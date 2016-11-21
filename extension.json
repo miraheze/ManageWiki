@@ -26,7 +26,8 @@
 		"SpecialManageWiki": "SpecialManageWiki.php"
 	},
 	"config": {
-		"ManageWikiEnable": false
+		"EnableManageWiki": true,
+		"ManageWikiMainDatabase": false
 	},
 	"manifest_version": 1
 }
