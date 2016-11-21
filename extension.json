@@ -11,9 +11,6 @@
 	"SpecialPages": {
 		"ManageWiki": "SpecialManageWiki"
 	},
-	"LogTypes": [
-		"farmer"
-	],
 	"LogActionsHandlers": {
 		"farmer/managewiki": "LogFormatter"
 	},
@@ -23,11 +20,13 @@
 		]
 	},
 	"AutoloadClasses": {
+		"ManageWikiHooks": "ManageWiki.hooks.php",
 		"SpecialManageWiki": "SpecialManageWiki.php"
 	},
 	"config": {
 		"EnableManageWiki": true,
 		"ManageWikiMainDatabase": false
 	},
+	"callback": "ManageWikiHooks::onRegistration",
 	"manifest_version": 1
 }
