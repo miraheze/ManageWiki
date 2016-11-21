@@ -1,0 +1,32 @@
+{
+	"name": "ManageWiki",
+	"author": "Southparkfan",
+	"url": "https://github.com/miraheze/ManageWiki",
+	"descriptionmsg": "managewiki-desc",
+	"type": "specialpage",
+	"AvailableRights": [
+		"managewiki",
+		"managewiki-restricted"
+	],
+	"SpecialPages": {
+		"ManageWiki": "SpecialManageWiki"
+	},
+	"LogTypes": [
+		"farmer"
+	],
+	"LogActionsHandlers": {
+		"farmer/managewiki": "LogFormatter"
+	},
+	"MessagesDirs": {
+		"ManageWiki": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"SpecialManageWiki": "SpecialManageWiki.php"
+	},
+	"config": {
+		"ManageWikiEnable": false
+	},
+	"manifest_version": 1
+}

@@ -1,0 +1,18 @@
+{
+	"@metadata": {
+		"authors": [
+			"Aira"
+		]
+	},
+	"logentry-farmer-managewiki": "$1 Hat die Einstellungen für \"$4\" geändert",
+	"managewiki": "Manage eine Wiki",
+	"managewiki-header": "Diese Seite wird benutzt um Einstellungen zur Wiki '$1' zu ändern. Manche Einstellungen sind restriktiert, In dem Fall sollten Sie einen Wiki Administrator von Miraheze kontaktieren.",
+	"managewiki-label-closed": "Geschlossen",
+	"managewiki-label-dbname": "Database Name",
+	"managewiki-label-language": "Sprache",
+	"managewiki-label-private": "Privat",
+	"managewiki-label-reason": "Grund",
+	"managewiki-label-sitename": "Name der Seite",
+	"managewiki-missing": "Diese Wiki existiert nicht.",
+	"managewiki-success": "Die Einstellungen wurden erfolgreich geändert."
+}
