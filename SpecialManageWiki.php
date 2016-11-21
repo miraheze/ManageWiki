@@ -21,8 +21,6 @@ class SpecialManageWiki extends SpecialPage {
 
 		$this->checkPermissions();
 
-		$dbw = wfGetDB( DB_MASTER );
-
 		if ( !is_null( $par ) && $par !== '' ) {
 			$this->showWikiForm( $par );
 		} else {
@@ -65,9 +63,11 @@ class SpecialManageWiki extends SpecialPage {
 	function showWikiForm( $wiki ) {
 		$out = $this->getOutput();
 
-		$wiki = $this->lookupWikiDetails( $wiki );
+		$dbName = $wiki;
 
-		if ( !$wiki ) {
+		$wiki = RemoteWiki::newFromName( $wiki );
+
+		if ( $wiki == NULL ) {
 			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;
 		}
@@ -88,7 +88,7 @@ class SpecialManageWiki extends SpecialPage {
 				'label-message' => 'managewiki-label-dbname',
 				'type' => 'text',
 				'size' => 20,
-				'default' => $wiki->wiki_dbname,
+				'default' => $dbName,
 				'disabled' => true,
 				'name' => 'mwDBname',
 			),
@@ -96,14 +96,14 @@ class SpecialManageWiki extends SpecialPage {
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
 				'size' => 20,
-				'default' => $wiki->wiki_sitename,
+				'default' => $wiki->getSitename(),
 				'required' => true,
 				'name' => 'mwSitename',
 			),
 			'language' => array(
 				'label-message' => 'managewiki-label-language',
 				'type' => 'select',
-				'default' => $wiki->wiki_language,
+				'default' => $wiki->getLanguage(),
 				'options' => $options,
 				'name' => 'mwLanguage',
 			),
@@ -111,14 +111,14 @@ class SpecialManageWiki extends SpecialPage {
 				'type' => 'check',
 				'label-message' => 'managewiki-label-closed',
 				'name' => 'cwClosed',
-				'default' => ( $wiki->wiki_closed == 1 ) ? 1 : 0,
+				'default' => $wiki->isClosed() ? 1 : 0,
 			),
 			'private' => array(
 				'type' => 'check',
 				'label-message' => 'managewiki-label-private',
 				'name' => 'cwPrivate',
 				'disabled' => ( !$this->getUser()->isAllowed( 'managewiki-restricted' ) ),
-				'default' => ( $wiki->wiki_private == 1 ) ? 1 : 0,
+				'default' => $wiki->isPrivate() ? 1 : 0,
 			),
 			'reason' => array(
 				'label-message' => 'managewiki-label-reason',
@@ -137,6 +137,10 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function onSubmitInput( array $params ) {
+		global $wgDBname, $wgManageWikiMainDatabase;
+
+		$dbName = $wgDBname;
+
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
 			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
 		}
@@ -152,6 +156,8 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$dbw = wfGetDB( DB_MASTER );
+		$dbw->selectDB( $wgManageWikiMainDatabase );
+
 		$dbw->update( 'cw_wikis',
 			$values,
 			array(
@@ -159,6 +165,8 @@ class SpecialManageWiki extends SpecialPage {
 			),
 			__METHOD__
 		);
+
+		$dbw->selectDB( $dbName ); // $dbw->close() errors?
 
 		$farmerLogEntry = new ManualLogEntry( 'farmer', 'managewiki' );
 		$farmerLogEntry->setPerformer( $this->getUser() );
@@ -173,22 +181,7 @@ class SpecialManageWiki extends SpecialPage {
 		$farmerLogEntry->publish( $farmerLogID );
 
 		$this->getOutput()->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
-		
+
 		return true;
-	}
-
-	function lookupWikiDetails( $wiki ) {
-		$dbw = wfGetDB( DB_MASTER );
-
-		$res = $dbw->selectRow( 'cw_wikis',
-			'*',
-			array(
-				'wiki_dbname' => strtolower( $wiki )
-			),
-			__METHOD__,
-			array()
-		);
-
-		return $res;
 	}
 }
