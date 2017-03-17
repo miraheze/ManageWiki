@@ -59,6 +59,35 @@ class SpecialManageWiki extends SpecialPage {
 
 		return true;
 	}
+	public function validateDBname( $DBname, $allData ) {
+		global $wgConf;
+
+		# HTMLForm's validation-callback somehow gets called, even
+		# while the form was not submitted yet. This should prevent
+		# the validation from failing because the submitted value is
+		# NULL, but it is a hack, and instead the validation just
+		# shouldn't be called unless the form actually has been
+		# submitted..
+		if ( is_null( $DBname ) ) {
+			return true;
+		}
+
+		$suffixed = false;
+		foreach ( $wgConf->suffixes as $suffix ) {
+			if ( substr( $DBname, -strlen( $suffix ) ) === $suffix ) {
+				$suffixed = true;
+				break;
+			}
+		}
+
+		$dbw = wfGetDB( DB_MASTER );
+		$res = $dbw->query( 'SHOW DATABASES LIKE ' . $dbw->addQuotes( $DBname ) . ';' );
+
+		if ( !$suffixed ) {
+			return wfMessage( 'managewiki-error-notsuffixed' )->escaped();
+		}
+		return true;
+	}
 
 	function showWikiForm( $wiki ) {
 		$out = $this->getOutput();
