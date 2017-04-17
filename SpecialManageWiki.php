@@ -120,6 +120,12 @@ class SpecialManageWiki extends SpecialPage {
 				'disabled' => ( !$this->getUser()->isAllowed( 'managewiki-restricted' ) ),
 				'default' => $wiki->isPrivate() ? 1 : 0,
 			),
+			'read-only' => array(
+				'type' => 'check',
+				'label-message' => 'managewiki-label-readonly',
+				'name' => 'cw-Readonly',
+				'default' => $wiki->isReadonly() ? 1: 0,
+			),
 			'reason' => array(
 				'label-message' => 'managewiki-label-reason',
 				'type' => 'text',
