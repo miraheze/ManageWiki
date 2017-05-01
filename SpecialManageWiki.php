@@ -5,7 +5,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgEnableManageWiki, $wgManageWikiMainDatabase;
+		global $wgEnableManageWiki, $wgManageWikiMainDatabase, $wgManageWikiGlobalWiki, $wgDBname;
 
 		if ( !$wgManageWikiMainDatabase ) {
 			throw new MWException( '$wgManageWikiMainDatabase was not set!' );
@@ -21,7 +21,9 @@ class SpecialManageWiki extends SpecialPage {
 
 		$this->checkPermissions();
 
-		if ( !is_null( $par ) && $par !== '' ) {
+		if ( $wgManageWikiGlobalWiki !== $wgDBname ) {
+			$this->showWikiForm( $wgDBname );
+		} elseif ( !is_null( $par ) && $par !== '' ) {
 			$this->showWikiForm( $par );
 		} else {
 			$this->showInputBox();

@@ -25,6 +25,7 @@
 	},
 	"config": {
 		"EnableManageWiki": true,
+		"ManageWikiGlobalWiki": "metawiki",
 		"ManageWikiMainDatabase": false
 	},
 	"callback": "ManageWikiHooks::onRegistration",
