@@ -119,7 +119,6 @@ class SpecialManageWiki extends SpecialPage {
 				'type' => 'check',
 				'label-message' => 'managewiki-label-private',
 				'name' => 'cwPrivate',
-				'disabled' => ( !$this->getUser()->isAllowed( 'managewiki-restricted' ) ),
 				'default' => $wiki->isPrivate() ? 1 : 0,
 			),
 			'reason' => array(
@@ -151,11 +150,8 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
 			'wiki_closed' => ( $params['closed'] == true ) ? 1 : 0,
+			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
 		);
-
-		if ( $this->getUser()->isAllowed( 'managewiki-restricted' ) ) {
-			$values['wiki_private'] = ( $params['private'] == true ) ? 1 : 0;
-		}
 
 		$dbw = wfGetLB( $wgManageWikiMainDatabase ) ->getConnectionRef( DB_MASTER, array(), $wgManageWikiMainDatabase );
 		$dbw->selectDB( $wgManageWikiMainDatabase );
