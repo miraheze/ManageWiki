@@ -16,5 +16,6 @@
 	"managewiki-label-reason": "Reason",
 	"managewiki-label-sitename": "Sitename",
 	"managewiki-missing": "That wiki does not exist.",
+	"managewiki-error-notsuffixed": "The database name doesn't end in a valid suffix (e.g. 'wiki').",
 	"managewiki-success": "The settings have been successfully changed."
 }
