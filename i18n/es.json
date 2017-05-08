@@ -8,7 +8,7 @@
 	"managewiki": "Administrar una wiki",
 	"managewiki-desc": "Permite a las personas administrar wikis a través de una interfaz web",
 	"managewiki-disabled": "Esta función aún no está habilitada en este wiki.",
-	"managewiki-header": "Esta página se usa para manejar la configuración de la wiki '$1'. Tenga en cuenta que es posible que no pueda cambiar todas las configuraciones de este wiki, en ese caso debe ponerse en contacto con un administrador del sistema.",
+	"managewiki-header": "Esta página se usa para manejar la configuración de la wiki '$1'. Tenga en cuenta que es posible que no pueda cambiar todas las configuraciones de este wiki, en ese caso debe ponerse en contacto con un administrador del sistema. ManageWiki todavía se está desarrollando, por lo que nuevas características estarían disponibles en un futuro próximo.",
 	"managewiki-label-closed": "Cerrada",
 	"managewiki-label-dbname": "Nombre de base de datos",
 	"managewiki-label-language": "Idioma",
