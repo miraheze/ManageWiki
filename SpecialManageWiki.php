@@ -153,7 +153,7 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
 		);
 
-		$dbw = wfGetLB( $wgManageWikiMainDatabase ) ->getConnectionRef( DB_MASTER, array(), $wgManageWikiMainDatabase );
+		$dbw = wfGetDB( DB_MASTER, array(), $wgManageWikiMainDatabase );
 		$dbw->selectDB( $wgManageWikiMainDatabase );
 
 		$dbw->update( 'cw_wikis',
