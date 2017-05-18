@@ -4,6 +4,7 @@
 			"AlvaroMolina"
 		]
 	},
+	"action-managewiki": "administrar la configuración de wiki",
 	"logentry-farmer-managewiki": "$1 modificó la configuración de la wiki \"$4\"",
 	"managewiki": "Administrar una wiki",
 	"managewiki-desc": "Permite a las personas administrar wikis a través de una interfaz web.",
