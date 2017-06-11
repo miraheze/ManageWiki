@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"AlvaroMolina", "The-Voidwalker"
+			"AlvaroMolina",
+			"The-Voidwalker"
 		]
 	},
 	"action-managewiki": "administrar la configuración de una wiki",
