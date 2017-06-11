@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Southparkfan", "The-Voidwalker"
+			"Southparkfan",
+			"The-Voidwalker"
 		]
 	},
 	"action-managewiki": "manage wiki settings",
