@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Southparkfan"
+			"Southparkfan",
+			"Corey Chambers"
 		]
 	},
 	"logentry-farmer-managewiki": "$1 changed the settings for \"$4\"",
