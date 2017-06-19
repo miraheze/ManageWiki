@@ -17,5 +17,5 @@
 	"managewiki-label-reason": "Reason",
 	"managewiki-label-sitename": "Sitename",
 	"managewiki-missing": "That wiki does not exist.",
-	"managewiki-success": "The settings have been successfully changed."
+	"managewiki-success": "Your changes have been saved. Changes may take up to a minute to take effect."
 }
