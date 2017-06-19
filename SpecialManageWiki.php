@@ -117,6 +117,14 @@ class SpecialManageWiki extends SpecialPage {
 				'required' => true,
 				'name' => 'mwLogo',
 			),
+			'favicon' => array(
+				'label-message' => 'managewiki-label-favicon-url',
+				'type' => 'text',
+				'size' => 20,
+				'default' => 'https://meta.miraheze.org/favicon.ico',
+				'required' => true,
+				'name' => 'mwFavicon',
+			),
 			'closed' => array(
 				'type' => 'check',
 				'label-message' => 'managewiki-label-closed',
@@ -158,6 +166,7 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
 			'wiki_logo' => $params['logo'],
+			'wiki_favicon' => $param['favicon'],
 			'wiki_closed' => ( $params['closed'] == true ) ? 1 : 0,
 			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
 		);
