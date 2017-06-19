@@ -2,6 +2,7 @@ The following configuration settings should be editable by local bureaucrats:
 
 - [ ] $wgDefaultSkin
 - [ ] $wgEmailConfirmToEdit
+- [ ] $wgEnableUploads
 - [ ] $wgFavicon
 - [x] $wgLanguageCode
 - [ ] $wgLocalTimezone
@@ -11,5 +12,7 @@ The following configuration settings should be editable by local bureaucrats:
 
 The following configuration settings should only be editable by stewards/system administrators:
 
+- [ ] $wgFileExtensions
 - [ ] $wgReadOnly
+- [ ] $wgServer
 - [ ] $wgUploadMaintenance
