@@ -109,6 +109,14 @@ class SpecialManageWiki extends SpecialPage {
 				'options' => $options,
 				'name' => 'mwLanguage',
 			),
+			'logo' => array(
+				'label-message' => 'managewiki-label-logo-url',
+				'type' => 'text',
+				'size' => 20,
+				'default' => 'https://static.miraheze.org/metawiki/3/35/Miraheze_Logo.svg',
+				'required' => true,
+				'name' => 'mwLogo',
+			),
 			'closed' => array(
 				'type' => 'check',
 				'label-message' => 'managewiki-label-closed',
@@ -149,6 +157,7 @@ class SpecialManageWiki extends SpecialPage {
 		$values = array(
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
+			'wiki_logo' => $params['logo'],
 			'wiki_closed' => ( $params['closed'] == true ) ? 1 : 0,
 			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
 		);
