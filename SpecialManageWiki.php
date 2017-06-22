@@ -162,6 +162,14 @@ class SpecialManageWiki extends SpecialPage {
 			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
 		}
 
+		if ( !substr( $params['favicon'], 0, 27 ) === "https://static.miraheze.org/" ) {
+			$this->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-invalid-file' )->escaped() . '</div>' );
+		}
+
+		if ( !substr( $params['logo'], 0, 27 ) === "https://static.miraheze.org/" ) {
+			$this->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-invalid-file' )->escaped() . '</div>' );
+		}
+
 		$values = array(
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
@@ -200,7 +208,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		return true;
 	}
-	
+
 	protected function getGroupName() {
 		return 'wikimanage';
 	}
