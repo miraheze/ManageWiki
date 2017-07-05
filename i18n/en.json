@@ -2,9 +2,11 @@
 	"@metadata": {
 		"authors": [
 			"Southparkfan",
-			"Corey Chambers"
+      "The-Voidwalker",
+      "Corey Chambers"
 		]
 	},
+	"action-managewiki": "manage wiki settings",
 	"logentry-farmer-managewiki": "$1 changed the settings for \"$4\"",
 	"managewiki": "Manage a wiki",
 	"managewiki-desc": "Allows people to manage wikis through a web interface",
