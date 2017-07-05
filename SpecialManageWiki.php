@@ -109,6 +109,22 @@ class SpecialManageWiki extends SpecialPage {
 				'options' => $options,
 				'name' => 'mwLanguage',
 			),
+			'logo' => array(
+				'label-message' => 'managewiki-label-logo-url',
+				'type' => 'text',
+				'size' => 20,
+				'default' => 'https://static.miraheze.org/metawiki/3/35/Miraheze_Logo.svg',
+				'required' => true,
+				'name' => 'mwLogo',
+			),
+			'favicon' => array(
+				'label-message' => 'managewiki-label-favicon-url',
+				'type' => 'text',
+				'size' => 20,
+				'default' => 'https://meta.miraheze.org/favicon.ico',
+				'required' => true,
+				'name' => 'mwFavicon',
+			),
 			'closed' => array(
 				'type' => 'check',
 				'label-message' => 'managewiki-label-closed',
@@ -146,9 +162,21 @@ class SpecialManageWiki extends SpecialPage {
 			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
 		}
 
+		if ( substr( $params['favicon'], 0, 27 ) != "https://static.miraheze.org/" ) {
+			$this->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-invalid-file' )->escaped() . '</div>' );
+			return false;
+		}
+
+		if ( substr( $params['logo'], 0, 27 ) != "https://static.miraheze.org/" ) {
+			$this->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-invalid-file' )->escaped() . '</div>' );
+			return false;
+		}
+
 		$values = array(
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
+			'wiki_logo' => $params['logo'],
+			'wiki_favicon' => $param['favicon'],
 			'wiki_closed' => ( $params['closed'] == true ) ? 1 : 0,
 			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
 		);
@@ -182,7 +210,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		return true;
 	}
-	
+
 	protected function getGroupName() {
 		return 'wikimanage';
 	}
