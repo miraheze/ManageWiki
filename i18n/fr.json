@@ -1,15 +1,18 @@
 {
 	"@metadata": {
 		"authors": [
-			"Reception123"
+			"Reception123",
+			"KATRINE1992",
+			"Wladek92"
 		]
 	},
+	"action-managewiki": "Regler les parametres de wiki",
 	"logentry-farmer-managewiki": "$1 a changé les paramètres pour \"$4\"",
 	"managewiki": "Paramétrer un wiki",
 	"managewiki-desc": "Permet aux utilisateurs de paramétrer un wiki dans une interface web",
-	"managewiki-disabled": "Cette fonctionalité n'est pas activé sur ce wiki encore.",
+	"managewiki-disabled": "Cette fonctionalité n'est pas encore activée sur ce wiki.",
 	"managewiki-header": "Cette page est utilisé pour parametrer les paramètres du wiki '$1'. Veuillez noter que vous ne pouvez peut-être pas changer tout les paramètres de ce wiki, dans ce cas vous pouvez contacter un administateur de système. ManageWiki est toujours en développement, alors des nouvelles fonctionnalités seront disponible prochainement.",
-	"managewiki-label-closed": "Fermé", 
+	"managewiki-label-closed": "Fermé",
 	"managewiki-label-dbname": "Nom de base de données",
 	"managewiki-label-language": "Langue",
 	"managewiki-label-private": "Privé",

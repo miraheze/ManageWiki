@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+		"authors": [
+			"Saraiki"
+		]
+	},
+	"action-managewiki": "وکی ترتیباں دا انتظام کرو",
+	"logentry-farmer-managewiki": "$1 نے \"$4\" کیتےترتیباں تبدیل کیتیاں ہن",
+	"managewiki": "وکی دا انتظام کرو",
+	"managewiki-desc": "ویب انٹر فیس نال لوکاں کوں وکی انتظام دی اجازت ݙیندے",
+	"managewiki-disabled": "ایں وکی تے اڄݨ تائیں ایہ خصوصیت فعال کائنی تھئی۔",
+	"managewiki-header": "ایہ ورقہ '$1' وکی دی ترتیباں کیتے ورتیندے۔ نوٹ کر گھنو جو تساں ساریاں تبدیلیاں نہوے کرسڳدے، تساں ایں کیتے ایڈمن نال رابطہ کرو۔ وکی انتظام اڄݨ بݨدا بئے، آوݨ آلے وقت وچ نویاں خصوصیات ملسن۔",
+	"managewiki-label-closed": "بند تھیا",
+	"managewiki-label-dbname": "ڈیٹابیس دا ناں",
+	"managewiki-label-language": "زبان",
+	"managewiki-label-private": "ذاتی",
+	"managewiki-label-reason": "سبب",
+	"managewiki-label-sitename": "سائٹ دا ناں",
+	"managewiki-missing": "ایہ وکی موجود کائنی۔",
+	"managewiki-success": "ترتیباں کامیابی نال تبدیل تھی ڳیاں۔"
+}

@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+		"authors": [
+			"Hamilton Abreu"
+		]
+	},
+	"action-managewiki": "gerir as configurações da wiki",
+	"logentry-farmer-managewiki": "$1 alterou as configurações de \"$4\"",
+	"managewiki": "Gerir uma wiki",
+	"managewiki-desc": "Permite que os utilizadores giram wikis através de uma interface web",
+	"managewiki-disabled": "Esta funcionalidade ainda não foi ativada nesta wiki.",
+	"managewiki-header": "Esta página é utilizada para gerir as configurações da wiki '$1'. Note, por favor, que é possível que não possa alterar todas as configurações desta wiki. Nesse caso, deve contactar um administrador de sistemas. O ManageWiki ainda está em desenvolvimento, por isso devem surgir novas funcionalidades no futuro.",
+	"managewiki-label-closed": "Fechada",
+	"managewiki-label-dbname": "Nome da base de dados",
+	"managewiki-label-language": "Língua",
+	"managewiki-label-private": "Privada",
+	"managewiki-label-reason": "Motivo",
+	"managewiki-label-sitename": "Nome do site",
+	"managewiki-missing": "Essa wiki não existe",
+	"managewiki-success": "As configurações foram alteradas."
+}

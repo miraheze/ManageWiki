@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+		"authors": [
+			"Liuxinyu970226"
+		]
+	},
+	"action-managewiki": "管理wiki设置",
+	"logentry-farmer-managewiki": "$1更改了“$4”的设置",
+	"managewiki": "管理wiki",
+	"managewiki-desc": "允许人们通过web界面管理wiki",
+	"managewiki-disabled": "此功能在该wiki尚未启用。",
+	"managewiki-header": "此页面用于管理“$1”的wiki设置。请注意您可能无法更改此wiki的所有设置，这时您应该联络系统管理员。ManageWiki仍在开发阶段，所以新功能今后才会提供。",
+	"managewiki-label-closed": "已关闭",
+	"managewiki-label-dbname": "数据库名称",
+	"managewiki-label-language": "语言",
+	"managewiki-label-private": "私有",
+	"managewiki-label-reason": "原因",
+	"managewiki-label-sitename": "网站名称",
+	"managewiki-missing": "该wiki不存在。",
+	"managewiki-success": "设置已成功更改。"
+}

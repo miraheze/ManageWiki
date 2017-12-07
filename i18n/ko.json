@@ -1,0 +1,22 @@
+{
+	"@metadata": {
+		"authors": [
+			"Revi",
+			"Ykhwong"
+		]
+	},
+	"action-managewiki": "위키 설정 관리",
+	"logentry-farmer-managewiki": "$1님이 \"$4\"의 설정을 변경했습니다",
+	"managewiki": "위키 관리",
+	"managewiki-desc": "사람들이 웹 인터페이스를 통해 위키를 관리할 수 있게 합니다",
+	"managewiki-disabled": "이 기능은 이 위키에서 아직 활성화되어 있지 않습니다.",
+	"managewiki-header": "이 문서는 '$1' 위키의 설정을 관리하기 위해 사용됩니다. 이 위키의 모든 위키 설정을 변경하지 못할 수 있으며 이 경우 시스템 관리자에게 문의해야 합니다. ManageWiki는 현재 개발 중이므로 나중에 새로운 기능들을 사용할 수 있게 될 것입니다.",
+	"managewiki-label-closed": "닫힘",
+	"managewiki-label-dbname": "데이터베이스 이름",
+	"managewiki-label-language": "언어",
+	"managewiki-label-private": "비공개",
+	"managewiki-label-reason": "이유",
+	"managewiki-label-sitename": "사이트 이름",
+	"managewiki-missing": "해당 위키는 존재하지 않습니다.",
+	"managewiki-success": "설정이 성공적으로 업데이트되었습니다."
+}

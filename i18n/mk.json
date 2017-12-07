@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bjankuloski06"
+		]
+	},
+	"action-managewiki": "раков. со википоставки",
+	"logentry-farmer-managewiki": "$1 ги измени поставките за „$4“",
+	"managewiki": "Раководење со вики",
+	"managewiki-desc": "Овозможува раководење со викија преку семрежен посредник",
+	"managewiki-disabled": "Оваа можност сè уште не е вклучена на ова вики.",
+	"managewiki-header": "Оваа служи за управување со поставките на викито „$1“. Имајте на ум дека може да се случи да не можете да ги смените сите поставки на ова вики, и во тој случај обратете се кај системски администратор. МедијаВики сè уште е во развој, па во иднина треба да има нови можности.",
+	"managewiki-label-closed": "Затворено",
+	"managewiki-label-dbname": "Назив на базата",
+	"managewiki-label-language": "Јазик",
+	"managewiki-label-private": "Скриено",
+	"managewiki-label-reason": "Причина",
+	"managewiki-label-sitename": "Назив на викито",
+	"managewiki-missing": "Нема такво вики.",
+	"managewiki-success": "Поставките се успешно изменети."
+}
