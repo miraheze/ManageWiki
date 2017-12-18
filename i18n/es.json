@@ -9,7 +9,7 @@
 	"action-managewiki": "gestionar configuración del wiki",
 	"logentry-farmer-managewiki": "$1 modificó la configuración de «$4»",
 	"managewiki": "Gestionar un wiki",
-	"managewiki-desc": "Permite a las personas administrar wikis a través de una interfaz web.",
+	"managewiki-desc": "Permite a las personas gestionar wikis a través de una interfaz web.",
 	"managewiki-disabled": "Esta función aún no está activada en este wiki.",
 	"managewiki-header": "Esta página permite gestionar la configuración del wiki «$1». Observa que es posible que no puedas modificar todas las opciones de este wiki; en tal caso, puedes ponerte en contacto con un administrador de sistemas. ManageWiki aún está en desarrollo: habrá funcionalidades nuevas en el futuro.",
 	"managewiki-label-closed": "Cerrada",
