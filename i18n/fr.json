@@ -3,10 +3,11 @@
 		"authors": [
 			"Reception123",
 			"KATRINE1992",
-			"Wladek92"
+			"Wladek92",
+			"Ltrlg"
 		]
 	},
-	"action-managewiki": "Regler les parametres de wiki",
+	"action-managewiki": "Régler les paramètres du wiki",
 	"logentry-farmer-managewiki": "$1 a changé les paramètres pour \"$4\"",
 	"managewiki": "Paramétrer un wiki",
 	"managewiki-desc": "Permet aux utilisateurs de paramétrer un wiki dans une interface web",

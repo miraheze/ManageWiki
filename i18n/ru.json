@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"EdwardGeneralov"
+			"EdwardGeneralov",
+			"Facenapalm"
 		]
 	},
+	"action-managewiki": "Управлять настройками вики",
 	"logentry-farmer-managewiki": "$1 изменил настройки для \"$4\"",
 	"managewiki": "Управлять вики",
 	"managewiki-desc": "Позволяет людям управлять вики через веб-интерфейс",
