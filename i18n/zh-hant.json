@@ -1,0 +1,12 @@
+{
+	"@metadata": {
+		"authors": [
+			"Liuxinyu970226"
+		]
+	},
+	"logentry-farmer-managewiki": "$1 變更了「$4」的設定",
+	"managewiki-label-closed": "已關閉",
+	"managewiki-label-language": "語言",
+	"managewiki-label-private": "非公開",
+	"managewiki-label-reason": "原因"
+}
