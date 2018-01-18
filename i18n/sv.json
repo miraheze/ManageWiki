@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"WikiPhoenix"
+		]
+	},
+	"managewiki-desc": "Låter personer hantera wikis med ett webbgränssnitt",
+	"managewiki-disabled": "Denna funktion har ännu inte aktiverats på denna wiki.",
+	"managewiki-label-closed": "Stängd",
+	"managewiki-success": "Inställningarna har ändrats."
+}

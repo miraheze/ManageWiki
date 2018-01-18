@@ -1,0 +1,11 @@
+{
+	"@metadata": {
+		"authors": [
+			"محمد أحمد عبد الفتاح"
+		]
+	},
+	"managewiki-label-closed": "مغلق",
+	"managewiki-label-dbname": "اسم قاعدة البيانات",
+	"managewiki-label-private": "خاص",
+	"managewiki-label-sitename": "اسم الموقع"
+}
