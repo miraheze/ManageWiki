@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Hamilton Abreu"
+			"Hamilton Abreu",
+			"Athena in Wonderland"
 		]
 	},
 	"action-managewiki": "gerir as configurações da wiki",
@@ -15,7 +16,7 @@
 	"managewiki-label-language": "Língua",
 	"managewiki-label-private": "Privada",
 	"managewiki-label-reason": "Motivo",
-	"managewiki-label-sitename": "Nome do site",
+	"managewiki-label-sitename": "Nome do sítio",
 	"managewiki-missing": "Essa wiki não existe",
 	"managewiki-success": "As configurações foram alteradas."
 }
