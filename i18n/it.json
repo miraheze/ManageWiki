@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Beta16",
+			"S4b1nuz E.656"
+		]
+	},
+	"managewiki-disabled": "Questa funzione non è ancora stata attivata su questo wiki.",
+	"managewiki-label-closed": "Chiuso",
+	"managewiki-label-dbname": "Nome database",
+	"managewiki-label-language": "Lingua",
+	"managewiki-label-private": "Privato",
+	"managewiki-label-reason": "Motivo",
+	"managewiki-missing": "Questo wiki non esiste."
+}
