@@ -75,7 +75,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( !$this->getRequest()->wasPosted() ) {
-			$out->addWikiMsg( 'managewiki-header', $wiki->wiki_dbname );
+			$out->addWikiMsg( 'managewiki-header', $dbName );
 		}
 
 		$languages = Language::fetchLanguageNames( null, 'mwfile' );
