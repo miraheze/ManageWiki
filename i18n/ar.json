@@ -1,11 +1,22 @@
 {
 	"@metadata": {
 		"authors": [
-			"محمد أحمد عبد الفتاح"
+			"محمد أحمد عبد الفتاح",
+			"ديفيد"
 		]
 	},
+	"action-managewiki": "إدارة إعدادات الويكي",
+	"logentry-farmer-managewiki": "$1 غير إعدادات \"$4\"",
+	"managewiki": "إدارة ويكي",
+	"managewiki-desc": "يسمح للناس بإدارة ويكي من خلال واجهة ويب",
+	"managewiki-disabled": "لم يتم تمكين هذه الميزة في هذا الويكي بعد.",
+	"managewiki-header": "يتم استخدام هذه الصفحة لإدارة إعدادات الويكي للويكي '$1'، تُرجَى ملاحظة أنك قد لا تكون قادرا على تغيير جميع إعدادات الويكي لهذا الويكي، في هذه الحالة يجب عليك الاتصال بإداري النظام، إدارة الويكي لا يزال يجري تطويرها; لذلك يجب أن تكون الميزات الجديدة متاحة في المستقبل.",
 	"managewiki-label-closed": "مغلق",
 	"managewiki-label-dbname": "اسم قاعدة البيانات",
+	"managewiki-label-language": "اللغة",
 	"managewiki-label-private": "خاص",
-	"managewiki-label-sitename": "اسم الموقع"
+	"managewiki-label-reason": "السبب",
+	"managewiki-label-sitename": "اسم الموقع",
+	"managewiki-missing": "ذلك الويكي غير موجود.",
+	"managewiki-success": "تم تغيير الإعدادات بنجاح."
 }
