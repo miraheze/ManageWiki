@@ -15,6 +15,7 @@
 	"managewiki-label-dbname": "Database name",
 	"managewiki-label-language": "Language",
 	"managewiki-label-private": "Private",
+	"managewiki-label-inactive": "Inactive",
 	"managewiki-label-reason": "Reason",
 	"managewiki-label-sitename": "Sitename",
 	"managewiki-missing": "That wiki does not exist.",
