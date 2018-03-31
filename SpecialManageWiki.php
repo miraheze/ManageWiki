@@ -115,6 +115,12 @@ class SpecialManageWiki extends SpecialPage {
 				'name' => 'cwClosed',
 				'default' => $wiki->isClosed() ? 1 : 0,
 			),
+			'inactive' => array(
+				'type' => 'check',
+				'label-message' => 'managewiki-label-inactive',
+				'name' => 'cwInactive',
+				'default' => $wiki->isInactive() ? 1 : 0,
+			),
 			'private' => array(
 				'type' => 'check',
 				'label-message' => 'managewiki-label-private',
@@ -150,6 +156,7 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
 			'wiki_closed' => ( $params['closed'] == true ) ? 1 : 0,
+			'wiki_inactive' => ( $params['inactive'] == true ) ? 1 : 0,
 			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
 		);
 
