@@ -127,6 +127,12 @@ class SpecialManageWiki extends SpecialPage {
 				'name' => 'cwPrivate',
 				'default' => $wiki->isPrivate() ? 1 : 0,
 			),
+			'category' => array(
+				'type' => 'select',
+				'label-message' => 'managewiki-label-category',
+				'options' => $wgCreateWikiCategories,
+				'default' => $wiki->getCategory(),
+			),
 			'reason' => array(
 				'label-message' => 'managewiki-label-reason',
 				'type' => 'text',
@@ -158,6 +164,7 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_closed' => ( $params['closed'] == true ) ? 1 : 0,
 			'wiki_inactive' => ( $params['inactive'] == true ) ? 1 : 0,
 			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
+			'wiki_category' => $params['category'],
 		);
 
 		$dbw = wfGetDB( DB_MASTER, array(), $wgManageWikiMainDatabase );
