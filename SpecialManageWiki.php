@@ -63,6 +63,8 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
+		global $wgCreateWikiCategories;
+
 		$out = $this->getOutput();
 
 		$dbName = $wiki;
