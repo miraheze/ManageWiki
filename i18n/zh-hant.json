@@ -15,6 +15,7 @@
 	"managewiki-label-dbname": "資料庫名稱",
 	"managewiki-label-language": "語言",
 	"managewiki-label-private": "非公開",
+	"managewiki-label-inactive": "不活躍",
 	"managewiki-label-reason": "原因",
 	"managewiki-label-sitename": "網站名稱",
 	"managewiki-missing": "該 wiki 不存在",

@@ -5,10 +5,12 @@
 		]
 	},
 	"managewiki": "Eng Wiki geréieren",
+	"managewiki-label-category": "Kategorie",
 	"managewiki-label-closed": "Zou",
 	"managewiki-label-dbname": "Numm vun der Datebank",
 	"managewiki-label-language": "Sprooch",
 	"managewiki-label-private": "Privat",
+	"managewiki-label-inactive": "Inaktiv",
 	"managewiki-label-reason": "Grond",
 	"managewiki-missing": "Déi Wiki gëtt et net.",
 	"managewiki-success": "D'Astellunge goufe geännert."

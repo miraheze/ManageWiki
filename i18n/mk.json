@@ -14,6 +14,7 @@
 	"managewiki-label-dbname": "Назив на базата",
 	"managewiki-label-language": "Јазик",
 	"managewiki-label-private": "Скриено",
+	"managewiki-label-inactive": "Неактивно",
 	"managewiki-label-reason": "Причина",
 	"managewiki-label-sitename": "Назив на викито",
 	"managewiki-missing": "Нема такво вики.",

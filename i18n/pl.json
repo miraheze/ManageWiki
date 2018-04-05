@@ -8,6 +8,7 @@
 	"managewiki": "Zarządzaj wiki",
 	"managewiki-desc": "Pozwala zarządzać stronami wiki za pomocą interfejsu internetowego",
 	"managewiki-disabled": "Ta funkcja nie została jeszcze włączona na tej wiki.",
+	"managewiki-label-category": "Kategoria",
 	"managewiki-label-dbname": "Nazwa bazy danych",
 	"managewiki-label-language": "Język",
 	"managewiki-label-reason": "Powód",

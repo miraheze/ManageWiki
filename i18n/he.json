@@ -1,0 +1,23 @@
+{
+	"@metadata": {
+		"authors": [
+			"Guycn2"
+		]
+	},
+	"action-managewiki": "ניהול הגדרות של אתר ויקי",
+	"logentry-farmer-managewiki": "$1 שינה את ההגדרות של \"$4\"",
+	"managewiki": "ניהול אתר ויקי",
+	"managewiki-desc": "מתן אפשרות לאנשים לנהל אתרי ויקי באמצעות ממשק אינטרנטי",
+	"managewiki-disabled": "אפשרות זו עדיין לא הופעלה באתר הוויקי הזה.",
+	"managewiki-header": "אפשר להשתמש בדף הזה כדי לנהל את ההגדרות של אתר הוויקי '$1'. ייתכן שלא יהיה באפשרותך לשנות את כל ההגדרות של אתר הוויקי הזה. במקרה כזה, יש לפנות למנהל מערכת. ההרחבה ManageWiki עדיין נמצאת בתהליך פיתוח, וייתכן שתכונות חדשות תהיינה זמינות בעתיד.",
+	"managewiki-label-category": "קטגוריה",
+	"managewiki-label-closed": "נסגר",
+	"managewiki-label-dbname": "שם מסד הנתונים",
+	"managewiki-label-language": "שפה",
+	"managewiki-label-private": "פרטי",
+	"managewiki-label-inactive": "לא פעיל",
+	"managewiki-label-reason": "סיבה",
+	"managewiki-label-sitename": "שם האתר",
+	"managewiki-missing": "אתר הוויקי הזה אינו קיים.",
+	"managewiki-success": "ההגדרות שונו בהצלחה."
+}

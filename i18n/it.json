@@ -6,10 +6,12 @@
 		]
 	},
 	"managewiki-disabled": "Questa funzione non è ancora stata attivata su questo wiki.",
+	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Chiuso",
 	"managewiki-label-dbname": "Nome database",
 	"managewiki-label-language": "Lingua",
 	"managewiki-label-private": "Privato",
+	"managewiki-label-inactive": "Inattivo",
 	"managewiki-label-reason": "Motivo",
 	"managewiki-missing": "Questo wiki non esiste."
 }
