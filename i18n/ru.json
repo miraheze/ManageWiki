@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"EdwardGeneralov",
-			"Facenapalm"
+			"Facenapalm",
+			"Happy13241"
 		]
 	},
 	"action-managewiki": "Управлять настройками вики",
@@ -11,10 +12,12 @@
 	"managewiki-desc": "Позволяет людям управлять вики через веб-интерфейс",
 	"managewiki-disabled": "Эта функция не была включена в этой вики еще.",
 	"managewiki-header": "Эта страница используется для управления настройками вики-вики '$1'. Обратите внимание, что вы не можете быть в состоянии изменить все настройки вики этой вики, в этом случае вам следует обратиться к системному администратору.",
+	"managewiki-label-category": "Категория",
 	"managewiki-label-closed": "Закрыто",
 	"managewiki-label-dbname": "Имя базы данных",
 	"managewiki-label-language": "Язык",
 	"managewiki-label-private": "Скрытый",
+	"managewiki-label-inactive": "Неактивен",
 	"managewiki-label-reason": "Причина",
 	"managewiki-label-sitename": "Название сайта",
 	"managewiki-missing": "Эта вики не существует.",

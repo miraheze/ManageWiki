@@ -1,17 +1,23 @@
 {
 	"@metadata": {
 		"authors": [
-			"Chrumps"
+			"Chrumps",
+			"Railfail536"
 		]
 	},
 	"action-managewiki": "zarządzaj ustawieniami wiki",
+	"logentry-farmer-managewiki": "$1 zmienił ustawienia dla „$4”",
 	"managewiki": "Zarządzaj wiki",
 	"managewiki-desc": "Pozwala zarządzać stronami wiki za pomocą interfejsu internetowego",
 	"managewiki-disabled": "Ta funkcja nie została jeszcze włączona na tej wiki.",
 	"managewiki-label-category": "Kategoria",
+	"managewiki-label-closed": "Zamknięte",
 	"managewiki-label-dbname": "Nazwa bazy danych",
 	"managewiki-label-language": "Język",
+	"managewiki-label-private": "Prywatny",
+	"managewiki-label-inactive": "Nieaktywny",
 	"managewiki-label-reason": "Powód",
+	"managewiki-label-sitename": "Nazwa strony",
 	"managewiki-missing": "Ta wiki nie istnieje.",
 	"managewiki-success": "Ustawienia zostały pomyślnie zmienione."
 }

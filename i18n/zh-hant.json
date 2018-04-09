@@ -11,6 +11,7 @@
 	"managewiki-desc": "允許人們透過 web 介面來管理 wiki",
 	"managewiki-disabled": "此功能尚未在此 wiki 啟用。",
 	"managewiki-header": "此頁面用來管理「$1」的 wiki 設定。請注意您可能無法更改所有此 wiki 上的 wiki 設定，在此情況您應該聯絡系統管理員。ManageWiki 目前仍為開發階段，因此新功能會在往後期間才可用。",
+	"managewiki-label-category": "分類",
 	"managewiki-label-closed": "已關閉",
 	"managewiki-label-dbname": "資料庫名稱",
 	"managewiki-label-language": "語言",
