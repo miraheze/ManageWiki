@@ -3,7 +3,8 @@
 		"authors": [
 			"EdwardGeneralov",
 			"Facenapalm",
-			"Happy13241"
+			"Happy13241",
+			"Ole Yves"
 		]
 	},
 	"action-managewiki": "Управлять настройками вики",
@@ -17,7 +18,7 @@
 	"managewiki-label-dbname": "Имя базы данных",
 	"managewiki-label-language": "Язык",
 	"managewiki-label-private": "Скрытый",
-	"managewiki-label-inactive": "Неактивен",
+	"managewiki-label-inactive": "Неактивна",
 	"managewiki-label-reason": "Причина",
 	"managewiki-label-sitename": "Название сайта",
 	"managewiki-missing": "Эта вики не существует.",
