@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Elisardojm"
+			"Elisardojm",
+			"Navhy"
 		]
 	},
 	"action-managewiki": "xestionar configuración da wiki",
@@ -10,10 +11,12 @@
 	"managewiki-desc": "Permite ós usuarios administrar wikis a través dunha interface web.",
 	"managewiki-disabled": "Esta función aínda non está activada nesta wiki.",
 	"managewiki-header": "Esta páxina permite xestionar a configuración da wiki «$1». Por favor, observe que é posible que non poida modificar tódalas opcións desta wiki; en tal caso, pode poñerse en contacto cun administrador de sistemas. ManageWiki aínda está en desenvolvemento: haberá funcionalidades novas no futuro.",
+	"managewiki-label-category": "Categoría",
 	"managewiki-label-closed": "Pechado",
 	"managewiki-label-dbname": "Nome da base de datos",
 	"managewiki-label-language": "Lingua",
 	"managewiki-label-private": "Privado",
+	"managewiki-label-inactive": "Inactivo",
 	"managewiki-label-reason": "Motivo",
 	"managewiki-label-sitename": "Nome do sitio",
 	"managewiki-missing": "Esa wiki non existe.",
