@@ -80,7 +80,7 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addWikiMsg( 'managewiki-header', $dbName );
 		}
 
-		$languages = Language::fetchLanguageNames( null, 'mwfile' );
+		$languages = Language::fetchLanguageNames( null, 'wmfile' );
 		ksort( $languages );
 		$options = array();
 		foreach ( $languages as $code => $name ) {
