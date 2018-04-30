@@ -10,6 +10,7 @@
 	"managewiki-desc": "Permite que les persones alministren wikis per una interfaz web.",
 	"managewiki-disabled": "Esta función inda nun ta activada nesta wiki.",
 	"managewiki-header": "Esta páxina s'usa p'alministrar la configuración de la wiki '$1'. Repara que ye posible que nun puedas cambiar toles opciones d'esta wiki; en tal casu, tendríes de comunicate con un alministrador del sistema. ManageWiki inda ta en desendolcu, de manera qu'habrá carauterístiques nueves nel futuru.",
+	"managewiki-label-category": "Categoría",
 	"managewiki-label-closed": "Zarrada",
 	"managewiki-label-dbname": "Nome de la base de datos",
 	"managewiki-label-language": "Llingua",
