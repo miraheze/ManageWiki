@@ -169,6 +169,35 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_category' => $params['category'],
 		);
 
+		$wiki = RemoteWiki::newFromName( $params['dbname'] );
+
+		$changedsettingsarray = [];
+		if ( $params['sitename'] != $wiki->getSitename() ) {
+			$changedsettingsarray[] = 'sitename';
+		}
+
+		if ( $params['language'] != $wiki->getLanguage() ) {
+			$changedsettingsarray[] = 'language';
+		}
+
+		if ( $params['closed'] != $wiki->isClosed() ) {
+			$changedsettingsarray[] = 'closed';
+		}
+
+		if ( $params['inactive'] != $wiki->isInactive() ) {
+			$changedsettingsarray[] = 'inactive';
+		}
+
+		if ( $params['private'] != $wiki->isPrivate() ) {
+			$changedsettingsarray[] = 'private';
+		}
+
+		if ( $params['category'] != $wiki->getCategory() ) {
+			$changedsettingsarray[] = 'category';
+		}
+
+		$changedsettings = implode( ", ", $changedsettingsarray );
+
 		$dbw = wfGetDB( DB_MASTER, array(), $wgManageWikiMainDatabase );
 		$dbw->selectDB( $wgManageWikiMainDatabase );
 
@@ -189,6 +218,7 @@ class SpecialManageWiki extends SpecialPage {
 		$farmerLogEntry->setParameters(
 			array(
 				'4::wiki' => $params['dbname'],
+				'5::changes' => $changedsettings,
 			)
 		);
 		$farmerLogID = $farmerLogEntry->insert();
@@ -198,7 +228,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		return true;
 	}
-	
+
 	protected function getGroupName() {
 		return 'wikimanage';
 	}
