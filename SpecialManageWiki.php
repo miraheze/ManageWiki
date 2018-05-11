@@ -212,6 +212,9 @@ class SpecialManageWiki extends SpecialPage {
 			}
 		}
 
+		// HACK: dummy extension name
+		$extensionsarray[] = "zzzz";
+
 		$extensions = implode( ",", $extensionsarray );
 
 		$values = array(
