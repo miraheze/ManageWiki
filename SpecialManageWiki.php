@@ -63,7 +63,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
-		global $wgCreateWikiCategories;
+		global $wgCreateWikiCategories, $wgManageWikiExtensions, $wgUser;
 
 		$out = $this->getOutput();
 
@@ -135,12 +135,24 @@ class SpecialManageWiki extends SpecialPage {
 				'options' => $wgCreateWikiCategories,
 				'default' => $wiki->getCategory(),
 			),
-			'reason' => array(
-				'label-message' => 'managewiki-label-reason',
+		);
+
+		if ( $wgManageWikiExtensions ) {
+			foreach ( $wgManageWikiExtensions as $name => $ext ) {
+				$formDescriptor["ext-$name"] = array(
+					'type' => 'check',
+					'label' => $ext['name'],
+					'default' => $wiki->hasExtension( $name ),
+					'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+				);
+			}
+		}
+
+		$formDescriptor['reason'] = array(
 				'type' => 'text',
+				'label-message' => 'managewiki-label-reason',
 				'size' => 45,
 				'required' => true,
-			),
 		);
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'changeForm' );
@@ -152,13 +164,43 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function onSubmitInput( array $params ) {
-		global $wgDBname, $wgManageWikiMainDatabase;
+		global $wgDBname, $wgManageWikiMainDatabase, $wgManageWikiExtensions, $wgUser;
 
 		$dbName = $wgDBname;
 
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
 			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
 		}
+
+		$wiki = RemoteWiki::newFromName( $params['dbname'] );
+
+		$changedsettingsarray = [];
+		$extensionsarray = [];
+		foreach ( $wgManageWikiExtensions as $name => $ext ) {
+			if ( $params["ext-$name"] ) {
+				if ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					$extensionsarray[] = $name;
+				} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					if ( $wiki->hasExtension( $name ) ) {
+						$extensionsarray[] = $name;
+					} else {
+						throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+					}
+				} else {
+					$extensionsarray[] = $name;
+				}
+			} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+				if ( !$wiki->hasExtension( $name ) ) {
+					throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+				}
+			}
+
+			if ( $params["ext-$name"] != $wiki->hasExtension( $name ) ) {
+				$changedsettingsarray[] = "ext-" . $name;
+			}
+		}
+
+		$extensions = implode( ",", $extensionsarray );
 
 		$values = array(
 			'wiki_sitename' => $params['sitename'],
@@ -167,11 +209,9 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_inactive' => ( $params['inactive'] == true ) ? 1 : 0,
 			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
 			'wiki_category' => $params['category'],
+			'wiki_extensions' => $extensions,
 		);
 
-		$wiki = RemoteWiki::newFromName( $params['dbname'] );
-
-		$changedsettingsarray = [];
 		if ( $params['sitename'] != $wiki->getSitename() ) {
 			$changedsettingsarray[] = 'sitename';
 		}

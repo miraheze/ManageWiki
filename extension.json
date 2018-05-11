@@ -26,7 +26,8 @@
 	"config": {
 		"EnableManageWiki": true,
 		"ManageWikiGlobalWiki": "metawiki",
-		"ManageWikiMainDatabase": false
+		"ManageWikiMainDatabase": false,
+		"ManageWikiExtensions": null
 	},
 	"callback": "ManageWikiHooks::onRegistration",
 	"manifest_version": 1
