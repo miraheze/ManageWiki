@@ -206,7 +206,7 @@ class SpecialManageWiki extends SpecialPage {
 					$extensionsarray[] = $name;
 				}
 			} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
-				if ( !$wiki->hasExtension( $name ) ) {
+				if ( $wiki->hasExtension( $name ) ) {
 					throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
 				}
 			}
