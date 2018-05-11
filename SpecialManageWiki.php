@@ -236,10 +236,6 @@ class SpecialManageWiki extends SpecialPage {
 			$changedsettingsarray[] = 'category';
 		}
 
-		if ( $params['extensions'] != $wiki->hasExtension() ) {
-			$changedsettingsarray[] = 'extensions';
-		}
-
 		$changedsettings = implode( ", ", $changedsettingsarray );
 
 		$dbw = wfGetDB( DB_MASTER, array(), $wgManageWikiMainDatabase );
