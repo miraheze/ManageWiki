@@ -237,7 +237,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( $params['extensions'] != $wiki->hasExtension() ) {
-			$changedsettingsarray[] = 'category';
+			$changedsettingsarray[] = 'extensions';
 		}
 
 		$changedsettings = implode( ", ", $changedsettingsarray );
