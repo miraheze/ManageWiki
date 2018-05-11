@@ -145,7 +145,7 @@ class SpecialManageWiki extends SpecialPage {
 						'label' => $ext['name'],
 						'default' => $wiki->hasExtension( $name ),
 						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-						'help' => "Requires: {$ext['requires']}.",
+						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
 					);
 				} else {
 					$formDescriptor["ext-$name"] = array(
