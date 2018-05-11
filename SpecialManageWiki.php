@@ -235,7 +235,7 @@ class SpecialManageWiki extends SpecialPage {
 		if ( $params['category'] != $wiki->getCategory() ) {
 			$changedsettingsarray[] = 'category';
 		}
-		
+
 		if ( $params['extensions'] != $wiki->hasExtension() ) {
 			$changedsettingsarray[] = 'category';
 		}
