@@ -139,12 +139,24 @@ class SpecialManageWiki extends SpecialPage {
 
 		if ( $wgManageWikiExtensions ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				$formDescriptor["ext-$name"] = array(
-					'type' => 'check',
-					'label' => $ext['name'],
-					'default' => $wiki->hasExtension( $name ),
-					'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-				);
+				if ( !$ext['conflicts'] ) {
+					$formDescriptor["ext-$name"] = array(
+						'type' => 'check',
+						'label' => $ext['name'],
+						'default' => $wiki->hasExtension( $name ),
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+						'help' => "Requires: {$ext['requires']}.",
+					);
+				} else {
+					$formDescriptor["ext-$name"] = array(
+						'type' => 'check',
+						'label' => $ext['name'],
+						'default' => $wiki->hasExtension ( $name ),
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+						'help' => "Requires: {$ext['requires']}. Conflicts: {$ext['conflicts']}.",
+						'validation-callback' => $this->checkExtensionConflicts( $name, $conflicts ),
+					);
+				}
 			}
 		}
 
@@ -265,6 +277,14 @@ class SpecialManageWiki extends SpecialPage {
 		$farmerLogEntry->publish( $farmerLogID );
 
 		$this->getOutput()->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
+
+		return true;
+	}
+
+	static function checkExtensionConflicts( $extension, $conflicts ) {
+		if ( $params["ext-$conflicts"] ) {
+			return "Conflict with $conflicts. The $extension can not be enabled until $conflicts has been disabled.";
+		}
 
 		return true;
 	}
