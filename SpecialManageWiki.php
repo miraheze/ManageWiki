@@ -154,7 +154,7 @@ class SpecialManageWiki extends SpecialPage {
 						'default' => $wiki->hasExtension ( $name ),
 						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
 						'help' => "Requires: {$ext['requires']}. Conflicts: {$ext['conflicts']}.",
-						'validation-callback' => 'SpecialManageWiki::checkExtensionConflicts()',
+						'validation-callback' => 'SpecialManageWiki::checkExtensionConflicts',
 					);
 				}
 			}
