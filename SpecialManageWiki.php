@@ -188,7 +188,7 @@ class SpecialManageWiki extends SpecialPage {
 		$changedsettingsarray = [];
 		$extensionsarray = [];
 		foreach ( $wgManageWikiExtensions as $name => $ext ) {
-			if ($ext['conflicts']) {
+			if ( $ext['conflicts'] && $params["ext-$name"] ) {
 				if ( $params["ext-" . $name] === $params["ext-" . $ext['conflicts']] ) {
 					return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
 				}
