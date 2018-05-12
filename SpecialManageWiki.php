@@ -285,6 +285,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	static function checkExtensionConflicts() {
+		global $wgManageWikiExtensions;
 		foreach ( $wgManageWikiExtensions as $name => $ext ) {
 			if ( $params["ext-" . $ext['conflicts'] . ""] ) {
 				return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
