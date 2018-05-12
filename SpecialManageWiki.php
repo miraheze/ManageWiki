@@ -154,7 +154,7 @@ class SpecialManageWiki extends SpecialPage {
 						'default' => $wiki->hasExtension ( $name ),
 						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
 						'help' => "Requires: {$ext['requires']}. Conflicts: {$ext['conflicts']}.",
-						'validation-callback' => $this->checkExtensionConflicts( $name, $conflicts ),
+						'validation-callback' => 'SpecialManageWiki::checkExtensionConflicts()',
 					);
 				}
 			}
@@ -284,9 +284,11 @@ class SpecialManageWiki extends SpecialPage {
 		return true;
 	}
 
-	static function checkExtensionConflicts( $extension, $conflicts ) {
-		if ( $params["ext-$conflicts"] ) {
-			return "Conflict with $conflicts. The $extension can not be enabled until $conflicts has been disabled.";
+	static function checkExtensionConflicts() {
+		foreach ( $wgManageWikiExtensions as $name => $ext ) {
+			if ( $params["ext-" . $ext['conflicts'] . ""] ) {
+				return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
+			}
 		}
 
 		return true;
