@@ -4,6 +4,7 @@
 			"Aftabuzzaman"
 		]
 	},
+	"logentry-farmer-managewiki": "$1 \"$4\"-এর জন্য সেটিংগুলি ($5) পরিবর্তন করেছেন",
 	"managewiki-label-category": "বিষয়শ্রেণী",
 	"managewiki-label-closed": "বন্ধ",
 	"managewiki-label-language": "ভাষা",

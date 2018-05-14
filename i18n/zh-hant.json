@@ -2,15 +2,16 @@
 	"@metadata": {
 		"authors": [
 			"Liuxinyu970226",
-			"Kly"
+			"Kly",
+			"LNDDYL"
 		]
 	},
 	"action-managewiki": "管理 wiki 設定",
-	"logentry-farmer-managewiki": "$1 變更了「$4」的設定",
+	"logentry-farmer-managewiki": "$1 變更了「$4」的設定（$5）",
 	"managewiki": "管理 wiki",
 	"managewiki-desc": "允許人們透過 web 介面來管理 wiki",
 	"managewiki-disabled": "此功能尚未在此 wiki 啟用。",
-	"managewiki-header": "此頁面用來管理「$1」的 wiki 設定。請注意您可能無法更改所有此 wiki 上的 wiki 設定，在此情況您應該聯絡系統管理員。ManageWiki 目前仍為開發階段，因此新功能會在往後期間才可用。",
+	"managewiki-header": "此頁面用來管理<b>「$1」</b>的 wiki 設定。請注意您可能無法更改所有此 wiki 上的 wiki 設定，在此情況您應該聯絡系統管理員。ManageWiki 目前仍為開發階段，因此新功能會在往後期間才可用。若有您想使用的功能尚未可用，請使用 <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> 來做出申請。在此為目前所安裝好的擴充，但您可以在<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features/zh-tw 申請功能]</span>裡來添加其它項目。",
 	"managewiki-label-category": "分類",
 	"managewiki-label-closed": "已關閉",
 	"managewiki-label-dbname": "資料庫名稱",
@@ -20,5 +21,5 @@
 	"managewiki-label-reason": "原因",
 	"managewiki-label-sitename": "網站名稱",
 	"managewiki-missing": "該 wiki 不存在",
-	"managewiki-success": "設定已成功更改。"
+	"managewiki-success": "設定已成功變更。"
 }

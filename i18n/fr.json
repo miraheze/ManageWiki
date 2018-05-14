@@ -10,7 +10,7 @@
 		]
 	},
 	"action-managewiki": "Régler les paramètres du wiki",
-	"logentry-farmer-managewiki": "$1 a changé les paramètres pour \"$4\"",
+	"logentry-farmer-managewiki": "$1 a changé les paramètres ($5) pour \"$4\"",
 	"managewiki": "Paramétrer un wiki",
 	"managewiki-desc": "Permet aux utilisateurs de paramétrer un wiki dans une interface web",
 	"managewiki-disabled": "Cette fonctionalité n'est pas encore activée sur ce wiki.",

@@ -4,6 +4,7 @@
 			"WikiPhoenix"
 		]
 	},
+	"logentry-farmer-managewiki": "$1 ändrade inställningarna ($5) för \"$4\"",
 	"managewiki-desc": "Låter personer hantera wikis med ett webbgränssnitt",
 	"managewiki-disabled": "Denna funktion har ännu inte aktiverats på denna wiki.",
 	"managewiki-label-category": "Kategori",
