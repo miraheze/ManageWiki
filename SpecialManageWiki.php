@@ -236,10 +236,12 @@ class SpecialManageWiki extends SpecialPage {
 		$settingsarray = [];
 
 		foreach( $wgManageWikiSettings as $var => $det ) {
-			$settingsarray[$var] = $params["set-$var"];
+			if ( $det['type'] != 'text' || $params["set-$var"] ) {
+				$settingsarray[$var] = $params["set-$var"];
 
-			if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
-				$changedsettingsarray[] = "setting-" . $var;
+				if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
+					$changedsettingsarray[] = "setting-" . $var;
+				}
 			}
 		}
 
