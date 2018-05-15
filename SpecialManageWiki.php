@@ -63,7 +63,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
-		global $wgCreateWikiCategories, $wgManageWikiExtensions, $wgUser;
+		global $wgCreateWikiCategories, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings;
 
 		$out = $this->getOutput();
 
@@ -159,6 +159,18 @@ class SpecialManageWiki extends SpecialPage {
 			}
 		}
 
+		if ( $wgManageWikiSettings ) {
+			foreach ( $wgManageWikiSettings as $var => $det ) {
+				if ( $det['requires'] && $wiki->hasExtension( $det['requires'] ) || !$det['requires'] ) {
+					$formDescriptor["set-$var"] = array(
+						'type' => $det['type'],
+						'label' => $det['name'],
+						'default' => $wiki->getSettingsValue( $var ),
+					);
+				}
+			}
+		}
+
 		$formDescriptor['reason'] = array(
 				'type' => 'text',
 				'label-message' => 'managewiki-label-reason',
@@ -175,7 +187,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function onSubmitInput( array $params ) {
-		global $wgDBname, $wgManageWikiMainDatabase, $wgManageWikiExtensions, $wgUser;
+		global $wgDBname, $wgManageWikiMainDatabase, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings;
 
 		$dbName = $wgDBname;
 
@@ -221,6 +233,18 @@ class SpecialManageWiki extends SpecialPage {
 
 		$extensions = implode( ",", $extensionsarray );
 
+		$settingsarray = [];
+
+		foreach( $wgManageWikiSettings as $var => $det ) {
+			$settingsarray[$var] = $params["set-$var"];
+
+			if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
+				$changedsettings[] = "setting-" . $var;
+			}
+		}
+
+		$settingsjson = json_encode( $settingsarray );
+
 		$values = array(
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
@@ -229,6 +253,7 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
 			'wiki_category' => $params['category'],
 			'wiki_extensions' => $extensions,
+			'wiki_settings' => $settingsjson,
 		);
 
 		if ( $params['sitename'] != $wiki->getSitename() ) {
