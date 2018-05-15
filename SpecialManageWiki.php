@@ -239,7 +239,7 @@ class SpecialManageWiki extends SpecialPage {
 			$settingsarray[$var] = $params["set-$var"];
 
 			if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
-				$changedsettings[] = "setting-" . $var;
+				$changedsettingsarray[] = "setting-" . $var;
 			}
 		}
 
