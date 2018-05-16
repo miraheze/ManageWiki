@@ -15,7 +15,7 @@ class ManageWikiPopulateSettings extends Maintenance {
 		$settingsource = file( $this->getOption( 'sourcelist' ) );
 
 		foreach ( $settingsource as $input ) {
-			$wikiDB = explode( '|' $line, 2 );
+			$wikiDB = explode( '|', $line, 2 );
 			list( $DBname, $settingvalue ) = array_pad( $wikiDB, 2, '' );
 
 			$remoteWiki = RemoteWiki::newFromName( $DBname );
@@ -36,7 +36,7 @@ class ManageWikiPopulateSettings extends Maintenance {
 				__METHOD__
 			);
 
-			unset( $
+			unset( $remotewiki );
 		}
 	}
 }
