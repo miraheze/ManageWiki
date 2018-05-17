@@ -6,6 +6,7 @@
 			"Eindt"
 		]
 	},
+	"logentry-farmer-managewiki": "$1 ha modificato le impostazioni ($5) per \"$4\"",
 	"managewiki-disabled": "Questa funzione non è ancora stata attivata su questo wiki.",
 	"managewiki-header": "Questa pagina è usata per gestire le impostazioni del wiki <b>$1</b>. Per favore osserva che potresti non essere in grado di modificare tutte le impostazioni di questo wiki, in quel caso dovresti contattare un amministratore di sistema. ManageWiki è ancora in via di sviluppo, quindi dovrebbero essere disponibili nuove funzionalità nel futuro. Se una funzionalità che ti piacerebbe usare non è ancora disponibile qui, per favore usa <span class=“plainlinks”> [https://meta.miraheze.org/wiki/Request_features Phabricator]</span> per richiederla. Le estensioni visualizzate qui sono le uniche attualmente istallate, ma tu puoi sempre <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features request]</span> aggiungerne un’altra.",
 	"managewiki-label-category": "Categoria",

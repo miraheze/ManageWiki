@@ -10,7 +10,7 @@
 	"managewiki": "Gerir uma wiki",
 	"managewiki-desc": "Permite que os utilizadores giram wikis através de uma interface web",
 	"managewiki-disabled": "Esta funcionalidade ainda não foi ativada nesta wiki.",
-	"managewiki-header": "Esta página é utilizada para gerir as configurações da wiki <b>'$1'</b>. Note, por favor, que é possível que não possa alterar todas as configurações desta wiki. Nesse caso, deve contactar um administrador de sistemas. O ManageWiki ainda está em desenvolvimento, por isso devem surgir novas funcionalidades no futuro. Se deseja usar uma funcionalidade que não está disponível aqui, por favor faça a solicitação no <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>.",
+	"managewiki-header": "Esta página é utilizada para gerir as configurações da wiki <b>'$1'</b>. Note, por favor, que é possível que não possa alterar todas as configurações desta wiki. Nesse caso, deve contactar um administrador de sistemas. O ManageWiki ainda está em desenvolvimento, por isso devem surgir novas funcionalidades no futuro. Se deseja usar uma funcionalidade que não está disponível aqui, por favor faça a solicitação no <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>. As extensões daqui são as que estão atualmente instaladas, mas também pode <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features solicitar]</span> para adicionar outras.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Fechada",
 	"managewiki-label-dbname": "Nome da base de dados",

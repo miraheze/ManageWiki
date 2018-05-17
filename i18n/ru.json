@@ -4,11 +4,12 @@
 			"EdwardGeneralov",
 			"Facenapalm",
 			"Happy13241",
-			"Ole Yves"
+			"Ole Yves",
+			"Okras"
 		]
 	},
 	"action-managewiki": "Управлять настройками вики",
-	"logentry-farmer-managewiki": "$1 изменил настройки для \"$4\"",
+	"logentry-farmer-managewiki": "$1 изменил настройки ($5) для «$4»",
 	"managewiki": "Управлять вики",
 	"managewiki-desc": "Позволяет людям управлять вики через веб-интерфейс",
 	"managewiki-disabled": "Эта функция не была включена в этой вики еще.",
