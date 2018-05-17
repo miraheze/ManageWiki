@@ -87,9 +87,6 @@ class SpecialManageWiki extends SpecialPage {
 			$options["$code - $name"] = $code;
 		}
 
-		$showExtensions = $this->getRequest()->getText( 'extensions' );
-		$showSettings = $this->getRequest()->getText( 'settings' );
-
 		$formDescriptor = array(
 			'dbname' => array(
 				'label-message' => 'managewiki-label-dbname',
@@ -140,7 +137,7 @@ class SpecialManageWiki extends SpecialPage {
 			),
 		);
 
-		if ( $wgManageWikiExtensions && $showExtensions ) {
+		if ( $wgManageWikiExtensions ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
 				if ( !$ext['conflicts'] ) {
 					$formDescriptor["ext-$name"] = array(
@@ -160,15 +157,9 @@ class SpecialManageWiki extends SpecialPage {
 					);
 				}
 			}
-
-			$formDescriptor['showextensions'] = array(
-				'type' => 'hidden',
-				'name' => 'extensions',
-				'default' => 'true',
-			);
 		}
 
-		if ( $wgManageWikiSettings && $showSettings ) {
+		if ( $wgManageWikiSettings ) {
 			foreach ( $wgManageWikiSettings as $var => $det ) {
 				if ( $det['requires'] && $wiki->hasExtension( $det['requires'] ) || !$det['requires'] ) {
 					$formDescriptor["set-$var"] = array(
@@ -178,12 +169,6 @@ class SpecialManageWiki extends SpecialPage {
 					);
 				}
 			}
-
-			$formDescriptor['showsettings'] = array(
-				'type' => 'hidden',
-				'name' => 'settings',
-				'default' => 'true',
-			);
 		}
 
 		$formDescriptor['reason'] = array(
@@ -196,32 +181,8 @@ class SpecialManageWiki extends SpecialPage {
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'changeForm' );
 		$htmlForm->setMethod( 'post' )
 			->setSubmitCallback( array( $this, 'onSubmitInput' ))
-			->setFormIdentifier( 'managewiki' )
 			->prepareForm()
 			->show();
-
-		if ( !$showExtensions ) {
-			$selectorForm['extensions'] = array(
-				'type' => 'check',
-				'label' => 'Show Extensions',
-			);
-		}
-
-		if ( !$showSettings ) {
-			$selectorForm['settings'] = array(
-				'type' => 'check',
-				'label' => 'Show Settings',
-			);
-		}
-
-		if ( $selectorForm ) {
-			$selectionBox = HTMLForm::factory( 'ooui', $selectorForm, $this->getContext() );
-			$selectionBox->setMethod( 'get' )
-				->setSubmitCallback( array( $this, 'dummyInput' ) )
-				->setFormIdentifier( 'optionsform' )
-				->prepareForm()
-				->show();
-		}
 
 	}
 
@@ -237,60 +198,54 @@ class SpecialManageWiki extends SpecialPage {
 		$wiki = RemoteWiki::newFromName( $params['dbname'] );
 
 		$changedsettingsarray = [];
-
-		if ( $params['showextensions'] ) {
-			$extensionsarray = [];
-			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				if ( $ext['conflicts'] && $params["ext-$name"] ) {
-					if ( $params["ext-" . $name] === $params["ext-" . $ext['conflicts']] ) {
-						return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
-					}
+		$extensionsarray = [];
+		foreach ( $wgManageWikiExtensions as $name => $ext ) {
+			if ( $ext['conflicts'] && $params["ext-$name"] ) {
+				if ( $params["ext-" . $name] === $params["ext-" . $ext['conflicts']] ) {
+					return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
 				}
-				if ( $params["ext-$name"] ) {
-					if ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
-						$extensionsarray[] = $name;
-					} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
-						if ( $wiki->hasExtension( $name ) ) {
-							$extensionsarray[] = $name;
-						} else {
-							throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
-						}
-					} else {
-						$extensionsarray[] = $name;
-					}
+			}
+			if ( $params["ext-$name"] ) {
+				if ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					$extensionsarray[] = $name;
 				} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
 					if ( $wiki->hasExtension( $name ) ) {
+						$extensionsarray[] = $name;
+					} else {
 						throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
 					}
+				} else {
+					$extensionsarray[] = $name;
 				}
-
-				if ( $params["ext-$name"] != $wiki->hasExtension( $name ) ) {
-					$changedsettingsarray[] = "ext-" . $name;
-				}
-			}
-
-			// HACK: dummy extension name
-			$extensionsarray[] = "zzzz";
-
-			$extensions = implode( ",", $extensionsarray );
-		}
-
-		if ( $params['showsettings'] ) {
-			$settingsarray = [];
-
-			foreach( $wgManageWikiSettings as $var => $det ) {
-				if ( $det['type'] != 'text' || $params["set-$var"] ) {
-					$settingsarray[$var] = $params["set-$var"];
-
-					if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
-						$changedsettingsarray[] = "setting-" . $var;
-					}
+			} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+				if ( $wiki->hasExtension( $name ) ) {
+					throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
 				}
 			}
 
-			$settingsjson = json_encode( $settingsarray );
-
+			if ( $params["ext-$name"] != $wiki->hasExtension( $name ) ) {
+				$changedsettingsarray[] = "ext-" . $name;
+			}
 		}
+
+		// HACK: dummy extension name
+		$extensionsarray[] = "zzzz";
+
+		$extensions = implode( ",", $extensionsarray );
+
+		$settingsarray = [];
+
+		foreach( $wgManageWikiSettings as $var => $det ) {
+			if ( $det['type'] != 'text' || $params["set-$var"] ) {
+				$settingsarray[$var] = $params["set-$var"];
+
+				if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
+					$changedsettingsarray[] = "setting-" . $var;
+				}
+			}
+		}
+
+		$settingsjson = json_encode( $settingsarray );
 
 		$values = array(
 			'wiki_sitename' => $params['sitename'],
@@ -299,15 +254,9 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_inactive' => ( $params['inactive'] == true ) ? 1 : 0,
 			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
 			'wiki_category' => $params['category'],
+			'wiki_extensions' => $extensions,
+			'wiki_settings' => $settingsjson,
 		);
-
-		if ( $params['showextensions'] ) {
-			$values['wiki_extensions'] = $extensions;
-		}
-
-		if ( $params['showsettings'] ) {
-			$values['wiki_settings'] = $settingsjson;
-		}
 
 		if ( $params['sitename'] != $wiki->getSitename() ) {
 			$changedsettingsarray[] = 'sitename';
@@ -364,10 +313,6 @@ class SpecialManageWiki extends SpecialPage {
 		$this->getOutput()->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
 
 		return true;
-	}
-
-	static function dummyInput( $formData ) {
-		return false;
 	}
 
 	protected function getGroupName() {
