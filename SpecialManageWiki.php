@@ -163,7 +163,7 @@ class SpecialManageWiki extends SpecialPage {
 
 			$formDescriptor['showextensions'] = array(
 				'type' => 'hidden',
-				'name' => 'hextensions',
+				'name' => 'extensions',
 				'default' => 'true',
 			);
 		}
@@ -181,7 +181,7 @@ class SpecialManageWiki extends SpecialPage {
 
 			$formDescriptor['showsettings'] = array(
 				'type' => 'hidden',
-				'name' => 'hsettings',
+				'name' => 'settings',
 				'default' => 'true',
 			);
 		}
@@ -204,7 +204,6 @@ class SpecialManageWiki extends SpecialPage {
 			$selectorForm['extensions'] = array(
 				'type' => 'check',
 				'label' => 'Show Extensions',
-				'name' => 'extensions',
 			);
 		}
 
@@ -212,7 +211,6 @@ class SpecialManageWiki extends SpecialPage {
 			$selectorForm['settings'] = array(
 				'type' => 'check',
 				'label' => 'Show Settings',
-				'name' => 'settings',
 			);
 		}
 
