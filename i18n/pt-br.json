@@ -5,11 +5,11 @@
 		]
 	},
 	"action-managewiki": "gerenciar as configurações do wiki",
-	"logentry-farmer-managewiki": "$1 alterou as configurações de \"$4\"",
+	"logentry-farmer-managewiki": "$1 alterou as configurações de ($5) para \"$4\"",
 	"managewiki": "Gerenciar uma wiki",
 	"managewiki-desc": "Permite que as pessoas gerenciem wikis através de uma interface da web",
 	"managewiki-disabled": "Esta funcionalidade ainda não foi ativada nesta wiki.",
-	"managewiki-header": "Esta página é usada para gerenciar as configurações da wiki '$1'. Observe que talvez você não consiga mudar todas as configurações do wiki desta wiki, nesse caso, você deve entrar em contato com um administrador do sistema. ManageWiki ainda está sendo desenvolvido, então novos recursos devem estar disponíveis no futuro.",
+	"managewiki-header": "Esta página é utilizada para gerenciar as configurações da wiki <b>'$1'</b>. Note, por favor, que é possível que não possa alterar todas as configurações desta wiki. Nesse caso, deve contactar um administrador de sistemas. O ManageWiki ainda está em desenvolvimento, por isso devem surgir novas funcionalidades no futuro. Se deseja usar uma funcionalidade que não está disponível aqui, por favor faça a solicitação no <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>. As extensões daqui são as que estão atualmente instaladas, mas também pode <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features solicitar]</span> para adicionar outras.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Fechado",
 	"managewiki-label-dbname": "Nome da base de dados",
