@@ -1,6 +1,6 @@
 <?php
 
-require_once "$IP/maintenance/Maintenance.php";
+require_once '../../../maintenance/Maintenance.php';
 
 class ManageWikiPopulateSettings extends Maintenance {
 	public function __construct() {
@@ -15,7 +15,7 @@ class ManageWikiPopulateSettings extends Maintenance {
 		$settingsource = file( $this->getOption( 'sourcelist' ) );
 
 		foreach ( $settingsource as $input ) {
-			$wikiDB = explode( '|', $line, 2 );
+			$wikiDB = explode( '|', $input, 2 );
 			list( $DBname, $settingvalue ) = array_pad( $wikiDB, 2, '' );
 
 			$remoteWiki = RemoteWiki::newFromName( $DBname );
