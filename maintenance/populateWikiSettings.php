@@ -1,6 +1,6 @@
 <?php
 
-require_once '../../../maintenance/Maintenance.php';
+require_once '/srv/mediawiki/w/maintenance/Maintenance.php';
 
 class ManageWikiPopulateSettings extends Maintenance {
 	public function __construct() {
@@ -20,7 +20,7 @@ class ManageWikiPopulateSettings extends Maintenance {
 
 			$remoteWiki = RemoteWiki::newFromName( $DBname );
 
-			$settingsarray = $remotewiki->getSettings();
+			$settingsarray = $remoteWiki->getSettings();
 
 			$settingsarray[$this->getOption('wgsetting')] = str_replace( "\n", '', $settingvalue );
 
@@ -36,7 +36,7 @@ class ManageWikiPopulateSettings extends Maintenance {
 				__METHOD__
 			);
 
-			unset( $remotewiki );
+			unset( $remoteWiki );
 		}
 	}
 }
