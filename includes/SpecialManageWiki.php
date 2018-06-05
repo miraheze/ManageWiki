@@ -5,11 +5,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgEnableManageWiki, $wgManageWikiMainDatabase, $wgManageWikiGlobalWiki, $wgDBname;
-
-		if ( !$wgManageWikiMainDatabase ) {
-			throw new MWException( '$wgManageWikiMainDatabase was not set!' );
-		}
+		global $wgEnableManageWiki, $wgCreateWikiDatabase, $wgDBname;
 
 		$out = $this->getOutput();
 		$this->setHeaders();
@@ -21,7 +17,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$this->checkPermissions();
 
-		if ( $wgManageWikiGlobalWiki !== $wgDBname ) {
+		if ( $wgCreateWikiDatabase !== $wgDBname ) {
 			$this->showWikiForm( $wgDBname );
 		} elseif ( !is_null( $par ) && $par !== '' ) {
 			$this->showWikiForm( $par );
@@ -63,7 +59,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
-		global $wgCreateWikiCategories, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings;
+		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
 
 		$out = $this->getOutput();
 
@@ -111,31 +107,43 @@ class SpecialManageWiki extends SpecialPage {
 				'options' => $options,
 				'name' => 'mwLanguage',
 			),
-			'closed' => array(
-				'type' => 'check',
-				'label-message' => 'managewiki-label-closed',
-				'name' => 'cwClosed',
-				'default' => $wiki->isClosed() ? 1 : 0,
-			),
-			'inactive' => array(
-				'type' => 'check',
-				'label-message' => 'managewiki-label-inactive',
-				'name' => 'cwInactive',
-				'default' => $wiki->isInactive() ? 1 : 0,
-			),
-			'private' => array(
+		);
+
+		if ( $wgCreateWikiUsePrivateWikis ) {
+			$formDescriptor['private'] = array(
 				'type' => 'check',
 				'label-message' => 'managewiki-label-private',
 				'name' => 'cwPrivate',
 				'default' => $wiki->isPrivate() ? 1 : 0,
-			),
-			'category' => array(
+			);
+		}
+
+		if ( $wgCreateWikiUseClosedWikis ) {
+			$formDescriptor['closed'] = array(
+				'type' => 'check',
+				'label-message' => 'managewiki-label-closed',
+				'name' => 'cwClosed',
+				'default' => $wiki->isClosed() ? 1 : 0,
+			);
+		}
+
+		if ( $wgCreateWikiUseInactiveWikis ) {
+			$formDescriptor['inactive'] = array(
+				'type' => 'check',
+				'label-message' => 'managewiki-label-inactive',
+				'name' => 'cwInactive',
+				'default' => $wiki->isInactive() ? 1 : 0,
+			);
+		}
+
+		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
+			$formDescriptor['category'] = array(
 				'type' => 'select',
 				'label-message' => 'managewiki-label-category',
 				'options' => $wgCreateWikiCategories,
 				'default' => $wiki->getCategory(),
-			),
-		);
+			);
+		}
 
 		if ( $wgManageWikiExtensions ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
@@ -187,7 +195,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function onSubmitInput( array $params ) {
-		global $wgDBname, $wgManageWikiMainDatabase, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings;
+		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings;
 
 		$dbName = $wgDBname;
 
@@ -247,13 +255,37 @@ class SpecialManageWiki extends SpecialPage {
 
 		$settingsjson = json_encode( $settingsarray );
 
+		if ( $wgCreateWikiUsePrivateWikis ) {
+			$private = ( $params['private'] == true ) ? 1 : 0;
+		} else {
+			$private = 0;
+		}
+
+		if ( $wgCreateWikiUseClosedWikis ) {
+			$closed = ( $params['closed'] == true ) ? 1 : 0;
+		} else {
+			$closed = 0;
+		}
+
+		if ( $wgCreateWikiUseInactiveWikis ) {
+			$inactive = ( $params['inactive'] == true ) ? 1 : 0;
+		} else {
+			$inactive = 0;
+		}
+
+		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
+			$category = $params['category'];
+		} else {
+			$category = 'uncategorised';
+		}
+
 		$values = array(
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
-			'wiki_closed' => ( $params['closed'] == true ) ? 1 : 0,
-			'wiki_inactive' => ( $params['inactive'] == true ) ? 1 : 0,
-			'wiki_private' => ( $params['private'] == true ) ? 1 : 0,
-			'wiki_category' => $params['category'],
+			'wiki_closed' => $closed,
+			'wiki_inactive' => $inactive,
+			'wiki_private' => $private,
+			'wiki_category' => $category,
 			'wiki_extensions' => $extensions,
 			'wiki_settings' => $settingsjson,
 		);
@@ -266,26 +298,34 @@ class SpecialManageWiki extends SpecialPage {
 			$changedsettingsarray[] = 'language';
 		}
 
-		if ( $params['closed'] != $wiki->isClosed() ) {
-			$changedsettingsarray[] = 'closed';
+		if ( $wgCreateWikiUseClosedWikis ) {
+			if ( $params['closed'] != $wiki->isClosed() ) {
+				$changedsettingsarray[] = 'closed';
+			}
 		}
 
-		if ( $params['inactive'] != $wiki->isInactive() ) {
-			$changedsettingsarray[] = 'inactive';
+		if ( $wgCreateWikiUseInactiveWikis ) {
+			if ( $params['inactive'] != $wiki->isInactive() ) {
+				$changedsettingsarray[] = 'inactive';
+			}
 		}
 
-		if ( $params['private'] != $wiki->isPrivate() ) {
-			$changedsettingsarray[] = 'private';
+		if ( $wgCreateWikiUsePrivateWikis ) {
+			if ( $params['private'] != $wiki->isPrivate() ) {
+				$changedsettingsarray[] = 'private';
+			}
 		}
 
-		if ( $params['category'] != $wiki->getCategory() ) {
-			$changedsettingsarray[] = 'category';
+		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
+			if ( $params['category'] != $wiki->getCategory() ) {
+				$changedsettingsarray[] = 'category';
+			}
 		}
 
 		$changedsettings = implode( ", ", $changedsettingsarray );
 
-		$dbw = wfGetDB( DB_MASTER, array(), $wgManageWikiMainDatabase );
-		$dbw->selectDB( $wgManageWikiMainDatabase );
+		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
+		$dbw->selectDB( $wgCreateWikiDatabase );
 
 		$dbw->update( 'cw_wikis',
 			$values,

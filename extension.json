@@ -25,14 +25,15 @@
 		]
 	},
 	"AutoloadClasses": {
-		"ManageWikiHooks": "ManageWiki.hooks.php",
-		"SpecialManageWiki": "SpecialManageWiki.php"
+		"ManageWikiHooks": "includes/ManageWikiHooks.php",
+		"SpecialManageWiki": "includes/SpecialManageWiki.php"
 	},
 	"config": {
+		"@wgEnableManageWiki": "Boolean. Whether Special:ManageWiki should work on the wiki.",
 		"EnableManageWiki": true,
-		"ManageWikiGlobalWiki": "metawiki",
-		"ManageWikiMainDatabase": false,
+		"@wgManageWikiExtensions": "Array. An array of extensions enabled within the wiki farm.",
 		"ManageWikiExtensions": null,
+		"@wgManageWikiSettings": "Array. An array of settings that can be managed through Special:ManageWiki",
 		"ManageWikiSettings": null
 	},
 	"callback": "ManageWikiHooks::onRegistration",
