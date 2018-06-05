@@ -4,6 +4,11 @@
 	"url": "https://github.com/miraheze/ManageWiki",
 	"descriptionmsg": "managewiki-desc",
 	"type": "specialpage",
+	"requires": {
+		"extensions": {
+			"CreateWiki": "*"
+		}
+	},
 	"AvailableRights": [
 		"managewiki",
 		"managewiki-restricted"
