@@ -195,7 +195,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function onSubmitInput( array $params ) {
-		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings;
+		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
 
 		$dbName = $wgDBname;
 
