@@ -197,6 +197,7 @@ class SpecialManageWiki extends SpecialPage {
 	function onSubmitInput( array $params ) {
 		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
 
+		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
 
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
@@ -261,16 +262,20 @@ class SpecialManageWiki extends SpecialPage {
 			$private = 0;
 		}
 
-		if ( $wgCreateWikiUseClosedWikis ) {
-			$closed = ( $params['closed'] == true ) ? 1 : 0;
+		if ( $wgCreateWikiUseClosedWikis && $params['closed'] ) {
+			$closed = 1;
+			$closedate = $dbw->timestamp();
 		} else {
 			$closed = 0;
+			$closedate = null;
 		}
 
-		if ( $wgCreateWikiUseInactiveWikis ) {
-			$inactive = ( $params['inactive'] == true ) ? 1 : 0;
+		if ( $wgCreateWikiUseInactiveWikis && $params['inactive'] ) {
+			$inactive = 1;
+			$inactivedate = $dbw->timestamp();
 		} else {
 			$inactive = 0;
+			$inactivedate = null;
 		}
 
 		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
@@ -283,7 +288,9 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
 			'wiki_closed' => $closed,
+			'wiki_closed_timestamp' => $closedate,
 			'wiki_inactive' => $inactive,
+			'wiki_inactive_timestamp' => $inactivedate,
 			'wiki_private' => $private,
 			'wiki_category' => $category,
 			'wiki_extensions' => $extensions,
@@ -324,7 +331,6 @@ class SpecialManageWiki extends SpecialPage {
 
 		$changedsettings = implode( ", ", $changedsettingsarray );
 
-		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbw->selectDB( $wgCreateWikiDatabase );
 
 		$dbw->update( 'cw_wikis',
