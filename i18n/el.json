@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"Nikosgranturismogt"
+		]
+	},
+	"action-managewiki": "Διαχείριση ρυθμίσεων βίκι",
+	"managewiki": "Διαχείριση ενός βίκι",
+	"managewiki-label-category": "Κατηγορία",
+	"managewiki-label-closed": "Έκλεισε",
+	"managewiki-label-dbname": "Όνομα βάσης δεδομένων",
+	"managewiki-label-language": "Γλώσσα",
+	"managewiki-label-private": "Ιδιωτικό",
+	"managewiki-label-inactive": "Ανενεργό",
+	"managewiki-label-reason": "Αιτιολογία",
+	"managewiki-label-sitename": "Όνομα ιστοχώρου",
+	"managewiki-missing": "Αυτό το βίκι δεν υπάρχει.",
+	"managewiki-success": "Αυτές οι ρυθμίσεις έχουν αλλαχθεί επιτυχώς."
+}

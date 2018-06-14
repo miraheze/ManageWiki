@@ -6,7 +6,7 @@
 		]
 	},
 	"action-managewiki": "zarządzaj ustawieniami wiki",
-	"logentry-farmer-managewiki": "$1 zmienił ustawienia dla „$4”",
+	"logentry-farmer-managewiki": "$1 zmienił ustawienia ($5) dla „$4”",
 	"managewiki": "Zarządzaj wiki",
 	"managewiki-desc": "Pozwala zarządzać stronami wiki za pomocą interfejsu internetowego",
 	"managewiki-disabled": "Ta funkcja nie została jeszcze włączona na tej wiki.",
