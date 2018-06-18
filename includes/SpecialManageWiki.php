@@ -170,8 +170,34 @@ class SpecialManageWiki extends SpecialPage {
 		if ( $wgManageWikiSettings ) {
 			foreach ( $wgManageWikiSettings as $var => $det ) {
 				if ( $det['requires'] && $wiki->hasExtension( $det['requires'] ) || !$det['requires'] ) {
+					switch ( $det['type'] ) {
+						case 'text':
+						case 'check':
+							$mwtype = $det['type'];
+							break;
+						case 'list':
+							$mwtype = 'select';
+							$mwoptions = $det['options'];
+							break;
+						case 'list-multi':
+							$mwtype = 'multiselect';
+							$mwoptions = $det['options'];
+							break;
+						case 'matrix':
+							$mwtype = 'checkmatrix';
+							$mwcols = $det['cols'];
+							$mwrows = $det['rows'];
+							break;
+						case 'url':
+							$mwtype = 'url';
+							break;
+						case 'wikipage':
+							$mwtype = 'title';
+							break;
+					}
+
 					$formDescriptor["set-$var"] = array(
-						'type' => $det['type'],
+						'type' => $mwtype,
 						'label' => $det['name'],
 						'default' => $wiki->getSettingsValue( $var ),
 					);
