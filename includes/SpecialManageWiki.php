@@ -171,8 +171,9 @@ class SpecialManageWiki extends SpecialPage {
 			foreach ( $wgManageWikiSettings as $var => $det ) {
 				if ( $det['requires'] && $wiki->hasExtension( $det['requires'] ) || !$det['requires'] ) {
 					switch ( $det['type'] ) {
-						case 'text':
 						case 'check':
+						case 'text':
+						case 'url':
 							$mwtype = $det['type'];
 							break;
 						case 'list':
@@ -188,9 +189,6 @@ class SpecialManageWiki extends SpecialPage {
 							$mwcols = $det['cols'];
 							$mwrows = $det['rows'];
 							break;
-						case 'url':
-							$mwtype = 'url';
-							break;
 						case 'wikipage':
 							$mwtype = 'title';
 							break;
@@ -201,6 +199,10 @@ class SpecialManageWiki extends SpecialPage {
 						'label' => $det['name'],
 						'default' => $wiki->getSettingsValue( $var ),
 					);
+
+					if ( $mwoptions ) {
+						$formDescriptor["set-$var"]['options'] = $mwoptions;
+					}
 				}
 			}
 		}
