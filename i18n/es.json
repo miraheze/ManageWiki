@@ -3,7 +3,8 @@
 		"authors": [
 			"AlvaroMolina",
 			"The-Voidwalker",
-			"Fitoschido"
+			"Fitoschido",
+			"RisingVoices"
 		]
 	},
 	"action-managewiki": "gestionar configuración del wiki",
@@ -17,6 +18,7 @@
 	"managewiki-label-dbname": "Nombre de base de datos",
 	"managewiki-label-language": "Idioma",
 	"managewiki-label-private": "Privado",
+	"managewiki-label-inactive": "Inactivo",
 	"managewiki-label-reason": "Motivo",
 	"managewiki-label-sitename": "Nombre del sitio",
 	"managewiki-missing": "Ese wiki no existe.",
