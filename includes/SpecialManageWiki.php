@@ -169,6 +169,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		if ( $wgManageWikiSettings ) {
 			foreach ( $wgManageWikiSettings as $var => $det ) {
+
 				if ( $det['requires'] && $wiki->hasExtension( $det['requires'] ) || !$det['requires'] ) {
 					switch ( $det['type'] ) {
 						case 'check':
@@ -200,7 +201,7 @@ class SpecialManageWiki extends SpecialPage {
 						'default' => ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'],
 					);
 
-					if ( $mwoptions ) {
+					if ( isset( $mwoptions ) && $mwoptions ) {
 						$formDescriptor["set-$var"]['options'] = $mwoptions;
 					}
 				}
