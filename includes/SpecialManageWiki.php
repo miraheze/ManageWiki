@@ -201,7 +201,7 @@ class SpecialManageWiki extends SpecialPage {
 						'default' => ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'],
 					);
 
-					if ( isset( $mwoptions ) && $mwoptions ) {
+					if ( isset( $mwoptions ) ) {
 						$formDescriptor["set-$var"]['options'] = $mwoptions;
 					}
 				}
