@@ -159,7 +159,7 @@ class SpecialManageWiki extends SpecialPage {
 					} else {
 						$formDescriptor["ext-$name"] = array(
 							'type' => 'check',
-							'label-message' => ['manageWiki-skin-name', $ext['name']],
+							'label-message' => ['managewiki-skin-name', $ext['name']],
 							'default' => $wiki->hasExtension( $name ),
 							'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
 							'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
