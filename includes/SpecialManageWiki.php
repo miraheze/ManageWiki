@@ -147,27 +147,23 @@ class SpecialManageWiki extends SpecialPage {
 
 		if ( $wgManageWikiExtensions ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				$helptip = [];
-
-				if ( $ext['conflicts'] ) {
-					$helptip[] = "Conflicts: {$ext['conflicts']}.";
+				if ( !$ext['conflicts'] ) {
+					$formDescriptor["ext-$name"] = array(
+						'type' => 'check',
+						'label' => $ext['name'],
+						'default' => $wiki->hasExtension( $name ),
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
+					);
+				} else {
+					$formDescriptor["ext-$name"] = array(
+						'type' => 'check',
+						'label' => $ext['name'],
+						'default' => $wiki->hasExtension ( $name ),
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
+					);
 				}
-
-				if ( $ext['requires'] ) {
-					$helptip[] = "Requires: {$ext['requires']}.";
-				}
-
-				if ( $ext['url'] ) {
-					$helptip[] = "URL: {$ext['url']}";
-				}
-
-				$formDescriptor["ext-$name"] = array(
-					'type' => 'check',
-					'label' => $ext['name'],
-					'default' => $wiki->hasExtension ( $name ),
-					'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-					'help' => ( $helptip ) ? implode( " ", $helptip ) : false,
-				);
 			}
 		}
 
