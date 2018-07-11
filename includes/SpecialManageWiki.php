@@ -148,7 +148,7 @@ class SpecialManageWiki extends SpecialPage {
 		if ( $wgManageWikiExtensions ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
 				if ( !$ext['conflicts'] ) {
-					if ( !$ext['skin'] ) {
+					if ( isset( $ext['skin'] ) && !$ext['skin'] ) {
 						$formDescriptor["ext-$name"] = array(
 							'type' => 'check',
 							'label-message' => ['managewiki-extension-name', $ext['name']],
@@ -166,7 +166,7 @@ class SpecialManageWiki extends SpecialPage {
 						);
 					}
 				} else {
-					if ( !$ext['skin'] ) {
+					if ( isset( $ext['skin'] ) && !$ext['skin'] ) {
 						$formDescriptor["ext-$name"] = array(
 							'type' => 'check',
 							'label-message' => ['managewiki-extension-name', $ext['name']],
