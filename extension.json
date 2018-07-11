@@ -1,6 +1,6 @@
 {
 	"name": "ManageWiki",
-	"author": [ "Southparkfan", "John Lewis" ],
+	"author": [ "Southparkfan", "John Lewis", "MacFan4000" ],
 	"url": "https://github.com/miraheze/ManageWiki",
 	"descriptionmsg": "managewiki-desc",
 	"type": "specialpage",

@@ -148,21 +148,41 @@ class SpecialManageWiki extends SpecialPage {
 		if ( $wgManageWikiExtensions ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
 				if ( !$ext['conflicts'] ) {
-					$formDescriptor["ext-$name"] = array(
-						'type' => 'check',
-						'label' => $ext['name'],
-						'default' => $wiki->hasExtension( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
-					);
+					if ( !$ext['skin'] ) {
+						$formDescriptor["ext-$name"] = array(
+							'type' => 'check',
+							'label-message' => ['ManageWiki-extension-name', $ext['name']],
+							'default' => $wiki->hasExtension( $name ),
+							'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+							'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
+						);
+					} else {
+						$formDescriptor["ext-$name"] = array(
+							'type' => 'check',
+							'label-message' => ['ManageWiki-skin-name', $ext['name']],
+							'default' => $wiki->hasExtension( $name ),
+							'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+							'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
+						);
+					}
 				} else {
-					$formDescriptor["ext-$name"] = array(
-						'type' => 'check',
-						'label' => $ext['name'],
-						'default' => $wiki->hasExtension ( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
-					);
+					if ( !$ext['skin'] ) {
+						$formDescriptor["ext-$name"] = array(
+							'type' => 'check',
+							'label-message' => ['ManageWiki-extension-name', $ext['name']],
+							'default' => $wiki->hasExtension ( $name ),
+							'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+							'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
+						);
+					} else {
+						$formDescriptor["ext-$name"] = array(
+							'type' => 'check',
+							'label-message' => ['ManageWiki-skin-name', $ext['name']],
+							'default' => $wiki->hasExtension ( $name ),
+							'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+							'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
+						);
+					}
 				}
 			}
 		}
