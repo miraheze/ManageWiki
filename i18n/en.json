@@ -22,6 +22,6 @@
 	"managewiki-label-sitename": "Sitename",
 	"managewiki-missing": "That wiki does not exist.",
 	"managewiki-success": "The settings have been successfully changed.",
-	"ManageWiki-extension-name": "[[mw:Extension:$1|$1]]",
-	"ManageWiki-skin-name": "[[mw:Skin:$1|$1 (skin)]]"
+	"managewiki-extension-name": "[[mw:Extension:$1|$1]]",
+	"managewiki-skin-name": "[[mw:Skin:$1|$1 (skin)]]"
 }
