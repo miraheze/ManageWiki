@@ -3,6 +3,7 @@
 		"authors": [
 			"Southparkfan",
 			"The-Voidwalker"
+			"MacFan4000"
 		]
 	},
 	"action-managewiki": "manage wiki settings",
@@ -20,5 +21,7 @@
 	"managewiki-label-reason": "Reason",
 	"managewiki-label-sitename": "Sitename",
 	"managewiki-missing": "That wiki does not exist.",
-	"managewiki-success": "The settings have been successfully changed."
+	"managewiki-success": "The settings have been successfully changed.",
+	"ManageWiki-extension-name": "[[mw:Extension:$1|$1]]",
+	"ManageWiki-skin-name": "[[mw:Skin:$1|$1 (skin)]]"
 }
