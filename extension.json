@@ -14,8 +14,7 @@
 		"managewiki-restricted"
 	],
 	"SpecialPages": {
-		"ManageWiki": "SpecialManageWiki",
-		"ManageWikiExtensions": "SpecialManageWikiExtensions"
+		"ManageWiki": "SpecialManageWiki"
 	},
 	"LogActionsHandlers": {
 		"farmer/managewiki": "LogFormatter"
@@ -27,8 +26,7 @@
 	},
 	"AutoloadClasses": {
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
-		"SpecialManageWiki": "includes/SpecialManageWiki.php",
-		"SpecialManageWikiExtensions": "includes/SpecialManageWikiExtensions.php"
+		"SpecialManageWiki": "includes/SpecialManageWiki.php"
 	},
 	"config": {
 		"@wgEnableManageWiki": "Boolean. Whether Special:ManageWiki should work on the wiki.",

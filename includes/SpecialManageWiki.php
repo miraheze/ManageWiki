@@ -59,7 +59,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
-		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
+		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
 
 		$out = $this->getOutput();
 
@@ -145,6 +145,28 @@ class SpecialManageWiki extends SpecialPage {
 			);
 		}
 
+		if ( $wgManageWikiExtensions ) {
+			foreach ( $wgManageWikiExtensions as $name => $ext ) {
+				if ( !$ext['conflicts'] ) {
+					$formDescriptor["ext-$name"] = array(
+						'type' => 'check',
+						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
+						'default' => $wiki->hasExtension( $name ),
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
+					);
+				} else {
+					$formDescriptor["ext-$name"] = array(
+						'type' => 'check',
+						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
+						'default' => $wiki->hasExtension ( $name ),
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
+					);
+				}
+			}
+		}
+
 		if ( $wgManageWikiSettings ) {
 			foreach ( $wgManageWikiSettings as $var => $det ) {
 
@@ -203,7 +225,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function onSubmitInput( array $params ) {
-		global $wgDBname, $wgCreateWikiDatabase, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
+		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
 
 		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
@@ -215,6 +237,40 @@ class SpecialManageWiki extends SpecialPage {
 		$wiki = RemoteWiki::newFromName( $params['dbname'] );
 
 		$changedsettingsarray = [];
+		$extensionsarray = [];
+		foreach ( $wgManageWikiExtensions as $name => $ext ) {
+			if ( $ext['conflicts'] && $params["ext-$name"] ) {
+				if ( $params["ext-" . $name] === $params["ext-" . $ext['conflicts']] ) {
+					return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
+				}
+			}
+			if ( $params["ext-$name"] ) {
+				if ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					$extensionsarray[] = $name;
+				} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					if ( $wiki->hasExtension( $name ) ) {
+						$extensionsarray[] = $name;
+					} else {
+						throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+					}
+				} else {
+					$extensionsarray[] = $name;
+				}
+			} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+				if ( $wiki->hasExtension( $name ) ) {
+					throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+				}
+			}
+
+			if ( $params["ext-$name"] != $wiki->hasExtension( $name ) ) {
+				$changedsettingsarray[] = "ext-" . $name;
+			}
+		}
+
+		// HACK: dummy extension name
+		$extensionsarray[] = "zzzz";
+
+		$extensions = implode( ",", $extensionsarray );
 
 		$settingsarray = [];
 
