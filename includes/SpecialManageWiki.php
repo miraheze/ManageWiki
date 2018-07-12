@@ -199,6 +199,7 @@ class SpecialManageWiki extends SpecialPage {
 						'type' => $mwtype,
 						'label' => $det['name'],
 						'default' => ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'],
+						'help' => ( $det['help'] ) ? $det['help'] : null,
 					);
 
 					if ( isset( $mwoptions ) ) {
