@@ -50,7 +50,7 @@ class SpecialManageWikiExtensions extends SpecialPage {
 		global $wgRequest;
 
 		if ( $params['dbname'] !== '' ) {
-			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki' )->getFullUrl() . '/' . $params['dbname'] );
+			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWikiExtensions' )->getFullUrl() . '/' . $params['dbname'] );
 		} else {
 			return 'Invalid url.';
 		}
@@ -59,7 +59,7 @@ class SpecialManageWikiExtensions extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
-		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgManageWikiExtensions, $wgUser, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
+		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgUser;
 
 		$out = $this->getOutput();
 
@@ -125,13 +125,13 @@ class SpecialManageWikiExtensions extends SpecialPage {
 	}
 
 	function onSubmitInput( array $params ) {
-		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgUser, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
+		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgUser;
 
 		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
 
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
-			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
+			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki extensions!" );
 		}
 
 		$wiki = RemoteWiki::newFromName( $params['dbname'] );
@@ -158,7 +158,7 @@ class SpecialManageWikiExtensions extends SpecialPage {
 				}
 			} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
 				if ( $wiki->hasExtension( $name ) ) {
-					throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+					throw new MWException( "User without managewiki-restricted tried to change a restricted extension setting ($name)" );
 				}
 			}
 
