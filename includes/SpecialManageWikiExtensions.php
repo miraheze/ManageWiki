@@ -1,7 +1,7 @@
 <?php
 class SpecialManageWikiExtensions extends SpecialPage {
 	function __construct() {
-		parent::__construct( 'ManageWikiExtensions', 'managewiki-extensions' );
+		parent::__construct( 'ManageWikiExtensions', 'managewiki' );
 	}
 
 	function execute( $par ) {
