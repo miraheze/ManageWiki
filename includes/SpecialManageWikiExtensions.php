@@ -5,13 +5,18 @@ class SpecialManageWikiExtensions extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgEnableManageWiki, $wgCreateWikiDatabase, $wgDBname;
+		global $wgEnableManageWiki, $wgManageWikiExtensions, $wgCreateWikiDatabase, $wgDBname;
 
 		$out = $this->getOutput();
 		$this->setHeaders();
 
 		if ( !$wgEnableManageWiki ) {
 			$out->addWikiMsg( 'managewiki-disabled' );
+			return false;
+		}
+
+		if ( !$wgManageWikiExtensions ) {
+			$out->addWikiMsg( 'managewiki-extensions-disabled' );
 			return false;
 		}
 
@@ -62,11 +67,6 @@ class SpecialManageWikiExtensions extends SpecialPage {
 		global $wgManageWikiExtensions, $wgUser;
 
 		$out = $this->getOutput();
-
-		if ( !$wgManageWikiExtensions ) {
-			$out->addWikiMsg( 'managewiki-extensions-disabled' );
-			return false;
-		}
 
 		$dbName = $wiki;
 
