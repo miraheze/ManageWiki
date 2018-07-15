@@ -1,6 +1,6 @@
 {
 	"name": "ManageWiki",
-	"author": [ "Southparkfan", "John Lewis", "MacFan4000" ],
+	"author": [ "Southparkfan", "John Lewis", "MacFan4000", "Reception123" ],
 	"url": "https://github.com/miraheze/ManageWiki",
 	"descriptionmsg": "managewiki-desc",
 	"type": "specialpage",
@@ -14,7 +14,8 @@
 		"managewiki-restricted"
 	],
 	"SpecialPages": {
-		"ManageWiki": "SpecialManageWiki"
+		"ManageWiki": "SpecialManageWiki",
+		"ManageWikiExtensions": "SpecialManageWikiExtensions"
 	},
 	"LogActionsHandlers": {
 		"farmer/managewiki": "LogFormatter"
@@ -26,7 +27,8 @@
 	},
 	"AutoloadClasses": {
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
-		"SpecialManageWiki": "includes/SpecialManageWiki.php"
+		"SpecialManageWiki": "includes/SpecialManageWiki.php",
+		"SpecialManageWikiExtensions": "includes/SpecialManageWikiExtensions.php"
 	},
 	"config": {
 		"@wgEnableManageWiki": "Boolean. Whether Special:ManageWiki should work on the wiki.",
