@@ -14,6 +14,7 @@
 	"managewiki-desc": "Allows people to manage wikis through a web interface",
 	"managewiki-disabled": "This feature has not been enabled on this wiki yet.",
 	"managewiki-header": "This page is used to manage the wiki settings of wiki <b>'$1'</b>. ManageWiki is still being developed, so new features should be available in the future. If a feature you would like is not available here yet, please use <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> to request it.<br>To manage the extensions for this wiki please see <b>[[Special:ManageWikiExtensions|this page]]</b> instead.",
+	"managewiki-extensions-disabled": "No extensions have been defined for this wiki",
 	"managewiki-extensions-header": "The extensions here are the ones that are currently installed, but you can always <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features request]</span> another one to be added. <br>To manage the settings for this wiki please see <b>[[Special:ManageWiki|this page]]</b>.",
 	"managewiki-label-category": "Category",
 	"managewiki-label-closed": "Closed",
