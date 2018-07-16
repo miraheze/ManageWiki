@@ -24,5 +24,6 @@
 	"managewiki-label-reason": "Raison",
 	"managewiki-label-sitename": "Nom du site",
 	"managewiki-missing": "Ce wiki n'existe pas.",
-	"managewiki-success": "Les paramètres ont été changés."
+	"managewiki-success": "Les paramètres ont été changés.",
+	"managewiki-extension-name": "[[mw:Extension:$1|$1]]"
 }

@@ -8,8 +8,10 @@
 	"action-managewiki": "die Wikieinstellungen zu verwalten",
 	"logentry-farmer-managewiki": "$1 änderte die Einstellungen ($5) für „$4“",
 	"managewiki": "Ein Wiki verwalten",
+	"managewikiextensions": "Ein Wiki verwalten (Erweiterungen)",
 	"managewiki-desc": "Erlaubt es Personen, Wikis mithilfe einer Weboberfläche zu verwalten.",
 	"managewiki-disabled": "Diese Funktion wurde noch nicht auf diesem Wiki aktiviert.",
+	"managewiki-extensions-header": "Diese Erweiterungen sind derzeit installiert, du kannst jedoch immer weitere zur Ergänzung <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features anfordern]</span>. <br>Um die Einstellungen für dieses Wiki zu verwalten, siehe bitte <b>[[Special:ManageWiki|diese Seite]]</b>.",
 	"managewiki-header": "Diese Seite wird benutzt, um Einstellungen zum Wiki <b>„$1“</b> zu ändern. Manche Einstellungen sind beschränkt. In diesem Fall solltest du einen Wiki-Administrator von Miraheze kontaktieren. ManageWiki wird noch weiterentwickelt, so dass neue Funktionen in Zukunft verfügbar sein sollten. Falls du eine Funktion haben möchtest, die hier noch nicht verfügbar ist, verwende bitte <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>, um diese anzufordern. Die Erweiterungen hier sind diejenigen, die derzeit installiert sind, jedoch kannst du immer eine weitere zur Hinzufügung <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features anfordern]</span>.",
 	"managewiki-label-category": "Kategorie",
 	"managewiki-label-closed": "Geschlossen",
@@ -20,5 +22,6 @@
 	"managewiki-label-reason": "Grund",
 	"managewiki-label-sitename": "Name der Website",
 	"managewiki-missing": "Dieses Wiki ist nicht vorhanden.",
-	"managewiki-success": "Die Einstellungen wurden erfolgreich geändert."
+	"managewiki-success": "Die Einstellungen wurden erfolgreich geändert.",
+	"managewiki-extension-name": "[$1 $2]"
 }

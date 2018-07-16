@@ -12,5 +12,6 @@
 	"managewiki-label-private": "ব্যক্তিগত",
 	"managewiki-label-reason": "কারণ",
 	"managewiki-label-sitename": "সাইটের নাম",
-	"managewiki-success": "সেটিংগুলি সফলভাবে পরিবর্তিত হয়েছে।"
+	"managewiki-success": "সেটিংগুলি সফলভাবে পরিবর্তিত হয়েছে।",
+	"managewiki-extension-name": "[$1 $2]"
 }

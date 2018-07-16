@@ -19,5 +19,6 @@
 	"managewiki-label-reason": "סיבה",
 	"managewiki-label-sitename": "שם האתר",
 	"managewiki-missing": "אתר הוויקי הזה אינו קיים.",
-	"managewiki-success": "ההגדרות שונו בהצלחה."
+	"managewiki-success": "ההגדרות שונו בהצלחה.",
+	"managewiki-extension-name": "[$1 $2]"
 }

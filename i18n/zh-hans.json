@@ -19,5 +19,6 @@
 	"managewiki-label-reason": "原因",
 	"managewiki-label-sitename": "网站名称",
 	"managewiki-missing": "该wiki不存在。",
-	"managewiki-success": "设置已成功更改。"
+	"managewiki-success": "设置已成功更改。",
+	"managewiki-extension-name": "[$1 $2]"
 }

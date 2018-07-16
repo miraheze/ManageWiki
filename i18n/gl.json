@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Elisardojm",
-			"Navhy"
+			"Navhy",
+			"Banjo"
 		]
 	},
 	"action-managewiki": "xestionar configuración da wiki",
@@ -20,5 +21,6 @@
 	"managewiki-label-reason": "Motivo",
 	"managewiki-label-sitename": "Nome do sitio",
 	"managewiki-missing": "Esa wiki non existe.",
-	"managewiki-success": "A configuración modificouse correctamente."
+	"managewiki-success": "A configuración modificouse correctamente.",
+	"managewiki-extension-name": "\n[$1 $2]"
 }

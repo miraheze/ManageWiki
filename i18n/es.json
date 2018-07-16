@@ -4,7 +4,8 @@
 			"AlvaroMolina",
 			"The-Voidwalker",
 			"Fitoschido",
-			"RisingVoices"
+			"RisingVoices",
+			"MarcoAurelio"
 		]
 	},
 	"action-managewiki": "gestionar configuración del wiki",
@@ -22,5 +23,6 @@
 	"managewiki-label-reason": "Motivo",
 	"managewiki-label-sitename": "Nombre del sitio",
 	"managewiki-missing": "Ese wiki no existe.",
-	"managewiki-success": "La configuración se modificó correctamente."
+	"managewiki-success": "La configuración se modificó correctamente.",
+	"managewiki-extension-name": "[$1 $2]"
 }

@@ -10,5 +10,6 @@
 	"managewiki-label-category": "Kategori",
 	"managewiki-label-closed": "Stängd",
 	"managewiki-label-inactive": "Inaktiv",
-	"managewiki-success": "Inställningarna har ändrats."
+	"managewiki-success": "Inställningarna har ändrats.",
+	"managewiki-extension-name": "[$1 $2]"
 }

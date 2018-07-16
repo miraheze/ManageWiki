@@ -19,5 +19,6 @@
 	"managewiki-label-reason": "Razão:",
 	"managewiki-label-sitename": "Nome do site",
 	"managewiki-missing": "Essa wiki não existe",
-	"managewiki-success": "As configurações foram alteradas."
+	"managewiki-success": "As configurações foram alteradas.",
+	"managewiki-extension-name": "[$1 $2]"
 }
