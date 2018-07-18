@@ -9,8 +9,8 @@ require_once "$IP/maintenance/Maintenance.php";
 class ManageWikiPopulateSettings extends Maintenance {
 	public function __construct() {
 		parent::__construct();
-		$this->addOption( 'wgsetting', 'The $wg setting minus $.', true );
-		$this->addOption( 'sourcelist', 'File in format of "wiki|value" for the $wg setting above.', true );
+		$this->addOption( 'wgsetting', 'The $wg setting minus $.' );
+		$this->addOption( 'sourcelist', 'File in format of "wiki|value" for the $wg setting above.' );
 	}
 
 	function execute() {
