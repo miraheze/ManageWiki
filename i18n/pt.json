@@ -2,15 +2,19 @@
 	"@metadata": {
 		"authors": [
 			"Hamilton Abreu",
-			"Athena in Wonderland"
+			"Athena in Wonderland",
+			"Vitorvicentevalente"
 		]
 	},
 	"action-managewiki": "gerir as configurações da wiki",
 	"logentry-farmer-managewiki": "$1 alterou as configurações de ($5) para \"$4\"",
 	"managewiki": "Gerir uma wiki",
-	"managewiki-desc": "Permite que os utilizadores giram wikis através de uma interface web",
+	"managewikiextensions": "Gerir uma wiki (extensões)",
+	"managewiki-desc": "Permite que os utilizadores giram wikis através de uma interface para a Internet",
 	"managewiki-disabled": "Esta funcionalidade ainda não foi ativada nesta wiki.",
-	"managewiki-header": "Esta página é utilizada para gerir as configurações da wiki <b>'$1'</b>. Note, por favor, que é possível que não possa alterar todas as configurações desta wiki. Nesse caso, deve contactar um administrador de sistemas. O ManageWiki ainda está em desenvolvimento, por isso devem surgir novas funcionalidades no futuro. Se deseja usar uma funcionalidade que não está disponível aqui, por favor faça a solicitação no <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>. As extensões daqui são as que estão atualmente instaladas, mas também pode <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features solicitar]</span> para adicionar outras.",
+	"managewiki-extensions-disabled": "Não foi definida nenhuma extensão para esta wiki",
+	"managewiki-extensions-header": "Estas extensões são as que estão instaladas, mas pode sempre <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features pedir]</span> a adição de outras. <br>Para gerir as configurações desta wiki, consulte <b>[[Special:ManageWiki|esta página]]</b>, por favor.",
+	"managewiki-header": "Esta página é utilizada para gerir as configurações da wiki <b>'$1'</b>. Se deseja usar uma funcionalidade que não está disponível aqui, use o <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> para pedi-la. <br>Para gerir as configurações desta wiki, consulte <b>[[Special:ManageWikiExtensions|esta página]]</b>, por favor.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Fechada",
 	"managewiki-label-dbname": "Nome da base de dados",

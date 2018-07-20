@@ -7,14 +7,17 @@
 			"Ole Yves",
 			"Okras",
 			"OlegCinema",
-			"Stjn"
+			"Stjn",
+			"Vlad5250"
 		]
 	},
 	"action-managewiki": "Управлять настройками вики",
 	"logentry-farmer-managewiki": "$1 изменил настройки ($5) для «$4»",
 	"managewiki": "Управлять вики",
+	"managewikiextensions": "Управление вики (расширения)",
 	"managewiki-desc": "Позволяет людям управлять вики через веб-интерфейс",
 	"managewiki-disabled": "Эта функция не была включена в этой вики.",
+	"managewiki-extensions-disabled": "Нет расширений, определённых на этой вики",
 	"managewiki-header": "Эта страница используется для изменения настроек вики '$1'. Обратите внимание, что вы не можете изменить все настройки, в этом случае вам следует обратиться к системному администратору.",
 	"managewiki-label-category": "Категория",
 	"managewiki-label-closed": "Закрыто",
