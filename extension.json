@@ -36,8 +36,8 @@
 		"@wgManageWikiExtensions": "Array. An array of extensions enabled within the wiki farm.",
 		"ManageWikiExtensions": null,
 		"@wgManageWikiSettings": "Array. An array of settings that can be managed through Special:ManageWiki",
-		"ManageWikiSettings": null
-		"ManageWikiHelpUrl": Help:ManageWiki
+		"ManageWikiSettings": null,
+		"ManageWikiHelpUrl": false
 	},
 	"callback": "ManageWikiHooks::onRegistration",
 	"manifest_version": 1

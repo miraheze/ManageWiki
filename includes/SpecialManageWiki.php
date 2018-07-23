@@ -9,8 +9,9 @@ class SpecialManageWiki extends SpecialPage {
 
 		$out = $this->getOutput();
 		$this->setHeaders();
-		$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
-
+		if ( $wgManageWikiHelpUrl ) {
+			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
+		}
 
 		if ( !$wgEnableManageWiki ) {
 			$out->addWikiMsg( 'managewiki-disabled' );
