@@ -5,11 +5,11 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgEnableManageWiki, $wgCreateWikiDatabase, $wgDBname;
+		global $wgEnableManageWiki, $wgManageWikiHelpUrl, $wgCreateWikiDatabase, $wgDBname;
 
 		$out = $this->getOutput();
 		$this->setHeaders();
-		$this->getOutput()->addHelpLink( '//meta.miraheze.org/wiki/ManageWiki', true );
+		$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 
 
 		if ( !$wgEnableManageWiki ) {

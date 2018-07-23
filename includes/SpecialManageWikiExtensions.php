@@ -5,10 +5,11 @@ class SpecialManageWikiExtensions extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgEnableManageWiki, $wgManageWikiExtensions, $wgCreateWikiDatabase, $wgDBname;
+		global $wgEnableManageWiki, $wgManageWikiHelpUrl, $wgManageWikiExtensions, $wgCreateWikiDatabase, $wgDBname;
 
 		$out = $this->getOutput();
 		$this->setHeaders();
+		$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 
 		if ( !$wgEnableManageWiki ) {
 			$out->addWikiMsg( 'managewiki-disabled' );
