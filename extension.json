@@ -37,7 +37,7 @@
 		"ManageWikiExtensions": null,
 		"@wgManageWikiSettings": "Array. An array of settings that can be managed through Special:ManageWiki",
 		"ManageWikiSettings": null
-		"ManageWikiHelpUrl": Help:ManageWiki
+		"ManageWikiHelpUrl": 'Help:ManageWiki'
 	},
 	"callback": "ManageWikiHooks::onRegistration",
 	"manifest_version": 1
