@@ -1,0 +1,13 @@
+{
+	"@metadata": {
+		"authors": [
+			"SPQRobin"
+		]
+	},
+	"managewiki-label-category": "Categorie",
+	"managewiki-label-closed": "Gesloten",
+	"managewiki-label-dbname": "Databasenaam",
+	"managewiki-label-language": "Taal",
+	"managewiki-label-inactive": "Inactief",
+	"managewiki-label-reason": "Reden"
+}
