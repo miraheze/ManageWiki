@@ -9,6 +9,8 @@ class SpecialManageWiki extends SpecialPage {
 
 		$out = $this->getOutput();
 		$this->setHeaders();
+		$this->getOutput()->addHelpLink( '//meta.miraheze.org/wiki/ManageWiki', true );
+
 
 		if ( !$wgEnableManageWiki ) {
 			$out->addWikiMsg( 'managewiki-disabled' );
