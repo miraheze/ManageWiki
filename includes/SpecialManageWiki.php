@@ -211,25 +211,6 @@ class SpecialManageWiki extends SpecialPage {
 
 		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
-
-		if ( $params["setting-$name"] ) {
-				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
-					$settingsarray[] = $name;
-				} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
-					if ( $wiki->getSettingsValue( $name ) ) {
-						$settingsarray[] = $name;
-					} else {
-						throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
-					}
-				} else {
-					$settingsarray[] = $name;
-				}
-			} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
-				if ( $wiki->getSettingsValue( $name ) ) {
-					throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
-				}
-			}
-	        }
 		
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
 			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
@@ -242,6 +223,25 @@ class SpecialManageWiki extends SpecialPage {
 		$settingsarray = [];
 
 		foreach( $wgManageWikiSettings as $var => $det ) {
+			if ( $params["setting-$var"] ) {
+					if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
+						$settingsarray[] = $name;
+					} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+						if ( $wiki->getSettingsValue( $var ) ) {
+							$settingsarray[] = $var;
+						} else {
+							throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+						}
+					} else {
+						$settingsarray[] = $var;
+					}
+				} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					if ( $wiki->getSettingsValue( $var ) ) {
+						throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+					}
+				}
+			}
+
 			if ( $det['type'] != 'text' || $params["set-$var"] ) {
 				$settingsarray[$var] = $params["set-$var"];
 
