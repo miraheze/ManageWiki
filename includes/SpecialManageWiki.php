@@ -180,6 +180,7 @@ class SpecialManageWiki extends SpecialPage {
 						'type' => $mwtype,
 						'label' => $det['name'],
 						'default' => ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'],
+						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
 						'help' => ( $det['help'] ) ? $det['help'] : null,
 					);
 
@@ -223,7 +224,11 @@ class SpecialManageWiki extends SpecialPage {
 
 		foreach( $wgManageWikiSettings as $var => $det ) {
 			if ( $det['type'] != 'text' || $params["set-$var"] ) {
-				$settingsarray[$var] = $params["set-$var"];
+				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
+					$settingsarray[$var] = $params["set-$var"];
+				} else {
+					$settingsarray[$var] = $wiki->getSettingsValue( $var );
+				}
 
 				if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
 					$changedsettingsarray[] = "setting-" . $var;
