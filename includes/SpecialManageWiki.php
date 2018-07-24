@@ -229,7 +229,7 @@ class SpecialManageWiki extends SpecialPage {
 					throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
 				}
 			}
-	      }
+	        }
 		
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
 			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
