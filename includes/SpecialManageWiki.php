@@ -180,6 +180,7 @@ class SpecialManageWiki extends SpecialPage {
 						'type' => $mwtype,
 						'label' => $det['name'],
 						'default' => ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'],
+						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
 						'help' => ( $det['help'] ) ? $det['help'] : null,
 					);
 
@@ -210,7 +211,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
-
+		
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
 			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
 		}
@@ -222,6 +223,24 @@ class SpecialManageWiki extends SpecialPage {
 		$settingsarray = [];
 
 		foreach( $wgManageWikiSettings as $var => $det ) {
+			if ( $params["setting-$var"] ) {
+				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					$settingsarray[] = $var;
+				} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					if ( $wiki->getSettingsValue( $var ) ) {
+						$settingsarray[] = $var;
+					} else {
+						throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+					}
+				} else {
+					$settingsarray[] = $var;
+				}
+			} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+				if ( $wiki->getSettingsValue( $var ) ) {
+					throw new MWException( "User without managewiki-restricted tried to change a restricted extension setting ($var)" );
+				}
+			}
+
 			if ( $det['type'] != 'text' || $params["set-$var"] ) {
 				$settingsarray[$var] = $params["set-$var"];
 
