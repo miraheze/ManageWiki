@@ -212,6 +212,25 @@ class SpecialManageWiki extends SpecialPage {
 		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
 
+		if ( $params["ext-$name"] ) {
+				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					$settingsarray[] = $name;
+				} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					if ( $wiki->getSettingsValue( $name ) ) {
+						$settingsarray[] = $name;
+					} else {
+						throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+					}
+				} else {
+					$settingsarray[] = $name;
+				}
+			} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+				if ( $wiki->getSettingsValue( $name ) ) {
+					throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+				}
+			}
+	      }
+		
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
 			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
 		}
