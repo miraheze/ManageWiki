@@ -180,6 +180,7 @@ class SpecialManageWiki extends SpecialPage {
 						'type' => $mwtype,
 						'label' => $det['name'],
 						'default' => ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'],
+						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
 						'help' => ( $det['help'] ) ? $det['help'] : null,
 					);
 
