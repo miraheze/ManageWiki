@@ -212,7 +212,7 @@ class SpecialManageWiki extends SpecialPage {
 		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
 
-		if ( $params["ext-$name"] ) {
+		if ( $params["setting-$name"] ) {
 				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
 					$settingsarray[] = $name;
 				} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
