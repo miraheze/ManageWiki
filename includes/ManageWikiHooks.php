@@ -1,4 +1,5 @@
 <?php
+
 class ManageWikiHooks {
         public static function onRegistration() {
                 global $wgLogTypes;

@@ -26,6 +26,7 @@
 		]
 	},
 	"AutoloadClasses": {
+		"ManageWiki": "includes/ManageWiki.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"SpecialManageWiki": "includes/SpecialManageWiki.php",
 		"SpecialManageWikiExtensions": "includes/SpecialManageWikiExtensions.php"
