@@ -174,6 +174,10 @@ class SpecialManageWiki extends SpecialPage {
 						case 'wikipage':
 							$mwtype = 'title';
 							break;
+						case 'timezone':
+							$mwtype = 'select';
+							$mwoptions = ManageWiki::getTimezoneList();
+							
 					}
 
 					$formDescriptor["set-$var"] = array(
