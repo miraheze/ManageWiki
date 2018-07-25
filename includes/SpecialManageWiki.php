@@ -171,12 +171,12 @@ class SpecialManageWiki extends SpecialPage {
 							$mwcols = $det['cols'];
 							$mwrows = $det['rows'];
 							break;
-						case 'wikipage':
-							$mwtype = 'title';
-							break;
 						case 'timezone':
 							$mwtype = 'select';
 							$mwoptions = ManageWiki::getTimezoneList();
+						case 'wikipage':
+							$mwtype = 'title';
+							break;
 							
 					}
 
