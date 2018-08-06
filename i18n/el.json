@@ -6,6 +6,7 @@
 	},
 	"action-managewiki": "Διαχείριση ρυθμίσεων βίκι",
 	"managewiki": "Διαχείριση ενός βίκι",
+	"managewikiextensions": "Διαχείριση ενός βίκι (επεκτάσεις)",
 	"managewiki-label-category": "Κατηγορία",
 	"managewiki-label-closed": "Έκλεισε",
 	"managewiki-label-dbname": "Όνομα βάσης δεδομένων",

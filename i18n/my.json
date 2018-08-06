@@ -1,0 +1,18 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dr Lotus Black"
+		]
+	},
+	"action-managewiki": "ဝီကီအပြင်အဆင်များကို စီမံရန်",
+	"managewiki": "ဝီကီတစ်ခုကို စီမံရန်",
+	"managewiki-label-category": "ကဏ္ဍ",
+	"managewiki-label-closed": "ပိတ်သိမ်းပြီး",
+	"managewiki-label-dbname": "ဒေတာဘေ့စ် အမည်",
+	"managewiki-label-language": "ဘာသာစကား",
+	"managewiki-label-reason": "အကြောင်းပြချက်",
+	"managewiki-label-sitename": "ဆိုဒ်အမည်",
+	"managewiki-missing": "ဤဝီကီ မရှိပါ",
+	"managewiki-success": "အပြင်အဆင်များ အောင်မြင်စွာ ပြောင်းလဲသွားပါသည်။",
+	"managewiki-extension-name": "[$1 $2]"
+}

@@ -5,11 +5,14 @@
 		]
 	},
 	"action-managewiki": "alministrar la configuración de la wiki",
-	"logentry-farmer-managewiki": "$1 cambió la configuración de «$4»",
+	"logentry-farmer-managewiki": "$1 cambió la configuración ($5) de «$4»",
 	"managewiki": "Alministrar una wiki",
+	"managewikiextensions": "Alministrar una wiki (estensiones)",
 	"managewiki-desc": "Permite que les persones alministren wikis per una interfaz web.",
 	"managewiki-disabled": "Esta función inda nun ta activada nesta wiki.",
-	"managewiki-header": "Esta páxina s'usa p'alministrar la configuración de la wiki '$1'. Repara que ye posible que nun puedas cambiar toles opciones d'esta wiki; en tal casu, tendríes de comunicate con un alministrador del sistema. ManageWiki inda ta en desendolcu, de manera qu'habrá carauterístiques nueves nel futuru.",
+	"managewiki-extensions-disabled": "Nun se definió nenguna estensión pa esta wiki",
+	"managewiki-extensions-header": "Estes estensiones son les que tán instalaes anguaño, pero siempre puedes <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features pidir]</span> que s'añada otra. <br>P'alministrar la configuración d'esta wiki visita <b>[[Special:ManageWiki|esta páxina]]</b>.",
+	"managewiki-header": "Esta páxina s'usa p'alministrar la configuración de la wiki <b>'$1'</b>. Si una opción que desees inda nun ta disponible equí, usa <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> pa pidila.<br>P'alministrar les estensiones d'esta wiki, meyor visita <b>[[Special:ManageWikiExtensions|esta páxina]]</b>",
 	"managewiki-label-category": "Categoría",
 	"managewiki-label-closed": "Zarrada",
 	"managewiki-label-dbname": "Nome de la base de datos",
@@ -19,5 +22,6 @@
 	"managewiki-label-reason": "Motivu",
 	"managewiki-label-sitename": "Nome del sitiu",
 	"managewiki-missing": "Esa wiki nun esiste.",
-	"managewiki-success": "La configuración cambióse correutamente."
+	"managewiki-success": "La configuración cambióse correutamente.",
+	"managewiki-extension-name": "[$1 $2]"
 }
