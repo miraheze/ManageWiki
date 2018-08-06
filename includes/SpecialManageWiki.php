@@ -228,15 +228,25 @@ class SpecialManageWiki extends SpecialPage {
 
 		foreach( $wgManageWikiSettings as $var => $det ) {
 			if ( $det['type'] != 'text' || $params["set-$var"] ) {
-				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
+				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
 					$settingsarray[$var] = $params["set-$var"];
+				} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+					if ( $wiki->getSettingsValue( $var ) ) {
+						$settingsarray[$var] = $params["set-$var"];
+					} else {
+						throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
+					}
 				} else {
-					$settingsarray[$var] = $wiki->getSettingsValue( $var );
+					$settingsarray[$var] = $params["set-$var"];
 				}
+			} elseif ( $det['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
+				if ( $wiki->getSettingsValue( $var ) ) {
+					throw new MWException( "User without managewiki-restricted tried to change a restricted extension setting ($name)" );
+				}
+			}
 
-				if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
-					$changedsettingsarray[] = "setting-" . $var;
-				}
+			if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
+				$changedsettingsarray[] = "setting-" . $var;
 			}
 		}
 
