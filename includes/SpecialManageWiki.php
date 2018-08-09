@@ -174,6 +174,7 @@ class SpecialManageWiki extends SpecialPage {
 						case 'timezone':
 							$mwtype = 'select';
 							$mwoptions = ManageWiki::getTimezoneList();
+							break;
 						case 'wikipage':
 							$mwtype = 'title';
 							break;
