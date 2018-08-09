@@ -8,5 +8,6 @@
 	"managewiki-label-closed": "Lukket",
 	"managewiki-label-language": "Sprog",
 	"managewiki-label-private": "Privat",
-	"managewiki-label-inactive": "Inaktiv"
+	"managewiki-label-inactive": "Inaktiv",
+	"managewiki-label-reason": "Årsag"
 }
