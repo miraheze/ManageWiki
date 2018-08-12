@@ -178,19 +178,31 @@ class SpecialManageWiki extends SpecialPage {
 						case 'wikipage':
 							$mwtype = 'title';
 							break;
-							
 					}
 
 					$formDescriptor["set-$var"] = array(
 						'type' => $mwtype,
 						'label' => $det['name'],
-						'default' => ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'],
 						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
 						'help' => ( $det['help'] ) ? $det['help'] : null,
 					);
 
+					if ( $mwtype != 'matrix' ) {
+						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'];
+					} else {
+						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' ) : $det['overridedefault'];
+					}
+
 					if ( isset( $mwoptions ) ) {
 						$formDescriptor["set-$var"]['options'] = $mwoptions;
+					}
+
+					if ( isset( $mwcols ) ) {
+						$formDescriptor["set-$var"]['columns'] = $mwcols;
+					}
+
+					if ( isset( $mwrows ) ) {
+						$formDescriptor["set-$var"]['rows'] = $mwrows;
 					}
 				}
 			}
@@ -228,7 +240,17 @@ class SpecialManageWiki extends SpecialPage {
 		$settingsarray = [];
 
 		foreach( $wgManageWikiSettings as $var => $det ) {
-			if ( $det['type'] != 'text' || $params["set-$var"] ) {
+			if ( $det['type'] == 'matrix' ) {
+				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
+					$settingsarray[$var] = ManageWiki::handleMatrix( $params["set-$var"], 'phparray' );
+				} else {
+					$settingsarray[$var] = ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' );
+				}
+
+				if ( $settingsarray[$var] != ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' ) ) {
+					$changedsettingsarray[] = "setting-" . $var;
+				}
+			} else {
 				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
 					$settingsarray[$var] = $params["set-$var"];
 				} else {

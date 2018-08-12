@@ -18,4 +18,34 @@ class ManageWiki {
                 
                 return $timeZoneList;
         }
+
+	public static function handleMatrix( $conversion, $to ) {
+		if ( $to == 'php' ) {
+			// $to is php, therefore $conversion must be json
+			$phpin = json_decode( $conversion, true );
+
+			$phpout = [];
+
+			foreach ( $phpin as $key => $value ) {
+				$phpout[] = "$key-$value";
+			}
+
+			return $phpout;
+		} elseif ( $to == 'phparray' ) {
+			// $to is phparray therefore $conversion must be php as json will be already phparray'd
+			$phparrayout = [];
+
+			foreach ( $conversion as $phparray ) {
+				$element = explode( '-', $phparray );
+				$phparrayout[$element[0]] = $element[1];
+			}
+
+			return $phparrayout;
+		} elseif ( $to == 'json' ) {
+			// $to is json, therefore $conversion must be php
+			return json_encode( $conversion );
+		} else {
+			return null;
+		}
+	}
 }
