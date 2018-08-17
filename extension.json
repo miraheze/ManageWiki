@@ -41,5 +41,10 @@
 		"ManageWikiHelpUrl": false
 	},
 	"callback": "ManageWikiHooks::onRegistration",
-	"manifest_version": 1
+	"manifest_version": 1,
+	"Hooks": {
+		"SkinBuildSidebar": [
+			"ManageWikiHooks::fnNewSidebarItem"
+		]
+	}
 }
