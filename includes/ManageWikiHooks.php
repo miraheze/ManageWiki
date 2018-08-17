@@ -14,7 +14,7 @@ class ManageWikiHooks {
 			$bar['administration'][] = [
 				'text' => wfMessage( 'managewiki-settings-link' )->plain(),
 				'id' => 'managewikilink',
-				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'MAnageWiki' )->getFullURL() )
+				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki' )->getFullURL() )
 			];
 			$bar['administration'][] = [
                                 'text' => wfMessage( 'managewiki-extensions-link' )->plain(),
