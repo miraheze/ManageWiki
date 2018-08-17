@@ -8,4 +8,19 @@ class ManageWikiHooks {
                         $wgLogTypes[] = 'farmer';
                 }
         }
+
+	public static function fnNewSidebarItem( $skin, &$bar ) {
+		if ( $skin->getUser()->isAllowed( 'managewiki' ) ) {
+			$bar['administration'][] = [
+				'text' => wfMessage( 'managewiki-settings-link' )->plain(),
+				'id' => 'managewikilink',
+				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'MAnageWiki' )->getFullURL() )
+			];
+			$bar['administration'][] = [
+                                'text' => wfMessage( 'managewiki-extensions-link' )->plain(),
+                                'id' => 'managewikiextensionslink',
+                                'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWikiExtensions' )->getFullURL() )
+                        ];
+		}
+	}
 }
