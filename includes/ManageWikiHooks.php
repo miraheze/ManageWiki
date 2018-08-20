@@ -10,7 +10,12 @@ class ManageWikiHooks {
         }
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {
-		if ( $skin->getUser()->isAllowed( 'managewiki' ) ) {
+		global $wgManageWikiSidebarLinks
+		
+		if (
+			$skin->getUser()->isAllowed( 'managewiki' ) &&
+			$wgManageWikiSidebarLinks
+		) {
 			$bar['administration'][] = [
 				'text' => wfMessage( 'managewiki-settings-link' )->plain(),
 				'id' => 'managewikilink',
