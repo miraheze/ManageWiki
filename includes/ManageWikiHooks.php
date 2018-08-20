@@ -10,7 +10,7 @@ class ManageWikiHooks {
         }
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {
-		global $wgManageWikiSidebarLinks
+		global $wgManageWikiSidebarLinks;
 		
 		if (
 			$skin->getUser()->isAllowed( 'managewiki' ) &&
