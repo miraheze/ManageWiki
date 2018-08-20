@@ -16,12 +16,12 @@ class ManageWikiHooks {
 			$skin->getUser()->isAllowed( 'managewiki' ) &&
 			$wgManageWikiSidebarLinks
 		) {
-			$bar['administration'][] = [
+			$bar['Administration'][] = [
 				'text' => wfMessage( 'managewiki-settings-link' )->plain(),
 				'id' => 'managewikilink',
 				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki' )->getFullURL() )
 			];
-			$bar['administration'][] = [
+			$bar['Administration'][] = [
                                 'text' => wfMessage( 'managewiki-extensions-link' )->plain(),
                                 'id' => 'managewikiextensionslink',
                                 'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWikiExtensions' )->getFullURL() )
