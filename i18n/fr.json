@@ -6,7 +6,8 @@
 			"Wladek92",
 			"Ltrlg",
 			"Fourmer",
-			"Gomoko"
+			"Gomoko",
+			"Momo50WM"
 		]
 	},
 	"action-managewiki": "Régler les paramètres du wiki",
@@ -28,5 +29,7 @@
 	"managewiki-label-sitename": "Nom du site",
 	"managewiki-missing": "Ce wiki n'existe pas.",
 	"managewiki-success": "Les paramètres ont été changés.",
-	"managewiki-extension-name": "[[mw:Extension:$1|$1]]"
+	"managewiki-extension-name": "[[mw:Extension:$1|$1]]",
+	"managewiki-extensions-link": "Gérer les extensions de ce wiki",
+	"managewiki-settings-link": "Gérer les paramètres de ce wiki"
 }

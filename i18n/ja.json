@@ -1,0 +1,15 @@
+{
+	"@metadata": {
+		"authors": [
+			"Suyama"
+		]
+	},
+	"managewiki-label-dbname": "データベース名",
+	"managewiki-label-language": "言語",
+	"managewiki-label-reason": "理由",
+	"managewiki-label-sitename": "サイト名",
+	"managewiki-missing": "そのウィキは存在しません。",
+	"managewiki-extension-name": "[$1 $2]",
+	"managewiki-extensions-link": "このウィキの拡張機能を管理する",
+	"managewiki-settings-link": "このウィキの設定を管理する"
+}

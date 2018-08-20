@@ -16,5 +16,7 @@
 	"managewiki-label-reason": "Αιτιολογία",
 	"managewiki-label-sitename": "Όνομα ιστοχώρου",
 	"managewiki-missing": "Αυτό το βίκι δεν υπάρχει.",
-	"managewiki-success": "Αυτές οι ρυθμίσεις έχουν αλλαχθεί επιτυχώς."
+	"managewiki-success": "Αυτές οι ρυθμίσεις έχουν αλλαχθεί επιτυχώς.",
+	"managewiki-extensions-link": "Διαχείριση των επεκτάσεων του βίκι",
+	"managewiki-settings-link": "Διαχείριση των ρυθμίσεων του βίκι"
 }

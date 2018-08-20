@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Revi",
-			"Ykhwong"
+			"Ykhwong",
+			"Jerrykim306"
 		]
 	},
 	"action-managewiki": "위키 설정 관리",
@@ -23,5 +24,7 @@
 	"managewiki-label-sitename": "사이트 이름",
 	"managewiki-missing": "해당 위키는 존재하지 않습니다.",
 	"managewiki-success": "설정이 성공적으로 업데이트되었습니다.",
-	"managewiki-extension-name": "[[mw:Extension:$1|$1]]"
+	"managewiki-extension-name": "[[mw:Extension:$1|$1]]",
+	"managewiki-extensions-link": "이 위키의 확장 기능을 관리하기",
+	"managewiki-settings-link": "이 위키의 설정을 관리하기"
 }

@@ -28,5 +28,7 @@
 	"managewiki-label-reason": "Причина",
 	"managewiki-label-sitename": "Название сайта",
 	"managewiki-missing": "Этой вики не существует.",
-	"managewiki-success": "Настройки были успешно изменены."
+	"managewiki-success": "Настройки были успешно изменены.",
+	"managewiki-extensions-link": "Управление расширениями вики",
+	"managewiki-settings-link": "Управление настройками вики"
 }

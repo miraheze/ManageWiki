@@ -23,5 +23,7 @@
 	"managewiki-label-sitename": "Nazwa strony",
 	"managewiki-missing": "Ta wiki nie istnieje.",
 	"managewiki-success": "Ustawienia zostały pomyślnie zmienione.",
-	"managewiki-extension-name": "[$1 $2]"
+	"managewiki-extension-name": "[$1 $2]",
+	"managewiki-extensions-link": "Zarządzaj rozszerzeniami tej wiki",
+	"managewiki-settings-link": "Zarządzaj ustawieniami tej wiki"
 }

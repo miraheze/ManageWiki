@@ -25,5 +25,7 @@
 	"managewiki-label-sitename": "Nome do sítio",
 	"managewiki-missing": "Essa wiki não existe",
 	"managewiki-success": "As configurações foram alteradas.",
-	"managewiki-extension-name": "[$1 $2]"
+	"managewiki-extension-name": "[$1 $2]",
+	"managewiki-extensions-link": "Gerir as extensões desta wiki",
+	"managewiki-settings-link": "Gerir as configurações desta wiki"
 }

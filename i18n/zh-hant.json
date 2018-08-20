@@ -25,5 +25,7 @@
 	"managewiki-label-sitename": "網站名稱",
 	"managewiki-missing": "該 wiki 不存在",
 	"managewiki-success": "設定已成功變更。",
-	"managewiki-extension-name": "[$1 $2]"
+	"managewiki-extension-name": "[$1 $2]",
+	"managewiki-extensions-link": "管理此 wiki 的擴充功能",
+	"managewiki-settings-link": "管理此 wiki 的設定"
 }
