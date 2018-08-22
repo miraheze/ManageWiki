@@ -250,7 +250,7 @@ class SpecialManageWiki extends SpecialPage {
 				if ( $settingsarray[$var] != ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' ) ) {
 					$changedsettingsarray[] = "setting-" . $var;
 				}
-			} else {
+			} elseif ( $det['type'] != 'text' || $params["set-$var"] ) {
 				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
 					$settingsarray[$var] = $params["set-$var"];
 				} else {
