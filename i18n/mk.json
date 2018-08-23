@@ -23,5 +23,7 @@
 	"managewiki-label-sitename": "Назив на викито",
 	"managewiki-missing": "Нема такво вики.",
 	"managewiki-success": "Поставките се успешно изменети.",
-	"managewiki-extension-name": "[$1 $2]"
+	"managewiki-extension-name": "[$1 $2]",
+	"managewiki-extensions-link": "Раководење со додатоците на викиво",
+	"managewiki-settings-link": "Раководење со поставките на викиво"
 }

@@ -4,6 +4,7 @@
 			"Suyama"
 		]
 	},
+	"managewiki-desc": "Web インターフェースを通してウィキを管理できるようにします",
 	"managewiki-label-dbname": "データベース名",
 	"managewiki-label-language": "言語",
 	"managewiki-label-reason": "理由",

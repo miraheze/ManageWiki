@@ -16,5 +16,7 @@
 	"managewiki-label-private": "Privato",
 	"managewiki-label-inactive": "Inattivo",
 	"managewiki-label-reason": "Motivo",
-	"managewiki-missing": "Questo wiki non esiste."
+	"managewiki-missing": "Questo wiki non esiste.",
+	"managewiki-extensions-link": "Gestisci le estensioni di questo wiki",
+	"managewiki-settings-link": "Gestisci le impostazioni di questo wiki"
 }
