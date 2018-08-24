@@ -36,6 +36,8 @@
 		"EnableManageWiki": true,
 		"@wgManageWikiExtensions": "Array. An array of extensions enabled within the wiki farm.",
 		"ManageWikiExtensions": null,
+		"@wgManageWikiPermissionsManagement": "Boolean. Whether ManageWiki should control group management within MediaWiki. Enable with care and caution!",
+		"ManageWikiPermissionsManagement": false,
 		"@wgManageWikiSettings": "Array. An array of settings that can be managed through Special:ManageWiki",
 		"ManageWikiSettings": null,
 		"ManageWikiHelpUrl": false,
@@ -44,6 +46,9 @@
 	"callback": "ManageWikiHooks::onRegistration",
 	"manifest_version": 1,
 	"Hooks": {
+		"SetupAfterCache": [
+			"ManageWikiHooks::onSetupAfterCache"
+		],
 		"SkinBuildSidebar": [
 			"ManageWikiHooks::fnNewSidebarItem"
 		]

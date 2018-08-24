@@ -9,6 +9,17 @@ class ManageWikiHooks {
                 }
         }
 
+	public static function onSetupAfterCache() {
+		global $wgManageWikiPermissionsManagement, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups;
+
+		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
+		if ( $wgManageWikiPermissionsManagement ) {
+			$wgGroupPermissions = [];
+			$wgAddGroups = [];
+			$wgRemoveGroups = [];
+		}
+	}
+
 	public static function fnNewSidebarItem( $skin, &$bar ) {
 		global $wgManageWikiSidebarLinks;
 		
