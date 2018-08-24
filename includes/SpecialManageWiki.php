@@ -240,24 +240,26 @@ class SpecialManageWiki extends SpecialPage {
 		$settingsarray = [];
 
 		foreach( $wgManageWikiSettings as $var => $det ) {
+			$rmVar = $wiki->getSettingsValue( $var );
+			
 			if ( $det['type'] == 'matrix' ) {
 				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
 					$settingsarray[$var] = ManageWiki::handleMatrix( $params["set-$var"], 'phparray' );
 				} else {
-					$settingsarray[$var] = ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' );
+					$settingsarray[$var] = ManageWiki::handleMatrix( $rmVar, 'php' );
 				}
 
-				if ( $settingsarray[$var] != ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' ) ) {
+				if ( $settingsarray[$var] != ManageWiki::handleMatrix( $rmVar, 'php' ) ) {
 					$changedsettingsarray[] = "setting-" . $var;
 				}
 			} elseif ( $det['type'] != 'text' || $params["set-$var"] ) {
 				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
 					$settingsarray[$var] = $params["set-$var"];
 				} else {
-					$settingsarray[$var] = $wiki->getSettingsValue( $var );
+					$settingsarray[$var] = $rmVar;
 				}
 
-				if ( $settingsarray[$var] != $wiki->getSettingsValue( $var ) ) {
+				if (  is_null( $rmVar) && $settingsarray[$var] != $det['overridedefault'] || !is_null( $rmVar) && $settingsarray[$var] != $rmVar ) {
 					$changedsettingsarray[] = "setting-" . $var;
 				}
 			}
