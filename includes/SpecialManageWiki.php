@@ -353,7 +353,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$dbw->selectDB( $dbName ); // $dbw->close() errors?
 
-		$farmerLogEntry = new ManualLogEntry( 'farmer', 'managewiki' );
+		$farmerLogEntry = new ManualLogEntry( 'managewiki', 'settings' );
 		$farmerLogEntry->setPerformer( $this->getUser() );
 		$farmerLogEntry->setTarget( $this->getTitle() );
 		$farmerLogEntry->setComment( $params['reason'] );

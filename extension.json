@@ -11,15 +11,23 @@
 	},
 	"AvailableRights": [
 		"managewiki",
+		"managewiki-editdefault",
 		"managewiki-restricted"
 	],
 	"SpecialPages": {
 		"ManageWiki": "SpecialManageWiki",
-		"ManageWikiExtensions": "SpecialManageWikiExtensions"
+		"ManageWikiDefaultPermissions": "SpecialManageWikiDefaultPermissions",
+		"ManageWikiExtensions": "SpecialManageWikiExtensions",
+		"ManageWikiPermissions": "SpecialManageWikiPermissions"
 	},
 	"LogActionsHandlers": {
-		"farmer/managewiki": "LogFormatter"
+		"managewiki/settings": "LogFormatter",
+		"managewiki/rename": "LogFormatter",
+		"managewiki/rights": "LogFormatter"
 	},
+	"LogTypes": [
+		"managewiki"
+	],
 	"MessagesDirs": {
 		"ManageWiki": [
 			"i18n"
@@ -29,7 +37,9 @@
 		"ManageWiki": "includes/ManageWiki.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"SpecialManageWiki": "includes/SpecialManageWiki.php",
-		"SpecialManageWikiExtensions": "includes/SpecialManageWikiExtensions.php"
+		"SpecialManageWikiDefaultPermissions": "includes/SpecialManageWikiDefaultPermissions.php",
+		"SpecialManageWikiExtensions": "includes/SpecialManageWikiExtensions.php",
+		"SpecialManageWikiPermissions": "includes/SpecialManageWikiPermissions.php"
 	},
 	"config": {
 		"@wgEnableManageWiki": "Boolean. Whether Special:ManageWiki should work on the wiki.",
@@ -40,6 +50,8 @@
 		"ManageWikiPermissionsAdditional": false,
 		"@wgManageWikiPermissionsBlacklistGroups": "Array. An array of usergroups which ManageWiki can't manage. Will prevent users creating same named groups as well.",
 		"ManageWikiPermissionsBlacklistGroups": false,
+		"@wgManageWikiPermissionsBlacklistRename": "Array. An array of groups that can not be renamed as they would cause issues.",
+		"ManageWikiPermissionsBlacklistRenames": [ "*", "user", "autoconfirmed", "sysop", "bureaucrat" ],
 		"@wgManageWikiPermissionsBlacklistRights": "Array. An array of user rights that ManageWiki can not manage and assign on wiki.",
 		"ManageWikiPermissionsBlacklistRights": [ "managewiki-restricted" ],
 		"@wgManageWikiPermissionsManagement": "Boolean. Whether ManageWiki should control group management within MediaWiki. Enable with care and caution!",
@@ -49,14 +61,23 @@
 		"ManageWikiHelpUrl": false,
 		"ManageWikiSidebarLinks": true
 	},
-	"callback": "ManageWikiHooks::onRegistration",
-	"manifest_version": 1,
 	"Hooks": {
-		"SetupAfterCache": [
+		"setupAfterCache": [
 			"ManageWikiHooks::onSetupAfterCache"
 		],
 		"SkinBuildSidebar": [
 			"ManageWikiHooks::fnNewSidebarItem"
 		]
-	}
+	},
+	"ResourceModules": {
+		"ext.managewiki.permissions": {
+			"styles": "ext.managewiki.permissions.css"
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "modules",
+		"remoteExtPath": "ManageWiki/modules"
+	},
+	"callback": "ManageWikiHooks::onRegistration",
+	"manifest_version": 1
 }

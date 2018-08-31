@@ -1,0 +1,12 @@
+/**
+  * Used on Special:ManageWikiPermissions
+  */
+.mw-managewiki-perm-readonly .mw-managewiki-perm-unchecked {
+	color: #808080;
+}
+
+.mw-managewiki-boxes {
+	-webkit-columns: 23em 3;
+	-moz-columns: 23em 3;
+	columns: 23em 3;
+}
