@@ -6,7 +6,7 @@
 
 class SpecialManageWikiPermissions extends SpecialPage {
 	public function __construct() {
-		parent::__construct( 'ManageWikiExtensions', 'managewiki' );
+		parent::__construct( 'ManageWikiPermissions', 'managewiki' );
 	}
 
 	function execute( $subpage ) {
