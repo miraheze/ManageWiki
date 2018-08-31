@@ -31,7 +31,7 @@
 	"managewiki-missing": "That wiki does not exist.",
 	"managewiki-perm-add": "Addable groups:",
 	"managewiki-perm-creategroup": "Create a new user group",
-	"managewiki-perm-disalbed": "ManageWiki Permissions Management is disabled on this wiki.",
+	"managewiki-perm-disabled": "ManageWiki Permissions Management is disabled on this wiki.",
 	"managewiki-perm-display": "Localised group name:",
 	"managewiki-perm-header": "Select a group below that already exists to modify or create a new user group in the box below it!",
 	"managewiki-perm-fieldset": "ManageWikiPermissions",
