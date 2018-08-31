@@ -15,6 +15,7 @@
 	"logentry-managewiki-settings": "$1 changed the settings ($5) for \"$4\"",
 	"managewiki": "Manage a wiki",
 	"managewikiextensions": "Manage a wiki (extensions)",
+	"managewikipermissions": "Manage a wiki (permissions)",
 	"managewiki-desc": "Allows people to manage wikis through a web interface",
 	"managewiki-disabled": "This feature has not been enabled on this wiki yet.",
 	"managewiki-extensions-disabled": "No extensions have been defined for this wiki",

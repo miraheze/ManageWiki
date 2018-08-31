@@ -6,12 +6,13 @@
 
 class SpecialManageWikiPermissions extends SpecialPage {
 	public function __construct() {
-		parent::__construct( 'ManageWikiPermissions' );
+		parent::__construct( 'ManageWikiExtensions', 'managewiki' );
 	}
 
 	function execute( $subpage ) {
 		global $wgManageWikiPermissionsManagement;
-
+		
+		$this->setHeaders();
 		$this->getOutput()->addModuleStyles( 'ext.managewiki.permissions' );
 		$this->getOutput()->setRobotPolicy( "noindex,nofollow" );
 		$this->getOutput()->setArticleRelated( false );
