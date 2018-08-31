@@ -10,7 +10,7 @@ class ManageWikiHooks {
 	}
 
 	public static function onSetupAfterCache() {
-		global $wgManageWikiPermissionsManagement, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname;
+		global $wgManageWikiPermissionsManagement, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups;
 
 		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
 		if ( $wgManageWikiPermissionsManagement ) {
@@ -34,8 +34,21 @@ class ManageWikiHooks {
 					$wgGroupPermissions[$row->perm_group][$perm] = true;
 				}
 
+				if ( $wgManageWikiPermissionsAdditionalRights ) {
+					$wgGroupPermissions = array_merge_recursive( $wgGroupPermissions, $wgManageWikiPermissionsAdditionalRights );
+				}
+
 				$wgAddGroups[$row->perm_group] = json_decode( $row->perm_addgroups );
+
+				if ( $wgManageWikiPermissionsAdditionalAddGroups ) {
+					$wgAddGroups = array_merge_recursive( $wgAddGroups, $wgManageWikiPermissionsAdditionalAddGroups );
+				}
+
 				$wgRemoveGroups[$row->perm_group] = json_decode( $row->perm_removegroups );
+
+				if ( $wgManageWikiPermissionsAdditionalRemoveGroups ) {
+					$wgRemoveGroups = array_merge_recursive( $wgRemoveGroups, $wgManageWikiPermissionsAdditionalRemoveGroups );
+				}
 			}
 		}
 	}
