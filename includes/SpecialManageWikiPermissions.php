@@ -11,7 +11,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 
 	function execute( $subpage ) {
 		global $wgManageWikiPermissionsManagement;
-		
+
 		$this->setHeaders();
 		$this->getOutput()->addModuleStyles( 'ext.managewiki.permissions' );
 		$this->getOutput()->setRobotPolicy( "noindex,nofollow" );
@@ -119,9 +119,9 @@ class SpecialManageWikiPermissions extends SpecialPage {
 		$fields = [];
 
 		if ( $editable ) {
-			$fields['managewiki-name'] = Xml::input( 'wpGlobalGroupName', 50, $group );
+			$fields['managewiki-perm-name'] = Xml::input( 'wpGlobalGroupName', 50, $group );
 		} else {
-			$fields['managewiki-name'] = htmlspecialchars( $group );
+			$fields['managewiki-perm-name'] = htmlspecialchars( $group );
 		}
 
 		$fields['managewiki-perm-display'] =
