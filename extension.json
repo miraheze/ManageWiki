@@ -67,7 +67,12 @@
 		"@wgManageWikiSettings": "Array. An array of settings that can be managed through Special:ManageWiki",
 		"ManageWikiSettings": null,
 		"ManageWikiHelpUrl": false,
-		"ManageWikiSidebarLinks": true
+		"ManageWikiSidebarLinks": true,
+		"ManageWikiLinks": {
+			"Additional Settings": "Settings",
+			"Extensions/Skins": "Extensions",
+			"Permissions": "Permissions"
+		}
 	},
 	"Hooks": {
 		"SetupAfterCache": [
