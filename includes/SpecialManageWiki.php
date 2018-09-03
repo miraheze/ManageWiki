@@ -163,7 +163,7 @@ class SpecialManageWiki extends SpecialPage {
 			->prepareForm()
 			->show();
 
-		if ( is_object( $wgManageWikiLinks ) ) {
+		if ( is_array( $wgManageWikiLinks ) ) {
 			$out->addWikiMsg( 'managewiki-header' );
 
 			$pageSelector['manage'] = [
@@ -171,7 +171,7 @@ class SpecialManageWiki extends SpecialPage {
 				'options' => $wgManageWikiLinks,
 			];
 
-			$selectForm = HTMLForm::factory( 'ooui', $wgManageWikiLinks, $this->getContext(), 'pageSelector' );
+			$selectForm = HTMLForm::factory( 'ooui', $pageSelector, $this->getContext(), 'pageSelector' );
 			$selectForm->setMethod('post' )
 				->setFormIdentifier( 'pageSelector' )
 				->setSubmitCallback( [ $this, 'onSubmitRedirectToManageWikiPage' ] )
