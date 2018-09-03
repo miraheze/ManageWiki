@@ -64,7 +64,7 @@ class SpecialManageWiki extends SpecialPage {
 	function showWikiForm( $wiki ) {
 		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings,
 			$wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis,
-			$wgManageWikiLinks;
+			$wgManageWikiLinks, $wgManageWikiExtensions, $wgManageWikiPermissionsManagement;
 
 		$out = $this->getOutput();
 
@@ -163,12 +163,26 @@ class SpecialManageWiki extends SpecialPage {
 			->prepareForm()
 			->show();
 
-		if ( is_array( $wgManageWikiLinks ) ) {
+		$landingOpts = [];
+
+		if ( $wgManageWikiSettings ) {
+			$landingOpts['Additional Settings'] = 'Settings';
+		}
+
+		if ( $wgManageWikiExtensions ) {
+			$landingOpts['Extensions/Skins'] = 'Extensions';
+		}
+
+		if ( $wgManageWikiPermissionsManagement ) {
+			$landingOpts['Permissions'] = 'Permissions';
+		}
+
+		if ( is_array( $landingOpts ) && count( $landingOpts ) > 0 ) {
 			$out->addWikiMsg( 'managewiki-header' );
 
 			$pageSelector['manage'] = [
 				'type' => 'select',
-				'options' => $wgManageWikiLinks,
+				'options' => $landingOpts,
 			];
 
 			$selectForm = HTMLForm::factory( 'ooui', $pageSelector, $this->getContext(), 'pageSelector' );
