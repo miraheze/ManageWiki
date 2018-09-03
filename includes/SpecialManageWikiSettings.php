@@ -1,7 +1,7 @@
 <?php
-class SpecialManageWiki extends SpecialPage {
+class SpecialManageWikiSettings extends SpecialPage {
 	function __construct() {
-		parent::__construct( 'ManageWiki', 'managewiki' );
+		parent::__construct( 'ManageWikiSettings', 'managewiki' );
 	}
 
 	function execute( $par ) {
@@ -76,7 +76,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( !$this->getRequest()->wasPosted() ) {
-			$out->addWikiMsg( 'managewiki-header', $dbName );
+			$out->addWikiMsg( 'managewiki-settings-header', $dbName );
 		}
 
 		$languages = Language::fetchLanguageNames( null, 'wmfile' );
