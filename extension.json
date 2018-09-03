@@ -48,6 +48,8 @@
 		"EnableManageWiki": true,
 		"@wgManageWikiExtensions": "Array. An array of extensions enabled within the wiki farm.",
 		"ManageWikiExtensions": null,
+		"@wgManageWikiSettings": "Array. An array of settings enabled within the wiki farm.",
+		"ManageWikiSettings": null,
 		"@wgManageWikiPermissionsAdditionalAddGroups": "Array. ManageWiki's version of $wgAddGroups.",
 		"ManageWikiPermissionsAdditionalAddGroups": false,
 		"@wgManageWikiPermissionsAdditionalRemoveGroups": "Array. ManageWiki's version of $wgRemoveGroups.",
