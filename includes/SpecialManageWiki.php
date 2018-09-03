@@ -47,6 +47,16 @@ class SpecialManageWiki extends SpecialPage {
 		return true;
 	}
 
+	function onSubmitRedirectToWikiForm( array $params ) {
+		global $wgRequest;
+		if ( $params['dbname'] !== '' ) {
+			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki' )->getFullUrl() . '/' . $params['dbname'] );
+		} else {
+			return 'Invalid url.';
+		}
+		return true;
+	}
+
 	function showWikiForm( $wiki ) {
 		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
 		$out = $this->getOutput();
