@@ -5,7 +5,7 @@
 		]
 	},
 	"action-managewiki": "وکی ترتیباں دا انتظام کرو",
-	"logentry-farmer-managewiki": "$1 نے \"$4\" کیتےترتیباں تبدیل کیتیاں ہن",
+	"logentry-managewiki-settings": "$1 نے \"$4\" کیتےترتیباں تبدیل کیتیاں ہن",
 	"managewiki": "وکی دا انتظام کرو",
 	"managewiki-desc": "ویب انٹر فیس نال لوکاں کوں وکی انتظام دی اجازت ݙیندے",
 	"managewiki-disabled": "ایں وکی تے اڄݨ تائیں ایہ خصوصیت فعال کائنی تھئی۔",

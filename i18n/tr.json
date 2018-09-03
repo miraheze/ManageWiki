@@ -1,11 +1,12 @@
 {
 	"@metadata": {
 		"authors": [
-			"Hedda"
+			"Hedda",
+			"Dual"
 		]
 	},
 	"action-managewiki": "viki ayarlarını yönet",
-	"logentry-farmer-managewiki": "$1, \"$4\" için ayarları değiştirdi.",
+	"logentry-managewiki-settings": "$1, \"$4\" için ayarları değiştirdi.",
 	"managewiki": "Bir vikiyi yönet",
 	"managewiki-desc": "İnsanların bir web arayüzü aracılığıyla viki'leri yönetmesine izin verir",
 	"managewiki-disabled": "Bu özellik henüz bu vikide etkin değil.",
@@ -19,5 +20,6 @@
 	"managewiki-label-reason": "Gerekçe",
 	"managewiki-label-sitename": "Site adı",
 	"managewiki-missing": "Bu viki mevcut değil.",
+	"managewiki-perm-readon": "Gerekçe:",
 	"managewiki-success": "Ayarlar başarıyla değiştirildi."
 }

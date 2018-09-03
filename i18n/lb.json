@@ -13,6 +13,9 @@
 	"managewiki-label-inactive": "Inaktiv",
 	"managewiki-label-reason": "Grond",
 	"managewiki-missing": "Déi Wiki gëtt et net.",
+	"managewiki-perm-name": "Numm vun der Grupp:",
+	"managewiki-perm-nonexistent": "De Grupp \"$1\" gëtt et elo net.",
+	"managewiki-perm-readon": "Grond:",
 	"managewiki-success": "D'Astellunge goufe geännert.",
 	"managewiki-extension-name": "[$1 $2]"
 }

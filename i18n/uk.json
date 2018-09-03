@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"Vlad5250"
+		]
+	},
+	"logentry-managewiki-rename": "$1 {{GENDER:$1|перейменував|перейменувала}} групу $3 з $4",
+	"managewiki-perm-add": "Додавання до груп:",
+	"managewiki-perm-creategroup": "Створити нову групу",
+	"managewiki-perm-display": "Локалізована назва групи:",
+	"managewiki-perm-member": "Назва членів групи:",
+	"managewiki-perm-name": "Назва групи:",
+	"managewiki-perm-nonexistent": "Група «$1» наразі не існує.",
+	"managewiki-perm-perms": "Призначені права:",
+	"managewiki-perm-readon": "Причина:",
+	"managewiki-perm-remove": "Виключення з груп:",
+	"managewiki-perm-rename-taken": "Неможливо перейменувати: «$1» уже існує.",
+	"managewiki-perm-select": "Виберіть існуючу групу для зміни"
+}

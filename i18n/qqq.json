@@ -3,11 +3,13 @@
 		"authors": [
 			"Reception123",
 			"Liuxinyu970226",
-			"Robby"
+			"Robby",
+			"Nike",
+			"Vlad5250"
 		]
 	},
 	"action-managewiki": "Button to manage the settings of a wiki.",
-	"logentry-farmer-managewiki": "Used as log message.",
+	"logentry-managewiki-settings": "Used as log message.",
 	"managewiki": "User right to manage a wiki",
 	"managewiki-desc": "ManageWiki extension description.",
 	"managewiki-disabled": "Message that indicates that a feature is not yet enabled on a wiki.",
@@ -22,5 +24,8 @@
 	"managewiki-label-reason": "Used as a label for 'reason'.\n{{Identical|Reason}}",
 	"managewiki-label-sitename": "Used as a label for 'sitename'.\n{{Identical|Sitename}}",
 	"managewiki-missing": "Message if the wiki entered does not exist in the database.",
+	"managewiki-perm-name": "Label for a input field thats contains the group name\n{{Identical|Group name}}",
+	"managewiki-perm-nonexistent": "Error shown when a group does not exist.\n\nParameters:\n* $1 - group name",
+	"managewiki-perm-readon": "Used as label for the \"Reason\" input box.\n{{Identical|Reason}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent."
 }

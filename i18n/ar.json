@@ -6,7 +6,7 @@
 		]
 	},
 	"action-managewiki": "إدارة إعدادات الويكي",
-	"logentry-farmer-managewiki": "$1 غير الإعدادات ($5) لـ\"$4\"",
+	"logentry-managewiki-settings": "$1 غير الإعدادات ($5) لـ\"$4\"",
 	"managewiki": "إدارة ويكي",
 	"managewikiextensions": "إدارة ويكي (امتدادات)",
 	"managewiki-desc": "يسمح للناس بإدارة ويكي من خلال واجهة ويب",

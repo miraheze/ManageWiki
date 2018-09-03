@@ -5,7 +5,7 @@
 		]
 	},
 	"action-managewiki": "ניהול הגדרות של אתר ויקי",
-	"logentry-farmer-managewiki": "$1 שינה את ההגדרות ($5) עבור \"$4\"",
+	"logentry-managewiki-settings": "$1 שינה את ההגדרות ($5) עבור \"$4\"",
 	"managewiki": "ניהול אתר ויקי",
 	"managewikiextensions": "ניהול אתר ויקי (הרחבות)",
 	"managewiki-desc": "מתן אפשרות לאנשים לנהל אתרי ויקי באמצעות ממשק אינטרנטי",

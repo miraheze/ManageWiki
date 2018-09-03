@@ -6,7 +6,7 @@
 		]
 	},
 	"action-managewiki": "管理wiki设置",
-	"logentry-farmer-managewiki": "$1更改了“$4”的设置（$5）",
+	"logentry-managewiki-settings": "$1更改了“$4”的设置（$5）",
 	"managewiki": "管理wiki",
 	"managewikiextensions": "管理维基（扩展）",
 	"managewiki-desc": "允许人们通过web界面管理wiki",

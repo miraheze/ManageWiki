@@ -7,7 +7,7 @@
 		]
 	},
 	"action-managewiki": "xestionar configuración da wiki",
-	"logentry-farmer-managewiki": "$1 modificou a configuración ($5) para \"$4\"",
+	"logentry-managewiki-settings": "$1 modificou a configuración ($5) para \"$4\"",
 	"managewiki": "Xestionar un wiki",
 	"managewikiextensions": "Xestionar unha wiki (extensións)",
 	"managewiki-desc": "Permite ós usuarios administrar wikis a través dunha interface web.",

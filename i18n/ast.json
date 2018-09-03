@@ -5,7 +5,7 @@
 		]
 	},
 	"action-managewiki": "alministrar la configuración de la wiki",
-	"logentry-farmer-managewiki": "$1 cambió la configuración ($5) de «$4»",
+	"logentry-managewiki-settings": "$1 cambió la configuración ($5) de «$4»",
 	"managewiki": "Alministrar una wiki",
 	"managewikiextensions": "Alministrar una wiki (estensiones)",
 	"managewiki-desc": "Permite que les persones alministren wikis per una interfaz web.",

@@ -5,7 +5,7 @@
 		]
 	},
 	"action-managewiki": "раков. со википоставки",
-	"logentry-farmer-managewiki": "$1 ги измени поставките ($5) за „$4“",
+	"logentry-managewiki-settings": "$1 ги измени поставките ($5) за „$4“",
 	"managewiki": "Раководење со вики",
 	"managewikiextensions": "Раководење со вики (додатоци)",
 	"managewiki-desc": "Овозможува раководење со викија преку семрежен посредник",
