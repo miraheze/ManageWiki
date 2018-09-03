@@ -284,4 +284,8 @@ class SpecialManageWiki extends SpecialPage {
 		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki' )->getFullUrl() . $params['manage'] );
 		return true;
 	}
+
+	protected function getGroupName() {
+ 		return 'wikimanage';
+	}
 }
