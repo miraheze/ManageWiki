@@ -63,8 +63,8 @@ class SpecialManageWiki extends SpecialPage {
 
 	function showWikiForm( $wiki ) {
 		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings,
-			$wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis,
-			$wgManageWikiLinks, $wgManageWikiExtensions, $wgManageWikiPermissionsManagement;
+			$wgManageWikiExtensions, $wgManageWikiPermissionsManagement, $wgCreateWikiUsePrivateWikis,
+			$wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
 
 		$out = $this->getOutput();
 
