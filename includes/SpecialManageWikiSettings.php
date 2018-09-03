@@ -62,7 +62,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
-		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
+		global $wgUser, $wgManageWikiSettings;
 
 		$out = $this->getOutput();
 
@@ -86,67 +86,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 			$options["$code - $name"] = $code;
 		}
 
-		$formDescriptor = array(
-			'dbname' => array(
-				'label-message' => 'managewiki-label-dbname',
-				'type' => 'text',
-				'size' => 20,
-				'default' => $dbName,
-				'disabled' => true,
-				'name' => 'mwDBname',
-			),
-			'sitename' => array(
-				'label-message' => 'managewiki-label-sitename',
-				'type' => 'text',
-				'size' => 20,
-				'default' => $wiki->getSitename(),
-				'required' => true,
-				'name' => 'mwSitename',
-			),
-			'language' => array(
-				'label-message' => 'managewiki-label-language',
-				'type' => 'select',
-				'default' => $wiki->getLanguage(),
-				'options' => $options,
-				'name' => 'mwLanguage',
-			),
-		);
-
-		if ( $wgCreateWikiUsePrivateWikis ) {
-			$formDescriptor['private'] = array(
-				'type' => 'check',
-				'label-message' => 'managewiki-label-private',
-				'name' => 'cwPrivate',
-				'default' => $wiki->isPrivate() ? 1 : 0,
-			);
-		}
-
-		if ( $wgCreateWikiUseClosedWikis ) {
-			$formDescriptor['closed'] = array(
-				'type' => 'check',
-				'label-message' => 'managewiki-label-closed',
-				'name' => 'cwClosed',
-				'default' => $wiki->isClosed() ? 1 : 0,
-			);
-		}
-
-		if ( $wgCreateWikiUseInactiveWikis ) {
-			$formDescriptor['inactive'] = array(
-				'type' => 'check',
-				'label-message' => 'managewiki-label-inactive',
-				'name' => 'cwInactive',
-				'default' => $wiki->isInactive() ? 1 : 0,
-			);
-		}
-
-		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
-			$formDescriptor['category'] = array(
-				'type' => 'select',
-				'label-message' => 'managewiki-label-category',
-				'options' => $wgCreateWikiCategories,
-				'default' => $wiki->getCategory(),
-			);
-		}
+		$formDescriptor = array();
 
 		if ( $wgManageWikiSettings ) {
 			foreach ( $wgManageWikiSettings as $var => $det ) {
@@ -224,7 +164,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 	}
 
 	function onSubmitInput( array $params ) {
-		global $wgDBname, $wgCreateWikiDatabase, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
+		global $wgDBname, $wgCreateWikiDatabase, $wgUser, $wgManageWikiSettings;
 
 		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
@@ -267,77 +207,9 @@ class SpecialManageWikiSettings extends SpecialPage {
 
 		$settingsjson = json_encode( $settingsarray );
 
-		if ( $wgCreateWikiUsePrivateWikis ) {
-			$private = ( $params['private'] == true ) ? 1 : 0;
-		} else {
-			$private = 0;
-		}
-
-		if ( $wgCreateWikiUseClosedWikis && $params['closed'] ) {
-			$closed = 1;
-			$closedate = $dbw->timestamp();
-		} else {
-			$closed = 0;
-			$closedate = null;
-		}
-
-		if ( $wgCreateWikiUseInactiveWikis && $params['inactive'] ) {
-			$inactive = 1;
-			$inactivedate = $dbw->timestamp();
-		} else {
-			$inactive = 0;
-			$inactivedate = null;
-		}
-
-		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
-			$category = $params['category'];
-		} else {
-			$category = 'uncategorised';
-		}
-
 		$values = array(
-			'wiki_sitename' => $params['sitename'],
-			'wiki_language' => $params['language'],
-			'wiki_closed' => $closed,
-			'wiki_closed_timestamp' => $closedate,
-			'wiki_inactive' => $inactive,
-			'wiki_inactive_timestamp' => $inactivedate,
-			'wiki_private' => $private,
-			'wiki_category' => $category,
 			'wiki_settings' => $settingsjson,
 		);
-
-		if ( $params['sitename'] != $wiki->getSitename() ) {
-			$changedsettingsarray[] = 'sitename';
-		}
-
-		if ( $params['language'] != $wiki->getLanguage() ) {
-			$changedsettingsarray[] = 'language';
-		}
-
-		if ( $wgCreateWikiUseClosedWikis ) {
-			if ( $params['closed'] != $wiki->isClosed() ) {
-				$changedsettingsarray[] = 'closed';
-			}
-		}
-
-		if ( $wgCreateWikiUseInactiveWikis ) {
-			if ( $params['inactive'] != $wiki->isInactive() ) {
-				$changedsettingsarray[] = 'inactive';
-			}
-		}
-
-		if ( $wgCreateWikiUsePrivateWikis ) {
-			if ( $params['private'] != $wiki->isPrivate() ) {
-				$changedsettingsarray[] = 'private';
-			}
-		}
-
-		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
-			if ( $params['category'] != $wiki->getCategory() ) {
-				$changedsettingsarray[] = 'category';
-			}
-		}
 
 		$changedsettings = implode( ", ", $changedsettingsarray );
 
