@@ -58,7 +58,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 		global $wgRequest;
 
 		if ( $params['dbname'] !== '' ) {
-			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki' )->getFullUrl() . '/' . $params['dbname'] );
+			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWikiSettings' )->getFullUrl() . '/' . $params['dbname'] );
 		} else {
 			return 'Invalid url.';
 		}
