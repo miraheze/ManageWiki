@@ -18,7 +18,8 @@
 		"ManageWiki": "SpecialManageWiki",
 		"ManageWikiDefaultPermissions": "SpecialManageWikiDefaultPermissions",
 		"ManageWikiExtensions": "SpecialManageWikiExtensions",
-		"ManageWikiPermissions": "SpecialManageWikiPermissions"
+		"ManageWikiPermissions": "SpecialManageWikiPermissions",
+		"ManageWikiSettings": "SpecialManageWikiSettings"
 	},
 	"LogActionsHandlers": {
 		"managewiki/settings": "LogFormatter",
@@ -39,7 +40,8 @@
 		"SpecialManageWiki": "includes/SpecialManageWiki.php",
 		"SpecialManageWikiDefaultPermissions": "includes/SpecialManageWikiDefaultPermissions.php",
 		"SpecialManageWikiExtensions": "includes/SpecialManageWikiExtensions.php",
-		"SpecialManageWikiPermissions": "includes/SpecialManageWikiPermissions.php"
+		"SpecialManageWikiPermissions": "includes/SpecialManageWikiPermissions.php",
+		"SpecialManageWikiSettings": "includes/SpecialManageWikiSettings.php"
 	},
 	"config": {
 		"@wgEnableManageWiki": "Boolean. Whether Special:ManageWiki should work on the wiki.",
