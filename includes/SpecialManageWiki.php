@@ -9,7 +9,6 @@ class SpecialManageWiki extends SpecialPage {
 
 		$out = $this->getOutput();
 		$this->setHeaders();
-
 		if ( $wgManageWikiHelpUrl ) {
 			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
@@ -20,6 +19,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$this->checkPermissions();
+
 		if ( $wgCreateWikiDatabase !== $wgDBname ) {
 			$this->showWikiForm( $wgDBname );
 		} elseif ( !is_null( $par ) && $par !== '' ) {
@@ -39,42 +39,53 @@ class SpecialManageWiki extends SpecialPage {
 				'name' => 'mwDBname',
 			)
 		);
+
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'searchForm' );
 		$htmlForm->setMethod( 'post' )
 			->setSubmitCallback( array( $this, 'onSubmitRedirectToWikiForm' ) )
 			->prepareForm()
 			->show();
+
 		return true;
 	}
 
 	function onSubmitRedirectToWikiForm( array $params ) {
 		global $wgRequest;
+
 		if ( $params['dbname'] !== '' ) {
 			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki' )->getFullUrl() . '/' . $params['dbname'] );
 		} else {
 			return 'Invalid url.';
 		}
+
 		return true;
 	}
 
 	function showWikiForm( $wiki ) {
 		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
+
 		$out = $this->getOutput();
+
 		$dbName = $wiki;
+
 		$wiki = RemoteWiki::newFromName( $wiki );
+
 		if ( $wiki == NULL ) {
 			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;
 		}
+
 		if ( !$this->getRequest()->wasPosted() ) {
 			$out->addWikiMsg( 'managewiki-header', $dbName );
 		}
+
 		$languages = Language::fetchLanguageNames( null, 'wmfile' );
 		ksort( $languages );
 		$options = array();
 		foreach ( $languages as $code => $name ) {
 			$options["$code - $name"] = $code;
 		}
+
 		$formDescriptor = array(
 			'dbname' => array(
 				'label-message' => 'managewiki-label-dbname',
@@ -100,6 +111,7 @@ class SpecialManageWiki extends SpecialPage {
 				'name' => 'mwLanguage',
 			),
 		);
+
 		if ( $wgCreateWikiUsePrivateWikis ) {
 			$formDescriptor['private'] = array(
 				'type' => 'check',
@@ -108,6 +120,7 @@ class SpecialManageWiki extends SpecialPage {
 				'default' => $wiki->isPrivate() ? 1 : 0,
 			);
 		}
+
 		if ( $wgCreateWikiUseClosedWikis ) {
 			$formDescriptor['closed'] = array(
 				'type' => 'check',
@@ -116,6 +129,7 @@ class SpecialManageWiki extends SpecialPage {
 				'default' => $wiki->isClosed() ? 1 : 0,
 			);
 		}
+
 		if ( $wgCreateWikiUseInactiveWikis ) {
 			$formDescriptor['inactive'] = array(
 				'type' => 'check',
@@ -124,6 +138,7 @@ class SpecialManageWiki extends SpecialPage {
 				'default' => $wiki->isInactive() ? 1 : 0,
 			);
 		}
+
 		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
 			$formDescriptor['category'] = array(
 				'type' => 'select',
@@ -139,6 +154,7 @@ class SpecialManageWiki extends SpecialPage {
 				'size' => 45,
 				'required' => true,
 		);
+
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'changeForm' );
 		$htmlForm->setMethod( 'post' )
 			->setSubmitCallback( array( $this, 'onSubmitInput' ))
@@ -147,14 +163,14 @@ class SpecialManageWiki extends SpecialPage {
 
 		$out->addWikiMsg( 'managewiki-header' );
 
-		$pageSelector['manage'] = array(
-			'type' => 'select',
-			'options' => [
-				'Additional Settings' => 'Settings',
-				'Extensions/Skins' => 'Extensions',
-				'Permissions' => 'Permissions',
-			],
-		);
+ 		$pageSelector['manage'] = array(
+ 			'type' => 'select',
+ 			'options' => [
+ 				'Additional Settings' => 'Settings',
+ 				'Extensions/Skins' => 'Extensions',
+ 				'Permissions' => 'Permissions',
+ 			],
+ 		);
 
 		$selectForm = HTMLForm::factory( 'ooui', $pageSelector, $this->getContext(), 'pageSelector' );
 		$selectForm->setMethod('post' )
@@ -252,6 +268,7 @@ class SpecialManageWiki extends SpecialPage {
 		$changedsettings = implode( ", ", $changedsettingsarray );
 
 		$dbw->selectDB( $wgCreateWikiDatabase );
+
 		$dbw->update( 'cw_wikis',
 			$values,
 			array(
@@ -286,6 +303,6 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	protected function getGroupName() {
- 		return 'wikimanage';
+		return 'wikimanage';
 	}
 }
