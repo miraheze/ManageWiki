@@ -62,7 +62,9 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
-		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
+		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings,
+			$wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis,
+			$wgManageWikiLinks
 
 		$out = $this->getOutput();
 
@@ -161,23 +163,21 @@ class SpecialManageWiki extends SpecialPage {
 			->prepareForm()
 			->show();
 
-		$out->addWikiMsg( 'managewiki-header' );
+		if ( is_array( $wgManageWikiLinks ) ) {
+			$out->addWikiMsg( 'managewiki-header' );
 
- 		$pageSelector['manage'] = array(
- 			'type' => 'select',
- 			'options' => [
- 				'Additional Settings' => 'Settings',
- 				'Extensions/Skins' => 'Extensions',
- 				'Permissions' => 'Permissions',
- 			],
- 		);
+			$pageSelector['manage'] = [
+				'type' => 'select',
+				'options' => $wgManageWikiLinks,
+			];
 
-		$selectForm = HTMLForm::factory( 'ooui', $pageSelector, $this->getContext(), 'pageSelector' );
-		$selectForm->setMethod('post' )
-			->setFormIdentifier( 'pageSelector' )
-			->setSubmitCallback( [ $this, 'onSubmitRedirectToManageWikiPage' ] )
-			->prepareForm()
-			->show();
+			$selectForm = HTMLForm::factory( 'ooui', $wgManageWikiLinks, $this->getContext(), 'pageSelector' );
+			$selectForm->setMethod('post' )
+				->setFormIdentifier( 'pageSelector' )
+				->setSubmitCallback( [ $this, 'onSubmitRedirectToManageWikiPage' ] )
+				->prepareForm()
+				->show();
+		}
 	}
 
 	function onSubmitInput( array $params ) {
