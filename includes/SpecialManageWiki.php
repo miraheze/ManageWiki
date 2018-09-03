@@ -64,7 +64,7 @@ class SpecialManageWiki extends SpecialPage {
 	function showWikiForm( $wiki ) {
 		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings,
 			$wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis,
-			$wgManageWikiLinks
+			$wgManageWikiLinks;
 
 		$out = $this->getOutput();
 
@@ -163,7 +163,7 @@ class SpecialManageWiki extends SpecialPage {
 			->prepareForm()
 			->show();
 
-		if ( is_array( $wgManageWikiLinks ) ) {
+		if ( is_object( $wgManageWikiLinks ) ) {
 			$out->addWikiMsg( 'managewiki-header' );
 
 			$pageSelector['manage'] = [
