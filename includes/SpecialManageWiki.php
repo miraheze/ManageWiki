@@ -132,59 +132,7 @@ class SpecialManageWiki extends SpecialPage {
 				'default' => $wiki->getCategory(),
 			);
 		}
-		if ( $wgManageWikiSettings ) {
-			foreach ( $wgManageWikiSettings as $var => $det ) {
-				if ( $det['requires'] && $wiki->hasExtension( $det['requires'] ) || !$det['requires'] ) {
-					switch ( $det['type'] ) {
-						case 'check':
-						case 'text':
-						case 'url':
-							$mwtype = $det['type'];
-							break;
-						case 'list':
-							$mwtype = 'select';
-							$mwoptions = $det['options'];
-							break;
-						case 'list-multi':
-							$mwtype = 'multiselect';
-							$mwoptions = $det['options'];
-							break;
-						case 'matrix':
-							$mwtype = 'checkmatrix';
-							$mwcols = $det['cols'];
-							$mwrows = $det['rows'];
-							break;
-						case 'timezone':
-							$mwtype = 'select';
-							$mwoptions = ManageWiki::getTimezoneList();
-							break;
-						case 'wikipage':
-							$mwtype = 'title';
-							break;
-					}
-					$formDescriptor["set-$var"] = array(
-						'type' => $mwtype,
-						'label' => $det['name'],
-						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
-						'help' => ( $det['help'] ) ? $det['help'] : null,
-					);
-					if ( $mwtype != 'matrix' ) {
-						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'];
-					} else {
-						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' ) : $det['overridedefault'];
-					}
-					if ( isset( $mwoptions ) ) {
-						$formDescriptor["set-$var"]['options'] = $mwoptions;
-					}
-					if ( isset( $mwcols ) ) {
-						$formDescriptor["set-$var"]['columns'] = $mwcols;
-					}
-					if ( isset( $mwrows ) ) {
-						$formDescriptor["set-$var"]['rows'] = $mwrows;
-					}
-				}
-			}
-		}
+
 		$formDescriptor['reason'] = array(
 				'type' => 'text',
 				'label-message' => 'managewiki-label-reason',
@@ -215,45 +163,27 @@ class SpecialManageWiki extends SpecialPage {
 			->prepareForm()
 			->show();
 	}
+
 	function onSubmitInput( array $params ) {
 		global $wgDBname, $wgCreateWikiDatabase, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
+
 		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
+
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
 			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
 		}
+
 		$wiki = RemoteWiki::newFromName( $params['dbname'] );
+
 		$changedsettingsarray = [];
-		$settingsarray = [];
-		foreach( $wgManageWikiSettings as $var => $det ) {
-			$rmVar = $wiki->getSettingsValue( $var );
-			
-			if ( $det['type'] == 'matrix' ) {
-				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
-					$settingsarray[$var] = ManageWiki::handleMatrix( $params["set-$var"], 'phparray' );
-				} else {
-					$settingsarray[$var] = ManageWiki::handleMatrix( $rmVar, 'php' );
-				}
-				if ( $settingsarray[$var] != ManageWiki::handleMatrix( $rmVar, 'php' ) ) {
-					$changedsettingsarray[] = "setting-" . $var;
-				}
-			} elseif ( $det['type'] != 'text' || $params["set-$var"] ) {
-				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
-					$settingsarray[$var] = $params["set-$var"];
-				} else {
-					$settingsarray[$var] = $rmVar;
-				}
-				if (  is_null( $rmVar) && $settingsarray[$var] != $det['overridedefault'] || !is_null( $rmVar) && $settingsarray[$var] != $rmVar ) {
-					$changedsettingsarray[] = "setting-" . $var;
-				}
-			}
-		}
-		$settingsjson = json_encode( $settingsarray );
+
 		if ( $wgCreateWikiUsePrivateWikis ) {
 			$private = ( $params['private'] == true ) ? 1 : 0;
 		} else {
 			$private = 0;
 		}
+
 		if ( $wgCreateWikiUseClosedWikis && $params['closed'] ) {
 			$closed = 1;
 			$closedate = $dbw->timestamp();
@@ -261,6 +191,7 @@ class SpecialManageWiki extends SpecialPage {
 			$closed = 0;
 			$closedate = null;
 		}
+
 		if ( $wgCreateWikiUseInactiveWikis && $params['inactive'] ) {
 			$inactive = 1;
 			$inactivedate = $dbw->timestamp();
@@ -268,11 +199,13 @@ class SpecialManageWiki extends SpecialPage {
 			$inactive = 0;
 			$inactivedate = null;
 		}
+
 		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
 			$category = $params['category'];
 		} else {
 			$category = 'uncategorised';
 		}
+
 		$values = array(
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
@@ -282,35 +215,42 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_inactive_timestamp' => $inactivedate,
 			'wiki_private' => $private,
 			'wiki_category' => $category,
-			'wiki_settings' => $settingsjson,
 		);
+
 		if ( $params['sitename'] != $wiki->getSitename() ) {
 			$changedsettingsarray[] = 'sitename';
 		}
+
 		if ( $params['language'] != $wiki->getLanguage() ) {
 			$changedsettingsarray[] = 'language';
 		}
+
 		if ( $wgCreateWikiUseClosedWikis ) {
 			if ( $params['closed'] != $wiki->isClosed() ) {
 				$changedsettingsarray[] = 'closed';
 			}
 		}
+
 		if ( $wgCreateWikiUseInactiveWikis ) {
 			if ( $params['inactive'] != $wiki->isInactive() ) {
 				$changedsettingsarray[] = 'inactive';
 			}
 		}
+
 		if ( $wgCreateWikiUsePrivateWikis ) {
 			if ( $params['private'] != $wiki->isPrivate() ) {
 				$changedsettingsarray[] = 'private';
 			}
 		}
+
 		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
 			if ( $params['category'] != $wiki->getCategory() ) {
 				$changedsettingsarray[] = 'category';
 			}
 		}
+
 		$changedsettings = implode( ", ", $changedsettingsarray );
+
 		$dbw->selectDB( $wgCreateWikiDatabase );
 		$dbw->update( 'cw_wikis',
 			$values,
@@ -319,7 +259,9 @@ class SpecialManageWiki extends SpecialPage {
 			),
 			__METHOD__
 		);
+
 		$dbw->selectDB( $dbName ); // $dbw->close() errors?
+
 		$farmerLogEntry = new ManualLogEntry( 'managewiki', 'settings' );
 		$farmerLogEntry->setPerformer( $this->getUser() );
 		$farmerLogEntry->setTarget( $this->getTitle() );
@@ -332,7 +274,9 @@ class SpecialManageWiki extends SpecialPage {
 		);
 		$farmerLogID = $farmerLogEntry->insert();
 		$farmerLogEntry->publish( $farmerLogID );
+
 		$this->getOutput()->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
+
 		return true;
 	}
 
