@@ -159,6 +159,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'changeForm' );
 		$htmlForm->setMethod( 'post' )
+			->setFormIdentifier( 'wikiForm' )
 			->setSubmitCallback( array( $this, 'onSubmitInput' ))
 			->prepareForm()
 			->show();
