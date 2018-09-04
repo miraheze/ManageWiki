@@ -54,21 +54,43 @@ class ManageWikiHooks {
 	}
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {
-		global $wgManageWikiSidebarLinks;
+		global $wgManageWikiSidebarLinks, $wgEnableManageWiki, $wgManageWikiExtensions,
+			$wgManageWikiPermissionsManagement, $wgManageWikiSettings;
 		if (
 			$skin->getUser()->isAllowed( 'managewiki' ) &&
 			$wgManageWikiSidebarLinks
 		) {
-			$bar['Administration'][] = [
-				'text' => wfMessage( 'managewiki-settings-link' )->plain(),
-				'id' => 'managewikilink',
-				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki' )->getFullURL() )
-			];
-			$bar['Administration'][] = [
-				'text' => wfMessage( 'managewiki-extensions-link' )->plain(),
-				'id' => 'managewikiextensionslink',
-				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWikiExtensions' )->getFullURL() )
-			];
+			if ( $wgEnableManageWiki ) {
+				$bar['Administration'][] = [
+					'text' => wfMessage( 'managewiki-link' )->plain(),
+					'id' => 'managewikilink',
+					'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki' )->getFullURL() )
+				];
+
+				if ( $wgManageWikiExtensions ) {
+					$bar['Administration'][] = [
+						'text' => wfMessage( 'managewiki-extensions-link' )->plain(),
+						'id' => 'managewikiextensionslink',
+						'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWikiExtensions' )->getFullURL() )
+					];
+				}
+
+				if ( $wgManageWikiPermissionsManagement ) {
+					$bar['Administration'][] = [
+						'text' => wfMessage( 'managewiki-permissions-link' )->plain(),
+						'id' => 'managewikipermissionslink',
+						'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWikiPermissions' )->getFullURL() )
+					];
+				}
+
+				if ( $wgManageWikiSettings ) {
+					$bar['Administration'][] = [
+						'text' => wfMessage( 'managewiki-settings-link' )->plain(),
+						'id' => 'managewikisettingslink',
+						'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWikiSettings' )->getFullURL() )
+					];
+				}
+			}
 		}
 	}
 }
