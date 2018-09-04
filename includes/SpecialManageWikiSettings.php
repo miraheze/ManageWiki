@@ -93,6 +93,15 @@ class SpecialManageWikiSettings extends SpecialPage {
 
 		$formDescriptor = array();
 
+		$formDescriptor['dbname'] = array(
+			'label-message' => 'managewiki-label-dbname',
+			'type' => 'text',
+			'size' => 20,
+			'default' => $dbName,
+			'disabled' => true,
+			'name' => 'mwDBname',
+		);
+
 		if ( $wgManageWikiSettings ) {
 			foreach ( $wgManageWikiSettings as $var => $det ) {
 
