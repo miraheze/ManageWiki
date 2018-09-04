@@ -54,8 +54,8 @@
 	"managewiki-perm-success-text": "\"$1\" metadata has been saved and should be applied within the next minute.",
 	"managewiki-success": "The settings have been successfully changed.",
 	"managewiki-extension-name": "[$1 $2]",
-	"managewiki-link": "Manage this wiki",
+	"managewiki-link": "Manage this wiki's settings",
 	"managewiki-extensions-link": "Manage this wiki's extensions",
 	"managewiki-permissions-link": "Manage this wiki's permissions",
-	"managewiki-settings-link": "Manage this wiki's settings"
+	"managewiki-settings-link": "Manage this wiki's additional settings"
 }
