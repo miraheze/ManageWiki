@@ -211,6 +211,17 @@ class SpecialManageWiki extends SpecialPage {
 
 		if ( $wgCreateWikiUsePrivateWikis ) {
 			$private = ( $params['private'] == true ) ? 1 : 0;
+
+			$previousPrivate = $wiki->isPrivate();
+
+			if ( $previousPrivate != $private ) {
+				// state changed
+				if ( $private == 1 ) {
+					Hooks::run( 'CreateWikiStatePrivate', [ $params['dbname'] ] );
+				} elseif ( $private == 0 ) {
+					Hooks::run( 'CreateWikiStatePublic', [ $params['dbname'] ] );
+				}
+			}
 		} else {
 			$private = 0;
 		}
