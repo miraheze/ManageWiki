@@ -53,6 +53,47 @@ class ManageWikiHooks {
 		}
 	}
 
+	public static function onCreateWikiStatePrivate( $dbname ) {
+		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiPermissionsManagement;
+
+		if ( $wgManageWikiPermissionsManagement && $wgManageWikiPermissionsDefaultPrivateGroup ) {
+
+			$defaultarray = ManageWiki::defaultGroupPermissions( $wgManageWikiPermissionsDefaultPrivateGroup );
+
+			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
+			$dbw->insert(
+				'mw_permissions',
+				[
+					'perm_dbname' => $dbname,
+					'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup,
+					'perm_permissions' => json_encode( $defaultarray['permissions'] ),
+					'perm_addgroups' => json_encode( $defaultarray['add'] ),
+					'perm_removegroups' => json_encode( $defaultarray['remove'] ),
+				],
+				__METHOD__
+			);
+		}
+	}
+
+	public static function onCreateWikiStatePublic( $dbname ) {
+		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiPermissionsManagement;
+
+		if ( $wgManageWikiPermissionsManagement && $wgManageWikiPermissionsDefaultPrivateGroup ) {
+
+			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
+			$dbw->delete(
+				'mw_permissions',
+				[
+					'perm_dbname' => $dbname,
+					'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup
+				],
+				__METHOD__
+			);
+		}
+	}
+
 	public static function fnNewSidebarItem( $skin, &$bar ) {
 		global $wgManageWikiSidebarLinks, $wgEnableManageWiki, $wgManageWikiExtensions,
 			$wgManageWikiPermissionsManagement, $wgManageWikiSettings;
