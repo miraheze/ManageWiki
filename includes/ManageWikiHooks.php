@@ -53,6 +53,34 @@ class ManageWikiHooks {
 		}
 	}
 
+	public static function onCreateWikiCreation( $dbname, $private ) {
+		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
+
+		$defaultGroups = ManageWiki::defaultGroups();
+
+		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
+		if ( !$private ) {
+			$defaultsToAdd = array_diff( $defaultGroups, "member" );
+		}
+
+		foreach ( $defaultsToAdd as $newgroup ) {
+			$grouparray = ManageWiki::defaultGroupPermissions( $newgroup );
+
+			$dbw->insert(
+				'mw_permissions',
+				[
+					'perm_dbname' => $dbname,
+					'perm_group' => $newgroup,
+					'perm_permissions' => json_encode( $grouparray['permissions'] ),
+					'perm_addgroups' => json_encode( $grouparray['add'] ),
+					'perm_removegroups' => json_encode( $grouparray['remove'] )
+				],
+				__METHOD__,
+			);
+		}
+	}
+
 	public static function onCreateWikiStatePrivate( $dbname ) {
 		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiPermissionsManagement;
 

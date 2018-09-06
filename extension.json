@@ -70,6 +70,9 @@
 		"ManageWikiSidebarLinks": true
 	},
 	"Hooks": {
+		"CreateWikiCreation": [
+			"ManageWikiHooks::onCreateWikiCreation"
+		],
 		"CreateWikiStatePrivate": [
 			"ManageWikiHooks::onCreateWikiStatePrivate"
 		],
