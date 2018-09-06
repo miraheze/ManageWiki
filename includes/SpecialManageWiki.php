@@ -226,9 +226,20 @@ class SpecialManageWiki extends SpecialPage {
 			$private = 0;
 		}
 
-		if ( $wgCreateWikiUseClosedWikis && $params['closed'] ) {
-			$closed = 1;
-			$closedate = $dbw->timestamp();
+		if ( $wgCreateWikiUseClosedWikis ) {
+			$previousClosed = $wiki->isClosed();
+
+			if ( $params['closed'] && $previousClosed != $params['closed'] ) {
+				$closed = 1;
+				$closedate = $dbw->timestamp();
+
+				Hooks::run( 'CreateWikiStateClosed', [ $params['dbname'] ] );
+			} elseif ( !$params['closed'] && $previousClosed != $params['closed'] ) {
+				$closed = 0;
+				$closedate = null;
+
+				Hooks::run( 'CreateWikiStateOpen', [ $params['dbname'] );
+			}
 		} else {
 			$closed = 0;
 			$closedate = null;
