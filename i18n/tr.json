@@ -10,7 +10,7 @@
 	"managewiki": "Bir vikiyi yönet",
 	"managewiki-desc": "İnsanların bir web arayüzü aracılığıyla viki'leri yönetmesine izin verir",
 	"managewiki-disabled": "Bu özellik henüz bu vikide etkin değil.",
-	"managewiki-header": "Bu sayfa '$1' viki'sinin ayarlarını yönetmek için kullanılır. Bu viki'nin tüm viki ayarlarını değiştiremeyebileceğinizi lütfen unutmayın, bu durumda sistem yöneticisine başvurmalısınız. ManageWiki hâlâ geliştiriliyor bu yüzden gelecekte yeni özellikler mevcut olmalıdır.",
+	"managewiki-settings-header": "Bu sayfa '$1' viki'sinin ayarlarını yönetmek için kullanılır. Bu viki'nin tüm viki ayarlarını değiştiremeyebileceğinizi lütfen unutmayın, bu durumda sistem yöneticisine başvurmalısınız. ManageWiki hâlâ geliştiriliyor bu yüzden gelecekte yeni özellikler mevcut olmalıdır.",
 	"managewiki-label-category": "Kategori",
 	"managewiki-label-closed": "Kapandı",
 	"managewiki-label-dbname": "Veritabanı adı",
@@ -20,6 +20,6 @@
 	"managewiki-label-reason": "Gerekçe",
 	"managewiki-label-sitename": "Site adı",
 	"managewiki-missing": "Bu viki mevcut değil.",
-	"managewiki-perm-readon": "Gerekçe:",
+	"managewiki-perm-reason": "Gerekçe:",
 	"managewiki-success": "Ayarlar başarıyla değiştirildi."
 }

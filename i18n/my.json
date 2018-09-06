@@ -6,6 +6,7 @@
 	},
 	"action-managewiki": "ဝီကီအပြင်အဆင်များကို စီမံရန်",
 	"managewiki": "ဝီကီတစ်ခုကို စီမံရန်",
+	"managewikipermissions": "ဝီကီတစ်ခုကို စီမံရန် (ခွင့်ပြုချက်များ)",
 	"managewiki-label-category": "ကဏ္ဍ",
 	"managewiki-label-closed": "ပိတ်သိမ်းပြီး",
 	"managewiki-label-dbname": "ဒေတာဘေ့စ် အမည်",
@@ -13,6 +14,13 @@
 	"managewiki-label-reason": "အကြောင်းပြချက်",
 	"managewiki-label-sitename": "ဆိုဒ်အမည်",
 	"managewiki-missing": "ဤဝီကီ မရှိပါ",
+	"managewiki-perm-add": "ပေါင်းထည့်နိုင်သော အုပ်စုများ:",
+	"managewiki-perm-creategroup": "အသုံးပြုသူ အုပ်စုသစ်တစ်ခု ဖန်တီးရန်",
+	"managewiki-perm-member": "အုပ်စုအဖွဲ့ဝင်များ၏ အမည်:",
+	"managewiki-perm-name": "အုပ်စုအမည်:",
+	"managewiki-perm-nonexistent": "အုပ်စု \"$1\" သည် လက်ရှိမတည်ရှိပါ။",
+	"managewiki-perm-reason": "အ​ကြောင်း​ပြ​ချက်:",
+	"managewiki-perm-remove": "ဖယ်ရှားနိုင်သော အုပ်စုများ:",
 	"managewiki-success": "အပြင်အဆင်များ အောင်မြင်စွာ ပြောင်းလဲသွားပါသည်။",
 	"managewiki-extension-name": "[$1 $2]"
 }

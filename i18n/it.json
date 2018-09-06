@@ -7,8 +7,10 @@
 		]
 	},
 	"logentry-managewiki-settings": "$1 ha modificato le impostazioni ($5) per \"$4\"",
+	"managewikisettings": "Gestisci un wiki (impostazioni)",
 	"managewiki-disabled": "Questa funzione non è ancora stata attivata su questo wiki.",
-	"managewiki-header": "Questa pagina è usata per gestire le impostazioni del wiki <b>$1</b>. Se una funzionalità che ti piacerebbe usare non è ancora disponibile qui, per favore usa <span class=“plainlinks”> [https://meta.miraheze.org/wiki/Request_features Phabricator]</span> per richiederla. Invece, per gestire le estensioni in questo wiki vedi <b>[[Special:ManageWikiExtensions|questa pagina]]</b>.",
+	"managewiki-settings-disabled": "Nessuna impostazione è stata definita per questo wiki",
+	"managewiki-settings-header": "Questa pagina è usata per gestire le impostazioni del wiki <b>$1</b>. Se una funzionalità che ti piacerebbe usare non è ancora disponibile qui, per favore usa <span class=“plainlinks”> [https://meta.miraheze.org/wiki/Request_features Phabricator]</span> per richiederla. Invece, per gestire le estensioni in questo wiki vedi <b>[[Special:ManageWikiExtensions|questa pagina]]</b>.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Chiuso",
 	"managewiki-label-dbname": "Nome database",
@@ -22,8 +24,9 @@
 	"managewiki-perm-name": "Nome gruppo:",
 	"managewiki-perm-nonexistent": "Il gruppo \"$1\" attualmente non esiste.",
 	"managewiki-perm-perms": "Permessi assegnati:",
-	"managewiki-perm-readon": "Motivo:",
+	"managewiki-perm-reason": "Motivo:",
 	"managewiki-perm-remove": "Gruppi rimovibili:",
+	"managewiki-link": "Gestisci le impostazioni di questo wiki",
 	"managewiki-extensions-link": "Gestisci le estensioni di questo wiki",
-	"managewiki-settings-link": "Gestisci le impostazioni di questo wiki"
+	"managewiki-settings-link": "Gestisci le impostazioni aggiuntive di questo wiki"
 }

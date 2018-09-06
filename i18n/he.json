@@ -12,7 +12,7 @@
 	"managewiki-disabled": "אפשרות זו עדיין לא הופעלה באתר הוויקי הזה.",
 	"managewiki-extensions-disabled": "לא הוגדרו הרחבות עבור אתר הוויקי הזה",
 	"managewiki-extensions-header": "ההרחבות שלהלן הן אלו שמותקנות כרגע, אבל תמיד אפשר <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features לבקש]</span> להוסיף עוד הרחבות. <br>כדי לנהל את ההגדרות של אתר הוויקי הזה, נא לעיין ב<b>[[Special:ManageWiki|דף זה]]</b>.",
-	"managewiki-header": "ניתן להשתמש בדף זה כדי לנהל את ההגדרות של אתר הוויקי <b>'$1'</b>. אם חסרה כאן תכונה שחשובה לך, באפשרותך לבקש אותה ב<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features פבריקטור]. כדי לנהל את ההרחבות של אתר הוויקי הזה, יש לעיין ב<b>[[Special:ManageWikiExtensions|דף זה]]</b> במקום.",
+	"managewiki-settings-header": "ניתן להשתמש בדף זה כדי לנהל את ההגדרות של אתר הוויקי <b>'$1'</b>. אם חסרה כאן תכונה שחשובה לך, באפשרותך לבקש אותה ב<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features פבריקטור]. כדי לנהל את ההרחבות של אתר הוויקי הזה, יש לעיין ב<b>[[Special:ManageWikiExtensions|דף זה]]</b> במקום.",
 	"managewiki-label-category": "קטגוריה",
 	"managewiki-label-closed": "נסגר",
 	"managewiki-label-dbname": "שם מסד הנתונים",

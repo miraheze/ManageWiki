@@ -13,7 +13,7 @@
 	"managewiki-disabled": "لم يتم تمكين هذه الميزة في هذا الويكي بعد.",
 	"managewiki-extensions-disabled": "لم يتم تحديد أية امتدادات لهذا الويكي",
 	"managewiki-extensions-header": "الامتدادات هنا هي تلك المثبتة حاليا، ولكن يمكنك دائما <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features طلب]</span> إضافة أخرى. <br>لإدارة إعدادات هذا الويكي، يُرجَى الاطلاع على <b>[[Special:ManageWiki|هذه الصفحة]]</b>.",
-	"managewiki-header": "يتم استخدام هذه الصفحة لإدارة إعدادات ويكي الويكي <b>'$1'</b>، إذا كانت الميزة التي تريدها غير متوفرة هنا حتى الآن، فيُرجَى استخدام <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features فبريكاتور]</span> to request it.<br> إدارة الامتدادات لهذا الويكي يُرجَى الاطلاع على <b>[[Special:ManageWikiExtensions|هذه الصفحة]]</b> بدلا من ذلك.",
+	"managewiki-settings-header": "يتم استخدام هذه الصفحة لإدارة إعدادات ويكي الويكي <b>'$1'</b>، إذا كانت الميزة التي تريدها غير متوفرة هنا حتى الآن، فيُرجَى استخدام <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features فبريكاتور]</span> to request it.<br> إدارة الامتدادات لهذا الويكي يُرجَى الاطلاع على <b>[[Special:ManageWikiExtensions|هذه الصفحة]]</b> بدلا من ذلك.",
 	"managewiki-label-category": "التصنيف",
 	"managewiki-label-closed": "مغلق",
 	"managewiki-label-dbname": "اسم قاعدة البيانات",

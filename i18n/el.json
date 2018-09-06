@@ -8,6 +8,7 @@
 	"log-name-managewiki": "Μητρώο ManageWiki",
 	"managewiki": "Διαχείριση ενός βίκι",
 	"managewikiextensions": "Διαχείριση ενός βίκι (επεκτάσεις)",
+	"managewikipermissions": "Διαχείριση ενός βίκι (άδειες)",
 	"managewiki-label-category": "Κατηγορία",
 	"managewiki-label-closed": "Έκλεισε",
 	"managewiki-label-dbname": "Όνομα βάσης δεδομένων",
@@ -19,7 +20,7 @@
 	"managewiki-missing": "Αυτό το βίκι δεν υπάρχει.",
 	"managewiki-perm-display": "Τοπικοποιημένο όνομα ομάδας:",
 	"managewiki-perm-name": "Όνομα ομάδας:",
-	"managewiki-perm-readon": "Αιτία:",
+	"managewiki-perm-reason": "Αιτία:",
 	"managewiki-success": "Αυτές οι ρυθμίσεις έχουν αλλαχθεί επιτυχώς.",
 	"managewiki-extensions-link": "Διαχείριση των επεκτάσεων του βίκι",
 	"managewiki-settings-link": "Διαχείριση των ρυθμίσεων του βίκι"
