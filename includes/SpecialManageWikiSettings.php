@@ -195,8 +195,9 @@ class SpecialManageWikiSettings extends SpecialPage {
 
 		foreach( $wgManageWikiSettings as $var => $det ) {
 			$rmVar = $wiki->getSettingsValue( $var );
-			
+
 			if ( $det['type'] == 'matrix' ) {
+				// we have a matrix
 				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
 					$settingsarray[$var] = ManageWiki::handleMatrix( $params["set-$var"], 'phparray' );
 				} else {
@@ -207,6 +208,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 					$changedsettingsarray[] = "setting-" . $var;
 				}
 			} elseif ( $det['type'] != 'text' || $params["set-$var"] ) {
+				// we don't have a matrix, we don't have text in all cases, there's a value so let's handle it
 				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
 					$settingsarray[$var] = $params["set-$var"];
 				} else {
@@ -214,6 +216,19 @@ class SpecialManageWikiSettings extends SpecialPage {
 				}
 
 				if (  is_null( $rmVar) && $settingsarray[$var] != $det['overridedefault'] || !is_null( $rmVar) && $settingsarray[$var] != $rmVar ) {
+					$changedsettingsarray[] = "setting-" . $var;
+				}
+			} else {
+				// we definitely have text and we don't have a value
+				if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
+					// no need to manipulate, it's good
+					continue;
+				} else {
+					// not good, let's not remove it
+					$settingsarray[$var] = $rmVar;
+				}
+
+				if ( $rmVar != $params["set-$var"] ) {
 					$changedsettingsarray[] = "setting-" . $var;
 				}
 			}
