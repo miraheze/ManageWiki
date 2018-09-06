@@ -44,7 +44,7 @@
 	"managewiki-perm-nonexistent": "The group \"$1\" does not currently exist.",
 	"managewiki-perm-not-default": "This is not the central wiki therefore editing the default user groups is not authorised.",
 	"managewiki-perm-perms": "Assigned permissions:",
-	"managewiki-perm-readon": "Reason:",
+	"managewiki-perm-reason": "Reason:",
 	"managewiki-perm-remove": "Removable groups:",
 	"managewiki-perm-rename-blacklisted": "Unable to rename as the group you are trying to rename has been blacklisted.",
 	"managewiki-perm-rename-taken": "Unable to rename as \"$1\" already exists.",
