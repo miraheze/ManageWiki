@@ -238,7 +238,7 @@ class SpecialManageWiki extends SpecialPage {
 				$closed = 0;
 				$closedate = null;
 
-				Hooks::run( 'CreateWikiStateOpen', [ $params['dbname'] );
+				Hooks::run( 'CreateWikiStateOpen', [ $params['dbname'] ] );
 			}
 		} else {
 			$closed = 0;
