@@ -76,7 +76,7 @@ class ManageWikiHooks {
 					'perm_addgroups' => json_encode( $grouparray['add'] ),
 					'perm_removegroups' => json_encode( $grouparray['remove'] )
 				],
-				__METHOD__,
+				__METHOD__
 			);
 		}
 	}
