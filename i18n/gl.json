@@ -13,7 +13,7 @@
 	"managewiki-desc": "Permite ós usuarios administrar wikis a través dunha interface web.",
 	"managewiki-disabled": "Esta función aínda non está activada nesta wiki.",
 	"managewiki-extensions-disabled": "Non se definiu ningunha extensión para esta wiki",
-	"managewiki-header": "Esta páxina permite xestionar a configuración da wiki «$1». Por favor, observe que é posible que non poida modificar tódalas opcións desta wiki; en tal caso, pode poñerse en contacto cun administrador de sistemas. ManageWiki aínda está en desenvolvemento: haberá funcionalidades novas no futuro.",
+	"managewiki-settings-header": "Esta páxina permite xestionar a configuración da wiki «$1». Por favor, observe que é posible que non poida modificar tódalas opcións desta wiki; en tal caso, pode poñerse en contacto cun administrador de sistemas. ManageWiki aínda está en desenvolvemento: haberá funcionalidades novas no futuro.",
 	"managewiki-label-category": "Categoría",
 	"managewiki-label-closed": "Pechado",
 	"managewiki-label-dbname": "Nome da base de datos",

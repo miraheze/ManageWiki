@@ -12,7 +12,7 @@
 	"managewiki-disabled": "Esta función inda nun ta activada nesta wiki.",
 	"managewiki-extensions-disabled": "Nun se definió nenguna estensión pa esta wiki",
 	"managewiki-extensions-header": "Estes estensiones son les que tán instalaes anguaño, pero siempre puedes <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features pidir]</span> que s'añada otra. <br>P'alministrar la configuración d'esta wiki visita <b>[[Special:ManageWiki|esta páxina]]</b>.",
-	"managewiki-header": "Esta páxina s'usa p'alministrar la configuración de la wiki <b>'$1'</b>. Si una opción que desees inda nun ta disponible equí, usa <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> pa pidila.<br>P'alministrar les estensiones d'esta wiki, meyor visita <b>[[Special:ManageWikiExtensions|esta páxina]]</b>",
+	"managewiki-settings-header": "Esta páxina s'usa p'alministrar la configuración de la wiki <b>'$1'</b>. Si una opción que desees inda nun ta disponible equí, usa <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> pa pidila.<br>P'alministrar les estensiones d'esta wiki, meyor visita <b>[[Special:ManageWikiExtensions|esta páxina]]</b>",
 	"managewiki-label-category": "Categoría",
 	"managewiki-label-closed": "Zarrada",
 	"managewiki-label-dbname": "Nome de la base de datos",

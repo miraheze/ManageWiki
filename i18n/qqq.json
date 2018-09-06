@@ -14,7 +14,7 @@
 	"managewiki-desc": "ManageWiki extension description.",
 	"managewiki-disabled": "Message that indicates that a feature is not yet enabled on a wiki.",
 	"managewiki-extensions-disabled": "Message that indicates that extensions have not yet been defined for the wiki.",
-	"managewiki-header": "Header for the ManageWiki extension.",
+	"managewiki-settings-header": "Header for the ManageWiki extension.",
 	"managewiki-label-category": "{{Identical|Category}}",
 	"managewiki-label-closed": "Used as a label for 'closed'.\n{{Identical|Closed}}",
 	"managewiki-label-dbname": "Used as a label for 'dbname'.\n{{Identical|Database name}}",
@@ -26,6 +26,6 @@
 	"managewiki-missing": "Message if the wiki entered does not exist in the database.",
 	"managewiki-perm-name": "Label for a input field thats contains the group name\n{{Identical|Group name}}",
 	"managewiki-perm-nonexistent": "Error shown when a group does not exist.\n\nParameters:\n* $1 - group name",
-	"managewiki-perm-readon": "Used as label for the \"Reason\" input box.\n{{Identical|Reason}}",
+	"managewiki-perm-reason": "Used as label for the \"Reason\" input box.\n{{Identical|Reason}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent."
 }
