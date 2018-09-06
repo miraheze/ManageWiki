@@ -430,10 +430,18 @@ class SpecialManageWikiPermissions extends SpecialPage {
 		$addGroups = array_merge( array_diff( $oldAddGroups, $removedAddGroups ), $newAddGroups );
 		$removeGroups = array_merge( array_diff( $oldRemoveGroups, $removedRemoveGroups ), $newRemoveGroups );
 
-		if ( count( $addRights ) != 0 || count( $removeRights ) != 0 || count( $newAddGroups ) != 0 || count( $removedAddGroups ) != 0 || count( $newRemoveGroups ) != 0 || count( $removedRemoveGroups ) != 0 ) {
-			var_dump( $addGroups );
+		$newChanges = ( count( array_merge( $addRights, $removeRights, $newAddGroups, $removedAddGroups, $newRemoveGroups, $removedRemoveGroups ) ) > 0 ) ? true : false;
+		$countRemoves = count( array_merge( $removeRights, $removeAddGroups, $removeRemovedGroups ) );
+		$countExisting = count( array_merge( $oldRights, $oldAddGroups, $oldRemoveGroups ) );
+
+		if ( $newChanges && $countExisting != $countRemoves ) {
+			// new changes && existing metadata is not the same as removed metadata
 			$this->updatePermissions( $group, $newRights, $addGroups, $removeGroups );
 			$this->addPermissionLog( $group, $addRights, $removeRights, $newAddGroups, $removedAddGroups, $newRemoveGroups, $removedRemoveGroups, $reason );
+		} elseif ( $newChanges && $countExisting == $countRemoves ) {
+			// new changes && existing metadata is equal to removals, group deleted
+			$this->deleteGroup( $group );
+			$this->addDeletionLog( $group, $reason );
 		}
 
 		$this->getOutput()->setSubTitle( $this->msg( 'managewiki-perm-success' ) );
@@ -468,6 +476,21 @@ class SpecialManageWikiPermissions extends SpecialPage {
 				__METHOD__
 			);
 		}
+	}
+
+	function deleteGroup( $group ) {
+		global $wgCreateWikiDatabase, $wgDBname;
+
+		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
+		$dbw->delete(
+			'mw_permissions',
+			[
+				'perm_dbname' => $wgDBname,
+				'perm_group' => $group
+			],
+			__METHOD__
+		);
 	}
 
 	protected function showLogFragment( $group, $output ) {
@@ -506,6 +529,16 @@ class SpecialManageWikiPermissions extends SpecialPage {
 				SpecialPage::getTitleFor( 'ManageWikiPermissions', $newName ),
 				SpecialPage::getTitleFor( 'ManageWikiPermissions', $oldName )
 			]
+		);
+	}
+
+	function addDeletionLog( $group, $reason ) {
+		$log = new LogPage('managewiki' );
+
+		$log->addEntry(
+			'delete',
+			SpecialPage::getTitleFor( 'ListUsers', $group ),
+			$reason
 		);
 	}
 
