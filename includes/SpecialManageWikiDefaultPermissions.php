@@ -61,7 +61,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
 		$selectForm->setMethod('post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
-		if ( $wgUser->isAllowed( 'managewiki-editdefaults' ) ) {
+		if ( $wgUser->isAllowed( 'managewiki-editdefault' ) ) {
 			$createDescriptor['groups'] = [
 				'type' => 'text',
 				'label-message' => 'managewiki-perm-creategroup',
@@ -196,14 +196,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$checkboxes = [];
 		$attribs = [];
-
-		if ( !$editable ) {
-			$attribs['disabled'] = 'disabled';
-			if ( !$assignedRights ) {
-				$this->getOutput()->wrapWikiMsg( '<div class="error">$1</div>',
-					[ 'managewiki-perm-nonexistent', $group ] );
-			}
-		}
 
 		$addedGroups = $this->getAddGroups( $group );
 		$addgroups = array_diff( ManageWiki::defaultGroups(), User::getImplicitGroups() );
