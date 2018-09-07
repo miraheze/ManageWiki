@@ -101,6 +101,27 @@ class ManageWikiHooks {
 				],
 				__METHOD__
 			);
+
+			$publicGroups = [ '*', 'user' ];
+
+			foreach ( $publicGroups as $group ) {
+				$meta = ManageWiki::groupPermissions( $group );
+				$perms = $meta['permissions'];
+
+				$newperms = array_diff( $perms, [ 'read' ] );
+
+				$dbw->update(
+					'mw_permissions',
+					[
+						'perm_permissions' => $json_encode( $newperms )
+					],
+					[
+						'perm_dbname' => $dbname,
+						'perm_group' => $group
+					],
+					__METHOD__
+				);
+			}
 		}
 	}
 
@@ -116,6 +137,22 @@ class ManageWikiHooks {
 				[
 					'perm_dbname' => $dbname,
 					'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup
+				],
+				__METHOD__
+			);
+
+			$meta = ManageWiki::groupPermissions( '*' );
+			$perms = $meta['permissions'];
+			$perms[] = "read";
+
+			$dbw->update(
+				'mw_permissions',
+				[
+					'perm_permissions' => json_encode( $perms )
+				],
+				[
+					'perm_dbname' => $dbname,
+					'perm_group' => '*'
 				],
 				__METHOD__
 			);
