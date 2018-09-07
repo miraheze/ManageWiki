@@ -209,14 +209,6 @@ class SpecialManageWikiPermissions extends SpecialPage {
 		$checkboxes = [];
 		$attribs = [];
 
-		if ( !$editable ) {
-			$attribs['disabled'] = 'disabled';
-			if ( !$assignedRights ) {
-				$this->getOutput()->wrapWikiMsg( '<div class="error">$1</div>',
-					[ 'managewiki-perm-nonexistent', $group ] );
-			}
-		}
-
 		$addedGroups = $this->getAddGroups( $group );
 		$addgroups = array_diff( ManageWiki::availableGroups(), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() );
 		sort( $addgroups );
