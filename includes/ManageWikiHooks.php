@@ -61,10 +61,10 @@ class ManageWikiHooks {
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 		if ( !$private ) {
-			$defaultsToAdd = array_diff( $defaultGroups, "member" );
+			$defaultGroups = array_diff( $defaultGroups, [ "member" ] );
 		}
 
-		foreach ( $defaultsToAdd as $newgroup ) {
+		foreach ( $defaultGroups as $newgroup ) {
 			$grouparray = ManageWiki::defaultGroupPermissions( $newgroup );
 
 			$dbw->insert(
