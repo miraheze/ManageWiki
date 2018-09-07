@@ -225,7 +225,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 					continue;
 				} else {
 					// not good, let's not remove it
-					if ( !is_null( $rmVar ) {
+					if ( !is_null( $rmVar ) ) {
 						$settingsarray[$var] = $rmVar;
 					}
 				}
