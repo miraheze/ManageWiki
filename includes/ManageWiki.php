@@ -80,14 +80,20 @@ class ManageWiki {
 			[ 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
 			[ 'perm_dbname' => $wgDBname, 'perm_group' => $group ]
 		);
-
+		
 		$perms = [];
 
-		$perms['permissions'] = json_decode( $res->perm_permissions );
-
-		$perms['addgroups'] = json_decode( $res->perm_addgroups );
-
-		$perms['removegroups'] = json_decode( $res->perm_removegroups );
+		if ( !$res ) {
+			$perms = [
+				'permissions' => [],
+				'addgroups' => [],
+				'removegroups' => []
+			];
+		} else {
+			$perms['permissions'] = json_decode( $res->perm_permissions );
+			$perms['addgroups'] = json_decode( $res->perm_addgroups );
+			$perms['removegroups'] = json_decode( $res->perm_removegroups );
+		}
 
 		return (array)$perms;
 	}
