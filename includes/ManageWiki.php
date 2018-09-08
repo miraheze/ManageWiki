@@ -13,7 +13,7 @@ class ManageWiki {
 					continue;
 				}
 
-			$timeZoneList[$identifier] = $identifier;
+				$timeZoneList[$identifier] = $identifier;
 			}
 		}
 
