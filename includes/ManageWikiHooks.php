@@ -10,29 +10,22 @@ class ManageWikiHooks {
 	}
 
 	public static function onSetupAfterCache() {
-		global $IP, $wgManageWikiPermissionsManagement, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups;
+		global $wgManageWikiPermissionsManagement, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups;
 
 		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
 		if ( $wgManageWikiPermissionsManagement ) {
 			$wgGroupPermissions = [];
 			$wgAddGroups = [];
 			$wgRemoveGroups = [];
-			
-			// Emergency fix for excessive DB queries
-			if ( file_exists( "$IP/cache/managewiki-permissions-{$wgDBname}.cdb" ) ) {
-				$res = unserialize( file_get_contents( "$IP/cache/managewiki-permissions-{$wgDBname}.cdb" ) );
-			} else {
-				$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
 
-				$res = $dbr->select(
-					'mw_permissions',
-					[ 'perm_group', 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
-					[ 'perm_dbname' => $wgDBname ],
-					__METHOD__
-				);
-				
-				file_put_contents( "$IP/cache/managewiki-permissions-{$wgDBname}.cdb", serialize( $res ) );
-			}
+			$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+
+			$res = $dbr->select(
+				'mw_permissions',
+				[ 'perm_group', 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
+				[ 'perm_dbname' => $wgDBname ],
+				__METHOD__
+			);
 
 			foreach ( $res as $row ) {
 				$permsjson = json_decode( $row->perm_permissions );
