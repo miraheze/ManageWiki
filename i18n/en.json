@@ -19,6 +19,7 @@
 	"managewikisettings": "Manage a wiki (settings)",
 	"managewikiextensions": "Manage a wiki (extensions)",
 	"managewikipermissions": "Manage a wiki (permissions)",
+	"managewikidefaultpermissions": "Manage a wiki (default permissions)",
 	"managewiki-desc": "Allows people to manage wikis through a web interface",
 	"managewiki-disabled": "This feature has not been enabled on this wiki yet.",
 	"managewiki-extensions-disabled": "No extensions have been defined for this wiki",

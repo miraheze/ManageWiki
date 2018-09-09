@@ -12,6 +12,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	function execute( $subpage ) {
 		global $wgDBname, $wgCreateWikiDatabase;
 
+		$this->setHeaders();
 		$this->getOutput()->addModuleStyles( 'ext.managewiki.permissions' );
 		$this->getOutput()->setRobotPolicy( "noindex,nofollow" );
 		$this->getOutput()->setArticleRelated( false );
