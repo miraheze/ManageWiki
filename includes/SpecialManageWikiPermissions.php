@@ -497,7 +497,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 
 		$log->addEntry(
 			'rights',
-			SpecialPage::getTitleFor( 'ListUsers', $group ),
+			SpecialPage::getTitleFor( 'ListUsers', false, '&=' . $group ),
 			$reason,
 			[
 				$this->makeLogList( $addRights ),
@@ -515,7 +515,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 
 		$log->addEntry(
 			'rename',
-			SpecialPage::getTitleFor( 'ListUsers', $newName ),
+			SpecialPage::getTitleFor( 'ListUsers', false, '&=' . $newName ),
 			$reason,
 			[
 				SpecialPage::getTitleFor( 'ManageWikiPermissions', $newName ),
@@ -529,7 +529,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 
 		$log->addEntry(
 			'delete',
-			SpecialPage::getTitleFor( 'ListUsers', $group ),
+			SpecialPage::getTitleFor( 'ListUsers', false, '&=' . $group ),
 			$reason
 		);
 	}
