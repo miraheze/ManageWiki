@@ -426,8 +426,8 @@ class SpecialManageWikiPermissions extends SpecialPage {
 		$countRemoves = count( array_merge( $removeRights, $removeAddGroups, $removeRemovedGroups ) );
 		$countExisting = count( array_merge( $oldRights, $oldAddGroups, $oldRemoveGroups ) );
 
-		if ( $newChanges && $countExisting != $countRemoves ) {
-			// new changes && existing metadata is not the same as removed metadata
+		if ( $newChanges && ( $countExisting != $countRemoves || $countExisting == 0 ) ) {
+			// new changes && existing metadata is not the same as removed metadata or create new group
 			$this->updatePermissions( $group, $newRights, $addGroups, $removeGroups );
 			$this->addPermissionLog( $group, $addRights, $removeRights, $newAddGroups, $removedAddGroups, $newRemoveGroups, $removedRemoveGroups, $reason );
 		} elseif ( $newChanges && $countExisting == $countRemoves ) {
