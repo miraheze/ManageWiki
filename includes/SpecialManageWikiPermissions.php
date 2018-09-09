@@ -422,7 +422,6 @@ class SpecialManageWikiPermissions extends SpecialPage {
 			}
 		}
 
-		var_dump( $addRights, $removeRights );
 		$addGroups = array_merge( array_diff( $oldAddGroups, $removedAddGroups ), $newAddGroups );
 		$removeGroups = array_merge( array_diff( $oldRemoveGroups, $removedRemoveGroups ), $newRemoveGroups );
 
