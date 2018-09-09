@@ -20,7 +20,16 @@ class ManageWikiHooks {
 
 			$wikiPermissions = $cache->getWithSetCallback(
 				$cache->makeKey( 'ManageWiki', 'mwpermissions' ),
-				$cache::TTL_HOUR,
+				// memcached runs on each server as a standalone instance.
+				// Thus, since cache invalidation only happens at one server at a time
+				// (and 'getLocalServerInstance', obviously, is meant for a local caching solution)
+				// one server will serve a wiki with the right permissions and other servers
+				// with the wrong permissions. A final solution might be a memcached cluster
+				// or central caching solution with more memory. (e.g. redis in Miraheze's setup)
+				// For now, set TTL to 60 seconds so at least there is some form of caching,
+				// and the short TTL matches i18n message managewiki-perm-success-text.
+				// -- Southparkfan 2018/9/9
+				$cache::TTL_MINUTE,
 				function () use (
 					$wgCreateWikiDatabase,
 					$wgManageWikiPermissionsAdditionalRights,
