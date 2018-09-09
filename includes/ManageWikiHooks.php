@@ -1,5 +1,4 @@
 <?php
-
 class ManageWikiHooks {
 	public static function onRegistration() {
 		global $wgLogTypes;
@@ -11,45 +10,72 @@ class ManageWikiHooks {
 
 	public static function onSetupAfterCache() {
 		global $wgManageWikiPermissionsManagement, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups;
-
 		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
 		if ( $wgManageWikiPermissionsManagement ) {
+			$cache = ObjectCache::getLocalServerInstance( CACHE_MEMCACHED );
+
 			$wgGroupPermissions = [];
 			$wgAddGroups = [];
 			$wgRemoveGroups = [];
 
-			$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+			$wikiPermissions = $cache->getWithSetCallback(
+				$cache->makeKey( 'ManageWiki', 'mwpermissions' ),
+				$cache::TTL_HOUR,
+				function () use (
+					$wgCreateWikiDatabase,
+					$wgManageWikiPermissionsAdditionalRights,
+					$wgManageWikiPermissionsAdditionalAddGroups,
+					$wgManageWikiPermissionsAdditionalRemoveGroups,
+					$wgDBname,
+					$wgGroupPermissions,
+					$wgAddGroups,
+					$wgRemoveGroups
+				) {
+					$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+					$res = $dbr->select(
+						'mw_permissions',
+						[ 'perm_group', 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
+						[ 'perm_dbname' => $wgDBname ],
+						__METHOD__
+					);
 
-			$res = $dbr->select(
-				'mw_permissions',
-				[ 'perm_group', 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
-				[ 'perm_dbname' => $wgDBname ],
-				__METHOD__
+					foreach ( $res as $row ) {
+						$permsJson = json_decode( $row->perm_permissions );
+
+						foreach ( (array)$permsJson as $perm ) {
+							$wgGroupPermissions[$row->perm_group][$perm] = true;
+						}
+
+						if ( $wgManageWikiPermissionsAdditionalRights ) {
+							$wgGroupPermissions = array_merge_recursive( $wgGroupPermissions, $wgManageWikiPermissionsAdditionalRights );
+						}
+
+						$wgAddGroups[$row->perm_group] = json_decode( $row->perm_addgroups );
+
+						if ( $wgManageWikiPermissionsAdditionalAddGroups ) {
+							$wgAddGroups = array_merge_recursive( $wgAddGroups, $wgManageWikiPermissionsAdditionalAddGroups );
+						}
+
+						$wgRemoveGroups[$row->perm_group] = json_decode( $row->perm_removegroups );
+
+						if ( $wgManageWikiPermissionsAdditionalRemoveGroups ) {
+							$wgRemoveGroups = array_merge_recursive( $wgRemoveGroups, $wgManageWikiPermissionsAdditionalRemoveGroups );
+						}
+					}
+
+					return (string)serialize( [
+						'wgGroupPermissions' => $wgGroupPermissions,
+						'wgAddGroups' => $wgAddGroups,
+						'wgRemoveGroups' => $wgRemoveGroups,
+					] );
+				}
 			);
 
-			foreach ( $res as $row ) {
-				$permsjson = json_decode( $row->perm_permissions );
+			$permissionsArray = unserialize( $wikiPermissions );
 
-				foreach ( (array)$permsjson as $perm ) {
-					$wgGroupPermissions[$row->perm_group][$perm] = true;
-				}
-
-				if ( $wgManageWikiPermissionsAdditionalRights ) {
-					$wgGroupPermissions = array_merge_recursive( $wgGroupPermissions, $wgManageWikiPermissionsAdditionalRights );
-				}
-
-				$wgAddGroups[$row->perm_group] = json_decode( $row->perm_addgroups );
-
-				if ( $wgManageWikiPermissionsAdditionalAddGroups ) {
-					$wgAddGroups = array_merge_recursive( $wgAddGroups, $wgManageWikiPermissionsAdditionalAddGroups );
-				}
-
-				$wgRemoveGroups[$row->perm_group] = json_decode( $row->perm_removegroups );
-
-				if ( $wgManageWikiPermissionsAdditionalRemoveGroups ) {
-					$wgRemoveGroups = array_merge_recursive( $wgRemoveGroups, $wgManageWikiPermissionsAdditionalRemoveGroups );
-				}
-			}
+			$wgGroupPermissions = $permissionsArray['wgGroupPermissions'];
+			$wgAddGroups = $permissionsArray['wgAddGroups'];
+			$wgRemoveGroups = $permissionsArray['wgRemoveGroups'];
 		}
 	}
 
@@ -78,6 +104,9 @@ class ManageWikiHooks {
 				],
 				__METHOD__
 			);
+
+			$cache = ObjectCache::getLocalServerInstance( CACHE_MEMCACHED );
+			$cache->delete( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
 		}
 	}
 
@@ -122,6 +151,9 @@ class ManageWikiHooks {
 					__METHOD__
 				);
 			}
+
+			$cache = ObjectCache::getLocalServerInstance( CACHE_MEMCACHED );
+			$cache->delete( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
 		}
 	}
 
@@ -129,7 +161,6 @@ class ManageWikiHooks {
 		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiPermissionsManagement;
 
 		if ( $wgManageWikiPermissionsManagement && $wgManageWikiPermissionsDefaultPrivateGroup ) {
-
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 			$dbw->delete(
@@ -156,6 +187,9 @@ class ManageWikiHooks {
 				],
 				__METHOD__
 			);
+
+			$cache = ObjectCache::getLocalServerInstance( CACHE_MEMCACHED );
+			$cache->delete( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
 		}
 	}
 
