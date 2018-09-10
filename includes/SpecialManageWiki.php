@@ -119,6 +119,7 @@ class SpecialManageWiki extends SpecialPage {
 				'type' => 'check',
 				'label-message' => 'managewiki-label-private',
 				'name' => 'cwPrivate',
+				'disabled' => !$this->isAllowedToChangePrivate(),
 				'default' => $wiki->isPrivate() ? 1 : 0,
 			);
 		}
@@ -209,7 +210,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$changedsettingsarray = [];
 
-		if ( $wgCreateWikiUsePrivateWikis ) {
+		if ( $wgCreateWikiUsePrivateWikis && $this->isAllowedToChangePrivate() ) {
 			$private = ( $params['private'] == true ) ? 1 : 0;
 
 			$previousPrivate = $wiki->isPrivate();
@@ -335,6 +336,18 @@ class SpecialManageWiki extends SpecialPage {
 		$this->getOutput()->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
 
 		return true;
+	}
+
+	public function isAllowedToChangePrivate() {
+		global $wgManageWikiPrivateOptionRestricted;
+
+                if ( $wgManageWikiPrivateOptionRestricted ) {
+                        $isAllowedToChangePrivate = $this->getUser()->isAllowed( 'managewiki-restricted' );
+                } else {
+                        $isAllowedToChangePrivate = $this->getUser()->isAllowed( 'managewiki' );
+                }
+
+		return $isAllowedToChangePrivate;
 	}
 
 	function onSubmitRedirectToManageWikiPage( array $params ) {

@@ -50,6 +50,8 @@
 		"ManageWikiExtensions": null,
 		"@wgManageWikiSettings": "Array. An array of settings that can be managed through Special:ManageWiki",
 		"ManageWikiSettings": null,
+		"@wgManageWikiPrivateOptionRestricted": "Boolean. Whether the option to (un)mark wikis as private requires the managewiki-restricted right instead of managewiki only.",
+		"ManageWikiPrivateOptionRestricted": false,
 		"@wgManageWikiPermissionsAdditionalAddGroups": "Array. ManageWiki's version of $wgAddGroups.",
 		"ManageWikiPermissionsAdditionalAddGroups": false,
 		"@wgManageWikiPermissionsAdditionalRemoveGroups": "Array. ManageWiki's version of $wgRemoveGroups.",
