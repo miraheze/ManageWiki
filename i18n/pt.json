@@ -9,6 +9,7 @@
 	"action-managewiki": "gerir as configurações da wiki",
 	"log-description-managewiki": "Este registo documenta todas as alterações das configurações de uma wiki através do GerirWiki.",
 	"log-name-managewiki": "Registo do GerirWiki",
+	"logentry-managewiki-delete": "$1 eliminou o grupo $3",
 	"logentry-managewiki-rename": "$1 alterou o nome do grupo de $4 para $3",
 	"logentry-managewiki-rights": "$1 alterou os metadados de grupo de $3: adicionou os privilégios $4; removeu os privilégios $5; adicionou os grupos adicionáveis $6; removeu os grupos adicionáveis $7; adicionou os grupos removíveis $8; removeu os grupos removíveis $9",
 	"logentry-managewiki-settings": "$1 alterou as configurações de ($5) para \"$4\"",

@@ -9,6 +9,7 @@
 	"action-managewiki": "管理 wiki 設定",
 	"log-description-managewiki": "此日誌透過　ManageWiki　來追蹤對於 wiki 設定的所有變更。",
 	"log-name-managewiki": "ManageWiki 日誌",
+	"logentry-managewiki-delete": "$1已刪除群組$3",
 	"logentry-managewiki-rename": "$1自$4重新命名群組$3",
 	"logentry-managewiki-rights": "$1已變更$3的詮釋資料：添加了權限$4、移除了權限$5、新增了添加群組$6、移除了添加群組$7、添加了移除群組$8、移除了移除群組$9",
 	"logentry-managewiki-settings": "$1 變更了「$4」的設定（$5）",

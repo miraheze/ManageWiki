@@ -4,6 +4,7 @@
 			"Robby"
 		]
 	},
+	"logentry-managewiki-delete": "$1 huet d'Grupp $3 geläscht",
 	"managewiki": "Eng Wiki geréieren",
 	"managewiki-label-category": "Kategorie",
 	"managewiki-label-closed": "Zou",
