@@ -47,16 +47,28 @@ class ManageWikiPopulatePermissions extends Maintenance {
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
-			$dbw->insert( 'mw_permissions',
-				array(
+			$check = $dbw->selectRow(
+				'mw_permissions',
+				[ 'perm_group' ],
+				[
 					'perm_dbname' => $wgDBname,
-					'perm_group' => $groupname,
-					'perm_permissions' => $groupatr['perms'],
-					'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
-					'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
-				),
+					'perm_group' => $groupname
+				],
 				__METHOD__
 			);
+
+			if ( !$check ) {
+				$dbw->insert( 'mw_permissions',
+					array(
+						'perm_dbname' => $wgDBname,
+						'perm_group' => $groupname,
+						'perm_permissions' => $groupatr['perms'],
+						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
+						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
+					),
+					__METHOD__
+				);
+			}
 		}
 	}
 }
