@@ -134,8 +134,8 @@ class ManageWikiHooks {
 					'perm_dbname' => $dbname,
 					'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup,
 					'perm_permissions' => json_encode( $defaultarray['permissions'] ),
-					'perm_addgroups' => json_encode( $defaultarray['add'] ),
-					'perm_removegroups' => json_encode( $defaultarray['remove'] ),
+					'perm_addgroups' => json_encode( $defaultarray['addgroups'] ),
+					'perm_removegroups' => json_encode( $defaultarray['removegroups'] ),
 				],
 				__METHOD__
 			);
