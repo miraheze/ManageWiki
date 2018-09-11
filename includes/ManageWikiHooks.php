@@ -108,8 +108,8 @@ class ManageWikiHooks {
 					'perm_dbname' => $dbname,
 					'perm_group' => $newgroup,
 					'perm_permissions' => json_encode( $grouparray['permissions'] ),
-					'perm_addgroups' => json_encode( $grouparray['add'] ),
-					'perm_removegroups' => json_encode( $grouparray['remove'] )
+					'perm_addgroups' => json_encode( $grouparray['addgroups'] ),
+					'perm_removegroups' => json_encode( $grouparray['removegroups'] )
 				],
 				__METHOD__
 			);
