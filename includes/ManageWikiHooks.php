@@ -80,6 +80,7 @@ class ManageWikiHooks {
 
 				if ( $useCDB ) {
 					// Let's make a CDB!
+					$cache = ObjectCache::getLocalClusterInstance();
 					$cdbw = \Cdb\Writer::open( $cdbfile );
 					$cdbw->set( 'getVersion', (string)$cache->get( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) ) );
 					$cdbw->set( 'availablegroups', json_encode( ManageWiki::availableGroups() ) );
