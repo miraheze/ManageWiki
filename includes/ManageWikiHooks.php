@@ -39,7 +39,7 @@ class ManageWikiHooks {
 						foreach ( $availableGroups as $group ) {
 							$groupArray = $permissionsArray[$group];
 
-							foreach ( $groupArray['permissions'] as $perm ) {
+							foreach ( (array)$groupArray['permissions'] as $perm ) {
 								$wgGroupPermissions[$group][$perm] = true;
 							}
 
