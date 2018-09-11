@@ -46,6 +46,8 @@
 	"config": {
 		"@wgEnableManageWiki": "Boolean. Whether Special:ManageWiki should work on the wiki.",
 		"EnableManageWiki": true,
+		"@wgManageWikiCDBDirectory": "String. Directory to store CDB files in. This will enable CDB capabilities in ManageWiki.",
+		"ManageWikiCDBDirectory": false,
 		"@wgManageWikiExtensions": "Array. An array of extensions enabled within the wiki farm.",
 		"ManageWikiExtensions": null,
 		"@wgManageWikiSettings": "Array. An array of settings that can be managed through Special:ManageWiki",

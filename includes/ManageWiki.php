@@ -137,4 +137,20 @@ class ManageWiki {
 
 		return (array)$perms;
 	}
+
+	public static function updateCDBCacheVersion() {
+		global $wgManageWikiCDBDirectory;
+
+		if ( $wgManageWikiCDBDirectory ) {
+			$cache = ObjectCache::getLocalClusterInstance();
+			$key = $cache->makeKey( 'ManageWiki', 'mwpermissions' );
+			$cur = (int)$cache->get( $key );
+			$delete = $cache->delete( $key );
+			$set = $cache->set( $key, $cur++ );
+
+			return $set;
+		} else {
+			return false;
+		}
+	}
 }

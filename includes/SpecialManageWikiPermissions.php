@@ -367,9 +367,6 @@ class SpecialManageWikiPermissions extends SpecialPage {
 				__METHOD__
 			);
 
-			$cache = ObjectCache::getLocalServerInstance( CACHE_MEMCACHED );
-			$cache->delete( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
-
 			$this->addRenameLog( $group, $newname, $reason );
 
 			$group = $newname;
@@ -472,8 +469,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 			);
 		}
 
-		$cache = ObjectCache::getLocalServerInstance( CACHE_MEMCACHED );
-		$cache->delete( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
+		$updateCache = ManageWiki::updateCDBCacheVersion();
 	}
 
 	function deleteGroup( $group ) {
@@ -490,8 +486,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 			__METHOD__
 		);
 
-		$cache = ObjectCache::getLocalServerInstance( CACHE_MEMCACHED );
-		$cache->delete( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
+		$updateCache = ManageWiki::updateCDBCacheVersion();
 	}
 
 	protected function showLogFragment( $group, $output ) {
