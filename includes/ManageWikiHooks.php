@@ -87,6 +87,19 @@ class ManageWikiHooks {
 					$cdbw->close();
 				}
 			}
+
+			if ( $wgManageWikiPermissionsAdditionalRights ) {
+				$wgGroupPermissions = array_merge_recursive( $wgGroupPermissions, $wgManageWikiPermissionsAdditionalRights );
+			}
+
+			if ( $wgManageWikiPermissionsAdditionalAddGroups ) {
+				$wgAddGroups = array_merge_recursive( $wgAddGroups, $wgManageWikiPermissionsAdditionalAddGroups );
+			}
+
+			if ( $wgManageWikiPermissionsAdditionalRemoveGroups ) {
+				$wgRemoveGroups = array_merge_recursive( $wgRemoveGroups, $wgManageWikiPermissionsAdditionalRemoveGroups );
+			}
+
 		}
 	}
 
