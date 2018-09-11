@@ -81,7 +81,7 @@ class ManageWikiHooks {
 				if ( $useCDB ) {
 					// Let's make a CDB!
 					$cdbw = \Cdb\Writer::open( $cdbfile );
-					$cdbw->set( 'getVersion', (string)$cache->get( $cach->makeKey( 'ManageWiki', 'mwpermissions' ) ) );
+					$cdbw->set( 'getVersion', (string)$cache->get( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) ) );
 					$cdbw->set( 'availablegroups', json_encode( ManageWiki::availableGroups() ) );
 					$cdbw->set( 'permissions', json_encode( $cacheArray ) );
 					$cdbw->close();
