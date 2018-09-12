@@ -176,7 +176,7 @@ class ManageWikiHooks {
 				$dbw->update(
 					'mw_permissions',
 					[
-						'perm_permissions' => $json_encode( $newperms )
+						'perm_permissions' => json_encode( $newperms )
 					],
 					[
 						'perm_dbname' => $dbname,
