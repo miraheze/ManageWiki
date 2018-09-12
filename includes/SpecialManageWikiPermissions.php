@@ -532,7 +532,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 		$log = new LogPage('managewiki' );
 
 		$log->addEntry(
-			'delete',
+			'delete group',
 			SpecialPage::getTitleFor( 'ListUsers', $group ),
 			$reason
 		);
