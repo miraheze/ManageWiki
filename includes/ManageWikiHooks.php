@@ -111,10 +111,6 @@ class ManageWikiHooks {
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-		if ( !$private ) {
-			$defaultGroups = array_diff( $defaultGroups, [ "member" ] );
-		}
-
 		foreach ( $defaultGroups as $newgroup ) {
 			$grouparray = ManageWiki::defaultGroupPermissions( $newgroup );
 
@@ -129,6 +125,10 @@ class ManageWikiHooks {
 				],
 				__METHOD__
 			);
+		}
+		
+		if ( $private ) {
+			ManageWikiHooks::onCreateWikiStatePrivate();
 		}
 
 		$updateCache = ManageWiki::updateCDBCacheVersion();
