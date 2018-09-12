@@ -107,7 +107,7 @@ class ManageWikiHooks {
 	public static function onCreateWikiCreation( $dbname, $private ) {
 		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
 
-		$defaultGroups = ManageWiki::defaultGroups();
+		$defaultGroups = array_diff( (array)ManageWiki::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
