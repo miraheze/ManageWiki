@@ -143,17 +143,27 @@ class ManageWikiHooks {
 
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-			$dbw->insert(
-				'mw_permissions',
+			$check = $dbw->selectRow( 'mw_permissions',
+				[ 'perm_dbname' ],
 				[
 					'perm_dbname' => $dbname,
-					'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup,
-					'perm_permissions' => json_encode( $defaultarray['permissions'] ),
-					'perm_addgroups' => json_encode( $defaultarray['addgroups'] ),
-					'perm_removegroups' => json_encode( $defaultarray['removegroups'] ),
+					'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup
 				],
 				__METHOD__
 			);
+
+			if ( !$check ) {
+				$dbw->insert( 'mw_permissions',
+					[
+						'perm_dbname' => $dbname,
+						'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup,
+						'perm_permissions' => json_encode( $defaultarray['permissions'] ),
+						'perm_addgroups' => json_encode( $defaultarray['addgroups'] ),
+						'perm_removegroups' => json_encode( $defaultarray['removegroups'] )
+					],
+					__METHOD__
+				);
+			}
 
 			$publicGroups = [ '*', 'user' ];
 
