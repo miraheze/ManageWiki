@@ -128,7 +128,7 @@ class ManageWikiHooks {
 		}
 		
 		if ( $private ) {
-			ManageWikiHooks::onCreateWikiStatePrivate();
+			ManageWikiHooks::onCreateWikiStatePrivate( $dbname );
 		}
 
 		$updateCache = ManageWiki::updateCDBCacheVersion();
