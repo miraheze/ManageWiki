@@ -13,7 +13,7 @@
 	},
 	"action-managewiki": "управление настройками вики",
 	"log-name-managewiki": "Журнал управления вики",
-	"logentry-managewiki-delete": "$1 {{GENDER:$1|удалил|удалила}} группу $3",
+	"logentry-managewiki-delete-group": "$1 {{GENDER:$1|удалил|удалила}} группу $3",
 	"logentry-managewiki-rename": "$1 {{GENDER:$1|переименовал|переименовала}} группу $3 из $4",
 	"logentry-managewiki-settings": "$1 изменил настройки ($5) для «$4»",
 	"managewiki": "Управлять вики",

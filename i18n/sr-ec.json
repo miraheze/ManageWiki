@@ -7,7 +7,7 @@
 	"action-managewiki": "управљај подешавањима викија",
 	"log-description-managewiki": "Овај дневник прати све промене у подешавањима викија путем ManageWiki-ја.",
 	"log-name-managewiki": "Дневник ManageWiki-ја",
-	"logentry-managewiki-delete": "$1 је {{GENDER:$1|уклонио|уклонила}} групу $3",
+	"logentry-managewiki-delete-group": "$1 је {{GENDER:$1|уклонио|уклонила}} групу $3",
 	"logentry-managewiki-rename": "$1 је преименовао/ла групу $3 из $4",
 	"logentry-managewiki-settings": "$1 је променио/ла подешавања ($5) за „$4”",
 	"managewiki": "Управљање викијем",

@@ -9,7 +9,7 @@
 	"action-managewiki": "위키 설정 관리",
 	"log-description-managewiki": "이 기록은 ManageWiki를 통한 위키 설정의 모든 변경사항을 추적합니다.",
 	"log-name-managewiki": "ManageWiki 기록",
-	"logentry-managewiki-delete": "$1님이 $3 그룹을 삭제했습니다",
+	"logentry-managewiki-delete-group": "$1님이 $3 그룹을 삭제했습니다",
 	"logentry-managewiki-rename": "$1님이 $3 그룹을 $4 그룹으로 이름을 바꾸었습니다",
 	"logentry-managewiki-settings": "$1님이 \"$4\"의 설정($5)을 변경했습니다",
 	"managewiki": "위키 관리",

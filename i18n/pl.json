@@ -10,6 +10,7 @@
 	"managewiki": "Zarządzaj wiki",
 	"managewikiextensions": "Zarządzaj wiki (rozszerzenia)",
 	"managewikipermissions": "Zarządzaj wiki (uprawnienia)",
+	"managewikidefaultpermissions": "Zarządzaj wiki (uprawnienia domyślne)",
 	"managewiki-desc": "Pozwala zarządzać stronami wiki za pomocą interfejsu internetowego",
 	"managewiki-disabled": "Ta funkcja nie została jeszcze włączona na tej wiki.",
 	"managewiki-extensions-disabled": "Dla tej wiki nie zdefiniowano żadnych rozszerzeń",

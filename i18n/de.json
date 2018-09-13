@@ -8,7 +8,7 @@
 	"action-managewiki": "die Wikieinstellungen zu verwalten",
 	"log-description-managewiki": "Dieses Logbuch zeichnet alle Änderungen an den Einstellungen eines Wikis durch ManageWiki auf.",
 	"log-name-managewiki": "Wikiverwaltungs-Logbuch",
-	"logentry-managewiki-delete": "$1 löschte die Gruppe $3",
+	"logentry-managewiki-delete-group": "$1 löschte die Gruppe $3",
 	"logentry-managewiki-rename": "$1 benannte die Gruppe $3 von $4 um",
 	"logentry-managewiki-rights": "$1 änderte die Gruppen-Metadaten für $3: Rechte $4 hinzugefügt; Rechte $5 entfernt; Addgruppen $6 hinzugefügt; Addgruppen $7 entfernt; Removegruppen $8 hinzugefügt; Removegruppen $9 entfernt",
 	"logentry-managewiki-settings": "$1 änderte die Einstellungen ($5) für „$4“",

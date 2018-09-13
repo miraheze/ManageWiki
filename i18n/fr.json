@@ -13,7 +13,7 @@
 	"action-managewiki": "Régler les paramètres du wiki",
 	"log-description-managewiki": "Ce journal trace tous les changements de configuration d'un wiki, faits par ManageWiki.",
 	"log-name-managewiki": "Journal de ManageWiki",
-	"logentry-managewiki-delete": "$1 a supprimé le groupe $3",
+	"logentry-managewiki-delete-group": "$1 a supprimé le groupe $3",
 	"logentry-managewiki-rename": "$1 a renommé le groupe $3 de $4",
 	"logentry-managewiki-rights": "$1 a modifié les métadonnées de groupe pour $3: droits ajoutés $4; droits supprimés $5; groupes à ajouter $6; supression de groupes à ajouter $7; ajout de groupes à supprimer $8; supression de groupes à supprimer $9",
 	"logentry-managewiki-settings": "$1 a changé les paramètres ($5) pour \"$4\"",

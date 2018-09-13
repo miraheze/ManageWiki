@@ -7,7 +7,7 @@
 	"action-managewiki": "керування налаштуваннями вікі",
 	"log-description-managewiki": "Цей журнал протоколює усі зміни у налаштування вікі через ManageWiki",
 	"log-name-managewiki": "Журнал управління вікі",
-	"logentry-managewiki-delete": "$1 {{GENDER:$1|вилучив|вилучила}} групу $3",
+	"logentry-managewiki-delete-group": "$1 {{GENDER:$1|вилучив|вилучила}} групу $3",
 	"logentry-managewiki-rename": "$1 {{GENDER:$1|перейменував|перейменувала}} групу $3 з $4",
 	"logentry-managewiki-rights": "$1 {{GENDER:$1|змінив|змінила}} групові метадані для $3: додані права $4; вилучені права $5; додані addgroups $6; вилучені addgroups $7; додані removegroups $8; вилучені removegroups $9",
 	"logentry-managewiki-settings": "$1 {{GENDER:$1|змінив|змінила}} налаштування ($5) для «$4»",
