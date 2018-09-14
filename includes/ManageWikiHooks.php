@@ -126,12 +126,28 @@ class ManageWikiHooks {
 				__METHOD__
 			);
 		}
-		
+
 		if ( $private ) {
 			ManageWikiHooks::onCreateWikiStatePrivate( $dbname );
 		}
 
 		$updateCache = ManageWiki::updateCDBCacheVersion();
+	}
+
+	public static function onCreateWikiDeletion( $dbw, $wiki ) {
+		global $wgManageWikiPermissionsManagement;
+
+		if ( $wgManageWikiPermissionsManagement ) {
+			DeleteWiki::doDeletes( $dbw, 'mw_permissions', 'perm_dbname', $wiki );
+		}
+	}
+
+	public static function onCreateWikiRename( $dbw, $old, $new ) {
+		global $wgManageWikiPermissionsManagement;
+
+		if ( $wgManageWikiPermissionsManagement ) {
+			RenameWiki::doRename( $dbw, 'mw_permissions', 'perm_dbname', $old. $new );
+		}
 	}
 
 	public static function onCreateWikiStatePrivate( $dbname ) {

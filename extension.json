@@ -77,6 +77,12 @@
 		"CreateWikiCreation": [
 			"ManageWikiHooks::onCreateWikiCreation"
 		],
+		"CreateWikiDeletion": [
+			"ManageWikiHooks::onCreateWikiDeletion"
+		],
+		"CreateWikiRename": [
+			"ManageWikiHooks::onCreateWikiRename"
+		],
 		"CreateWikiStatePrivate": [
 			"ManageWikiHooks::onCreateWikiStatePrivate"
 		],
