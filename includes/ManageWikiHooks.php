@@ -84,7 +84,7 @@ class ManageWikiHooks {
 					$cacheVersion = $cache->get( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
 
 					if ( !$cacheVersion ) {
-						$cacheVersion = $cache->set( $this->makeKey( 'ManageWiki', 'mwpermissions' ), "1" );
+						$cacheVersion = $cache->set( $cache->makeKey( 'ManageWiki', 'mwpermissions' ), "1" );
 					}
 
 					$cdbw = \Cdb\Writer::open( $cdbfile );
