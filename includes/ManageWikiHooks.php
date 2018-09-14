@@ -30,8 +30,8 @@ class ManageWikiHooks {
 					$cache = ObjectCache::getLocalClusterInstance();
 					$cacheValue = $cache->get( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
 
-					// check whether $cdbr (stored value) is greater than or equal to $cache (last change)
-					if ( (bool)$cacheValue && ( ( (int)$cdbr->get( 'getVersion' ) >= (int)$cacheValue ) ) ) {
+					// check whether $cdbr (stored value) is equal to $cache (last change)
+					if ( (bool)$cacheValue && ( ( (int)$cdbr->get( 'getVersion' ) == (int)$cacheValue ) ) ) {
 						$permissionsArray = (array)json_decode( $cdbr->get( 'permissions' ), true );
 						$availableGroups = (array)json_decode( $cdbr->get( 'availablegroups' ), true );
 						$useDB = false;
@@ -81,8 +81,14 @@ class ManageWikiHooks {
 				if ( $useCDB ) {
 					// Let's make a CDB!
 					$cache = ObjectCache::getLocalClusterInstance();
+					$cacheVersion = $cache->get( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
+
+					if ( !$cacheVersion ) {
+						$cacheVersion = $cache->set( $this->makeKey( 'ManageWiki', 'mwpermissions' ), "1" );
+					}
+
 					$cdbw = \Cdb\Writer::open( $cdbfile );
-					$cdbw->set( 'getVersion', (string)$cache->get( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) ) );
+					$cdbw->set( 'getVersion', (string)$cacheVersion );
 					$cdbw->set( 'availablegroups', json_encode( ManageWiki::availableGroups() ) );
 					$cdbw->set( 'permissions', json_encode( $cacheArray ) );
 					$cdbw->close();
