@@ -144,11 +144,8 @@ class ManageWiki {
 		if ( $wgManageWikiCDBDirectory ) {
 			$cache = ObjectCache::getLocalClusterInstance();
 			$key = $cache->makeKey( 'ManageWiki', 'mwpermissions' );
-			$cur = (int)$cache->get( $key );
-			$delete = $cache->delete( $key );
-			$set = $cache->set( $key, $cur++ );
 
-			return $set;
+			return $cache->incr( $key );
 		} else {
 			return false;
 		}
