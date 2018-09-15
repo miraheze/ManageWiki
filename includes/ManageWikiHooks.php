@@ -152,7 +152,7 @@ class ManageWikiHooks {
 		global $wgManageWikiPermissionsManagement;
 
 		if ( $wgManageWikiPermissionsManagement ) {
-			RenameWiki::doRename( $dbw, 'mw_permissions', 'perm_dbname', $old. $new );
+			RenameWiki::doRename( $dbw, 'mw_permissions', 'perm_dbname', $old, $new );
 		}
 	}
 
