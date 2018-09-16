@@ -71,7 +71,7 @@
 		"@wgManageWikiPermissionsManagement": "Boolean. Whether ManageWiki should control group management within MediaWiki. Enable with care and caution!",
 		"ManageWikiPermissionsManagement": false,
 		"ManageWikiHelpUrl": false,
-		"ManageWikiSidebarLinks": true,
+		"ManageWikiSidebarLinks": true
 	},
 	"Hooks": {
 		"CreateWikiCreation": [
