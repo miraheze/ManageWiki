@@ -72,8 +72,6 @@
 		"ManageWikiPermissionsManagement": false,
 		"ManageWikiHelpUrl": false,
 		"ManageWikiSidebarLinks": true,
-		"@wgManageWikiGlobalWiki": "String. Database name of global wiki.",
-		"ManageWikiGlobalWiki": false
 	},
 	"Hooks": {
 		"CreateWikiCreation": [
