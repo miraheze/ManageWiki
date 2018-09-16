@@ -5,7 +5,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgEnableManageWiki, $wgManageWikiHelpUrl, $wgManageWikiSettings, $wgCreateWikiDatabase, $wgDBname;
+		global $wgEnableManageWiki, $wgManageWikiHelpUrl, $wgManageWikiSettings, $wgCreateWikiGlobalWiki, $wgDBname;
 
 		$out = $this->getOutput();
 		$this->setHeaders();
@@ -25,7 +25,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 
 		$this->checkPermissions();
 
-		if ( $wgCreateWikiDatabase !== $wgDBname ) {
+		if ( $wgCreateWikiGlobalWiki !== $wgDBname ) {
 			$this->showWikiForm( $wgDBname );
 		} elseif ( !is_null( $par ) && $par !== '' ) {
 			$this->showWikiForm( $par );
