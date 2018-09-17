@@ -66,6 +66,8 @@
 		"ManageWikiPermissionsBlacklistRenames": [ "*", "user", "autoconfirmed", "sysop", "bureaucrat" ],
 		"@wgManageWikiPermissionsBlacklistRights": "Array. An array of user rights that ManageWiki can not manage and assign on wiki.",
 		"ManageWikiPermissionsBlacklistRights": [ "managewiki-restricted" ],
+		"@wgManageWikiPermissionsBlacklistRightsAnon": "Array. An array of user rights that ManageWiki can not and assign to * on wiki.",
+		"wgManageWikiPermissionsBlacklistRightsAnon": false,
 		"@wgManageWikiPermissionsDefaultPrivateGroup": "String. Name of a group to add to private wikis. False disables this function.",
 		"ManageWikiPermissionsDefaultPrivateGroup": false,
 		"@wgManageWikiPermissionsManagement": "Boolean. Whether ManageWiki should control group management within MediaWiki. Enable with care and caution!",
