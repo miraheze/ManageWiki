@@ -62,19 +62,19 @@ class ManageWikiHooks {
 				);
 
 				foreach ( $res as $row ) {
-					$permsJson = json_decode( $row->perm_permissions );
+					$permsJson = json_decode( $row->perm_permissions, true );
 						foreach ( (array)$permsJson as $perm ) {
 						$wgGroupPermissions[$row->perm_group][$perm] = true;
 					}
 
-					$wgAddGroups[$row->perm_group] = json_decode( $row->perm_addgroups );
+					$wgAddGroups[$row->perm_group] = json_decode( $row->perm_addgroups, true );
 
-					$wgRemoveGroups[$row->perm_group] = json_decode( $row->perm_removegroups );
+					$wgRemoveGroups[$row->perm_group] = json_decode( $row->perm_removegroups, true );
 
 					$cacheArray[$row->perm_group] = [
 						'permissions' => $permsJson,
-						'addgroups' => json_decode( $row->perm_addgroups ),
-						'removegroups' => json_decode( $row->perm_removegroups )
+						'addgroups' => json_decode( $row->perm_addgroups, true ),
+						'removegroups' => json_decode( $row->perm_removegroups, true )
 					];
 				}
 

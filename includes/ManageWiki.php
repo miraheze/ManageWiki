@@ -80,7 +80,7 @@ class ManageWiki {
 			[ 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
 			[ 'perm_dbname' => $wgDBname, 'perm_group' => $group ]
 		);
-		
+
 		$perms = [];
 
 		if ( !$res ) {
@@ -90,9 +90,9 @@ class ManageWiki {
 				'removegroups' => []
 			];
 		} else {
-			$perms['permissions'] = json_decode( $res->perm_permissions );
-			$perms['addgroups'] = json_decode( $res->perm_addgroups );
-			$perms['removegroups'] = json_decode( $res->perm_removegroups );
+			$perms['permissions'] = json_decode( $res->perm_permissions, true );
+			$perms['addgroups'] = json_decode( $res->perm_addgroups, true );
+			$perms['removegroups'] = json_decode( $res->perm_removegroups, true );
 		}
 
 		return (array)$perms;
@@ -131,9 +131,9 @@ class ManageWiki {
 
 		$perms = [];
 
-		$perms['permissions'] = json_decode( $res->perm_permissions );
-		$perms['addgroups'] = json_decode( $res->perm_addgroups );
-		$perms['removegroups'] = json_decode( $res->perm_removegroups );
+		$perms['permissions'] = json_decode( $res->perm_permissions, true );
+		$perms['addgroups'] = json_decode( $res->perm_addgroups, true );
+		$perms['removegroups'] = json_decode( $res->perm_removegroups, true );
 
 		return (array)$perms;
 	}
