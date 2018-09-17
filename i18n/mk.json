@@ -15,6 +15,7 @@
 	"managewikisettings": "Раководење со вики (поставки)",
 	"managewikiextensions": "Раководење со вики (додатоци)",
 	"managewikipermissions": "Раководење со вики (дозволи)",
+	"managewikidefaultpermissions": "Раководење со вики (основни дозволи)",
 	"managewiki-desc": "Овозможува раководење со викија преку семрежен посредник",
 	"managewiki-disabled": "Оваа можност сè уште не е вклучена на ова вики.",
 	"managewiki-extensions-disabled": "Нема укажано додатоци за ова вики",

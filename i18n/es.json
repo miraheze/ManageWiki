@@ -6,7 +6,8 @@
 			"Fitoschido",
 			"RisingVoices",
 			"MarcoAurelio",
-			"Tiberius1701"
+			"Tiberius1701",
+			"Cgalindo"
 		]
 	},
 	"action-managewiki": "gestionar configuración del wiki",
@@ -16,6 +17,8 @@
 	"managewiki-desc": "Permite a las personas gestionar wikis a través de una interfaz web.",
 	"managewiki-disabled": "Esta función aún no está activada en este wiki.",
 	"managewiki-extensions-disabled": "No se ha definido ninguna extensión en esta wiki",
+	"managewiki-settings-disabled": "No se ha definido ninguna configuración en esta wiki",
+	"managewiki-header": "Selecciona qué te gustaría administrar abajo y ¡envía!",
 	"managewiki-settings-header": "Esta página permite gestionar la configuración del wiki «<b>$1</b>». Observa que es posible que no puedas modificar todas las opciones de este wiki; en tal caso, puedes ponerte en contacto con un administrador de sistemas. ManageWiki aún está en desarrollo: habrá funcionalidades nuevas en el futuro. Si falta alguna función que te gustaría usar, utiliza <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> para solicitarla. Las extensiones siguientes se han instalado, pero podrás <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features pedir]</span> que se añada otra si lo necesitas.",
 	"managewiki-label-category": "Categoría",
 	"managewiki-label-closed": "Cerrada",
@@ -27,5 +30,6 @@
 	"managewiki-label-sitename": "Nombre del sitio",
 	"managewiki-missing": "Ese wiki no existe.",
 	"managewiki-success": "La configuración se modificó correctamente.",
-	"managewiki-extension-name": "[$1 $2]"
+	"managewiki-extension-name": "[$1 $2]",
+	"managewiki-permissions-link": "Administra los permisos de este wiki"
 }
