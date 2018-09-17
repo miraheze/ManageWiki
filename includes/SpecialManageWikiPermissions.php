@@ -151,7 +151,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function buildPermCheckboxes( $group ) {
-		global $wgUser, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
+		global $wgUser, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups, $wgManageWikiPermissionsBlacklistRightsDefault;
 		$editable = ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) ? false : $wgUser->isAllowed( 'managewiki' );
 
 		$assignedRights = $this->getAssignedRights( $group );
@@ -167,7 +167,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 			}
 		}
 
-		$rights = array_diff( User::getAllRights(), $wgManageWikiPermissionsBlacklistRights );
+		$rights = ( $group == "*" ) ? array_diff( User::getAllRights(), array_merge( $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistRightsDefault ) ) : array_diff( User::getAllRights(), $wgManageWikiPermissionsBlacklistRights );
 		sort( $rights );
 
 		foreach ( $rights as $right ) {
@@ -334,7 +334,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function doSubmit( $group ) {
-		global $wgUser, $wgDBname, $wgManageWikiPermissionsBlacklistGroups, $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistRenames;
+		global $wgUser, $wgDBname, $wgManageWikiPermissionsBlacklistGroups, $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistRenames, $wgManageWikiPermissionsBlacklistRightsDefault;
 
 		if ( !$wgUser->isAllowed( 'managewiki' ) || in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) {
 			return;
@@ -375,7 +375,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 		$addRights = [];
 		$removeRights = [];
 		$oldRights = ( !is_null( $this->getAssignedRights( $group ) ) ) ? $this->getAssignedRights( $group ): [];
-		$allRights = array_diff( User::getAllRights(), $wgManageWikiPermissionsBlacklistRights );
+		$allRights = ( $group == "*" ) ? array_diff( User::getAllRights(), array_merge( $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistRightsDefault ) ) : array_diff( User::getAllRights(), $wgManageWikiPermissionsBlacklistRights );
 
 		foreach ( $allRights as $right ) {
 			$alreadyAssigned = in_array( $right, $oldRights );
