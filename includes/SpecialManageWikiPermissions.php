@@ -167,7 +167,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 			}
 		}
 
-		$rights = array_diff( User::getAllRights(), is_null ( $wgManageWikiPermissionsBlacklistRights[$group] ) ? $wgManageWikiPermissionsBlacklistRights['any'] :  array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) );
+		$rights = array_diff( User::getAllRights(), isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) :  $wgManageWikiPermissionsBlacklistRights['any'] );
 		sort( $rights );
 
 		foreach ( $rights as $right ) {
@@ -375,7 +375,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 		$addRights = [];
 		$removeRights = [];
 		$oldRights = ( !is_null( $this->getAssignedRights( $group ) ) ) ? $this->getAssignedRights( $group ): [];
-		$allRights = array_diff( User::getAllRights(), is_null ( $wgManageWikiPermissionsBlacklistRights[$group] ) ? $wgManageWikiPermissionsBlacklistRights['any'] :  array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) );
+		$allRights = array_diff( User::getAllRights(), isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ?  array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] );
 
 		foreach ( $allRights as $right ) {
 			$alreadyAssigned = in_array( $right, $oldRights );
