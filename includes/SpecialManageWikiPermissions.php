@@ -166,8 +166,6 @@ class SpecialManageWikiPermissions extends SpecialPage {
 					[ 'managewiki-perm-nonexistent', $group ] );
 			}
 		}
-		
-		if
 
 		$rights = array_diff( User::getAllRights(), isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) :  $wgManageWikiPermissionsBlacklistRights['any'] );
 		sort( $rights );
