@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Liuxinyu970226",
-			"Hanyanbo98"
+			"Hanyanbo98",
+			"夢蝶葬花"
 		]
 	},
 	"action-managewiki": "管理wiki设置",
@@ -23,6 +24,7 @@
 	"managewiki-label-reason": "原因",
 	"managewiki-label-sitename": "网站名称",
 	"managewiki-missing": "该wiki不存在。",
+	"managewiki-perm-reason": "原因：",
 	"managewiki-success": "设置已成功更改。",
 	"managewiki-extension-name": "[$1 $2]"
 }
