@@ -217,7 +217,7 @@ class ManageWikiFormFactory {
 				if ( $det['type'] == 'matrix' ) {
 					// we have a matrix
 					if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
-						$settingsarray[$var] = ManageWiki::handleMatrix( $params["set-$var"], 'phparray' );
+						$settingsarray[$var] = ManageWiki::handleMatrix( $formData["set-$var"], 'phparray' );
 					} else {
 						$settingsarray[$var] = ManageWiki::handleMatrix( $rmVar, 'php' );
 					}
@@ -225,10 +225,10 @@ class ManageWikiFormFactory {
 					if ( $settingsarray[$var] != ManageWiki::handleMatrix( $rmVar, 'php' ) ) {
 						$changedsettingsarray[] = "setting-" . $var;
 					}
-				} elseif ( $det['type'] != 'text' || $params["set-$var"] ) {
+				} elseif ( $det['type'] != 'text' || $formData["set-$var"] ) {
 					// we don't have a matrix, we don't have text in all cases, there's a value so let's handle it
 					if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
-						$settingsarray[$var] = $params["set-$var"];
+						$settingsarray[$var] = $formData["set-$var"];
 					} else {
 						$settingsarray[$var] = $rmVar;
 					}
@@ -248,7 +248,7 @@ class ManageWikiFormFactory {
 						}
 					}
 
-					if ( $rmVar != $params["set-$var"] ) {
+					if ( $rmVar != $formData["set-$var"] ) {
 						$changedsettingsarray[] = "setting-" . $var;
 					}
 				}
