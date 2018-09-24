@@ -83,7 +83,7 @@ class SpecialManageWikiExtensions extends SpecialPage {
 		}
 
 		$formFactory = new ManageWikiFormFactory();
-		$htmlForm = $formFactory->getForm( $dbName, $this->getContext, 'extensions' );
+		$htmlForm = $formFactory->getForm( $dbName, $this->getContext(), 'extensions' );
 		$sectionTitles = $htmlForm->getFormSections();
 
 		$sectTabs = [];
