@@ -9,7 +9,7 @@
 		]
 	},
 	"action-managewiki": "manage wiki settings",
-	"extensions-default": "Default",
+	"extensions-other": "Other",
 	"extensions-handling": "Submit",
 	"log-description-managewiki": "This log tracks all changes to a wikis settings through ManageWiki.",
 	"log-name-managewiki": "ManageWiki log",
