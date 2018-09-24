@@ -71,6 +71,8 @@ class SpecialManageWikiSettings extends SpecialPage {
 
 		$out = $this->getOutput();
 
+		$out->addModules( 'ext.managewiki.baseform' );
+
 		$dbName = $wiki;
 
 		if ( $wiki == NULL ) {
