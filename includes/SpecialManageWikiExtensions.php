@@ -73,8 +73,6 @@ class SpecialManageWikiExtensions extends SpecialPage {
 
 		$dbName = $wiki;
 
-		$wiki = RemoteWiki::newFromName( $wiki );
-
 		if ( $wiki == NULL ) {
 			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;
@@ -84,130 +82,21 @@ class SpecialManageWikiExtensions extends SpecialPage {
 			$out->addWikiMsg( 'managewiki-extensions-header', $dbName );
 		}
 
-		$formDescriptor['dbname'] = array(
-			'label-message' => 'managewiki-label-dbname',
-			'type' => 'text',
-			'size' => 20,
-			'default' => $dbName,
-			'disabled' => true,
-			'name' => 'mwDBname',
-		);
+		$formFactory = new ManageWikiFormFactory();
+		$htmlForm = $formFactory->getForm( $dbName, $this->getContext, 'extensions' );
+		$sectionTitles = $htmlForm->getFormSections();
 
-		foreach ( $wgManageWikiExtensions as $name => $ext ) {
-			if ( !$ext['conflicts'] ) {
-				$formDescriptor["ext-$name"] = array(
-					'type' => 'check',
-					'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
-					'default' => $wiki->hasExtension( $name ),
-					'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-					'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
-				);
-			} else {
-				$formDescriptor["ext-$name"] = array(
-					'type' => 'check',
-					'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
-					'default' => $wiki->hasExtension ( $name ),
-					'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-					'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
-				);
-			}
+		$sectTabs = [];
+		foreach( $sectionTitles as $key ) {
+			$sectTabs[] = [
+				'name' => $key,
+				'label' => $htmlForm->getLegend( $key )
+			];
 		}
 
-		$formDescriptor['reason'] = array(
-				'type' => 'text',
-				'label-message' => 'managewiki-label-reason',
-				'size' => 45,
-				'required' => true,
-		);
+		$out->addJsConfigVars( 'wgManageWikiBaseFormTabs', $sectTabs );
 
-		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'changeForm' );
-		$htmlForm->setMethod( 'post' )
-			->setSubmitCallback( array( $this, 'onSubmitInput' ))
-			->prepareForm()
-			->show();
-
-	}
-
-	function onSubmitInput( array $params ) {
-		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgUser;
-
-		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
-		$dbName = $wgDBname;
-
-		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
-			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki extensions!" );
-		}
-
-		$wiki = RemoteWiki::newFromName( $params['dbname'] );
-
-		$changedsettingsarray = [];
-		$extensionsarray = [];
-		foreach ( $wgManageWikiExtensions as $name => $ext ) {
-			if ( $ext['conflicts'] && $params["ext-$name"] ) {
-				if ( $params["ext-" . $name] === $params["ext-" . $ext['conflicts']] ) {
-					return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
-				}
-			}
-			if ( $params["ext-$name"] ) {
-				if ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
-					$extensionsarray[] = $name;
-				} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
-					if ( $wiki->hasExtension( $name ) ) {
-						$extensionsarray[] = $name;
-					} else {
-						throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
-					}
-				} else {
-					$extensionsarray[] = $name;
-				}
-			} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
-				if ( $wiki->hasExtension( $name ) ) {
-					throw new MWException( "User without managewiki-restricted tried to change a restricted extension setting ($name)" );
-				}
-			}
-
-			if ( $params["ext-$name"] != $wiki->hasExtension( $name ) ) {
-				$changedsettingsarray[] = "ext-" . $name;
-			}
-		}
-
-		// HACK: dummy extension name
-		$extensionsarray[] = "zzzz";
-
-		$extensions = implode( ",", $extensionsarray );
-
-		$changedsettings = implode( ", ", $changedsettingsarray );
-
-		$dbw->selectDB( $wgCreateWikiDatabase );
-
-		$dbw->update( 'cw_wikis',
-			array(
-				'wiki_extensions' => $extensions,
-			),
-			array(
-				'wiki_dbname' => $params['dbname'],
-			),
-			__METHOD__
-		);
-
-		$dbw->selectDB( $dbName ); // $dbw->close() errors?
-
-		$farmerLogEntry = new ManualLogEntry( 'managewiki', 'settings' );
-		$farmerLogEntry->setPerformer( $this->getUser() );
-		$farmerLogEntry->setTarget( $this->getTitle() );
-		$farmerLogEntry->setComment( $params['reason'] );
-		$farmerLogEntry->setParameters(
-			array(
-				'4::wiki' => $params['dbname'],
-				'5::changes' => $changedsettings,
-			)
-		);
-		$farmerLogID = $farmerLogEntry->insert();
-		$farmerLogEntry->publish( $farmerLogID );
-
-		$this->getOutput()->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
-
-		return true;
+		$htmlForm->show();
 	}
 
 	protected function getGroupName() {

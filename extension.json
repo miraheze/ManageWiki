@@ -36,6 +36,8 @@
 	},
 	"AutoloadClasses": {
 		"ManageWiki": "includes/ManageWiki.php",
+		"ManageWikiBaseFormOOUI": "includes/formFactory/ManageWikiBaseFormOOUI.php",
+		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"SpecialManageWiki": "includes/SpecialManageWiki.php",
 		"SpecialManageWikiDefaultPermissions": "includes/SpecialManageWikiDefaultPermissions.php",
@@ -97,6 +99,18 @@
 		]
 	},
 	"ResourceModules": {
+		"ext.managewiki.baseform": {
+			"scripts": [
+				"ext.managewiki.baseform.ooui.js",
+				"ext.managewiki.baseform.edit.ooui.js"
+			],
+			"styles": "ext.managewiki.baseform.ooui.less",
+			"dependencies": [
+				"oojs-ui",
+				"mediawiki.editfont.styles"
+			],
+			"targets": [ "desktop", "mobile" ]
+		},
 		"ext.managewiki.permissions": {
 			"styles": "ext.managewiki.permissions.css"
 		}
