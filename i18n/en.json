@@ -63,6 +63,9 @@
 	"managewiki-extensions-link": "Manage this wiki's extensions",
 	"managewiki-permissions-link": "Manage this wiki's permissions",
 	"managewiki-settings-link": "Manage this wiki's additional settings",
+	"right-managewiki": "Manage wiki settings",
+	"right-managewiki-restricted": "Manage restricted wiki settings",
+	"right-managewiki-editdefault": "Manage default group permissions",
 	"settings-other": "Other",
 	"settings-handling": "Submit"
 }
