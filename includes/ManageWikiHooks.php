@@ -146,7 +146,9 @@ class ManageWikiHooks {
 		if ( $wgManageWikiPermissionsManagement ) {
 			DeleteWiki::doDeletes( $dbw, 'mw_permissions', 'perm_dbname', $wiki );
 
-			exec("/bin/rm -rf $wgManageWikiCDBDirectory/permissions-$wiki.cdb");
+			if ( $wgManageWikiCDBDirectory ) {
+				exec("/bin/rm -rf $wgManageWikiCDBDirectory/permissions-$wiki.cdb");
+			}
 		}
 	}
 
@@ -156,7 +158,9 @@ class ManageWikiHooks {
 		if ( $wgManageWikiPermissionsManagement ) {
 			RenameWiki::doRename( $dbw, 'mw_permissions', 'perm_dbname', $old, $new );
 
-			exec("/bin/rm -rf $wgManageWikiCDBDirectory/permissions-$old.cdb");
+			if ( $wgManageWikiCDBDirectory ) {
+				exec("/bin/rm -rf $wgManageWikiCDBDirectory/permissions-$old.cdb");
+			}
 		}
 	}
 
