@@ -141,19 +141,23 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiDeletion( $dbw, $wiki ) {
-		global $wgManageWikiPermissionsManagement;
+		global $wgManageWikiPermissionsManagement, $wgManageWikiCDBDirectory;
 
 		if ( $wgManageWikiPermissionsManagement ) {
 			DeleteWiki::doDeletes( $dbw, 'mw_permissions', 'perm_dbname', $wiki );
 		}
+		
+		exec("/bin/rm -rf $wgManageWikiCDBDirectory/permissions-$wiki.cdb");
 	}
 
 	public static function onCreateWikiRename( $dbw, $old, $new ) {
-		global $wgManageWikiPermissionsManagement;
+		global $wgManageWikiPermissionsManagement, $wgManageWikiCDBDirectory;
 
 		if ( $wgManageWikiPermissionsManagement ) {
 			RenameWiki::doRename( $dbw, 'mw_permissions', 'perm_dbname', $old, $new );
 		}
+
+		exec("/bin/rm -rf $wgManageWikiCDBDirectory/permissions-$old.cdb");
 	}
 
 	public static function onCreateWikiStatePrivate( $dbname ) {
