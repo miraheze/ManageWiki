@@ -88,7 +88,7 @@ class ManageWikiFormFactory {
 							'label' => $det['name'],
 							'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
 							'help' => ( $det['help'] ) ? $det['help'] : null,
-							'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
+							'section' => ( isset( $det['section'] ) ) ? $det['section'] : 'other',
 						);
 
 						if ( $mwtype != 'matrix' ) {
