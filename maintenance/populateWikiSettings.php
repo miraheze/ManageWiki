@@ -14,9 +14,9 @@ class ManageWikiPopulateSettings extends Maintenance {
 	}
 
 	function execute() {
-		global $wgCreateWikiGlobalWiki;
+		global $wgCreateWikiDatabase;
 
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiGlobalWiki );
+		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 		$settingsource = file( $this->getOption( 'sourcelist' ) );
 
