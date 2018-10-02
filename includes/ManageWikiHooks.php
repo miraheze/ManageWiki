@@ -111,33 +111,57 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiCreation( $dbname, $private ) {
-		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
+		global $wgManageWikiPermissionsManagement, $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiExtensionsDefault;
 
-		$defaultGroups = array_diff( (array)ManageWiki::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+		if ( $wgManageWikiPermissionsManagement ) {
+			$defaultGroups = array_diff( (array)ManageWiki::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
 
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-		foreach ( $defaultGroups as $newgroup ) {
-			$grouparray = ManageWiki::defaultGroupPermissions( $newgroup );
+			foreach ( $defaultGroups as $newgroup ) {
+				$grouparray = ManageWiki::defaultGroupPermissions( $newgroup );
 
-			$dbw->insert(
-				'mw_permissions',
-				[
-					'perm_dbname' => $dbname,
-					'perm_group' => $newgroup,
-					'perm_permissions' => json_encode( $grouparray['permissions'] ),
-					'perm_addgroups' => json_encode( $grouparray['addgroups'] ),
-					'perm_removegroups' => json_encode( $grouparray['removegroups'] )
-				],
+				$dbw->insert(
+					'mw_permissions',
+					[
+						'perm_dbname' => $dbname,
+						'perm_group' => $newgroup,
+						'perm_permissions' => json_encode( $grouparray['permissions'] ),
+						'perm_addgroups' => json_encode( $grouparray['addgroups'] ),
+						'perm_removegroups' => json_encode( $grouparray['removegroups'] )
+					],
+					__METHOD__
+				);
+			}
+
+			if ( $private ) {
+				ManageWikiHooks::onCreateWikiStatePrivate( $dbname );
+			}
+
+			$updateCache = ManageWiki::updateCDBCacheVersion();
+		}
+
+		if ( $wgManageWikiExtensions && $wgManageWikiExtensionsDefault ) {
+			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
+			$cur = explode( ",",
+				(string)$dbw->selectRow(
+					'cw_wikis',
+					[ 'wiki_extensions' ],
+					[ 'wiki_dbname' => $dbname ],
+					__METHOD__
+				)->wiki_extensions
+			);
+
+			$newlist = implode( ",", array_merge( $cur, $wgManageWikiExtensionsDefault ) );
+
+			$dbw->update(
+				'cw_wikis',
+				[ 'wiki_extensions' => $newlist ],
+				[ 'wiki_dbname' => $dbname ],
 				__METHOD__
 			);
 		}
-
-		if ( $private ) {
-			ManageWikiHooks::onCreateWikiStatePrivate( $dbname );
-		}
-
-		$updateCache = ManageWiki::updateCDBCacheVersion();
 	}
 
 	public static function onCreateWikiDeletion( $dbw, $wiki ) {

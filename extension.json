@@ -52,6 +52,8 @@
 		"ManageWikiCDBDirectory": false,
 		"@wgManageWikiExtensions": "Array. An array of extensions enabled within the wiki farm.",
 		"ManageWikiExtensions": null,
+		"@wgManageWikiExtensionsDefault": "Array. An array of default extensions.",
+		"ManageWikiExtensionsDefault": null,
 		"@wgManageWikiSettings": "Array. An array of settings that can be managed through Special:ManageWiki",
 		"ManageWikiSettings": null,
 		"@wgManageWikiPrivateOptionRestricted": "Boolean. Whether the option to (un)mark wikis as private requires the managewiki-restricted right instead of managewiki only.",
