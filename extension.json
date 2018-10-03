@@ -1,6 +1,11 @@
 {
 	"name": "ManageWiki",
-	"author": [ "Southparkfan", "John Lewis", "MacFan4000", "Reception123" ],
+	"author": [
+		"Southparkfan",
+		"John Lewis",
+		"MacFan4000",
+		"Reception123"
+	],
 	"url": "https://github.com/miraheze/ManageWiki",
 	"descriptionmsg": "managewiki-desc",
 	"type": "specialpage",
@@ -44,38 +49,6 @@
 		"SpecialManageWikiExtensions": "includes/SpecialManageWikiExtensions.php",
 		"SpecialManageWikiPermissions": "includes/SpecialManageWikiPermissions.php",
 		"SpecialManageWikiSettings": "includes/SpecialManageWikiSettings.php"
-	},
-	"config": {
-		"@wgEnableManageWiki": "Boolean. Whether Special:ManageWiki should work on the wiki.",
-		"EnableManageWiki": true,
-		"@wgManageWikiCDBDirectory": "String. Directory to store CDB files in. This will enable CDB capabilities in ManageWiki.",
-		"ManageWikiCDBDirectory": false,
-		"@wgManageWikiExtensions": "Array. An array of extensions enabled within the wiki farm.",
-		"ManageWikiExtensions": null,
-		"@wgManageWikiExtensionsDefault": "Array. An array of default extensions.",
-		"ManageWikiExtensionsDefault": null,
-		"@wgManageWikiSettings": "Array. An array of settings that can be managed through Special:ManageWiki",
-		"ManageWikiSettings": null,
-		"@wgManageWikiPrivateOptionRestricted": "Boolean. Whether the option to (un)mark wikis as private requires the managewiki-restricted right instead of managewiki only.",
-		"ManageWikiPrivateOptionRestricted": false,
-		"@wgManageWikiPermissionsAdditionalAddGroups": "Array. ManageWiki's version of $wgAddGroups.",
-		"ManageWikiPermissionsAdditionalAddGroups": false,
-		"@wgManageWikiPermissionsAdditionalRemoveGroups": "Array. ManageWiki's version of $wgRemoveGroups.",
-		"ManageWikiPermissionsAdditionalRemoveGroups": false,
-		"@wgManageWikiPermissionsAdditionalRights": "Array. ManageWiki's version of $wgGroupPermissions.",
-		"ManageWikiPermissionsAdditionalRights": false,
-		"@wgManageWikiPermissionsBlacklistGroups": "Array. An array of usergroups which ManageWiki can't manage. Will prevent users creating same named groups as well.",
-		"ManageWikiPermissionsBlacklistGroups": false,
-		"@wgManageWikiPermissionsBlacklistRename": "Array. An array of groups that can not be renamed as they would cause issues.",
-		"ManageWikiPermissionsBlacklistRenames": [ "*", "user", "autoconfirmed", "sysop", "bureaucrat" ],
-		"@wgManageWikiPermissionsBlacklistRights": "Array. An array of user rights that ManageWiki can not manage and assign on wiki.",
-		"ManageWikiPermissionsBlacklistRights": [ "managewiki-restricted" ],
-		"@wgManageWikiPermissionsDefaultPrivateGroup": "String. Name of a group to add to private wikis. False disables this function.",
-		"ManageWikiPermissionsDefaultPrivateGroup": false,
-		"@wgManageWikiPermissionsManagement": "Boolean. Whether ManageWiki should control group management within MediaWiki. Enable with care and caution!",
-		"ManageWikiPermissionsManagement": false,
-		"ManageWikiHelpUrl": false,
-		"ManageWikiSidebarLinks": true
 	},
 	"Hooks": {
 		"CreateWikiCreation": [
@@ -121,6 +94,88 @@
 		"localBasePath": "modules",
 		"remoteExtPath": "ManageWiki/modules"
 	},
+	"config": {
+		"EnableManageWiki": {
+			"description": "Boolean. Whether Special:ManageWiki should work on the wiki.",
+			"public": true,
+			"value": true
+		},
+		"ManageWikiCDBDirectory": {
+			"description": "String. Directory to store CDB files in. This will enable CDB capabilities in ManageWiki.",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiExtensions": {
+			"description": "Array. An array of extensions enabled within the wiki farm.",
+			"public": true,
+			"value": null
+		},
+		"ManageWikiExtensionsDefault": {
+			"description": "Array. An array of default extensions.",
+			"public": true,
+			"value": null
+		},
+		"ManageWikiSettings": {
+			"description": "Array. An array of settings that can be managed through Special:ManageWiki",
+			"public": true,
+			"value": null
+		},		
+		"ManageWikiPrivateOptionRestricted": {
+			"description": "Boolean. Whether the option to (un)mark wikis as private requires the managewiki-restricted right instead of managewiki only.",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiPermissionsAdditionalAddGroups": {
+			"description": "Array. ManageWiki's version of $wgAddGroups.",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiPermissionsAdditionalRemoveGroups": {
+			"description": "Array. ManageWiki's version of $wgRemoveGroups.",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiPermissionsAdditionalRights": {
+			"description": "Array. ManageWiki's version of $wgGroupPermissions.",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiPermissionsBlacklistGroups": {
+			"description": "Array. An array of usergroups which ManageWiki can't manage. Will prevent users creating same named groups as well.",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiPermissionsBlacklistRenames": {
+			"description": "Array. An array of groups that can not be renamed as they would cause issues.",
+			"public": true,
+			"value": [ "*", "user", "autoconfirmed", "sysop", "bureaucrat" ]
+		},
+		"ManageWikiPermissionsBlacklistRights": {
+			"description": "Array. An array of user rights that ManageWiki can not manage and assign on wiki.",
+			"public": true,
+			"value": [ "managewiki-restricted" ]
+		},
+		"ManageWikiPermissionsDefaultPrivateGroup": {
+			"description": "String. Name of a group to add to private wikis. False disables this function.",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiPermissionsManagement": {
+			"description": "Boolean. Whether ManageWiki should control group management within MediaWiki. Enable with care and caution!",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiHelpUrl": {
+			"description": "String. URL of a help page for ManageWiki on the local wiki farm.",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiSidebarLinks": {
+			"description": "Boolean. Whether to show quick links to ManageWiki pages in the side bar.",
+			"public": true,
+			"value": true
+		}
+	},
 	"callback": "ManageWikiHooks::onRegistration",
-	"manifest_version": 1
+	"manifest_version": 2
 }
