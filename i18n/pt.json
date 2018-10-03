@@ -7,6 +7,8 @@
 		]
 	},
 	"action-managewiki": "gerir as configurações da wiki",
+	"extensions-other": "Outra",
+	"extensions-handling": "Enviar",
 	"log-description-managewiki": "Este registo documenta todas as alterações das configurações de uma wiki através do GerirWiki.",
 	"log-name-managewiki": "Registo do GerirWiki",
 	"logentry-managewiki-delete-group": "$1 eliminou o grupo $3",
@@ -23,8 +25,8 @@
 	"managewiki-extensions-disabled": "Não foi definida nenhuma extensão para esta wiki",
 	"managewiki-settings-disabled": "Não foi definida nenhuma configuração para esta wiki",
 	"managewiki-header": "Selecione abaixo aquilo que pretende gerir e clique enviar!",
-	"managewiki-extensions-header": "Estas extensões são as que estão instaladas, mas pode sempre <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features pedir]</span> a adição de outras. <br>Para gerir as configurações desta wiki, consulte <b>[[Special:ManageWiki|esta página]]</b>, por favor.",
-	"managewiki-settings-header": "Esta página é utilizada para gerir as configurações da wiki <b>'$1'</b>. Se deseja usar uma funcionalidade que não está disponível aqui, use o <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> para pedi-la. <br>Para gerir as configurações desta wiki, consulte <b>[[Special:ManageWikiExtensions|esta página]]</b>, por favor.",
+	"managewiki-extensions-header": "Estas extensões são as que estão instaladas, mas pode sempre <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features pedir]</span> a adição de outras. <br>Para gerir as configurações desta wiki, consulte <b>[[Special:ManageWiki|esta página]]</b>. <br> Quando terminar, clique o separador \"enviar\" para gravar as suas alterações.",
+	"managewiki-settings-header": "Esta página é utilizada para gerir as configurações da wiki <b>'$1'</b>. Se deseja usar uma funcionalidade que não está disponível aqui, use o <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> para pedi-la. <br>Para gerir as configurações desta wiki, consulte <b>[[Special:ManageWikiExtensions|esta página]]</b>. <br> Quando terminar, clique o separador \"enviar\" para gravar as suas alterações.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Fechada",
 	"managewiki-label-dbname": "Nome da base de dados",
@@ -58,5 +60,10 @@
 	"managewiki-link": "Gerir as configurações desta wiki",
 	"managewiki-extensions-link": "Gerir as extensões desta wiki",
 	"managewiki-permissions-link": "Gerir os privilégios desta wiki",
-	"managewiki-settings-link": "Gerir as configurações adicionais desta wiki"
+	"managewiki-settings-link": "Gerir as configurações adicionais desta wiki",
+	"right-managewiki": "Gerir as configurações da wiki",
+	"right-managewiki-restricted": "Gerir as configurações restritas da wiki",
+	"right-managewiki-editdefault": "Gerir os privilégios padrão dos grupos",
+	"settings-other": "Outra",
+	"settings-handling": "Enviar"
 }

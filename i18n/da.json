@@ -4,10 +4,21 @@
 			"Saederup92"
 		]
 	},
+	"extensions-other": "Andre",
+	"extensions-handling": "Indsned",
+	"logentry-managewiki-delete-group": "$1 slettede gruppe $3",
+	"logentry-managewiki-rename": "$1 omdøbte gruppe $3 fra $4",
 	"managewiki-label-category": "Kategori",
 	"managewiki-label-closed": "Lukket",
+	"managewiki-label-dbname": "Databasenavn",
 	"managewiki-label-language": "Sprog",
 	"managewiki-label-private": "Privat",
 	"managewiki-label-inactive": "Inaktiv",
-	"managewiki-label-reason": "Årsag"
+	"managewiki-label-reason": "Årsag",
+	"managewiki-label-sitename": "Sidenavn",
+	"managewiki-missing": "Denne wiki findes ikke.",
+	"managewiki-perm-name": "Gruppenavn:",
+	"managewiki-perm-reason": "Begrundelse:",
+	"settings-other": "Andet",
+	"settings-handling": "Indsend"
 }

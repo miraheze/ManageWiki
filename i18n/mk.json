@@ -5,6 +5,8 @@
 		]
 	},
 	"action-managewiki": "раков. со википоставки",
+	"extensions-other": "Други",
+	"extensions-handling": "Поднеси",
 	"log-description-managewiki": "Овој дневник ги следи сите промени во нагодувања на викијата преку Викираководство",
 	"log-name-managewiki": "Дневник на Викираководството",
 	"logentry-managewiki-delete-group": "$1 ја избриша групата $3",
@@ -21,8 +23,8 @@
 	"managewiki-extensions-disabled": "Нема укажано додатоци за ова вики",
 	"managewiki-settings-disabled": "Нема зададено поставки за ова вики",
 	"managewiki-header": "Изберете си што сакате да работите подолу, па стиснете на „Поднеси“!",
-	"managewiki-extensions-header": "Тука се дадени тековно воспоставените додатоци, но секогаш можете да <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features побарате]</span> да се додаде друг. <br>За да измените нагодувањата на ова вики, појдете на <b>[[Special:ManageWiki|оваа страница]]</b>.",
-	"managewiki-settings-header": "Оваа страница склужи за раководење со нагодувањата на викито <b>„$1“</b>. Доколку не гледате некоја можност што ви треба, побарајте ја на <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Фабрикатор]</span>.<br>За да измените нагодувања на ова вики, појдете на <b>[[Special:ManageWikiExtensions|оваа страница]]</b>.",
+	"managewiki-extensions-header": "Тука се дадени тековно воспоставените додатоци, но секогаш можете да <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features побарате]</span> да се додаде друг. <br>За да измените нагодувањата на ова вики, појдете на <b>[[Special:ManageWiki|оваа страница]]</b>. <br> Штом готови, стиснете на јазичето „поднеси“ за да ги зачувате промените.",
+	"managewiki-settings-header": "Оваа страница склужи за раководење со нагодувањата на викито <b>„$1“</b>. Доколку не гледате некоја можност што ви треба, побарајте ја на <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Фабрикатор]</span>.<br>За да измените нагодувања на ова вики, појдете на <b>[[Special:ManageWikiExtensions|оваа страница]]</b>. <br> Штом готови, стиснете на јазичето „поднеси“ за да ги зачувате промените.",
 	"managewiki-label-category": "Категорија",
 	"managewiki-label-closed": "Затворено",
 	"managewiki-label-dbname": "Назив на базата",
@@ -56,5 +58,10 @@
 	"managewiki-link": "Раководење со поставките на викиво",
 	"managewiki-extensions-link": "Раководење со додатоците на викиво",
 	"managewiki-permissions-link": "Раководење со дозволите на викиво",
-	"managewiki-settings-link": "Раководење со дополнителните поставки на викиво"
+	"managewiki-settings-link": "Раководење со дополнителните поставки на викиво",
+	"right-managewiki": "Поставки за раководење со вики",
+	"right-managewiki-restricted": "Раководење со ограничени википоставки",
+	"right-managewiki-editdefault": "Раководење со основни дозволи за отскочници",
+	"settings-other": "Други",
+	"settings-handling": "Поднеси"
 }

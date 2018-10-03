@@ -5,6 +5,8 @@
 		]
 	},
 	"action-managewiki": "gerenciar as configurações do wiki",
+	"extensions-other": "Outro",
+	"extensions-handling": "Enviar",
 	"log-description-managewiki": "Este registro rastreia todas as alterações nas configurações de wikis através do Gerenciarumawiki.",
 	"log-name-managewiki": "Registro do Gerenciarumawiki",
 	"logentry-managewiki-delete-group": "$1 eliminou o grupo $3",
@@ -21,8 +23,8 @@
 	"managewiki-extensions-disabled": "Nenhuma extensão foi definida para este wiki",
 	"managewiki-settings-disabled": "Nenhuma configuração foi definida para esta wiki",
 	"managewiki-header": "Selecione o que você gostaria de gerenciar abaixo e clique em enviar!",
-	"managewiki-extensions-header": "As extensões aqui são as que estão atualmente instaladas, mas você pode sempre <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features solicitar]</span> outra para ser adicionado. <br>Para gerenciar as configurações deste wiki, por favor veja <b>[[Special:ManageWiki|essa página]]</b>.",
-	"managewiki-settings-header": "Esta página é usada para gerenciar as configurações wiki da wiki <b>'$1'</b>. Se um recurso que você gostaria não estiver disponível aqui, use <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> para solicitá-lo.<br>Para gerenciar as extensões deste wiki, por favor veja <b>[[Special:ManageWikiExtensions|essa página]]</b>.",
+	"managewiki-extensions-header": "As extensões aqui são as que estão atualmente instaladas, mas você pode sempre <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features solicitar]</span> outra para ser adicionado. <br>Para gerenciar as configurações deste wiki, por favor veja <b>[[Special:ManageWiki|essa página]]</b>. <br> Quando terminar, pressione a guia \"enviar\" para salvar suas alterações.",
+	"managewiki-settings-header": "Esta página é usada para gerenciar as configurações wiki da wiki <b>'$1'</b>. Se um recurso que você gostaria não estiver disponível aqui, use <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> para solicitá-lo.<br>Para gerenciar as extensões deste wiki, por favor veja <b>[[Special:ManageWikiExtensions|essa página]]</b>. <br> Quando terminar, pressione a guia \"enviar\" para salvar suas alterações.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Fechado",
 	"managewiki-label-dbname": "Nome da base de dados",
@@ -56,5 +58,10 @@
 	"managewiki-link": "Gerenciar as configurações desta wiki",
 	"managewiki-extensions-link": "Gerenciar as extensões desta wiki",
 	"managewiki-permissions-link": "Gerenciar as permissões desta wiki",
-	"managewiki-settings-link": "Gerenciar configurações adicionais desta wiki"
+	"managewiki-settings-link": "Gerenciar configurações adicionais desta wiki",
+	"right-managewiki": "Gerenciar configurações da wiki",
+	"right-managewiki-restricted": "Gerenciar configurações restritas da wiki",
+	"right-managewiki-editdefault": "Gerenciar permissões de grupo padrão",
+	"settings-other": "Outro",
+	"settings-handling": "Enviar"
 }

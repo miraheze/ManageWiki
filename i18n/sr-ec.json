@@ -5,6 +5,8 @@
 		]
 	},
 	"action-managewiki": "управљај подешавањима викија",
+	"extensions-other": "Друго",
+	"extensions-handling": "Пошаљи",
 	"log-description-managewiki": "Овај дневник прати све промене у подешавањима викија путем ManageWiki-ја.",
 	"log-name-managewiki": "Дневник ManageWiki-ја",
 	"logentry-managewiki-delete-group": "$1 је {{GENDER:$1|уклонио|уклонила}} групу $3",
@@ -51,7 +53,12 @@
 	"managewiki-success": "Подешавања су успешно промењена.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link": "Управљај подешавањима овог викија",
-	"managewiki-extensions-link": "Управљање додацима викија",
+	"managewiki-extensions-link": "Управљај додацима овог викија",
 	"managewiki-permissions-link": "Управљај дозволама овог викија",
-	"managewiki-settings-link": "Управљај додатним подешавањима овог викија"
+	"managewiki-settings-link": "Управљај додатним подешавањима овог викија",
+	"right-managewiki": "управљање подешавањима викија",
+	"right-managewiki-restricted": "управљање ограниченим подешавањима викија",
+	"right-managewiki-editdefault": "управљање подразумеваним дозволама група",
+	"settings-other": "Друго",
+	"settings-handling": "Пошаљи"
 }

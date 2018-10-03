@@ -5,6 +5,8 @@
 		]
 	},
 	"action-managewiki": "وکی ترتیباں دا انتظام کرو",
+	"extensions-other": "ٻیا",
+	"extensions-handling": "جمع کرواؤ",
 	"logentry-managewiki-settings": "$1 نے \"$4\" کیتےترتیباں تبدیل کیتیاں ہن",
 	"managewiki": "وکی دا انتظام کرو",
 	"managewiki-desc": "ویب انٹر فیس نال لوکاں کوں وکی انتظام دی اجازت ݙیندے",
@@ -21,5 +23,7 @@
 	"managewiki-missing": "ایہ وکی موجود کائنی۔",
 	"managewiki-perm-reason": "سبب:",
 	"managewiki-success": "ترتیباں کامیابی نال تبدیل تھی ڳیاں۔",
-	"managewiki-extension-name": "[$1 $2]"
+	"managewiki-extension-name": "[$1 $2]",
+	"settings-other": "ٻیا",
+	"settings-handling": "جمع کرواؤ"
 }

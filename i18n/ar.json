@@ -2,10 +2,13 @@
 	"@metadata": {
 		"authors": [
 			"محمد أحمد عبد الفتاح",
-			"ديفيد"
+			"ديفيد",
+			"Meno25"
 		]
 	},
 	"action-managewiki": "إدارة إعدادات الويكي",
+	"extensions-other": "أخرى",
+	"extensions-handling": "إرسال",
 	"log-description-managewiki": "يتتبع هذا السجل كل التغييرات في إعدادات الويكي من خلال إدارة الويكي.",
 	"log-name-managewiki": "سجل إدارة الويكي",
 	"logentry-managewiki-delete-group": "$1 حذف المجموعة $3",
@@ -22,8 +25,8 @@
 	"managewiki-extensions-disabled": "لم يتم تحديد أية امتدادات لهذا الويكي",
 	"managewiki-settings-disabled": "لم يتم تحديد أية إعدادات لهذا الويكي",
 	"managewiki-header": "حدد ما تريد إدارته أدناه، وانقر فوق إرسال!",
-	"managewiki-extensions-header": "الامتدادات هنا هي تلك المثبتة حاليا، ولكن يمكنك دائما <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features طلب]</span> إضافة أخرى. <br>لإدارة إعدادات هذا الويكي، يُرجَى الاطلاع على <b>[[Special:ManageWiki|هذه الصفحة]]</b>.",
-	"managewiki-settings-header": "يتم استخدام هذه الصفحة لإدارة إعدادات ويكي الويكي <b>'$1'</b>، إذا كانت الميزة التي تريدها غير متوفرة هنا حتى الآن، فيُرجَى استخدام <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features فبريكاتور]</span> to request it.<br> إدارة الامتدادات لهذا الويكي يُرجَى الاطلاع على <b>[[Special:ManageWikiExtensions|هذه الصفحة]]</b> بدلا من ذلك.",
+	"managewiki-extensions-header": "الامتدادات هنا هي تلك المثبتة حاليا، ولكن يمكنك دائما <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features طلب]</span> إضافة أخرى. <br>لإدارة إعدادات هذا الويكي، يُرجَى الاطلاع على <b>[[Special:ManageWiki|هذه الصفحة]]</b>. <br> متى ما انتهيت، اضغط على لسان \"submit\" لحفظ تغييراتك.",
+	"managewiki-settings-header": "يتم استخدام هذه الصفحة لإدارة إعدادات ويكي الويكي <b>'$1'</b>، إذا كانت الميزة التي تريدها غير متوفرة هنا حتى الآن، فيُرجَى استخدام <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features فبريكاتور]</span> to request it.<br> إدارة الامتدادات لهذا الويكي يُرجَى الاطلاع على <b>[[Special:ManageWikiExtensions|هذه الصفحة]]</b> بدلا من ذلك. <br> متى ما انتهيت، اضغط على لسان \"submit\" لحفظ تغييراتك.",
 	"managewiki-label-category": "التصنيف",
 	"managewiki-label-closed": "مغلق",
 	"managewiki-label-dbname": "اسم قاعدة البيانات",
@@ -57,5 +60,10 @@
 	"managewiki-link": "إدارة إعدادات ويكي",
 	"managewiki-extensions-link": "إدارة امتدادات هذا الويكي",
 	"managewiki-permissions-link": "إدارة صلاحيات الويكي",
-	"managewiki-settings-link": "إدارة الإعدادات الإضافية لهذا الويكي"
+	"managewiki-settings-link": "إدارة الإعدادات الإضافية لهذا الويكي",
+	"right-managewiki": "إدارة إعدادات الويكي",
+	"right-managewiki-restricted": "إدارة إعدادات الويكي المحظورة",
+	"right-managewiki-editdefault": "إدارة سماحات المجموعة الافتراضية",
+	"settings-other": "أخرى",
+	"settings-handling": "إرسال"
 }

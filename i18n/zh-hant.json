@@ -7,6 +7,8 @@
 		]
 	},
 	"action-managewiki": "管理 wiki 設定",
+	"extensions-other": "其它",
+	"extensions-handling": "提交",
 	"log-description-managewiki": "此日誌透過　ManageWiki　來追蹤對於 wiki 設定的所有變更。",
 	"log-name-managewiki": "ManageWiki 日誌",
 	"logentry-managewiki-delete-group": "$1已刪除群組$3",
@@ -23,8 +25,8 @@
 	"managewiki-extensions-disabled": "此 wiki 上沒有定義擴充",
 	"managewiki-settings-disabled": "此 wiki 上沒有定義設定",
 	"managewiki-header": "在以下選擇您所想要管理的內容，然後點擊提交！",
-	"managewiki-extensions-header": "在此為目前已安裝的擴充，而您也可以隨時<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features 請求]</span>其它要添加的項目。<br>要管理此 wiki 的設定，請查看<b>[[Special:ManageWiki|此頁面]]</b>。",
-	"managewiki-settings-header": "此頁面用來管理<b>「$1」</b>的 wiki 設定。若尚未有您想使用的功能，請使用 <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> 來做出申請。<br>若要管理用於此 wiki 的擴充，請改在<b>[[Special:ManageWikiExtensions|此頁面]]</b>查看。",
+	"managewiki-extensions-header": "在此為目前已安裝的擴充，而您也可以隨時<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features 請求]</span>其它要添加的項目。<br>要管理此 wiki 的設定，請查看<b>[[Special:ManageWiki|此頁面]]</b>。<br>一旦您完成後，按下「提交」分頁來保存您的更改。",
+	"managewiki-settings-header": "此頁面用來管理<b>「$1」</b>的 wiki 設定。若尚未有您想使用的功能，請使用 <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> 來做出申請。<br>若要管理用於此 wiki 的擴充，請改在<b>[[Special:ManageWikiExtensions|此頁面]]</b>查看。<br>一旦您完成後，按下「提交」分頁來保存您的更改。",
 	"managewiki-label-category": "分類",
 	"managewiki-label-closed": "已關閉",
 	"managewiki-label-dbname": "資料庫名稱",
@@ -58,5 +60,10 @@
 	"managewiki-link": "管理此 wiki 的設定",
 	"managewiki-extensions-link": "管理此 wiki 的擴充功能",
 	"managewiki-permissions-link": "管理此 wiki 的權限",
-	"managewiki-settings-link": "管理此 wiki 的額外設定"
+	"managewiki-settings-link": "管理此 wiki 的額外設定",
+	"right-managewiki": "管理 wiki 設定",
+	"right-managewiki-restricted": "管理限制的 wiki 設定",
+	"right-managewiki-editdefault": "管理預設群組權限",
+	"settings-other": "其它",
+	"settings-handling": "提交"
 }

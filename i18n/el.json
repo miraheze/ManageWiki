@@ -5,6 +5,8 @@
 		]
 	},
 	"action-managewiki": "Διαχείριση ρυθμίσεων βίκι",
+	"extensions-other": "Άλλο",
+	"extensions-handling": "Υποβολή",
 	"log-name-managewiki": "Μητρώο ManageWiki",
 	"logentry-managewiki-delete-group": "Ο $1 διέγραψε την ομάδα $3",
 	"managewiki": "Διαχείριση ενός βίκι",
@@ -24,5 +26,7 @@
 	"managewiki-perm-reason": "Αιτία:",
 	"managewiki-success": "Αυτές οι ρυθμίσεις έχουν αλλαχθεί επιτυχώς.",
 	"managewiki-extensions-link": "Διαχείριση των επεκτάσεων του βίκι",
-	"managewiki-settings-link": "Διαχείριση των ρυθμίσεων του βίκι"
+	"managewiki-settings-link": "Διαχείριση των ρυθμίσεων του βίκι",
+	"settings-other": "Άλλο",
+	"settings-handling": "Υποβολή"
 }

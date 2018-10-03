@@ -7,6 +7,8 @@
 		]
 	},
 	"action-managewiki": "위키 설정 관리",
+	"extensions-other": "기타",
+	"extensions-handling": "제출",
 	"log-description-managewiki": "이 기록은 ManageWiki를 통한 위키 설정의 모든 변경사항을 추적합니다.",
 	"log-name-managewiki": "ManageWiki 기록",
 	"logentry-managewiki-delete-group": "$1님이 $3 그룹을 삭제했습니다",
@@ -54,5 +56,10 @@
 	"managewiki-link": "이 위키의 설정을 관리하기",
 	"managewiki-extensions-link": "이 위키의 확장 기능을 관리하기",
 	"managewiki-permissions-link": "이 위키의 권한 관리",
-	"managewiki-settings-link": "이 위키의 추가 설정을 관리하기"
+	"managewiki-settings-link": "이 위키의 추가 설정을 관리하기",
+	"right-managewiki": "위키 설정 관리",
+	"right-managewiki-restricted": "제한된 위키 설정 관리",
+	"right-managewiki-editdefault": "기본 그룹 권한 관리",
+	"settings-other": "기타",
+	"settings-handling": "제출"
 }

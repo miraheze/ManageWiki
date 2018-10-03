@@ -54,5 +54,8 @@
 	"managewiki-link": "Управление настройками вики",
 	"managewiki-extensions-link": "Управление расширениями вики",
 	"managewiki-permissions-link": "Управление правами на этой вики",
-	"managewiki-settings-link": "Управление дополнительными настройками вики"
+	"managewiki-settings-link": "Управление дополнительными настройками вики",
+	"right-managewiki": "управление настройками вики",
+	"right-managewiki-restricted": "управление ограниченными вики-настройками",
+	"right-managewiki-editdefault": "управление правами стандартных групп"
 }

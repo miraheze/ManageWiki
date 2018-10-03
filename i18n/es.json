@@ -8,7 +8,8 @@
 			"MarcoAurelio",
 			"Tiberius1701",
 			"Cgalindo",
-			"GOTILON"
+			"GOTILON",
+			"Ucronistaw"
 		]
 	},
 	"action-managewiki": "gestionar configuración del wiki",
@@ -20,7 +21,7 @@
 	"managewiki": "Gestionar un wiki",
 	"managewikisettings": "Gestionar un wiki (configuración)",
 	"managewikiextensions": "Administrar una wiki (extensiones)",
-	"managewikipermissions": "Gestionar un wiki (permisos)",
+	"managewikipermissions": "Administrar una wiki (permisos)",
 	"managewikidefaultpermissions": "Gestionar un wiki (permisos por defecto)",
 	"managewiki-desc": "Permite a las personas gestionar wikis a través de una interfaz web.",
 	"managewiki-disabled": "Esta función aún no está activada en este wiki.",
@@ -47,7 +48,25 @@
 	"managewiki-perm-member": "Nombre de miembros de grupo:",
 	"managewiki-perm-name": "Nombre del grupo:",
 	"managewiki-perm-nonexistent": "El grupo \"$<span class=\"notranslate\">1</span>\"  no existe actualmente.",
+	"managewiki-perm-not-default": "Este no es el wiki central, por lo tanto editar los grupos por defecto no está autorizado",
+	"managewiki-perm-perms": "Permisos asignados:",
+	"managewiki-perm-reason": "Motivo:",
+	"managewiki-perm-remove": "Grupos revocables",
+	"managewiki-perm-rename-blacklisted": "No se puede renombrar el grupo porque el nombre que intenta cambiar se encuentra en la lista negra.",
+	"managewiki-perm-rename-taken": "No se puede renombrar el grupo \"$<span class=\"notranslate\">1</span>\" porque ya existe un grupo con este nombre.",
+	"managewiki-perm-select": "Selecciona un grupo existente para editar",
+	"managewiki-perm-submit": "Guardar los metadatos del grupo",
+	"managewiki-perm-success": "Cambios en los metadatos del grupo",
+	"managewiki-perm-success-text": "\"$<span class=\"notranslate\">1</span>\" los metadatos han sido guardados y serán aplicados dentro de los próximos minutos.",
 	"managewiki-success": "La configuración se modificó correctamente.",
 	"managewiki-extension-name": "[$1 $2]",
-	"managewiki-permissions-link": "Administra los permisos de este wiki"
+	"managewiki-link": "Administra los ajustes de este wiki",
+	"managewiki-extensions-link": "Administra las extensiones de este wiki",
+	"managewiki-permissions-link": "Administra los permisos de este wiki",
+	"managewiki-settings-link": "Administra los ajustes adicionales de este wiki",
+	"right-managewiki": "Administra los ajustes del wiki",
+	"right-managewiki-restricted": "Administre los ajustes restringidos del wiki",
+	"right-managewiki-editdefault": "Administre los permisos por defecto del grupo",
+	"settings-other": "Otro",
+	"settings-handling": "Enviar"
 }
