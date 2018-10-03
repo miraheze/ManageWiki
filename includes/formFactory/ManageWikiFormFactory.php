@@ -169,6 +169,8 @@ class ManageWikiFormFactory {
 			throw new MWException( "User '{$wgUser->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
 		}
 
+		$ceRes = $wgUser->isAllowed( 'managewiki-restricted' );
+
 		$wiki = RemoteWiki::newFromName( $formData['dbname'] );
 
 		$changedsettingsarray = [];
@@ -176,35 +178,36 @@ class ManageWikiFormFactory {
 		if ( $module == 'extensions' ) {
 			$extensionsarray = [];
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				if ( $ext['conflicts'] && $formData["ext-$name"] ) {
+				$mwAllowed = ( $ext['restricted'] && $ceRes || !$ext['restricted'] );
+				$value = $formData["ext-$name"];
+				$current = $wiki->hasExtension( $name );
+
+				if ( $ext['conflicts'] && $value ) {
 					if ( $formData["ext-" . $name] === $formData["ext-" . $ext['conflicts']] ) {
 						return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
 					}
 				}
-				if ( $formData["ext-$name"] ) {
-					if ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
+
+				if ( $value ) {
+					if ( $mwAllowed ) {
 						$extensionsarray[] = $name;
-					} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
-						if ( $wiki->hasExtension( $name ) ) {
-							$extensionsarray[] = $name;
-						} else {
-							throw new MWException( "User without managewiki-restricted tried to change a restricted setting ($name)" );
-						}
-					} else {
+					} elseif ( $current ) {
 						$extensionsarray[] = $name;
 					}
-				} elseif ( $ext['restricted'] && !$wgUser->isAllowed( 'managewiki-restricted' ) ) {
-					if ( $wiki->hasExtension( $name ) ) {
-						throw new MWException( "User without managewiki-restricted tried to change a restricted extension setting ($name)" );
+				} else {
+					if ( $mwAllowed ) {
+						// they're cool
+					} elseif ( $current ) {
+						$extensionsarray[] = $name;
 					}
 				}
 
-				if ( $formData["ext-$name"] != $wiki->hasExtension( $name ) ) {
+				if ( $formData["ext-$name"] != $current ) {
 					$changedsettingsarray[] = "ext-" . $name;
 				}
 			}
 
-	                // HACK: dummy extension name
+	                // HACK: dummy extension name - kinda wanna get rid of soon... now that maybe we can handle this better... JSON!?!
 	                $extensionsarray[] = "zzzz";
 
 	                $moduledata = implode( ",", $extensionsarray );
@@ -213,11 +216,14 @@ class ManageWikiFormFactory {
 
 			foreach( $wgManageWikiSettings as $var => $det ) {
 				$rmVar = $wiki->getSettingsValue( $var );
+				$mwAllowed = ( $det['restricted'] && $ceRes || !$det['restricted'] );
+				$type = $det['type'];
+				$value = $formData["set-$var"];
 
-				if ( $det['type'] == 'matrix' ) {
+				if ( $type == 'matrix' ) {
 					// we have a matrix
-					if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
-						$settingsarray[$var] = ManageWiki::handleMatrix( $formData["set-$var"], 'phparray' );
+					if ( $mwAllowed ) {
+						$settingsarray[$var] = ManageWiki::handleMatrix( $value, 'phparray' );
 					} else {
 						$settingsarray[$var] = ManageWiki::handleMatrix( $rmVar, 'php' );
 					}
@@ -225,10 +231,21 @@ class ManageWikiFormFactory {
 					if ( $settingsarray[$var] != ManageWiki::handleMatrix( $rmVar, 'php' ) ) {
 						$changedsettingsarray[] = "setting-" . $var;
 					}
-				} elseif ( $det['type'] != 'text' || $formData["set-$var"] ) {
+				} elseif ( $type == 'check' ) {
+					// we have a check box
+					if ( $mwAllowed ) {
+						$settingsarray[$var] = ( isset( $value ) ) ? true : false;
+					} else {
+						$settingsarray[$var] = $rmVar;
+					}
+
+					if ( $settingsarray[$var] != $rmVar ) {
+						$changedsettings[] = "setting-" . $var;
+					}
+				} elseif ( $type != 'text' || $value ) {
 					// we don't have a matrix, we don't have text in all cases, there's a value so let's handle it
-					if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
-						$settingsarray[$var] = $formData["set-$var"];
+					if ( $mwAllowed ) {
+						$settingsarray[$var] = $value;
 					} else {
 						$settingsarray[$var] = $rmVar;
 					}
@@ -238,7 +255,7 @@ class ManageWikiFormFactory {
 					}
 				} else {
 					// we definitely have text and we don't have a value
-					if ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) {
+					if ( $mwAllowed ) {
 						// no need to manipulate, it's good
 						continue;
 					} else {
@@ -248,7 +265,7 @@ class ManageWikiFormFactory {
 						}
 					}
 
-					if ( $rmVar != $formData["set-$var"] ) {
+					if ( $rmVar != $value ) {
 						$changedsettingsarray[] = "setting-" . $var;
 					}
 				}
@@ -256,7 +273,7 @@ class ManageWikiFormFactory {
 
 			$moduledata = json_encode( $settingsarray );
 		} else {
-			// nothingyet
+			// nothing yet
 		}
 
 		$changedsettings = implode( ", ", $changedsettingsarray );
