@@ -54,7 +54,7 @@ class ManageWikiFormFactory {
 			if ( $wgManageWikiSettings ) {
 				foreach ( $wgManageWikiSettings as $var => $det ) {
 
-					if ( $det['requires'] && $wiki->hasExtension( $det['requires'] ) || !$det['requires'] ) {
+					if ( !$det['requires'] || $det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
 						switch ( $det['type'] ) {
 							case 'check':
 							case 'text':
@@ -220,7 +220,7 @@ class ManageWikiFormFactory {
 				$type = $det['type'];
 				$value = $formData["set-$var"];
 
-				if ( $det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
+				if ( !$det['requires'] || $det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
 					if ( $type == 'matrix' ) {
 						// we have a matrix
 						if ( $mwAllowed ) {
@@ -241,7 +241,7 @@ class ManageWikiFormFactory {
 						}
 
 						if ( $settingsarray[$var] != $rmVar ) {
-							$changedsettings[] = "setting-" . $var;
+							$changedsettingsarray[] = "setting-" . $var;
 						}
 					} elseif ( $type != 'text' || $value ) {
 						// we don't have a matrix, we don't have text in all cases, there's a value so let's handle it
