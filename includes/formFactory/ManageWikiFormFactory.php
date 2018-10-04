@@ -220,53 +220,55 @@ class ManageWikiFormFactory {
 				$type = $det['type'];
 				$value = $formData["set-$var"];
 
-				if ( $type == 'matrix' ) {
-					// we have a matrix
-					if ( $mwAllowed ) {
-						$settingsarray[$var] = ManageWiki::handleMatrix( $value, 'phparray' );
-					} else {
-						$settingsarray[$var] = ManageWiki::handleMatrix( $rmVar, 'php' );
-					}
+				if ( $det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
+					if ( $type == 'matrix' ) {
+						// we have a matrix
+						if ( $mwAllowed ) {
+							$settingsarray[$var] = ManageWiki::handleMatrix( $value, 'phparray' );
+						} else {
+							$settingsarray[$var] = ManageWiki::handleMatrix( $rmVar, 'php' );
+						}
 
-					if ( $settingsarray[$var] != ManageWiki::handleMatrix( $rmVar, 'php' ) ) {
-						$changedsettingsarray[] = "setting-" . $var;
-					}
-				} elseif ( $type == 'check' ) {
-					// we have a check box
-					if ( $mwAllowed ) {
-						$settingsarray[$var] = ( isset( $value ) ) ? true : false;
-					} else {
-						$settingsarray[$var] = $rmVar;
-					}
-
-					if ( $settingsarray[$var] != $rmVar ) {
-						$changedsettings[] = "setting-" . $var;
-					}
-				} elseif ( $type != 'text' || $value ) {
-					// we don't have a matrix, we don't have text in all cases, there's a value so let's handle it
-					if ( $mwAllowed ) {
-						$settingsarray[$var] = $value;
-					} else {
-						$settingsarray[$var] = $rmVar;
-					}
-
-					if (  is_null( $rmVar) && $settingsarray[$var] != $det['overridedefault'] || !is_null( $rmVar) && $settingsarray[$var] != $rmVar ) {
-						$changedsettingsarray[] = "setting-" . $var;
-					}
-				} else {
-					// we definitely have text and we don't have a value
-					if ( $mwAllowed ) {
-						// no need to manipulate, it's good
-						continue;
-					} else {
-						// not good, let's not remove it
-						if ( !is_null( $rmVar ) ) {
+						if ( $settingsarray[$var] != ManageWiki::handleMatrix( $rmVar, 'php' ) ) {
+							$changedsettingsarray[] = "setting-" . $var;
+						}
+					} elseif ( $type == 'check' ) {
+						// we have a check box
+						if ( $mwAllowed ) {
+							$settingsarray[$var] = $value;
+						} else {
 							$settingsarray[$var] = $rmVar;
 						}
-					}
 
-					if ( $rmVar != $value ) {
-						$changedsettingsarray[] = "setting-" . $var;
+						if ( $settingsarray[$var] != $rmVar ) {
+							$changedsettings[] = "setting-" . $var;
+						}
+					} elseif ( $type != 'text' || $value ) {
+						// we don't have a matrix, we don't have text in all cases, there's a value so let's handle it
+						if ( $mwAllowed ) {
+							$settingsarray[$var] = $value;
+						} else {
+							$settingsarray[$var] = $rmVar;
+						}
+
+						if (  is_null( $rmVar) && $settingsarray[$var] != $det['overridedefault'] || !is_null( $rmVar) && $settingsarray[$var] != $rmVar ) {
+							$changedsettingsarray[] = "setting-" . $var;
+						}
+					} else {
+						// we definitely have text and we don't have a value
+						if ( $mwAllowed ) {
+							// no need to manipulate, it's good
+							continue;
+						} else {
+							// not good, let's not remove it
+							if ( !is_null( $rmVar ) ) {
+								$settingsarray[$var] = $rmVar;
+							}
+						}
+
+						if ( $rmVar != $value ) {
+							$changedsettingsarray[] = "setting-" . $var;
+						}
 					}
 				}
 			}
