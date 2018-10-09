@@ -5,6 +5,8 @@
 		]
 	},
 	"action-managewiki": "hantera wiki-inställningar",
+	"extensions-other": "Andra",
+	"extensions-handling": "Skicka",
 	"log-description-managewiki": "Denna logg spårar alla ändringar i inställningarna för en wiki via ManageWiki.",
 	"log-name-managewiki": "ManageWiki-logg",
 	"logentry-managewiki-rename": "$1 bytte namn på grupp $3 från $4",
@@ -53,5 +55,9 @@
 	"managewiki-link": "Hantera inställningar för denna wiki",
 	"managewiki-extensions-link": "Hantera tillägg för denna wiki",
 	"managewiki-permissions-link": "Hantera behörigheter för denna wiki",
-	"managewiki-settings-link": "Hantera ytterligare inställningar för denna wiki"
+	"managewiki-settings-link": "Hantera ytterligare inställningar för denna wiki",
+	"right-managewiki": "Hantera wikiinställningar",
+	"right-managewiki-restricted": "Hantera begränsade wikiinställningar",
+	"right-managewiki-editdefault": "Hantera standardbehörigheter för grupper",
+	"settings-handling": "Skicka"
 }
