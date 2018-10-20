@@ -30,7 +30,11 @@ class ManageWikiPopulateSettings extends Maintenance {
 
 			$settingsarray = $remoteWiki->getSettings();
 
-			$settingsarray[$this->getOption('wgsetting')] = str_replace( "\n", '', $settingvalue );
+			if ( is_bool($settingvalue) ) {
+				$settingsarray[$this->getOption('wgsetting')] = str_replace( "\n", '', $settingvalue );
+			} else {
+				$settingsarray[$this->getOption('wgsetting')] = str_replace( "\n", '', $settingvalue );
+			}
 
 			$settings = json_encode( $settingsarray );
 
