@@ -181,13 +181,13 @@ class ManageWikiFormFactory {
 				$mwAllowed = ( $ext['restricted'] && $ceRes || !$ext['restricted'] );
 				$current = $wiki->hasExtension( $name );
 
-				if ( $ext['conflicts'] && is_set( $formData["ext-$name"] ) && $formData["ext-$name"] ) {
+				if ( $ext['conflicts'] && isset( $formData["ext-$name"] ) && $formData["ext-$name"] ) {
 					if ( $formData["ext-" . $name] === $formData["ext-" . $ext['conflicts']] ) {
 						return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
 					}
 				}
 
-				if ( is_set ( $formData["ext-$name"] ) && $formData["ext-$name"] ) {
+				if ( isset( $formData["ext-$name"] ) && $formData["ext-$name"] ) {
 					if ( $mwAllowed ) {
 						$extensionsarray[] = $name;
 					} elseif ( $current ) {
@@ -241,7 +241,7 @@ class ManageWikiFormFactory {
 						if ( $settingsarray[$var] != $rmVar ) {
 							$changedsettingsarray[] = "setting-" . $var;
 						}
-					} elseif ( $type != 'text' || is_set( $formData["set-$var"] ) && $formData["set-$var"] ) {
+					} elseif ( $type != 'text' || isset( $formData["set-$var"] ) && $formData["set-$var"] ) {
 						// we don't have a matrix, we don't have text in all cases, there's a value so let's handle it
 						if ( $mwAllowed ) {
 							$settingsarray[$var] = $formData["set-$var"];
