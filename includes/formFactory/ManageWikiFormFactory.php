@@ -116,11 +116,11 @@ class ManageWikiFormFactory {
 		}
 
 		$formDescriptor['reason'] = array(
-				'type' => 'text',
-				'section' => 'handling',
-				'label-message' => 'managewiki-label-reason',
-				'size' => 45,
-				'required' => true,
+			'type' => 'text',
+			'section' => 'handling',
+			'label-message' => 'managewiki-label-reason',
+			'size' => 45,
+			'required' => true,
 		);
 
 		$formDescriptor['submit'] = array(
@@ -179,16 +179,15 @@ class ManageWikiFormFactory {
 			$extensionsarray = [];
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
 				$mwAllowed = ( $ext['restricted'] && $ceRes || !$ext['restricted'] );
-				$value = $formData["ext-$name"];
 				$current = $wiki->hasExtension( $name );
 
-				if ( $ext['conflicts'] && $value ) {
+				if ( $ext['conflicts'] && is_set( $formData["ext-$name"] ) && $formData["ext-$name"] ) {
 					if ( $formData["ext-" . $name] === $formData["ext-" . $ext['conflicts']] ) {
 						return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
 					}
 				}
 
-				if ( $value ) {
+				if ( is_set ( $formData["ext-$name"] ) && $formData["ext-$name"] ) {
 					if ( $mwAllowed ) {
 						$extensionsarray[] = $name;
 					} elseif ( $current ) {
@@ -218,13 +217,12 @@ class ManageWikiFormFactory {
 				$rmVar = $wiki->getSettingsValue( $var );
 				$mwAllowed = ( $det['restricted'] && $ceRes || !$det['restricted'] );
 				$type = $det['type'];
-				$value = $formData["set-$var"];
 
 				if ( !$det['requires'] || $det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
 					if ( $type == 'matrix' ) {
 						// we have a matrix
 						if ( $mwAllowed ) {
-							$settingsarray[$var] = ManageWiki::handleMatrix( $value, 'phparray' );
+							$settingsarray[$var] = ManageWiki::handleMatrix( $formData["set-$var"], 'phparray' );
 						} else {
 							$settingsarray[$var] = ManageWiki::handleMatrix( $rmVar, 'php' );
 						}
@@ -235,7 +233,7 @@ class ManageWikiFormFactory {
 					} elseif ( $type == 'check' ) {
 						// we have a check box
 						if ( $mwAllowed ) {
-							$settingsarray[$var] = $value;
+							$settingsarray[$var] = $formData["set-$var"];
 						} else {
 							$settingsarray[$var] = $rmVar;
 						}
@@ -243,10 +241,10 @@ class ManageWikiFormFactory {
 						if ( $settingsarray[$var] != $rmVar ) {
 							$changedsettingsarray[] = "setting-" . $var;
 						}
-					} elseif ( $type != 'text' || $value ) {
+					} elseif ( $type != 'text' || is_set( $formData["set-$var"] ) && $formData["set-$var"] ) {
 						// we don't have a matrix, we don't have text in all cases, there's a value so let's handle it
 						if ( $mwAllowed ) {
-							$settingsarray[$var] = $value;
+							$settingsarray[$var] = $formData["set-$var"];
 						} else {
 							$settingsarray[$var] = $rmVar;
 						}
@@ -266,7 +264,7 @@ class ManageWikiFormFactory {
 							}
 						}
 
-						if ( $rmVar != $value ) {
+						if ( $rmVar != $formData["set-$var"] ) {
 							$changedsettingsarray[] = "setting-" . $var;
 						}
 					}
