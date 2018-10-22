@@ -218,9 +218,10 @@ class ManageWikiFormFactory {
 				$rmVar = $wiki->getSettingsValue( $var );
 				$mwAllowed = ( $det['restricted'] && $ceRes || !$det['restricted'] );
 				$type = $det['type'];
-				$value = $formData["set-$var"];
 
 				if ( !$det['requires'] || $det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
+					$value = $formData["set-$var"];
+
 					if ( $type == 'matrix' ) {
 						// we have a matrix
 						if ( $mwAllowed ) {
