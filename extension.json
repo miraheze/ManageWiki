@@ -44,6 +44,7 @@
 		"ManageWikiBaseFormOOUI": "includes/formFactory/ManageWikiBaseFormOOUI.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
+		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
 		"SpecialManageWiki": "includes/SpecialManageWiki.php",
 		"SpecialManageWikiDefaultPermissions": "includes/SpecialManageWikiDefaultPermissions.php",
 		"SpecialManageWikiExtensions": "includes/SpecialManageWikiExtensions.php",

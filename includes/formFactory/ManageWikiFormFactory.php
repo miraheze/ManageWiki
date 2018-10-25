@@ -174,6 +174,7 @@ class ManageWikiFormFactory {
 		$wiki = RemoteWiki::newFromName( $formData['dbname'] );
 
 		$changedsettingsarray = [];
+		$errors = [];
 
 		if ( $module == 'extensions' ) {
 			$extensionsarray = [];
@@ -184,20 +185,29 @@ class ManageWikiFormFactory {
 
 				if ( $ext['conflicts'] && $value ) {
 					if ( $formData["ext-" . $name] === $formData["ext-" . $ext['conflicts']] ) {
-						return "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
+						$errors[] = "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
 					}
 				}
 
 				if ( $value ) {
 					if ( $mwAllowed ) {
-						$extensionsarray[] = $name;
+						// new extension being added
+						$installed = ( is_null( $ext['install'] ) ) ? true : ManageWikiInstaller::process( $formData['dbname'], 'install', $ext['install'] );
+
+						if ( $installed ) {
+							$extensionsarray[] = $name;
+						} else {
+							$errors[] = "$name was not installed successfully.";
+						}
 					} elseif ( $current ) {
+						// should already be installed
 						$extensionsarray[] = $name;
 					}
 				} else {
 					if ( $mwAllowed ) {
 						// they're cool
 					} elseif ( $current ) {
+						// should already be installed
 						$extensionsarray[] = $name;
 					}
 				}
@@ -277,6 +287,10 @@ class ManageWikiFormFactory {
 			$moduledata = json_encode( $settingsarray );
 		} else {
 			// nothing yet
+		}
+
+		if ( !empty( $errors ) ) {
+			return 'The following errors occured: ' . implode( ', ', $errors );
 		}
 
 		$changedsettings = implode( ", ", $changedsettingsarray );
