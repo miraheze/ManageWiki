@@ -10,7 +10,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	function execute( $subpage ) {
-		global $wgDBname, $wgCreateWikiDatabase;
+		global $wgDBname, $wgCreateWikiGlobalWiki;
 
 		$this->setHeaders();
 		$this->getOutput()->addModuleStyles( 'ext.managewiki.permissions' );
@@ -18,7 +18,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$this->getOutput()->setArticleRelated( false );
 		$this->getOutput()->enableClientCache( false );
 
-		if ( $wgDBname != $wgCreateWikiDatabase ) {
+		if ( $wgDBname != $wgCreateWikiGlobalWiki ) {
 			$this->getOutput()->addWikiMsg( 'managewiki-perm-not-default' );
 			return false;
 		}
