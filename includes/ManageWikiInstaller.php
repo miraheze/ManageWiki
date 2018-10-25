@@ -28,10 +28,8 @@ class ManageWikiInstaller {
 		$dbw = wfGetDB( DB_MASTER, [], $dbname );
 
 		foreach ( $data as $table => $sql ) {
-			if ( $dbw->tableExists( $table ) ) {
-				return true;
-			} else {
-				return $dbw->sourceFile( $sql );
+			if ( !$dbw->tableExists( $table ) ) {
+				$dbw->sourceFile( $sql );
 			}
 		}
 	}
