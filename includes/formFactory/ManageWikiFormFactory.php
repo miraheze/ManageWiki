@@ -192,7 +192,7 @@ class ManageWikiFormFactory {
 				if ( $value ) {
 					if ( $mwAllowed ) {
 						// new extension being added
-						$installed = ( isset( $ext['install'] ) ) ? true : ManageWikiInstaller::process( $formData['dbname'], 'install', $ext['install'] );
+						$installed = ( !isset( $ext['install'] ) ) ? true : ManageWikiInstaller::process( $formData['dbname'], 'install', $ext['install'] );
 
 						if ( $installed ) {
 							$extensionsarray[] = $name;
