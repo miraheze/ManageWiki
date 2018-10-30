@@ -30,24 +30,26 @@ class ManageWikiFormFactory {
 
 		if ( $module == 'extensions' ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				if ( !$ext['conflicts'] ) {
-					$formDescriptor["ext-$name"] = array(
-						'type' => 'check',
-						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
-						'default' => $wiki->hasExtension( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
-						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
-					);
-				} else {
-					$formDescriptor["ext-$name"] = array(
-						'type' => 'check',
-						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
-						'default' => $wiki->hasExtension ( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
-						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
-					);
+				if ( !$ext['requires'] || $ext['requires'] && $wiki->hasExtension( $ext['requires'] ) ) {
+					if ( !$ext['conflicts'] ) {
+						$formDescriptor["ext-$name"] = array(
+							'type' => 'check',
+							'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
+							'default' => $wiki->hasExtension( $name ),
+							'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+							'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
+							'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
+						);
+					} else {
+						$formDescriptor["ext-$name"] = array(
+							'type' => 'check',
+							'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
+							'default' => $wiki->hasExtension ( $name ),
+							'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
+							'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
+							'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
+						);
+					}
 				}
 			}
 		} elseif ( $module == 'settings' ) {
