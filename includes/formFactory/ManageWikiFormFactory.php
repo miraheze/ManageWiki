@@ -37,7 +37,7 @@ class ManageWikiFormFactory {
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension( $name ),
 						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
-						'help' => (bool)$ext['requires'] ? "Requires: {$ext['requires']}." : null,
+						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					);
 				} else {
@@ -46,7 +46,7 @@ class ManageWikiFormFactory {
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension ( $name ),
 						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
-						'help' => (bool)$ext['requires'] ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
+						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					);
 				}
