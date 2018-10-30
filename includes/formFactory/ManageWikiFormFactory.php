@@ -30,14 +30,14 @@ class ManageWikiFormFactory {
 
 		if ( $module == 'extensions' ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				$requires_ext = !$ext['requires'] || $ext['requires'] && $wiki->hasExtension( $ext['requires'] );
+				$requires_ext = ( (bool)!$ext['requires'] || (bool)$ext['requires'] && $wiki->hasExtension( $ext['requires'] ) );
 				if ( !$ext['conflicts'] ) {
 					$formDescriptor["ext-$name"] = array(
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension( $name ),
 						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
-						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
+						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					);
 				} else {
@@ -46,7 +46,7 @@ class ManageWikiFormFactory {
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension ( $name ),
 						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
-						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
+						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					);
 				}
@@ -55,7 +55,7 @@ class ManageWikiFormFactory {
 			if ( $wgManageWikiSettings ) {
 				foreach ( $wgManageWikiSettings as $var => $det ) {
 
-					if ( !$det['requires'] || $det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
+					if ( (bool)!$det['requires'] || (bool)$det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
 						switch ( $det['type'] ) {
 							case 'check':
 							case 'text':
