@@ -30,13 +30,14 @@ class ManageWikiFormFactory {
 
 		if ( $module == 'extensions' ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
+				$requires_ext = ( (bool)!$ext['requires'] || (bool)$ext['requires'] && $wiki->hasExtension( $ext['requires'] ) );
 				if ( !$ext['conflicts'] ) {
 					$formDescriptor["ext-$name"] = array(
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
+						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					);
 				} else {
@@ -44,8 +45,8 @@ class ManageWikiFormFactory {
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension ( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$ext['restricted'] ) ? 0 : 1,
-						'help' => ( $ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
+						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					);
 				}
@@ -54,7 +55,7 @@ class ManageWikiFormFactory {
 			if ( $wgManageWikiSettings ) {
 				foreach ( $wgManageWikiSettings as $var => $det ) {
 
-					if ( !$det['requires'] || $det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
+					if ( (bool)!$det['requires'] || (bool)$det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
 						switch ( $det['type'] ) {
 							case 'check':
 							case 'text':
@@ -189,7 +190,7 @@ class ManageWikiFormFactory {
 					}
 				}
 
-				if ( $value ) {
+				if ( $value && !(bool)$ext['requires'] || $value && (bool)$ext['requires'] && $wiki->hasExtension( $ext['requires'] ) ) {
 					if ( $mwAllowed ) {
 						// new extension being added
 						$installed = ( !isset( $ext['install'] ) ) ? true : ManageWikiInstaller::process( $formData['dbname'], 'install', $ext['install'] );
@@ -229,7 +230,7 @@ class ManageWikiFormFactory {
 				$mwAllowed = ( $det['restricted'] && $ceRes || !$det['restricted'] );
 				$type = $det['type'];
 
-				if ( !$det['requires'] || $det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
+				if ( !(bool)$det['requires'] || (bool)$det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
 					$value = $formData["set-$var"];
 
 					if ( $type == 'matrix' ) {
