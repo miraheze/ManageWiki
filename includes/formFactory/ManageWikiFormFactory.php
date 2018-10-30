@@ -189,7 +189,7 @@ class ManageWikiFormFactory {
 					}
 				}
 
-				if ( $value ) {
+				if ( $value && !$ext['requires'] || $value && $ext['requires'] && $wiki->hasExtension( $ext['requires'] ) ) {
 					if ( $mwAllowed ) {
 						// new extension being added
 						$installed = ( !isset( $ext['install'] ) ) ? true : ManageWikiInstaller::process( $formData['dbname'], 'install', $ext['install'] );
