@@ -41,7 +41,6 @@
 	},
 	"AutoloadClasses": {
 		"ManageWiki": "includes/ManageWiki.php",
-		"ManageWikiBaseFormOOUI": "includes/formFactory/ManageWikiBaseFormOOUI.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
@@ -75,18 +74,6 @@
 		]
 	},
 	"ResourceModules": {
-		"ext.managewiki.baseform": {
-			"scripts": [
-				"ext.managewiki.baseform.ooui.js",
-				"ext.managewiki.baseform.edit.ooui.js"
-			],
-			"styles": "ext.managewiki.baseform.ooui.less",
-			"dependencies": [
-				"oojs-ui",
-				"mediawiki.editfont.styles"
-			],
-			"targets": [ "desktop", "mobile" ]
-		},
 		"ext.managewiki.permissions": {
 			"styles": "ext.managewiki.permissions.css"
 		}
@@ -120,7 +107,7 @@
 			"description": "Array. An array of settings that can be managed through Special:ManageWiki",
 			"public": true,
 			"value": null
-		},		
+		},
 		"ManageWikiPrivateOptionRestricted": {
 			"description": "Boolean. Whether the option to (un)mark wikis as private requires the managewiki-restricted right instead of managewiki only.",
 			"public": true,

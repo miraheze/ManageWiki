@@ -138,7 +138,7 @@ class ManageWikiFormFactory {
 		string $wiki = NULL,
 		IContextSource $context,
 		string $module = NULL,
-		$formClass = ManageWikiBaseFormOOUI::class
+		$formClass = CreateWikiOOUIForm::class
 	) {
 		$formDescriptor = $this->getFormDescriptor( $wiki, $context, $module );
 

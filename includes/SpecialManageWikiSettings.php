@@ -71,7 +71,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 
 		$out = $this->getOutput();
 
-		$out->addModules( 'ext.managewiki.baseform' );
+		$out->addModules( 'ext.createwiki.oouiform' );
 
 		$dbName = $wiki;
 
@@ -96,7 +96,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 			];
 		}
 
-		$out->addJsConfigVars( 'wgManageWikiBaseFormTabs', $sectTabs );
+		$out->addJsConfigVars( 'wgCreateWikiOOUIFormTabs', $sectTabs );
 
 		$htmlForm->show();
 
