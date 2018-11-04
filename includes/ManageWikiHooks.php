@@ -171,7 +171,6 @@ class ManageWikiHooks {
 			DeleteWiki::doDeletes( $dbw, 'mw_permissions', 'perm_dbname', $wiki );
 
 			if ( $wgManageWikiCDBDirectory ) {
-				$wiki = wfEscapeShellArg( $wiki );
 				unlink( $wgManageWikiCDBDirectory . '/permissions-' . $wiki . '.cdb' );
 			}
 		}
