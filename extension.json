@@ -14,6 +14,9 @@
 			"CreateWiki": "*"
 		}
 	},
+	"APIListModules": {
+		"wikiconfig": "ApiQueryWikiConfig"
+	},
 	"AvailableRights": [
 		"managewiki",
 		"managewiki-editdefault",
@@ -40,6 +43,7 @@
 		]
 	},
 	"AutoloadClasses": {
+		"ApiQueryWikiConfig": "includes/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
