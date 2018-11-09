@@ -50,15 +50,17 @@ class ManageWiki {
 		}
 	}
 
-	public static function availableGroups() {
+	public static function availableGroups( $wiki ) {
 		global $wgCreateWikiDatabase, $wgDBname;
+
+		$dbName = $wiki ?? $wgDBname;
 
 		$dbr = wfGetDB( DB_SLAVE, [], $wgCreateWikiDatabase );
 
 		$res = $dbr->select(
 			'mw_permissions',
 			'perm_group',
-			[ 'perm_dbname' => $wgDBname ]
+			[ 'perm_dbname' => $dbName ]
 		);
 
 		$groups = [];
@@ -70,15 +72,17 @@ class ManageWiki {
 		return $groups;
 	}
 
-	public static function groupPermissions( $group ) {
+	public static function groupPermissions( $group, $wiki ) {
 		global $wgCreateWikiDatabase, $wgDBname;
+
+		$dbName = $wiki ?? $wgDBname;
 
 		$dbr = wfGetDB( DB_SLAVE, [], $wgCreateWikiDatabase );
 
 		$res = $dbr->selectRow(
 			'mw_permissions',
 			[ 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
-			[ 'perm_dbname' => $wgDBname, 'perm_group' => $group ]
+			[ 'perm_dbname' => $dbName, 'perm_group' => $group ]
 		);
 
 		$perms = [];
