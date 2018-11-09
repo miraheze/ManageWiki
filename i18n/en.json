@@ -17,7 +17,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "View the permissions of the user groups",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Check if the wiki is marked as private",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "View the settings of the wiki",
-	"apihelp-query+wikiconfig-paramvalue-prop-settings": "View the sitename of the wiki",
+	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "View the sitename of the wiki",
 	"apiwarn-wikiconfig-nopermission": "You are not allowed to view the configuration for wiki '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki '$1' does not exist.",
 	"extensions-other": "Other",
