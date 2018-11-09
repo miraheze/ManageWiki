@@ -50,7 +50,7 @@ class ManageWiki {
 		}
 	}
 
-	public static function availableGroups( $wiki ) {
+	public static function availableGroups( $wiki = null ) {
 		global $wgCreateWikiDatabase, $wgDBname;
 
 		$dbName = $wiki ?? $wgDBname;
@@ -72,7 +72,7 @@ class ManageWiki {
 		return $groups;
 	}
 
-	public static function groupPermissions( $group, $wiki ) {
+	public static function groupPermissions( $group, $wiki = null ) {
 		global $wgCreateWikiDatabase, $wgDBname;
 
 		$dbName = $wiki ?? $wgDBname;
