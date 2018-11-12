@@ -75,7 +75,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 
 		$dbName = $wiki;
 
-		if ( $wiki == NULL ) {
+		if ( $wiki == "" ) {
 			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;
 		}
