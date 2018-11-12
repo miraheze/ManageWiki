@@ -17,13 +17,6 @@ class ManageWikiFormFactory {
 
 		$wiki = RemoteWiki::newFromName( $dbName );
 
-		$out = $context->getOutput();
-
-		if ( $wiki == null ) {
-			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
-			return false;
-		}
-
 		$formDescriptor = [];
 
 		$formDescriptor['dbname'] = array(
@@ -147,6 +140,13 @@ class ManageWikiFormFactory {
 		string $module = NULL,
 		$formClass = CreateWikiOOUIForm::class
 	) {
+		$out = $context->getOutput();
+		
+		if ( $wiki == null ) {
+			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
+			return false;
+		}
+		
 		$formDescriptor = $this->getFormDescriptor( $wiki, $context, $module );
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
