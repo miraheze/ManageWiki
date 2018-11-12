@@ -5,6 +5,11 @@
 		]
 	},
 	"action-managewiki": "керування налаштуваннями вікі",
+	"apihelp-query+wikiconfig-param-prop": "Оберіть властивості для виведення:",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Переглянути дозволи груп користувачів",
+	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Переглянути налаштування вікі",
+	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Переглянути назву сайту",
+	"apiwarn-wikiconfig-wikidoesnotexist": "Вікі «$1» не існує.",
 	"log-description-managewiki": "Цей журнал протоколює усі зміни у налаштування вікі через ManageWiki",
 	"log-name-managewiki": "Журнал управління вікі",
 	"logentry-managewiki-delete-group": "$1 {{GENDER:$1|вилучив|вилучила}} групу $3",

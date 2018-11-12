@@ -4,6 +4,8 @@
 			"Saederup92"
 		]
 	},
+	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Tjek om wikien er markeret som lukket",
+	"apiwarn-wikiconfig-wikidoesnotexist": "Wikien '$1' findes ikke.",
 	"extensions-other": "Andre",
 	"extensions-handling": "Indsned",
 	"logentry-managewiki-delete-group": "$1 slettede gruppe $3",

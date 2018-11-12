@@ -5,6 +5,7 @@
 		]
 	},
 	"action-managewiki": "Διαχείριση ρυθμίσεων βίκι",
+	"apihelp-query+wikiconfig-param-wikis": "Ποια βίκι θα ελεγχθούν.",
 	"extensions-other": "Άλλο",
 	"extensions-handling": "Υποβολή",
 	"log-name-managewiki": "Μητρώο ManageWiki",

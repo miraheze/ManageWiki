@@ -6,6 +6,10 @@
 		]
 	},
 	"action-managewiki": "viki ayarlarını yönet",
+	"apihelp-query+wikiconfig-param-prop": "Dönecek özellikleri seçin:",
+	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Viki'nin kapalı olarak işaretlenmiş olup olmadığını kontrol edin",
+	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Viki'nin ayarlarını görüntüle",
+	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Viki'nin site ismini görüntüle",
 	"logentry-managewiki-settings": "$1, \"$4\" için ayarları değiştirdi.",
 	"managewiki": "Bir vikiyi yönet",
 	"managewiki-desc": "İnsanların bir web arayüzü aracılığıyla viki'leri yönetmesine izin verir",

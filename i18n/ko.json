@@ -7,6 +7,13 @@
 		]
 	},
 	"action-managewiki": "위키 설정 관리",
+	"apihelp-query+wikiconfig-param-prop": "반환할 속성을 선택합니다:",
+	"apihelp-query+wikiconfig-param-wikis": "확인할 위키입니다.",
+	"apihelp-query+wikiconfig-paramvalue-prop-closed": "위키가 닫힌 것으로 표시되어 있는지 확인합니다",
+	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "위키가 비활동으로 표시되어 있는지 확인합니다",
+	"apihelp-query+wikiconfig-paramvalue-prop-private": "위키가 비공개로 표시되어 있는지 확인합니다",
+	"apiwarn-wikiconfig-nopermission": "'$1' 위키의 구성을 볼 권한이 없습니다",
+	"apiwarn-wikiconfig-wikidoesnotexist": "'$1' 위키가 존재하지 않습니다.",
 	"extensions-other": "기타",
 	"extensions-handling": "제출",
 	"log-description-managewiki": "이 기록은 ManageWiki를 통한 위키 설정의 모든 변경사항을 추적합니다.",

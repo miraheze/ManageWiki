@@ -12,6 +12,11 @@
 		]
 	},
 	"action-managewiki": "управление настройками вики",
+	"apihelp-query+wikiconfig-param-prop": "Какие свойства вернуть:",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Просмотреть разрешения групп участников",
+	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Просмотреть настройки вики",
+	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Просмотреть название сайта",
+	"apiwarn-wikiconfig-wikidoesnotexist": "Вики «$1» не существует.",
 	"log-name-managewiki": "Журнал управления вики",
 	"logentry-managewiki-delete-group": "$1 {{GENDER:$1|удалил|удалила}} группу $3",
 	"logentry-managewiki-rename": "$1 {{GENDER:$1|переименовал|переименовала}} группу $3 из $4",
