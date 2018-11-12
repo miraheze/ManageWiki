@@ -64,6 +64,8 @@
 	"managewiki-perm-remove": "Removable groups:",
 	"managewiki-perm-rename-blacklisted": "Unable to rename as the group you are trying to rename has been blacklisted.",
 	"managewiki-perm-rename-taken": "Unable to rename as \"$1\" already exists.",
+	"managewiki-perm-resetgroups": "Reset all groups to default",
+	"managewiki-perm-resetgroups-header": "By clicking the button below, all group configuration will be wiped and the default permissions configuration for the wiki will be restored. This will remove all custom changes except the readability of the wiki. Proceed only if you are sure you wish to do this.",
 	"managewiki-perm-select": "Select existing group to edit",
 	"managewiki-perm-submit": "Save group metadata",
 	"managewiki-perm-success": "Group metadata changed",

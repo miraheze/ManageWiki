@@ -2,9 +2,10 @@
 
 class ManageWikiFormFactory {
 	public function getFormDescriptor(
-		string $wiki = NULL,
+		string $dbName = NULL,
 		IContextSource $context,
-		string $module = NULL
+		string $module = NULL,
+		RemoteWiki $wiki
 	) {
 		global $wgManageWikiExtensions, $wgManageWikiSettings, $wgUser;
 
@@ -12,10 +13,6 @@ class ManageWikiFormFactory {
 			strtolower( $context->getSkin()->getSkinName() ),
 			$context->getLanguage()->getDir()
 		);
-
-		$dbName = $wiki;
-
-		$wiki = RemoteWiki::newFromName( $dbName );
 
 		$formDescriptor = [];
 
@@ -140,7 +137,14 @@ class ManageWikiFormFactory {
 		string $module = NULL,
 		$formClass = CreateWikiOOUIForm::class
 	) {
-		$formDescriptor = $this->getFormDescriptor( $wiki, $context, $module );
+		$remoteWiki = RemoteWiki::newFromName( $wiki );
+
+		if ( $remoteWiki == NULL ) {
+			$context->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
+			return false;
+		}
+
+		$formDescriptor = $this->getFormDescriptor( $wiki, $context, $module, $remoteWiki );
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
@@ -148,7 +152,7 @@ class ManageWikiFormFactory {
 		$htmlForm->suppressDefaultSubmit();
 		$htmlForm->setSubmitCallback(
 			function ( array $formData, HTMLForm $form ) use ( $module ) {
-				return $this->submitForm( $formData, $form, $module );
+				return $this->submitForm( $formData, $form, $module, $remoteWiki );
 			}
 		);
 
