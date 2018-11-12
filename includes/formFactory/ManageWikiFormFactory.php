@@ -18,7 +18,7 @@ class ManageWikiFormFactory {
 		$wiki = RemoteWiki::newFromName( $dbName );
 		
 		if ( $wiki == null ) {
-			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
+			$this->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;
 		}
 
