@@ -20,7 +20,7 @@ class ManageWikiFormFactory {
 		$out = $context->getOutput();
 
 		if ( $wiki == null ) {
-			$out->addWikiMsg( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
+			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;
 		}
 
