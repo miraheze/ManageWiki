@@ -86,7 +86,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function onSubmitResetForm( $formData ) {
-		global $wgDBname, $wmgPrivateWiki;
+		global $wgDBname, $wmgPrivateWiki, $wgCreateWikiDatabase;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
