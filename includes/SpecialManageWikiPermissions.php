@@ -71,11 +71,34 @@ class SpecialManageWikiPermissions extends SpecialPage {
 
 			$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
 			$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] ) ->prepareForm()->show();
+
+			$out->addWikiMsg( 'managewiki-perm-resetgroups-header' );
+
+			$resetForm = HTMLForm::factory( 'ooui', [], $this->getContext() );
+			$resetForm->setMethod( 'post' )->setFormIdentifier( 'resetform' )->setSubmitTextMsg( 'managewiki-perm-resetgroups' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitResetForm' ] )->prepareForm()->show();
 		}
 	}
 
 	function onSubmitRedirectToPermissionsPage( array $params ) {
 		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWikiPermissions' )->getFullUrl() . '/' . $params['groups'] );
+
+		return true;
+	}
+
+	function onSubmitResetForm( $formData ) {
+		global $wgDBname, $wmgPrivateWiki;
+
+		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
+		$dbw->delete(
+			'mw_permissions',
+			[
+				'perm_dbname' => $wgDBname
+			],
+			__METHOD__
+		);
+
+		ManageWikiHooks::onCreateWikiCreation( $wgDBname, $wmgPrivateWiki );
 
 		return true;
 	}
