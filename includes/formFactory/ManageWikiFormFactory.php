@@ -151,7 +151,7 @@ class ManageWikiFormFactory {
 		$htmlForm->setId( 'mw-baseform-' . $module );
 		$htmlForm->suppressDefaultSubmit();
 		$htmlForm->setSubmitCallback(
-			function ( array $formData, HTMLForm $form ) use ( $module, $remoteWiki ) {
+			function ( array $formData, HTMLForm $form, RemoteWiki $remoteWiki ) use ( $module, $remoteWiki ) {
 				return $this->submitForm( $formData, $form, $module, $remoteWiki );
 			}
 		);
