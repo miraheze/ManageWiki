@@ -163,7 +163,8 @@ class ManageWikiFormFactory {
 	protected function submitForm(
 		array $formData,
 		HTMLForm $form,
-		string $module = NULL
+		string $module = NULL,
+		RemoteWiki $remoteWiki,
 	) {
 		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiSettings, $wgUser;
 
