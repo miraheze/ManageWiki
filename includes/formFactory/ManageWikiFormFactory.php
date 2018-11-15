@@ -151,7 +151,7 @@ class ManageWikiFormFactory {
 		$htmlForm->setId( 'mw-baseform-' . $module );
 		$htmlForm->suppressDefaultSubmit();
 		$htmlForm->setSubmitCallback(
-			function ( array $formData, HTMLForm $form ) use ( $module ) {
+			function ( array $formData, HTMLForm $form ) use ( $module. $remoteWiki ) {
 				return $this->submitForm( $formData, $form, $module, $remoteWiki );
 			}
 		);
@@ -163,7 +163,8 @@ class ManageWikiFormFactory {
 	protected function submitForm(
 		array $formData,
 		HTMLForm $form,
-		string $module = NULL
+		string $module = NULL,
+		RemoteWiki $wiki
 	) {
 		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiSettings, $wgUser;
 
@@ -175,8 +176,6 @@ class ManageWikiFormFactory {
 		}
 
 		$ceRes = $wgUser->isAllowed( 'managewiki-restricted' );
-
-		$wiki = RemoteWiki::newFromName( $formData['dbname'] );
 
 		$changedsettingsarray = [];
 		$errors = [];
