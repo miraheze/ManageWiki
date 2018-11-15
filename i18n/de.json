@@ -61,6 +61,8 @@
 	"managewiki-perm-remove": "Entfernbare Gruppen:",
 	"managewiki-perm-rename-blacklisted": "Fehler bei der Umbenennung. Die Gruppe, die du umbenennen möchtest, steht auf der schwarzen Liste.",
 	"managewiki-perm-rename-taken": "Fehler bei der Umbenennung, da „$1“ bereits vorhanden ist.",
+	"managewiki-perm-resetgroups": "Alle Gruppen auf den Standard zurücksetzen",
+	"managewiki-perm-resetgroups-header": "Durch das Anklicken der unteren Schaltfläche werden sämtliche Gruppenkonfigurationen gelöscht und die Standardberechtigungskonfiguration für das Wiki wiederhergestellt. Dies entfernt alle benutzerdefinierten Änderungen außer die Lesbarkeit des Wikis. Fahre nur fort, wenn du dir sicher bist, dass du dies tun möchtest.",
 	"managewiki-perm-select": "Vorhandene Gruppe zum Bearbeiten auswählen",
 	"managewiki-perm-submit": "Gruppen-Metadaten speichern",
 	"managewiki-perm-success": "Gruppen-Metadaten geändert",

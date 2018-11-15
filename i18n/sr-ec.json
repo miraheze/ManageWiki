@@ -57,6 +57,7 @@
 	"managewiki-perm-remove": "Уклоњиве групе:",
 	"managewiki-perm-rename-blacklisted": "Не могу да преименујем јер је група коју покушавате преименовати на црној листи.",
 	"managewiki-perm-rename-taken": "Не могу да преименујем јер „$1” већ постоји.",
+	"managewiki-perm-resetgroups": "Ресетуј све групе на подразумевано",
 	"managewiki-perm-select": "Изаберите постојећу групу да бисте уређивали",
 	"managewiki-perm-submit": "Сачувај метаподатке групе",
 	"managewiki-perm-success": "Метаподаци групе су промењени",

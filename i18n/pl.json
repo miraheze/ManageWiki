@@ -6,6 +6,7 @@
 		]
 	},
 	"action-managewiki": "zarządzaj ustawieniami wiki",
+	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki '$1' nie istnieje.",
 	"log-description-managewiki": "Ten rejestr śledzi wszystkie zmiany w ustawieniach wiki, wykonywane za pośrednictwem rozszerzenia ManageWiki.",
 	"log-name-managewiki": "Rejestr zarządzania wiki",
 	"logentry-managewiki-delete-group": "$1 {{GENDER:$1|usunął|usunęła}} grupę $3",

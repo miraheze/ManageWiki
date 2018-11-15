@@ -66,6 +66,8 @@
 	"managewiki-perm-remove": "Groupes supprimables:",
 	"managewiki-perm-rename-blacklisted": "Impossible de renommer ce groupe car il est en liste noire.",
 	"managewiki-perm-rename-taken": "Impossible de renommer car « $1 » existe déja.",
+	"managewiki-perm-resetgroups": "Réinitialiser avec les permissions de groupe par défaut",
+	"managewiki-perm-resetgroups-header": "En cliquant sur le bouton ci-dessous, toutes les configurations des groupes seront effacées et la configuration des droits par défaut sera réappliquée. Ceci supprimera toutes les modifications personnalisées sauf l'accès en lecture du wiki. Ne continuez que si vous êtes sûr de bien vouloir faire cela.",
 	"managewiki-perm-select": "Choisir un groupe existant à mettre à jour",
 	"managewiki-perm-submit": "Enregistrer les métadonnées du groupe",
 	"managewiki-perm-success": "Métadonnées du groupe modifiées",
