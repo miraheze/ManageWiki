@@ -16,6 +16,8 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Переглянути назву сайту",
 	"apiwarn-wikiconfig-nopermission": "У Вас немає прав на перегляд конфігурації вікі «$1».",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Вікі «$1» не існує.",
+	"extensions-other": "Інші",
+	"extensions-handling": "Надіслати",
 	"log-description-managewiki": "Цей журнал протоколює усі зміни у налаштування вікі через ManageWiki",
 	"log-name-managewiki": "Журнал управління вікі",
 	"logentry-managewiki-delete-group": "$1 {{GENDER:$1|вилучив|вилучила}} групу $3",
@@ -32,8 +34,8 @@
 	"managewiki-extensions-disabled": "Немає розширень, визначених на цій вікі",
 	"managewiki-settings-disabled": "Немає налаштувань, визначених на цій вікі",
 	"managewiki-header": "Оберіть, з чим ви хочете працювати нижче, та натисніть «Відправити»!",
-	"managewiki-extensions-header": "Тут наведені вже встановлені розширення, але ви завжди можете <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features надати запит]</span> для додання іншого. <br>Щоб змінити налаштування цієї вікі, дивіться <b>[[Special:ManageWiki|цю сторінку]]</b>.",
-	"managewiki-settings-header": "Ця сторінка призначена для керування налаштуваннями вікі <b>„$1“</b>. Якщо тут немає можливості, яку ви хочете, запитайте її на <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Фабрикаторі]</span>.<br>Щоб змінити налаштування цієї вікі, дивіться <b>[[Special:ManageWiki|цю сторінку]]</b>.",
+	"managewiki-extensions-header": "Тут наведені вже встановлені розширення, але ви завжди можете <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features надати запит]</span> для додання іншого. <br>Щоб змінити налаштування цієї вікі, дивіться <b>[[Special:ManageWiki|цю сторінку]]</b>. <br> Коли ви закінчите, натисніть на вкладку «надіслати», щоб зберегти зміни.",
+	"managewiki-settings-header": "Ця сторінка призначена для керування налаштуваннями вікі <b>«$1»</b>. Якщо тут немає можливості, яку ви хочете, запитайте її на <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Фабрикаторі]</span>.<br>Щоб змінити налаштування цієї вікі, дивіться <b>[[Special:ManageWiki|цю сторінку]]</b>. <br> Коли ви закінчите, натисніть на вкладку «надіслати», щоб зберегти зміни.",
 	"managewiki-label-category": "Категорія",
 	"managewiki-label-closed": "Закрито",
 	"managewiki-label-dbname": "Назва бази даних",
@@ -68,5 +70,10 @@
 	"managewiki-link": "Керування налаштуваннями вікі",
 	"managewiki-extensions-link": "Керування розширеннями вікі",
 	"managewiki-permissions-link": "Керування дозволами вікі",
-	"managewiki-settings-link": "Керування додатковими налаштуваннями вікі"
+	"managewiki-settings-link": "Керування додатковими налаштуваннями вікі",
+	"right-managewiki": "керування налаштуваннями вікі",
+	"right-managewiki-restricted": "керування обмеженими вікі-налаштуваннями",
+	"right-managewiki-editdefault": "керування дозволами за замовчуванням",
+	"settings-other": "Інші",
+	"settings-handling": "Надіслати"
 }

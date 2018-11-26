@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Bjankuloski06"
+			"Bjankuloski06",
+			"Vlad5250"
 		]
 	},
 	"action-managewiki": "раков. со википоставки",
@@ -74,7 +75,7 @@
 	"managewiki-settings-link": "Раководење со дополнителните поставки на викиво",
 	"right-managewiki": "Поставки за раководење со вики",
 	"right-managewiki-restricted": "Раководење со ограничени википоставки",
-	"right-managewiki-editdefault": "Раководење со основни дозволи за отскочници",
+	"right-managewiki-editdefault": "Раководење со основни дозволи за групи",
 	"settings-other": "Други",
 	"settings-handling": "Поднеси"
 }

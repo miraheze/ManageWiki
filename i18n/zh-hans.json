@@ -9,6 +9,11 @@
 		]
 	},
 	"action-managewiki": "管理wiki设置",
+	"apihelp-query+wikiconfig-param-prop": "要返回的属性：",
+	"apihelp-query+wikiconfig-param-wikis": "检查哪种维基",
+	"apihelp-query+wikiconfig-paramvalue-prop-closed": "检查被标记关闭的维基",
+	"apihelp-query+wikiconfig-paramvalue-prop-settings": "浏览该维基的设置情况",
+	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "浏览该维基的地名",
 	"extensions-other": "其他",
 	"extensions-handling": "提交",
 	"log-description-managewiki": "此日志通过ManageWiki跟踪Wiki设置的所有更改。",
