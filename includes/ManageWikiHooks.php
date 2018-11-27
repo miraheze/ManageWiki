@@ -15,83 +15,28 @@ class ManageWikiHooks {
 			$wgGroupPermissions = [];
 			$wgAddGroups = [];
 			$wgRemoveGroups = [];
-			$cacheArray = [];
-			$useDB = true;
-			$useCDB = false;
 
-
-			if ( $wgManageWikiCDBDirectory ) {
-				$cdbfile = "$wgManageWikiCDBDirectory/permissions-$wgDBname.cdb";
-				$useCDB = true;
-
-				if ( file_exists( $cdbfile ) ) {
-					// We're using CDB already so let's get it
-					$cdbr = \Cdb\Reader::open( $cdbfile );
-					$cache = ObjectCache::getLocalClusterInstance();
-					$cacheValue = $cache->get( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
-
-					// check whether $cdbr (stored value) is equal to $cache (last change)
-					if ( (bool)$cacheValue && ( ( (int)$cdbr->get( 'getVersion' ) == (int)$cacheValue ) ) ) {
-						$permissionsArray = (array)json_decode( $cdbr->get( 'permissions' ), true );
-						$availableGroups = (array)json_decode( $cdbr->get( 'availablegroups' ), true );
-						$useDB = false;
-
-						foreach ( $availableGroups as $group ) {
-							$groupArray = $permissionsArray[$group];
-
-							foreach ( (array)$groupArray['permissions'] as $perm ) {
-								$wgGroupPermissions[$group][$perm] = true;
-							}
-
-							$wgAddGroups[$group] = $groupArray['addgroups'];
-							$wgRemoveGroups[$group] = $groupArray['removegroups'];
-						}
-					}
-
-					$cdbr->close();
-				}
+			if ( !ManageWikiCDB::latest( 'permissions' ) ) {
+				ManageWikiCDB::upsert( 'permissions' );
 			}
 
-			if ( $useDB ) {
-				$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
-				$res = $dbr->select(
-					'mw_permissions',
-					[ 'perm_group', 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
-					[ 'perm_dbname' => $wgDBname ],
-					__METHOD__
-				);
+			$permsArray = ManageWikiCDB::get( 'permissions', [ 'wgGroupPermissions', 'wgAddGroups', 'wgRemoveGroups' ] );
 
-				foreach ( $res as $row ) {
-					$permsJson = json_decode( $row->perm_permissions, true );
-						foreach ( (array)$permsJson as $perm ) {
-						$wgGroupPermissions[$row->perm_group][$perm] = true;
+			foreach( $permsArray as $key => $json ) {
+				$permsArray[$key] = json_decode( $json, true );
+			}
+
+			foreach ( $permsArray as $key => $array ) {
+				if ( $key == 'wgGroupPermissions' ) {
+					foreach ( $array as $i => $perms ) {
+						$$key[$group][$perm] = true;
 					}
-
-					$wgAddGroups[$row->perm_group] = json_decode( $row->perm_addgroups, true );
-
-					$wgRemoveGroups[$row->perm_group] = json_decode( $row->perm_removegroups, true );
-
-					$cacheArray[$row->perm_group] = [
-						'permissions' => $permsJson,
-						'addgroups' => json_decode( $row->perm_addgroups, true ),
-						'removegroups' => json_decode( $row->perm_removegroups, true )
-					];
-				}
-
-				if ( $useCDB ) {
-					// Let's make a CDB!
-					$cache = ObjectCache::getLocalClusterInstance();
-					$cacheVersion = $cache->get( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
-
-					if ( !$cacheVersion ) {
-						$cacheVersion = $cache->set( $cache->makeKey( 'ManageWiki', 'mwpermissions' ), (int)1 );
+				} else {
+					foreach ( $array as $i => $groups ) {
+						foreach ( $groups as $id => $group ) {
+							$$key[$i][] = $group;
+						}
 					}
-
-					$cdbw = \Cdb\Writer::open( $cdbfile );
-					$cdbw->set( 'getVersion', (string)$cacheVersion );
-					$cdbw->set( 'availablegroups', json_encode( ManageWiki::availableGroups() ) );
-					$cdbw->set( 'permissions', json_encode( $cacheArray ) );
-					$cdbw->close();
 				}
 			}
 

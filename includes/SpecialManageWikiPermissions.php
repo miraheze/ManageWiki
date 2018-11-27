@@ -492,7 +492,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 			);
 		}
 
-		$updateCache = ManageWiki::updateCDBCacheVersion();
+		ManageWikiCDB::changes( 'permissions' );
 	}
 
 	function deleteGroup( $group ) {
@@ -509,7 +509,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 			__METHOD__
 		);
 
-		$updateCache = ManageWiki::updateCDBCacheVersion();
+		ManageWikiCDB::changes( 'permissions' );
 	}
 
 	protected function showLogFragment( $group, $output ) {

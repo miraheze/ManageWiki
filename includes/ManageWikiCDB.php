@@ -53,7 +53,7 @@ class ManageWikiCDB {
 		global $wgManageWikiCDBDirectory, $wgCreateWikiDatabase, $wgDBname;
 
 		if ( $wgManageWikiCDBDirectory ) {
-			$cdbFile = "$wgManageWikiCDBDirectory/$wiki-$module.cdb";
+			$cdbFile = "$wgManageWikiCDBDirectory/$wgDBname-$module.cdb";
 
 			$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
 
@@ -93,6 +93,11 @@ class ManageWikiCDB {
 				}
 			}
 
+			// json-ify stuff
+			foreach( $cacheArray as $key => $val ) {
+				$cacheArray[$key] = json_encode( $val );
+			}
+
 			// Let's grab the cache version
 			$cache = ObjectCache::getLocalClusterInstance();
 			$key = $cache->makeKey( 'ManageWiki', $module );
@@ -108,10 +113,10 @@ class ManageWikiCDB {
 			// If we're running an out of date version, let's do nothing.
 			// If we're ruinning "the latest", let's increase it.
 			// If we don't have a key... let's make one!
-			if ( $cacheVersion == $cdbVersion) {
-				$cacheVersion = (int)$cache->incr( $key );
-			} elseif ( !$cacheVersion ) {
+			if ( !$cacheVersion ) {
 				$cacheVersion = (int)$cache->set( $key, 1, rand( 84600, 88200 ) );
+			} else {
+				$cacheVersion = (int)$cache->incr( $key );
 			}
 
 			// Now we've added our end key to the array, let's push it
