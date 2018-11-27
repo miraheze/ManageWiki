@@ -55,9 +55,6 @@
 		"SpecialManageWikiSettings": "includes/SpecialManageWikiSettings.php"
 	},
 	"Hooks": {
-		"CreateWikiCDBUpserting": [
-			"ManageWikiHooks::onCreateWikiCDBUpserting"
-		],
 		"CreateWikiCreation": [
 			"ManageWikiHooks::onCreateWikiCreation"
 		],

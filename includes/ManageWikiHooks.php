@@ -319,30 +319,4 @@ class ManageWikiHooks {
 			}
 		}
 	}
-
-	public static function onCreateWikiCDBUpserting( $dbr, $wiki, &$settings ) {
-		$mwperms = $dbr->select(
-			'mw_permissions',
-			[
-				'perm_group',
-				'perm_permissions',
-				'perm_addgroups',
-				'perm_removegroups'
-			],
-			[
-				'perm_dbname' => $wiki
-			],
-			__METHOD__
-		);
-
-		foreach ( $mwperms as $row ) {
-			$permsArray = (array)json_decode( $row->perm_permissions, true );
-			foreach ( $permsArray as $perm ) {
-				$settings['wgGroupPermissions'][$row->perm_group][$perm] = true;
-			}
-
-			$settings['wgAddGroups'][$row->perm_group] = json_decode( $row->perm_addgroups, true );
-			$settings['wgRemoveGroups'][$row->perm_group] = json_decode( $row->perm_removegroups, true );
-		}
-	}
 }
