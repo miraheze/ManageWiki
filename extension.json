@@ -45,6 +45,7 @@
 	"AutoloadClasses": {
 		"ApiQueryWikiConfig": "includes/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
+		"ManageWikiCDB": "includes/ManageWikiCDB.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
