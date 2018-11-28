@@ -28,8 +28,10 @@ class ManageWikiHooks {
 
 			foreach ( $permsArray as $key => $array ) {
 				if ( $key == 'wgGroupPermissions' ) {
-					foreach ( $array as $i => $perms ) {
-						$$key[$group][$perm] = true;
+					foreach ( $array as $group => $perms ) {
+						foreach ( $perms as $i => $perm ) {
+							$$key[$group][$perm] = true;
+						}
 					}
 				} else {
 					foreach ( $array as $i => $groups ) {
