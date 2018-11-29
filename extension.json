@@ -43,17 +43,17 @@
 		]
 	},
 	"AutoloadClasses": {
-		"ApiQueryWikiConfig": "includes/ApiQueryWikiConfig.php",
+		"ApiQueryWikiConfig": "includes/api/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
 		"ManageWikiCDB": "includes/ManageWikiCDB.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
-		"SpecialManageWiki": "includes/SpecialManageWiki.php",
-		"SpecialManageWikiDefaultPermissions": "includes/SpecialManageWikiDefaultPermissions.php",
-		"SpecialManageWikiExtensions": "includes/SpecialManageWikiExtensions.php",
-		"SpecialManageWikiPermissions": "includes/SpecialManageWikiPermissions.php",
-		"SpecialManageWikiSettings": "includes/SpecialManageWikiSettings.php"
+		"SpecialManageWiki": "includes/specials/SpecialManageWiki.php",
+		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php",
+		"SpecialManageWikiExtensions": "includes/specials/SpecialManageWikiExtensions.php",
+		"SpecialManageWikiPermissions": "includes/specials/SpecialManageWikiPermissions.php",
+		"SpecialManageWikiSettings": "includes/specials/SpecialManageWikiSettings.php"
 	},
 	"Hooks": {
 		"CreateWikiCreation": [
