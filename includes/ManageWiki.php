@@ -60,7 +60,10 @@ class ManageWiki {
 		$res = $dbr->select(
 			'mw_permissions',
 			'perm_group',
-			[ 'perm_dbname' => $dbName ]
+			[
+				'perm_dbname' => $dbName
+			],
+			__METHOD__
 		);
 
 		$groups = [];
@@ -81,8 +84,16 @@ class ManageWiki {
 
 		$res = $dbr->selectRow(
 			'mw_permissions',
-			[ 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
-			[ 'perm_dbname' => $dbName, 'perm_group' => $group ]
+			[
+				'perm_permissions',
+				'perm_addgroups',
+				'perm_removegroups'
+			],
+			[
+				'perm_dbname' => $dbName,
+				'perm_group' => $group
+			],
+			__METHOD__
 		);
 
 		$perms = [];
@@ -142,16 +153,49 @@ class ManageWiki {
 		return (array)$perms;
 	}
 
-	public static function updateCDBCacheVersion() {
-		global $wgManageWikiCDBDirectory;
+	public static function modifyPermissions( $group, $addp = [], $removep = [], $addag = [], $removeag = [], $addrg = [], $removerg = [] ) {
+		global $wgCreateWikiDatabase, $wgDBname;
 
-		if ( $wgManageWikiCDBDirectory ) {
-			$cache = ObjectCache::getLocalClusterInstance();
-			$key = $cache->makeKey( 'ManageWiki', 'mwpermissions' );
+		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-			return $cache->incr( $key );
+		$existing = in_array( $group, ManageWiki::availableGroups() );
+
+		if ( $existing ) {
+			$xArray = (array)ManageWiki::groupPermissions( $group );
+			$perms = array_merge( (array)$addp, array_diff( $xArray['permissions'], (array)$removep ) );
+			$addgroups = array_merge( (array)$addag, array_diff( $xArray['addgroups'], (array)$removeag ) );
+			$removegroups = array_merge( (array)$addrg, array_diff( $xArray['removegroups'], $removerg ) );
 		} else {
-			return false;
+			// if no group exists, you can't remove anything
+			$perms = (array)$addp;
+			$addgroups = (array)$addag;
+			$removegroups = (array)$addrg;
+		}
+
+		$row = [
+			'perm_dbname' => $wgDBname,
+			'perm_group' => $group,
+			'perm_permissions' => json_encode( $perms ),
+			'perm_addgroups' => json_encode( $addgroups ),
+			'perm_removegroups' => json_encode( $removegroups )
+		];
+
+		if ( $existing ) {
+			$dbw->update(
+				'mw_permissions',
+				$rows,
+				[
+					'perm_dbname' => $wgDBname,
+					'perm_group' => $group
+				],
+				__METHOD__
+			);
+		} else {
+			$dbw->insert(
+				'mw_permissions',
+				$rows,
+				__METHOD__
+			);
 		}
 	}
 }

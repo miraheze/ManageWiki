@@ -451,7 +451,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 
 		if ( $newChanges && ( $countExisting != $countRemoves || $countExisting == 0 ) ) {
 			// new changes && existing metadata is not the same as removed metadata or no existing rights
-			$this->updatePermissions( $group, $newRights, $addGroups, $removeGroups );
+			ManageWiki::modifyPermissions( $group, $addRights, $removeRights, $newAddGroups, $removedAddGroups, $newRemoveGroups, $removedRemoveGroups );
 			$this->addPermissionLog( $group, $addRights, $removeRights, $newAddGroups, $removedAddGroups, $newRemoveGroups, $removedRemoveGroups, $reason );
 		} elseif ( $newChanges && $countExisting == $countRemoves ) {
 			// new changes && existing metadata is equal to removals, group deleted
@@ -461,36 +461,6 @@ class SpecialManageWikiPermissions extends SpecialPage {
 
 		$this->getOutput()->setSubTitle( $this->msg( 'managewiki-perm-success' ) );
 		$this->getOutput()->addWikiMsg( 'managewiki-perm-success-text', $group );
-	}
-
-	function updatePermissions( $group, $rights, $addgroups, $removegroups ) {
-		global $wgCreateWikiDatabase, $wgDBname;
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-
-		$existing = in_array( $group, ManageWiki::availableGroups() );
-
-		$rows = [
-			'perm_dbname' => $wgDBname,
-			'perm_group' => $group,
-			'perm_permissions' => json_encode( $rights ),
-			'perm_addgroups' => json_encode( $addgroups ),
-			'perm_removegroups' => json_encode( $removegroups )
-		];
-
-		if ( $existing ) {
-			$dbw->update(
-				'mw_permissions',
-				$rows,
-				[ 'perm_dbname' => $wgDBname, 'perm_group' => $group ],
-				__METHOD__
-			);
-		} else {
-			$dbw->insert(
-				'mw_permissions',
-				$rows,
-				__METHOD__
-			);
-		}
 
 		ManageWikiCDB::changes( 'permissions' );
 	}
@@ -508,8 +478,6 @@ class SpecialManageWikiPermissions extends SpecialPage {
 			],
 			__METHOD__
 		);
-
-		ManageWikiCDB::changes( 'permissions' );
 	}
 
 	protected function showLogFragment( $group, $output ) {
