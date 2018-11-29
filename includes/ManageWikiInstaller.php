@@ -41,9 +41,36 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	// @TODO: Will handle copying of files + directory creations
 	private static function files( string $dbname, array $data ) {
-		return false;
+		global $wgUploadDirectory;
+
+		$baseloc = $wgUploadDirectory . $dbname;
+
+		foreach ( $data as $location => $source ) {
+			if ( substr( $location, -1 ) == '/' ) {
+				if ( $source === true ) {
+					if ( !is_dir( $baseloc . $location ) ) {
+						if ( !mkdir( $baseloc . $location ) ) {
+							return false;
+						}
+					}
+				} else {
+					$files = array_diff( scandir( $source, [ '.', '..' ] ) );
+
+					foreach ( $files as $file ) {
+						if ( !copy( $source . $file, $baseloc . $location . $file ) ) {
+							return false;
+						}
+					}
+				}
+			} else {
+				if ( !copy( $source, $baseloc . $location ) ) {
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	// @TODO: Will handle creation of a permissions row entry/modification of an existing row (needs cleaning up MWP to work)
