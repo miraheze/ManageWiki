@@ -73,9 +73,12 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	// @TODO: Will handle creation of a permissions row entry/modification of an existing row (needs cleaning up MWP to work)
 	private static function permissions( string $dbname, array $data ) {
-		return false;
+		foreach ( $data as $group => $mod ) {
+			ManageWiki::modifyPermissions( $group, $addp = $mod['permissions'], $addag = $mod['addgroups'], $addrg = $mod['removegroups' ], $wiki = $dbname );
+		}
+
+		return true;
 	}
 
 	// @TODO: Will handle management of namesapces. Needs MWN to be done.

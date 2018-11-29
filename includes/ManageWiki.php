@@ -153,10 +153,12 @@ class ManageWiki {
 		return (array)$perms;
 	}
 
-	public static function modifyPermissions( $group, $addp = [], $removep = [], $addag = [], $removeag = [], $addrg = [], $removerg = [] ) {
+	public static function modifyPermissions( $group, $addp = [], $removep = [], $addag = [], $removeag = [], $addrg = [], $removerg = [], $wiki = null ) {
 		global $wgCreateWikiDatabase, $wgDBname;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
+		$wiki = $wiki ?? $wgDBname;
 
 		$existing = in_array( $group, ManageWiki::availableGroups() );
 
@@ -173,7 +175,7 @@ class ManageWiki {
 		}
 
 		$row = [
-			'perm_dbname' => $wgDBname,
+			'perm_dbname' => $wiki,
 			'perm_group' => $group,
 			'perm_permissions' => json_encode( $perms ),
 			'perm_addgroups' => json_encode( $addgroups ),
@@ -185,7 +187,7 @@ class ManageWiki {
 				'mw_permissions',
 				$rows,
 				[
-					'perm_dbname' => $wgDBname,
+					'perm_dbname' => $wiki,
 					'perm_group' => $group
 				],
 				__METHOD__
