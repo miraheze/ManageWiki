@@ -19,8 +19,9 @@ class ManageWikiInstaller {
 			}
 		}
 
-		// should introduce pass/fail logic into here rather than trying to manage it upstream on execution
-		return $stepresponse;
+		$proceed = ( (bool)array_search( false, $stepresponse ) ) ? false : true;
+
+		return $proceed;
 
 	}
 
@@ -29,9 +30,15 @@ class ManageWikiInstaller {
 
 		foreach ( $data as $table => $sql ) {
 			if ( !$dbw->tableExists( $table ) ) {
-				$dbw->sourceFile( $sql );
+				try {
+					$dbw->sourceFile( $sql );
+				} catch ( Exception $e ) {
+					return false;
+				}
 			}
 		}
+
+		return true;
 	}
 
 	// @TODO: Will handle copying of files + directory creations
