@@ -109,6 +109,53 @@ class ManageWikiFormFactory {
 					}
 				}
 			}
+		} elseif ( $module == 'namespaces' ) {
+			foreach( [ 'namespace', 'namespacetalk' ] as $name ) {
+				$formDescriptor += [
+					"namespace-$name" => [
+						'type' => 'text',
+						'label-message' => 'namespaces-namespace',
+						'section' => "$name"
+					],
+					"namespacetalk-$name" => [
+						'type' => 'text',
+						'label-message' => 'namespaces-namespacetalk',
+						'section' => "$name"
+					],
+					"content-$name" => [
+						'type' => 'check',
+						'label-message' => 'namespaces-content',
+						'section' => "$name"
+					],
+					"subpages-$name" => [
+						'type' => 'check',
+						'label-message' => 'namespaces-subpages',
+						'section' => "$name"
+					],
+					"search-$name" => [
+						'type' => 'check',
+						'label-message' => 'namespaces-search',
+						'section' => "$name"
+					],
+					"protection-$name" => [
+						'type' => 'selectorother',
+						'label-message' => 'namespaces-protection',
+						'section' => "$name",
+						'default' => 'none',
+						'options' => [
+							'None' => 'none',
+							'editinterface' => 'editinterface',
+							'editsemiprotected' => 'editsemiprotected',
+							'editprotected' => 'editprotected'
+						]
+					],
+					"aliases-$name" => [
+						'type' => 'textarea',
+						'label-message' => 'namespaces-aliases',
+						'section' => 'aliases'
+					]
+				];
+			}
 		} else {
 			// nothing yet
 		}
@@ -179,6 +226,7 @@ class ManageWikiFormFactory {
 
 		$changedsettingsarray = [];
 		$errors = [];
+		$mwStore = 'cw_wikis';
 
 		if ( $module == 'extensions' ) {
 			$extensionsarray = [];
@@ -289,6 +337,63 @@ class ManageWikiFormFactory {
 			}
 
 			$moduledata = json_encode( $settingsarray );
+		} elseif ( $module == 'namespaces' ) {
+			$mwStore = 'mw_namespaces';
+			$build = [];
+
+			$existingNamespace = $dbw->selectRow(
+				'mw_namespaces',
+				'ns_namespace_id',
+				[
+					'ns_dbname' => $wgDBname,
+					'ns_namespace_name' => $formData['namespace-namespace']
+				],
+				__METHOD__
+			);
+
+			if ( $existingNamespace ) {
+				$nsID = [
+					'namespace' => (int)$existingNamespace->ns_namespace_id,
+					'namespacetalk' => (int)$existingNamespace->ns_namespace_id + 1
+				];
+			} else {
+				$lastID = $dbw->selectRow(
+					'mw_namespaces',
+					'ns_namespace_id',
+					[
+						'ns_dbname' => $wgDBname,
+					],
+					__METHOD__,
+					[
+						'ORDER BY' => 'ns_namespace_id DESC'
+					]
+				);
+
+				if ( $lastID ) {
+					$nsID = [
+						'namespace' => (int)$lastID->ns_namespace_id + 1,
+						'namespacetalk' => (int)$lastID->ns_namespace_id + 2
+					];
+				} else {
+					$nsID = [
+						'namespace' => 3000,
+						'namespacetalk' => 3001
+					];
+				}
+			}
+
+			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
+				$build[$name] = [
+					'ns_dbname' => $wgDBname,
+					'ns_namespace_id' => $nsID[$name],
+					'ns_namespace_name' => $formData["namespace-$name"],
+					'ns_searchable' => (int)$formData["searchable-$name"],
+					'ns_subpages' => (int)$formData["subpages-$name"],
+					'ns_aliases' => json_encode( explode( "\n", $formData["aliases-$name"] ) ),
+					'ns_protection' => $formData["protection-$name"],
+					'ns_content' => (int)$formData["content-$name"]
+				];
+			}
 		} else {
 			// nothing yet
 		}
@@ -297,32 +402,58 @@ class ManageWikiFormFactory {
 			return 'The following errors occured: ' . implode( ', ', $errors );
 		}
 
-		$changedsettings = implode( ", ", $changedsettingsarray );
-
 		$dbw->selectDB( $wgCreateWikiDatabase );
 
-		$dbw->update( 'cw_wikis',
-			array(
-				"wiki_{$module}" => $moduledata,
-			),
-			array(
-				'wiki_dbname' => $formData['dbname'],
-			),
-			__METHOD__
-		);
+		if ( $mwStore = 'cw_wikis' ) {
+			$mwLog = 'settings';
+			$changedSettings = implode( ", ", $changedsettingsarray );
+			$logData = [
+				'4::wiki' => $formData['dbname'],
+				'5::changes' => $changedSettings
+			];
+
+			$dbw->update( 'cw_wikis',
+				array(
+					"wiki_{$module}" => $moduledata,
+				),
+				array(
+					'wiki_dbname' => $formData['dbname'],
+				),
+				__METHOD__
+			);
+		} elseif( $mwStore = 'mw_namespaces' ) {
+			$mwLog = 'namespaces';
+			$logData = [
+				'4::wiki' => $formData['dbname'],
+				'5::namespace' => $build['namespace']['ns_namespace_name']
+			];
+
+			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
+				if ( $existingNamespace ) {
+					$dbw->update( 'mw_namespaces',
+						$build[$name],
+						[
+							'ns_dbname' => $build[$name]['ns_dbname'],
+							'ns_namespace_name' => $build[$name]['ns_namespace_name']
+						],
+						__METHOD__
+					);
+				} else {
+					$dbw->inser( 'mw_namespaces',
+						$build[$name],
+						__METHOD__
+					);
+				}
+			}
+		}
 
 		$dbw->selectDB( $dbName ); // $dbw->close() errors?
 
-		$farmerLogEntry = new ManualLogEntry( 'managewiki', 'settings' );
+		$farmerLogEntry = new ManualLogEntry( 'managewiki', $mwLog );
 		$farmerLogEntry->setPerformer( $form->getContext()->getUser() );
 		$farmerLogEntry->setTarget( $form->getTitle() );
 		$farmerLogEntry->setComment( $formData['reason'] );
-		$farmerLogEntry->setParameters(
-			array(
-				'4::wiki' => $formData['dbname'],
-				'5::changes' => $changedsettings,
-			)
-		);
+		$farmerLogEntry->setParameters( $logData );
 		$farmerLogID = $farmerLogEntry->insert();
 		$farmerLogEntry->publish( $farmerLogID );
 
