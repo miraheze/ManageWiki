@@ -5,25 +5,26 @@ class ManageWikiFormFactory {
 		string $dbName = NULL,
 		IContextSource $context,
 		string $module = NULL,
+		string $special = "",
 		RemoteWiki $wiki
 	) {
-		global $wgManageWikiExtensions, $wgManageWikiSettings, $wgUser;
+		global $wgManageWikiExtensions, $wgManageWikiSettings, $wgUser, $wgCreateWikiDatabase;
 
 		OutputPage::setupOOUI(
 			strtolower( $context->getSkin()->getSkinName() ),
 			$context->getLanguage()->getDir()
 		);
 
-		$formDescriptor = [];
-
-		$formDescriptor['dbname'] = array(
-			'label-message' => 'managewiki-label-dbname',
-			'type' => 'hidden',
-			'size' => 20,
-			'default' => $dbName,
-			'disabled' => true,
-			'name' => 'mwDBname',
-		);
+		$formDescriptor = [
+			'dbname' => [
+				'label-message' => 'managewiki-label-dbname',
+				'type' => 'hidden',
+				'size' => 20,
+				'default' => $dbName,
+				'disabled' => true,
+				'name' => 'mwDBname',
+			]
+		];
 
 		if ( $module == 'extensions' ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
@@ -110,38 +111,65 @@ class ManageWikiFormFactory {
 				}
 			}
 		} elseif ( $module == 'namespaces' ) {
+			$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+
+			$nsID = [
+				'namespace' => (int)$special,
+				'namespacetalk' => (int)$special + 1
+			];
+
 			foreach( [ 'namespace', 'namespacetalk' ] as $name ) {
+				$nsData = $dbr->selectRow(
+					'mw_namespaces',
+					[
+						'ns_namespace_name',
+						'ns_content',
+						'ns_subpages',
+						'ns_searchable',
+						'ns_protection',
+						'ns_aliases',
+						'ns_core'
+					],
+					[
+						'ns_dbname' => $wgDBname,
+						'ns_namespace_id' => $nsID[$name]
+					],
+					__METHOD__
+				);
+
+				$ceVitals = ( (bool)$nsData->ns_core ) ? false : true;
+
 				$formDescriptor += [
 					"namespace-$name" => [
 						'type' => 'text',
-						'label-message' => 'namespaces-namespace',
-						'section' => "$name"
-					],
-					"namespacetalk-$name" => [
-						'type' => 'text',
-						'label-message' => 'namespaces-namespacetalk',
+						'label-message' => "namespaces-$name",
+						'default' => ( $nsData ) ? $nsData->ns_namespace_name : NULL,
+						'disabled' => $ceVitals,
 						'section' => "$name"
 					],
 					"content-$name" => [
 						'type' => 'check',
 						'label-message' => 'namespaces-content',
+						'default' => ( $nsData ) ? $nsData->ns_content : 0,
 						'section' => "$name"
 					],
 					"subpages-$name" => [
 						'type' => 'check',
 						'label-message' => 'namespaces-subpages',
+						'default' => ( $nsData ) ? $nsData->ns_subpages : 0,
 						'section' => "$name"
 					],
 					"search-$name" => [
 						'type' => 'check',
 						'label-message' => 'namespaces-search',
+						'default' => ( $nsData ) ? $nsData->ns_searchable : 0,
 						'section' => "$name"
 					],
 					"protection-$name" => [
 						'type' => 'selectorother',
 						'label-message' => 'namespaces-protection',
 						'section' => "$name",
-						'default' => 'none',
+						'default' => ( $nsData ) ? $nsData->ns_protection : 'none',
 						'options' => [
 							'None' => 'none',
 							'editinterface' => 'editinterface',
@@ -152,7 +180,8 @@ class ManageWikiFormFactory {
 					"aliases-$name" => [
 						'type' => 'textarea',
 						'label-message' => 'namespaces-aliases',
-						'section' => 'aliases'
+						'default' => ( $nsData ) ? implode( "\n", json_decode( $nsData->ns_aliases, true ) ) : NULL,
+						'section' => "$name"
 					]
 				];
 			}
@@ -182,6 +211,7 @@ class ManageWikiFormFactory {
 		string $wiki = NULL,
 		IContextSource $context,
 		string $module = NULL,
+		string $special = "",
 		$formClass = CreateWikiOOUIForm::class
 	) {
 		$remoteWiki = RemoteWiki::newFromName( $wiki );
@@ -191,7 +221,7 @@ class ManageWikiFormFactory {
 			return false;
 		}
 
-		$formDescriptor = $this->getFormDescriptor( $wiki, $context, $module, $remoteWiki );
+		$formDescriptor = $this->getFormDescriptor( $wiki, $context, $module, $special, $remoteWiki );
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
@@ -206,7 +236,6 @@ class ManageWikiFormFactory {
 		return $htmlForm;
 	}
 
-	// Currently this is only able to handle straight cw_wikis changes, so isn't a true FormFactory (except for our 3 appropriate forms)
 	protected function submitForm(
 		array $formData,
 		HTMLForm $form,
@@ -362,6 +391,7 @@ class ManageWikiFormFactory {
 					'ns_namespace_id',
 					[
 						'ns_dbname' => $wgDBname,
+						'ns_namespace_id >= 3000'
 					],
 					__METHOD__,
 					[
