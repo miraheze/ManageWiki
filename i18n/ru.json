@@ -71,6 +71,9 @@
 	"managewiki-extensions-link": "Управление расширениями вики",
 	"managewiki-permissions-link": "Управление правами на этой вики",
 	"managewiki-settings-link": "Управление дополнительными настройками вики",
+	"namespaces-namespace": "Название пространства имён",
+	"namespaces-namespacetalk": "Название пространства имён для обсуждений",
+	"namespace-protection": "Какое право требуется для правки этого пространства имён?",
 	"right-managewiki": "управление настройками вики",
 	"right-managewiki-restricted": "управление ограниченными вики-настройками",
 	"right-managewiki-editdefault": "управление правами стандартных групп"

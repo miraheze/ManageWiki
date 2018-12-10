@@ -8,6 +8,7 @@
 	},
 	"extensions-other": "Altro",
 	"extensions-handling": "Invia",
+	"logentry-managewiki-namespaces": "$1 ha modificato il namespace \"$5\" per wiki \"$4\"",
 	"logentry-managewiki-settings": "$1 ha modificato le impostazioni ($5) per \"$4\"",
 	"managewikisettings": "Gestisci un wiki (impostazioni)",
 	"managewiki-disabled": "Questa funzione non è ancora stata attivata su questo wiki.",
@@ -31,6 +32,9 @@
 	"managewiki-link": "Gestisci le impostazioni di questo wiki",
 	"managewiki-extensions-link": "Gestisci le estensioni di questo wiki",
 	"managewiki-settings-link": "Gestisci le impostazioni aggiuntive di questo wiki",
+	"namespaces-aliases": "Inserisci su una nuova riga tutti i namespace non definiti che dovrebbero reindirizzare a questo",
+	"namespaces-namespace": "Nome del namespace",
+	"namespaces-namespacetalk": "Nome del namespace di discussione",
 	"settings-other": "Altro",
 	"settings-handling": "Invia"
 }

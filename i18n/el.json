@@ -28,6 +28,7 @@
 	"managewiki-success": "Αυτές οι ρυθμίσεις έχουν αλλαχθεί επιτυχώς.",
 	"managewiki-extensions-link": "Διαχείριση των επεκτάσεων του βίκι",
 	"managewiki-settings-link": "Διαχείριση των ρυθμίσεων του βίκι",
+	"namespaces-namespace": "Όνομα του ονοματοχώρου",
 	"settings-other": "Άλλο",
 	"settings-handling": "Υποβολή"
 }

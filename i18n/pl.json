@@ -51,5 +51,8 @@
 	"managewiki-link": "Zarządzaj ustawieniami tej wiki",
 	"managewiki-extensions-link": "Zarządzaj rozszerzeniami tej wiki",
 	"managewiki-permissions-link": "Zarządzaj uprawnieniami na tej wiki",
-	"managewiki-settings-link": "Zarządzaj dodatkowymi ustawieniami tej wiki"
+	"managewiki-settings-link": "Zarządzaj dodatkowymi ustawieniami tej wiki",
+	"namespaces-namespace": "Nazwa przestrzeni nazw",
+	"namespaces-namespacetalk": "Nazwa przestrzeni nazw dyskusji",
+	"namespaces-search": "Czy ta przestrzeń nazw powinna być domyślnie dostępna do przeszukiwania?"
 }
