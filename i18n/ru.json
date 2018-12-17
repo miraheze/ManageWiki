@@ -8,7 +8,8 @@
 			"Okras",
 			"OlegCinema",
 			"Stjn",
-			"Vlad5250"
+			"Vlad5250",
+			"Nk88"
 		]
 	},
 	"action-managewiki": "управление настройками вики",
@@ -79,5 +80,7 @@
 	"namespaces-subpages": "Нужно ли включить подстраницы в этом пространстве имён?",
 	"right-managewiki": "управление настройками вики",
 	"right-managewiki-restricted": "управление ограниченными вики-настройками",
-	"right-managewiki-editdefault": "управление правами стандартных групп"
+	"right-managewiki-editdefault": "управление правами стандартных групп",
+	"settings-other": "Другое",
+	"settings-handling": "Отправить"
 }
