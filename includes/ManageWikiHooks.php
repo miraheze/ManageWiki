@@ -85,7 +85,7 @@ class ManageWikiHooks {
 				ManageWikiHooks::onCreateWikiStatePrivate( $dbname );
 			}
 
-			$updateCache = ManageWiki::updateCDBCacheVersion();
+			ManageWikiCDB::changes( 'permissions' );
 		}
 
 		if ( $wgManageWikiExtensions && $wgManageWikiExtensionsDefault ) {
@@ -188,7 +188,7 @@ class ManageWikiHooks {
 			}
 		}
 
-		$updateCache = ManageWiki::updateCDBCacheVersion();
+		ManageWikiCDB::changes( 'permissions' );
 	}
 
 	public static function onCreateWikiStatePublic( $dbname ) {
@@ -223,7 +223,7 @@ class ManageWikiHooks {
 			);
 		}
 
-		$updateCache = ManageWiki::updateCDBCacheVersion();
+		ManageWikiCDB::changes( 'permissions' );
 	}
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {
