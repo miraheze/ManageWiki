@@ -118,7 +118,7 @@ class ManageWikiHooks {
 			DeleteWiki::doDeletes( $dbw, 'mw_permissions', 'perm_dbname', $wiki );
 
 			if ( $wgManageWikiCDBDirectory ) {
-				unlink( $wgManageWikiCDBDirectory . $wiki . '-permissions.cdb' );
+				unlink( $wgManageWikiCDBDirectory . '/' . $wiki . '-permissions.cdb' );
 			}
 		}
 	}
@@ -130,7 +130,7 @@ class ManageWikiHooks {
 			RenameWiki::doRename( $dbw, 'mw_permissions', 'perm_dbname', $old, $new );
 
 			if ( $wgManageWikiCDBDirectory ) {
-				unlink( $wgManageWikiCDBDirectory . $old . '-permissions.cdb' );
+				unlink( $wgManageWikiCDBDirectory . '/' . $old . '-permissions.cdb' );
 			}
 		}
 	}
