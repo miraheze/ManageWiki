@@ -185,7 +185,7 @@ class ManageWiki {
 		if ( $existing ) {
 			$dbw->update(
 				'mw_permissions',
-				$rows,
+				$row,
 				[
 					'perm_dbname' => $wiki,
 					'perm_group' => $group
