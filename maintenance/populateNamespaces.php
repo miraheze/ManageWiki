@@ -18,7 +18,14 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 
 		$namespaces = $wgCanonicalNamespaceNames + [ 0 => '<Main>' ];
 
+		Wikimedia\suppressWarnings();
+
 		foreach ( $namespaces as $id => $name ) {
+			if ( $id < 0 ) {
+				// We don't like 'imaginary' namespaces
+				continue;
+			}
+
 			$matchedNSKeys = array_keys( $wgNamespaceAliases, $id );
 			$nsAliases = [];
 
@@ -42,6 +49,8 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 				__METHOD__
 			);
 		}
+
+		Wikimedia\restoreWarnings();
 	}
 }
 
