@@ -195,7 +195,7 @@ class ManageWiki {
 		} else {
 			$dbw->insert(
 				'mw_permissions',
-				$rows,
+				$row,
 				__METHOD__
 			);
 		}
