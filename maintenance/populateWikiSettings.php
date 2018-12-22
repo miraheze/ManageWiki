@@ -23,7 +23,7 @@ class ManageWikiPopulateSettings extends Maintenance {
 		foreach ( $settingsource as $input ) {
 			$wikiDB = explode( '|', $input, 2 );
 			list( $DBname, $settingvalue ) = array_pad( $wikiDB, 2, '' );
-			
+
 			$this->output( "Setting $settingvalue for $DBname\n" );
 
 			$remoteWiki = RemoteWiki::newFromName( $DBname );
@@ -41,16 +41,14 @@ class ManageWikiPopulateSettings extends Maintenance {
 			$settings = json_encode( $settingsarray );
 
 			$dbw->update( 'cw_wikis',
-				array(
+				[
 					'wiki_settings' => $settings
-				),
-				array(
+				],
+				[
 					'wiki_dbname' => $DBname
-				),
+				],
 				__METHOD__
 			);
-
-			unset( $remoteWiki );
 		}
 	}
 }

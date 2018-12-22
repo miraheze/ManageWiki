@@ -30,19 +30,19 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function showInputBox() {
-		$formDescriptor = array(
-			'dbname' => array(
+		$formDescriptor = [
+			'dbname' => [
 				'label-message' => 'managewiki-label-dbname',
 				'type' => 'text',
 				'size' => 20,
 				'required' => true,
 				'name' => 'mwDBname',
-			)
-		);
+			]
+		];
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'searchForm' );
 		$htmlForm->setMethod( 'post' )
-			->setSubmitCallback( array( $this, 'onSubmitRedirectToWikiForm' ) )
+			->setSubmitCallback( [ $this, 'onSubmitRedirectToWikiForm' ] )
 			->prepareForm()
 			->show();
 
@@ -83,85 +83,85 @@ class SpecialManageWiki extends SpecialPage {
 
 		$languages = Language::fetchLanguageNames( null, 'wmfile' );
 		ksort( $languages );
-		$options = array();
+		$options = [];
 		foreach ( $languages as $code => $name ) {
 			$options["$code - $name"] = $code;
 		}
 
-		$formDescriptor = array(
-			'dbname' => array(
+		$formDescriptor = [
+			'dbname' => [
 				'label-message' => 'managewiki-label-dbname',
 				'type' => 'text',
 				'size' => 20,
 				'default' => $dbName,
 				'disabled' => true,
 				'name' => 'mwDBname',
-			),
-			'sitename' => array(
+			],
+			'sitename' => [
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
 				'size' => 20,
 				'default' => $wiki->getSitename(),
 				'required' => true,
 				'name' => 'mwSitename',
-			),
-			'language' => array(
+			],
+			'language' => [
 				'label-message' => 'managewiki-label-language',
 				'type' => 'select',
 				'default' => $wiki->getLanguage(),
 				'options' => $options,
 				'name' => 'mwLanguage',
-			),
-		);
+			],
+		];
 
 		if ( $wgCreateWikiUsePrivateWikis ) {
-			$formDescriptor['private'] = array(
+			$formDescriptor['private'] = [
 				'type' => 'check',
 				'label-message' => 'managewiki-label-private',
 				'name' => 'cwPrivate',
 				'disabled' => !$this->isAllowedToChangePrivate(),
 				'default' => $wiki->isPrivate() ? 1 : 0,
-			);
+			];
 		}
 
 		if ( $wgCreateWikiUseClosedWikis ) {
-			$formDescriptor['closed'] = array(
+			$formDescriptor['closed'] = [
 				'type' => 'check',
 				'label-message' => 'managewiki-label-closed',
 				'name' => 'cwClosed',
 				'default' => $wiki->isClosed() ? 1 : 0,
-			);
+			];
 		}
 
 		if ( $wgCreateWikiUseInactiveWikis ) {
-			$formDescriptor['inactive'] = array(
+			$formDescriptor['inactive'] = [
 				'type' => 'check',
 				'label-message' => 'managewiki-label-inactive',
 				'name' => 'cwInactive',
 				'default' => $wiki->isInactive() ? 1 : 0,
-			);
+			];
 		}
 
 		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
-			$formDescriptor['category'] = array(
+			$formDescriptor['category'] = [
 				'type' => 'select',
 				'label-message' => 'managewiki-label-category',
 				'options' => $wgCreateWikiCategories,
 				'default' => $wiki->getCategory(),
-			);
+			];
 		}
 
-		$formDescriptor['reason'] = array(
+		$formDescriptor['reason'] = [
 				'type' => 'text',
 				'label-message' => 'managewiki-label-reason',
 				'size' => 45,
 				'required' => true,
-		);
+		];
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'changeForm' );
 		$htmlForm->setMethod( 'post' )
 			->setFormIdentifier( 'wikiForm' )
-			->setSubmitCallback( array( $this, 'onSubmitInput' ))
+			->setSubmitCallback( [ $this, 'onSubmitInput' ] )
 			->prepareForm()
 			->show();
 
@@ -199,7 +199,7 @@ class SpecialManageWiki extends SpecialPage {
 	function onSubmitInput( array $params ) {
 		global $wgDBname, $wgCreateWikiDatabase, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
 
-		$dbw = wfGetDB( DB_MASTER, array(), $wgCreateWikiDatabase );
+		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
 
 		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
@@ -263,7 +263,7 @@ class SpecialManageWiki extends SpecialPage {
 			$category = 'uncategorised';
 		}
 
-		$values = array(
+		$values = [
 			'wiki_sitename' => $params['sitename'],
 			'wiki_language' => $params['language'],
 			'wiki_closed' => $closed,
@@ -272,7 +272,7 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_inactive_timestamp' => $inactivedate,
 			'wiki_private' => $private,
 			'wiki_category' => $category,
-		);
+		];
 
 		if ( $params['sitename'] != $wiki->getSitename() ) {
 			$changedsettingsarray[] = 'sitename';
@@ -312,9 +312,9 @@ class SpecialManageWiki extends SpecialPage {
 
 		$dbw->update( 'cw_wikis',
 			$values,
-			array(
+			[
 				'wiki_dbname' => $params['dbname'],
-			),
+			],
 			__METHOD__
 		);
 
@@ -325,10 +325,10 @@ class SpecialManageWiki extends SpecialPage {
 		$farmerLogEntry->setTarget( $this->getTitle() );
 		$farmerLogEntry->setComment( $params['reason'] );
 		$farmerLogEntry->setParameters(
-			array(
+			[
 				'4::wiki' => $params['dbname'],
 				'5::changes' => $changedsettings,
-			)
+			]
 		);
 		$farmerLogID = $farmerLogEntry->insert();
 		$farmerLogEntry->publish( $farmerLogID );

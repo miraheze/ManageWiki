@@ -53,11 +53,11 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$out->addWikiMsg( 'managewiki-perm-header' );
 
-		$groupSelector['groups'] = array(
+		$groupSelector['groups'] = [
 			'label-message' => 'managewiki-perm-select',
 			'type' => 'select',
 			'options' => $craftedGroups,
-		);
+		];
 
 		$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
 		$selectForm->setMethod('post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();

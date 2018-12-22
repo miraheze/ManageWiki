@@ -35,19 +35,19 @@ class SpecialManageWikiSettings extends SpecialPage {
 	}
 
 	function showInputBox() {
-		$formDescriptor = array(
-			'dbname' => array(
+		$formDescriptor = [
+			'dbname' => [
 				'label-message' => 'managewiki-label-dbname',
 				'type' => 'text',
 				'size' => 20,
 				'required' => true,
 				'name' => 'mwDBname',
-			)
-		);
+			]
+		];
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'searchForm' );
 		$htmlForm->setMethod( 'post' )
-			->setSubmitCallback( array( $this, 'onSubmitRedirectToWikiForm' ) )
+			->setSubmitCallback( [ $this, 'onSubmitRedirectToWikiForm' ] )
 			->prepareForm()
 			->show();
 

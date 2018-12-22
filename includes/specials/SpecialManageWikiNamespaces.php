@@ -38,11 +38,11 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 
 		$out->addWikiMsg( 'managewiki-ns-header' );
 
-		$namespaceSelector['namespaces'] = array(
+		$namespaceSelector['namespaces'] = [
 			'label-message' => 'managewiki-ns-select',
 			'type' => 'select',
 			'options' => $craftedNamespaces,
-		);
+		];
 
 		$selectForm = HTMLForm::factory( 'ooui', $namespaceSelector, $this->getContext(), 'namespaceSelector' );
 		$selectForm->setMethod('post' )->setFormIdentifier( 'namespaceSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToNamespacePage' ] )->prepareForm()->show();
@@ -54,10 +54,10 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 					'default' => wfMessage( 'managewiki-ns-createnamespaceinfo' )->text()
 				],
 				'submit' => [
-                		        'type' => 'submit',
-                		        'default' => wfMessage( 'managewiki-ns-createnamespace' )->text()
+					'type' => 'submit',
+					'default' => wfMessage( 'managewiki-ns-createnamespace' )->text()
 				]
-                	];
+			];
 
 
 			$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
@@ -107,7 +107,7 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 
 		$htmlForm->show();
 	}
-//
+
 	function validateNamespaceName( $namespace, $nullForm ) {
 		global $wgCanonicalNamespaceNames;
 

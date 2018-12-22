@@ -59,13 +59,13 @@ class ManageWikiPopulatePermissions extends Maintenance {
 
 			if ( !$check ) {
 				$dbw->insert( 'mw_permissions',
-					array(
+					[
 						'perm_dbname' => $wgDBname,
 						'perm_group' => $groupname,
 						'perm_permissions' => $groupatr['perms'],
 						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
 						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
-					),
+					],
 					__METHOD__
 				);
 			}

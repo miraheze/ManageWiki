@@ -30,23 +30,23 @@ class ManageWikiFormFactory {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
 				$requires_ext = ( (bool)!$ext['requires'] || (bool)$ext['requires'] && $wiki->hasExtension( $ext['requires'] ) );
 				if ( !$ext['conflicts'] ) {
-					$formDescriptor["ext-$name"] = array(
+					$formDescriptor["ext-$name"] = [
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension( $name ),
 						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
 						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
-					);
+					];
 				} else {
-					$formDescriptor["ext-$name"] = array(
+					$formDescriptor["ext-$name"] = [
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension ( $name ),
 						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
 						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
-					);
+					];
 				}
 			}
 		} elseif ( $module == 'settings' ) {
@@ -82,13 +82,13 @@ class ManageWikiFormFactory {
 								break;
 						}
 
-						$formDescriptor["set-$var"] = array(
+						$formDescriptor["set-$var"] = [
 							'type' => $mwtype,
 							'label' => $det['name'],
 							'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
 							'help' => ( $det['help'] ) ? $det['help'] : null,
 							'section' => ( isset( $det['section'] ) ) ? $det['section'] : 'other',
-						);
+						];
 
 						if ( $mwtype != 'matrix' ) {
 							$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'];
@@ -187,19 +187,19 @@ class ManageWikiFormFactory {
 			// nothing yet
 		}
 
-		$formDescriptor['reason'] = array(
+		$formDescriptor['reason'] = [
 				'type' => 'text',
 				'section' => 'handling',
 				'label-message' => 'managewiki-label-reason',
 				'size' => 45,
 				'required' => true,
-		);
+		];
 
-		$formDescriptor['submit'] = array(
+		$formDescriptor['submit'] = [
 			'type' => 'submit',
 			'default' => wfMessage( 'htmlform-submit' )->text(),
 			'section' => 'handling'
-		);
+		];
 
 		return $formDescriptor;
 	}
@@ -441,12 +441,12 @@ class ManageWikiFormFactory {
 			];
 
 			$dbw->update( 'cw_wikis',
-				array(
+				[
 					"wiki_{$module}" => $moduledata,
-				),
-				array(
+				],
+				[
 					'wiki_dbname' => $formData['dbname'],
-				),
+				],
 				__METHOD__
 			);
 		} elseif( $mwStore = 'mw_namespaces' ) {
