@@ -131,20 +131,18 @@ class ManageWikiFormFactory {
 						'ns_core'
 					],
 					[
-						'ns_dbname' => $wgDBname,
+						'ns_dbname' => $dbName,
 						'ns_namespace_id' => $nsID[$name]
 					],
 					__METHOD__
 				);
-
-				$ceVitals = ( (bool)$nsData->ns_core ) ? false : true;
 
 				$formDescriptor += [
 					"namespace-$name" => [
 						'type' => 'text',
 						'label-message' => "namespaces-$name",
 						'default' => ( $nsData ) ? $nsData->ns_namespace_name : NULL,
-						'disabled' => $ceVitals,
+						'disabled' => (bool)$nsData->ns_core,
 						'section' => "$name"
 					],
 					"content-$name" => [
