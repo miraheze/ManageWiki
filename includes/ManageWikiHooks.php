@@ -9,7 +9,9 @@ class ManageWikiHooks {
 	}
 
 	public static function onSetupAfterCache() {
-		global $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory;
+		global $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory,
+			$wgManageWikiNamespacesCore, $wgContentNamespaces, $wgExtraNamespaces, $wgNamespaceProtection, $wgNamespacesToBeSearchedDefault, $wgNamespaceAliases, $wgNamespaceWithSubpages;
+
 		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$wgGroupPermissions = [];
@@ -53,7 +55,36 @@ class ManageWikiHooks {
 			if ( $wgManageWikiPermissionsAdditionalRemoveGroups ) {
 				$wgRemoveGroups = array_merge_recursive( $wgRemoveGroups, $wgManageWikiPermissionsAdditionalRemoveGroups );
 			}
+		}
 
+		// Safe guard if - should not remove existing namespaces if we're not going to manage them
+		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+			$wgContentNamespaces = [];
+			$wgExtraNamespaces = [];
+			$wgNamespaceProtection = [];
+			$wgNamespacesToBeSearchedDefault = [];
+			$wgNamespacesWithSubpages = [];
+			$wgNamespaceAliases = [];
+
+			if ( !ManageWikiCDB::latest( 'namespaces' ) ) {
+				ManageWikiCDB::upsert( 'namespaces' );
+			}
+
+			$nsArray = ManageWikiCDB::get( 'namespaces', [ 'wgContentNamespaces', 'wgExtraNamespaces', 'wgNamespaceProtection', 'wgNamespacesToBeSearchedDefault', 'wgNamespacesWithSubpages', 'wgNamespaceAliases', 'wgManageWikiNamespacesCore' ] );
+
+			foreach ( $nsArray as $key => $json ) {
+				$nsArray[$key] = json_decode( $json, true );
+			}
+
+			foreach ( $nsArray as $key => $array ) {
+				if ( !is_array( $array ) ) {
+					continue;
+				}
+
+				foreach ( $array as $id => $val ) {
+					$$key[$id] = $val;
+				}
+			}
 		}
 	}
 

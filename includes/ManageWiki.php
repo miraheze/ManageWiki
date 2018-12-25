@@ -25,7 +25,7 @@ class ManageWiki {
 	public static function listModules( bool $public = true ) {
 		global $wgManageWiki, $wgManageWikiBackendModules;
 
-		$enabledModules = array_key( $wgManageWiki, true );
+		$enabledModules = array_keys( $wgManageWiki, true );
 
 		if ( $public ) {
 			return array_diff( $enabledModules, $wgManageWikiBackendModules );

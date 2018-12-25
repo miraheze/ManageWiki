@@ -166,7 +166,7 @@ class ManageWikiFormFactory {
 						'section' => "$name",
 						'default' => ( $nsData ) ? $nsData->ns_protection : 'none',
 						'options' => [
-							'None' => 'none',
+							'None' => '',
 							'editinterface' => 'editinterface',
 							'editsemiprotected' => 'editsemiprotected',
 							'editprotected' => 'editprotected'
@@ -370,7 +370,7 @@ class ManageWikiFormFactory {
 				'ns_namespace_id',
 				[
 					'ns_dbname' => $wgDBname,
-					'ns_namespace_name' => $formData['namespace-namespace']
+					'ns_namespace_name' => str_replace( ' ', '_', $formData['namespace-namespace'] )
 				],
 				__METHOD__
 			);
@@ -411,8 +411,8 @@ class ManageWikiFormFactory {
 				$build[$name] = [
 					'ns_dbname' => $wgDBname,
 					'ns_namespace_id' => $nsID[$name],
-					'ns_namespace_name' => $formData["namespace-$name"],
-					'ns_searchable' => (int)$formData["searchable-$name"],
+					'ns_namespace_name' => str_replace( ' ', '_', $formData["namespace-$name"] ),
+					'ns_searchable' => (int)$formData["search-$name"],
 					'ns_subpages' => (int)$formData["subpages-$name"],
 					'ns_aliases' => json_encode( explode( "\n", $formData["aliases-$name"] ) ),
 					'ns_protection' => $formData["protection-$name"],
@@ -429,7 +429,7 @@ class ManageWikiFormFactory {
 
 		$dbw->selectDB( $wgCreateWikiDatabase );
 
-		if ( $mwStore = 'cw_wikis' ) {
+		if ( $mwStore == 'cw_wikis' ) {
 			$mwLog = 'settings';
 			$changedSettings = implode( ", ", $changedsettingsarray );
 			$logData = [
@@ -446,7 +446,7 @@ class ManageWikiFormFactory {
 				],
 				__METHOD__
 			);
-		} elseif( $mwStore = 'mw_namespaces' ) {
+		} elseif( $mwStore == 'mw_namespaces' ) {
 			$mwLog = 'namespaces';
 			$logData = [
 				'4::wiki' => $formData['dbname'],
@@ -464,12 +464,14 @@ class ManageWikiFormFactory {
 						__METHOD__
 					);
 				} else {
-					$dbw->inser( 'mw_namespaces',
+					$dbw->insert( 'mw_namespaces',
 						$build[$name],
 						__METHOD__
 					);
 				}
 			}
+
+			ManageWikiCDB::changes( 'namespaces' );
 		}
 
 		$dbw->selectDB( $dbName ); // $dbw->close() errors?

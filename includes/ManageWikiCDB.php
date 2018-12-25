@@ -66,6 +66,19 @@ class ManageWikiCDB {
 					'perm_removegroups'
 				];
 				$dbSelector = 'perm_dbname';
+			} elseif ( $module == 'namespaces' ) {
+				$dbTable = 'mw_namespaces';
+				$dbCols = [
+					'ns_namespace_id',
+					'ns_namespace_name',
+					'ns_searchable',
+					'ns_subpages',
+					'ns_content',
+					'ns_protection',
+					'ns_aliases',
+					'ns_core'
+				];
+				$dbSelector = 'ns_dbname';
 			} else {
 				return 'Need to add a fatal';
 			}
@@ -91,6 +104,42 @@ class ManageWikiCDB {
 					$cacheArray['wgRemoveGroups'][$group] = json_decode( $row->perm_removegroups, true );
 					$cacheArray['availabeGroups'][] = $group;
 				}
+			} elseif ( $module == 'namespaces' ) {
+				foreach ( $moduleRes as $row ) {
+					$nsID = $row->ns_namespace_id;
+
+					if ( $row->ns_content ) {
+						$cacheArray['wgContentNamespaces'][] = $nsID;
+					}
+
+					if ( !$row->ns_core ) {
+						$cacheArray['wgExtraNamespaces'][$nsID] = $row->ns_namespace_name;
+					}
+
+					if ( $row->ns_protection ) {
+						$cacheArray['wgNamespaceProtection'][$nsID] = $row->ns_protection;
+					}
+
+					if ( $row->ns_searchable ) {
+						$cacheArray['wgNamespacesToBeSearchedDefault'][$nsID] = true;
+					}
+
+					if ( $row->ns_subpages ) {
+						$cacheArray['wgNamespacesWithSubpages'][$nsID] = true;
+					}
+
+					foreach ( (array)json_decode( $row->ns_aliases, true ) as $alias ) {
+						if ( !empty( $alias ) ) {
+							$cacheArray['wgNamespaceAliases'][$alias] = $nsID;
+						}
+					}
+
+					if ( $row->ns_core ) {
+						$cacheArray['wgManageWikiNamespacesCore'][] = $nsID;
+					}
+				}
+			} else {
+				// nothing
 			}
 
 			// json-ify stuff
