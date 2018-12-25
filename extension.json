@@ -26,6 +26,7 @@
 		"ManageWiki": "SpecialManageWiki",
 		"ManageWikiDefaultPermissions": "SpecialManageWikiDefaultPermissions",
 		"ManageWikiExtensions": "SpecialManageWikiExtensions",
+		"ManageWikiNamespaces": "SpecialManageWikiNamespaces",
 		"ManageWikiPermissions": "SpecialManageWikiPermissions",
 		"ManageWikiSettings": "SpecialManageWikiSettings"
 	},
@@ -49,9 +50,11 @@
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
+		"ManageWikiNamespaces": "includes/ManageWikiNamespaces.php",
 		"SpecialManageWiki": "includes/specials/SpecialManageWiki.php",
 		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php",
 		"SpecialManageWikiExtensions": "includes/specials/SpecialManageWikiExtensions.php",
+		"SpecialManageWikiNamespaces": "includes/specials/SpecialManageWikiNamespaces.php",
 		"SpecialManageWikiPermissions": "includes/specials/SpecialManageWikiPermissions.php",
 		"SpecialManageWikiSettings": "includes/specials/SpecialManageWikiSettings.php"
 	},
