@@ -5,18 +5,16 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgEnableManageWiki, $wgManageWikiHelpUrl, $wgDBname;
+		global $wgManageWikiHelpUrl, $wgDBname;
 
 		$out = $this->getOutput();
 		$this->setHeaders();
+
 		if ( $wgManageWikiHelpUrl ) {
 			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
-		if ( !$wgEnableManageWiki ) {
-			$out->addWikiMsg( 'managewiki-disabled' );
-			return false;
-		}
+		ManageWiki::checkSetup( 'namespaces', true, $out );
 
 		if ( !is_null( $par ) && $par !== '' ) {
 			$this->showNamespace( $par );

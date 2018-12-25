@@ -9,9 +9,9 @@ class ManageWikiHooks {
 	}
 
 	public static function onSetupAfterCache() {
-		global $wgManageWikiPermissionsManagement, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory;
+		global $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory;
 		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
-		if ( $wgManageWikiPermissionsManagement ) {
+		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$wgGroupPermissions = [];
 			$wgAddGroups = [];
 			$wgRemoveGroups = [];
@@ -58,9 +58,9 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiCreation( $dbname, $private ) {
-		global $wgManageWikiPermissionsManagement, $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiExtensionsDefault;
+		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiExtensionsDefault;
 
-		if ( $wgManageWikiPermissionsManagement ) {
+		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$defaultGroups = array_diff( (array)ManageWiki::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
 
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
@@ -112,33 +112,33 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiDeletion( $dbw, $wiki ) {
-		global $wgManageWikiPermissionsManagement, $wgManageWikiCDBDirectory;
+		global $wgManageWikiCDBDirectory;
 
-		if ( $wgManageWikiPermissionsManagement ) {
+		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			DeleteWiki::doDeletes( $dbw, 'mw_permissions', 'perm_dbname', $wiki );
 
-			if ( $wgManageWikiCDBDirectory ) {
+			if ( ManageWiki::checkSetup( 'cdb' ) ) {
 				unlink( $wgManageWikiCDBDirectory . '/' . $wiki . '-permissions.cdb' );
 			}
 		}
 	}
 
 	public static function onCreateWikiRename( $dbw, $old, $new ) {
-		global $wgManageWikiPermissionsManagement, $wgManageWikiCDBDirectory;
+		global $wgManageWikiCDBDirectory;
 
-		if ( $wgManageWikiPermissionsManagement ) {
+		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			RenameWiki::doRename( $dbw, 'mw_permissions', 'perm_dbname', $old, $new );
 
-			if ( $wgManageWikiCDBDirectory ) {
+			if ( ManageWiki::checkSetup( 'cdb' ) ) {
 				unlink( $wgManageWikiCDBDirectory . '/' . $old . '-permissions.cdb' );
 			}
 		}
 	}
 
 	public static function onCreateWikiStatePrivate( $dbname ) {
-		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiPermissionsManagement;
+		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
 
-		if ( $wgManageWikiPermissionsManagement && $wgManageWikiPermissionsDefaultPrivateGroup ) {
+		if ( ManageWiki::checkSetup( 'permissions' ) && $wgManageWikiPermissionsDefaultPrivateGroup ) {
 
 			$defaultarray = ManageWiki::defaultGroupPermissions( $wgManageWikiPermissionsDefaultPrivateGroup );
 
@@ -192,9 +192,9 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiStatePublic( $dbname ) {
-		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiPermissionsManagement;
+		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
 
-		if ( $wgManageWikiPermissionsManagement && $wgManageWikiPermissionsDefaultPrivateGroup ) {
+		if ( ManageWiki::checkSetup( 'permissions' ) && $wgManageWikiPermissionsDefaultPrivateGroup ) {
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 			$dbw->delete(
@@ -227,42 +227,24 @@ class ManageWikiHooks {
 	}
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {
-		global $wgManageWikiSidebarLinks, $wgEnableManageWiki, $wgManageWikiExtensions,
-			$wgManageWikiPermissionsManagement, $wgManageWikiSettings;
+		global $wgManageWikiSidebarLinks, $wgManageWiki;
+
 		if (
-			$skin->getUser()->isAllowed( 'managewiki' ) &&
-			$wgManageWikiSidebarLinks
+			$skin->getUser()->isAllowed( 'managewiki' )
+			&& $wgManageWikiSidebarLinks
 		) {
-			if ( $wgEnableManageWiki ) {
+			$bar['Administration'][] = [
+				'text' => wfMessage( 'managewiki-link' )->plain(),
+				'id' => 'managewikilink',
+				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki' )->getFullURL() )
+			];
+
+			foreach ( (array)ManageWiki::listModules() as $module ) {
 				$bar['Administration'][] = [
-					'text' => wfMessage( 'managewiki-link' )->plain(),
-					'id' => 'managewikilink',
-					'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki' )->getFullURL() )
+					'text' => wfMessage( 'managewiki-' . $module . '-link' )->plain(),
+					'id' => 'managewiki' . $module . 'link',
+					'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki' . ucfirst( $module ) )->getFullURL() )
 				];
-
-				if ( $wgManageWikiExtensions ) {
-					$bar['Administration'][] = [
-						'text' => wfMessage( 'managewiki-extensions-link' )->plain(),
-						'id' => 'managewikiextensionslink',
-						'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWikiExtensions' )->getFullURL() )
-					];
-				}
-
-				if ( $wgManageWikiPermissionsManagement ) {
-					$bar['Administration'][] = [
-						'text' => wfMessage( 'managewiki-permissions-link' )->plain(),
-						'id' => 'managewikipermissionslink',
-						'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWikiPermissions' )->getFullURL() )
-					];
-				}
-
-				if ( $wgManageWikiSettings ) {
-					$bar['Administration'][] = [
-						'text' => wfMessage( 'managewiki-settings-link' )->plain(),
-						'id' => 'managewikisettingslink',
-						'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWikiSettings' )->getFullURL() )
-					];
-				}
 			}
 		}
 	}

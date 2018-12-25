@@ -4,7 +4,7 @@ class ManageWikiCDB {
 	public static function latest( string $module ) {
 		global $wgManageWikiCDBDirectory, $wgDBname;
 
-		if ( $wgManageWikiCDBDirectory ) {
+		if ( ManageWiki::checkSetup( 'cdb' ) ) {
 			// all the cache stuff
 			$cache = ObjectCache::getLocalClusterInstance();
 			$key = $cache->makeKey( 'ManageWiki', $module );
@@ -24,7 +24,7 @@ class ManageWikiCDB {
 	public static function get( string $module, $section ) {
 		global $wgManageWikiCDBDirectory, $wgDBname;
 
-		if ( $wgManageWikiCDBDirectory ) {
+		if ( ManageWiki::checkSetup( 'cdb' ) ) {
 			$cdbfile = "$wgManageWikiCDBDirectory/$wgDBname-$module.cdb";
 
 			if ( file_exists( $cdbfile ) ) {
@@ -52,7 +52,7 @@ class ManageWikiCDB {
 		// function should update a CDB or ensure one exists.
 		global $wgManageWikiCDBDirectory, $wgCreateWikiDatabase, $wgDBname;
 
-		if ( $wgManageWikiCDBDirectory ) {
+		if ( ManageWiki::checkSetup( 'cdb' ) ) {
 			$cdbFile = "$wgManageWikiCDBDirectory/$wgDBname-$module.cdb";
 
 			$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
@@ -139,7 +139,7 @@ class ManageWikiCDB {
 	public static function delete( string $module ) {
 		global $wgManageWikiCDBDirectory, $wgDBname;
 
-		if ( $wgManageWikiCDBDirectory ) {
+		if ( ManageWiki::checkSetup( 'cdb' ) ) {
 			$cache = ObjectCache::getLocalClusterInstance();
 			$key = $cache->makeKey( 'ManageWiki', $module );
 			$cache->delete( $key );
@@ -149,9 +149,7 @@ class ManageWikiCDB {
 	}
 
 	public static function changes( string $module ) {
-		global $wgManageWikiCDBDirectory;
-
-		if ( $wgManageWikiCDBDirectory ) {
+		if ( ManageWiki::checkSetup( 'cdb' ) ) {
 			$cache = ObjectCache::getLocalClusterInstance();
 			$key = $cache->makeKey( 'ManageWiki', $module );
 			$cache->incr( $key );

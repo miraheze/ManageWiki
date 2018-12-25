@@ -1,6 +1,39 @@
 <?php
 
 class ManageWiki {
+	public static function checkSetup( string $module, bool $verbose = false, $out = false ) {
+		global $wgManageWiki, $wgManageWikiCDBDirectory;
+
+		// Checks ManageWiki module is enabled before doing anything
+		// $verbose means output an error. Otherwise return true/false.
+
+		if ( $wgManageWiki[$module] ) {
+			if ( $module == 'cdb' ) {
+				return ( $wgManageWikiCDBDirectory ) ? true : false;
+			}
+
+			return true;
+		} else {
+			if ( $verbose ) {
+				$out->addWikiMsg( 'managewiki-disabled', $module );
+			} else {
+				return false;
+			}
+		}
+	}
+
+	public static function listModules( bool $public = true ) {
+		global $wgManageWiki, $wgManageWikiBackendModules;
+
+		$enabledModules = array_key( $wgManageWiki, true );
+
+		if ( $public ) {
+			return array_diff( $enabledModules, $wgManageWikiBackendModules );
+		}
+
+		return $enabledModules;
+	}
+
 	public static function getTimezoneList() {
 		$identifiers = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
 

@@ -5,7 +5,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgEnableManageWiki, $wgManageWikiHelpUrl, $wgManageWikiSettings, $wgCreateWikiGlobalWiki, $wgDBname;
+		global $wgManageWikiHelpUrl, $wgManageWikiSettings, $wgCreateWikiGlobalWiki, $wgDBname;
 
 		$out = $this->getOutput();
 		$this->setHeaders();
@@ -13,15 +13,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
-		if ( !$wgEnableManageWiki ) {
-			$out->addWikiMsg( 'managewiki-disabled' );
-			return false;
-		}
-
-		if ( !$wgManageWikiSettings ) {
-			$out->addWikiMsg( 'managewiki-settings-disabled' );
-			return false;
-		}
+		ManageWiki::checkSetup( 'settings', true, $out );
 
 		$this->checkPermissions();
 

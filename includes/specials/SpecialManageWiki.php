@@ -5,18 +5,16 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function execute( $par ) {
-		global $wgEnableManageWiki, $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname;
+		global $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname;
 
 		$out = $this->getOutput();
 		$this->setHeaders();
+
 		if ( $wgManageWikiHelpUrl ) {
 			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
-		if ( !$wgEnableManageWiki ) {
-			$out->addWikiMsg( 'managewiki-disabled' );
-			return false;
-		}
+		ManageWiki::checkSetup( 'core', true, $out );
 
 		$this->checkPermissions();
 
@@ -62,9 +60,8 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
-		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser, $wgManageWikiSettings,
-			$wgManageWikiExtensions, $wgManageWikiPermissionsManagement, $wgCreateWikiUsePrivateWikis,
-			$wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
+		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser,
+			$wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
 
 		$out = $this->getOutput();
 
@@ -119,7 +116,6 @@ class SpecialManageWiki extends SpecialPage {
 				'type' => 'check',
 				'label-message' => 'managewiki-label-private',
 				'name' => 'cwPrivate',
-				'disabled' => !$this->isAllowedToChangePrivate(),
 				'default' => $wiki->isPrivate() ? 1 : 0,
 			];
 		}
@@ -167,19 +163,11 @@ class SpecialManageWiki extends SpecialPage {
 
 		$landingOpts = [];
 
-		if ( $wgManageWikiSettings ) {
-			$landingOpts['Additional Settings'] = 'Settings';
+		foreach ( (array)ManageWiki::listModules() as $mod ) {
+			$landingOpts[ucfirst($mod)] = ucfirst($mod);
 		}
 
-		if ( $wgManageWikiExtensions ) {
-			$landingOpts['Extensions/Skins'] = 'Extensions';
-		}
-
-		if ( $wgManageWikiPermissionsManagement ) {
-			$landingOpts['Permissions'] = 'Permissions';
-		}
-
-		if ( is_array( $landingOpts ) && count( $landingOpts ) > 0 ) {
+		if ( count( $landingOpts ) > 0 ) {
 			$out->addWikiMsg( 'managewiki-header' );
 
 			$pageSelector['manage'] = [
@@ -210,7 +198,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$changedsettingsarray = [];
 
-		if ( $wgCreateWikiUsePrivateWikis && $this->isAllowedToChangePrivate() ) {
+		if ( $wgCreateWikiUsePrivateWikis ) {
 			$private = ( $params['private'] == true ) ? 1 : 0;
 
 			$previousPrivate = $wiki->isPrivate();
@@ -336,18 +324,6 @@ class SpecialManageWiki extends SpecialPage {
 		$this->getOutput()->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
 
 		return true;
-	}
-
-	public function isAllowedToChangePrivate() {
-		global $wgManageWikiPrivateOptionRestricted;
-
-                if ( $wgManageWikiPrivateOptionRestricted ) {
-                        $isAllowedToChangePrivate = $this->getUser()->isAllowed( 'managewiki-restricted' );
-                } else {
-                        $isAllowedToChangePrivate = $this->getUser()->isAllowed( 'managewiki' );
-                }
-
-		return $isAllowedToChangePrivate;
 	}
 
 	function onSubmitRedirectToManageWikiPage( array $params ) {

@@ -10,18 +10,16 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function execute( $subpage ) {
-		global $wgManageWikiPermissionsManagement;
 
 		$this->setHeaders();
-		$this->getOutput()->addModuleStyles( 'ext.managewiki.permissions' );
-		$this->getOutput()->setRobotPolicy( "noindex,nofollow" );
-		$this->getOutput()->setArticleRelated( false );
-		$this->getOutput()->enableClientCache( false );
+		$out = $this->getOutput();
 
-		if ( !$wgManageWikiPermissionsManagement ) {
-			$this->getOutput()->addWikiMsg( 'managewiki-perm-disabled' );
-			return false;
-		}
+		$out->addModuleStyles( 'ext.managewiki.permissions' );
+		$out->setRobotPolicy( "noindex,nofollow" );
+		$out->setArticleRelated( false );
+		$out->enableClientCache( false );
+
+		ManageWiki::checkSetup( 'permissions', true, $out );
 
 		if ( $subpage == '' ) {
 			$subpage = $this->getRequest()->getVal( 'wpGroup' );

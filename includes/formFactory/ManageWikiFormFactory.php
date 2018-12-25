@@ -50,63 +50,60 @@ class ManageWikiFormFactory {
 				}
 			}
 		} elseif ( $module == 'settings' ) {
-			if ( $wgManageWikiSettings ) {
-				foreach ( $wgManageWikiSettings as $var => $det ) {
+			foreach ( $wgManageWikiSettings as $var => $det ) {
+				if ( (bool)!$det['requires'] || (bool)$det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
+					switch ( $det['type'] ) {
+						case 'check':
+						case 'text':
+						case 'url':
+							$mwtype = $det['type'];
+							break;
+						case 'list':
+							$mwtype = 'select';
+							$mwoptions = $det['options'];
+							break;
+						case 'list-multi':
+							$mwtype = 'multiselect';
+							$mwoptions = $det['options'];
+							break;
+						case 'matrix':
+							$mwtype = 'checkmatrix';
+							$mwcols = $det['cols'];
+							$mwrows = $det['rows'];
+							break;
+						case 'timezone':
+							$mwtype = 'select';
+							$mwoptions = ManageWiki::getTimezoneList();
+							break;
+						case 'wikipage':
+							$mwtype = 'title';
+							break;
+					}
 
-					if ( (bool)!$det['requires'] || (bool)$det['requires'] && $wiki->hasExtension( $det['requires'] ) ) {
-						switch ( $det['type'] ) {
-							case 'check':
-							case 'text':
-							case 'url':
-								$mwtype = $det['type'];
-								break;
-							case 'list':
-								$mwtype = 'select';
-								$mwoptions = $det['options'];
-								break;
-							case 'list-multi':
-								$mwtype = 'multiselect';
-								$mwoptions = $det['options'];
-								break;
-							case 'matrix':
-								$mwtype = 'checkmatrix';
-								$mwcols = $det['cols'];
-								$mwrows = $det['rows'];
-								break;
-							case 'timezone':
-								$mwtype = 'select';
-								$mwoptions = ManageWiki::getTimezoneList();
-								break;
-							case 'wikipage':
-								$mwtype = 'title';
-								break;
-						}
+					$formDescriptor["set-$var"] = [
+						'type' => $mwtype,
+						'label' => $det['name'],
+						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
+						'help' => ( $det['help'] ) ? $det['help'] : null,
+						'section' => ( isset( $det['section'] ) ) ? $det['section'] : 'other',
+					];
 
-						$formDescriptor["set-$var"] = [
-							'type' => $mwtype,
-							'label' => $det['name'],
-							'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
-							'help' => ( $det['help'] ) ? $det['help'] : null,
-							'section' => ( isset( $det['section'] ) ) ? $det['section'] : 'other',
-						];
+					if ( $mwtype != 'matrix' ) {
+						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'];
+					} else {
+						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' ) : $det['overridedefault'];
+					}
 
-						if ( $mwtype != 'matrix' ) {
-							$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'];
-						} else {
-							$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' ) : $det['overridedefault'];
-						}
+					if ( isset( $mwoptions ) ) {
+						$formDescriptor["set-$var"]['options'] = $mwoptions;
+					}
 
-						if ( isset( $mwoptions ) ) {
-							$formDescriptor["set-$var"]['options'] = $mwoptions;
-						}
+					if ( isset( $mwcols ) ) {
+						$formDescriptor["set-$var"]['columns'] = $mwcols;
+					}
 
-						if ( isset( $mwcols ) ) {
-							$formDescriptor["set-$var"]['columns'] = $mwcols;
-						}
-
-						if ( isset( $mwrows ) ) {
-							$formDescriptor["set-$var"]['rows'] = $mwrows;
-						}
+					if ( isset( $mwrows ) ) {
+						$formDescriptor["set-$var"]['rows'] = $mwrows;
 					}
 				}
 			}

@@ -88,10 +88,25 @@
 		"remoteExtPath": "ManageWiki/modules"
 	},
 	"config": {
-		"EnableManageWiki": {
-			"description": "Boolean. Whether Special:ManageWiki should work on the wiki.",
+		"ManageWiki": {
+			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
 			"public": true,
-			"value": true
+			"value": {
+				"cdb": false,
+				"core": false,
+				"extensions": false,
+				"namespaces": false,
+				"permissions": false,
+				"settings": false
+			}
+		},
+		"ManageWikiBackendModules": {
+			"description": "Array. List of backend ManageWiki modules. Shouldn't be changed.",
+			"public": true,
+			"value": [
+				"cdb",
+				"core"
+			]
 		},
 		"ManageWikiCDBDirectory": {
 			"description": "String. Directory to store CDB files in. This will enable CDB capabilities in ManageWiki.",
@@ -101,20 +116,15 @@
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"public": true,
-			"value": null
+			"value": false
 		},
 		"ManageWikiExtensionsDefault": {
 			"description": "Array. An array of default extensions.",
 			"public": true,
-			"value": null
+			"value": false
 		},
 		"ManageWikiSettings": {
 			"description": "Array. An array of settings that can be managed through Special:ManageWiki",
-			"public": true,
-			"value": null
-		},
-		"ManageWikiPrivateOptionRestricted": {
-			"description": "Boolean. Whether the option to (un)mark wikis as private requires the managewiki-restricted right instead of managewiki only.",
 			"public": true,
 			"value": false
 		},
@@ -141,20 +151,23 @@
 		"ManageWikiPermissionsBlacklistRenames": {
 			"description": "Array. An array of groups that can not be renamed as they would cause issues.",
 			"public": true,
-			"value": [ "*", "user", "autoconfirmed", "sysop", "bureaucrat" ]
+			"value": [
+				"*",
+				"user",
+				"autoconfirmed",
+				"sysop",
+				"bureaucrat"
+			]
 		},
 		"ManageWikiPermissionsBlacklistRights": {
 			"description": "Array. An array of user rights that ManageWiki can not manage and assign on wiki.",
 			"public": true,
-			"value": [ "managewiki-restricted" ]
+			"value": [
+				"managewiki-restricted"
+			]
 		},
 		"ManageWikiPermissionsDefaultPrivateGroup": {
 			"description": "String. Name of a group to add to private wikis. False disables this function.",
-			"public": true,
-			"value": false
-		},
-		"ManageWikiPermissionsManagement": {
-			"description": "Boolean. Whether ManageWiki should control group management within MediaWiki. Enable with care and caution!",
 			"public": true,
 			"value": false
 		},

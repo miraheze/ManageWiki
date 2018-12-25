@@ -13,10 +13,14 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		global $wgDBname, $wgCreateWikiGlobalWiki;
 
 		$this->setHeaders();
-		$this->getOutput()->addModuleStyles( 'ext.managewiki.permissions' );
-		$this->getOutput()->setRobotPolicy( "noindex,nofollow" );
-		$this->getOutput()->setArticleRelated( false );
-		$this->getOutput()->enableClientCache( false );
+		$out = $this->getOutput();
+
+		$out->addModuleStyles( 'ext.managewiki.permissions' );
+		$out->setRobotPolicy( "noindex,nofollow" );
+		$out->setArticleRelated( false );
+		$out->enableClientCache( false );
+
+		ManageWiki::checkSetup( 'permissions', true, $out );
 
 		if ( $wgDBname != $wgCreateWikiGlobalWiki ) {
 			$this->getOutput()->addWikiMsg( 'managewiki-perm-not-default' );
