@@ -13,7 +13,6 @@
 	"managewiki": "User right to manage a wiki",
 	"managewiki-desc": "ManageWiki extension description.",
 	"managewiki-disabled": "Message that indicates that a feature is not yet enabled on a wiki.",
-	"managewiki-extensions-disabled": "Message that indicates that extensions have not yet been defined for the wiki.",
 	"managewiki-settings-header": "Header for the ManageWiki extension.",
 	"managewiki-label-category": "{{Identical|Category}}",
 	"managewiki-label-closed": "Used as a label for 'closed'.\n{{Identical|Closed}}",
