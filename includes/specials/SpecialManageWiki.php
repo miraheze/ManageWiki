@@ -72,6 +72,8 @@ class SpecialManageWiki extends SpecialPage {
 			return false;
 		}
 
+		$ceMW = ManageWiki::checkPermission( $wiki, $this->getUser() );
+
 		if ( !$this->getRequest()->wasPosted() ) {
 			$out->addWikiMsg( 'managewiki-header', $dbName );
 		}
@@ -97,6 +99,7 @@ class SpecialManageWiki extends SpecialPage {
 				'type' => 'text',
 				'size' => 20,
 				'default' => $wiki->getSitename(),
+				'disabled' => !$ceMW,
 				'required' => true,
 				'name' => 'mwSitename',
 			],
@@ -104,6 +107,7 @@ class SpecialManageWiki extends SpecialPage {
 				'label-message' => 'managewiki-label-language',
 				'type' => 'select',
 				'default' => $wiki->getLanguage(),
+				'disabled' => !$ceMW,
 				'options' => $options,
 				'name' => 'mwLanguage',
 			],
@@ -115,6 +119,7 @@ class SpecialManageWiki extends SpecialPage {
 				'label-message' => 'managewiki-label-private',
 				'name' => 'cwPrivate',
 				'default' => $wiki->isPrivate() ? 1 : 0,
+				'disabled' => !$ceMW
 			];
 		}
 
@@ -124,6 +129,7 @@ class SpecialManageWiki extends SpecialPage {
 				'label-message' => 'managewiki-label-closed',
 				'name' => 'cwClosed',
 				'default' => $wiki->isClosed() ? 1 : 0,
+				'disabled' => !$ceMW
 			];
 		}
 
@@ -133,6 +139,7 @@ class SpecialManageWiki extends SpecialPage {
 				'label-message' => 'managewiki-label-inactive',
 				'name' => 'cwInactive',
 				'default' => $wiki->isInactive() ? 1 : 0,
+				'disabled' => !$ceMW
 			];
 		}
 
@@ -142,10 +149,11 @@ class SpecialManageWiki extends SpecialPage {
 				'label-message' => 'managewiki-label-category',
 				'options' => $wgCreateWikiCategories,
 				'default' => $wiki->getCategory(),
+				'disabled' => !$ceMW
 			];
 		}
 
-		if ( ManageWiki::checkPermission( $wiki, $wgUser ) ) {
+		if ( $ceMW ) {
 			$formDescriptor += [
 				'reason' => [
 					'type' => 'text',

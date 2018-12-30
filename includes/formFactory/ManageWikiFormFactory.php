@@ -35,7 +35,7 @@ class ManageWikiFormFactory {
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext || !$ceMW ) ? 0 : 1,
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext || $ceMW ) ? 0 : 1,
 						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					];
@@ -44,7 +44,7 @@ class ManageWikiFormFactory {
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension ( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext || !$ceMW ) ? 0 : 1,
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext || $ceMW ) ? 0 : 1,
 						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					];
@@ -84,7 +84,7 @@ class ManageWikiFormFactory {
 					$formDescriptor["set-$var"] = [
 						'type' => $mwtype,
 						'label' => $det['name'],
-						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] || !$ceMW ) ? 0 : 1,
+						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] || $ceMW ) ? 0 : 1,
 						'help' => ( $det['help'] ) ? $det['help'] : null,
 						'section' => ( isset( $det['section'] ) ) ? $det['section'] : 'other',
 					];
