@@ -16,9 +16,9 @@ class ManageWiki {
 		} else {
 			if ( $verbose ) {
 				$out->addWikiMsg( 'managewiki-disabled', $module );
-			} else {
-				return false;
 			}
+
+			return false;
 		}
 	}
 
