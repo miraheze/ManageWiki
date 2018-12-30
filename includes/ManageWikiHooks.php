@@ -73,6 +73,14 @@ class ManageWikiHooks {
 			$nsArray = ManageWikiCDB::get( 'namespaces', [ 'wgContentNamespaces', 'wgExtraNamespaces', 'wgNamespaceProtection', 'wgNamespacesToBeSearchedDefault', 'wgNamespacesWithSubpages', 'wgNamespaceAliases', 'wgManageWikiNamespacesCore' ] );
 
 			foreach ( $nsArray as $key => $json ) {
+				if ( !isset( $nsArray[$key] ) ) {
+					continue;
+				}
+				if ( !is_array ( $json) ) {
+					if ( !isset( $nsArray[$key][$json] ) ) {
+						continue;
+					}
+				}
 				$nsArray[$key] = json_decode( $json, true );
 			}
 
