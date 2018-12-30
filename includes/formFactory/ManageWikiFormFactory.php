@@ -29,13 +29,14 @@ class ManageWikiFormFactory {
 
 		if ( $module == 'extensions' ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				$requires_ext = ( (bool)!$ext['requires'] || (bool)$ext['requires'] && $wiki->hasExtension( $ext['requires'] ) );
+				$requiresExt = ( (bool)!$ext['requires'] || (bool)$ext['requires'] && $wiki->hasExtension( $ext['requires'] ) );
+				$disabled = !( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && requiresExt || !$ext['restricted'] && $requiresExt );
 				if ( !$ext['conflicts'] ) {
 					$formDescriptor["ext-$name"] = [
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext || $ceMW ) ? 0 : 1,
+						'disabled' => ( $ceMW ) ? $disabled : 1,
 						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					];
@@ -81,10 +82,12 @@ class ManageWikiFormFactory {
 							break;
 					}
 
+					$disabled = !( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] );
+
 					$formDescriptor["set-$var"] = [
 						'type' => $mwtype,
 						'label' => $det['name'],
-						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] || $ceMW ) ? 0 : 1,
+						'disabled' => ( $ceMW ) ? $disabled : 1,
 						'help' => ( $det['help'] ) ? $det['help'] : null,
 						'section' => ( isset( $det['section'] ) ) ? $det['section'] : 'other',
 					];
