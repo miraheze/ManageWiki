@@ -16,7 +16,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-		$namespaces = $wgCanonicalNamespaceNames + [ 0 => '<Main>' ];
+		$namespaces = $wgCanonicalNamespaceNames + [ 0 => 'Main' ];
 
 		Wikimedia\suppressWarnings();
 
