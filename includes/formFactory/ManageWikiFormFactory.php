@@ -6,6 +6,7 @@ class ManageWikiFormFactory {
 		IContextSource $context,
 		string $module = NULL,
 		string $special = "",
+		bool $ceMW = false,
 		RemoteWiki $wiki
 	) {
 		global $wgManageWikiExtensions, $wgManageWikiSettings, $wgUser, $wgCreateWikiDatabase;
@@ -34,7 +35,7 @@ class ManageWikiFormFactory {
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext || !$ceMW ) ? 0 : 1,
 						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					];
@@ -43,7 +44,7 @@ class ManageWikiFormFactory {
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension ( $name ),
-						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext ) ? 0 : 1,
+						'disabled' => ( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requires_ext || !$ext['restricted'] && $requires_ext || !$ceMW ) ? 0 : 1,
 						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					];
@@ -83,7 +84,7 @@ class ManageWikiFormFactory {
 					$formDescriptor["set-$var"] = [
 						'type' => $mwtype,
 						'label' => $det['name'],
-						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] ) ? 0 : 1,
+						'disabled' => ( $det['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) || !$det['restricted'] || !$ceMW ) ? 0 : 1,
 						'help' => ( $det['help'] ) ? $det['help'] : null,
 						'section' => ( isset( $det['section'] ) ) ? $det['section'] : 'other',
 					];
@@ -139,25 +140,28 @@ class ManageWikiFormFactory {
 						'type' => 'text',
 						'label-message' => "namespaces-$name",
 						'default' => ( $nsData ) ? $nsData->ns_namespace_name : NULL,
-						'disabled' => (bool)$nsData->ns_core,
+						'disabled' => ( (bool)$nsData->ns_core || !$ceMW ),
 						'section' => "$name"
 					],
 					"content-$name" => [
 						'type' => 'check',
 						'label-message' => 'namespaces-content',
 						'default' => ( $nsData ) ? $nsData->ns_content : 0,
+						'disabled' => !$ceMW,
 						'section' => "$name"
 					],
 					"subpages-$name" => [
 						'type' => 'check',
 						'label-message' => 'namespaces-subpages',
 						'default' => ( $nsData ) ? $nsData->ns_subpages : 0,
+						'disabled' => !$ceMW,
 						'section' => "$name"
 					],
 					"search-$name" => [
 						'type' => 'check',
 						'label-message' => 'namespaces-search',
 						'default' => ( $nsData ) ? $nsData->ns_searchable : 0,
+						'disabled' => !$ceMW,
 						'section' => "$name"
 					],
 					"protection-$name" => [
@@ -165,6 +169,7 @@ class ManageWikiFormFactory {
 						'label-message' => 'namespaces-protection',
 						'section' => "$name",
 						'default' => ( $nsData ) ? $nsData->ns_protection : 'none',
+						'disabled' => !$ceMW,
 						'options' => [
 							'None' => '',
 							'editinterface' => 'editinterface',
@@ -176,6 +181,7 @@ class ManageWikiFormFactory {
 						'type' => 'textarea',
 						'label-message' => 'namespaces-aliases',
 						'default' => ( $nsData ) ? implode( "\n", json_decode( $nsData->ns_aliases, true ) ) : NULL,
+						'disabled' => !$ceMW,
 						'section' => "$name"
 					]
 				];
@@ -184,19 +190,21 @@ class ManageWikiFormFactory {
 			// nothing yet
 		}
 
-		$formDescriptor['reason'] = [
-				'type' => 'text',
-				'section' => 'handling',
-				'label-message' => 'managewiki-label-reason',
-				'size' => 45,
-				'required' => true,
-		];
+		if ( $ceMW ) {
+			$formDescriptor['reason'] = [
+					'type' => 'text',
+					'section' => 'handling',
+					'label-message' => 'managewiki-label-reason',
+					'size' => 45,
+					'required' => true,
+			];
 
-		$formDescriptor['submit'] = [
-			'type' => 'submit',
-			'default' => wfMessage( 'htmlform-submit' )->text(),
-			'section' => 'handling'
-		];
+			$formDescriptor['submit'] = [
+				'type' => 'submit',
+				'default' => wfMessage( 'htmlform-submit' )->text(),
+				'section' => 'handling'
+			];
+		}
 
 		return $formDescriptor;
 	}
@@ -216,15 +224,17 @@ class ManageWikiFormFactory {
 			return false;
 		}
 
-		$formDescriptor = $this->getFormDescriptor( $wiki, $context, $module, $special, $remoteWiki );
+		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
+
+		$formDescriptor = $this->getFormDescriptor( $wiki, $context, $module, $special, $ceMW, $remoteWiki );
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
 		$htmlForm->setId( 'mw-baseform-' . $module );
 		$htmlForm->suppressDefaultSubmit();
 		$htmlForm->setSubmitCallback(
-			function ( array $formData, HTMLForm $form ) use ( $module, $remoteWiki ) {
-				return $this->submitForm( $formData, $form, $module, $remoteWiki );
+			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki ) {
+				return $this->submitForm( $formData, $form, $module, $ceMW, $remoteWiki );
 			}
 		);
 
@@ -235,6 +245,7 @@ class ManageWikiFormFactory {
 		array $formData,
 		HTMLForm $form,
 		string $module = NULL,
+		bool $ceMW = false,
 		RemoteWiki $wiki
 	) {
 		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiSettings, $wgUser;
@@ -242,7 +253,7 @@ class ManageWikiFormFactory {
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
 
-		if ( !$wgUser->isAllowed( 'managewiki' ) ) {
+		if ( !$ceMW ) {
 			throw new MWException( "User '{$wgUser->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
 		}
 

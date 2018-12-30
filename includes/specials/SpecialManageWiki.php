@@ -1,7 +1,7 @@
 <?php
 class SpecialManageWiki extends SpecialPage {
 	function __construct() {
-		parent::__construct( 'ManageWiki', 'managewiki' );
+		parent::__construct( 'ManageWiki' );
 	}
 
 	function execute( $par ) {
@@ -15,8 +15,6 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		ManageWiki::checkSetup( 'core', true, $out );
-
-		$this->checkPermissions();
 
 		if ( $wgCreateWikiGlobalWiki !== $wgDBname ) {
 			$this->showWikiForm( $wgDBname );
@@ -147,17 +145,26 @@ class SpecialManageWiki extends SpecialPage {
 			];
 		}
 
-		$formDescriptor['reason'] = [
-				'type' => 'text',
-				'label-message' => 'managewiki-label-reason',
-				'size' => 45,
-				'required' => true,
-		];
+		if ( ManageWiki::checkPermission( $wiki, $wgUser ) ) {
+			$formDescriptor += [
+				'reason' => [
+					'type' => 'text',
+					'label-message' => 'managewiki-label-reason',
+					'size' => 45,
+					'required' => true
+				],
+				'submit' => [
+					'type' => 'submit',
+					'default' => wfMessage( 'htmlform-submit' )->text()
+				]
+			];
+		}
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'changeForm' );
 		$htmlForm->setMethod( 'post' )
 			->setFormIdentifier( 'wikiForm' )
 			->setSubmitCallback( [ $this, 'onSubmitInput' ] )
+			->suppressDefaultSubmit()
 			->prepareForm()
 			->show();
 
@@ -190,11 +197,9 @@ class SpecialManageWiki extends SpecialPage {
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
 
-		if ( !$this->getUser()->isAllowed( 'managewiki' ) ) {
-			throw new MWException( "User '{$this->getUser()->getName()}' without managewiki right tried to change wiki settings!" );
-		}
-
 		$wiki = RemoteWiki::newFromName( $params['dbname'] );
+
+		ManageWiki::checkPermission( $wiki, $this->getUser(), true );
 
 		$changedsettingsarray = [];
 

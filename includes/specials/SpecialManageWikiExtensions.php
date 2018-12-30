@@ -1,7 +1,7 @@
 <?php
 class SpecialManageWikiExtensions extends SpecialPage {
 	function __construct() {
-		parent::__construct( 'ManageWikiExtensions', 'managewiki' );
+		parent::__construct( 'ManageWikiExtensions' );
 	}
 
 	function execute( $par ) {
@@ -16,8 +16,6 @@ class SpecialManageWikiExtensions extends SpecialPage {
 		}
 
 		ManageWiki::checkSetup( 'extensions', true, $out );
-
-		$this->checkPermissions();
 
 		if ( $wgCreateWikiGlobalWiki !== $wgDBname ) {
 			$this->showWikiForm( $wgDBname );

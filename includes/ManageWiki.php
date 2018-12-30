@@ -34,6 +34,29 @@ class ManageWiki {
 		return $enabledModules;
 	}
 
+	public static function checkPermission( RemoteWiki $rm, User $user, bool $verbose = false, string $perm = "" ) {
+		$maxPerm = ( (bool)$perm ) ? $perm : 'managewiki';
+
+		if ( !$user->isAllowed( $maxPerm ) ) {
+			if ( $verbose ) {
+				throw new PermissionsError( $maxPerm );
+			}
+
+			return false;
+		}
+
+		// Early implementation of MWLocked feature - down as RemoteWiki but will be WikiManager
+		//if ( $rm->isMWLocked() ) {
+		//	if ( $verbose ) {
+		//		return wfMessage( 'managewiki-mwlocked' )->plain();
+		//	}
+
+		//	return false;
+		//}
+
+		return true;
+	}
+
 	public static function getTimezoneList() {
 		$identifiers = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
 
