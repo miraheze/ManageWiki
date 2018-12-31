@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"BadDog"
+			"BadDog",
+			"Zoranzoki21"
 		]
 	},
 	"action-managewiki": "управљај подешавањима викија",
@@ -25,12 +26,13 @@
 	"logentry-managewiki-rename": "$1 је преименовао/ла групу $3 из $4",
 	"logentry-managewiki-settings": "$1 је променио/ла подешавања ($5) за „$4”",
 	"managewiki": "Управљање викијем",
-	"managewikisettings": "Управљање викијем (подешавањима)",
-	"managewikiextensions": "Управљање викијем (додацима)",
-	"managewikipermissions": "Управљање викијем (дозволама)",
-	"managewikidefaultpermissions": "Управљање викијем (подразумеваним дозволама)",
+	"managewikisettings": "Управљање додатним подешавањима викија",
+	"managewikiextensions": "Управљање додацима викија",
+	"managewikinamespaces": "Управљање именском просторима викија",
+	"managewikipermissions": "Управљање дозволама викијa",
+	"managewikidefaultpermissions": "Управљање подразумеваним дозволама фарми викија",
 	"managewiki-desc": "Дозвољава особама да управљају викијима путем веб-интерфејса",
-	"managewiki-disabled": "Ова могућност још увек није омогућена на овом викију.",
+	"managewiki-disabled": "Ова функција ($1) још није омогућена на овом викију.",
 	"managewiki-header": "Изаберите оно што бисте желели да управљате испод, па кликните на пошаљи.",
 	"managewiki-label-category": "Категорија",
 	"managewiki-label-closed": "Затворено",
@@ -41,6 +43,8 @@
 	"managewiki-label-reason": "Разлог",
 	"managewiki-label-sitename": "Име сајта",
 	"managewiki-missing": "Овај вики не постоји.",
+	"managewiki-ns-createnamespace": "Прављење новог именског простора",
+	"managewiki-ns-select": "Изаберите именски простор са листе испод, па притисните пошаљи",
 	"managewiki-perm-add": "Додељиве групе:",
 	"managewiki-perm-creategroup": "направите нову корисничку групу",
 	"managewiki-perm-display": "Локализовано име групе:",
@@ -68,8 +72,10 @@
 	"managewiki-settings-link": "Управљај додатним подешавањима овог викија",
 	"namespaces-aliases": "У нови ред унесите све недефинисане именске просторе које треба преусмерити на овај",
 	"namespaces-content": "Да ли овај именски простор садржи главни wiki материјал (садржај)?",
-	"namespaces-namespace": "Име именског простора",
-	"namespaces-namespacetalk": "Име именског простора „разговор”",
+	"namespaces-handling": "Пошаљи",
+	"namespaces-namespace": "Главни именски простор",
+	"namespaces-namespacetalk": "Именски простор разговор",
+	"namespaces-protection": "Која корисничка права треба да буду потребна за уређивање овог именског простора?",
 	"namespaces-search": "Треба ли овај именски простор подразумевано бити претражив?",
 	"namespaces-subpages": "Треба ли овај именски простор имати омогућене подстранице?",
 	"right-managewiki": "управљање подешавањима викија",
