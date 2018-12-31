@@ -33,7 +33,8 @@
 	"LogActionsHandlers": {
 		"managewiki/settings": "LogFormatter",
 		"managewiki/rename": "LogFormatter",
-		"managewiki/rights": "LogFormatter"
+		"managewiki/rights": "LogFormatter",
+		"managewiki/namespaces": "LogFormatter"
 	},
 	"LogTypes": [
 		"managewiki"
