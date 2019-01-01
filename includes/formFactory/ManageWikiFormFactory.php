@@ -30,7 +30,7 @@ class ManageWikiFormFactory {
 		if ( $module == 'extensions' ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
 				$requiresExt = ( (bool)!$ext['requires'] || (bool)$ext['requires'] && $wiki->hasExtension( $ext['requires'] ) );
-				$disabled = !( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && requiresExt || !$ext['restricted'] && $requiresExt );
+				$disabled = !( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requiresExt || !$ext['restricted'] && $requiresExt );
 				if ( !$ext['conflicts'] ) {
 					$formDescriptor["ext-$name"] = [
 						'type' => 'check',
