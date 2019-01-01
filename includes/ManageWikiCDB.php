@@ -130,7 +130,7 @@ class ManageWikiCDB {
 
 					foreach ( (array)json_decode( $row->ns_aliases, true ) as $alias ) {
 						if ( !empty( $alias ) ) {
-							$cacheArray['wgNamespaceAliases'][$alias] = $nsID;
+							$cacheArray['wgNamespaceAliases'][$alias] = (int)$nsID;
 						}
 					}
 
