@@ -75,6 +75,9 @@ class ManageWikiInstaller {
 
 	private static function permissions( string $dbname, array $data ) {
 		foreach ( $data as $group => $mod ) {
+			if ( !isset( $mod['permissions'] ) ) {
+				$mod['permissions'] = [];
+			}
 			if ( !isset( $mod['addgroups'] ) ) {
 				$mod['addgroups'] = [];
 			}
