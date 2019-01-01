@@ -106,7 +106,7 @@ class ManageWikiCDB {
 				}
 			} elseif ( $module == 'namespaces' ) {
 				foreach ( $moduleRes as $row ) {
-					$nsID = $row->ns_namespace_id;
+					$nsID = (int)$row->ns_namespace_id;
 
 					if ( $row->ns_content ) {
 						$cacheArray['wgContentNamespaces'][] = $nsID;
@@ -130,7 +130,7 @@ class ManageWikiCDB {
 
 					foreach ( (array)json_decode( $row->ns_aliases, true ) as $alias ) {
 						if ( !empty( $alias ) ) {
-							$cacheArray['wgNamespaceAliases'][$alias] = (int)$nsID;
+							$cacheArray['wgNamespaceAliases'][$alias] = $nsID;
 						}
 					}
 
