@@ -77,6 +77,10 @@ class ManageWikiHooks {
 			}
 
 			foreach ( $nsArray as $key => $array ) {
+				if ( !is_array( $array ) ) {
+					continue;
+				}
+
 				foreach ( $array as $id => $val ) {
 					$$key[$id] = $val;
 				}
