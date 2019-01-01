@@ -75,10 +75,10 @@ class ManageWikiInstaller {
 
 	private static function permissions( string $dbname, array $data ) {
 		foreach ( $data as $group => $mod ) {
-			if ( !isset( $mod['addgroups'] ) {
+			if ( !isset( $mod['addgroups'] ) ) {
 				$mod['addgroups'] = [];
 			}
-			if ( !isset( $mod['removegroups'] ) {
+			if ( !isset( $mod['removegroups'] ) ) {
 				$mod['removegroups'] = [];
 			}
 			ManageWiki::modifyPermissions( $group, $addp = $mod['permissions'], $addag = $mod['addgroups'], $addrg = $mod['removegroups' ], $wiki = $dbname );
