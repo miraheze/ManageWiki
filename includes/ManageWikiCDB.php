@@ -7,7 +7,7 @@ class ManageWikiCDB {
 		if ( ManageWiki::checkSetup( 'cdb' ) ) {
 			// all the cache stuff
 			$cache = ObjectCache::getLocalClusterInstance();
-			$key = $cache->makeKey( 'ManageWikiCDB', $module );
+			$key = $cache->makeKey( 'ManageWiki', $module );
 			$cacheVersion = $cache->get( $key );
 
 			// all the CBD stuff
@@ -149,7 +149,7 @@ class ManageWikiCDB {
 
 			// Let's grab the cache version
 			$cache = ObjectCache::getLocalClusterInstance();
-			$key = $cache->makeKey( 'ManageWikiCDB', $module );
+			$key = $cache->makeKey( 'ManageWiki', $module );
 			$cacheVersion = $cache->get( $key );
 
 			// CDB version
@@ -190,7 +190,7 @@ class ManageWikiCDB {
 
 		if ( ManageWiki::checkSetup( 'cdb' ) ) {
 			$cache = ObjectCache::getLocalClusterInstance();
-			$key = $cache->makeKey( 'ManageWikiCDB', $module );
+			$key = $cache->makeKey( 'ManageWiki', $module );
 			$cache->delete( $key );
 
 			return unlink( "$wgManageWikiCDBDirectory/$module-$wgDBname.cdb" );
@@ -200,7 +200,7 @@ class ManageWikiCDB {
 	public static function changes( string $module ) {
 		if ( ManageWiki::checkSetup( 'cdb' ) ) {
 			$cache = ObjectCache::getLocalClusterInstance();
-			$key = $cache->makeKey( 'ManageWikiCDB', $module );
+			$key = $cache->makeKey( 'ManageWiki', $module );
 			$cache->incr( $key );
 		}
 	}
