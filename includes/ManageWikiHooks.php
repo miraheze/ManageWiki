@@ -152,6 +152,14 @@ class ManageWikiHooks {
 				unlink( $wgManageWikiCDBDirectory . '/' . $wiki . '-permissions.cdb' );
 			}
 		}
+
+		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+			DeleteWiki::doDeletes( $dbw, 'mw_namespaces', 'ns_dbname', $wiki );
+
+			if ( ManageWiki::checkSetup( 'cdb' ) ) {
+				unlink( $wgManageWikiCDBDirectory . '/' . $wiki . '-namespaces.cdb' );
+			}
+		}
 	}
 
 	public static function onCreateWikiRename( $dbw, $old, $new ) {
@@ -162,6 +170,14 @@ class ManageWikiHooks {
 
 			if ( ManageWiki::checkSetup( 'cdb' ) ) {
 				unlink( $wgManageWikiCDBDirectory . '/' . $old . '-permissions.cdb' );
+			}
+		}
+
+		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+			RenameWiki::doRename( $dbw, 'mw_namespaces', 'ns_dbname', $old, $new );
+
+			if ( ManageWiki::checkSetup( 'cdb' ) ) {
+				unlink( $wgManageWikiCDBDirectory . '/' . $old . '-namespaces.cdb' );
 			}
 		}
 	}
