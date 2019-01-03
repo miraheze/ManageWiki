@@ -144,6 +144,7 @@ class ManageWikiFormFactory {
 						'label-message' => "namespaces-$name",
 						'default' => ( $nsData ) ? $nsData->ns_namespace_name : NULL,
 						'disabled' => ( (bool)$nsData->ns_core || !$ceMW ),
+						'required' => true,
 						'section' => "$name"
 					],
 					"content-$name" => [
