@@ -13,7 +13,9 @@ class ManageWikiCDB {
 			// all the CBD stuff
 			$cdbrVersion = ManageWikiCDB::get( $module, 'version' );
 
-			if ( !(bool)$cacheVersion || (int)$cdbrVersion != (int)$cacheVersion ) {
+			if ( (bool)$cacheVersion && ( ( (int)$cdbrVersion== (int)$cacheVersion ) ) ) {
+				return true;
+			} else {
 				return false;
 			}
 		}
