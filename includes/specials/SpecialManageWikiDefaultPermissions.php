@@ -20,7 +20,9 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$out->setArticleRelated( false );
 		$out->enableClientCache( false );
 
-		ManageWiki::checkSetup( 'permissions', true, $out );
+		if ( !ManageWiki::checkSetup( 'permissions', true, $out ) ) {
+			return false;
+		}
 
 		if ( $wgDBname != $wgCreateWikiGlobalWiki ) {
 			$this->getOutput()->addWikiMsg( 'managewiki-perm-not-default' );
