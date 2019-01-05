@@ -14,7 +14,9 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
-		ManageWiki::checkSetup( 'namespaces', true, $out );
+		if ( !ManageWiki::checkSetup( 'namespaces', true, $out ) ) {
+			return false;
+		}
 
 		if ( !is_null( $par ) && $par !== '' ) {
 			$this->showNamespace( $par );
