@@ -75,6 +75,9 @@
 		"CreateWikiStatePublic": [
 			"ManageWikiHooks::onCreateWikiStatePublic"
 		],
+		"LoadExtensionSchemaUpdates": [
+			"ManageWikiHooks::fnManageWikiSchemaUpdates"
+		],
 		"SetupAfterCache": [
 			"ManageWikiHooks::onSetupAfterCache"
 		],
