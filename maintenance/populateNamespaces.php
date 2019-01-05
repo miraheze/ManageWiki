@@ -14,6 +14,10 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 	function execute() {
 		global $wgCreateWikiDatabase, $wgDBname, $wgCanonicalNamespaceNames, $wgNamespaceAliases, $wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces, $wgNamespaceProtection;
 
+		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+			$this->fatalError( 'ManageWiki Namespaces can not be enabled on this wiki.' );
+		}
+
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 		$namespaces = $wgCanonicalNamespaceNames + [ 0 => '<Main>' ];

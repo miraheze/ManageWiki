@@ -14,6 +14,11 @@ class ManageWikiPopulatePermissions extends Maintenance {
 	function execute() {
 		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistGroups, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgDBname;
 
+		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+			$this->fatalError( 'ManageWiki Permissions can not be enabled on this wiki.' );
+		}
+
+
 		$blacklist = $wgManageWikiPermissionsBlacklistGroups;
 
 		$grouparray = [];
