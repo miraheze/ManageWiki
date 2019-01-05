@@ -1,10 +1,14 @@
 <?php
 class ManageWikiHooks {
 	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
-		$updater->addExtensionTable( 'mw_namespaces',
-				__DIR__ . '/../sql/mw_namespaces.sql' );
-		$updater->addExtensionTable( 'mw_permissions',
-				__DIR__ . '/../sql/mw_permissions.sql' );
+		global $wgCreateWikiDatabase, $wgDBname;
+
+		if ( $wgCreateWikiDatabase === $wgDBname ) {
+			$updater->addExtensionTable( 'mw_namespaces',
+					__DIR__ . '/../sql/mw_namespaces.sql' );
+			$updater->addExtensionTable( 'mw_permissions',
+					__DIR__ . '/../sql/mw_permissions.sql' );
+		}
 	}
 
 	public static function onRegistration() {
