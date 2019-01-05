@@ -19,7 +19,9 @@ class SpecialManageWikiPermissions extends SpecialPage {
 		$out->setArticleRelated( false );
 		$out->enableClientCache( false );
 
-		ManageWiki::checkSetup( 'permissions', true, $out );
+		if ( !ManageWiki::checkSetup( 'permissions', true, $out ) ) {
+			return false;
+		}
 
 		if ( $subpage == '' ) {
 			$subpage = $this->getRequest()->getVal( 'wpGroup' );
