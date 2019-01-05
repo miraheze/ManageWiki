@@ -62,8 +62,8 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 	}
 	
 	public function insertNamespace( $dbw, $id, $name, $nsAliases ) {
-		global $wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces,
-			$wgNamespaceProtection;
+		global $wgDBname, $wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages,
+			$wgContentNamespaces, $wgNamespaceProtection;
 
 		$dbw->insert(
 			'mw_namespaces',
