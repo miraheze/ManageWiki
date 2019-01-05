@@ -48,12 +48,11 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 
 			if ( !$res || !is_object( $res ) ) {
 				$this->insertNamespace( $dbw, $id, $name, $nsAliases);
-				return;
-			}
-
-			foreach ( $res as $row ) {
-				if ( $row->ns_namespace_id !== (int)$id ) {
-					$this->insertNamespace( $dbw, $id, $name, $nsAliases);
+			} else {
+				foreach ( $res as $row ) {
+					if ( $row->ns_namespace_id !== (int)$id ) {
+						$this->insertNamespace( $dbw, $id, $name, $nsAliases);
+					}
 				}
 			}
 		}
