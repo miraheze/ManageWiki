@@ -13,7 +13,9 @@ class SpecialManageWikiSettings extends SpecialPage {
 			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
-		ManageWiki::checkSetup( 'settings', true, $out );
+		if ( !ManageWiki::checkSetup( 'settings', true, $out ) ) {
+			return false;
+		}
 
 		if ( $wgCreateWikiGlobalWiki !== $wgDBname ) {
 			$this->showWikiForm( $wgDBname );
