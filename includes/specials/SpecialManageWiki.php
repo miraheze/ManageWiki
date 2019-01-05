@@ -14,7 +14,9 @@ class SpecialManageWiki extends SpecialPage {
 			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
-		ManageWiki::checkSetup( 'core', true, $out );
+		if ( !ManageWiki::checkSetup( 'core', true, $out ) ) {
+			return false;
+		}
 
 		if ( $wgCreateWikiGlobalWiki !== $wgDBname ) {
 			$this->showWikiForm( $wgDBname );
