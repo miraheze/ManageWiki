@@ -33,38 +33,53 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 				$nsAliases[] = $n;
 			}
 
-			$lastID = $dbw->selectRow(
+			$res = $dbw->select(
 				'mw_namespaces',
-				'ns_namespace_id',
 				[
-					'ns_dbname' => $wgDBname,
+					'ns_namespace_name',
+					'ns_namespace_id'
 				],
-				__METHOD__,
 				[
-					'ORDER BY' => 'ns_namespace_id DESC'
-				]
+					'ns_dbname' => $wgDBname
+				],
+				__METHOD__
 			);
 
-			if ( (int)$lastID->ns_namespace_id !== (int)$id ) {
-				$dbw->insert(
-					'mw_namespaces',
-					[
-						'ns_dbname' => $wgDBname,
-						'ns_namespace_id' => (int)$id,
-						'ns_namespace_name' => (string)$name,
-						'ns_searchable' => (int)$wgNamespacesToBeSearchedDefault[$id],
-						'ns_subpages' => (int)$wgNamespacesWithSubpages[$id],
-						'ns_content' => (int)$wgContentNamespaces[$id],
-						'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
-						'ns_aliases' => (string)json_encode( $nsAliases ),
-						'ns_core' => ( $id < 1000 ) ? 1 : 0 // we assume less than < is "core", could do with smarter logic!
-					],
-					__METHOD__
-				);
+
+			if ( !$res || !is_object( $res ) ) {
+				$this->insertNamespace( $dbw, $id, $name, $nsAliases);
+				return;
+			}
+
+			foreach ( $res as $row ) {
+				if ( $row->ns_namespace_id !== (int)$id ) {
+					$this->insertNamespace( $dbw, $id, $name, $nsAliases);
+				}
 			}
 		}
 
 		Wikimedia\restoreWarnings();
+	}
+	
+	public function insertNamespace( $dbw, $id, $name, $nsAliases ) {
+		global $wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces,
+			$wgNamespaceProtection;
+
+		$dbw->insert(
+			'mw_namespaces',
+			[
+				'ns_dbname' => $wgDBname,
+				'ns_namespace_id' => (int)$id,
+				'ns_namespace_name' => (string)$name,
+				'ns_searchable' => (int)$wgNamespacesToBeSearchedDefault[$id],
+				'ns_subpages' => (int)$wgNamespacesWithSubpages[$id],
+				'ns_content' => (int)$wgContentNamespaces[$id],
+				'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
+				'ns_aliases' => (string)json_encode( $nsAliases ),
+				'ns_core' => ( $id < 1000 ) ? 1 : 0 // we assume less than < is "core", could do with smarter logic!
+			],
+			__METHOD__
+		);
 	}
 }
 
