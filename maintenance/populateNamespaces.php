@@ -33,21 +33,35 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 				$nsAliases[] = $n;
 			}
 
-			$dbw->insert(
+			$lastID = $dbw->selectRow(
 				'mw_namespaces',
+				'ns_namespace_id',
 				[
 					'ns_dbname' => $wgDBname,
-					'ns_namespace_id' => (int)$id,
-					'ns_namespace_name' => (string)$name,
-					'ns_searchable' => (int)$wgNamespacesToBeSearchedDefault[$id],
-					'ns_subpages' => (int)$wgNamespacesWithSubpages[$id],
-					'ns_content' => (int)$wgContentNamespaces[$id],
-					'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
-					'ns_aliases' => (string)json_encode( $nsAliases ),
-					'ns_core' => ( $id < 1000 ) ? 1 : 0 // we assume less than < is "core", could do with smarter logic!
 				],
-				__METHOD__
+				__METHOD__,
+				[
+					'ORDER BY' => 'ns_namespace_id DESC'
+				]
 			);
+
+			if ( (int)$lastID->ns_namespace_id !== (int)$id ) {
+				$dbw->insert(
+					'mw_namespaces',
+					[
+						'ns_dbname' => $wgDBname,
+						'ns_namespace_id' => (int)$id,
+						'ns_namespace_name' => (string)$name,
+						'ns_searchable' => (int)$wgNamespacesToBeSearchedDefault[$id],
+						'ns_subpages' => (int)$wgNamespacesWithSubpages[$id],
+						'ns_content' => (int)$wgContentNamespaces[$id],
+						'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
+						'ns_aliases' => (string)json_encode( $nsAliases ),
+						'ns_core' => ( $id < 1000 ) ? 1 : 0 // we assume less than < is "core", could do with smarter logic!
+					],
+					__METHOD__
+				);
+			}
 		}
 
 		Wikimedia\restoreWarnings();
