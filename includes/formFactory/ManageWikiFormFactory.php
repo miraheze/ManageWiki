@@ -423,9 +423,9 @@ class ManageWikiFormFactory {
 			}
 
 			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
-				$nsAlias = [];
+				$nsAlias = (string)json_encode( [] );
 				if ( !empty( $formData["aliases-$name"] ) ) {
-					$nsAlias = json_encode( explode( "\n", $formData["aliases-$name"] ) );
+					$nsAlias = (string)json_encode( explode( "\n", $formData["aliases-$name"] ) );
 				}
 				$build[$name] = [
 					'ns_dbname' => $wgDBname,
