@@ -122,8 +122,6 @@ class ManageWikiCDB {
 
 					if ( $row->ns_searchable ) {
 						$cacheArray['wgNamespacesToBeSearchedDefault'][$nsID] = true;
-					} else {
-						$cacheArray['wgNamespacesToBeSearchedDefault'] = [];
 					}
 
 					if ( $row->ns_subpages ) {
