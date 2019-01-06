@@ -422,14 +422,19 @@ class ManageWikiFormFactory {
 				}
 			}
 
+			if ( empty( 
 			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
+				$nsAlias = [];
+				if ( !empty( $formData["aliases-$name"] ) ) {
+					$nsAlias = json_encode( explode( "\n", $formData["aliases-$name"] ) );
+				}
 				$build[$name] = [
 					'ns_dbname' => $wgDBname,
 					'ns_namespace_id' => $nsID[$name],
 					'ns_namespace_name' => str_replace( ' ', '_', $formData["namespace-$name"] ),
 					'ns_searchable' => (int)$formData["search-$name"],
 					'ns_subpages' => (int)$formData["subpages-$name"],
-					'ns_aliases' => json_encode( explode( "\n", $formData["aliases-$name"] ) ),
+					'ns_aliases' => $nsAlias,
 					'ns_protection' => $formData["protection-$name"],
 					'ns_content' => (int)$formData["content-$name"]
 				];
