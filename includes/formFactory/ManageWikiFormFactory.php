@@ -422,7 +422,6 @@ class ManageWikiFormFactory {
 				}
 			}
 
-			if ( empty( 
 			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
 				$nsAlias = [];
 				if ( !empty( $formData["aliases-$name"] ) ) {
