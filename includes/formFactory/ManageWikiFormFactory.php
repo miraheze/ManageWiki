@@ -422,7 +422,7 @@ class ManageWikiFormFactory {
 				'ns_namespace_name',
 				[
 					'ns_dbname' => $wgDBname,
-					'ns_namespace_id' => $nsID['namespace']
+					'ns_namespace_name' => str_replace( ' ', '_', $formData['namespace-namespace'] ),
 				],
 				__METHOD__
 			);
