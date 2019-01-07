@@ -100,7 +100,7 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiCreation( $dbname, $private ) {
-		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiExtensionsDefault, $wgDBname, $wgCanonicalNamespaceNames, $wgNamespaceAliases,
+		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiExtensionsDefault, $wgCanonicalNamespaceNames, $wgNamespaceAliases,
 			$wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces, $wgNamespaceProtection;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
@@ -174,7 +174,7 @@ class ManageWikiHooks {
 				$dbw->insert(
 					'mw_namespaces',
 					[
-						'ns_dbname' => $wgDBname,
+						'ns_dbname' => $dbname,
 						'ns_namespace_id' => (int)$id,
 						'ns_namespace_name' => (string)$name,
 						'ns_searchable' => (int)$wgNamespacesToBeSearchedDefault[$id],
