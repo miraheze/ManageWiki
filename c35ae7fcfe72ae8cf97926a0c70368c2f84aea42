@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d39da20_bdaaf7d8",
+        "filename": "includes/ManageWikiHooks.php",
+        "patchSetId": 2
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1006413
+      },
+      "writtenOn": "2019-01-07T19:31:35Z",
+      "side": 1,
+      "message": "What about using $dbname? (from the function \"public static function onCreateWikiCreation( $dbname, $private ) {\")",
+      "range": {
+        "startLine": 177,
+        "startChar": 21,
+        "endLine": 177,
+        "endChar": 30
+      },
+      "revId": "c35ae7fcfe72ae8cf97926a0c70368c2f84aea42",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": true
+    }
+  ]
+}
