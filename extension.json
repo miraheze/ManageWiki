@@ -30,11 +30,15 @@
 		"ManageWikiPermissions": "SpecialManageWikiPermissions",
 		"ManageWikiSettings": "SpecialManageWikiSettings"
 	},
+	"JobClasses": {
+		"NamespaceMigrationJob": "NamespaceMigrationJob"
+	},
 	"LogActionsHandlers": {
 		"managewiki/settings": "LogFormatter",
 		"managewiki/rename": "LogFormatter",
 		"managewiki/rights": "LogFormatter",
-		"managewiki/namespaces": "LogFormatter"
+		"managewiki/namespaces": "LogFormatter",
+		"managewiki/namespaces-delete": "LogFormatter"
 	},
 	"LogTypes": [
 		"managewiki"
@@ -52,6 +56,7 @@
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
 		"ManageWikiNamespaces": "includes/ManageWikiNamespaces.php",
+		"NamespaceMigrationJob": "includes/NamespaceMigrationJob.php",
 		"SpecialManageWiki": "includes/specials/SpecialManageWiki.php",
 		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php",
 		"SpecialManageWikiExtensions": "includes/specials/SpecialManageWikiExtensions.php",
