@@ -422,7 +422,7 @@ class ManageWikiFormFactory {
 				'ns_namespace_name',
 				[
 					'ns_dbname' => $wgDBname,
-					'ns_namespace_id' => $nsID
+					'ns_namespace_id' => $nsID['namespace']
 				],
 				__METHOD__
 			);
