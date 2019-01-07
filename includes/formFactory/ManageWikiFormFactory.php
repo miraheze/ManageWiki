@@ -143,7 +143,7 @@ class ManageWikiFormFactory {
 						'type' => 'text',
 						'label-message' => "namespaces-$name",
 						'default' => ( $nsData ) ? $nsData->ns_namespace_name : NULL,
-						'disabled' => ( (bool)$nsData->ns_core || !$ceMW ),
+						'disabled' => ( !$ceMW || ( $nsData && (bool)$nsData->ns_core ) ),
 						'required' => true,
 						'section' => "$name"
 					],
@@ -172,7 +172,7 @@ class ManageWikiFormFactory {
 						'type' => 'selectorother',
 						'label-message' => 'namespaces-protection',
 						'section' => "$name",
-						'default' => ( $nsData ) ? $nsData->ns_protection : 'none',
+						'default' => ( $nsData ) ? $nsData->ns_protection : '',
 						'disabled' => !$ceMW,
 						'options' => [
 							'None' => '',
@@ -187,6 +187,37 @@ class ManageWikiFormFactory {
 						'default' => ( $nsData ) ? implode( "\n", json_decode( $nsData->ns_aliases, true ) ) : NULL,
 						'disabled' => !$ceMW,
 						'section' => "$name"
+					]
+				];
+			}
+			if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
+				$namespaces = ManageWikiNamespaces::configurableNamespaces( $id = true, $readable = true, $main = true );
+				$craftedNamespaces = [];
+				$canDelete = false;
+
+				foreach( $namespaces as $id => $namespace ) {
+					if ( $id !== $nsID['namespace'] ) {
+						$craftedNamespaces[$namespace] = $id;
+					} else {
+						$canDelete = true; //existing namespace
+					}
+				}
+
+				$formDescriptor += [
+					'delete-checkbox' => [
+						'type' => 'check',
+						'label-message' => 'namespaces-delete-checkbox',
+						'section' => 'delete',
+						'default' => 0,
+						'disabled' => !$canDelete
+					],
+					'delete-migrate-to' => [
+						'type' => 'select',
+						'label-message' => 'namespaces-migrate-to',
+						'options' => $craftedNamespaces,
+						'section' => 'delete',
+						'default' => 0,
+						'disabled' => !$canDelete
 					]
 				];
 			}
@@ -237,8 +268,8 @@ class ManageWikiFormFactory {
 		$htmlForm->setId( 'mw-baseform-' . $module );
 		$htmlForm->suppressDefaultSubmit();
 		$htmlForm->setSubmitCallback(
-			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki ) {
-				return $this->submitForm( $formData, $form, $module, $ceMW, $remoteWiki );
+			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special ) {
+				return $this->submitForm( $formData, $form, $module, $ceMW, $remoteWiki, $special );
 			}
 		);
 
@@ -250,7 +281,8 @@ class ManageWikiFormFactory {
 		HTMLForm $form,
 		string $module = NULL,
 		bool $ceMW = false,
-		RemoteWiki $wiki
+		RemoteWiki $wiki,
+		string $special = ""
 	) {
 		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiSettings, $wgUser;
 
@@ -380,60 +412,29 @@ class ManageWikiFormFactory {
 			$mwStore = 'mw_namespaces';
 			$build = [];
 
+			$nsID = [
+				'namespace' => (int)$special,
+				'namespacetalk' => (int)$special + 1
+			];
+
 			$existingNamespace = $dbw->selectRow(
 				'mw_namespaces',
-				'ns_namespace_id',
+				'ns_namespace_name',
 				[
 					'ns_dbname' => $wgDBname,
-					'ns_namespace_name' => str_replace( ' ', '_', $formData['namespace-namespace'] )
+					'ns_namespace_id' => $nsID
 				],
 				__METHOD__
 			);
 
-			if ( $existingNamespace ) {
-				$nsID = [
-					'namespace' => (int)$existingNamespace->ns_namespace_id,
-					'namespacetalk' => (int)$existingNamespace->ns_namespace_id + 1
-				];
-			} else {
-				$lastID = $dbw->selectRow(
-					'mw_namespaces',
-					'ns_namespace_id',
-					[
-						'ns_dbname' => $wgDBname,
-						'ns_namespace_id >= 3000'
-					],
-					__METHOD__,
-					[
-						'ORDER BY' => 'ns_namespace_id DESC'
-					]
-				);
-
-				if ( $lastID ) {
-					$nsID = [
-						'namespace' => (int)$lastID->ns_namespace_id + 1,
-						'namespacetalk' => (int)$lastID->ns_namespace_id + 2
-					];
-				} else {
-					$nsID = [
-						'namespace' => 3000,
-						'namespacetalk' => 3001
-					];
-				}
-			}
-
 			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
-				$nsAlias = (string)json_encode( [] );
-				if ( !empty( $formData["aliases-$name"] ) ) {
-					$nsAlias = (string)json_encode( explode( "\n", $formData["aliases-$name"] ) );
-				}
 				$build[$name] = [
 					'ns_dbname' => $wgDBname,
 					'ns_namespace_id' => $nsID[$name],
 					'ns_namespace_name' => str_replace( ' ', '_', $formData["namespace-$name"] ),
 					'ns_searchable' => (int)$formData["search-$name"],
 					'ns_subpages' => (int)$formData["subpages-$name"],
-					'ns_aliases' => $nsAlias,
+					'ns_aliases' => $formData["aliases-$name"] == "" ? "[]" : json_encode( explode( "\n", $formData["aliases-$name"] ) ),
 					'ns_protection' => $formData["protection-$name"],
 					'ns_content' => (int)$formData["content-$name"]
 				];
@@ -471,22 +472,59 @@ class ManageWikiFormFactory {
 				'4::wiki' => $formData['dbname'],
 				'5::namespace' => $build['namespace']['ns_namespace_name']
 			];
-
-			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
-				if ( $existingNamespace ) {
-					$dbw->update( 'mw_namespaces',
-						$build[$name],
+			if ( $formData['delete-checkbox'] ) {
+				$mwLog .= '-delete';
+				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
+					$dbw->delete( 'mw_namespaces',
 						[
 							'ns_dbname' => $build[$name]['ns_dbname'],
 							'ns_namespace_name' => $build[$name]['ns_namespace_name']
 						],
 						__METHOD__
 					);
-				} else {
-					$dbw->insert( 'mw_namespaces',
-						$build[$name],
-						__METHOD__
+
+					$jobParams = array(
+						'action' => 'delete',
+						'nsID' => $build[$name]['ns_namespace_id'],
+						'nsName' => $build[$name]['ns_namespace_name'],
+						'nsNew' => $formData['delete-migrate-to']
 					);
+					$job = new NamespaceMigrationJob( Title::newFromText( 'Special:ManageWikiNamespaces' ), $jobParams );
+					JobQueueGroup::singleton()->push( $job );
+				}
+			} else {
+				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
+					if ( $existingNamespace ) {
+						$dbw->update( 'mw_namespaces',
+							$build[$name],
+							[
+								'ns_dbname' => $build[$name]['ns_dbname'],
+								'ns_namespace_id' => $build[$name]['ns_namespace_id']
+							],
+							__METHOD__
+						);
+
+						$jobParams = array(
+							'action' => 'rename',
+							'nsName' => $build[$name]['ns_namespace_name'],
+							'nsID' => $build[$name]['ns_namespace_id']
+						);
+						$job = new NamespaceMigrationJob( Title::newFromText( 'Special:ManageWikiNamespaces' ), $jobParams );
+						JobQueueGroup::singleton()->push( $job );
+					} else {
+						$dbw->insert( 'mw_namespaces',
+							$build[$name],
+							__METHOD__
+						);
+
+						$jobParams = array(
+							'action' => 'create',
+							'nsName' => $build[$name]['ns_namespace_name'],
+							'nsID' => $build[$name]['ns_namespace_id']
+						);
+						$job = new NamespaceMigrationJob( Title::newFromText( 'Special:ManageWikiNamespaces' ), $jobParams );
+						JobQueueGroup::singleton()->push( $job );
+					}
 				}
 			}
 

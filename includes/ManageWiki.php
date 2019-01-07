@@ -14,7 +14,7 @@ class ManageWiki {
 
 			return true;
 		} else {
-			if ( $verbose ) {
+			if ( $verbose && $out ) {
 				$out->addWikiMsg( 'managewiki-disabled', $module );
 			}
 

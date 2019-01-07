@@ -93,6 +93,11 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm( $wgDBname, $this->getContext(), 'namespaces', $id );
+
+		if ( !$htmlForm ) {
+			return false;
+		}
+
 		$sectionTitles = $htmlForm->getFormSections();
 
 		$sectTabs = [];
