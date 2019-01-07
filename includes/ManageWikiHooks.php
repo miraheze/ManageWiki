@@ -100,7 +100,8 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiCreation( $dbname, $private ) {
-		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiExtensionsDefault;
+		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiExtensionsDefault, $wgDBname, $wgCanonicalNamespaceNames, $wgNamespaceAliases,
+			$wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces, $wgNamespaceProtection;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$defaultGroups = array_diff( (array)ManageWiki::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
@@ -150,6 +151,42 @@ class ManageWikiHooks {
 				[ 'wiki_dbname' => $dbname ],
 				__METHOD__
 			);
+		}
+
+		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+			$namespaces = $wgCanonicalNamespaceNames + [ 0 => '<Main>' ];
+
+			foreach ( $namespaces as $id => $name ) {
+				if ( $id < 0 ) {
+					// Don't include imaginary
+					continue;
+				}
+
+				$matchedNSKeys = array_keys( $wgNamespaceAliases, $id );
+				$nsAliases = [];
+
+				foreach ( $matchedNSKeys as $o => $n ) {
+					$nsAliases[] = $n;
+				}
+
+				// Wiki was just created, we can assume no entries in mw_namespaces
+				$dbw->insert(
+					'mw_namespaces',
+					[
+						'ns_dbname' => $wgDBname,
+						'ns_namespace_id' => (int)$id,
+						'ns_namespace_name' => (string)$name,
+						'ns_searchable' => (int)$wgNamespacesToBeSearchedDefault[$id],
+						'ns_subpages' => (int)$wgNamespacesWithSubpages[$id],
+						'ns_content' => (int)$wgContentNamespaces[$id],
+						'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
+						'ns_aliases' => (string)json_encode( $nsAliases ),
+						'ns_core' => ( $id < 1000 ) ? 1 : 0 // we assume less than < is "core", could do with smarter logic!
+					],
+					__METHOD__
+				);
+			}
 		}
 	}
 
