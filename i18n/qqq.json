@@ -26,5 +26,6 @@
 	"managewiki-perm-name": "Label for a input field thats contains the group name\n{{Identical|Group name}}",
 	"managewiki-perm-nonexistent": "Error shown when a group does not exist.\n\nParameters:\n* $1 - group name",
 	"managewiki-perm-reason": "Used as label for the \"Reason\" input box.\n{{Identical|Reason}}",
-	"managewiki-success": "Message when the wiki request was succesfully sent."
+	"managewiki-success": "Message when the wiki request was succesfully sent.",
+	"namespaces-delete": "{{Identical|Delete}}"
 }
