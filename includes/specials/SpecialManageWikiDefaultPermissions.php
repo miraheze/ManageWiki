@@ -358,7 +358,10 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$dbw->update(
 				'mw_permissions',
 				[ 'perm_group' => $newname ],
-				[ 'perm_group' => $group, 'perm_wiki' => 'default' ],
+				[
+					'perm_group' => $group,
+					'perm_dbname' => 'default'
+				],
 				__METHOD__
 			);
 
