@@ -171,7 +171,7 @@ class ManageWikiHooks {
 						'ns_subpages' => (int)$namespacesArray['ns_subpages'],
 						'ns_content' => (int)$namespacesArray['ns_content'],
 						'ns_protection' => $namespacesArray['ns_protection'],
-						'ns_aliases' => (array)$namespacesArray['ns_aliases',
+						'ns_aliases' => (array)$namespacesArray['ns_aliases'],
 						'ns_core' => (int)$namespacesArray['ns_core'],
 					],
 					__METHOD__
