@@ -174,7 +174,7 @@ class ManageWikiHooks {
 					[
 						'ns_dbname' => $dbname,
 						'ns_namespace_id' => $newnamespace,
-						'ns_namespace_name' => $namespacesarray['ns_namespace_name'] ),
+						'ns_namespace_name' => $namespacesarray['ns_namespace_name'],
 						'ns_searchable' => (int)$namespacesarray['ns_searchable'],
 						'ns_subpages' => (int)$namespacesarray['ns_subpages'],
 						'ns_content' => (int)$namespacesarray['ns_content'],
