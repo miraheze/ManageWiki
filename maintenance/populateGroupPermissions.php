@@ -12,7 +12,8 @@ class ManageWikiPopulatePermissions extends Maintenance {
 	}
 
 	function execute() {
-		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistGroups, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgDBname;
+		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistGroups, $wgGroupPermissions,
+			$wgAddGroups, $wgRemoveGroups, $wgDBname;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
@@ -52,11 +53,20 @@ class ManageWikiPopulatePermissions extends Maintenance {
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
+			// insert perms for wiki
+			$this->insertPermissions( $dbw, $wgDBname, $groupname, $groupatr );
+			
+			// insert default perms
+			$this->insertPermissions( $dbw, 'default', $groupname, $groupatr );
+		}
+	}
+	
+	public function insertPermissions( $dbw, $dbname, $groupname, $groupatr ) {
 			$check = $dbw->selectRow(
 				'mw_permissions',
 				[ 'perm_group' ],
 				[
-					'perm_dbname' => $wgDBname,
+					'perm_dbname' => $dbname,
 					'perm_group' => $groupname
 				],
 				__METHOD__
@@ -65,7 +75,7 @@ class ManageWikiPopulatePermissions extends Maintenance {
 			if ( !$check ) {
 				$dbw->insert( 'mw_permissions',
 					[
-						'perm_dbname' => $wgDBname,
+						'perm_dbname' => $dbname,
 						'perm_group' => $groupname,
 						'perm_permissions' => $groupatr['perms'],
 						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
@@ -74,7 +84,6 @@ class ManageWikiPopulatePermissions extends Maintenance {
 					__METHOD__
 				);
 			}
-		}
 	}
 }
 
