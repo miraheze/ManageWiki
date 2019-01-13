@@ -154,6 +154,42 @@ class ManageWikiHooks {
 		}
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+			$defaultCanonicalNamespaces = array_diff( (array)ManageWiki::defaultCanonicalNamespaces(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+
+			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
+			foreach ( $defaultCanonicalNamespaces as $newnamespace ) {
+				$namespacesarray = ManageWiki::defaultNamespaces( $newnamespace );
+
+				$nsAliases = [];
+				if ( is_array( $namespacesarray['ns_aliases'] ) ) {
+					$matchedNSKeys = array_keys( $namespacesarray['ns_aliases'], $id );
+					foreach ( $matchedNSKeys as $o => $n ) {
+						$nsAliases[] = $n;
+					}
+				}
+
+				$dbw->insert(
+					'mw_namespaces',
+					[
+						'ns_dbname' => $dbname,
+						'ns_namespace_id' => $newnamespace,
+						'ns_namespace_name' => $namespacesarray['ns_namespace_name'] ),
+						'ns_searchable' => (int)$namespacesarray['ns_searchable'],
+						'ns_subpages' => (int)$namespacesarray['ns_subpages'],
+						'ns_content' => (int)$namespacesarray['ns_content'],
+						'ns_protection' => $namespacesarray['ns_protection'],
+						'ns_aliases' => (string)json_encode( $nsAliases ),
+						'ns_core' => $namespacesarray['ns_core'],
+					],
+					__METHOD__
+				);
+			}
+
+			ManageWikiCDB::changes( 'namespaces' );
+		}
+
+		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 			$namespaces = $wgCanonicalNamespaceNames + [ 0 => '<Main>' ];
 
