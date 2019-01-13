@@ -299,8 +299,6 @@ class ManageWiki {
 			]
 		);
 
-		$ns = json_decode( $res, true );
-
-		return $ns;
+		return (object)$res;
 	}
 }
