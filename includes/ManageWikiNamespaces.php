@@ -59,4 +59,62 @@ class ManageWikiNamespaces {
 
 		return 3000;
 	}
+
+	public static function defaultCanonicalNamespaces() {
+		global $wgCreateWikiDatabase;
+
+		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+
+		$res = $dbr->select(
+			'mw_namespaces',
+			'ns_namespace_id',
+			[
+				'ns_dbname' => 'default'
+			]
+		);
+
+		$namespaces = [];
+
+		foreach( $res as $row ) {
+			$namespaces[] = $row->ns_namespace_id;
+		}
+
+		return $namespaces;
+	}
+
+	public static function defaultNamespaces( $namespace ) {
+		global $wgCreateWikiDatabase;
+
+		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+
+		$row = $dbr->selectRow(
+			'mw_namespaces',
+			[
+				'ns_namespace_name',
+				'ns_searchable',
+				'ns_subpages',
+				'ns_content',
+				'ns_protection',
+				'ns_aliases',
+				'ns_core',
+			],
+			[
+				'ns_dbname' => 'default',
+				'ns_namespace_id' => $namespace
+			]
+		);
+		
+		$ns = [];
+		
+		$ns['ns_namespace_name'] = $row->ns_namespace_name;
+		$ns['ns_searchable'] = $row->ns_searchable;
+		$ns['ns_subpages'] = $row->ns_subpages;
+		$ns['ns_subpages'] = $row->ns_subpages;
+		$ns['ns_content'] = $row->ns_content;
+		$ns['ns_protection'] = $row->ns_protection;
+		$ns['ns_aliases'] = $row->ns_aliases;
+		$ns['ns_core'] = $row->ns_core;
+
+		return (array)$ns;
+	}
 }
