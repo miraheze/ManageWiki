@@ -265,7 +265,9 @@ class ManageWiki {
 		$res = $dbr->select(
 			'mw_namespaces',
 			'ns_namespace_id',
-			[ 'ns_dbname' => 'default' ]
+			[
+				'ns_dbname' => 'default'
+			],
 		);
 
 		$namespaces = [];
