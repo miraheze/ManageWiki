@@ -267,7 +267,7 @@ class ManageWiki {
 			'ns_namespace_id',
 			[
 				'ns_dbname' => 'default'
-			],
+			]
 		);
 
 		$namespaces = [];
