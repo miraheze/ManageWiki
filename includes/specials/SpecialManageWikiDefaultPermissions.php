@@ -475,7 +475,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$log->addEntry(
 			'rights',
-			SpecialPage::getTitleFor( 'ManageWikiDefaultPermissions', "default-$group" ),
+			SpecialPage::getTitleFor( 'ManageWikiDefaultPermissions', "$group" ),
 			$reason,
 			[
 				$this->makeLogList( $addRights ),
@@ -493,7 +493,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$log->addEntry(
 			'rename',
-			SpecialPage::getTitleFor( 'ManageWikiDefaultPermissions', "default-$newName" ),
+			SpecialPage::getTitleFor( 'ManageWikiDefaultPermissions', "$newName" ),
 			$reason,
 			[
 				SpecialPage::getTitleFor( 'ManageWikiDefaultPermissions', $newName ),
