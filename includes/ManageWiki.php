@@ -301,6 +301,6 @@ class ManageWiki {
 			]
 		);
 
-		return (obect)$row;
+		return (object)$row;
 	}
 }
