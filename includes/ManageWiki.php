@@ -284,7 +284,7 @@ class ManageWiki {
 
 		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
 
-		$res = $dbr->selectRow(
+		$row = $dbr->selectRow(
 			'mw_namespaces',
 			[
 				'ns_namespace_name',
@@ -300,17 +300,7 @@ class ManageWiki {
 				'ns_namespace_id' => $namespace
 			]
 		);
-		
-		$ns = [];
 
-		$ns['ns_namespace_name'] = json_decode( $res->ns_namespace_name, true );
-		$ns['ns_searchable'] = json_decode( $res->ns_searchable, true );
-		$ns['ns_subpages'] = json_decode( $res->ns_subpages, true );
-		$ns['ns_content'] = json_decode( $res->ns_content, true );
-		$ns['ns_protection'] = json_decode( $res->ns_protection, true );
-		$ns['ns_aliases'] = json_decode( $res->ns_aliases, true );
-		$ns['ns_core'] = json_decode( $res->ns_core, true );
-
-		return (array)$ns;
+		return (obect)$row;
 	}
 }
