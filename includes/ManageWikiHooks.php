@@ -154,7 +154,7 @@ class ManageWikiHooks {
 		}
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-			$defaultCanonicalNamespaces = array_diff( (array)ManageWiki::defaultCanonicalNamespaces(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+			$defaultCanonicalNamespaces = (array)ManageWiki::defaultCanonicalNamespaces();
 
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
