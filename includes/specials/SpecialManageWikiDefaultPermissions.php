@@ -467,7 +467,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	protected function showLogFragment( $group, $output ) {
 		$logPage = new LogPage( 'managewiki' );
 		$output->addHTML( Xml::element( 'h2', null, $logPage->getName()->text() . "\n" ) );
-		LogEventsList::showLogExtract( $output, 'managewiki', "default-$group" );
+		LogEventsList::showLogExtract( $output, 'managewiki', SpecialPage::getTitleFor( 'ManageWikiDefaultPermissions', "default-$group" ) );
 	}
 
 	function addPermissionLog( $group, $addRights, $removeRights, $newAddGroups, $removedAddGroups, $newRemoveGroups, $removedRemoveGroups, $reason ) {
