@@ -154,39 +154,31 @@ class ManageWikiHooks {
 		}
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+			$defaultCanonicalNamespaces = (array)ManageWikiNamespaces::defaultCanonicalNamespaces();
+
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-			$namespaces = $wgCanonicalNamespaceNames + [ 0 => '<Main>' ];
 
-			foreach ( $namespaces as $id => $name ) {
-				if ( $id < 0 ) {
-					// Don't include imaginary
-					continue;
-				}
+			foreach ( $defaultCanonicalNamespaces as $newnamespace ) {
+				$namespacesArray = ManageWikiNamespaces::defaultNamespaces( $newnamespace );
 
-				$matchedNSKeys = array_keys( $wgNamespaceAliases, $id );
-				$nsAliases = [];
-
-				foreach ( $matchedNSKeys as $o => $n ) {
-					$nsAliases[] = $n;
-				}
-
-				// Wiki was just created, we can assume no entries in mw_namespaces
 				$dbw->insert(
 					'mw_namespaces',
 					[
 						'ns_dbname' => $dbname,
-						'ns_namespace_id' => (int)$id,
-						'ns_namespace_name' => (string)$name,
-						'ns_searchable' => (int)$wgNamespacesToBeSearchedDefault[$id],
-						'ns_subpages' => (int)$wgNamespacesWithSubpages[$id],
-						'ns_content' => (int)$wgContentNamespaces[$id],
-						'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
-						'ns_aliases' => (string)json_encode( $nsAliases ),
-						'ns_core' => ( $id < 1000 ) ? 1 : 0 // we assume less than < is "core", could do with smarter logic!
+						'ns_namespace_id' => $newnamespace,
+						'ns_namespace_name' => (string)$namespacesArray['ns_namespace_name'],
+						'ns_searchable' => (int)$namespacesArray['ns_searchable'],
+						'ns_subpages' => (int)$namespacesArray['ns_subpages'],
+						'ns_content' => (int)$namespacesArray['ns_content'],
+						'ns_protection' => $namespacesArray['ns_protection'],
+						'ns_aliases' => (array)$namespacesArray['ns_aliases'],
+						'ns_core' => (int)$namespacesArray['ns_core'],
 					],
 					__METHOD__
 				);
 			}
+
+			ManageWikiCDB::changes( 'namespaces' );
 		}
 	}
 
