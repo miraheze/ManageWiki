@@ -62,28 +62,28 @@ class ManageWikiPopulatePermissions extends Maintenance {
 	}
 	
 	public function insertPermissions( $dbw, $dbname, $groupname, $groupatr ) {
-			$check = $dbw->selectRow(
-				'mw_permissions',
-				[ 'perm_group' ],
+		$check = $dbw->selectRow(
+			'mw_permissions',
+			[ 'perm_group' ],
+			[
+				'perm_dbname' => $dbname,
+				'perm_group' => $groupname
+			],
+			__METHOD__
+		);
+
+		if ( !$check ) {
+			$dbw->insert( 'mw_permissions',
 				[
 					'perm_dbname' => $dbname,
-					'perm_group' => $groupname
+					'perm_group' => $groupname,
+					'perm_permissions' => $groupatr['perms'],
+					'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
+					'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
 				],
 				__METHOD__
 			);
-
-			if ( !$check ) {
-				$dbw->insert( 'mw_permissions',
-					[
-						'perm_dbname' => $dbname,
-						'perm_group' => $groupname,
-						'perm_permissions' => $groupatr['perms'],
-						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
-						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
-					],
-					__METHOD__
-				);
-			}
+		}
 	}
 }
 
