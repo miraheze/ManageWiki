@@ -472,7 +472,7 @@ class ManageWikiFormFactory {
 				'4::wiki' => $formData['dbname'],
 				'5::namespace' => $build['namespace']['ns_namespace_name']
 			];
-			if ( $formData['delete-checkbox'] ) {
+			if ( isset( $formData['delete-checkbox'] ) && $formData['delete-checkbox'] ) {
 				$mwLog .= '-delete';
 				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
 					$dbw->delete( 'mw_namespaces',
