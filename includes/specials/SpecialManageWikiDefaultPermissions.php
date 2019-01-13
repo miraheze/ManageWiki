@@ -357,16 +357,15 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 			$dbw->update(
 				'mw_permissions',
-				[ 'perm_group' => $newname ],
+				[
+					'perm_group' => $newname
+				],
 				[
 					'perm_group' => $group,
 					'perm_dbname' => 'default'
 				],
 				__METHOD__
 			);
-
-			$cache = ObjectCache::getLocalServerInstance( CACHE_MEMCACHED );
-			$cache->delete( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
 
 			$this->addRenameLog( $group, $newname, $reason );
 
@@ -423,7 +422,10 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$addGroups = array_merge( array_diff( $oldAddGroups, $removedAddGroups ), $newAddGroups );
 		$removeGroups = array_merge( array_diff( $oldRemoveGroups, $removedRemoveGroups ), $newRemoveGroups );
 
-		if ( count( $addRights ) != 0 || count( $removeRights ) != 0 || count( $newAddGroups ) != 0 || count( $removedAddGroups ) != 0 || count( $newRemoveGroups ) != 0 || count( $removedRemoveGroups ) != 0 ) {
+		if ( count( $addRights ) != 0 || count( $removeRights ) != 0 ||
+		    count( $newAddGroups ) != 0 || count( $removedAddGroups ) != 0 ||
+		    count( $newRemoveGroups ) != 0 || count( $removedRemoveGroups ) != 0
+		) {
 			$this->updatePermissions( $group, $newRights, $addGroups, $removeGroups );
 			$this->addPermissionLog( $group, $addRights, $removeRights, $newAddGroups, $removedAddGroups, $newRemoveGroups, $removedRemoveGroups, $reason );
 		}
@@ -460,9 +462,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				__METHOD__
 			);
 		}
-
-		$cache = ObjectCache::getLocalServerInstance( CACHE_MEMCACHED );
-		$cache->delete( $cache->makeKey( 'ManageWiki', 'mwpermissions' ) );
 	}
 
 	protected function showLogFragment( $group, $output ) {
