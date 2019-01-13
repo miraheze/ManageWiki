@@ -159,28 +159,20 @@ class ManageWikiHooks {
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 			foreach ( $defaultCanonicalNamespaces as $newnamespace ) {
-				$namespacesarray = ManageWiki::defaultNamespaces( $newnamespace );
-
-				$nsAliases = [];
-				if ( is_array( $namespacesarray['ns_aliases'] ) ) {
-					$matchedNSKeys = array_keys( $namespacesarray['ns_aliases'], $id );
-					foreach ( $matchedNSKeys as $o => $n ) {
-						$nsAliases[] = $n;
-					}
-				}
+				$namespacesArray = ManageWiki::defaultNamespaces( $newnamespace );
 
 				$dbw->insert(
 					'mw_namespaces',
 					[
 						'ns_dbname' => $dbname,
 						'ns_namespace_id' => $newnamespace,
-						'ns_namespace_name' => $namespacesarray['ns_namespace_name'],
-						'ns_searchable' => (int)$namespacesarray['ns_searchable'],
-						'ns_subpages' => (int)$namespacesarray['ns_subpages'],
-						'ns_content' => (int)$namespacesarray['ns_content'],
-						'ns_protection' => $namespacesarray['ns_protection'],
-						'ns_aliases' => (string)json_encode( $nsAliases ),
-						'ns_core' => $namespacesarray['ns_core'],
+						'ns_namespace_name' => $namespacesArray->ns_namespace_name,
+						'ns_searchable' => (int)$namespacesArray->ns_searchable,
+						'ns_subpages' => (int)$namespacesArray->ns_subpages,
+						'ns_content' => (int)$namespacesArray->ns_content,
+						'ns_protection' => $namespacesArray->ns_protection,
+						'ns_aliases' => (array)$namespacesArray->ns_aliases,
+						'ns_core' => (int)$namespacesArray->ns_core,
 					],
 					__METHOD__
 				);
