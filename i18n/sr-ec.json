@@ -73,6 +73,7 @@
 	"managewiki-settings-link": "Управљај додатним подешавањима овог викија",
 	"namespaces-aliases": "У нови ред унесите све недефинисане именске просторе које треба преусмерити на овај",
 	"namespaces-content": "Да ли овај именски простор садржи главни wiki материјал (садржај)?",
+	"namespaces-delete": "Брисање",
 	"namespaces-handling": "Пошаљи",
 	"namespaces-namespace": "Главни именски простор",
 	"namespaces-namespacetalk": "Именски простор разговор",
