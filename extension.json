@@ -62,7 +62,8 @@
 		"SpecialManageWikiExtensions": "includes/specials/SpecialManageWikiExtensions.php",
 		"SpecialManageWikiNamespaces": "includes/specials/SpecialManageWikiNamespaces.php",
 		"SpecialManageWikiPermissions": "includes/specials/SpecialManageWikiPermissions.php",
-		"SpecialManageWikiSettings": "includes/specials/SpecialManageWikiSettings.php"
+		"SpecialManageWikiSettings": "includes/specials/SpecialManageWikiSettings.php",
+		"WikiManager": "includes/WikiManager.php"
 	},
 	"Hooks": {
 		"CreateWikiCreation": [
