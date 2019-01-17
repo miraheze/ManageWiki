@@ -85,6 +85,8 @@ class ManageWikiInstaller {
 				$mod['removegroups'] = [];
 			}
 			ManageWiki::modifyPermissions( $group, $addp = $mod['permissions'], $addag = $mod['addgroups'], $addrg = $mod['removegroups' ], $wiki = $dbname );
+
+			ManageWikiCDB::changes( 'permissions' );
 		}
 
 		return true;
