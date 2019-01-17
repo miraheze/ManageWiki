@@ -8,7 +8,8 @@
 			"Fourmer",
 			"Gomoko",
 			"Momo50WM",
-			"Tektasc"
+			"Tektasc",
+			"Void"
 		]
 	},
 	"action-managewiki": "Régler les paramètres du wiki",
@@ -80,7 +81,7 @@
 	"managewiki-perm-success": "Métadonnées du groupe modifiées",
 	"managewiki-perm-success-text": "Les métadonnées « $1 » ont été enregistrées et seront appliquées dans la minute.",
 	"managewiki-success": "Les paramètres ont été changés.",
-	"managewiki-extension-name": "[[mw:Extension:$1|$1]]",
+	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link": "Gérer les paramètres de ce wiki",
 	"managewiki-extensions-link": "Gérer les extensions de ce wiki",
 	"managewiki-namespaces-link": "Gérer les espaces de noms de ce wiki",
