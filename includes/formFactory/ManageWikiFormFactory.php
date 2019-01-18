@@ -289,6 +289,8 @@ class ManageWikiFormFactory {
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
 
+		$out = $form->getContext()->getOutput();
+
 		if ( !$ceMW ) {
 			throw new MWException( "User '{$wgUser->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
 		}
@@ -428,10 +430,25 @@ class ManageWikiFormFactory {
 			);
 
 			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
+				$namespaceName = str_replace( ' ', '_', $formData["namespace-$name"] );
+				$existingName = $dbw->selectRow(
+					'mw_namespaces',
+					'ns_namespace_id',
+					[
+						'ns_dbname' => $wgDBname,
+						'ns_namespace_name' => $namespaceName
+					],
+					__METHOD__
+				);
+				if ( $existingName && $existingName->ns_namespace_id != $nsID[$name] ) {
+					$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-namespace-conflicts', $namespaceName )->escaped() . '</div>' );
+					return true; // NS conflicts, go no further
+				}
+
 				$build[$name] = [
 					'ns_dbname' => $wgDBname,
 					'ns_namespace_id' => $nsID[$name],
-					'ns_namespace_name' => str_replace( ' ', '_', $formData["namespace-$name"] ),
+					'ns_namespace_name' => $namespaceName,
 					'ns_searchable' => (int)$formData["search-$name"],
 					'ns_subpages' => (int)$formData["subpages-$name"],
 					'ns_aliases' => $formData["aliases-$name"] == "" ? "[]" : json_encode( explode( "\n", $formData["aliases-$name"] ) ),
@@ -541,7 +558,7 @@ class ManageWikiFormFactory {
 		$farmerLogID = $farmerLogEntry->insert();
 		$farmerLogEntry->publish( $farmerLogID );
 
-		$form->getContext()->getOutput()->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
+		$out->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
 
 		return true;
 	}

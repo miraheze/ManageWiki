@@ -51,6 +51,7 @@
 	"managewiki-label-sitename": "Sitename",
 	"managewiki-missing": "That wiki does not exist.",
 	"managewiki-mwlocked": "This wiki has it's ability to use ManageWiki restricted.",
+	"managewiki-namespace-conflicts": "Cannot modify \"$1\", a namespace with that name already exists",
 	"managewiki-ns-createnamespace": "Create new namespace",
 	"managewiki-ns-createnamespaceinfo": "Press the button below to create a new namespace on this wiki. You will be able to define a name and configure it on the next page.",
 	"managewiki-ns-header": "Select a namespace to edit below (if you want to edit a talk namespace, select it's associated main namespace) or press the button to create a new namespace below!",
