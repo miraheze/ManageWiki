@@ -432,7 +432,7 @@ class ManageWikiFormFactory {
 			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
 				$namespaceName = str_replace( ' ', '_', $formData["namespace-$name"] );
 				$existingName = $dbr->selectRow(
-					'mw_namespaces'
+					'mw_namespaces',
 					'ns_namespace_id',
 					[
 						'ns_dbname' => $wgDBname,
