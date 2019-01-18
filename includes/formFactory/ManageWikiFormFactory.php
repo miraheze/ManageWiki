@@ -289,6 +289,8 @@ class ManageWikiFormFactory {
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
 
+		$out = $form->getContext()->getOutput();
+
 		if ( !$ceMW ) {
 			throw new MWException( "User '{$wgUser->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
 		}
@@ -494,6 +496,21 @@ class ManageWikiFormFactory {
 				}
 			} else {
 				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
+					$existingName = $dbr->selectRow(
+						'mw_namespaces'
+						'ns_namespace_id',
+						[
+							'ns_dbname' => $build[$name]['ns_dbname'],
+							'ns_namespace_name' => $build[$name]['ns_namespace_name']
+						],
+						__METHOD__
+					);
+					if ( $existingName && $existingName->ns_namespace_id != $build[$name]['ns_namespace_id'] ) {
+						$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-namespace-conflicts' )->escaped() . '</div>' );
+						return true; // NS conflicts, go no further
+					}
+				}
+				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
 					if ( $existingNamespace ) {
 						$dbw->update( 'mw_namespaces',
 							$build[$name],
@@ -541,7 +558,7 @@ class ManageWikiFormFactory {
 		$farmerLogID = $farmerLogEntry->insert();
 		$farmerLogEntry->publish( $farmerLogID );
 
-		$form->getContext()->getOutput()->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
+		$out->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
 
 		return true;
 	}
