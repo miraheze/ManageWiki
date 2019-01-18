@@ -417,16 +417,6 @@ class ManageWikiFormFactory {
 				'namespacetalk' => (int)$special + 1
 			];
 
-			$existingNamespace = $dbw->selectRow(
-				'mw_namespaces',
-				'ns_namespace_name',
-				[
-					'ns_dbname' => $wgDBname,
-					'ns_namespace_id' => $nsID['namespace']
-				],
-				__METHOD__
-			);
-
 			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
 				$build[$name] = [
 					'ns_dbname' => $wgDBname,
@@ -494,6 +484,16 @@ class ManageWikiFormFactory {
 				}
 			} else {
 				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
+					$existingNamespace = $dbw->selectRow(
+						'mw_namespaces',
+						'ns_namespace_name',
+						[
+							'ns_dbname' => $wgDBname,
+							'ns_namespace_name' => $build[$name]['ns_namespace_name'],
+						],
+						__METHOD__
+					);
+
 					if ( $existingNamespace ) {
 						$dbw->update( 'mw_namespaces',
 							$build[$name],
@@ -511,7 +511,8 @@ class ManageWikiFormFactory {
 						);
 						$job = new NamespaceMigrationJob( Title::newFromText( 'Special:ManageWikiNamespaces' ), $jobParams );
 						JobQueueGroup::singleton()->push( $job );
-					} else {
+					} elseif ( !$existingNamespaceName ) {
+						
 						$dbw->insert( 'mw_namespaces',
 							$build[$name],
 							__METHOD__
