@@ -478,7 +478,6 @@ class ManageWikiFormFactory {
 					$dbw->delete( 'mw_namespaces',
 						[
 							'ns_dbname' => $build[$name]['ns_dbname'],
-							'ns_namespace_name' => $build[$name]['ns_namespace_name'],
 							'ns_namespace_id' => $build[$name]['ns_namespace_id']
 						],
 						__METHOD__
