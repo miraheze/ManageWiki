@@ -484,7 +484,7 @@ class ManageWikiFormFactory {
 				}
 			} else {
 				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
-					$res = $dbw->selectRow(
+					$existingNamespace = $dbw->selectRow(
 						'mw_namespaces',
 						[
 							'ns_namespace_name',
@@ -497,38 +497,36 @@ class ManageWikiFormFactory {
 						__METHOD__
 					);
 
-					foreach ( $res as $existingNamespace ) {
-						if ( $existingNamespace->ns_namespace_id === $build[$name]['ns_namespace_id'] ) {
-							$dbw->update( 'mw_namespaces',
-								$build[$name],
-								[
-									'ns_dbname' => $build[$name]['ns_dbname'],
-									'ns_namespace_id' => $build[$name]['ns_namespace_id']
-								],
-								__METHOD__
-							);
+					if ( $existingNamespace->ns_namespace_id === $build[$name]['ns_namespace_id'] ) {
+						$dbw->update( 'mw_namespaces',
+							$build[$name],
+							[
+								'ns_dbname' => $build[$name]['ns_dbname'],
+								'ns_namespace_id' => $build[$name]['ns_namespace_id']
+							],
+							__METHOD__
+						);
 
-							$jobParams = array(
-								'action' => 'rename',
-								'nsName' => $build[$name]['ns_namespace_name'],
-								'nsID' => $build[$name]['ns_namespace_id']
-							);
-							$job = new NamespaceMigrationJob( Title::newFromText( 'Special:ManageWikiNamespaces' ), $jobParams );
-							JobQueueGroup::singleton()->push( $job );
-						} elseif ( !$existingNamespace ) {
-							$dbw->insert( 'mw_namespaces',
-								$build[$name],
-								__METHOD__
-							);
+						$jobParams = array(
+							'action' => 'rename',
+							'nsName' => $build[$name]['ns_namespace_name'],
+							'nsID' => $build[$name]['ns_namespace_id']
+						);
+						$job = new NamespaceMigrationJob( Title::newFromText( 'Special:ManageWikiNamespaces' ), $jobParams );
+						JobQueueGroup::singleton()->push( $job );
+					} elseif ( !$existingNamespace ) {
+						$dbw->insert( 'mw_namespaces',
+							$build[$name],
+							__METHOD__
+						);
 
-							$jobParams = array(
-								'action' => 'create',
-								'nsName' => $build[$name]['ns_namespace_name'],
-								'nsID' => $build[$name]['ns_namespace_id']
-							);
-							$job = new NamespaceMigrationJob( Title::newFromText( 'Special:ManageWikiNamespaces' ), $jobParams );
-							JobQueueGroup::singleton()->push( $job );
-						}
+						$jobParams = array(
+							'action' => 'create',
+							'nsName' => $build[$name]['ns_namespace_name'],
+							'nsID' => $build[$name]['ns_namespace_id']
+						);
+						$job = new NamespaceMigrationJob( Title::newFromText( 'Special:ManageWikiNamespaces' ), $jobParams );
+						JobQueueGroup::singleton()->push( $job );
 					}
 				}
 			}
