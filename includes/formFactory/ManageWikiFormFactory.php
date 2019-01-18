@@ -488,16 +488,13 @@ class ManageWikiFormFactory {
 						'mw_namespaces',
 						[
 							'ns_namespace_name',
-							'ns_namespace_id',
+							'ns_namespace_id'
 						],
 						[
 							'ns_dbname' => $wgDBname,
 							'ns_namespace_name' => $build[$name]['ns_namespace_name']
 						],
-						__METHOD__,
-						[
-							'LIMIT' => 1,
-						],
+						__METHOD__
 					);
 
 					if ( $existingNamespace->ns_namespace_id === $build[$name]['ns_namespace_id'] ||
