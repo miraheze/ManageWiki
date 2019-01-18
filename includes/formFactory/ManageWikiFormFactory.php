@@ -481,7 +481,7 @@ class ManageWikiFormFactory {
 							'ns_namespace_name' => $build[$name]['ns_namespace_name']
 						],
 						[
-							'ns_namespace_id' => $build[$name]['ns_namespace_id'],
+							'ns_namespace_id' => $build[$name]['ns_namespace_id']
 						],
 						__METHOD__
 					);
@@ -502,6 +502,9 @@ class ManageWikiFormFactory {
 							$build[$name],
 							[
 								'ns_dbname' => $build[$name]['ns_dbname'],
+								'ns_namespace_id' => $build[$name]['ns_namespace_id']
+							],
+							[
 								'ns_namespace_id' => $build[$name]['ns_namespace_id']
 							],
 							__METHOD__
