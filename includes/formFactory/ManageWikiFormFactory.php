@@ -430,10 +430,25 @@ class ManageWikiFormFactory {
 			);
 
 			foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
+				$namespaceName = str_replace( ' ', '_', $formData["namespace-$name"] );
+				$existingName = $dbr->selectRow(
+					'mw_namespaces'
+					'ns_namespace_id',
+					[
+						'ns_dbname' => $wgDBname,
+						'ns_namespace_name' => $namespaceName
+					],
+					__METHOD__
+				);
+				if ( $existingName && $existingName->ns_namespace_id != $nsID[$name] ) {
+					$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-namespace-conflicts', $namespaceName )->escaped() . '</div>' );
+					return true; // NS conflicts, go no further
+				}
+
 				$build[$name] = [
 					'ns_dbname' => $wgDBname,
 					'ns_namespace_id' => $nsID[$name],
-					'ns_namespace_name' => str_replace( ' ', '_', $formData["namespace-$name"] ),
+					'ns_namespace_name' => $namespaceName,
 					'ns_searchable' => (int)$formData["search-$name"],
 					'ns_subpages' => (int)$formData["subpages-$name"],
 					'ns_aliases' => $formData["aliases-$name"] == "" ? "[]" : json_encode( explode( "\n", $formData["aliases-$name"] ) ),
@@ -495,21 +510,6 @@ class ManageWikiFormFactory {
 					JobQueueGroup::singleton()->push( $job );
 				}
 			} else {
-				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
-					$existingName = $dbr->selectRow(
-						'mw_namespaces'
-						'ns_namespace_id',
-						[
-							'ns_dbname' => $build[$name]['ns_dbname'],
-							'ns_namespace_name' => $build[$name]['ns_namespace_name']
-						],
-						__METHOD__
-					);
-					if ( $existingName && $existingName->ns_namespace_id != $build[$name]['ns_namespace_id'] ) {
-						$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-namespace-conflicts' )->escaped() . '</div>' );
-						return true; // NS conflicts, go no further
-					}
-				}
 				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
 					if ( $existingNamespace ) {
 						$dbw->update( 'mw_namespaces',
