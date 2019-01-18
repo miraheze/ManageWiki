@@ -143,7 +143,7 @@ class ManageWikiFormFactory {
 						'type' => 'text',
 						'label-message' => "namespaces-$name",
 						'default' => ( $nsData ) ? $nsData->ns_namespace_name : NULL,
-						'disabled' => ( !$ceMW || ( $nsData && (bool)$nsData->ns_core ) ),
+						'disabled' => ( ( $nsData && (bool)$nsData->ns_core ) || !$ceMW ),
 						'required' => true,
 						'section' => "$name"
 					],
@@ -478,7 +478,8 @@ class ManageWikiFormFactory {
 					$dbw->delete( 'mw_namespaces',
 						[
 							'ns_dbname' => $build[$name]['ns_dbname'],
-							'ns_namespace_name' => $build[$name]['ns_namespace_name']
+							'ns_namespace_name' => $build[$name]['ns_namespace_name'],
+							'ns_namespace_id' => $build[$name]['ns_namespace_id']
 						],
 						__METHOD__
 					);
