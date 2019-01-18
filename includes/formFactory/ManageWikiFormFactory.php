@@ -484,11 +484,21 @@ class ManageWikiFormFactory {
 				}
 			} else {
 				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
-					$existingNamespace = $dbw->selectRow(
+					$existingNamespaceId = $dbw->selectRow(
+						'mw_namespaces',
+						[
+							'ns_namespace_id'
+						],
+						[
+							'ns_dbname' => $wgDBname,
+							'ns_namespace_id' => $build[$name]['ns_namespace_id']
+						],
+						__METHOD__
+					);
+					$existingNamespaceName = $dbw->selectRow(
 						'mw_namespaces',
 						[
 							'ns_namespace_name',
-							'ns_namespace_id'
 						],
 						[
 							'ns_dbname' => $wgDBname,
@@ -497,9 +507,7 @@ class ManageWikiFormFactory {
 						__METHOD__
 					);
 
-					if ( $existingNamespace->ns_namespace_id === $build[$name]['ns_namespace_id'] ||
-						$existingNamespace->ns_namespace_name === $build[$name]['ns_namespace_name']
-					) {
+					if ( $existingNamespaceId || $existingNamespaceName ) {
 						$dbw->update( 'mw_namespaces',
 							$build[$name],
 							[
