@@ -511,7 +511,7 @@ class ManageWikiFormFactory {
 						);
 						$job = new NamespaceMigrationJob( Title::newFromText( 'Special:ManageWikiNamespaces' ), $jobParams );
 						JobQueueGroup::singleton()->push( $job );
-					} elseif ( !$existingNamespaceName ) {
+					} else {
 						
 						$dbw->insert( 'mw_namespaces',
 							$build[$name],
