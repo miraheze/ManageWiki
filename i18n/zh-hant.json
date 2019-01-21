@@ -49,6 +49,7 @@
 	"managewiki-label-sitename": "網站名稱",
 	"managewiki-missing": "該 wiki 不存在",
 	"managewiki-mwlocked": "此 wiki 可使用 ManageWiki 限制。",
+	"managewiki-namespace-conflicts": "無法變動「$1」，已存在該名稱的命名空間",
 	"managewiki-ns-createnamespace": "建立新命名空間",
 	"managewiki-ns-createnamespaceinfo": "按下以下按鈕來建立此 wiki 的命名空間。您可以在下一頁來定義名稱和設置。",
 	"managewiki-ns-header": "在下方選擇要編輯的命名空間（若您想編輯對話命名空間，請選擇它所關聯的主命名空間）或壓下按鈕來建立新的命名空間！",

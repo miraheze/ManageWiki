@@ -48,6 +48,7 @@
 	"managewiki-label-sitename": "Name der Website",
 	"managewiki-missing": "Dieses Wiki ist nicht vorhanden.",
 	"managewiki-mwlocked": "Dieses Wiki kann ManageWiki eingeschränkt verwenden.",
+	"managewiki-namespace-conflicts": "„$1“ kann nicht verändert werden. Ein Namensraum mit diesem Namen ist bereits vorhanden.",
 	"managewiki-ns-createnamespace": "Neuen Namensraum erstellen",
 	"managewiki-ns-createnamespaceinfo": "Klicke unten auf die Schaltfläche, um einen neuen Namensraum auf diesem Wiki zu erstellen. Du kannst auf der nächsten Seite einen Namen definieren und ihn konfigurieren.",
 	"managewiki-ns-header": "Wähle unten einen zu bearbeitenden Namensraum aus (Falls du einen Diskussionsnamensraum bearbeiten möchtest, wähle seinen dazugehörigen Hauptnamensraum aus.) oder klicke auf die Schaltfläche, um unten einen neuen Namensraum zu erstellen!",

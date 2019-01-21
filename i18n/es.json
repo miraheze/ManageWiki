@@ -73,7 +73,7 @@
 	"namespaces-migrate-to": "Si este espacio de nombres se borrase, ¿hacia qué espacio deben migrarse todas sus páginas?",
 	"namespaces-namespace": "Espacio de nombres principal",
 	"namespaces-namespacetalk": "Espacio de nombres de discusión",
-	"namespaces-protection": "¿Cuál privilegio de usuario hace falta para editar este espacio de nombres?",
+	"namespaces-protection": "¿Qué permisos de usuario deberían ser necesarios para editar este espacio de nombres?",
 	"right-managewiki": "Administra los ajustes del wiki",
 	"right-managewiki-restricted": "Administre los ajustes restringidos del wiki",
 	"right-managewiki-editdefault": "Administre los permisos por defecto del grupo",
