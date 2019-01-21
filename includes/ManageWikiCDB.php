@@ -144,7 +144,8 @@ class ManageWikiCDB {
 
 			// json-ify stuff
 			foreach( $cacheArray as $key => $val ) {
-				$cacheArray[$key] = json_encode( $val );
+				$valObj = ( is_array( $val ) ) ? (object) $val : $val;
+				$cacheArray[$key] = json_encode( $valObj );
 			}
 
 			// Let's grab the cache version
