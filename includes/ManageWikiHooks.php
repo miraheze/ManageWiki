@@ -273,6 +273,23 @@ class ManageWikiHooks {
 					__METHOD__
 				);
 			}
+
+			$sysopMeta = ManageWiki::groupPermissions( 'sysop' );
+			$sysopAdd = $sysopMeta['addgroups'] + [ $wgManageWikiPermissionsDefaultPrivateGroup ];
+			$sysopRemove = $sysopMeta['removegroups'] + [ $wgManageWikiPermissionsDefaultPrivateGroup ];
+
+			$dbw->update(
+				'mw_permissions',
+				[
+					'perm_addgroups' => json_encode( $sysopAdd ),
+					'perm_removegroups' => json_encode( $sysopRemove ),
+				],
+				[
+					'perm_dbname' => $dbname,
+					'perm_group' => 'sysop'
+				],
+				__METHOD__
+			);
 		}
 
 		ManageWikiCDB::changes( 'permissions' );
