@@ -35,6 +35,10 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				$wikiData['inactive'] = ( $wikiObj->isInactive() == true ) ? 1 : 0;
 			}
 
+			if ( isset( $prop['inactive-exempt'] ) ) {
+				$wikiData['inactive-exempt'] = ( $wikiObj->isInactiveExempt() == true ) ? 1 : 0;
+			}
+
 			if ( isset( $prop['private'] ) ) {
 				$wikiData['private'] = ( $wikiObj->isPrivate() == true ) ? 1 : 0;
 			}
@@ -109,6 +113,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				ApiBase::PARAM_TYPE => [
 					'sitename',
 					'inactive',
+					'inactive-exempt',
 					'closed',
 					'private',
 					'extensions',

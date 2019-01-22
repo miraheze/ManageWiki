@@ -136,12 +136,21 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( $wgCreateWikiUseInactiveWikis ) {
-			$formDescriptor['inactive'] = [
-				'type' => 'check',
-				'label-message' => 'managewiki-label-inactive',
-				'name' => 'cwInactive',
-				'default' => $wiki->isInactive() ? 1 : 0,
-				'disabled' => !$ceMW
+			$formDescriptor += [
+				'inactive' => [
+					'type' => 'check',
+					'label-message' => 'managewiki-label-inactive',
+					'name' => 'cwInactive',
+					'default' => $wiki->isInactive() ? 1 : 0,
+					'disabled' => !$ceMW
+				],
+				'inactiveExempt' => [
+					'type' => 'check',
+					'label-message' => 'managewiki-label-inactive-exempt',
+					'name' => 'cwInactiveExempt',
+					'default' => $wiki->isInactiveExempt() ? 1 : 0,
+					'disable' => $wgUser->isAllowed( 'managewiki-restricted' )
+				]
 			];
 		}
 
@@ -260,6 +269,12 @@ class SpecialManageWiki extends SpecialPage {
 			$inactivedate = null;
 		}
 
+		if ( $wgCreateWikiUseInactiveWikis && $params['inactiveExempt'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
+			$inactiveExempt = 1;
+		} else {
+			$inactiveExempt = $wiki->isInactiveExempt() ? 1 : 0;
+		}
+
 		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
 			$category = $params['category'];
 		} else {
@@ -273,6 +288,7 @@ class SpecialManageWiki extends SpecialPage {
 			'wiki_closed_timestamp' => $closedate,
 			'wiki_inactive' => $inactive,
 			'wiki_inactive_timestamp' => $inactivedate,
+			'wiki_inactive_exempt' => $inactiveExempt,
 			'wiki_private' => $private,
 			'wiki_category' => $category,
 		];
@@ -294,6 +310,10 @@ class SpecialManageWiki extends SpecialPage {
 		if ( $wgCreateWikiUseInactiveWikis ) {
 			if ( $params['inactive'] != $wiki->isInactive() ) {
 				$changedsettingsarray[] = 'inactive';
+			}
+
+			if ( $params['inactiveExempt'] != $wiki->isInactiveExempt() ) {
+				$changedsettingsarray[] = 'inactive-exempt';
 			}
 		}
 
