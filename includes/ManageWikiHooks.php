@@ -99,7 +99,7 @@ class ManageWikiHooks {
 		}
 	}
 
-	public static function onCreateWikiCreation( $dbname, $private ) {
+	public static function onCreateWikiCreation( string $dbname, $private ) {
 		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiExtensionsDefault, $wgCanonicalNamespaceNames, $wgNamespaceAliases,
 			$wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces, $wgNamespaceProtection;
 
