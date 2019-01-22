@@ -149,7 +149,7 @@ class SpecialManageWiki extends SpecialPage {
 					'label-message' => 'managewiki-label-inactive-exempt',
 					'name' => 'cwInactiveExempt',
 					'default' => $wiki->isInactiveExempt() ? 1 : 0,
-					'disabled' => $wgUser->isAllowed( 'managewiki-restricted' )
+					'disabled' => !$wgUser->isAllowed( 'managewiki-restricted' )
 				]
 			];
 		}
