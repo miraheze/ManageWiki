@@ -275,8 +275,8 @@ class ManageWikiHooks {
 			}
 
 			$sysopMeta = ManageWiki::groupPermissions( 'sysop' );
-			$sysopAdd = $sysopMeta['addgroups'] + [ $wgManageWikiPermissionsDefaultPrivateGroup ];
-			$sysopRemove = $sysopMeta['removegroups'] + [ $wgManageWikiPermissionsDefaultPrivateGroup ];
+			$sysopAdd = array_merge( $sysopMeta['addgroups'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
+			$sysopRemove = array_merge( $sysopMeta['removegroups'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
 
 			$dbw->update(
 				'mw_permissions',
@@ -325,6 +325,32 @@ class ManageWikiHooks {
 				],
 				__METHOD__
 			);
+
+			// Fully delete group by removing all other groups' ability to manage it
+			$groups = ManageWiki::availableGroups();
+			foreach ( $groups as $group ) {
+				$rights = ManageWiki::groupPermissions( $group );
+				$addGroups = $rights['addgroups'];
+				$removeGroups = $rights['removegroups'];
+
+				if ( in_array( $wgManageWikiPermissionsDefaultPrivateGroup, $addGroups ) || in_array( $wgManageWikiPermissionsDefaultPrivateGroup, $removeGroups ) ) {
+					$addGroups = array_diff( $addGroups, [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
+					$removeGroups = array_diff( $removeGroups, [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
+
+					$dbw->update(
+						'mw_permissions',
+						[
+							'perm_addgroups' => json_encode( $addGroups ),
+							'perm_removegroups' => json_encode( $removeGroups ),
+						],
+						[
+							'perm_dbname' => $dbname,
+							'perm_group' => $group
+						],
+						__METHOD__
+					);
+				}
+			}
 		}
 
 		ManageWikiCDB::changes( 'permissions' );
