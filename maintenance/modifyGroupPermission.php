@@ -27,6 +27,8 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 		$removerg = (array)explode( ',', $this->getOption( 'removeremovegroups', '' ) );
 
 		ManageWiki::modifyPermissions( $this->getArg( 0 ), $addp, $removep, $addag, $removeag, $addrg, $removerg );
+
+		ManageWikiCDB::changes( 'permissions' );
 	}
 }
 
