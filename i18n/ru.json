@@ -9,7 +9,8 @@
 			"OlegCinema",
 			"Stjn",
 			"Vlad5250",
-			"Nk88"
+			"Nk88",
+			"Movses"
 		]
 	},
 	"action-managewiki": "управление настройками вики",
@@ -18,6 +19,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Проверить, помечена ли вики как закрытая",
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Посмотреть, какие расширения включены на вики",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Проверить, помечена ли вики как неактивная",
+	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Проверить, является ли вики исключённой из неактивных",
 	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Просмотреть разрешения групп участников",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Проверить, помечена ли вики как приватная",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Просмотреть настройки вики",
@@ -48,6 +50,7 @@
 	"managewiki-label-language": "Язык",
 	"managewiki-label-private": "Скрытый",
 	"managewiki-label-inactive": "Неактивна",
+	"managewiki-label-inactive-exempt": "Исключено из неактивных",
 	"managewiki-label-reason": "Причина",
 	"managewiki-label-sitename": "Название сайта",
 	"managewiki-missing": "Этой вики не существует.",
@@ -86,8 +89,8 @@
 	"namespaces-delete-checkbox": "Установка этой опции удалит это пространство имён",
 	"namespaces-handling": "Отправить",
 	"namespaces-migrate-to": "Если вы удалите это пространство имён, в какое пространство будут перемещены страницы?",
-	"namespaces-namespace": "Название пространства имён",
-	"namespaces-namespacetalk": "Название пространства имён для обсуждений",
+	"namespaces-namespace": "Основное пространство имён",
+	"namespaces-namespacetalk": "Пространство имён для обсуждения",
 	"namespaces-protection": "Какое право требуется для правки этого пространства имён?",
 	"namespaces-subpages": "Нужно ли включить подстраницы в этом пространстве имён?",
 	"right-managewiki": "управление настройками вики",

@@ -26,6 +26,7 @@
 	"managewiki-perm-name": "Gruppenavn:",
 	"managewiki-perm-nonexistent": "Gruppen \"$1\" findes på nuværende tidspunkt ikke.",
 	"managewiki-perm-reason": "Begrundelse:",
+	"managewiki-namespaces-link": "Administrer denne wikis navnerum",
 	"namespaces-delete": "Slet",
 	"namespaces-handling": "Indsend",
 	"namespaces-namespace": "Hovednavnerum",

@@ -5,6 +5,7 @@
 		]
 	},
 	"action-managewiki": "управление на настройките на уики",
+	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Провери, изключено ли е уикито от неактивност",
 	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Виж разрешенията на потребителските групи",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Виж настройките на уикито",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Виж името на уикито",
@@ -31,6 +32,7 @@
 	"managewiki-label-language": "Език",
 	"managewiki-label-private": "Скрито",
 	"managewiki-label-inactive": "Неактивно",
+	"managewiki-label-inactive-exempt": "Изключено от неактивност",
 	"managewiki-label-reason": "Причина",
 	"managewiki-label-sitename": "Име на уикито",
 	"managewiki-missing": "Няма такова уики.",

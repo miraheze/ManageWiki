@@ -9,7 +9,8 @@
 			"Gomoko",
 			"Momo50WM",
 			"Tektasc",
-			"Void"
+			"Void",
+			"Alno"
 		]
 	},
 	"action-managewiki": "Régler les paramètres du wiki",
@@ -18,6 +19,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Vérifier si le wiki est marqué comme étant fermé",
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Aficher les extensions actives sur le wiki",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Vérifier si le wiki est marqué comme étant désactivé",
+	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Vérifier si le wiki est bien actif",
 	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Afficher les droits des groupes d'utilisateurs",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Vérifier si le wiki est marqué comme étant privé",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Afficher les paramètres du wiki",
@@ -51,6 +53,7 @@
 	"managewiki-label-language": "Langue",
 	"managewiki-label-private": "Privé",
 	"managewiki-label-inactive": "Inactif",
+	"managewiki-label-inactive-exempt": "Exempt d'inactivité",
 	"managewiki-label-reason": "Raison",
 	"managewiki-label-sitename": "Nom du site",
 	"managewiki-missing": "Ce wiki n'existe pas.",
