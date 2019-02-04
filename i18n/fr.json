@@ -10,7 +10,8 @@
 			"Momo50WM",
 			"Tektasc",
 			"Void",
-			"Alno"
+			"Alno",
+			"DSwissK"
 		]
 	},
 	"action-managewiki": "Régler les paramètres du wiki",
@@ -34,7 +35,7 @@
 	"logentry-managewiki-namespaces": "$1 a modifié l'espace de noms « $5 » pour le wiki « $4 »",
 	"logentry-managewiki-namespaces-delete": "$1 a supprimé l'espace de noms « $5 » pour le wiki « $4 »",
 	"logentry-managewiki-rename": "$1 a renommé le groupe $3 de $4",
-	"logentry-managewiki-rights": "$1 a modifié les métadonnées de groupe pour $3: droits ajoutés $4; droits supprimés $5; groupes à ajouter $6; supression de groupes à ajouter $7; ajout de groupes à supprimer $8; supression de groupes à supprimer $9",
+	"logentry-managewiki-rights": "$1 a modifié les métadonnées de groupe pour $3: droits ajoutés $4; droits supprimés $5; groupes à ajouter $6; suppression de groupes à ajouter $7; ajout de groupes à supprimer $8; supression de groupes à supprimer $9",
 	"logentry-managewiki-settings": "$1 a changé les paramètres ($5) pour « $4 »",
 	"managewiki": "Paramétrer un wiki",
 	"managewikisettings": "Gérer les paramètres additionnels d'un wiki",
