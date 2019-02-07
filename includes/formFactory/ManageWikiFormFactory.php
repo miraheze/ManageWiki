@@ -310,7 +310,7 @@ class ManageWikiFormFactory {
 
 				if ( $ext['conflicts'] && $value ) {
 					if ( $formData["ext-" . $name] === $formData["ext-" . $ext['conflicts']] ) {
-						$errors[] = "Conflict with " . $ext['conflicts'] . ". The $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
+						$errors[] = "Conflict with " . $ext['conflicts'] . ". The extension $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
 					}
 				}
 
@@ -322,7 +322,7 @@ class ManageWikiFormFactory {
 						if ( $installed ) {
 							$extensionsarray[] = $name;
 						} else {
-							$errors[] = "$name was not installed successfully.";
+							$errors[] = "Extension $name was not installed successfully.";
 						}
 					} elseif ( $current ) {
 						// should already be installed
@@ -461,7 +461,8 @@ class ManageWikiFormFactory {
 		}
 
 		if ( !empty( $errors ) ) {
-			return 'The following errors occured: ' . implode( ', ', $errors );
+			$out->addHTML( '<div class="errorbox">The following errors occured:' . implode( '<br>', $errors ) . '</div>' );
+			return;
 		}
 
 		$dbw->selectDB( $wgCreateWikiDatabase );
