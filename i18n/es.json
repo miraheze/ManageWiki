@@ -39,6 +39,7 @@
 	"managewiki-label-reason": "Motivo",
 	"managewiki-label-sitename": "Nombre del sitio",
 	"managewiki-missing": "Ese wiki no existe.",
+	"managewiki-namespace-conflicts": "No se puede modificar «$1»; ya existe otro espacio de nombres así denominado",
 	"managewiki-ns-createnamespace": "Crear un espacio de nombres",
 	"managewiki-ns-invalidid": "Los identificadores de los espacios de nombres deben ser enteros pares para editarlos a través de ManageWiki.",
 	"managewiki-ns-select": "Selecciona un espacio de nombres de la lista siguiente y pulsa en «Enviar»",
