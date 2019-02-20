@@ -57,6 +57,7 @@
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
 		"ManageWikiNamespaces": "includes/ManageWikiNamespaces.php",
+		"ManageWikiRequirements": "includes/ManageWikiRequirements.php",
 		"NamespaceMigrationJob": "includes/NamespaceMigrationJob.php",
 		"SpecialManageWiki": "includes/specials/SpecialManageWiki.php",
 		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php",

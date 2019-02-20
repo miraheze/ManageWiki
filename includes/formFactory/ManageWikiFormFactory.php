@@ -29,14 +29,12 @@ class ManageWikiFormFactory {
 
 		if ( $module == 'extensions' ) {
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				$requiresExt = ( (bool)!$ext['requires'] || (bool)$ext['requires'] && $wiki->hasExtension( $ext['requires'] ) );
-				$disabled = !( $ext['restricted'] && $wgUser->isAllowed( 'managewiki-restricted' ) && $requiresExt || !$ext['restricted'] && $requiresExt );
 				if ( !$ext['conflicts'] ) {
 					$formDescriptor["ext-$name"] = [
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension( $name ),
-						'disabled' => ( $ceMW ) ? $disabled : 1,
+						'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $dbName, $ext['requires'], $context ) : 1,
 						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					];
@@ -45,7 +43,7 @@ class ManageWikiFormFactory {
 						'type' => 'check',
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension ( $name ),
-						'disabled' => ( $ceMW ) ? $disabled : 1,
+						'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $dbName, $ext['requires'], $context ) : 1,
 						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					];
@@ -304,7 +302,7 @@ class ManageWikiFormFactory {
 		if ( $module == 'extensions' ) {
 			$extensionsarray = [];
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				$mwAllowed = ( $ext['restricted'] && $ceRes || !$ext['restricted'] );
+				$mwAllowed = ManageWikiRequirements::process( $dbName, $ext['requires'], $context );
 				$value = $formData["ext-$name"];
 				$current = $wiki->hasExtension( $name );
 
