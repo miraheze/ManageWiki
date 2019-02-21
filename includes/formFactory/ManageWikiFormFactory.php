@@ -302,18 +302,18 @@ class ManageWikiFormFactory {
 		if ( $module == 'extensions' ) {
 			$extensionsarray = [];
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				$mwAllowed = ManageWikiRequirements::process( $dbName, $ext['requires'], $form->getContext() );
+				$requiresMet = ManageWikiRequirements::process( $dbName, $ext['requires'], $form->getContext() );
 				$value = $formData["ext-$name"];
 				$current = $wiki->hasExtension( $name );
 
 				if ( $ext['conflicts'] && $value ) {
-					if ( $formData["ext-" . $name] === $formData["ext-" . $ext['conflicts']] ) {
+					if ( $formData["ext-" . $ext['conflicts']] ) {
 						$errors[] = "Conflict with " . $ext['conflicts'] . ". The extension $name can not be enabled until " . $ext['conflicts'] . " has been disabled.";
 					}
 				}
 
-				if ( $value && !(bool)$ext['requires'] || $value && (bool)$ext['requires'] && $wiki->hasExtension( $ext['requires'] ) ) {
-					if ( $mwAllowed ) {
+				if ( $value ) {
+					if ( $requiresMet ) {
 						// new extension being added
 						$installed = ( !isset( $ext['install'] ) ) ? true : ManageWikiInstaller::process( $formData['dbname'], 'install', $ext['install'] );
 
@@ -325,13 +325,8 @@ class ManageWikiFormFactory {
 					} elseif ( $current ) {
 						// should already be installed
 						$extensionsarray[] = $name;
-					}
-				} else {
-					if ( $mwAllowed ) {
-						// they're cool
-					} elseif ( $current ) {
-						// should already be installed
-						$extensionsarray[] = $name;
+					} else {
+						$errors[] = "Extension $name was not added because of extension requirements.";
 					}
 				}
 
