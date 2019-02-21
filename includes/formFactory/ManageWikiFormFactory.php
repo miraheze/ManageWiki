@@ -35,7 +35,7 @@ class ManageWikiFormFactory {
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension( $name ),
 						'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $dbName, $ext['requires'], $context ) : 1,
-						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." : null,
+						'help' => ( (bool)$ext['requires']['extensions'] ) ? "Requires: " . implode( ',', $ext['requires']['extensions'] ) . "." : null,
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					];
 				} else {
@@ -44,7 +44,7 @@ class ManageWikiFormFactory {
 						'label-message' => ['managewiki-extension-name', $ext['linkPage'], $ext['name']],
 						'default' => $wiki->hasExtension ( $name ),
 						'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $dbName, $ext['requires'], $context ) : 1,
-						'help' => ( (bool)$ext['requires'] ) ? "Requires: {$ext['requires']}." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
+						'help' => ( (bool)$ext['requires']['extensions'] ) ? "Requires: " . implode( ',', $ext['requires']['extensions'] ) . "." . " Conflicts: {$ext['conflicts']}." : "Conflicts: {$ext['conflicts']}.",
 						'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 					];
 				}
@@ -302,7 +302,7 @@ class ManageWikiFormFactory {
 		if ( $module == 'extensions' ) {
 			$extensionsarray = [];
 			foreach ( $wgManageWikiExtensions as $name => $ext ) {
-				$mwAllowed = ManageWikiRequirements::process( $dbName, $ext['requires'], $context );
+				$mwAllowed = ManageWikiRequirements::process( $dbName, $ext['requires'], $form->getContext() );
 				$value = $formData["ext-$name"];
 				$current = $wiki->hasExtension( $name );
 
