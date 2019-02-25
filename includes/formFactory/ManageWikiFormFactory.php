@@ -372,6 +372,18 @@ class ManageWikiFormFactory {
 						if ( $settingsarray[$var] != $rmVar ) {
 							$changedsettingsarray[] = "setting-" . $var;
 						}
+					} elseif ( $type == 'list-multi' ) {
+						if ( $mwAllowed ) {
+							foreach ( $value as $val ) {
+								$settingsarray[$var][$val] = true;
+							}
+						} else {
+							$settingsarray[$var] = $rmVar;
+						}
+
+						if ( is_null( $rmVar) && $settingsarray[$var] != $det['overridedefault'] || !is_null( $rmVar) && $settingsarray[$var] != $rmVar ) {
+							$changedsettingsarray[] = "setting-" . $var;
+						}
 					} elseif ( $type != 'text' || $value ) {
 						// we don't have a matrix, we don't have text in all cases, there's a value so let's handle it
 						if ( $mwAllowed ) {
