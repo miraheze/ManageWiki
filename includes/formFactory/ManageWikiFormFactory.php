@@ -71,6 +71,11 @@ class ManageWikiFormFactory {
 							$mwcols = $det['cols'];
 							$mwrows = $det['rows'];
 							break;
+						case 'integer':
+							$mwtype = 'int';
+							$mwmin = $det['minint'];
+							$mwmax = $det['maxint'];
+							break;
 						case 'timezone':
 							$mwtype = 'select';
 							$mwoptions = ManageWiki::getTimezoneList();
@@ -106,6 +111,14 @@ class ManageWikiFormFactory {
 
 					if ( isset( $mwrows ) ) {
 						$formDescriptor["set-$var"]['rows'] = $mwrows;
+					}
+
+					if ( isset( $mwmin ) ) {
+						$formDescriptor["set-$var"]['min'] = $mwmin;
+					}
+
+					if ( isset( $mwmax ) ) {
+						$formDescriptor["set-$var"]['max'] = $mwmax;
 					}
 				}
 			}
