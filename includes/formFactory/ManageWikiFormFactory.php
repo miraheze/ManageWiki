@@ -95,10 +95,12 @@ class ManageWikiFormFactory {
 						'section' => ( isset( $det['section'] ) ) ? $det['section'] : 'other',
 					];
 
-					if ( $mwtype != 'matrix' ) {
-						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'];
-					} else {
+					if ( $mwtype == 'matrix' ) {
 						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' ) : $det['overridedefault'];
+					} elseif( $mwtype == 'list-multi' ) {
+						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? array_keys( $wiki->getSettingsValue( $var ) : array_keys( $det['overridedefault'] );
+					} else {
+						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'];
 					}
 
 					if ( isset( $mwoptions ) ) {
