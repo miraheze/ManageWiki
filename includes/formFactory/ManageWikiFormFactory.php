@@ -98,7 +98,7 @@ class ManageWikiFormFactory {
 					if ( $mwtype == 'matrix' ) {
 						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue( $var ), 'php' ) : $det['overridedefault'];
 					} elseif( $mwtype == 'list-multi' ) {
-						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? array_keys( $wiki->getSettingsValue( $var ) : array_keys( $det['overridedefault'] );
+						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? array_keys( $wiki->getSettingsValue( $var )  ) : array_keys( $det['overridedefault'] );
 					} else {
 						$formDescriptor["set-$var"]['default'] = ( !is_null( $wiki->getSettingsValue( $var ) ) ) ? $wiki->getSettingsValue( $var ) : $det['overridedefault'];
 					}
