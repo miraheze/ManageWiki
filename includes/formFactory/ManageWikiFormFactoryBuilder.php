@@ -1,9 +1,9 @@
 <?php
 
-class ManageWikiFormFactorBuilder {
+class ManageWikiFormFactoryBuilder {
 	public static function buildDescriptor(
 		string $module,
-		string $dbname,
+		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
 		RemoteWiki $wiki,
@@ -77,7 +77,7 @@ class ManageWikiFormFactorBuilder {
 				],
 				'default' => $wiki->hasExtension( $name ),
 				'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $dbName, $ext['requires'], $context ) : 1,
-				'help' => (string)$help,
+				'help' => (string)implode( ' ', $help ),
 				'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 			];
 		}
@@ -282,6 +282,8 @@ class ManageWikiFormFactorBuilder {
 				]
 			];
 		}
+
+		return $formDescriptor;
 	}
 
 	public static function submissionHandler(
@@ -296,7 +298,7 @@ class ManageWikiFormFactorBuilder {
 	) {
 		switch ( $module ) {
 			case 'extensions':
-				$mwReturn = self::submissionExtensions( $formData, $dbName, $wiki );
+				$mwReturn = self::submissionExtensions( $formData, $dbName, $context, $wiki );
 				break;
 			case 'settings':
 				$mwReturn = self::submissionSettings( $formData, $context, $wiki );
@@ -403,6 +405,7 @@ class ManageWikiFormFactorBuilder {
 	private static function submissionExtensions(
 		array $formData,
 		string $dbName,
+		IContextSource $context,
 		RemoteWiki $wiki
 	) {
 		global $wgManageWikiExtensions;
