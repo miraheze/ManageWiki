@@ -112,6 +112,10 @@ class ManageWikiFormFactoryBuilder {
 						$mwType = 'multiselect';
 						$mwOptions = $set['options'];
 						break;
+					case 'list-multi-bool':
+						$mwType = 'multiselect';
+						$mwOptions = $set['options'];
+						break;
 					case 'matrix':
 						$mwType = 'checkmatrix';
 						$mwCols = $set['cols'];
@@ -494,8 +498,14 @@ class ManageWikiFormFactoryBuilder {
 						$changedSettings[] = "setting-$name";
 					}
 				} elseif( $type == 'list-multi' ) {
-					foreach ( $value as $val ) {
-						$settingsArray[$name][$val] = true;
+					$settingsArray[$name] = $value;
+
+					if ( is_null( $current ) && $settingsArray[$name] != $set['overridedefault'] || !is_null( $current ) && $settingsArray[$name] != $current ) {
+						$changedSettings[] = "setting-$name";
+					}
+				} elseif( $type == 'list-multi-bool' ) {
+					foreach ( $set['allopts'] as $opt ) {
+						$settingsArray[$name][$opt] = in_array( $opt, $value );
 					}
 
 					if ( is_null( $current ) && $settingsArray[$name] != $det['overridedefault'] || !is_null( $current ) && $settingsArray[$name] != $current ) {
