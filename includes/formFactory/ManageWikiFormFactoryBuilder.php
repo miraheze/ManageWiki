@@ -457,7 +457,7 @@ class ManageWikiFormFactoryBuilder {
 
 		return [
 			'cdb' => false,
-			'changes' => implode( ',', $changedExtensions ),
+			'changes' => implode( ', ', $changedExtensions ),
 			'data' => implode( ',', $extensionsArray ),
 			'errors' => $errors,
 			'log' => 'settings',
@@ -532,7 +532,7 @@ class ManageWikiFormFactoryBuilder {
 
 		return [
 			'cdb' => false,
-			'changes' => implode( ',', $changedSettings ),
+			'changes' => implode( ', ', $changedSettings ),
 			'data' => json_encode( $settingsArray ),
 			'errors' => false,
 			'log' => 'settings',
