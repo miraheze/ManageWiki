@@ -54,6 +54,7 @@
 		"ManageWiki": "includes/ManageWiki.php",
 		"ManageWikiCDB": "includes/ManageWikiCDB.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
+		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
 		"ManageWikiNamespaces": "includes/ManageWikiNamespaces.php",
