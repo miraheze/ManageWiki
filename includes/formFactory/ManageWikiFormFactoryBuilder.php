@@ -398,10 +398,10 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn['log'] );
-		$mwLogEntry->setPerformer( $context->getUser() )
-			->setTarget( $form->getTitle() )
-			->setComment( $formData['reason'] )
-			->setParameters( $mwLogParams );
+		$mwLogEntry->setPerformer( $context->getUser() );
+		$mwLogEntry->setTarget( $form->getTitle() );
+		$mwLogEntry->setComment( $formData['reason'] );
+		$mwLogEntry->setParameters( $mwLogParams );
 		$mwLogID = $mwLogEntry->insert();
 		$mwLogEntry->publish( $mwLogID );
 	}
