@@ -131,7 +131,7 @@ class ManageWikiFormFactoryBuilder {
 						break;
 				}
 
-				$disabled = !( $set['restricted'] || ( $set['restricted'] && $context->getUser()->isAllowed( 'managewiki-restricted' ) ) );
+				$disabled = !( !$set['restricted'] || ( $set['restricted'] && $context->getUser()->isAllowed( 'managewiki-restricted' ) ) );
 
 				$formDescriptor["set-$name"] = [
 					'type' => $mwType,
