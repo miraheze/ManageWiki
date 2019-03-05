@@ -48,8 +48,6 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function onSubmitRedirectToWikiForm( array $params ) {
-		global $wgRequest;
-
 		if ( $params['dbname'] !== '' ) {
 			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki' )->getFullUrl() . '/' . $params['dbname'] );
 		} else {
@@ -60,7 +58,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
-		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgUser,
+		global $wgCreateWikiCategories, $wgCreateWikiUseCategories,
 			$wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
 
 		$out = $this->getOutput();
@@ -149,7 +147,7 @@ class SpecialManageWiki extends SpecialPage {
 					'label-message' => 'managewiki-label-inactive-exempt',
 					'name' => 'cwInactiveExempt',
 					'default' => $wiki->isInactiveExempt() ? 1 : 0,
-					'disabled' => !$wgUser->isAllowed( 'managewiki-restricted' )
+					'disabled' => !$this->getContext()->getUser()->isAllowed( 'managewiki-restricted' )
 				]
 			];
 		}
@@ -211,7 +209,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	function onSubmitInput( array $params ) {
-		global $wgDBname, $wgCreateWikiDatabase, $wgUser, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
+		global $wgDBname, $wgCreateWikiDatabase, $wgManageWikiSettings, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 		$dbName = $wgDBname;
@@ -269,7 +267,7 @@ class SpecialManageWiki extends SpecialPage {
 			$inactivedate = null;
 		}
 
-		if ( $wgCreateWikiUseInactiveWikis && $params['inactiveExempt'] && $wgUser->isAllowed( 'managewiki-restricted' ) ) {
+		if ( $wgCreateWikiUseInactiveWikis && $params['inactiveExempt'] && $this->getContext()->getUser()->isAllowed( 'managewiki-restricted' ) ) {
 			$inactiveExempt = 1;
 		} else {
 			$inactiveExempt = $wiki->isInactiveExempt() ? 1 : 0;

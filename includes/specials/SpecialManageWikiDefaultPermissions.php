@@ -48,7 +48,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	function buildMainView() {
-		global $wgUser;
 		$out = $this->getOutput();
 		$groups = ManageWiki::defaultGroups();
 		$craftedGroups = [];
@@ -68,7 +67,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
 		$selectForm->setMethod('post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
-		if ( $wgUser->isAllowed( 'managewiki-editdefault' ) ) {
+		if ( $this->getContext()->getUser()->isAllowed( 'managewiki-editdefault' ) ) {
 			$createDescriptor['groups'] = [
 				'type' => 'text',
 				'label-message' => 'managewiki-perm-creategroup',
@@ -86,8 +85,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	function buildGroupView( $group ) {
-		global $wgUser;
-		$editable = $wgUser->isAllowed( 'managewiki-editdefault' );
+		$editable = $this->getContext()->getUser()->isAllowed( 'managewiki-editdefault' );
 
 		$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 
@@ -146,8 +144,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	function buildPermCheckboxes( $group ) {
-		global $wgUser;
-		$editable = $wgUser->isAllowed( 'managewiki-editdefault' );
+		$editable = $this->getContext()->getUser()->isAllowed( 'managewiki-editdefault' );
 
 		$assignedRights = $this->getAssignedRights( $group );
 
@@ -198,8 +195,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	function buildAddCheckboxes( $group ) {
-		global $wgUser;
-		$editable = $wgUser->isAllowed( 'managewiki-editdefault' );
+		$editable = $this->getContext()->getUser()->isAllowed( 'managewiki-editdefault' );
 
 		$checkboxes = [];
 		$attribs = [];
@@ -241,8 +237,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	function buildRemoveCheckboxes( $group ) {
-		global $wgUser;
-		$editable = $wgUser->isAllowed( 'managewiki-editdefault' );
+		$editable = $this->getContext()->getUser()->isAllowed( 'managewiki-editdefault' );
 
 		$checkboxes = [];
 		$attribs = [];
@@ -329,9 +324,9 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	function doSubmit( $group ) {
-		global $wgUser, $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistRenames;
+		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistRenames;
 
-		if ( !$wgUser->isAllowed( 'managewiki-editdefault' ) ) {
+		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-editdefault' ) ) {
 			return;
 		}
 

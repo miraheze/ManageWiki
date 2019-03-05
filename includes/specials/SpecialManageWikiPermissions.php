@@ -42,7 +42,6 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function buildMainView() {
-		global $wgUser;
 		$out = $this->getOutput();
 		$groups = ManageWiki::availableGroups();
 		$craftedGroups = [];
@@ -62,7 +61,7 @@ class SpecialManageWikiPermissions extends SpecialPage {
 		$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
 		$selectForm->setMethod('post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
-		if ( $wgUser->isAllowed( 'managewiki' ) ) {
+		if ( $this->getContext()->getUser()->isAllowed( 'managewiki' ) ) {
 			$createDescriptor['groups'] = [
 				'type' => 'text',
 				'label-message' => 'managewiki-perm-creategroup',
@@ -114,8 +113,8 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function buildGroupView( $group ) {
-		global $wgUser, $wgManageWikiPermissionsBlacklistGroups;
-		$editable = ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) ? false : $wgUser->isAllowed( 'managewiki' );
+		global $wgManageWikiPermissionsBlacklistGroups;
+		$editable = ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) ? false : $this->getContext()->getUser()->isAllowed( 'managewiki' );
 
 		$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 
@@ -174,8 +173,8 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function buildPermCheckboxes( $group ) {
-		global $wgUser, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
-		$editable = ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) ? false : $wgUser->isAllowed( 'managewiki' );
+		global $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
+		$editable = ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) ? false : $this->getContext()->getUser()->isAllowed( 'managewiki' );
 
 		$assignedRights = $this->getAssignedRights( $group );
 
@@ -226,8 +225,8 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function buildAddCheckboxes( $group ) {
-		global $wgUser, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
-		$editable = ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) ? false : $wgUser->isAllowed( 'managewiki' );
+		global $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
+		$editable = ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) ? false : $this->getContext()->getUser()->isAllowed( 'managewiki' );
 
 		$checkboxes = [];
 		$attribs = [];
@@ -269,8 +268,8 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function buildRemoveCheckboxes( $group ) {
-		global $wgUser, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
-		$editable = ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) ? false : $wgUser->isAllowed( 'managewiki' );
+		global $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
+		$editable = ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) ? false : $this->getContext()->getUser()->isAllowed( 'managewiki' );
 
 		$checkboxes = [];
 		$attribs = [];
@@ -357,9 +356,9 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	function doSubmit( $group ) {
-		global $wgUser, $wgDBname, $wgManageWikiPermissionsBlacklistGroups, $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistRenames;
+		global $wgDBname, $wgManageWikiPermissionsBlacklistGroups, $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistRenames;
 
-		if ( !$wgUser->isAllowed( 'managewiki' ) || in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) {
+		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki' ) || in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) {
 			return;
 		}
 

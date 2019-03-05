@@ -26,8 +26,6 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 	}
 
 	function showMain() {
-		global $wgUser;
-
 		$out = $this->getOutput();
 		$namespaces = ManageWikiNamespaces::configurableNamespaces( $id = true, $readable = true, $main = true );
 		$craftedNamespaces = [];
@@ -47,7 +45,7 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 		$selectForm = HTMLForm::factory( 'ooui', $namespaceSelector, $this->getContext(), 'namespaceSelector' );
 		$selectForm->setMethod('post' )->setFormIdentifier( 'namespaceSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToNamespacePage' ] )->prepareForm()->show();
 
-		if ( $wgUser->isAllowed( 'managewiki' ) ) {
+		if ( $this->getContext()->getUser()->isAllowed( 'managewiki' ) ) {
 			$createDescriptor = [
 				'info' => [
 					'type' => 'info',
@@ -66,8 +64,6 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 	}
 
 	function onSubmitRedirectToNamespacePage( array $params ) {
-		global $wgRequest;
-
 		if ( isset( $params['namespaces'] ) ) {
 			$namespaceID = $params['namespaces'];
 		} else {
