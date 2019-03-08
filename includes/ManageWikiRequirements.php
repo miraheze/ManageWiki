@@ -7,15 +7,19 @@ class ManageWikiRequirements {
 
 		foreach ( $actions as $action => $data ) {
 			if ( $action == 'permissions' ) {
-				$stepresponse['permissions'] = self::permissions( $data, $context );
+				$stepResponse['permissions'] = self::permissions( $data, $context );
 			} elseif ( $action == 'extensions' ) {
-				$stepresponse['extensions'] = self::extensions( $dbname, $data );
+				$stepResponse['extensions'] = self::extensions( $dbname, $data );
+			} elseif ( $action == 'articles' ) {
+				$stepResponse['articles'] = self::articles( $data );
+			} elseif ( $action == 'pages' ) {
+				$stepResponse['pages'] = self::pages( $data );
 			} else {
 				return false;
 			}
 		}
 
-		$proceed = ( (bool)array_search( false, $stepresponse ) ) ? false : true;
+		$proceed = ( (bool)array_search( false, $stepResponse ) ) ? false : true;
 
 		return $proceed;
 
@@ -41,5 +45,13 @@ class ManageWikiRequirements {
 		}
 
 		return true;
+	}
+
+	private static function articles( string $lim ) {
+		return eval( "return " . SiteStats::articles() . " $lim;" );
+	}
+
+	private static function pages( string $lim ) {
+		return eval( "return " . SiteStats::pages() . " $lim;" );
 	}
 }
