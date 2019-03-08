@@ -74,7 +74,7 @@ class ManageWikiFormFactory {
 		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $special );
 
 		if ( is_array( $mwReturn ) ) {
-			$out->addHTML( '<div class="errorbox">The following errors occured:' . implode( '<br>', $mwReturn ) . '</div>' );
+			$out->addHTML( '<div class="errorbox">The following errors occurred:' . implode( '<br>', $mwReturn ) . '</div>' );
 			return;
 		}
 
