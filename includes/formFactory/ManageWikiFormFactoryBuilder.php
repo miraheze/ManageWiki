@@ -439,8 +439,6 @@ class ManageWikiFormFactoryBuilder {
 					} else {
 						$errors[] = "Extension $name was not installed.";
 					}
-				} elseif ( $current ) {
-					$extensionsArray[] = $name;
 				} else {
 					$errors[] = "Extension $name was not added because of failed requirements.";
 				}
