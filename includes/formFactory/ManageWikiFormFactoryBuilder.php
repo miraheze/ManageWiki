@@ -506,13 +506,13 @@ class ManageWikiFormFactoryBuilder {
 						$settingsArray[$name][$opt] = in_array( $opt, $value );
 					}
 
-					if ( is_null( $current ) && $settingsArray[$name] != $det['overridedefault'] || !is_null( $current ) && $settingsArray[$name] != $current ) {
+					if ( is_null( $current ) && $settingsArray[$name] != $set['overridedefault'] || !is_null( $current ) && $settingsArray[$name] != $current ) {
 						$changedSettings[] = "setting-$name";
 					}
 				} elseif ( $type != 'text' || $value ) {
 					$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
 
-					if ( is_null( $current ) && $settingsArray[$name] != $det['overridedefault'] || !is_null( $current ) && ( $settingsArray[$name] != $current ) ) {
+					if ( is_null( $current ) && $settingsArray[$name] != $set['overridedefault'] || !is_null( $current ) && ( $settingsArray[$name] != $current ) ) {
 						$changedSettings[] = "setting-$name";
 					}
 				} else {
