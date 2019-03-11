@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Vlad5250"
+			"Vlad5250",
+			"StanProg"
 		]
 	},
 	"action-managewiki": "управление на настройките на уики",
@@ -79,14 +80,14 @@
 	"managewiki-settings-link": "Управление на допълнителните настройки на уикито",
 	"namespaces-aliases": "В нов ред въведете всички недефинирани именни пространства, които трябва да доведат до това",
 	"namespaces-delete": "Изтриване",
-	"namespaces-delete-checkbox": "Като маркирате кутията, ще изтриете именното пространство",
+	"namespaces-delete-checkbox": "Ако установите тази отметка, именното пространство ще бъде изтрито",
 	"namespaces-handling": "Изпращане",
-	"namespaces-migrate-to": "Ако изтриете това именно пространство, на което именно пространство ще бъдат преместени страниците?",
+	"namespaces-migrate-to": "Ако това именно пространство се изтрие, към кое именно пространство трябва бъдат преместени страниците?",
 	"namespaces-namespace": "Основно именно пространство",
 	"namespaces-namespacetalk": "Именно пространство за беседа",
 	"right-managewiki": "Управление на настройки на уики",
-	"right-managewiki-restricted": "Управление на ограничени уики настройки",
-	"right-managewiki-editdefault": "Управление на основни разрешения за групи",
-	"settings-other": "Други",
+	"right-managewiki-restricted": "Управление на ограничените уики настройки",
+	"right-managewiki-editdefault": "Управление на основни права за групи",
+	"settings-other": "Друго",
 	"settings-handling": "Изпращане"
 }
