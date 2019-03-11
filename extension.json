@@ -31,6 +31,7 @@
 		"ManageWikiSettings": "SpecialManageWikiSettings"
 	},
 	"JobClasses": {
+		"MWScriptJob": "MWScriptJob",
 		"NamespaceMigrationJob": "NamespaceMigrationJob"
 	},
 	"LogActionsHandlers": {
@@ -59,7 +60,8 @@
 		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
 		"ManageWikiNamespaces": "includes/ManageWikiNamespaces.php",
 		"ManageWikiRequirements": "includes/ManageWikiRequirements.php",
-		"NamespaceMigrationJob": "includes/NamespaceMigrationJob.php",
+		"MWScriptJob": "includes/jobs/MWScriptJob.php",
+		"NamespaceMigrationJob": "includes/jobs/NamespaceMigrationJob.php",
 		"SpecialManageWiki": "includes/specials/SpecialManageWiki.php",
 		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php",
 		"SpecialManageWikiExtensions": "includes/specials/SpecialManageWikiExtensions.php",

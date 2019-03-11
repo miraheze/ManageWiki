@@ -14,6 +14,8 @@ class ManageWikiInstaller {
 				$stepresponse['permissions'] = self::permissions( $dbname, $data );
 			} elseif ( $action == 'namespaces' ) {
 				$stepresponse['namespaces'] = self::namespaces( $dbname, $data );
+			} elseif( $action == 'mwscript' ) {
+				$stepresponse['mwscript'] = self::mwscript( $dbname, $data );
 			} else {
 				return false;
 			}
@@ -95,5 +97,22 @@ class ManageWikiInstaller {
 	// @TODO: Will handle management of namesapces. Needs MWN to be done.
 	private static function namespaces( string $dbname, array $data ) {
 		return false;
+	}
+
+	private static function mwscript( string $dbname, array $data ) {
+		if ( Shell::isDisabled() ) {
+			throw new MWException( 'Shell is disabled.' );
+		}
+
+		foreach ( $data as $script => $options ) {
+			$params = [
+				'script' => $script,
+				'options' => $options
+			];
+
+			$mwJob = new MWScriptJob( $dbname, $params );
+
+			JobQueueGroup::singleton()->push( $job );
+		}
 	}
 }
