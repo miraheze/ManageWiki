@@ -3,7 +3,7 @@
 class ManageWikiRequirements {
 	public static function process( string $dbname, array $actions, IContextSource $context ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
-		$stepresponse = [];
+		$stepResponse = [];
 
 		foreach ( $actions as $action => $data ) {
 			if ( $action == 'permissions' ) {
