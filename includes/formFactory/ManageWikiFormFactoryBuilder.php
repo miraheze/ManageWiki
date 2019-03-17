@@ -424,7 +424,7 @@ class ManageWikiFormFactoryBuilder {
 			$current = $wiki->hasExtension( $name );
 
 			if ( $ext['conflicts'] && $value ) {
-				if ( $formData["ext-{$formData['conflicts']}"] ) {
+				if ( $formData["ext-{$ext['conflicts']}"] ) {
 					$errors[] = "Conflict with {$ext['conflicts']}. The extension $name can not be enabled until this is disabled.";
 					continue;
 				}
