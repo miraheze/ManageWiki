@@ -344,6 +344,7 @@ class ManageWikiFormFactoryBuilder {
 				wfMessage( 'managewiki-permissions-removeall' )->text() => 'wgRemoveGroups'
 			],
 			'rows' => $rowsBuilt,
+			'section' => 'group',
 			'default' => $groupData['groupMatrix'],
 			'disabled' => !$ceMW
 		];
