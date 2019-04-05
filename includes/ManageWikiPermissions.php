@@ -61,6 +61,46 @@ class ManageWikiPermissions {
 		return $data;
 	}
 
+	public static function defaultGroups() {
+		global $wgCreateWikiDatabase;
+
+		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+
+		$res = $dbr->select(
+			'mw_permissions',
+			'perm_group',
+			[ 'perm_dbname' => 'default' ]
+		);
+
+		$groups = [];
+
+		foreach( $res as $row ) {
+			$groups[] = $row->perm_group;
+		}
+
+		return $groups;
+	}
+
+	public static function defaultGroupPermissions( $group ) {
+		global $wgCreateWikiDatabase;
+
+		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+
+		$res = $dbr->selectRow(
+			'mw_permissions',
+			[ 'perm_permissions', 'perm_addgroups', 'perm_removegroups' ],
+			[ 'perm_dbname' => 'default', 'perm_group' => $group ]
+		);
+
+		$perms = [];
+
+		$perms['permissions'] = json_decode( $res->perm_permissions, true );
+		$perms['addgroups'] = json_decode( $res->perm_addgroups, true );
+		$perms['removegroups'] = json_decode( $res->perm_removegroups, true );
+
+		return (array)$perms;
+	}
+
 	public static function groupAssignBuilder( string $group, string $wiki = null ) {
 		global $wgDBname, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
 
