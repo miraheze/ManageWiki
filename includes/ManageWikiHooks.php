@@ -256,7 +256,7 @@ class ManageWikiHooks {
 			$publicGroups = [ '*', 'user' ];
 
 			foreach ( $publicGroups as $group ) {
-				$meta = ManageWiki::groupPermissions( $group );
+				$meta = ManageWikiPermissions::groupPermissions( $group );
 				$perms = $meta['permissions'];
 
 				$newperms = array_diff( $perms, [ 'read' ] );
@@ -274,7 +274,7 @@ class ManageWikiHooks {
 				);
 			}
 
-			$sysopMeta = ManageWiki::groupPermissions( 'sysop' );
+			$sysopMeta = ManageWikiPermissions::groupPermissions( 'sysop' );
 			$sysopAdd = array_merge( $sysopMeta['addgroups'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
 			$sysopRemove = array_merge( $sysopMeta['removegroups'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
 
@@ -310,7 +310,7 @@ class ManageWikiHooks {
 				__METHOD__
 			);
 
-			$meta = ManageWiki::groupPermissions( '*' );
+			$meta = ManageWikiPermissions::groupPermissions( '*' );
 			$perms = $meta['permissions'];
 			$perms[] = "read";
 
@@ -327,9 +327,9 @@ class ManageWikiHooks {
 			);
 
 			// Fully delete group by removing all other groups' ability to manage it
-			$groups = ManageWiki::availableGroups();
+			$groups = ManageWikiPermissions::availableGroups();
 			foreach ( $groups as $group ) {
-				$rights = ManageWiki::groupPermissions( $group );
+				$rights = ManageWikiPermissions::groupPermissions( $group );
 				$addGroups = $rights['addgroups'];
 				$removeGroups = $rights['removegroups'];
 
