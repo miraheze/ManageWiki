@@ -104,12 +104,12 @@ class ManageWikiHooks {
 			$wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces, $wgNamespaceProtection;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$defaultGroups = array_diff( (array)ManageWiki::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+			$defaultGroups = array_diff( (array)ManageWikiPermissions::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
 
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 			foreach ( $defaultGroups as $newgroup ) {
-				$grouparray = ManageWiki::defaultGroupPermissions( $newgroup );
+				$grouparray = ManageWikiPermissions::defaultGroupPermissions( $newgroup );
 
 				$dbw->insert(
 					'mw_permissions',
@@ -227,7 +227,7 @@ class ManageWikiHooks {
 
 		if ( ManageWiki::checkSetup( 'permissions' ) && $wgManageWikiPermissionsDefaultPrivateGroup ) {
 
-			$defaultarray = ManageWiki::defaultGroupPermissions( $wgManageWikiPermissionsDefaultPrivateGroup );
+			$defaultarray = ManageWikiPermissions::defaultGroupPermissions( $wgManageWikiPermissionsDefaultPrivateGroup );
 
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
