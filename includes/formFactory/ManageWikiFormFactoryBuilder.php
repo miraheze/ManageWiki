@@ -20,6 +20,9 @@ class ManageWikiFormFactoryBuilder {
 			case 'namespaces':
 				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $special, $dbw );
 				break;
+			case 'permissions':
+				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special );
+				break;
 		}
 
 		if ( $ceMW ) {
@@ -290,6 +293,64 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	private static function buildDescriptorPermissions(
+		string $wiki,
+		bool $ceMW,
+		string $group
+	) {
+		$groupData = ManageWikiPermissions::groupAssignBuilder( $group, $wiki );
+
+		$formDescriptor = [
+			'assigned' => [
+				'type' => 'info',
+				'default' => wfMessage( 'managewiki-permissions-assigned' )->text(),
+				'section' => 'assigned'
+			],
+			'unassigned' => [
+				'type' => 'info',
+				'default' => wfMessage( 'managewiki-permissions-unassigned' )->text(),
+				'section' => 'unassigned'
+			],
+			'group' => [
+				'type' => 'info',
+				'default' => wfMessage( 'managewiki-permissions-group' )->text(),
+				'section' => 'group'
+			]
+		];
+
+		foreach ( $groupData['allPermissions'] as $perm ) {
+			$assigned = in_array( $perm, $groupData['assignedPermissions'] );
+
+			$formDescriptor["right-{$perm}"] = [
+				'type' => 'check',
+				'label' => $perm,
+				'help' => User::getRightDescription( $perm ),
+				'section' => ( $assigned ) ? 'assigned' : 'unassigned',
+				'default' => $assigned,
+				'disabled' => !$ceMW
+			];
+		}
+
+		$rowsBuilt = [];
+
+		foreach ( $groupData['allGroups'] as $group ) {
+			$rowsBuilt[UserGroupMembership::getGroupName( $group )] = $group;
+		}
+
+		$formDescriptor['group-matrix'] = [
+			'type' => 'checkmatrix',
+			'columns' => [
+				wfMessage( 'managewiki-permissions-addall' )->text() => 'wgAddGroups',
+				wfMessage( 'managewiki-permissions-removeall' )->text() => 'wgRemoveGroups'
+			],
+			'rows' => $rowsBuilt,
+			'default' => $groupData['groupMatrix'],
+			'disabled' => !$ceMW
+		];
+
+		return $formDescriptor;
+	}
+
 	public static function submissionHandler(
 		array $formData,
 		HTMLForm $form,
@@ -309,6 +370,9 @@ class ManageWikiFormFactoryBuilder {
 				break;
 			case 'namespaces':
 				$mwReturn = self::submissionNamespaces( $formData, $dbName, $special, $dbw );
+				break;
+			case 'permissions':
+				$mwReturn = self::submissionPermissions( $formData, $dbName, $special );
 				break;
 		}
 
@@ -389,6 +453,51 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$mwLogParams['5::namespace'] = $mwReturn['data']['namespace']['ns_namespace_name'];
+		} elseif ( $mwReturn['table'] == 'mw_permissions' ) {
+			$state = $mwReturn['data']['state'];
+
+			$rows = [
+				'perm_dbname' => $dbName,
+				'perm_group' => $special,
+				'perm_permissions' => $mwReturn['data']['permissions'],
+				'perm_addgroups' => json_encode( $mwReturn['data']['groups']['wgAddGroups'] ),
+				'perm_removegroups' => json_encode( $mwReturn['data']['groups']['wgRemoveGroups'] )
+			];
+
+			if ( $state == 'update' ) {
+				$dbw->update(
+					'mw_permissions',
+					$rows,
+					[
+						'perm_dbname' => $dbName,
+						'perm_group' => $special
+					]
+				);
+			} elseif ( $state == 'delete' ) {
+				$dbw->delete(
+					'mw_permissions',
+					[
+						'perm_dbname' => $dbName,
+						'perm_group' => $special
+					]
+				);
+			} elseif ( $state == 'create' ) {
+				$dbw->insert(
+					'mw_permissions',
+					$rows
+				);
+			}
+
+			$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
+
+			$mwLogParams = [
+				'4::ar' => $mwReturn['changes']['added']['permissions'] ?? $logNULL,
+				'5::rr' => $mwReturn['changes']['removed']['permissions'] ?? $logNULL,
+				'6::aag' => $mwReturn['changes']['added']['ag'] ?? $logNULL,
+				'7::rag' => $mwReturn['changes']['removed']['ag'] ?? $logNULL,
+				'8::arg' => $mwReturn['changes']['added']['rg'] ?? $logNULL,
+				'9::rrg' => $mwReturn['changes']['removed']['rg'] ?? $logNULL
+			];
 		} else {
 			return [ 'Error processing.' ];
 		}
@@ -594,6 +703,91 @@ class ManageWikiFormFactoryBuilder {
 			'errors' => false,
 			'log' => 'namespaces',
 			'table' => 'mw_namespaces'
+		];
+	}
+
+	private static function submissionPermissions(
+		array $formData,
+		string $wiki,
+		string $special
+	) {
+		$groupData = ManageWikiPermissions::groupAssignBuilder( $special, $wiki );
+
+		$addedPerms = [];
+		$removedPerms = [];
+		$newPerms = [];
+
+		foreach ( $groupData['allPermissions'] as $perm ) {
+			if ( $formData["right-$perm"] ) {
+				if ( !is_int( array_search( $perm, $groupData['assignedPermissions'] ) ) ) {
+					$addedPerms[] = $perm;
+				}
+
+				$newPerms[] = $perm;
+			} else {
+				if ( is_int( array_search( $perm, $groupData['assignedPermissions'] ) ) ) {
+					$removedPerms[] = $perm;
+				}
+			}
+		}
+
+		$newMatrix = ManageWiki::handleMatrix( array_diff( $formData['group-matrix'], $groupData['groupMatrix'] ), 'phparray' );
+		$oldMatrix = ManageWiki::handleMatrix( array_diff( $groupData['groupMatrix']. $formData['group-matrix'] ), 'phparray' );
+
+		$matrixToShort = [
+			'wgAddGroups' => 'ag',
+			'wgRemoveGroups' => 'rg'
+		];
+
+		$logBuild = [
+			'added' => [
+				'permissions' => ( $addedPerms ) ? implode( ', ', $addedPerms ) : NULL
+			],
+			'removed' => [
+				'permissions' => ( $removedPerms ) ? implode( ', ', $removedPerms ) : NULL
+			]
+		];
+
+		foreach ( $newMatrix as $type => $array ) {
+			$newArray = [];
+
+			foreach ( $array as $name ) {
+				$newArray[] = $name;
+			}
+
+			$logBuild['added'][$matrixToShort[$type]] = implode( ', ', $newArray );
+		}
+
+		foreach ( $oldMatrix as $type => $array ) {
+			$newArray = [];
+
+			foreach ( $array as $name ) {
+				$newArray[] = $name;
+			}
+
+			$logBuild['removed'][$matrixToShort[$type]] = implode( ', ', $newArray );
+		}
+
+		$dataArray = [
+			'permissions' => json_encode( $newPerms ),
+			'groups' => ManageWiki::handleMatrix( $formData['group-matrix'], 'phparray' )
+		];
+
+		if ( count( $newPerms ) == 0 ) {
+			$dataArray['state'] = 'delete';
+		} elseif ( count( $groupData['assignedPermissions'] ) == 0 ) {
+			$dataArray['state'] = 'create';
+		} else {
+			$dataArray['state'] = 'update';
+		}
+
+		return [
+			'cdb' => 'permissions',
+			'changes' => $logBuild,
+			'data' => $dataArray,
+			'errors' => false,
+			'log' => 'rights',
+			'table' => 'mw_permissions'
 		];
 	}
 }

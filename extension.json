@@ -59,6 +59,7 @@
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
 		"ManageWikiNamespaces": "includes/ManageWikiNamespaces.php",
+		"ManageWikiPermissions": "includes/ManageWikiPermissions.php",
 		"ManageWikiRequirements": "includes/ManageWikiRequirements.php",
 		"MWScriptJob": "includes/jobs/MWScriptJob.php",
 		"NamespaceMigrationJob": "includes/jobs/NamespaceMigrationJob.php",
@@ -164,17 +165,6 @@
 			"description": "Array. An array of usergroups which ManageWiki can't manage. Will prevent users creating same named groups as well.",
 			"public": true,
 			"value": false
-		},
-		"ManageWikiPermissionsBlacklistRenames": {
-			"description": "Array. An array of groups that can not be renamed as they would cause issues.",
-			"public": true,
-			"value": [
-				"*",
-				"user",
-				"autoconfirmed",
-				"sysop",
-				"bureaucrat"
-			]
 		},
 		"ManageWikiPermissionsBlacklistRights": {
 			"description": "Array. An array of user rights that ManageWiki can not manage and assign on wiki.",
