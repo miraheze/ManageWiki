@@ -12,7 +12,8 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	}
 
 	function execute() {
-		global $wgCreateWikiDatabase, $wgManageWikiPermissionsDefaultPrivateGroup, $wgDBname;
+		global $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsDefaultPrivateGroup,
+			$wmgPrivateWiki;
 
 		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Enable ManageWiki Permissions on this wiki.' );
@@ -37,6 +38,10 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 				__METHOD__
 			);
 		}
+		
+		if ( $wmgPrivateWiki ) {
+			ManageWikiHooks::onCreateWikiStatePrivate( $wgDBname );
+		);
 
 		ManageWikiCDB::changes( 'permissions' );
 	}
