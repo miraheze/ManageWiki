@@ -12,38 +12,18 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	}
 
 	function execute() {
-		global $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsDefaultPrivateGroup,
-			$wmgPrivateWiki;
-
-		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
-			$this->fatalError( 'Enable ManageWiki Permissions on this wiki.' );
-		}
-
-		$defaultGroups = array_diff( (array)ManageWikiPermissions::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+		global $wgCreateWikiDatabase, $wgDBname, $wmgPrivateWiki;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-
-		foreach ( $defaultGroups as $newgroup ) {
-			$grouparray = ManageWikiPermissions::defaultGroupPermissions( $newgroup );
-
-			$dbw->insert(
-				'mw_permissions',
-				[
-					'perm_dbname' => $wgDBname,
-					'perm_group' => $newgroup,
-					'perm_permissions' => json_encode( $grouparray['permissions'] ),
-					'perm_addgroups' => json_encode( $grouparray['addgroups'] ),
-					'perm_removegroups' => json_encode( $grouparray['removegroups'] )
-				],
-				__METHOD__
-			);
-		}
-		
-		if ( $wmgPrivateWiki ) {
-			ManageWikiHooks::onCreateWikiStatePrivate( $wgDBname );
+		$dbw->delete(
+			'mw_permissions',
+			[
+				'perm_dbname' => $wgDBname
+			],
+			__METHOD__
 		);
 
-		ManageWikiCDB::changes( 'permissions' );
+		ManageWikiHooks::onCreateWikiCreation( $wgDBname, $wmgPrivateWiki );
 	}
 }
 
