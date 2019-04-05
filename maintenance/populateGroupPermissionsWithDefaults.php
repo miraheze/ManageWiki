@@ -14,8 +14,8 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	function execute() {
 		global $wgCreateWikiDatabase, $wgManageWikiPermissionsDefaultPrivateGroup, $wgDBname;
 
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
+		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
+			$this->fatalError( 'Enable ManageWiki Permissions on this wiki.' );
 		}
 
 		$defaultGroups = array_diff( (array)ManageWikiPermissions::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
@@ -42,5 +42,5 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	}
 }
 
-$maintClass = 'v';
+$maintClass = 'ManageWikiPopulatePermissionsWithDefaults';
 require_once RUN_MAINTENANCE_IF_MAIN;
