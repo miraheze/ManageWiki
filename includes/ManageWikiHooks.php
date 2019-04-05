@@ -104,7 +104,10 @@ class ManageWikiHooks {
 			$wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces, $wgNamespaceProtection;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$defaultGroups = array_diff( (array)ManageWikiPermissions::availableGroups( $wiki = 'default' ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+			$defaultGroups = array_diff(
+				(array)ManageWikiPermissions::availableGroups( $wiki = 'default' ),
+				(array)$wgManageWikiPermissionsDefaultPrivateGroup
+			);
 
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
