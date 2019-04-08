@@ -3,7 +3,8 @@
 		"authors": [
 			"Beta16",
 			"S4b1nuz E.656",
-			"Eindt"
+			"Eindt",
+			"Abijeet Patro"
 		]
 	},
 	"extensions-other": "Altro",
@@ -26,13 +27,7 @@
 	"managewiki-missing": "Questo wiki non esiste.",
 	"managewiki-ns-createnamespace": "Crea nuovo namespace",
 	"managewiki-ns-select": "Seleziona un namespace dall'elenco sottostante e premi Invia",
-	"managewiki-perm-creategroup": "Crea un nuovo gruppo utenti",
-	"managewiki-perm-member": "Nome dei membri del gruppo:",
-	"managewiki-perm-name": "Nome gruppo:",
-	"managewiki-perm-nonexistent": "Il gruppo \"$1\" attualmente non esiste.",
-	"managewiki-perm-perms": "Permessi assegnati:",
-	"managewiki-perm-reason": "Motivo:",
-	"managewiki-perm-remove": "Gruppi rimovibili:",
+	"managewiki-permissions-creategroup": "Crea un nuovo gruppo utenti",
 	"managewiki-link": "Gestisci le impostazioni di questo wiki",
 	"managewiki-extensions-link": "Gestisci le estensioni di questo wiki",
 	"managewiki-settings-link": "Gestisci le impostazioni aggiuntive di questo wiki",
@@ -41,6 +36,7 @@
 	"namespaces-handling": "Invia",
 	"namespaces-namespace": "Namespace principale",
 	"namespaces-namespacetalk": "Namespace di discussione",
+	"permissions-assigned": "Permessi assegnati:",
 	"settings-other": "Altro",
 	"settings-handling": "Invia"
 }

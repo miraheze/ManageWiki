@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Saederup92"
+			"Saederup92",
+			"Abijeet Patro"
 		]
 	},
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Tjek om wikien er markeret som lukket",
@@ -20,12 +21,7 @@
 	"managewiki-label-sitename": "Sidenavn",
 	"managewiki-missing": "Denne wiki findes ikke.",
 	"managewiki-ns-createnamespace": "Opret nyt navnerum",
-	"managewiki-perm-add": "Tilgængelige grupper:",
-	"managewiki-perm-creategroup": "Opret en ny brugergruppe",
-	"managewiki-perm-member": "Navn på gruppemedlemmer:",
-	"managewiki-perm-name": "Gruppenavn:",
-	"managewiki-perm-nonexistent": "Gruppen \"$1\" findes på nuværende tidspunkt ikke.",
-	"managewiki-perm-reason": "Begrundelse:",
+	"managewiki-permissions-creategroup": "Opret en ny brugergruppe",
 	"managewiki-namespaces-link": "Administrer denne wikis navnerum",
 	"namespaces-delete": "Slet",
 	"namespaces-handling": "Indsend",

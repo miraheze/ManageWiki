@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"WikiPhoenix"
+			"WikiPhoenix",
+			"Abijeet Patro"
 		]
 	},
 	"action-managewiki": "hantera wiki-inställningar",
@@ -49,24 +50,9 @@
 	"managewiki-ns-header": "Välj en namnrymd att redigera nedan (om du vill redigera en diskussionsnamnrymd, välj dess associerade huvudnamnrymd) eller klicka på knappen för att skapa en ny namnrymd nedan!",
 	"managewiki-ns-invalidid": "ID:n för namnrymder måste vara ett jämnt heltal för att redigera via ManageWiki.",
 	"managewiki-ns-select": "Välj en namnrymd från listan nedan och klicka på skicka",
-	"managewiki-perm-add": "Grupper som kan läggas till:",
-	"managewiki-perm-creategroup": "Skapa en ny användargrupp",
-	"managewiki-perm-display": "Lokaliserat gruppnamn:",
-	"managewiki-perm-header": "Välj en grupp nedan som redan finns för att modifiera den eller skapa en ny användargrupp i fältet nedanför!",
-	"managewiki-perm-fieldset": "ManageWikiPermissions",
-	"managewiki-perm-member": "Namn på gruppmedlemmar:",
-	"managewiki-perm-name": "Gruppnamn:",
-	"managewiki-perm-nonexistent": "Gruppen \"$1\" finns ännu inte.",
-	"managewiki-perm-perms": "Tilldelade behörigheter:",
-	"managewiki-perm-reason": "Anledning:",
-	"managewiki-perm-remove": "Grupper som kan tas bort:",
-	"managewiki-perm-rename-blacklisted": "Kunde inte byta namn eftersom gruppen du försöker byta namn på är i svartlistan.",
-	"managewiki-perm-rename-taken": "Kunde inte byta namn eftersom \"$1\" redan finns.",
-	"managewiki-perm-resetgroups": "Återställ alla grupper till standardvärden",
-	"managewiki-perm-select": "Välj befintliga grupper att redigera",
-	"managewiki-perm-submit": "Spara gruppmetadata",
-	"managewiki-perm-success": "Gruppmetadata ändrades",
-	"managewiki-perm-success-text": "Metadatan \"$1\" har sparats och bär tillämpas inom en minut.",
+	"managewiki-permissions-creategroup": "Skapa en ny användargrupp",
+	"managewiki-permissions-header": "Välj en grupp nedan som redan finns för att modifiera den eller skapa en ny användargrupp i fältet nedanför!",
+	"managewiki-permissions-resetgroups": "Återställ alla grupper till standardvärden",
 	"managewiki-success": "Inställningarna har ändrats.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link": "Hantera inställningar för denna wiki",
@@ -80,6 +66,7 @@
 	"namespaces-namespace": "Huvudnamnrymd",
 	"namespaces-namespacetalk": "Diskussionsnamnrymd",
 	"namespaces-protection": "Vilken användarrättighet bör användas för att redigera denna namnrymd?",
+	"permissions-assigned": "Tilldelade behörigheter:",
 	"right-managewiki": "Hantera wikiinställningar",
 	"right-managewiki-restricted": "Hantera begränsade wikiinställningar",
 	"right-managewiki-editdefault": "Hantera standardbehörigheter för grupper",

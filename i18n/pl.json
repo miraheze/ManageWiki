@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Chrumps",
-			"Railfail536"
+			"Railfail536",
+			"Abijeet Patro"
 		]
 	},
 	"action-managewiki": "zarządzaj ustawieniami wiki",
@@ -32,19 +33,8 @@
 	"managewiki-label-sitename": "Nazwa strony",
 	"managewiki-missing": "Ta wiki nie istnieje.",
 	"managewiki-ns-createnamespace": "Utwórz nową przestrzeń nazw",
-	"managewiki-perm-creategroup": "Utwórz nową grupę użytkowników",
-	"managewiki-perm-header": "Wybierz istniejącą grupę uprawnień, aby ją zmodyfikować, lub stwórz nową używając poniższego formularza!",
-	"managewiki-perm-name": "Nazwa grupy:",
-	"managewiki-perm-nonexistent": "Grupa „$1” obecnie nie istnieje.",
-	"managewiki-perm-not-default": "To nie jest centralna wiki, w związku z czym edytowanie domyślnych ustawień grup użytkowników nie jest autoryzowane.",
-	"managewiki-perm-perms": "Przypisane uprawnienia:",
-	"managewiki-perm-reason": "Powód:",
-	"managewiki-perm-rename-blacklisted": "Zmiana nazwy tej grupy nie jest możliwa, ponieważ znajduje się ona na czarnej liście.",
-	"managewiki-perm-rename-taken": "Zmiana nazwy nie powiodła się, ponieważ „$1” już istnieje.",
-	"managewiki-perm-select": "Wybierz istniejącą grupę do edycji",
-	"managewiki-perm-submit": "Zapisz metadane grupy",
-	"managewiki-perm-success": "Metadane grupy zostały zmienione",
-	"managewiki-perm-success-text": "Metadana „$1” została zapisana i powinna wejść w życie w ciągu minuty.",
+	"managewiki-permissions-creategroup": "Utwórz nową grupę użytkowników",
+	"managewiki-permissions-header": "Wybierz istniejącą grupę uprawnień, aby ją zmodyfikować, lub stwórz nową używając poniższego formularza!",
 	"managewiki-success": "Ustawienia zostały pomyślnie zmienione.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link": "Zarządzaj ustawieniami tej wiki",
@@ -53,5 +43,6 @@
 	"managewiki-settings-link": "Zarządzaj dodatkowymi ustawieniami tej wiki",
 	"namespaces-namespace": "Główna przestrzeń nazw",
 	"namespaces-namespacetalk": "Przestrzeń nazw dyskusji",
-	"namespaces-search": "Czy ta przestrzeń nazw powinna być domyślnie dostępna do przeszukiwania?"
+	"namespaces-search": "Czy ta przestrzeń nazw powinna być domyślnie dostępna do przeszukiwania?",
+	"permissions-assigned": "Przypisane uprawnienia:"
 }
