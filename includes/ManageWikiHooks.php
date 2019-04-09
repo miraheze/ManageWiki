@@ -104,12 +104,12 @@ class ManageWikiHooks {
 			$wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces, $wgNamespaceProtection;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$defaultGroups = array_diff( (array)ManageWikiPermissions::defaultGroups(), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+			$defaultGroups = array_diff( (array)ManageWikiPermissions::availableGroups( 'default' ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
 
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 			foreach ( $defaultGroups as $newgroup ) {
-				$grouparray = ManageWikiPermissions::defaultGroupPermissions( $newgroup );
+				$grouparray = ManageWikiPermissions::groupPermissions( $newgroup, 'default' );
 
 				$dbw->insert(
 					'mw_permissions',
@@ -117,8 +117,8 @@ class ManageWikiHooks {
 						'perm_dbname' => $dbname,
 						'perm_group' => $newgroup,
 						'perm_permissions' => json_encode( $grouparray['permissions'] ),
-						'perm_addgroups' => json_encode( $grouparray['addgroups'] ),
-						'perm_removegroups' => json_encode( $grouparray['removegroups'] )
+						'perm_addgroups' => json_encode( $grouparray['ag'] ),
+						'perm_removegroups' => json_encode( $grouparray['rg'] )
 					],
 					__METHOD__
 				);
@@ -227,7 +227,7 @@ class ManageWikiHooks {
 
 		if ( ManageWiki::checkSetup( 'permissions' ) && $wgManageWikiPermissionsDefaultPrivateGroup ) {
 
-			$defaultarray = ManageWikiPermissions::defaultGroupPermissions( $wgManageWikiPermissionsDefaultPrivateGroup );
+			$defaultarray = ManageWikiPermissions::groupPermissions( $wgManageWikiPermissionsDefaultPrivateGroup, 'default' );
 
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
@@ -246,8 +246,8 @@ class ManageWikiHooks {
 						'perm_dbname' => $dbname,
 						'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup,
 						'perm_permissions' => json_encode( $defaultarray['permissions'] ),
-						'perm_addgroups' => json_encode( $defaultarray['addgroups'] ),
-						'perm_removegroups' => json_encode( $defaultarray['removegroups'] )
+						'perm_addgroups' => json_encode( $defaultarray['ag'] ),
+						'perm_removegroups' => json_encode( $defaultarray['rg'] )
 					],
 					__METHOD__
 				);
@@ -275,8 +275,8 @@ class ManageWikiHooks {
 			}
 
 			$sysopMeta = ManageWikiPermissions::groupPermissions( 'sysop' );
-			$sysopAdd = array_merge( $sysopMeta['addgroups'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
-			$sysopRemove = array_merge( $sysopMeta['removegroups'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
+			$sysopAdd = array_merge( $sysopMeta['ag'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
+			$sysopRemove = array_merge( $sysopMeta['rg'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
 
 			$dbw->update(
 				'mw_permissions',
@@ -330,8 +330,8 @@ class ManageWikiHooks {
 			$groups = ManageWikiPermissions::availableGroups();
 			foreach ( $groups as $group ) {
 				$rights = ManageWikiPermissions::groupPermissions( $group );
-				$addGroups = $rights['addgroups'];
-				$removeGroups = $rights['removegroups'];
+				$addGroups = $rights['ag'];
+				$removeGroups = $rights['rg'];
 
 				if ( in_array( $wgManageWikiPermissionsDefaultPrivateGroup, $addGroups ) || in_array( $wgManageWikiPermissionsDefaultPrivateGroup, $removeGroups ) ) {
 					$addGroups = array_diff( $addGroups, [ $wgManageWikiPermissionsDefaultPrivateGroup ] );

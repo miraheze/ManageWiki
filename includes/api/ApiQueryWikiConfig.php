@@ -65,8 +65,8 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 			if ( isset( $prop['permissions'] ) ) {
 				if ( $this->isAllowedToViewConfig( $wikiObj ) ) {
-					foreach ( ManageWiki::availableGroups( $wiki ) as $group ) {
-						$wikiData['permissions'][$group] = ManageWiki::groupPermissions( $group, $wiki );
+					foreach ( ManageWikiPermissions::availableGroups( $wiki ) as $group ) {
+						$wikiData['permissions'][$group] = ManageWikiPermissions::groupPermissions( $group, $wiki );
 					}
 				} else {
 					$this->addWarning( [ 'apiwarn-wikiconfig-nopermission', $wiki ] );
