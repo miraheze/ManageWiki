@@ -21,7 +21,7 @@ class ManageWikiFormFactory {
 
 	public function getForm(
 		string $wiki = NULL,
-		boolean $remoteWiki
+		boolean $remoteWiki,
 		IContextSource $context,
 		string $module = NULL,
 		string $special = '',
