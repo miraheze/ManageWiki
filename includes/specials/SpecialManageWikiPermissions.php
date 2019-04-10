@@ -93,14 +93,27 @@ class SpecialManageWikiPermissions extends SpecialPage {
 	}
 
 	public function buildGroupView( $group ) {
-		global $wgDBname;
+		global $wgDBname, $wgCreateWikiGlobalWiki;
 
 		$out = $this->getOutput();
 
 		$out->addModules( 'ext.createwiki.oouiform' );
 
+		if ( $wgDBname == 'default' ) {
+			// If wiki is default, we mean it but we can't use RM this way
+			$remoteWiki = RemoteWiki::newFromName( $wgCreateWikiGlobalWiki );
+		} else {
+			$remoteWiki = RemoteWiki::newFromName( $wgDBname );
+		}
+
+		if ( $remoteWiki == NULL ) {
+			$this->getContext()->getOutput()->addHTML(
+				'<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
+			return false;
+		}
+
 		$formFactory = new ManageWikiFormFactory();
-		$htmlForm = $formFactory->getForm( $wgDBname, $this->getContext(), 'permissions', $group );
+		$htmlForm = $formFactory->getForm( $wgDBname, $remoteWiki, $this->getContext(), 'permissions', $group );
 		$sectionTitles = $htmlForm->getFormSections();
 
 		$sectTabs = [];
