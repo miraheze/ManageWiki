@@ -59,6 +59,8 @@ class SpecialManageWikiExtensions extends SpecialPage {
 	}
 
 	function showWikiForm( $wiki ) {
+		global $wgCreateWikiGlobalWiki;
+
 		$out = $this->getOutput();
 
 		$out->addModules( 'ext.createwiki.oouiform' );
@@ -69,8 +71,21 @@ class SpecialManageWikiExtensions extends SpecialPage {
 			$out->addWikiMsg( 'managewiki-extensions-header', $dbName );
 		}
 
+		if ( $dbName == 'default' ) {
+			// If wiki is default, we mean it but we can't use RM this way
+			$remoteWiki = RemoteWiki::newFromName( $wgCreateWikiGlobalWiki );
+		} else {
+			$remoteWiki = RemoteWiki::newFromName( $dbName );
+		}
+
+		if ( $remoteWiki == NULL ) {
+			$this->getContext()->getOutput()->addHTML(
+				'<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
+			return false;
+		}
+
 		$formFactory = new ManageWikiFormFactory();
-		$htmlForm = $formFactory->getForm( $dbName, $this->getContext(), 'extensions' );
+		$htmlForm = $formFactory->getForm( $dbName, $remoteWiki, $this->getContext(), 'extensions' );
 		$sectionTitles = $htmlForm->getFormSections();
 
 		$sectTabs = [];
