@@ -21,24 +21,13 @@ class ManageWikiFormFactory {
 
 	public function getForm(
 		string $wiki = NULL,
+		boolean $remoteWiki
 		IContextSource $context,
 		string $module = NULL,
 		string $special = '',
 		$formClass = CreateWikiOOUIForm::class
 	) {
 		global $wgCreateWikiDatabase, $wgCreateWikiGlobalWiki;
-
-		if ( $wiki == 'default' ) {
-			// If wiki is default, we mean it but we can't use RM this way
-			$remoteWiki = RemoteWiki::newFromName( $wgCreateWikiGlobalWiki );
-		} else {
-			$remoteWiki = RemoteWiki::newFromName( $wiki );
-		}
-
-		if ( $remoteWiki == NULL ) {
-			$context->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
-			return false;
-		}
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
