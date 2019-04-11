@@ -36,7 +36,8 @@
 	"namespaces-handling": "Invia",
 	"namespaces-namespace": "Namespace principale",
 	"namespaces-namespacetalk": "Namespace di discussione",
-	"permissions-assigned": "Permessi assegnati:",
+	"permissions-assigned": "Permessi assegnati",
+	"permissions-handling": "Invia",
 	"settings-other": "Altro",
 	"settings-handling": "Invia"
 }

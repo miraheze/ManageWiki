@@ -79,6 +79,7 @@
 	"namespaces-search": "Дали овој именски простор да биде пребарлив по основно?",
 	"namespaces-subpages": "Дали да се овозможат потстраници во овој именски простор?",
 	"permissions-assigned": "Доделени дозволи:",
+	"permissions-handling": "Поднеси",
 	"right-managewiki": "Поставки за раководење со вики",
 	"right-managewiki-restricted": "Раководење со ограничени википоставки",
 	"right-managewiki-editdefault": "Раководење со основни дозволи за групи",
