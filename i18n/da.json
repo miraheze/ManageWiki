@@ -21,12 +21,15 @@
 	"managewiki-label-sitename": "Sidenavn",
 	"managewiki-missing": "Denne wiki findes ikke.",
 	"managewiki-ns-createnamespace": "Opret nyt navnerum",
+	"managewiki-permissions-addall": "Kan tilføje til andre",
 	"managewiki-permissions-creategroup": "Opret en ny brugergruppe",
+	"managewiki-permissions-removeall": "Kan fjerne fra andre",
 	"managewiki-namespaces-link": "Administrer denne wikis navnerum",
 	"namespaces-delete": "Slet",
 	"namespaces-handling": "Indsend",
 	"namespaces-namespace": "Hovednavnerum",
 	"namespaces-search": "Skal dette navnerum være søgbart som standard?",
+	"permissions-handling": "Indsend",
 	"settings-other": "Andet",
 	"settings-handling": "Indsend"
 }
