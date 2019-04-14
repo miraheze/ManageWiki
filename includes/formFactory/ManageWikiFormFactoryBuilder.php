@@ -721,20 +721,21 @@ class ManageWikiFormFactoryBuilder {
 
 		$addedPerms = [];
 		$removedPerms = [];
+		$newPerms = [];
 
 		foreach ( $groupData['allPermissions'] as $perm ) {
 			if ( $formData["right-$perm"] ) {
 				if ( !is_int( array_search( $perm, $groupData['assignedPermissions'] ) ) ) {
 					$addedPerms[] = $perm;
 				}
+
+				$newPerms[] = $perm;
 			} else {
 				if ( is_int( array_search( $perm, $groupData['assignedPermissions'] ) ) ) {
 					$removedPerms[] = $perm;
 				}
 			}
 		}
-
-		$newPerms = array_merge( $addedPerms, array_diff( $groupData['assignedPermissions'], $removedPerms ) );
 
 		$newMatrix = ManageWiki::handleMatrix( array_diff( $formData['group-matrix'], $groupData['groupMatrix'] ), 'phparray' );
 		$oldMatrix = ManageWiki::handleMatrix( array_diff( $groupData['groupMatrix'], $formData['group-matrix'] ), 'phparray' );
