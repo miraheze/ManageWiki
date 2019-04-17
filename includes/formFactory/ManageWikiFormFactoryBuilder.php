@@ -547,7 +547,7 @@ class ManageWikiFormFactoryBuilder {
 
 			if ( $value ) {
 				if ( $requiresMet ) {
-					$installed = ( !isset( $ext['install'] ) ) ? true : ManageWikiInstaller::process( $dbName, 'install', $ext['install'] );
+					$installed = ( !isset( $ext['install'] ) || $current ) ? true : ManageWikiInstaller::process( $dbName, 'install', $ext['install'] );
 
 					if ( $installed ) {
 						$extensionsArray[] = $name;
