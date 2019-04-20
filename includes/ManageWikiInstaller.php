@@ -94,9 +94,12 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	// @TODO: Will handle management of namesapces. Needs MWN to be done.
 	private static function namespaces( string $dbname, array $data ) {
-		return false;
+		foreach ( $data as $name => $i ) {
+			ManageWikiNamespaces::modifyNamespace( $i['id'], $name, $i['searchable'], $i['subpages']. $i['protection'], $i['content'], $i['aliases'], $dbname );
+		}
+
+		return true;
 	}
 
 	private static function mwscript( string $dbname, array $data ) {

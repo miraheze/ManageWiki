@@ -103,9 +103,9 @@ class ManageWikiNamespaces {
 				'ns_namespace_id' => $namespace
 			]
 		);
-		
+
 		$ns = [];
-		
+
 		$ns['ns_namespace_name'] = $row->ns_namespace_name;
 		$ns['ns_searchable'] = $row->ns_searchable;
 		$ns['ns_subpages'] = $row->ns_subpages;
@@ -116,5 +116,49 @@ class ManageWikiNamespaces {
 		$ns['ns_core'] = $row->ns_core;
 
 		return (array)$ns;
+	}
+
+	public static function modifyNamespace( bool $id, string $name, int $search, int $subpages, string $protection, int $content, array $aliases, string $wiki = NULL ) {
+		global $wgDBname, $wgCreateWikiDatabase;
+
+		$dbName = $wiki ?? $wgDBname;
+
+		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
+		$row = [
+			'ns_dbname' => $dbName,
+			'ns_namespace_id' => $id,
+			'ns_namespace_name' => $name,
+			'ns_searchable' => $search,
+			'ns_subpages' => $subpages,
+			'ns_protection' => $protection,
+			'ns_content' => $content,
+			'ns_aliases' => json_encode( $aliases )
+		];
+
+		$check = $dbw->selectRow(
+			'mw_namespaces',
+			'*',
+			[
+				'ns_dbname' => $dbName,
+				'ns_namespace_id' => $id
+			]
+		);
+
+		if ( $check ) {
+			$dbw->update(
+				'mw_namespaces',
+				$row,
+				[
+					'ns_dbname' => $dbName,
+					'ns_namespace_id' => $id
+				]
+			);
+		} else {
+			$dbw->insert(
+				'mw_namespaces',
+				$row
+			);
+		}
 	}
 }
