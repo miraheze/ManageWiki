@@ -96,7 +96,7 @@ class ManageWikiInstaller {
 
 	private static function namespaces( string $dbname, array $data ) {
 		foreach ( $data as $name => $i ) {
-			ManageWikiNamespaces::modifyNamespace( $i['id'], $name, $i['searchable'], $i['subpages']. $i['protection'], $i['content'], $i['aliases'], $dbname );
+			ManageWikiNamespaces::modifyNamespace( $i['id'], $name, $i['searchable'], $i['subpages']. $i['protection'], $i['content'], 1, $i['aliases'], $dbname );
 		}
 
 		return true;
