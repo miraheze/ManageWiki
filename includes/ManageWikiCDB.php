@@ -194,7 +194,7 @@ class ManageWikiCDB {
 			$key = $cache->makeKey( 'ManageWiki', $module );
 			$cache->delete( $key );
 
-			return unlink( "$wgManageWikiCDBDirectory/$module-$wgDBname.cdb" );
+			return unlink( "$wgManageWikiCDBDirectory/$wgDBname-$module.cdb" );
 		}
 	}
 
