@@ -769,9 +769,14 @@ class ManageWikiFormFactoryBuilder {
 			$logBuild['removed'][$matrixToShort[$type]] = implode( ', ', $newArray );
 		}
 
+		$matrixOut = ManageWiki::handleMatrix( $formData['group-matrix'], 'phparray' );
+
 		$dataArray = [
 			'permissions' => json_encode( $newPerms ),
-			'groups' => ManageWiki::handleMatrix( $formData['group-matrix'], 'phparray' )
+			'groups' => [
+				'wgAddGroups' => $matrixOut['wgAddGroups'] ?? [],
+				'wgRemoveGroups' => $matrixOut['wgRemoveGroups'] ?? []
+			]
 		];
 
 		if ( count( $newPerms ) == 0 ) {
