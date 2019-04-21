@@ -457,17 +457,12 @@ class ManageWikiFormFactoryBuilder {
 		} elseif ( $mwReturn['table'] == 'mw_permissions' ) {
 			$state = $mwReturn['data']['state'];
 
-			$addgroups = is_null( $mwReturn['data']['groups']['wgAddGroups'] ) ?
-				[] : $mwReturn['data']['groups']['wgAddGroups'];
-			$removegroups = is_null( $mwReturn['data']['groups']['wgRemoveGroups'] ) ?
-				[] : $mwReturn['data']['groups']['wgRemoveGroups'];
-
 			$rows = [
 				'perm_dbname' => $dbName,
 				'perm_group' => $special,
 				'perm_permissions' => $mwReturn['data']['permissions'],
-				'perm_addgroups' => json_encode( $addgroups ),
-				'perm_removegroups' => json_encode( $removegroups )
+				'perm_addgroups' => json_encode( $mwReturn['data']['groups']['wgAddGroups'] ),
+				'perm_removegroups' => json_encode( $mwReturn['data']['groups']['wgRemoveGroups'] )
 			];
 
 			if ( $state == 'update' ) {
