@@ -163,10 +163,10 @@ class ManageWikiCDB {
 			// If we're running an out of date version, let's do nothing.
 			// If we're ruinning "the latest", let's increase it.
 			// If we don't have a key... let's make one!
-			if ( $cacheVersion == $cdbVersion) {
-				$cacheVersion = (int)$cache->incr( $key );
-			} elseif ( !$cacheVersion ) {
+			if ( !$cacheVersion ) {
 				$cacheVersion = (int)$cache->set( $key, 1, rand( 84600, 88200 ) );
+			} elseif ( $cacheVersion == $cdbVersion) {
+				$cacheVersion = (int)$cache->incr( $key );
 			}
 
 			// Now we've added our end key to the array, let's push it
