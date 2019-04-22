@@ -6,6 +6,6 @@ CREATE TABLE /*_*/mw_permissions (
   `perm_removegroups` LONGTEXT NOT NULL,
   `perm_addgroupstoself` LONGTEXT NOT NULL,
   `perm_removegroupsfromself` LONGTEXT NOT NULL,
-  `perm_autopromotion` LONGTEXT
+  `perm_autopromote` LONGTEXT
 ) /*$wgDBTableOptions*/;
 

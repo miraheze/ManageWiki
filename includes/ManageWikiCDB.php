@@ -88,7 +88,11 @@ class ManageWikiCDB {
 					$cacheArray['wgRemoveGroups'][$group] = json_decode( $row->perm_removegroups, true );
 					$cacheArray['wgGroupsAddToSelf'][$group] = json_decode( $row->perm_addgroupstoself, true );
 					$cacheArray['wgGroupsRemoveFromSelf'][$group] = json_decode( $row->perm_removegroupsfromself, true );
-					$cacheArray['wgAutopromote'][$group] = json_decode( $row->perm_autopromote );
+
+					if ( !is_null( $row->perm_autopromote ) ) {
+						$cacheArray['wgAutopromote'][$group] = json_decode( $row->perm_autopromote );
+					}
+
 					$cacheArray['availabeGroups'][] = $group;
 				}
 			} elseif ( $module == 'namespaces' ) {

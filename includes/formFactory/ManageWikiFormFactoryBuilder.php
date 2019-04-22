@@ -364,7 +364,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		$formDescriptor =+ [
+		$formDescriptor += [
 			'enable' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-enable',
@@ -380,13 +380,13 @@ class ManageWikiFormFactoryBuilder {
 					wfMessage( 'managewiki-permissions-autopromote-conds-not' )->text() => '!'
 				],
 				'default' => $groupData['autopromote'][0],
-				'hide-if' => [ '!==', 'wpenable' ],
+				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'section' => 'autopromote'
 			],
 			'editcount' => [
 				'type' => 'int',
 				'label-message' => 'managewiki-permissions-autopromote-editcount',
-				'hide-if' => [ '!==', 'wpenable' ],
+				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'min' => 0,
 				'default' => $aPArray[APCOND_EDITCOUNT] ?? 0,
 				'section' => 'autopromote'
@@ -394,7 +394,7 @@ class ManageWikiFormFactoryBuilder {
 			'age' => [
 				'type' => 'int',
 				'label-message' => 'managewiki-permissions-autopromote-age',
-				'hide-if' => [ '!==', 'wpenable' ],
+				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'min' => 0,
 				'default' => is_null( $aPArray[APCOND_AGE] ) ? 0 : $aPArray[APCOND_AGE] / 86400,
 				'section' => 'autopromote'
@@ -402,21 +402,21 @@ class ManageWikiFormFactoryBuilder {
 			'emailconfirmed' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-email',
-				'hide-if' => [ '!==', 'wpenable' ],
+				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'default' => is_int( array_search( APCOND_EMAILCONFIRMED, $groupData['autopromote'] ) ),
 				'section' => 'autopromote'
 			],
 			'blocked' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-blocked',
-				'hide-if' => [ '!==', 'wpenable' ],
+				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'default' => is_int( array_search( APCOND_BLOCKED, $groupData['autopromote'] ) ),
 				'section' => 'autopromote'
 			],
 			'bot' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-bot',
-				'hide-if' => [ '!==', 'wpenable' ],
+				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'default' => is_int( array_search( APCOND_ISBOT, $groupData['autopromote'] ) ),
 				'section' => 'autopromote'
 			],
@@ -424,7 +424,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'multiselect',
 				'label-message' => 'managewiki-permissions-autopromote-groups',
 				'options' => $rowsBuilt,
-				'hide-if' => [ '!==', 'wpenable' ],
+				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'default' => $aPArray[APCOND_INGROUPS] ?? [],
 				'section' => 'autopromote'
 			]
@@ -879,12 +879,12 @@ class ManageWikiFormFactoryBuilder {
 		] : NULL;
 
 		if ( !is_null( $dataArray['autopromote'] ) ) {
-			if ( is_int( $formData['editcount'] ) ) {
-				$dataArray['autopromote'][] = [ APCOND_EDITCOUNT, $formData['editcount'] ];
+			if ( $formData['editcount'] ) {
+				$dataArray['autopromote'][] = [ APCOND_EDITCOUNT, (int)$formData['editcount'] ];
 			}
 
-			if ( is_int( $formData['age'] ) ) {
-				$dataArray['autopromote'][] = [ APCOND_AGE, $formData['age'] * 86400 ];
+			if ( $formData['age'] ) {
+				$dataArray['autopromote'][] = [ APCOND_AGE, (int)$formData['age'] * 86400 ];
 			}
 
 			if ( $formData['emailconfirmed'] ) {

@@ -37,7 +37,7 @@ class ManageWikiHooks {
 				ManageWikiCDB::upsert( 'permissions' );
 			}
 
-			$permsArray = ManageWikiCDB::get( 'permissions', [ 'wgGroupPermissions', 'wgAddGroups', 'wgRemoveGroups' ] );
+			$permsArray = ManageWikiCDB::get( 'permissions', [ 'wgGroupPermissions', 'wgAddGroups', 'wgRemoveGroups', 'wgGroupsAddToSelf', 'wgGroupsRemoveFromSelf', 'wgAutopromote' ] );
 
 			foreach( $permsArray as $key => $json ) {
 				$permsArray[$key] = json_decode( $json, true );
