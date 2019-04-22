@@ -12,7 +12,7 @@ class ManageWikiPopulatePermissions extends Maintenance {
 	}
 
 	function execute() {
-		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistGroups, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgDBname;
+		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistGroups, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgDBname, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
@@ -49,6 +49,18 @@ class ManageWikiPopulatePermissions extends Maintenance {
 			}
 		}
 
+		foreach ( $wgGroupsAddToSelf as $group => $adds ) {
+			if ( !in_array( $group, $blacklist ) ) {
+				$grouparray[$group]['addself'] = json_encode( $adds );
+			}
+		}
+
+		foreach ( $wgGroupsRemoveFromSelf as $group => $removes ) {
+			if ( !in_array( $group, $blacklist ) ) {
+				$grouparray[$group]['removeself'] = json_encode( $removes );
+			}
+		}
+
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
@@ -70,6 +82,8 @@ class ManageWikiPopulatePermissions extends Maintenance {
 						'perm_permissions' => $groupatr['perms'],
 						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
 						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
+						'perm_addgroupstoself' => empty( $groupattr['adds'] ) ? json_encode( [] ) : $groupattr['adds'],
+						'perm_removegroupsfromself' => empty( $groupatr['removes'] ) ? json_encode( [] ) : $groupatr['removes']
 					],
 					__METHOD__
 				);

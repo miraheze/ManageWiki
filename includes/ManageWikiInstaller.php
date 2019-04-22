@@ -80,13 +80,16 @@ class ManageWikiInstaller {
 			if ( !isset( $mod['permissions'] ) ) {
 				$mod['permissions'] = [];
 			}
+
 			if ( !isset( $mod['addgroups'] ) ) {
 				$mod['addgroups'] = [];
 			}
+
 			if ( !isset( $mod['removegroups'] ) ) {
 				$mod['removegroups'] = [];
 			}
-			ManageWikiPermissions::modifyPermissions( $group, $mod['permissions'], [], $mod['addgroups'], [], $mod['removegroups' ], [], $dbname );
+
+			ManageWikiPermissions::modifyPermissions( $group, $mod['permissions'], [], $mod['addgroups'], [], $mod['removegroups' ], [], [], [], [], [], $dbname );
 
 			ManageWikiCDB::changes( 'permissions' );
 		}

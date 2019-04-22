@@ -151,8 +151,18 @@
 			"public": true,
 			"value": false
 		},
+		"ManageWikiPermissionsAdditionalAddGroupsSelf": {
+			"description": "Array. ManageWiki's version of $wgGroupsAddToSelf.",
+			"public": true,
+			"value": false
+		},
 		"ManageWikiPermissionsAdditionalRemoveGroups": {
 			"description": "Array. ManageWiki's version of $wgRemoveGroups.",
+			"public": true,
+			"value": false
+		},
+		"ManageWikiPermissionsAdditionalRemoveGroupsSelf": {
+			"description": "Array. ManageWiki's version of $wgGroupsRemoveFromSelf",
 			"public": true,
 			"value": false
 		},

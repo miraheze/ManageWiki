@@ -21,13 +21,16 @@ class ManageWikiHooks {
 
 	public static function onSetupAfterCache() {
 		global $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory,
-			$wgManageWikiNamespacesCore, $wgContentNamespaces, $wgExtraNamespaces, $wgNamespaceProtection, $wgNamespacesToBeSearchedDefault, $wgNamespaceAliases, $wgNamespacesWithSubpages;
+			$wgManageWikiNamespacesCore, $wgContentNamespaces, $wgExtraNamespaces, $wgNamespaceProtection, $wgNamespacesToBeSearchedDefault, $wgNamespaceAliases, $wgNamespacesWithSubpages, $wgManageWikiPermissionsAdditionalAddGroupsSelf,
+			$wgManageWikiPermissionsAdditionalRemoveGroupsSelf, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf;
 
 		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$wgGroupPermissions = [];
 			$wgAddGroups = [];
 			$wgRemoveGroups = [];
+			$wgGroupsAddToSelf = [];
+			$wgGroupsRemoveFromSelf = [];
 
 			if ( !ManageWikiCDB::latest( 'permissions' ) ) {
 				ManageWikiCDB::upsert( 'permissions' );
@@ -65,6 +68,14 @@ class ManageWikiHooks {
 
 			if ( $wgManageWikiPermissionsAdditionalRemoveGroups ) {
 				$wgRemoveGroups = array_merge_recursive( $wgRemoveGroups, $wgManageWikiPermissionsAdditionalRemoveGroups );
+			}
+
+			if ( $wgManageWikiPermissionsAdditionalAddGroupsSelf ) {
+				$wgGroupsAddToSelf = array_merge_recursive( $wgGroupsAddToSelf, $wgManageWikiPermissionsAdditionalAddGroupsSelf );
+			}
+
+			if ( $wgManageWikiPermissionsAdditionalRemoveGroupsSelf ) {
+				$wgGroupRemoveFromSelf = array_merge_recursive( $wgGroupsRemoveFromSelf, $wgManageWikiPermissionsAdditionalRemoveGroupsSelf );
 			}
 		}
 

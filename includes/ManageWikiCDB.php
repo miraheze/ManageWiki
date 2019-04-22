@@ -59,25 +59,9 @@ class ManageWikiCDB {
 
 			if ( $module == 'permissions' ) {
 				$dbTable = 'mw_permissions';
-				$dbCols = [
-					'perm_group',
-					'perm_permissions',
-					'perm_addgroups',
-					'perm_removegroups'
-				];
 				$dbSelector = 'perm_dbname';
 			} elseif ( $module == 'namespaces' ) {
 				$dbTable = 'mw_namespaces';
-				$dbCols = [
-					'ns_namespace_id',
-					'ns_namespace_name',
-					'ns_searchable',
-					'ns_subpages',
-					'ns_content',
-					'ns_protection',
-					'ns_aliases',
-					'ns_core'
-				];
 				$dbSelector = 'ns_dbname';
 			} else {
 				return 'Need to add a fatal';
@@ -85,7 +69,7 @@ class ManageWikiCDB {
 
 			$moduleRes = $dbr->select(
 				$dbTable,
-				$dbCols,
+				'*',
 				[
 					$dbSelector => $wgDBname
 				],
@@ -102,6 +86,8 @@ class ManageWikiCDB {
 					$cacheArray['wgGroupPermissions'][$group] = json_decode( $row->perm_permissions, true );
 					$cacheArray['wgAddGroups'][$group] = json_decode( $row->perm_addgroups, true );
 					$cacheArray['wgRemoveGroups'][$group] = json_decode( $row->perm_removegroups, true );
+					$cacheArray['wgGroupsAddToSelf'][$group] = json_decode( $row->perm_addgroupstoself, true );
+					$cacheArray['wgGroupsRemoveFromSelf'][$group] = json_decode( $row->perm_removegroupsfromself, true );
 					$cacheArray['availabeGroups'][] = $group;
 				}
 			} elseif ( $module == 'namespaces' ) {

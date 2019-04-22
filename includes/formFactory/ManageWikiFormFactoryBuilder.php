@@ -341,7 +341,9 @@ class ManageWikiFormFactoryBuilder {
 			'type' => 'checkmatrix',
 			'columns' => [
 				wfMessage( 'managewiki-permissions-addall' )->text() => 'wgAddGroups',
-				wfMessage( 'managewiki-permissions-removeall' )->text() => 'wgRemoveGroups'
+				wfMessage( 'managewiki-permissions-removeall' )->text() => 'wgRemoveGroups',
+				wfMessage( 'managewiki-permissions-addself' )->text() => 'wgGroupsAddToSelf',
+				wfMessage( 'managewiki-permissions-removeself' )->text() => 'wgGroupsRemoveFromSelf'
 			],
 			'rows' => $rowsBuilt,
 			'section' => 'group',
@@ -462,7 +464,9 @@ class ManageWikiFormFactoryBuilder {
 				'perm_group' => $special,
 				'perm_permissions' => $mwReturn['data']['permissions'],
 				'perm_addgroups' => json_encode( $mwReturn['data']['groups']['wgAddGroups'] ),
-				'perm_removegroups' => json_encode( $mwReturn['data']['groups']['wgRemoveGroups'] )
+				'perm_removegroups' => json_encode( $mwReturn['data']['groups']['wgRemoveGroups'] ),
+				'perm_addgroupstoself' => json_encode( $mwReturn['data']['groups']['wgGroupsAddToSelf'] ),
+				'perm_removegroupsfromself' => json_encode( $mwReturn['data']['groups']['wgGroupsRemoveFromSelf'] )
 			];
 
 			if ( $state == 'update' ) {
@@ -497,7 +501,11 @@ class ManageWikiFormFactoryBuilder {
 				'6::aag' => $mwReturn['changes']['added']['ag'] ?? $logNULL,
 				'7::rag' => $mwReturn['changes']['removed']['ag'] ?? $logNULL,
 				'8::arg' => $mwReturn['changes']['added']['rg'] ?? $logNULL,
-				'9::rrg' => $mwReturn['changes']['removed']['rg'] ?? $logNULL
+				'9::rrg' => $mwReturn['changes']['removed']['rg'] ?? $logNULL,
+				'10::aags' => $mwReturn['changes']['added']['ags'] ?? $logNULL,
+				'11::rags' => $mwReturn['changes']['removed']['ags'] ?? $logNULL,
+				'12::args' => $mwReturn['changes']['added']['rgs'] ?? $logNULL,
+				'13::rrgs' => $mwReturn['changes']['removed']['rgs'] ?? $logNULL
 			];
 		} else {
 			return [ 'Error processing.' ];
@@ -737,7 +745,9 @@ class ManageWikiFormFactoryBuilder {
 
 		$matrixToShort = [
 			'wgAddGroups' => 'ag',
-			'wgRemoveGroups' => 'rg'
+			'wgRemoveGroups' => 'rg',
+			'wgGroupsAddToSelf' => 'ags',
+			'wgGroupRemoveFromSelf' => 'rgs'
 		];
 
 		$logBuild = [
@@ -775,7 +785,9 @@ class ManageWikiFormFactoryBuilder {
 			'permissions' => json_encode( $newPerms ),
 			'groups' => [
 				'wgAddGroups' => $matrixOut['wgAddGroups'] ?? [],
-				'wgRemoveGroups' => $matrixOut['wgRemoveGroups'] ?? []
+				'wgRemoveGroups' => $matrixOut['wgRemoveGroups'] ?? [],
+				'wgGroupsAddToSelf' => $matrixOut['wgGroupsAddToSelf'] ?? [],
+				'wgGroupsRemoveFromSelf' => $matrixOut['wgGroupsRemoveFromSelf'] ?? []
 			]
 		];
 

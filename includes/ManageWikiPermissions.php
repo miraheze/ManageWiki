@@ -44,13 +44,17 @@ class ManageWikiPermissions {
 		if ( $row ) {
 			$groupAssigns = [
 				'wgAddGroups' => json_decode( $row->perm_addgroups, true ),
-				'wgRemoveGroups' => json_decode( $row->perm_removegroups, true )
+				'wgRemoveGroups' => json_decode( $row->perm_removegroups, true ),
+				'wgGroupsAddToSelf' => json_decode( $row->perm_addgroupstoself, true ),
+				'wgGroupRemoveFromSelf' => json_decode( $row->perm_removegroupsfromself, true )
 			];
 
 			$data = [
 				'permissions' => json_decode( $row->perm_permissions, true ),
 				'ag' => $groupAssigns['wgAddGroups'],
 				'rg' => $groupAssigns['wgRemoveGroups'],
+				'ags' => $groupAssigns['wgGroupAddToSelf'],
+				'rgs' => $groupAssigns['wgGroupRemoveFromSelf'],
 				'matrix' => ManageWiki::handleMatrix( json_encode( $groupAssigns ), 'php' ),
 			];
 		} else {
@@ -58,6 +62,8 @@ class ManageWikiPermissions {
 				'permissions' => [],
 				'ag' => [],
 				'rg' => [],
+				'ags' => [],
+				'rgs' => [],
 				'matrix' => []
 			];
 		}
@@ -80,7 +86,7 @@ class ManageWikiPermissions {
 		];
 	}
 
-	public static function modifyPermissions( string $group, array $addp = [], array $removep = [], array $addag = [], array $removeag = [], array $addrg = [], array $removerg = [], string $wiki = null ) {
+	public static function modifyPermissions( string $group, array $addp = [], array $removep = [], array $addag = [], array $removeag = [], array $addrg = [], array $removerg = [], array $addags = [], array $removeags = [], array $addrgs = [], array $removergs = [], string $wiki = null ) {
 		global $wgDBname, $wgCreateWikiDatabase;
 
 		$dbName = $wiki ?? $wgDBname;
@@ -92,13 +98,17 @@ class ManageWikiPermissions {
 		if ( $existingGroup ) {
 			$groupData = (array)self::groupPermissions( $group, $dbName );
 			$perms = array_merge( $addp, array_diff( $groupData['permissions'], $removep ) );
-			$addGroups = array_merge( $addag, array_diff( $groupData['addgroups'], $removeag ) );
-			$removeGroups = array_merge( $addrg, array_diff( $groupData['removegroups'], $removerg ) );
+			$addGroups = array_merge( $addag, array_diff( $groupData['ag'], $removeag ) );
+			$removeGroups = array_merge( $addrg, array_diff( $groupData['rg'], $removerg ) );
+			$addGroupsToSelf = array_merge( $addags, array_diff( $groupData['ags'], $removeags ) );
+			$removeGroupsFromSelf = array_merge( $removergs, array_diff( $groupData['rgs'], $removergs ) );
 		} else {
 			// Not an existing group
 			$perms = $addp;
 			$addGroups = $addag;
 			$removeGroups = $addrg;
+			$addGroupsToSelf = $addags;
+			$removeGroupsFromSelf = $addrgs;
 		}
 
 		$row = [
@@ -106,7 +116,9 @@ class ManageWikiPermissions {
 			'perm_group' => $group,
 			'perm_permissions' => json_encode( $perms ),
 			'perm_addgroups' => json_encode( $addGroups ),
-			'perm_removegroups' => json_encode( $removeGroups )
+			'perm_removegroups' => json_encode( $removeGroups ),
+			'perm_addgroupstoself' => json_encode( $addGroupsToSelf ),
+			'perm_removegroupsfromself' => json_encode( $removeGroupsFromSelf )
 		];
 
 		if ( $existingGroup ) {
