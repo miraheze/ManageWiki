@@ -315,6 +315,11 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'info',
 				'default' => wfMessage( 'managewiki-permissions-group' )->text(),
 				'section' => 'group'
+			],
+			'autopromote' => [
+				'type' => 'info',
+				'default' => wfMessage( 'managewiki-permissions-autopromote' )->text(),
+				'section' => 'autopromote'
 			]
 		];
 
@@ -349,6 +354,80 @@ class ManageWikiFormFactoryBuilder {
 			'section' => 'group',
 			'default' => $groupData['groupMatrix'],
 			'disabled' => !$ceMW
+		];
+
+		// This is not a good method but it is a method.
+		$aPArray = [];
+		foreach ( $groupData['autopromote'] as $element ) {
+			if ( is_array( $element ) ) {
+				$aPArray[$element[0]] = $element[1];
+			}
+		}
+
+		$formDescriptor =+ [
+			'enable' => [
+				'type' => 'check',
+				'label-message' => 'managewiki-permissions-autopromote-enable',
+				'default' => !is_null( $groupData['autopromote'] ),
+				'section' => 'autopromote'
+			],
+			'conds' => [
+				'type' => 'select',
+				'label-message' => 'managewiki-permissions-autopromote-conds',
+				'options' => [
+					wfMessage( 'managewiki-permissions-autopromote-conds-and' )->text() => '&',
+					wfMessage( 'managewiki-permissions-autopromote-conds-or' )->text() => '|',
+					wfMessage( 'managewiki-permissions-autopromote-conds-not' )->text() => '!'
+				],
+				'default' => $groupData['autopromote'][0],
+				'hide-if' => [ '!==', 'wpenable' ],
+				'section' => 'autopromote'
+			],
+			'editcount' => [
+				'type' => 'int',
+				'label-message' => 'managewiki-permissions-autopromote-editcount',
+				'hide-if' => [ '!==', 'wpenable' ],
+				'min' => 0,
+				'default' => $aPArray[APCOND_EDITCOUNT] ?? 0,
+				'section' => 'autopromote'
+			],
+			'age' => [
+				'type' => 'int',
+				'label-message' => 'managewiki-permissions-autopromote-age',
+				'hide-if' => [ '!==', 'wpenable' ],
+				'min' => 0,
+				'default' => is_null( $aPArray[APCOND_AGE] ) ? 0 : $aPArray[APCOND_AGE] / 86400,
+				'section' => 'autopromote'
+			],
+			'emailconfirmed' => [
+				'type' => 'check',
+				'label-message' => 'managewiki-permissions-autopromote-email',
+				'hide-if' => [ '!==', 'wpenable' ],
+				'default' => is_int( array_search( APCOND_EMAILCONFIRMED, $groupData['autopromote'] ) ),
+				'section' => 'autopromote'
+			],
+			'blocked' => [
+				'type' => 'check',
+				'label-message' => 'managewiki-permissions-autopromote-blocked',
+				'hide-if' => [ '!==', 'wpenable' ],
+				'default' => is_int( array_search( APCOND_BLOCKED, $groupData['autopromote'] ) ),
+				'section' => 'autopromote'
+			],
+			'bot' => [
+				'type' => 'check',
+				'label-message' => 'managewiki-permissions-autopromote-bot',
+				'hide-if' => [ '!==', 'wpenable' ],
+				'default' => is_int( array_search( APCOND_ISBOT, $groupData['autopromote'] ) ),
+				'section' => 'autopromote'
+			],
+			'groups' => [
+				'type' => 'multiselect',
+				'label-message' => 'managewiki-permissions-autopromote-groups',
+				'options' => $rowsBuilt,
+				'hide-if' => [ '!==', 'wpenable' ],
+				'default' => $aPArray[APCOND_INGROUPS] ?? [],
+				'section' => 'autopromote'
+			]
 		];
 
 		return $formDescriptor;
@@ -466,7 +545,8 @@ class ManageWikiFormFactoryBuilder {
 				'perm_addgroups' => json_encode( $mwReturn['data']['groups']['wgAddGroups'] ),
 				'perm_removegroups' => json_encode( $mwReturn['data']['groups']['wgRemoveGroups'] ),
 				'perm_addgroupstoself' => json_encode( $mwReturn['data']['groups']['wgGroupsAddToSelf'] ),
-				'perm_removegroupsfromself' => json_encode( $mwReturn['data']['groups']['wgGroupsRemoveFromSelf'] )
+				'perm_removegroupsfromself' => json_encode( $mwReturn['data']['groups']['wgGroupsRemoveFromSelf'] ),
+				'perm_autopromote' => json_encode( $mwReturn['data']['autopromote'] )
 			];
 
 			if ( $state == 'update' ) {
@@ -494,6 +574,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
+			$logAP = $mwReturn['changes']['modified']['autopromote'] ? 'htmlform-yes' : 'htmlform-no';
 
 			$mwLogParams = [
 				'4::ar' => $mwReturn['changes']['added']['permissions'] ?? $logNULL,
@@ -505,7 +586,8 @@ class ManageWikiFormFactoryBuilder {
 				'10::aags' => $mwReturn['changes']['added']['ags'] ?? $logNULL,
 				'11::rags' => $mwReturn['changes']['removed']['ags'] ?? $logNULL,
 				'12::args' => $mwReturn['changes']['added']['rgs'] ?? $logNULL,
-				'13::rrgs' => $mwReturn['changes']['removed']['rgs'] ?? $logNULL
+				'13::rrgs' => $mwReturn['changes']['removed']['rgs'] ?? $logNULL,
+				'14::ap' => strtolower( wfMessage( $logAP )->inContentLanguage()->text() )
 			];
 		} else {
 			return [ 'Error processing.' ];
@@ -780,6 +862,7 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$matrixOut = ManageWiki::handleMatrix( $formData['group-matrix'], 'phparray' );
+		$aE = $formData['enable'];
 
 		$dataArray = [
 			'permissions' => json_encode( $newPerms ),
@@ -790,6 +873,38 @@ class ManageWikiFormFactoryBuilder {
 				'wgGroupsRemoveFromSelf' => $matrixOut['wgGroupsRemoveFromSelf'] ?? []
 			]
 		];
+
+		$dataArray['autopromote'] = $aE ? [
+				$formData['conds']
+		] : NULL;
+
+		if ( !is_null( $dataArray['autopromote'] ) ) {
+			if ( is_int( $formData['editcount'] ) ) {
+				$dataArray['autopromote'][] = [ APCOND_EDITCOUNT, $formData['editcount'] ];
+			}
+
+			if ( is_int( $formData['age'] ) ) {
+				$dataArray['autopromote'][] = [ APCOND_AGE, $formData['age'] * 86400 ];
+			}
+
+			if ( $formData['emailconfirmed'] ) {
+				$dataArray['autopromote'][] = APCOND_EMAILCONFIRMED;
+			}
+
+			if ( $formData['blocked'] ) {
+				$dataArray['autopromote'][] = APCOND_BLOCKED;
+			}
+
+			if ( $formData['bot'] ) {
+				$dataArray['autopromote'][] = APCOND_ISBOT;
+			}
+
+			if ( $formData['groups'] ) {
+				$dataArray['autopromote'][] = [ APCOND_INGROUPS, $formData['groups'] ];
+			}
+		}
+
+		$logBuild['modified']['autopromote'] = ( $groupData['autopromote'] != $aE );
 
 		if ( count( $newPerms ) == 0 ) {
 			$dataArray['state'] = 'delete';

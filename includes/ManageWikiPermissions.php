@@ -55,6 +55,7 @@ class ManageWikiPermissions {
 				'rg' => $groupAssigns['wgRemoveGroups'],
 				'ags' => $groupAssigns['wgGroupsAddToSelf'],
 				'rgs' => $groupAssigns['wgGroupsRemoveFromSelf'],
+				'autopromote' => json_decode( $row->perm_autopromote, true ),
 				'matrix' => ManageWiki::handleMatrix( json_encode( $groupAssigns ), 'php' ),
 			];
 		} else {
@@ -64,6 +65,7 @@ class ManageWikiPermissions {
 				'rg' => [],
 				'ags' => [],
 				'rgs' => [],
+				'autopromote' => [],
 				'matrix' => []
 			];
 		}
@@ -83,6 +85,7 @@ class ManageWikiPermissions {
 			'assignedPermissions' => $groupData['permissions'],
 			'allGroups' => array_diff( self::availableGroups( $dbName ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
 			'groupMatrix' => $groupData['matrix'],
+			'autopromote' => $groupData['autopromote']
 		];
 	}
 

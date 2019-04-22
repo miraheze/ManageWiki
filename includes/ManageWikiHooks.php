@@ -22,7 +22,7 @@ class ManageWikiHooks {
 	public static function onSetupAfterCache() {
 		global $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory,
 			$wgManageWikiNamespacesCore, $wgContentNamespaces, $wgExtraNamespaces, $wgNamespaceProtection, $wgNamespacesToBeSearchedDefault, $wgNamespaceAliases, $wgNamespacesWithSubpages, $wgManageWikiPermissionsAdditionalAddGroupsSelf,
-			$wgManageWikiPermissionsAdditionalRemoveGroupsSelf, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf;
+			$wgManageWikiPermissionsAdditionalRemoveGroupsSelf, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote;
 
 		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
@@ -31,6 +31,7 @@ class ManageWikiHooks {
 			$wgRemoveGroups = [];
 			$wgGroupsAddToSelf = [];
 			$wgGroupsRemoveFromSelf = [];
+			$wgAutopromote = [];
 
 			if ( !ManageWikiCDB::latest( 'permissions' ) ) {
 				ManageWikiCDB::upsert( 'permissions' );
@@ -49,6 +50,8 @@ class ManageWikiHooks {
 							$$key[$group][$perm] = true;
 						}
 					}
+				} elseif ( $key == 'wgAutopromote' ) {
+					$$key = $array;
 				} else {
 					foreach ( $array as $i => $groups ) {
 						foreach ( $groups as $id => $group ) {
