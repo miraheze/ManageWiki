@@ -9,8 +9,9 @@ class ManageWikiHooks {
 			$updater->addExtensionTable( 'mw_permissions',
 					__DIR__ . '/../sql/mw_permissions.sql' );
 			$updater->modifyTable( 'mw_permissions',
-					__DIR__ . '/../sql/patches/patch-groups-self',
-					true );
+					__DIR__ . '/../sql/patches/patch-groups-self.sql', true );
+			$updater->modifyTable( 'mw_permissions',
+					__DIR__ . '/../sql/patches/patch-autopromote.sql', true );
 		}
 	}
 
