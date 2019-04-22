@@ -46,15 +46,15 @@ class ManageWikiPermissions {
 				'wgAddGroups' => json_decode( $row->perm_addgroups, true ),
 				'wgRemoveGroups' => json_decode( $row->perm_removegroups, true ),
 				'wgGroupsAddToSelf' => json_decode( $row->perm_addgroupstoself, true ),
-				'wgGroupRemoveFromSelf' => json_decode( $row->perm_removegroupsfromself, true )
+				'wgGroupsRemoveFromSelf' => json_decode( $row->perm_removegroupsfromself, true )
 			];
 
 			$data = [
 				'permissions' => json_decode( $row->perm_permissions, true ),
 				'ag' => $groupAssigns['wgAddGroups'],
 				'rg' => $groupAssigns['wgRemoveGroups'],
-				'ags' => $groupAssigns['wgGroupAddToSelf'],
-				'rgs' => $groupAssigns['wgGroupRemoveFromSelf'],
+				'ags' => $groupAssigns['wgGroupsAddToSelf'],
+				'rgs' => $groupAssigns['wgGroupsRemoveFromSelf'],
 				'matrix' => ManageWiki::handleMatrix( json_encode( $groupAssigns ), 'php' ),
 			];
 		} else {
