@@ -546,7 +546,7 @@ class ManageWikiFormFactoryBuilder {
 				'perm_removegroups' => json_encode( $mwReturn['data']['groups']['wgRemoveGroups'] ),
 				'perm_addgroupstoself' => json_encode( $mwReturn['data']['groups']['wgGroupsAddToSelf'] ),
 				'perm_removegroupsfromself' => json_encode( $mwReturn['data']['groups']['wgGroupsRemoveFromSelf'] ),
-				'perm_autopromote' => json_encode( $mwReturn['data']['autopromote'] )
+				'perm_autopromote' => $mwReturn['data']['autopromote']
 			];
 
 			if ( $state == 'update' ) {
@@ -902,6 +902,8 @@ class ManageWikiFormFactoryBuilder {
 			if ( $formData['groups'] ) {
 				$dataArray['autopromote'][] = [ APCOND_INGROUPS, $formData['groups'] ];
 			}
+
+			$dataArray['autopromote'] = json_encode( $dataArray['autopromote'] );
 		}
 
 		$logBuild['modified']['autopromote'] = ( $groupData['autopromote'] != $aE );
