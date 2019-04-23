@@ -96,7 +96,7 @@ class ManageWiki {
 			$phparrayout = [];
 
 			foreach ( $conversion as $phparray ) {
-				$element = explode( '-', $phparray );
+				$element = explode( '-', $phparray, 2 );
 				$phparrayout[$element[0]][] = $element[1];
 			}
 
