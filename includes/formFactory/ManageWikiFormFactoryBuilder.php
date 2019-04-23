@@ -874,37 +874,37 @@ class ManageWikiFormFactoryBuilder {
 			]
 		];
 
-		$dataArray['autopromote'] = $aE ? [
+		$aPBuild = $aE ? [
 				$formData['conds']
-		] : NULL;
+		] : [];
 
-		if ( !is_null( $dataArray['autopromote'] ) ) {
+		if ( count( $dataArray['autopromote'] ) != 0 ) {
 			if ( $formData['editcount'] ) {
-				$dataArray['autopromote'][] = [ APCOND_EDITCOUNT, (int)$formData['editcount'] ];
+				$aPBuild[] = [ APCOND_EDITCOUNT, (int)$formData['editcount'] ];
 			}
 
 			if ( $formData['age'] ) {
-				$dataArray['autopromote'][] = [ APCOND_AGE, (int)$formData['age'] * 86400 ];
+				$aPBuild[] = [ APCOND_AGE, (int)$formData['age'] * 86400 ];
 			}
 
 			if ( $formData['emailconfirmed'] ) {
-				$dataArray['autopromote'][] = APCOND_EMAILCONFIRMED;
+				$aPBuild[] = APCOND_EMAILCONFIRMED;
 			}
 
 			if ( $formData['blocked'] ) {
-				$dataArray['autopromote'][] = APCOND_BLOCKED;
+				$aPBuild[] = APCOND_BLOCKED;
 			}
 
 			if ( $formData['bot'] ) {
-				$dataArray['autopromote'][] = APCOND_ISBOT;
+				$aPBuild[] = APCOND_ISBOT;
 			}
 
 			if ( $formData['groups'] ) {
-				$dataArray['autopromote'][] = [ APCOND_INGROUPS, $formData['groups'] ];
+				$aPBuild[] = [ APCOND_INGROUPS, $formData['groups'] ];
 			}
-
-			$dataArray['autopromote'] = json_encode( $dataArray['autopromote'] );
 		}
+
+		$dataArray['autopromote'] = ( count( $aPBuild ) <= 1 ) ? NULL : json_encode( $aPBuild );
 
 		$logBuild['modified']['autopromote'] = ( $groupData['autopromote'] != $aE );
 
