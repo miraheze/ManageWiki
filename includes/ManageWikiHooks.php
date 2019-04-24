@@ -54,7 +54,7 @@ class ManageWikiHooks {
 							$$key[$group][$perm] = true;
 						}
 					}
-				} elseif ( $key == 'wgAutopromote' ) {
+				} elseif ( $key == 'wgAutopromote' && !is_null( $array ) ) {
 					$$key = $array;
 				} else {
 					foreach ( $array as $i => $groups ) {
