@@ -55,7 +55,7 @@ class ManageWikiHooks {
 						}
 					}
 				} elseif ( $key == 'wgAutopromote' ) {
-					if ( !is_null( $array ) {
+					if ( !is_null( $array ) ) {
 						$$key = $array;
 					}
 				} else {
