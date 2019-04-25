@@ -60,7 +60,7 @@
 	"managewiki-permissions-addall": "Kann zu anderen hinzufügen",
 	"managewiki-permissions-addself": "Kann sich selbst hinzufügen",
 	"managewiki-permissions-assigned": "Die unteren Benutzerrechte sind derzeit der Benutzergruppe zugewiesen.",
-	"managewiki-permissions-autopromote": "Unten kannst du die Autopromotion von Benutzern für diese Gruppe verwalten. Beachte, dass, falls ein Benutzer die unteren Kriterien erfüllt, alle Berechtigungen für diese Gruppe bekommen und du sie unter keinen Umständen aus dieser Gruppe entfernen kannst.",
+	"managewiki-permissions-autopromote": "Unten kannst du die Autopromotion von Benutzern für diese Gruppe verwalten. Beachte bitte: Falls ein Benutzer die unteren Kriterien erfüllt, erhält er alle Berechtigungen für diese Gruppe. Du kannst sie unter keinen Umständen aus dieser Gruppe entfernen.",
 	"managewiki-permissions-autopromote-age": "Muss ein Benutzer für die folgende Anzahl an Tagen sein",
 	"managewiki-permissions-autopromote-blocked": "Muss gesperrt sein",
 	"managewiki-permissions-autopromote-bot": "Muss ein Bot-Benutzerkonto sein",

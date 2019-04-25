@@ -47,6 +47,7 @@
 	"managewiki-ns-createnamespaceinfo": "이 위키에 새 이름공간을 만들려면 아래의 버튼을 누르십시오. 다음 페이지에서 이름을 정의하고 구성할 수 있습니다.",
 	"managewiki-ns-invalidid": "ManageWiki를 통해 편집하려면 이름공간 ID는 짝수여야 합니다.",
 	"managewiki-ns-select": "아래 목록에서 이름공간을 선택한 다음 제출을 누르십시오",
+	"managewiki-permissions-autopromote-email": "이메일 인증은 필수입니다",
 	"managewiki-permissions-creategroup": "새 사용자 그룹 만들기",
 	"managewiki-permissions-resetgroups": "모든 그룹을 기본값으로 재설정",
 	"managewiki-success": "설정이 성공적으로 업데이트되었습니다.",
