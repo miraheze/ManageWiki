@@ -19,6 +19,8 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 	}
 
 	function execute() {
+		global $wgDBname;
+
 		$addp = (array)explode( ',', $this->getOption( 'addperms', '' ) );
 		$removep = (array)explode( ',', $this->getOption( 'removeperms', '' ) );
 		$addag = (array)explode( ',', $this->getOption( 'newaddgroups', '' ) );
@@ -26,7 +28,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 		$addrg = (array)explode( ',', $this->getOption( 'newremovegroups', '' ) );
 		$removerg = (array)explode( ',', $this->getOption( 'removeremovegroups', '' ) );
 
-		ManageWiki::modifyPermissions( $this->getArg( 0 ), $addp, $removep, $addag, $removeag, $addrg, $removerg );
+		ManageWikiPermissions::modifyPermissions( $this->getArg( 0 ), $addp, $removep, $addag, $removeag, $addrg, $removerg, [], [], [], [], $wgDBname );
 
 		ManageWikiCDB::changes( 'permissions' );
 	}
