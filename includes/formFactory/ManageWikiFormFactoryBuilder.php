@@ -99,9 +99,10 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $wgManageWikiSettings as $name => $set ) {
 			$add = ( $set['from'] == 'mediawiki' ) ? true : $wiki->hasExtension( $set['from'] );
+			$sType = $set[‘type’];
 
 			if ( $add ) {
-				switch ( $set['type'] ) {
+				switch ( $sType ) {
 					case 'check':
 					case 'text':
 					case 'url':
@@ -150,8 +151,10 @@ class ManageWikiFormFactoryBuilder {
 
 				if ( $mwType == 'matrix' ) {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue ( $name ), 'php' ) : $set['overridedefault'];
-				} elseif( $mwType == 'multiselect' ) {
+				} elseif( $sType == 'list-multi-bool' ) {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? array_keys( $wiki->getSettingsValue( $name ) ) : array_keys( $set['overridedefault'] );
+				} elseif( $sType == 'list-multi' ) {
+					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? $wiki->getSettingsValue( $name ) : $set['overridedefault'];
 				} else {
 					$formDescriptor["set-$name"]['default'] = $wiki->getSettingsValue( $name ) ?? $set['overridedefault'];
 				}
