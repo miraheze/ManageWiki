@@ -99,7 +99,7 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $wgManageWikiSettings as $name => $set ) {
 			$add = ( $set['from'] == 'mediawiki' ) ? true : $wiki->hasExtension( $set['from'] );
-			$sType = $set[‘type’];
+			$sType = $set['type'];
 
 			if ( $add ) {
 				switch ( $sType ) {
