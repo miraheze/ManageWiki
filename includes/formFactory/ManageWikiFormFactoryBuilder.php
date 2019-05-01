@@ -152,7 +152,7 @@ class ManageWikiFormFactoryBuilder {
 				if ( $mwType == 'matrix' ) {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue ( $name ), 'php' ) : $set['overridedefault'];
 				} elseif( $sType == 'list-multi-bool' ) {
-					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? array_keys( $wiki->getSettingsValue( $name ) ) : array_keys( $set['overridedefault'], true );
+					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? array_keys( $wiki->getSettingsValue( $name ), true ) : array_keys( $set['overridedefault'], true );
 				} elseif( $sType == 'list-multi' ) {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? $wiki->getSettingsValue( $name ) : $set['overridedefault'];
 				} else {
