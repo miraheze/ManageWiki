@@ -60,7 +60,7 @@ class ManageWikiHooks {
 					}
 				} else {
 					foreach ( $array as $i => $groups ) {
-						if ( is_array( $array ) ) {
+						if ( is_array( $groups ) && count( $groups ) >= 1 ) {
 							foreach ( $groups as $id => $group ) {
 								$$key[$i][] = $group;
 							}
