@@ -54,7 +54,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		RemoteWiki $wiki
 	) {
-		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
+		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiGlobalWiki;
 
 		$languages = Language::fetchLanguageNames( NULL, 'wmfile' );
 		ksort( $languages );
@@ -133,7 +133,7 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
-		if ( $context->getUser()->isAllowed( 'managewiki-restricted' ) ) {
+		if ( $context->getUser()->isAllowed( 'managewiki-restricted' ) && ( $dbName != $wgCreateWikiGlobalWiki ) ) {
 			$formDescriptor['delete'] = [
 				'type' => 'check',
 				'label-message' => 'managewiki-label-deletewiki',
@@ -582,7 +582,7 @@ class ManageWikiFormFactoryBuilder {
 			$deleteLog->setPerformer( $context->getUser() );
 			$deleteLog->setTarget( $form->getTitle() );
 			$deleteLog->setComment( $formData['reason'] );
-			$deleteLog->setParamters( [ '4::wiki' => $dbName ] );
+			$deleteLog->setParameters( [ '4::wiki' => $dbName ] );
 			$logID = $deleteLog->insert( wfGetDB( DB_MASTER, [], $wgCreateWikiGlobalWiki ) );
 			$deleteLog->publish();
 
