@@ -21,6 +21,8 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "View the sitename of the wiki",
 	"apiwarn-wikiconfig-nopermission": "You are not allowed to view the configuration for wiki '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki '$1' does not exist.",
+	"core-main": "Main Settings",
+	"core-handling": "Submit",
 	"extensions-other": "Other",
 	"extensions-handling": "Submit",
 	"log-description-managewiki": "This log tracks all changes to a wikis settings through ManageWiki.",

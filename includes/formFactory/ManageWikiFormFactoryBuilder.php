@@ -106,7 +106,7 @@ class ManageWikiFormFactoryBuilder {
 				'if' => $wgCreateWikiUseInactiveWikis,
 				'type' => 'check',
 				'default' => $wiki->isInactiveExempt(),
-				'access' => $context->getUser->isAllowed( 'managewiki-restricted' )
+				'access' => !$context->getUser()->isAllowed( 'managewiki-restricted' )
 			]
 		];
 
@@ -762,7 +762,7 @@ class ManageWikiFormFactoryBuilder {
 			$closedDate = NULL;
 		}
 
-		if ( $wgCreateWikiUserInactiveWikis ) {
+		if ( $wgCreateWikiUseInactiveWikis ) {
 			$newInactive = $formData['inactive'];
 			$newInactiveExempt = $formData['inactive-exempt'];
 
