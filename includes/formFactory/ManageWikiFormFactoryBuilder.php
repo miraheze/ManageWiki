@@ -133,6 +133,15 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+		if ( $context->getUser()->isAllowed( 'managewiki-restricted' ) ) {
+			$formDescriptor['delete'] = [
+				'type' => 'check',
+				'label-message' => 'managewiki-label-deletewiki',
+				'default' => false,
+				'section' => 'handling'
+			];
+		}
+
 		return $formDescriptor;
 	}
 
@@ -537,6 +546,8 @@ class ManageWikiFormFactoryBuilder {
 		Database $dbw,
 		string $special = ''
 	) {
+		global $wgCreateWikiGlobalWiki;
+
 		switch ( $module ) {
 			case 'core':
 				$mwReturn = self::submissionCore( $formData, $dbName, $context, $wiki, $dbw );
@@ -553,6 +564,29 @@ class ManageWikiFormFactoryBuilder {
 			case 'permissions':
 				$mwReturn = self::submissionPermissions( $formData, $dbName, $special );
 				break;
+		}
+
+		if ( $mwReturn === 'deleted-wiki' ) {
+			$dbw->update(
+				'cw_wikis',
+				[
+					'wiki_deleted' => 1,
+					'wiki_deleted_timestamp' => $dbw->timestamp()
+				],
+				[
+					'wiki_dbname' => $dbName
+				]
+			);
+
+			$deleteLog = new ManualLogEntry( 'managewiki', 'delete' );
+			$deleteLog->setPerformer( $context->getUser() );
+			$deleteLog->setTarget( $form->getTitle() );
+			$deleteLog->setComment( $formData['reason'] );
+			$deleteLog->setParamters( [ '4::wiki' => $dbName ] );
+			$logID = $deleteLog->insert( wfGetDB( DB_MASTER, [], $wgCreateWikiGlobalWiki ) );
+			$deleteLog->publish();
+
+			return 'Wiki deleted.';
 		}
 
 		if ( $mwReturn['errors'] ) {
@@ -717,6 +751,10 @@ class ManageWikiFormFactoryBuilder {
 		Database $dbw
 	) {
 		global $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
+
+		if ( $formData['delete'] ) {
+			return 'deleted-wiki';
+		}
 
 		$changedArray = [];
 
