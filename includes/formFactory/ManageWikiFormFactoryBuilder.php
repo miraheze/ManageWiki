@@ -11,6 +11,9 @@ class ManageWikiFormFactoryBuilder {
 		Database $dbw
 	) {
 		switch ( $module ) {
+			case 'core':
+				$formDescriptor = self::buildDescriptorCore( $dbName, $ceMW, $context, $wiki );
+				break;
 			case 'extensions':
 				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $context, $wiki );
 				break;
@@ -39,6 +42,94 @@ class ManageWikiFormFactoryBuilder {
 					'default' => wfMessage( 'htmlform-submit' )->text(),
 					'section' => 'handling'
 				]
+			];
+		}
+
+		return $formDescriptor;
+	}
+
+	private static function buildDescriptorCore(
+		string $dbName,
+		bool $ceMW,
+		IContextSource $context,
+		RemoteWiki $wiki
+	) {
+		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis;
+
+		$languages = Language::fetchLanguageNames( NULL, 'wmfile' );
+		ksort( $languages );
+		$options = [];
+		foreach ( $languages as $code => $name ) {
+			$options["$code - $name"] = $code;
+		}
+
+		$formDescriptor = [
+			'sitename' => [
+				'label-message' => 'managewiki-label-sitename',
+				'type' => 'text',
+				'default' => $wiki->getSitename(),
+				'disabled' => !$ceMW,
+				'required' => true,
+				'section' => 'main'
+			],
+			'language' => [
+				'label-message' => 'managewiki-label-language',
+				'type' => 'select',
+				'default' => $wiki->getLanguage(),
+				'options' => $options,
+				'disabled' => !$ceMW,
+				'required' => true,
+				'section' => 'main'
+			]
+		];
+
+		$addedModules = [
+			'private' => [
+				'if' => $wgCreateWikiUsePrivateWikis,
+				'type' => 'check',
+				'default' => $wiki->isPrivate(),
+				'access' => !$ceMW
+			],
+			'closed' => [
+				'if' => $wgCreateWikiUseClosedWikis,
+				'type' => 'check',
+				'default' => $wiki->isClosed(),
+				'access' => !$ceMW
+			],
+			'inactive' => [
+				'if' => $wgCreateWikiUseInactiveWikis,
+				'type' => 'check',
+				'default' => $wiki->isInactive(),
+				'access' => !$ceMW
+			],
+			'inactive-exempt' => [
+				'if' => $wgCreateWikiUseInactiveWikis,
+				'type' => 'check',
+				'default' => $wiki->isInactiveExempt(),
+				'access' => $context->getUser->isAllowed( 'managewiki-restricted' )
+			]
+		];
+
+		foreach ( $addedModules as $name => $data ) {
+			if ( $data['if'] ) {
+				$formDescriptor[$name] = [
+					'type' => $data['type'],
+					'label-message' => "managewiki-label-$name",
+					'default' => $data['default'],
+					'disabled' => $data['access'],
+					'section' => 'main'
+				];
+			}
+		}
+
+		if ( $wgCreateWikiUseCategories && $wgCreateWikiCategories ) {
+			$formDescriptor['category'] = [
+				'type' => 'select',
+				'label-message' => 'managewiki-label-category',
+				'options' => $wgCreateWikiCategories,
+				'default' => $wiki->getCategory(),
+				'disabled' => !$ceMW,
+				'section' => 'main'
 			];
 		}
 
@@ -447,6 +538,9 @@ class ManageWikiFormFactoryBuilder {
 		string $special = ''
 	) {
 		switch ( $module ) {
+			case 'core':
+				$mwReturn = self::submissionCore( $formData, $dbName, $context, $wiki, $dbw );
+				break;
 			case 'extensions':
 				$mwReturn = self::submissionExtensions( $formData, $dbName, $context, $wiki );
 				break;
@@ -470,11 +564,17 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		if ( $mwReturn['table'] == 'cw_wikis' ) {
+			if ( is_array( $mwReturn['data'] ) ) {
+				$rows = $mwReturn['data'];
+			} else {
+				$rows = [
+					"wiki_{$module}" => $mwReturn['data']
+				];
+			}
+
 			$dbw->update(
 				'cw_wikis',
-				[
-					"wiki_{$module}" => $mwReturn['data']
-				],
+				$rows,
 				[
 					'wiki_dbname' => $dbName
 				]
@@ -607,6 +707,111 @@ class ManageWikiFormFactoryBuilder {
 		$mwLogEntry->setParameters( $mwLogParams );
 		$mwLogID = $mwLogEntry->insert();
 		$mwLogEntry->publish( $mwLogID );
+	}
+
+	private static function submissionCore(
+		array $formData,
+		string $dbName,
+		IContextSource $context,
+		RemoteWiki $wiki,
+		Database $dbw
+	) {
+		global $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
+
+		$changedArray = [];
+
+		if ( $wgCreateWikiUsePrivateWikis ) {
+			if ( $wiki->isPrivate() != $formData['private'] ) {
+				if ( $formData['private'] ) {
+					Hooks::run( 'CreateWikiStatePrivate', [ $dbName ] );
+					$changedArray[] = 'private';
+				} else {
+					Hooks::run( 'CreateWikiStatePublic', [ $dbName ] );
+					$changedArray[] = 'public';
+				}
+			}
+		} else {
+			$private = 0;
+		}
+
+		if ( $wgCreateWikiUseClosedWikis ) {
+			$previousClosed = $wiki->isClosed();
+			$newClosed = $formData['closed'];
+
+			if ( $newClosed && ( $previousClosed != $newClosed ) ) {
+				$closed = 1;
+				$closedDate = $dbw->timestamp();
+
+				Hooks::run( 'CreateWikiStateClosed', [ $dbName ] );
+
+				$changedArray[] = 'closed';
+			} elseif ( !$newClosed && ( $previousClosed != $newClosed ) ) {
+				$closed = 0;
+				$closedDate = NULL;
+
+				Hooks::run( 'CreateWikiStateOpen', [ $dbName ] );
+
+				$changedArray[] = 'opened';
+			} else {
+				$closed = $previousClosed;
+				$closedDate = $wiki->closureDate();
+			}
+
+		} else {
+			$closed = 0;
+			$closedDate = NULL;
+		}
+
+		if ( $wgCreateWikiUserInactiveWikis ) {
+			$newInactive = $formData['inactive'];
+			$newInactiveExempt = $formData['inactive-exempt'];
+
+			if ( $newInactive != $wiki->isInactive() ) {
+				$inactive = $newInactive;
+				$inactiveDate = $dbw->timestamp();
+
+				$changedArray[] = ( $newInactive ) ? 'inactive' : 'active';
+			}
+
+			if ( $newInactiveExempt && $context->getUser()->isAllowed( 'managewiki-restricted' ) ) {
+				$inactiveExempt = 1;
+
+				$changedArray[] = 'inactive-exempt';
+			} else {
+				$inactiveExempt = $wiki->isInactiveExempt();
+			}
+		} else {
+			$inactive = 0;
+			$inactiveDate = NULL;
+			$inactiveExempt = 0;
+		}
+
+		$category = ( $wgCreateWikiUseCategories ) ? $formData['category'] : 'uncategorised';
+
+		if ( $category != $wiki->getCategory() ) {
+			$changedArray[] = 'category';
+		}
+
+		$data = [
+			'wiki_sitename' => $formData['sitename'],
+			'wiki_language' => $formData['language'],
+			'wiki_closed' => $closed,
+			'wiki_closed_timestamp' => $closedDate,
+			'wiki_inactive' => $inactive,
+			'wiki_inactive_timestamp' => $inactiveDate,
+			'wiki_inactive_exempt' => $inactiveExempt,
+			'wiki_private' => $private,
+			'wiki_category' => $category
+		];
+
+		return [
+			'cdb' => false,
+			'changes' => implode( ', ', $changedArray ),
+			'data' => $data,
+			'errors' => false,
+			'log' => 'settings',
+			'table' => 'cw_wikis'
+		];
 	}
 
 	private static function submissionExtensions(
