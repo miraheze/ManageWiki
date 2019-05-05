@@ -64,6 +64,13 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$formDescriptor = [
+			'dbname' => [
+				'label-message' => 'managewiki-label-dbname',
+				'type' => 'text',
+				'default' => $dbName,
+				'disabled' => true,
+				'section' => 'main'
+			],
 			'sitename' => [
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
