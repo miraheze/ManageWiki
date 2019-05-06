@@ -1,11 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Alireza Ivaz"
+			"Alireza Ivaz",
+			"Sjazz"
 		]
 	},
 	"action-managewiki": "مدیریت تنظیمات ویکی",
 	"apiwarn-wikiconfig-wikidoesnotexist": "ویکی «$1» وجود ندارد.",
+	"core-handling": "ثبت",
 	"extensions-other": "دیگر",
 	"extensions-handling": "اعمال",
 	"log-name-managewiki": "سیاههٔ مدیریت ویکی",
