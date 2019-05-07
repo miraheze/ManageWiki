@@ -598,7 +598,7 @@ class ManageWikiFormFactoryBuilder {
 			$deleteLog->setComment( $formData['reason'] );
 			$deleteLog->setParameters( [ '4::wiki' => $dbName ] );
 			$logID = $deleteLog->insert();
-			$deleteLog->publish();
+			$deleteLog->publish( $logID );
 
 			return "Wiki has been {$mwReturn}";
 		}
