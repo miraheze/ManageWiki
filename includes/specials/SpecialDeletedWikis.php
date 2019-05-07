@@ -1,14 +1,14 @@
 <?php
-class SpecialDeletableWikis extends SpecialPage {
+class SpecialDeletedWikis extends SpecialPage {
 	function __construct() {
-		parent::__construct( 'DeletableWikis' );
+		parent::__construct( 'DeletedWikis' );
 	}
 
 	function execute( $par ) {
 		$out = $this->getOutput();
 		$this->setHeaders();
 
-		$pager = new ManageWikiDeletableWikiPager();
+		$pager = new ManageWikiDeletedWikiPager();
 		$table = $pager->getBody();
 
 		$this->getOutput()->addHTML( $pager->getNavigationBar() . $table . $pager->getNavigationBar() );

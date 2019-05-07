@@ -23,6 +23,7 @@
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki '$1' does not exist.",
 	"core-main": "Main Settings",
 	"core-handling": "Submit",
+	"deletedwikis": "Deleted Wikis",
 	"extensions-other": "Other",
 	"extensions-handling": "Submit",
 	"log-description-managewiki": "This log tracks all changes to a wikis settings through ManageWiki.",

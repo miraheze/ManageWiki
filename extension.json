@@ -23,7 +23,7 @@
 		"managewiki-restricted"
 	],
 	"SpecialPages": {
-		"DeletableWikis": "SpecialDeletableWikis",
+		"DeletedWikis": "SpecialDeletedWikis",
 		"ManageWiki": "SpecialManageWiki",
 		"ManageWikiDefaultPermissions": "SpecialManageWikiDefaultPermissions",
 		"ManageWikiExtensions": "SpecialManageWikiExtensions",
@@ -57,7 +57,7 @@
 		"ApiQueryWikiConfig": "includes/api/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
 		"ManageWikiCDB": "includes/helpers/ManageWikiCDB.php",
-		"ManageWikiDeleteWikiPager": "includes/helpers/ManageWikiDeleteWikiPager.php",
+		"ManageWikiDeletedWikiPager": "includes/helpers/ManageWikiDeletedWikiPager.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
@@ -67,7 +67,7 @@
 		"ManageWikiRequirements": "includes/helpers/ManageWikiRequirements.php",
 		"MWScriptJob": "includes/jobs/MWScriptJob.php",
 		"NamespaceMigrationJob": "includes/jobs/NamespaceMigrationJob.php",
-		"SpecialDeletableWikis": "includes/specials/SpecialDeletableWikis.php",
+		"SpecialDeletedWikis": "includes/specials/SpecialDeletedWikis.php",
 		"SpecialManageWiki": "includes/specials/SpecialManageWiki.php",
 		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php",
 		"SpecialManageWikiExtensions": "includes/specials/SpecialManageWikiExtensions.php",
