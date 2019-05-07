@@ -54,7 +54,8 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		RemoteWiki $wiki
 	) {
-		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiGlobalWiki;
+		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis,
+			$wgCreateWikiUseInactiveWikis, $wgCreateWikiGlobalWiki, $wgDBname;
 
 		$languages = Language::fetchLanguageNames( NULL, 'wmfile' );
 		ksort( $languages );
@@ -140,10 +141,12 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
-		if ( $context->getUser()->isAllowed( 'managewiki-restricted' ) && ( $dbName != $wgCreateWikiGlobalWiki ) ) {
-			$formDescriptor['delete'] = [
+		if ( $ceMW && ( $wgDBname == $wgCreateWikiGlobalWiki ) && !$wiki->isInactiveExempt() ) {
+			$mwAction = ( $wiki->isDeleted() ) ? 'undelete' : 'delete';
+
+			$formDescriptor[$mwAction] = [
 				'type' => 'check',
-				'label-message' => 'managewiki-label-deletewiki',
+				'label-message' => "managewiki-label-{$mwAction}wiki",
 				'default' => false,
 				'section' => 'handling'
 			];
@@ -553,8 +556,6 @@ class ManageWikiFormFactoryBuilder {
 		Database $dbw,
 		string $special = ''
 	) {
-		global $wgCreateWikiGlobalWiki;
-
 		switch ( $module ) {
 			case 'core':
 				$mwReturn = self::submissionCore( $formData, $dbName, $context, $wiki, $dbw );
@@ -573,27 +574,33 @@ class ManageWikiFormFactoryBuilder {
 				break;
 		}
 
-		if ( $mwReturn === 'deleted-wiki' ) {
+		if ( $mwReturn === 'deleted' || $mwReturn === 'undeleted' ) {
+			$delete = ( $mwReturn === 'deleted' );
+
+			$rows = [
+				'wiki_deleted' => (int)$delete,
+				'wiki_deleted_timestamp' => ( $delete ) ? $dbw->timestamp() : NULL
+			];
+
 			$dbw->update(
 				'cw_wikis',
-				[
-					'wiki_deleted' => 1,
-					'wiki_deleted_timestamp' => $dbw->timestamp()
-				],
+				$rows,
 				[
 					'wiki_dbname' => $dbName
 				]
 			);
 
-			$deleteLog = new ManualLogEntry( 'managewiki', 'delete' );
+			$logAction = ( $delete ) ? 'delete' : 'undelete';
+
+			$deleteLog = new ManualLogEntry( 'managewiki', $logAction );
 			$deleteLog->setPerformer( $context->getUser() );
 			$deleteLog->setTarget( $form->getTitle() );
 			$deleteLog->setComment( $formData['reason'] );
 			$deleteLog->setParameters( [ '4::wiki' => $dbName ] );
-			$logID = $deleteLog->insert( wfGetDB( DB_MASTER, [], $wgCreateWikiGlobalWiki ) );
+			$logID = $deleteLog->insert();
 			$deleteLog->publish();
 
-			return 'Wiki deleted.';
+			return "Wiki has been {$mwReturn}";
 		}
 
 		if ( $mwReturn['errors'] ) {
@@ -759,8 +766,10 @@ class ManageWikiFormFactoryBuilder {
 	) {
 		global $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
 
-		if ( $formData['delete'] ) {
-			return 'deleted-wiki';
+		if ( isset( $formData['delete'] ) && $formData['delete'] ) {
+			return 'deleted';
+		} elseif ( isset( $formData['undelete'] ) && $formData['undelete'] ) {
+			return 'undeleted';
 		}
 
 		$changedArray = [];

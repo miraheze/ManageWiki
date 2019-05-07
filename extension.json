@@ -23,6 +23,7 @@
 		"managewiki-restricted"
 	],
 	"SpecialPages": {
+		"DeletableWikis": "SpecialDeletableWikis",
 		"ManageWiki": "SpecialManageWiki",
 		"ManageWikiDefaultPermissions": "SpecialManageWikiDefaultPermissions",
 		"ManageWikiExtensions": "SpecialManageWikiExtensions",
@@ -35,12 +36,14 @@
 		"NamespaceMigrationJob": "NamespaceMigrationJob"
 	},
 	"LogActionsHandlers": {
+		"managewiki/delete": "LogFormatter",
 		"managewiki/delete-group": "LogFormatter",
 		"managewiki/settings": "LogFormatter",
 		"managewiki/rename": "LogFormatter",
 		"managewiki/rights": "LogFormatter",
 		"managewiki/namespaces": "LogFormatter",
-		"managewiki/namespaces-delete": "LogFormatter"
+		"managewiki/namespaces-delete": "LogFormatter",
+		"managewiki/undelete": "LogFormatter"
 	},
 	"LogTypes": [
 		"managewiki"
@@ -53,16 +56,18 @@
 	"AutoloadClasses": {
 		"ApiQueryWikiConfig": "includes/api/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
-		"ManageWikiCDB": "includes/ManageWikiCDB.php",
+		"ManageWikiCDB": "includes/helpers/ManageWikiCDB.php",
+		"ManageWikiDeleteWikiPager": "includes/helpers/ManageWikiDeleteWikiPager.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
-		"ManageWikiInstaller": "includes/ManageWikiInstaller.php",
+		"ManageWikiInstaller": "includes/helpers/ManageWikiInstaller.php",
 		"ManageWikiNamespaces": "includes/ManageWikiNamespaces.php",
-		"ManageWikiPermissions": "includes/ManageWikiPermissions.php",
-		"ManageWikiRequirements": "includes/ManageWikiRequirements.php",
+		"ManageWikiPermissions": "includes/helpers/ManageWikiPermissions.php",
+		"ManageWikiRequirements": "includes/helpers/ManageWikiRequirements.php",
 		"MWScriptJob": "includes/jobs/MWScriptJob.php",
 		"NamespaceMigrationJob": "includes/jobs/NamespaceMigrationJob.php",
+		"SpecialDeletableWikis": "includes/specials/SpecialDeletableWikis.php",
 		"SpecialManageWiki": "includes/specials/SpecialManageWiki.php",
 		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php",
 		"SpecialManageWikiExtensions": "includes/specials/SpecialManageWikiExtensions.php",
