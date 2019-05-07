@@ -32,10 +32,10 @@ class ManageWikiDeletedWikiPager extends TablePager {
 				$formatted = $row->wiki_dbname;
 				break;
 			case 'wiki_creation':
-				$formatted = wfTimestamp( TS_RFC2822, (int)$row->wiki_creation_date );
+				$formatted = wfTimestamp( TS_RFC2822, (int)$row->wiki_creation );
 				break;
 			case 'wiki_deleted_timestamp':
-				$formatted = wfTimestamp( TS_RFC2822, (int)$row->wiki_deleted_date );
+				$formatted = wfTimestamp( TS_RFC2822, (int)$row->wiki_deleted_timestamp );
 				break;
 			case 'wiki_deleted':
 				$formatted = Linker::makeExternalLink( SpecialPage::getTitleFOr( 'ManageWiki' )->getFullURL() . '/' . $row->wiki_dbname, wfMessage( 'managewiki-label-goto' )->text() );
