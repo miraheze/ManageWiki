@@ -766,6 +766,7 @@ class ManageWikiFormFactoryBuilder {
 		$changedArray = [];
 
 		if ( $wgCreateWikiUsePrivateWikis ) {
+			$private = ( $formData['private'] == true ) ? 1 : 0;
 			if ( $wiki->isPrivate() != $formData['private'] ) {
 				if ( $formData['private'] ) {
 					Hooks::run( 'CreateWikiStatePrivate', [ $dbName ] );
