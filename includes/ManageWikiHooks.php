@@ -143,7 +143,7 @@ class ManageWikiHooks {
 						'perm_removegroups' => json_encode( $groupArray['rg'] ),
 						'perm_addgroupstoself' => json_encode( $groupArray['ags'] ),
 						'perm_removegroupsfromself' => json_encode( $groupArray['rgs'] ),
-						'perm_autopromote' => json_encode( $groupArray['autopromote'] )
+						'perm_autopromote' => ( is_null( $groupArray['autopromote'] ) ) ? NULL : json_encode( $groupArray['autopromote'] )
 					],
 					__METHOD__
 				);
