@@ -62,7 +62,7 @@
 		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/helpers/ManageWikiInstaller.php",
-		"ManageWikiNamespaces": "includes/ManageWikiNamespaces.php",
+		"ManageWikiNamespaces": "includes/helpers/ManageWikiNamespaces.php",
 		"ManageWikiPermissions": "includes/helpers/ManageWikiPermissions.php",
 		"ManageWikiRequirements": "includes/helpers/ManageWikiRequirements.php",
 		"MWScriptJob": "includes/jobs/MWScriptJob.php",
