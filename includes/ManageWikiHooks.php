@@ -131,16 +131,19 @@ class ManageWikiHooks {
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 			foreach ( $defaultGroups as $newgroup ) {
-				$grouparray = ManageWikiPermissions::groupPermissions( $newgroup, 'default' );
+				$groupArray = ManageWikiPermissions::groupPermissions( $newgroup, 'default' );
 
 				$dbw->insert(
 					'mw_permissions',
 					[
 						'perm_dbname' => $dbname,
 						'perm_group' => $newgroup,
-						'perm_permissions' => json_encode( $grouparray['permissions'] ),
-						'perm_addgroups' => json_encode( $grouparray['ag'] ),
-						'perm_removegroups' => json_encode( $grouparray['rg'] )
+						'perm_permissions' => json_encode( $groupArray['permissions'] ),
+						'perm_addgroups' => json_encode( $groupArray['ag'] ),
+						'perm_removegroups' => json_encode( $groupArray['rg'] ),
+						'perm_addgroupstoself' => json_encode( $groupArray['ags'] ),
+						'perm_removegroupsfromself' => json_encode( $groupArray['rgs'] ),
+						'perm_autopromote' => json_encode( $groupArray['autopromote'] )
 					],
 					__METHOD__
 				);
