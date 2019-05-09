@@ -1144,7 +1144,7 @@ class ManageWikiFormFactoryBuilder {
 				$formData['conds']
 		] : [];
 
-		if ( count( $dataArray['autopromote'] ) != 0 ) {
+		if ( count( $aPBuild ) != 0 ) {
 			if ( $formData['editcount'] ) {
 				$aPBuild[] = [ APCOND_EDITCOUNT, (int)$formData['editcount'] ];
 			}
