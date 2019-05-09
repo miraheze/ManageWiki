@@ -790,10 +790,11 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		if ( $wgCreateWikiUseClosedWikis ) {
-			$previousClosed = $wiki->isClosed();
+			$closed = $wiki->isClosed();
+			$closedDate = $wiki->getClosedDate();
 			$newClosed = $formData['closed'];
 
-			if ( $newClosed && ( $previousClosed != $newClosed ) ) {
+			if ( $newClosed && ( $closed != $newClosed ) ) {
 				$closed = 1;
 				$closedDate = $dbw->timestamp();
 
@@ -819,9 +820,11 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $wgCreateWikiUseInactiveWikis ) {
 			$newInactive = $formData['inactive'];
+			$inactive = $wiki->isInactive();
+			$inactiveDate = $wiki->getInactiveDate();
 			$newInactiveExempt = $formData['inactive-exempt'];
 
-			if ( $newInactive != $wiki->isInactive() ) {
+			if ( $newInactive != $inactive ) {
 				$inactive = $newInactive;
 				$inactiveDate = $dbw->timestamp();
 
