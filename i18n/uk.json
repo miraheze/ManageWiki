@@ -3,7 +3,8 @@
 		"authors": [
 			"Vlad5250",
 			"Piramidion",
-			"Abijeet Patro"
+			"Abijeet Patro",
+			"Ата"
 		]
 	},
 	"action-managewiki": "керувати налаштуваннями вікі",
@@ -27,7 +28,7 @@
 	"logentry-managewiki-namespaces": "$1 {{GENDER:$1|змінив|змінила}} простір назв «$5» для вікі «$4»",
 	"logentry-managewiki-namespaces-delete": "$1 {{GENDER:$1|вилучив|вилучила}} простір назв «$5» для вікі «$4»",
 	"logentry-managewiki-rename": "$1 {{GENDER:$1|перейменував|перейменувала}} групу $3 з $4",
-	"logentry-managewiki-rights": "$1 {{GENDER:$1|змінив|змінила}} групові метадані для $3: додано права $4; вилучено права $5; додано addgroups $6; вилучено addgroups $7; додано removegroups $8; вилучено removegroups $9",
+	"logentry-managewiki-rights": "$1 {{GENDER:$1|змінив|змінила}} групові метадані для $3: додано права $4; вилучено права $5; додано addgroups $6; вилучено addgroups $7; додано removegroups $8; вилучено removegroups $9; додано addgroupstoself $10; вилучено addgroupstoself $11; додано removegroupsfromself $12; вилучено removegroupsfromself $13; змінено autopromotion ($14)",
 	"logentry-managewiki-settings": "$1 {{GENDER:$1|змінив|змінила}} налаштування ($5) для «$4»",
 	"managewiki": "Керувати вікі",
 	"managewikisettings": "Керувати додатковими налаштуваннями вікі",
@@ -78,7 +79,7 @@
 	"namespaces-protection": "Яке право користувача має бути потрібне для редагування цього простору назв?",
 	"namespaces-search": "Чи має цей простір назв враховуватися за замовчуванням при здійсненні пошуку?",
 	"namespaces-subpages": "Чи має бути увімкнена можливість створення підсторінок у цьому просторі назв?",
-	"permissions-assigned": "Призначені права:",
+	"permissions-assigned": "Призначені права",
 	"right-managewiki": "керування налаштуваннями вікі",
 	"right-managewiki-restricted": "керування обмеженими налаштуваннями вікі",
 	"right-managewiki-editdefault": "керування правами стандартних груп",
