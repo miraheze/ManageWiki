@@ -791,7 +791,7 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $wgCreateWikiUseClosedWikis ) {
 			$closed = $wiki->isClosed();
-			$closedDate = $wiki->getClosedDate();
+			$closedDate = $wiki->getClosureDate();
 			$newClosed = $formData['closed'];
 
 			if ( $newClosed && ( $closed != $newClosed ) ) {
