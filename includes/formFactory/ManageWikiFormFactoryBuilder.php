@@ -801,7 +801,7 @@ class ManageWikiFormFactoryBuilder {
 				Hooks::run( 'CreateWikiStateClosed', [ $dbName ] );
 
 				$changedArray[] = 'closed';
-			} elseif ( !$newClosed && ( $previousClosed != $newClosed ) ) {
+			} elseif ( !$newClosed && ( $closed != $newClosed ) ) {
 				$closed = 0;
 				$closedDate = NULL;
 
@@ -809,7 +809,7 @@ class ManageWikiFormFactoryBuilder {
 
 				$changedArray[] = 'opened';
 			} else {
-				$closed = $previousClosed;
+				$closed = $closed;
 				$closedDate = $wiki->closureDate();
 			}
 
