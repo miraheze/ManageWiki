@@ -1,7 +1,7 @@
 <?php
 
 class ManageWikiRequirements {
-	public static function process( string $dbname, array $actions, IContextSource $context ) {
+	public static function process( string $dbname, array $actions, IContextSource $context, array $formData = [] ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
@@ -9,7 +9,7 @@ class ManageWikiRequirements {
 			if ( $action == 'permissions' ) {
 				$stepResponse['permissions'] = self::permissions( $data, $context );
 			} elseif ( $action == 'extensions' ) {
-				$stepResponse['extensions'] = self::extensions( $dbname, $data );
+				$stepResponse['extensions'] = self::extensions( $dbname, $data, $formData );
 			} elseif ( $action == 'articles' ) {
 				$stepResponse['articles'] = self::articles( $data );
 			} elseif ( $action == 'pages' ) {
@@ -35,11 +35,11 @@ class ManageWikiRequirements {
 		return true;
 	}
 
-	private static function extensions( string $dbname, array $data ) {
+	private static function extensions( string $dbname, array $data, array $formData ) {
 		$remoteWiki = RemoteWiki::newFromName( $dbname );
 
 		foreach ( $data as $extension ) {
-			if ( !$remoteWiki->hasExtension( $extension ) ) {
+			if ( !$remoteWiki->hasExtension( $extension ) || isset( $formData["ext-$extension"] ) && !$formData["ext-$extension"] ) {
 				return false;
 			}
 		}

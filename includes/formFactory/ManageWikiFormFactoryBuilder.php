@@ -885,7 +885,7 @@ class ManageWikiFormFactoryBuilder {
 		$changedExtensions = [];
 
 		foreach ( $wgManageWikiExtensions as $name => $ext ) {
-			$requiresMet = ManageWikiRequirements::process( $dbName, $ext['requires'], $context );
+			$requiresMet = ManageWikiRequirements::process( $dbName, $ext['requires'], $context, $formData );
 			$value = $formData["ext-$name"];
 			$current = $wiki->hasExtension( $name );
 
