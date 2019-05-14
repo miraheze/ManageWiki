@@ -91,6 +91,9 @@
 		"CreateWikiStatePublic": [
 			"ManageWikiHooks::onCreateWikiStatePublic"
 		],
+		"CreateWikiTables": [
+			"ManageWikiHooks::onCreateWikiTables"
+		],
 		"LoadExtensionSchemaUpdates": [
 			"ManageWikiHooks::fnManageWikiSchemaUpdates"
 		],

@@ -207,21 +207,25 @@ class ManageWikiHooks {
 		}
 	}
 
-	public static function onCreateWikiDeletion( $dbw, $wiki ) {
-		global $wgManageWikiCDBDirectory;
-
+	public static function onCreateWikiTables( &$tables ) {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			DeleteWiki::doDeletes( $dbw, 'mw_permissions', 'perm_dbname', $wiki );
-
-			if ( ManageWiki::checkSetup( 'cdb' ) ) {
-				unlink( $wgManageWikiCDBDirectory . '/' . $wiki . '-permissions.cdb' );
-			}
+			$tables['mw_permissions'] = 'perm_dbname';
 		}
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-			DeleteWiki::doDeletes( $dbw, 'mw_namespaces', 'ns_dbname', $wiki );
+			$tables['mw_namespaces'] = 'ns_dbname';
+		}
+	}
 
-			if ( ManageWiki::checkSetup( 'cdb' ) ) {
+	public static function onCreateWikiDeletion( $dbw, $wiki ) {
+		global $wgManageWikiCDBDirectory;
+
+		if ( ManageWiki::checkSetup( 'cdb' ) ) {
+			if ( ManageWiki::checkSetup( 'permissions' ) ) {
+				unlink( $wgManageWikiCDBDirectory . '/' . $wiki . '-permissions.cdb' );
+			}
+
+			if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 				unlink( $wgManageWikiCDBDirectory . '/' . $wiki . '-namespaces.cdb' );
 			}
 		}
@@ -230,18 +234,12 @@ class ManageWikiHooks {
 	public static function onCreateWikiRename( $dbw, $old, $new ) {
 		global $wgManageWikiCDBDirectory;
 
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			RenameWiki::doRename( $dbw, 'mw_permissions', 'perm_dbname', $old, $new );
-
-			if ( ManageWiki::checkSetup( 'cdb' ) ) {
+		if ( ManageWiki::checkSetup( 'cdb' ) ) {
+			if ( ManageWiki::checkSetup( 'permissions' ) ) {
 				unlink( $wgManageWikiCDBDirectory . '/' . $old . '-permissions.cdb' );
 			}
-		}
 
-		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-			RenameWiki::doRename( $dbw, 'mw_namespaces', 'ns_dbname', $old, $new );
-
-			if ( ManageWiki::checkSetup( 'cdb' ) ) {
+			if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 				unlink( $wgManageWikiCDBDirectory . '/' . $old . '-namespaces.cdb' );
 			}
 		}
