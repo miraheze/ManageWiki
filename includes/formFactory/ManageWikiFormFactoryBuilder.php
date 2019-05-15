@@ -1027,6 +1027,8 @@ class ManageWikiFormFactoryBuilder {
 		string $special,
 		Database $dbw
 	) {
+		global $wgManageWikiNamespacesAdditional;
+
 		$nsID = [
 			'namespace' => (int)$special,
 			'namespacetalk' => (int)$special + 1

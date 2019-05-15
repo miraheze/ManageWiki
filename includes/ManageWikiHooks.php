@@ -112,10 +112,6 @@ class ManageWikiHooks {
 			}
 
 			foreach ( $nsArray as $key => $array ) {
-				if ( $key == 'mwAdditional' ) {
-					$array = json_decode( $array, true );
-				}
-
 				if ( !is_array( $array ) ) {
 					continue;
 				}
@@ -124,7 +120,9 @@ class ManageWikiHooks {
 					foreach ( $array as $key => $id ) {
 						global $$key;
 
-						$$key[] = $id;
+						foreach ( $id as $nsID ) {
+							$$key[$nsID] = $nsID;
+						}
 					}
 				} else {
 					foreach ( $array as $id => $val ) {
