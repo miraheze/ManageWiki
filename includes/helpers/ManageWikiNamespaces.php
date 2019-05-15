@@ -97,6 +97,7 @@ class ManageWikiNamespaces {
 				'ns_protection',
 				'ns_aliases',
 				'ns_core',
+				'ns_additional'
 			],
 			[
 				'ns_dbname' => 'default',
@@ -114,11 +115,12 @@ class ManageWikiNamespaces {
 		$ns['ns_protection'] = $row->ns_protection;
 		$ns['ns_aliases'] = $row->ns_aliases;
 		$ns['ns_core'] = $row->ns_core;
+		$ns['ns_additional'] = $row->ns_additional;
 
 		return (array)$ns;
 	}
 
-	public static function modifyNamespace( int $id, string $name, int $search, int $subpages, string $protection, int $content, int $core, array $aliases, string $wiki = NULL ) {
+	public static function modifyNamespace( int $id, string $name, int $search, int $subpages, string $protection, int $content, int $core, array $aliases, array $additional, string $wiki = NULL ) {
 		global $wgDBname, $wgCreateWikiDatabase;
 
 		$dbName = $wiki ?? $wgDBname;
@@ -134,7 +136,8 @@ class ManageWikiNamespaces {
 			'ns_protection' => $protection,
 			'ns_content' => $content,
 			'ns_core' => $core,
-			'ns_aliases' => json_encode( $aliases )
+			'ns_aliases' => json_encode( $aliases ),
+			'ns_additional' => json_encode( $additional )
 		];
 
 		$check = $dbw->selectRow(

@@ -125,6 +125,10 @@ class ManageWikiCDB {
 						}
 					}
 
+					foreach ( (array)json_decode( $row->ns_additional, true ) as $key => $value ) {
+						$cacheArray[$key][$nsID] = $value;
+					}
+
 					if ( $row->ns_core ) {
 						$cacheArray['wgManageWikiNamespacesCore'][] = $nsID;
 					}

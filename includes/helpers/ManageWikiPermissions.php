@@ -117,11 +117,11 @@ class ManageWikiPermissions {
 		$row = [
 			'perm_dbname' => $dbName,
 			'perm_group' => $group,
-			'perm_permissions' => json_encode( $perms ),
-			'perm_addgroups' => json_encode( $addGroups ),
-			'perm_removegroups' => json_encode( $removeGroups ),
-			'perm_addgroupstoself' => json_encode( $addGroupsToSelf ),
-			'perm_removegroupsfromself' => json_encode( $removeGroupsFromSelf )
+			'perm_permissions' => json_encode( array_unique( $perms ) ),
+			'perm_addgroups' => json_encode( array_unique( $addGroups ) ),
+			'perm_removegroups' => json_encode( array_unique( $removeGroups ) ),
+			'perm_addgroupstoself' => json_encode( array_unique( $addGroupsToSelf ) ),
+			'perm_removegroupsfromself' => json_encode( array_unique( $removeGroupsFromSelf ) )
 		];
 
 		if ( $existingGroup ) {
