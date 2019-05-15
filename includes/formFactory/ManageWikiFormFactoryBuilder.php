@@ -301,6 +301,8 @@ class ManageWikiFormFactoryBuilder {
 		string $special,
 		Database $dbw
 	) {
+		global $wgManageWikiNamespacesAdditional;
+
 		$formDescriptor = [];
 
 		$nsID = [
@@ -360,14 +362,29 @@ class ManageWikiFormFactoryBuilder {
 					],
 					'disabled' => !$ceMW,
 					'section' => $name
-				],
-				"aliases-$name" => [
-					'type' => 'textarea',
-					'label-message' => 'namespaces-aliases',
-					'default' => ( $nsData ) ? implode( "\n", json_decode( $nsData->ns_aliases, true ) ) : NULL,
-					'disabled' => !$ceMW,
-					'section' => $name
 				]
+			];
+
+			$additionalArray = ( $nsData ) ? json_decode( $nsData->ns_additional, true ) : [];
+
+			foreach( (array)$wgManageWikiNamespacesAdditional as $key => $a ) {
+				if ( $a['mainonly'] && $name == 'namespace' ) {
+					$formDescriptor["$key-$name"] = [
+						'type' => 'check',
+						'label' => $a['name'],
+						'default' => ( isset( $additionalArray[$key] ) ) ? $additionalArray[$key] : $a['overridedefault'],
+						'disabled' => !$ceMW,
+						'section' => $name
+					];
+				}
+			}
+
+			$formDescriptor["aliases-$name"] = [
+				'type' => 'textarea',
+				'label-message' => 'namespaces-aliases',
+				'default' => ( $nsData ) ? implode( "\n", json_decode( $nsData->ns_aliases, true ) ) : NULL,
+				'disabled' => !$ceMW,
+				'section' => $name
 			];
 		}
 
@@ -1036,6 +1053,12 @@ class ManageWikiFormFactoryBuilder {
 				]
 			);
 
+			$additionalBuilt = [];
+
+			foreach ( (array)$wgManageWikiNamespacesAdditional as $key => $a ) {
+				$additionalBuilt[$key] = $formData["$key-$name"];
+			}
+
 			if ( $existingName && ( $existingName->ns_namespace_id != $id ) ) {
 				return false;
 			}
@@ -1048,7 +1071,8 @@ class ManageWikiFormFactoryBuilder {
 				'ns_subpages' => (int)$formData["subpages-$name"],
 				'ns_protection' => $formData["protection-$name"],
 				'ns_content' => (int)$formData["content-$name"],
-				'ns_aliases' => ( $formData["aliases-$name"] == '' ) ? '[]' : json_encode( explode( "\n", $formData["aliases-$name"] ) )
+				'ns_aliases' => ( $formData["aliases-$name"] == '' ) ? '[]' : json_encode( explode( "\n", $formData["aliases-$name"] ) ),
+				'ns_additional' => json_encode( $additionalBuilt )
 			];
 
 		}

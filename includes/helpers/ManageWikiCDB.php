@@ -126,7 +126,7 @@ class ManageWikiCDB {
 					}
 
 					foreach ( (array)json_decode( $row->ns_additional, true ) as $key => $value ) {
-						$cacheArray[$key][$nsID] = $value;
+						$cacheArray['mwAdditional'][$key] = $nsID;
 					}
 
 					if ( $row->ns_core ) {

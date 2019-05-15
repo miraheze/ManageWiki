@@ -12,6 +12,8 @@ class ManageWikiHooks {
 					__DIR__ . '/../sql/patches/patch-groups-self.sql', true );
 			$updater->modifyTable( 'mw_permissions',
 					__DIR__ . '/../sql/patches/patch-autopromote.sql', true );
+			$updater->modifyTable( 'mw_namespaces',
+					__DIR__ . '/../sql/patches/patch-namespaces-additional.sql', true );
 		}
 	}
 
@@ -103,19 +105,31 @@ class ManageWikiHooks {
 				ManageWikiCDB::upsert( 'namespaces' );
 			}
 
-			$nsArray = ManageWikiCDB::get( 'namespaces', [ 'wgContentNamespaces', 'wgExtraNamespaces', 'wgNamespaceProtection', 'wgNamespacesToBeSearchedDefault', 'wgNamespacesWithSubpages', 'wgNamespaceAliases', 'wgManageWikiNamespacesCore' ] );
+			$nsArray = ManageWikiCDB::get( 'namespaces', [ 'wgContentNamespaces', 'wgExtraNamespaces', 'wgNamespaceProtection', 'wgNamespacesToBeSearchedDefault', 'wgNamespacesWithSubpages', 'wgNamespaceAliases', 'wgManageWikiNamespacesCore', 'mwAdditional' ] );
 
 			foreach ( $nsArray as $key => $json ) {
 				$nsArray[$key] = json_decode( $json, true );
 			}
 
 			foreach ( $nsArray as $key => $array ) {
+				if ( $key == 'mwAdditional' ) {
+					$array = json_decode( $array, true );
+				}
+
 				if ( !is_array( $array ) ) {
 					continue;
 				}
 
-				foreach ( $array as $id => $val ) {
-					$$key[$id] = $val;
+				if ( $key == 'mwAdditional' ) {
+					foreach ( $array as $key => $id ) {
+						global $$key;
+
+						$$key[] = $id;
+					}
+				} else {
+					foreach ( $array as $id => $val ) {
+						$$key[$id] = $val;
+					}
 				}
 			}
 		}
