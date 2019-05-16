@@ -103,6 +103,10 @@ class ManageWikiCDB {
 						$cacheArray['wgContentNamespaces'][] = $nsID;
 					}
 
+					if ( $row->ns_content_model ) {
+						$cacheArray['wgNamespaceContentModels'][$nsID] = (string)$row->ns_content_model;
+					}
+
 					if ( !$row->ns_core ) {
 						$cacheArray['wgExtraNamespaces'][$nsID] = $row->ns_namespace_name;
 					}
@@ -127,7 +131,7 @@ class ManageWikiCDB {
 
 					foreach ( (array)json_decode( $row->ns_additional, true ) as $key => $value ) {
 						if ( $value ) {
-							$cacheArray['mwAdditional'][$key] = $nsID;
+							$cacheArray['mwAdditional'][$key][] = $nsID;
 						}
 					}
 
