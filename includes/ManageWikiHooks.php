@@ -28,7 +28,7 @@ class ManageWikiHooks {
 	public static function onSetupAfterCache() {
 		global $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory,
 			$wgManageWikiNamespacesCore, $wgContentNamespaces, $wgExtraNamespaces, $wgNamespaceProtection, $wgNamespacesToBeSearchedDefault, $wgNamespaceAliases, $wgNamespacesWithSubpages, $wgManageWikiPermissionsAdditionalAddGroupsSelf,
-			$wgManageWikiPermissionsAdditionalRemoveGroupsSelf, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote;
+			$wgManageWikiPermissionsAdditionalRemoveGroupsSelf, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote, $wgNamespaceContentModels;
 
 		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
@@ -105,7 +105,7 @@ class ManageWikiHooks {
 				ManageWikiCDB::upsert( 'namespaces' );
 			}
 
-			$nsArray = ManageWikiCDB::get( 'namespaces', [ 'wgContentNamespaces', 'wgExtraNamespaces', 'wgNamespaceProtection', 'wgNamespacesToBeSearchedDefault', 'wgNamespacesWithSubpages', 'wgNamespaceAliases', 'wgManageWikiNamespacesCore', 'mwAdditional' ] );
+			$nsArray = ManageWikiCDB::get( 'namespaces', [ 'wgContentNamespaces', 'wgNamespaceContentModels', 'wgExtraNamespaces', 'wgNamespaceProtection', 'wgNamespacesToBeSearchedDefault', 'wgNamespacesWithSubpages', 'wgNamespaceAliases', 'wgManageWikiNamespacesCore', 'mwAdditional' ] );
 
 			foreach ( $nsArray as $key => $json ) {
 				$nsArray[$key] = json_decode( $json, true );

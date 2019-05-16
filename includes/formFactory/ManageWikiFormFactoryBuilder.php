@@ -301,7 +301,7 @@ class ManageWikiFormFactoryBuilder {
 		string $special,
 		Database $dbw
 	) {
-		global $wgManageWikiNamespacesAdditional;
+		global $wgManageWikiNamespacesAdditional, $wgManageWikiNamespacesExtraContentModels;
 
 		$formDescriptor = [];
 
@@ -347,6 +347,19 @@ class ManageWikiFormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => 'namespaces-search',
 					'default' => ( $nsData ) ? $nsData->ns_searchable : 0,
+					'disabled' => !$ceMW,
+					'section' => $name
+				],
+				"contentmodel-$name" => [
+					'type' => 'select',
+					'label-message' => 'namespaces-contentmodel',
+					'default' => ( $nsData ) ? $nsData->ns_content_model : CONTENT_MODEL_WIKITEXT,
+					'options' => array_merge( [
+						'CSS' => CONTENT_MODEL_CSS,
+						'JavaScript' => CONTENT_MODEL_JAVASCRIPT,
+						'JSON' => CONTENT_MODEL_JSON,
+						'Wikitext' => CONTENT_MODEL_WIKITEXT
+						], (array)$wgManageWikiNamespacesExtraContentModels ),
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
@@ -1073,6 +1086,7 @@ class ManageWikiFormFactoryBuilder {
 				'ns_subpages' => (int)$formData["subpages-$name"],
 				'ns_protection' => $formData["protection-$name"],
 				'ns_content' => (int)$formData["content-$name"],
+				'ns_content_model' => $formData["contentmodel-$name"],
 				'ns_aliases' => ( $formData["aliases-$name"] == '' ) ? '[]' : json_encode( explode( "\n", $formData["aliases-$name"] ) ),
 				'ns_additional' => json_encode( $additionalBuilt )
 			];

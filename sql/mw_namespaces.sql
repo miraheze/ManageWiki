@@ -5,6 +5,7 @@ CREATE TABLE /*_*/mw_namespaces (
   `ns_searchable` TINYINT NOT NULL,
   `ns_subpages` TINYINT NOT NULL,
   `ns_content` TINYINT NOT NULL,
+  `ns_content_model` VARCHAR(32) NOT NULL,
   `ns_protection` VARCHAR(32) NOT NULL,
   `ns_aliases` LONGTEXT NOT NULL,
   `ns_core` INT(1) NOT NULL,
