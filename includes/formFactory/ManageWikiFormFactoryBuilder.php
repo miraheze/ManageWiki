@@ -353,12 +353,12 @@ class ManageWikiFormFactoryBuilder {
 				"contentmodel-$name" => [
 					'type' => 'select',
 					'label-message' => 'namespaces-contentmodel',
-					'default' => ( $nsData ) ? $nsData->ns_content_model : CONTENT_MODEL_WIKITEXT,
+					'default' => ( $nsData ) ? $nsData->ns_content_model : 'wikitext',
 					'options' => array_merge( [
-						'CSS' => CONTENT_MODEL_CSS,
-						'JavaScript' => CONTENT_MODEL_JAVASCRIPT,
-						'JSON' => CONTENT_MODEL_JSON,
-						'Wikitext' => CONTENT_MODEL_WIKITEXT
+						'CSS' => 'css',
+						'JavaScript' => 'javascript',
+						'JSON' => 'json',
+						'Wikitext' => 'wikitext'
 						], (array)$wgManageWikiNamespacesExtraContentModels ),
 					'disabled' => !$ceMW,
 					'section' => $name
