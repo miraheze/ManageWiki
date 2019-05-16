@@ -120,8 +120,10 @@ class ManageWikiHooks {
 					foreach ( $array as $key => $id ) {
 						global $$key;
 
-						foreach ( $id as $nsID ) {
-							$$key[$nsID] = $nsID;
+						if ( !empty( $id ) ) {
+							foreach ( $id as $nsID ) {
+								$$key[$nsID] = $nsID;
+							}
 						}
 					}
 				} else {
