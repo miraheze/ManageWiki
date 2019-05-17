@@ -109,6 +109,7 @@
 	"managewiki-settings-link": "Gérer les paramètres complémentaires de ce wiki",
 	"namespaces-aliases": "Veillez saisir sur une nouvelle ligne tous les espaces de noms indéfnis qui doivent être redirigés vers celui-ci",
 	"namespaces-content": "Est-ce que cet espace de noms doit contenir les matériaux du wiki principal (le contenu) ?",
+	"namespaces-contentmodel": "Quel devrait être le modèle de contenu de ces espaces de noms ?",
 	"namespaces-delete": "Supprimer",
 	"namespaces-delete-checkbox": "En cochant cette case vous allez supprimer cet espace de noms",
 	"namespaces-handling": "Envoyer",

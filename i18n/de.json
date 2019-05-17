@@ -100,6 +100,7 @@
 	"managewiki-settings-link": "Die Einstellungen dieses Wikis verwalten",
 	"namespaces-aliases": "Gib in einer neuen Zeile alle undefinierten Namensräume an, die auf diesen weiterleiten sollen.",
 	"namespaces-content": "Enthält dieser Namensraum Haupt-Wikimaterial (Inhalt)?",
+	"namespaces-contentmodel": "Was soll das Inhaltsmodell dieses Namensraums sein?",
 	"namespaces-delete": "Löschen",
 	"namespaces-delete-checkbox": "Durch das Markieren dieses Kästchens wird der Namensraum gelöscht",
 	"namespaces-handling": "Absenden",

@@ -101,6 +101,7 @@
 	"managewiki-settings-link": "管理此 wiki 的額外設定",
 	"namespaces-aliases": "在新的一行上，輸入所有應重新導向至此的未定義命名空間",
 	"namespaces-content": "此命名空間包含主 wiki 內容嗎？",
+	"namespaces-contentmodel": "此命名空間的內容模組應是？",
 	"namespaces-delete": "刪除",
 	"namespaces-delete-checkbox": "勾選此方框將會刪除此命名空間",
 	"namespaces-handling": "提交",
