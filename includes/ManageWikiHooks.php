@@ -28,7 +28,7 @@ class ManageWikiHooks {
 	public static function onSetupAfterCache() {
 		global $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory,
 			$wgManageWikiNamespacesCore, $wgContentNamespaces, $wgExtraNamespaces, $wgNamespaceProtection, $wgNamespacesToBeSearchedDefault, $wgNamespaceAliases, $wgNamespacesWithSubpages, $wgManageWikiPermissionsAdditionalAddGroupsSelf,
-			$wgManageWikiPermissionsAdditionalRemoveGroupsSelf, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote, $wgNamespaceContentModels;
+			$wgManageWikiPermissionsAdditionalRemoveGroupsSelf, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote, $wgNamespaceContentModels, $wgManageWikiNamespacesAdditional;
 
 		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
@@ -122,7 +122,7 @@ class ManageWikiHooks {
 
 						if ( !empty( $id ) ) {
 							foreach ( $id as $nsID ) {
-								$$key[$nsID] = $nsID;
+								$$key[$nsID] = ( $wgManageWikiNamespacesAdditional[$key]['vestyle'] ) ? true : $$nsID;
 							}
 						}
 					}
