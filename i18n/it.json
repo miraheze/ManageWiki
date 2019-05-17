@@ -38,6 +38,7 @@
 	"managewiki-extensions-link": "Gestisci le estensioni di questo wiki",
 	"managewiki-settings-link": "Gestisci le impostazioni aggiuntive di questo wiki",
 	"namespaces-aliases": "Inserisci su una nuova riga tutti i namespace non definiti che dovrebbero reindirizzare a questo",
+	"namespaces-contentmodel": "Quale dovrebbe essere il modello di contenuti di questo namespace?",
 	"namespaces-delete": "Cancella",
 	"namespaces-handling": "Invia",
 	"namespaces-namespace": "Namespace principale",

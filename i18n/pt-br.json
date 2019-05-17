@@ -101,6 +101,7 @@
 	"managewiki-settings-link": "Gerenciar configurações adicionais desta wiki",
 	"namespaces-aliases": "Insira em uma nova linha todos os espaços de nomes indefinidos que devem redirecionar para este",
 	"namespaces-content": "Este espaço nominal contém o material principal da wiki (o conteúdo)?",
+	"namespaces-contentmodel": "Qual deveria ser o modelo de conteúdo deste espaço nominal/domínio?",
 	"namespaces-delete": "Excluir",
 	"namespaces-delete-checkbox": "Marcar esta caixa causará a eliminação deste espaço nominal",
 	"namespaces-handling": "Enviar",

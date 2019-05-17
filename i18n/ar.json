@@ -101,6 +101,7 @@
 	"managewiki-settings-link": "إدارة الإعدادات الإضافية لهذا الويكي",
 	"namespaces-aliases": "أدخل على سطر جديد جميع النطاقات غير المعروفة والتي يجب أن تحول إلى هذا",
 	"namespaces-content": "هل يحتوي هذا النطاق على مادة ويكي أساسية (محتوى)؟",
+	"namespaces-contentmodel": "ماذا يجب أن يكون نموذج محتوى هذا النطاق؟",
 	"namespaces-delete": "حذف",
 	"namespaces-delete-checkbox": "سيؤدي تحديد هذا الصندوق إلى حذف هذا النطاق",
 	"namespaces-handling": "إرسال",
