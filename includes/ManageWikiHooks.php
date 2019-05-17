@@ -122,7 +122,7 @@ class ManageWikiHooks {
 
 						if ( !empty( $id ) && isset( $wgManageWikiNamespacesAdditional[$key] ) ) {
 							foreach ( $id as $nsID ) {
-								$$key[$nsID] = ( $wgManageWikiNamespacesAdditional[$key]['vestyle'] ) ? true : $$nsID;
+								$$key[$nsID] = ( $wgManageWikiNamespacesAdditional[$key]['vestyle'] ) ? true : $nsID;
 							}
 						}
 					}
