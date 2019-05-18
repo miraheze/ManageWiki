@@ -167,9 +167,12 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $wgManageWikiExtensions as $name => $ext ) {
 			$help = [];
+			$conflictLabel = wfMessage( 'managewiki-conflicts' )->text();
+			$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+
 
 			if ( $ext['conflicts'] ) {
-				$help[] = "Conflicts with {$ext['conflicts']}";
+				$help[] = "{$conflictLabel} {$ext['conflicts']}";
 			}
 
 			if ( $ext['requires'] ) {
@@ -178,7 +181,7 @@ class ManageWikiFormFactoryBuilder {
 					$requires[] = ucfirst( $require ) . " - " . implode( ', ', $data );
 				}
 
-				$help[] = "Requires: " . implode( ' & ', $requires );
+				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires );
 			}
 
 			$formDescriptor["ext-$name"] = [
@@ -251,11 +254,14 @@ class ManageWikiFormFactoryBuilder {
 
 				$disabled = !( !$set['restricted'] || ( $set['restricted'] && $context->getUser()->isAllowed( 'managewiki-restricted' ) ) );
 
+				$msgName = wfMessage( "managewiki-setting-{$name}-name" );
+				$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
+
 				$formDescriptor["set-$name"] = [
 					'type' => $mwType,
-					'label' => $set['name'],
+					'label' => ( $msgName->exists() ) ? $msgName->text() : $set['name'],
 					'disabled' => ( $ceMW ) ? $disabled : 1,
-					'help' => ( $set['help'] ) ? $set['help'] : NULL,
+					'help' => ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'],
 					'section' => ( isset( $set['section'] ) ) ? $set['section'] : 'other'
 				];
 
