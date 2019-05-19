@@ -250,6 +250,14 @@ class ManageWikiFormFactoryBuilder {
 					case 'wikipage':
 						$mwType = 'title';
 						break;
+					case 'usergroups':
+						$mwType = 'multiselect';
+						$groups = [];
+						foreach( ManageWikiPermissions::availableGroups() as $group ) {
+							$groups[UserGroupMembership::getGroupName( $group )] = $group;
+						}
+						$mwOptions = $groups;
+						break;
 				}
 
 				$disabled = !( !$set['restricted'] || ( $set['restricted'] && $context->getUser()->isAllowed( 'managewiki-restricted' ) ) );
@@ -269,7 +277,7 @@ class ManageWikiFormFactoryBuilder {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue ( $name ), 'php' ) : $set['overridedefault'];
 				} elseif( $sType == 'list-multi-bool' ) {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? array_keys( $wiki->getSettingsValue( $name ), true ) : array_keys( $set['overridedefault'], true );
-				} elseif( $sType == 'list-multi' ) {
+				} elseif( $sType == 'list-multi' || $sType == 'usergroups' ) {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? $wiki->getSettingsValue( $name ) : $set['overridedefault'];
 				} else {
 					$formDescriptor["set-$name"]['default'] = $wiki->getSettingsValue( $name ) ?? $set['overridedefault'];
@@ -997,7 +1005,7 @@ class ManageWikiFormFactoryBuilder {
 					if ( is_null( $current ) && $settingsArray[$name] != $set['overridedefault'] || !is_null( $current ) && $settingsArray[$name] != $current  ) {
 						$changedSettings[] = "setting-$name";
 					}
-				} elseif( $type == 'list-multi' ) {
+				} elseif( $type == 'list-multi' ||  $type == 'usergroups' ) {
 					$settingsArray[$name] = $value;
 
 					if ( is_null( $current ) && $settingsArray[$name] != $set['overridedefault'] || !is_null( $current ) && $settingsArray[$name] != $current ) {
