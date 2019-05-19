@@ -256,7 +256,7 @@ class ManageWikiFormFactoryBuilder {
 						foreach( ManageWikiPermissions::availableGroups() as $group ) {
 							$groups[UserGroupMembership::getGroupName( $group )] = $group;
 						}
-						$mwOptions = array_merge( $groups, $set['options'] );
+						$mwOptions = isset( $set['options'] ) ? array_merge( $groups, $set['options'] ) : $groups;
 						break;
 				}
 
