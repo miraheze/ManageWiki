@@ -252,7 +252,12 @@ class ManageWikiFormFactoryBuilder {
 						break;
 					case 'usergroups':
 						$mwType = 'multiselect';
-						$mwOptions = ManageWikiPermissions::availableGroups();
+						$groups = [];
+						foreach( ManageWikiPermissions::availableGroups() as $group ) {
+							$groups[$group] = $group;
+						}
+						$mwOptions = $groups;
+						break;
 				}
 
 				$disabled = !( !$set['restricted'] || ( $set['restricted'] && $context->getUser()->isAllowed( 'managewiki-restricted' ) ) );
