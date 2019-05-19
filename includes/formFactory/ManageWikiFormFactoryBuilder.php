@@ -254,7 +254,7 @@ class ManageWikiFormFactoryBuilder {
 						$mwType = 'multiselect';
 						$groups = [];
 						foreach( ManageWikiPermissions::availableGroups() as $group ) {
-							$groups[$group] = $group;
+							$groups[UserGroupMembership::getGroupName( $group )] = $group;
 						}
 						$mwOptions = $groups;
 						break;
