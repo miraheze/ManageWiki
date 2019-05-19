@@ -90,7 +90,15 @@ class ManageWikiCDB {
 					$cacheArray['wgGroupsRemoveFromSelf'][$group] = json_decode( $row->perm_removegroupsfromself, true );
 
 					if ( !is_null( $row->perm_autopromote ) ) {
-						$cacheArray['wgAutopromote'][$group] = json_decode( $row->perm_autopromote );
+						$aPArray = json_decode( $row->perm_autopromote );
+						$once = array_search( 'once', $aPArray );
+
+						if ( is_int( $once ) ) {
+							unset ( $aPArray[$once] );
+							$cacheArray['wgAutoPromoteOnce']['onEdit'][$group] = $aPArray;
+						} else {
+							$cacheArray['wgAutopromote'][$group] = $aPArray;
+						}
 					}
 
 					$cacheArray['availabeGroups'][] = $group;

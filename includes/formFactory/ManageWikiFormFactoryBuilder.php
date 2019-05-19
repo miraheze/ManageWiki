@@ -532,6 +532,13 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'section' => 'autopromote'
 			],
+			'once' => [
+				'type' => 'check',
+				'label-message' => 'managewiki-permissions-autopromote-once',
+				'default' => is_int( array_search( 'once', $groupData['autopromote'] ) ),
+				'hide-if' => [ '!==', 'wpenable', '1' ],
+				'section' => 'autopromote'
+			],
 			'editcount' => [
 				'type' => 'int',
 				'label-message' => 'managewiki-permissions-autopromote-editcount',
@@ -1191,6 +1198,10 @@ class ManageWikiFormFactoryBuilder {
 		] : [];
 
 		if ( count( $aPBuild ) != 0 ) {
+			if ( $formData['once'] ) {
+				$aPBuild[] = 'once';
+			}
+
 			if ( $formData['editcount'] ) {
 				$aPBuild[] = [ APCOND_EDITCOUNT, (int)$formData['editcount'] ];
 			}
