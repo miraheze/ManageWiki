@@ -18,7 +18,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $context, $wiki );
 				break;
 			case 'settings':
-				$formDescriptor = self::buildDescriptorSettings( $ceMW, $context, $wiki );
+				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki );
 				break;
 			case 'namespaces':
 				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $special, $dbw );
@@ -202,6 +202,7 @@ class ManageWikiFormFactoryBuilder {
 	}
 
 	private static function buildDescriptorSettings(
+		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
 		RemoteWiki $wiki
@@ -253,7 +254,7 @@ class ManageWikiFormFactoryBuilder {
 					case 'usergroups':
 						$mwType = 'multiselect';
 						$groups = [];
-						foreach( ManageWikiPermissions::availableGroups() as $group ) {
+						foreach( ManageWikiPermissions::availableGroups( $dbName ) as $group ) {
 							$groups[UserGroupMembership::getGroupName( $group )] = $group;
 						}
 						$mwOptions = isset( $set['options'] ) ? array_merge( $groups, $set['options'] ) : $groups;
