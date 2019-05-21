@@ -11,7 +11,8 @@
 			"Vlad5250",
 			"Nk88",
 			"Movses",
-			"Abijeet Patro"
+			"Abijeet Patro",
+			"1233qwer1234qwer4"
 		]
 	},
 	"action-managewiki": "управление настройками вики",
@@ -47,6 +48,8 @@
 	"managewiki-settings-header": "Эта страница используется для изменения настроек вики '$1'. Обратите внимание, что вы не можете изменить все настройки, в этом случае вам следует обратиться к системному администратору.",
 	"managewiki-label-category": "Категория",
 	"managewiki-label-closed": "Закрыто",
+	"managewiki-label-creationdate": "Дата создания",
+	"managewiki-label-deletiondate": "Дата удаления",
 	"managewiki-label-dbname": "Имя базы данных",
 	"managewiki-label-language": "Язык",
 	"managewiki-label-private": "Скрытый",
