@@ -515,8 +515,9 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		// This is not a good method but it is a method.
+		$aP = $groupData['autopromote'];
 		$aPArray = [];
-		foreach ( $groupData['autopromote'] as $element ) {
+		foreach ( (array)$aP as $element ) {
 			if ( is_array( $element ) ) {
 				$aPArray[$element[0]] = $element[1];
 			}
@@ -526,7 +527,7 @@ class ManageWikiFormFactoryBuilder {
 			'enable' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-enable',
-				'default' => !is_null( $groupData['autopromote'] ),
+				'default' => !is_null( $aP ),
 				'section' => 'autopromote'
 			],
 			'conds' => [
@@ -537,14 +538,14 @@ class ManageWikiFormFactoryBuilder {
 					wfMessage( 'managewiki-permissions-autopromote-conds-or' )->text() => '|',
 					wfMessage( 'managewiki-permissions-autopromote-conds-not' )->text() => '!'
 				],
-				'default' => $groupData['autopromote'][0],
+				'default' => ( is_null( $aP ) ) ? '&' : $aP[0],
 				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'section' => 'autopromote'
 			],
 			'once' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-once',
-				'default' => is_int( array_search( 'once', $groupData['autopromote'] ) ),
+				'default' => is_int( array_search( 'once', (array)$aP ) ),
 				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'section' => 'autopromote'
 			],
@@ -561,28 +562,28 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-autopromote-age',
 				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'min' => 0,
-				'default' => is_null( $aPArray[APCOND_AGE] ) ? 0 : $aPArray[APCOND_AGE] / 86400,
+				'default' => isset( $aPArray[APCOND_AGE] ) ? $aPArray[APCOND_AGE] / 86400 : 0,
 				'section' => 'autopromote'
 			],
 			'emailconfirmed' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-email',
 				'hide-if' => [ '!==', 'wpenable', '1' ],
-				'default' => is_int( array_search( APCOND_EMAILCONFIRMED, $groupData['autopromote'] ) ),
+				'default' => is_int( array_search( APCOND_EMAILCONFIRMED, (array)$aP ) ),
 				'section' => 'autopromote'
 			],
 			'blocked' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-blocked',
 				'hide-if' => [ '!==', 'wpenable', '1' ],
-				'default' => is_int( array_search( APCOND_BLOCKED, $groupData['autopromote'] ) ),
+				'default' => is_int( array_search( APCOND_BLOCKED, (array)$aP ) ),
 				'section' => 'autopromote'
 			],
 			'bot' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-bot',
 				'hide-if' => [ '!==', 'wpenable', '1' ],
-				'default' => is_int( array_search( APCOND_ISBOT, $groupData['autopromote'] ) ),
+				'default' => is_int( array_search( APCOND_ISBOT, (array)$aP ) ),
 				'section' => 'autopromote'
 			],
 			'groups' => [
@@ -590,7 +591,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-autopromote-groups',
 				'options' => $rowsBuilt,
 				'hide-if' => [ '!==', 'wpenable', '1' ],
-				'default' => $aPArray[APCOND_INGROUPS] ?? [],
+				'default' => isset( $aPArray[APCOND_INGROUPS] ) ? $aPArray[AP_INGROUPS] : [],
 				'section' => 'autopromote'
 			]
 		];
