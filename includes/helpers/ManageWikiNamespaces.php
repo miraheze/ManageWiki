@@ -94,6 +94,7 @@ class ManageWikiNamespaces {
 				'ns_searchable',
 				'ns_subpages',
 				'ns_content',
+				'ns_content_model',
 				'ns_protection',
 				'ns_aliases',
 				'ns_core',
@@ -112,6 +113,7 @@ class ManageWikiNamespaces {
 		$ns['ns_subpages'] = $row->ns_subpages;
 		$ns['ns_subpages'] = $row->ns_subpages;
 		$ns['ns_content'] = $row->ns_content;
+		$ns['ns_content_model'] = $row->ns_content_model;
 		$ns['ns_protection'] = $row->ns_protection;
 		$ns['ns_aliases'] = $row->ns_aliases;
 		$ns['ns_core'] = $row->ns_core;

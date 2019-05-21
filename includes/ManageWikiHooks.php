@@ -209,9 +209,11 @@ class ManageWikiHooks {
 						'ns_searchable' => (int)$namespacesArray['ns_searchable'],
 						'ns_subpages' => (int)$namespacesArray['ns_subpages'],
 						'ns_content' => (int)$namespacesArray['ns_content'],
+						'ns_content_model' => $namespacesArray['ns_content_model'],
 						'ns_protection' => $namespacesArray['ns_protection'],
 						'ns_aliases' => (string)$namespacesArray['ns_aliases'],
 						'ns_core' => (int)$namespacesArray['ns_core'],
+						'ns_additional' => $namespacesArray['ns_additional']
 					],
 					__METHOD__
 				);
