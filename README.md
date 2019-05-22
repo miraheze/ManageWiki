@@ -1,4 +1,4 @@
-Miraheze's MediaWiki extension allowing wiki founders to manage their wikis.
+Miraheze's MediaWiki extension allowing users to manage wikis.
 
 Developed by Miraheze.
 
