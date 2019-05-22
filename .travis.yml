@@ -4,9 +4,14 @@ php:
   - 7.1
   - 7.0
 
+addons:
+    sonarcloud:
+        organization: "miraheze"
+
 script:
   # Check php script syntax
   - bash .travis.phplint.sh
+  - sonar-scanner
 
 notifications:
   irc:
