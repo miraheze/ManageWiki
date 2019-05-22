@@ -9,7 +9,7 @@ class ManageWiki {
 
 		if ( $wgManageWiki[$module] ) {
 			if ( $module == 'cdb' ) {
-				return ( $wgManageWikiCDBDirectory ) ? true : false;
+				return (bool)$wgManageWikiCDBDirectory;
 			}
 
 			return true;

@@ -26,6 +26,9 @@ class ManageWikiFormFactoryBuilder {
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special );
 				break;
+			default:
+				throw new MWException( "{$module} not recognised" );
+				break;
 		}
 
 		if ( $ceMW ) {
@@ -258,6 +261,9 @@ class ManageWikiFormFactoryBuilder {
 							$groups[UserGroupMembership::getGroupName( $group )] = $group;
 						}
 						$mwOptions = isset( $set['options'] ) ? array_merge( $groups, $set['options'] ) : $groups;
+						break;
+					default:
+						throw new MWException( "{$sType} not recognised" );
 						break;
 				}
 
@@ -624,6 +630,9 @@ class ManageWikiFormFactoryBuilder {
 				break;
 			case 'permissions':
 				$mwReturn = self::submissionPermissions( $formData, $dbName, $special );
+				break;
+			default:
+				throw new MWException( "{$module} not recognised" );
 				break;
 		}
 

@@ -88,7 +88,7 @@ class ManageWikiHooks {
 			}
 
 			if ( $wgManageWikiPermissionsAdditionalRemoveGroupsSelf ) {
-				$wgGroupRemoveFromSelf = array_merge_recursive( $wgGroupsRemoveFromSelf, $wgManageWikiPermissionsAdditionalRemoveGroupsSelf );
+				$wgGroupsRemoveFromSelf = array_merge_recursive( $wgGroupsRemoveFromSelf, $wgManageWikiPermissionsAdditionalRemoveGroupsSelf );
 			}
 		}
 
@@ -157,7 +157,7 @@ class ManageWikiHooks {
 						'perm_removegroups' => json_encode( $groupArray['rg'] ),
 						'perm_addgroupstoself' => json_encode( $groupArray['ags'] ),
 						'perm_removegroupsfromself' => json_encode( $groupArray['rgs'] ),
-						'perm_autopromote' => ( is_null( $groupArray['autopromote'] ) ) ? NULL : json_encode( $groupArray['autopromote'] )
+						'perm_autopromote' => ( is_null( $groupArray['autopromote'] ) ) ? null : json_encode( $groupArray['autopromote'] )
 					],
 					__METHOD__
 				);
