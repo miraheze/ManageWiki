@@ -5,8 +5,8 @@ php:
   - 7.0
 
 addons:
-    sonarcloud:
-        organization: "miraheze"
+  sonarcloud:
+    organization: "miraheze"
 
 script:
   # Check php script syntax
