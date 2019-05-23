@@ -16,8 +16,6 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	function execute() {
 		global $wgCreateWikiDatabase, $wgDBname, $wmgPrivateWiki;
 
-		$checkRow = false;
-
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 		if ( $this->getOption( 'overwrite' ) ) {
