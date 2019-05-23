@@ -30,17 +30,15 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 			);
 		}
 
-		if ( !$this->getOption( 'overwrite' ) ) {
-			$checkRow = $dbw->selectRow(
-				'mw_permissions',
-				[
-					'*'
-				],
-				[
-					'perm_dbname' => $wgDBname
-				]
-			);
-		}
+		$checkRow = $dbw->selectRow(
+			'mw_permissions',
+			[
+				'*'
+			],
+			[
+				'perm_dbname' => $wgDBname
+			]
+		);
 
 		if ( !$checkRow ) {
 			ManageWikiHooks::onCreateWikiCreation( $wgDBname, $wmgPrivateWiki );
