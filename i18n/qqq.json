@@ -6,7 +6,8 @@
 			"Robby",
 			"Nike",
 			"Vlad5250",
-			"Shirayuki"
+			"Shirayuki",
+			"McDutchie"
 		]
 	},
 	"action-managewiki": "Button to manage the settings of a wiki.",
@@ -24,6 +25,7 @@
 	"managewiki-label-reason": "Used as a label for 'reason'.\n{{Identical|Reason}}",
 	"managewiki-label-sitename": "Used as a label for 'sitename'.\n{{Identical|Sitename}}",
 	"managewiki-missing": "Message if the wiki entered does not exist in the database.",
+	"managewiki-permissions-autopromote": "{{Doc-singularthey}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent.",
 	"namespaces-delete": "{{Identical|Delete}}",
 	"right-managewiki": "{{doc-right|managewiki}}"

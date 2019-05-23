@@ -12,7 +12,8 @@
 			"Void",
 			"Alno",
 			"DSwissK",
-			"Abijeet Patro"
+			"Abijeet Patro",
+			"McDutchie"
 		]
 	},
 	"action-managewiki": "Régler les paramètres du wiki",
@@ -80,7 +81,7 @@
 	"managewiki-permissions-addall": "Peut ajouter à d'autres",
 	"managewiki-permissions-addself": "Peut ajouter à soi-même",
 	"managewiki-permissions-assigned": "Les droits utilisateur ci-dessous ne sont actuellement assigné à aucun groupe d'utilisateurs.",
-	"managewiki-permissions-autopromote": "Ci-dessous vous pouvez gérer la promotion automatique des utilisateurs dans ce groupe. Notez que si un utilisateur correspond aux critères que vous avez définis ci-dessous, il héritera de tous les droits de ce groupe et vous ne pourrez pas le supprimer de ce groupe en aucun cas.",
+	"managewiki-permissions-autopromote": "Ci-dessous vous pouvez gérer la promotion automatique des utilisateurs dans ce groupe. Notez que si un utilisateur correspond aux critères que vous avez définis ci-dessous, il héritera de tous les droits de ce groupe et vous ne pourrez en aucun cas le supprimer de ce groupe, à moins de choisir de le promouvoir une seule fois avant qu’il ne correspond aux critères.",
 	"managewiki-permissions-autopromote-age": "Doit avoir été un utilisateur pendant le nombre de jours suivant",
 	"managewiki-permissions-autopromote-blocked": "Doit être bloqué",
 	"managewiki-permissions-autopromote-bot": "Doit être un compte de robot",
@@ -92,6 +93,7 @@
 	"managewiki-permissions-autopromote-enable": "Activer la promotion automatique pour ce groupe",
 	"managewiki-permissions-autopromote-email": "Doit avoir son courriel confirmé",
 	"managewiki-permissions-autopromote-groups": "Doit être un membre des groupes suivants",
+	"managewiki-permissions-autopromote-once": "Promouvoir seulement une fois l’utilisateur.",
 	"managewiki-permissions-creategroup": "Créer un nouveau groupe d'utilisateurs.",
 	"managewiki-permissions-group": "Ci-dessous vous pouvez autoriser la manière dont ce groupe utilisateur peut assigner/désassigner d'autres groupes utilisateur.",
 	"managewiki-permissions-header": "Choisir un groupe qui existe déja ci-dessous pour le modifier, ou créez un nouveau groupe d'utilisateurs dans le champ de saisie en dessous !",
@@ -101,7 +103,7 @@
 	"managewiki-permissions-resetgroups-header": "En cliquant sur le bouton ci-dessous, toutes les configurations des groupes seront effacées et la configuration des droits par défaut sera appliquée. Ceci supprimera toutes les modifications personnalisées sauf l'accès en lecture du wiki. Ne continuez que si vous êtes sûr de vouloir faire cela.",
 	"managewiki-permissions-select": "Choisir un groupe existant à modifier",
 	"managewiki-permissions-unassigned": "Les droits utilisateur ci-dessous ne sont actuellement pas assignés au groupe d'utilisateurs.",
-	"managewiki-reqires": "Nécessite",
+	"managewiki-requires": "Nécessite",
 	"managewiki-success": "Les paramètres ont été changés.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link": "Gérer les paramètres de ce wiki",

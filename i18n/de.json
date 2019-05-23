@@ -92,7 +92,7 @@
 	"managewiki-permissions-resetgroups-header": "Durch das Anklicken der unteren Schaltfläche werden alle Gruppenkonfigurationen gelöscht und die Standard-Berechtigungs-Konfiguration für das Wiki wird wiederhergestellt. Dies entfernt alle benutzerdefinierten Änderungen außer die Lesbarkeit des Wikis. Fahre nur fort, wenn du dir sicher bist, dass du dies tun möchtest.",
 	"managewiki-permissions-select": "Zu bearbeitende Gruppe auswählen",
 	"managewiki-permissions-unassigned": "Die unteren Benutzerrechte sind derzeit nicht der Benutzergruppe zugewiesen.",
-	"managewiki-reqires": "Erfordert",
+	"managewiki-requires": "Erfordert",
 	"managewiki-success": "Die Einstellungen wurden erfolgreich geändert.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link": "Einstellungen dieses Wikis verwalten",
