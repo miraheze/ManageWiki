@@ -18,8 +18,9 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 
 		$checkRow = false;
 
+		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+
 		if ( $this->getOption( 'overwrite' ) ) {
-			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 			$dbw->delete(
 				'mw_permissions',
 				[
@@ -30,7 +31,7 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 		}
 
 		if ( !$this->getOption( 'overwrite' ) ) {
-			$checkRow = $dbr->selectRow(
+			$checkRow = $dbw->selectRow(
 				'mw_permissions',
 				[
 					'*'
