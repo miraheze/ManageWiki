@@ -1,13 +1,13 @@
 <?php
 class ManageWikiDeletedWikiPager extends TablePager {
-	function __construct() {
+	public function __construct() {
 		global $wgCreateWikiDatabase;
 
 		parent::__construct( $this->getContext() );
 		$this->mDb = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
 	}
 
-	function getFieldNames() {
+	public function getFieldNames() {
 		static $headers = null;
 
 		$headers = [
@@ -24,7 +24,7 @@ class ManageWikiDeletedWikiPager extends TablePager {
 		return $headers;
 	}
 
-	function formatValue( $name, $value ) {
+	public function formatValue( $name, $value ) {
 		$row = $this->mCurrentRow;
 
 		switch ( $name ) {
@@ -47,8 +47,8 @@ class ManageWikiDeletedWikiPager extends TablePager {
 		return $formatted;
 	}
 
-	function getQueryInfo() {
-		$info = [
+	public function getQueryInfo() {
+		return [
 			'tables' => [
 				'cw_wikis'
 			],
@@ -63,15 +63,13 @@ class ManageWikiDeletedWikiPager extends TablePager {
 			],
 			'joins_conds' => [],
 		];
-
-		return $info;
 	}
 
-	function getDefaultSort() {
+	public function getDefaultSort() {
 		return 'wiki_dbname';
 	}
 
-	function isFieldSortable( $name ) {
+	public function isFieldSortable( $name ) {
 		return true;
 	}
 }

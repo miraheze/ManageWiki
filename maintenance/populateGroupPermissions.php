@@ -7,11 +7,7 @@ if ( $IP === false ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 class ManageWikiPopulatePermissions extends Maintenance {
-	public function __construct() {
-		parent::__construct();
-	}
-
-	function execute() {
+	public function execute() {
 		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistGroups, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgDBname, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
@@ -28,7 +24,7 @@ class ManageWikiPopulatePermissions extends Maintenance {
 
 			if ( !in_array( $group, $blacklist) ) {
 				foreach ( $perm as $name => $value ) {
-					if ( $value == true ) {
+					if ( $value ) {
 						$permsarray[] = $name;
 					}
 				}
@@ -88,7 +84,7 @@ class ManageWikiPopulatePermissions extends Maintenance {
 						'perm_permissions' => $groupatr['perms'],
 						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
 						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
-						'perm_addgroupstoself' => empty( $groupattr['adds'] ) ? json_encode( [] ) : $groupattr['adds'],
+						'perm_addgroupstoself' => empty( $groupatr['adds'] ) ? json_encode( [] ) : $groupatr['adds'],
 						'perm_removegroupsfromself' => empty( $groupatr['removes'] ) ? json_encode( [] ) : $groupatr['removes'],
 						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote']
 					],

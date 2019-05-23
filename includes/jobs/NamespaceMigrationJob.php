@@ -45,10 +45,8 @@ class NamespaceMigrationJob extends Job {
 				$newTitle = $pageTitle;
 			}
 
-			if ( $this->params['action'] !== 'create' ) {
-				if ( $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
-					$newTitle .= '~' . $this->params['nsName'];
-				}
+			if ( $this->params['action'] !== 'create' && $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
+				$newTitle .= '~' . $this->params['nsName'];
 			}
 
 			$dbw->update(
@@ -90,10 +88,6 @@ class NamespaceMigrationJob extends Job {
 			__METHOD__
 		);
 
-		if ( $row ) {
-			return true;
-		} else {
-			return false;
-		}
+		return (bool)$row;
 	}
 }

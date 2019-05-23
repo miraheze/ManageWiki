@@ -1,10 +1,10 @@
 <?php
 class SpecialManageWikiExtensions extends SpecialPage {
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'ManageWikiExtensions' );
 	}
 
-	function execute( $par ) {
+	public function execute( $par ) {
 		global $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname;
 
 		$out = $this->getOutput();
@@ -28,7 +28,7 @@ class SpecialManageWikiExtensions extends SpecialPage {
 		}
 	}
 
-	function showInputBox() {
+	private function showInputBox() {
 		$formDescriptor = [
 			'dbname' => [
 				'label-message' => 'managewiki-label-dbname',
@@ -48,7 +48,7 @@ class SpecialManageWikiExtensions extends SpecialPage {
 		return true;
 	}
 
-	function onSubmitRedirectToWikiForm( array $params ) {
+	private function onSubmitRedirectToWikiForm( array $params ) {
 		if ( $params['dbname'] !== '' ) {
 			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWikiExtensions' )->getFullUrl() . '/' . $params['dbname'] );
 		} else {
@@ -58,7 +58,7 @@ class SpecialManageWikiExtensions extends SpecialPage {
 		return true;
 	}
 
-	function showWikiForm( $wiki ) {
+	private function showWikiForm( $wiki ) {
 		$out = $this->getOutput();
 
 		$out->addModules( 'ext.createwiki.oouiform' );

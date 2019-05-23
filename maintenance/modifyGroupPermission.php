@@ -18,7 +18,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 		$this->addOption( 'removeremovegroups', 'Comma separated list of groups to remove from the list of removable groups.', false, true );
 	}
 
-	function execute() {
+	public function execute() {
 		$addp = (array)explode( ',', $this->getOption( 'addperms', '' ) );
 		$removep = (array)explode( ',', $this->getOption( 'removeperms', '' ) );
 		$addag = (array)explode( ',', $this->getOption( 'newaddgroups', '' ) );

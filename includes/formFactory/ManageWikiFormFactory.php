@@ -20,9 +20,9 @@ class ManageWikiFormFactory {
 
 
 	public function getForm(
-		string $wiki = NULL,
+		string $wiki,
 		IContextSource $context,
-		string $module = NULL,
+		string $module,
 		string $special = '',
 		$formClass = CreateWikiOOUIForm::class
 	) {
@@ -35,7 +35,7 @@ class ManageWikiFormFactory {
 			$remoteWiki = RemoteWiki::newFromName( $wiki );
 		}
 
-		if ( $remoteWiki == NULL ) {
+		if ( $remoteWiki == null ) {
 			$context->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;
 		}
@@ -80,7 +80,7 @@ class ManageWikiFormFactory {
 
 		if ( is_array( $mwReturn ) ) {
 			$out->addHTML( '<div class="errorbox">The following errors occurred:' . implode( '<br>', $mwReturn ) . '</div>' );
-			return;
+			return null;
 		}
 
 		$out->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );

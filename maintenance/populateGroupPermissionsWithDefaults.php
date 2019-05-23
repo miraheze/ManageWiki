@@ -13,7 +13,7 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 		$this->addOption( 'overwrite', 'This overwrites perms to reset them back to the default.', false, false );
 	}
 
-	function execute() {
+	public function execute() {
 		global $wgCreateWikiDatabase, $wgDBname, $wmgPrivateWiki;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );

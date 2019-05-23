@@ -78,12 +78,12 @@ class ManageWikiPermissions {
 
 		$dbName = $wiki ?? $wgDBname;
 
-		$groupData = self::groupPermissions( $group, $dbName );
+		$groupData = static::groupPermissions( $group, $dbName );
 
 		return [
 			'allPermissions' => array_diff( User::getAllRights(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] ),
 			'assignedPermissions' => $groupData['permissions'],
-			'allGroups' => array_diff( self::availableGroups( $dbName ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
+			'allGroups' => array_diff( static::availableGroups( $dbName ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
 			'groupMatrix' => $groupData['matrix'],
 			'autopromote' => $groupData['autopromote']
 		];
@@ -96,10 +96,10 @@ class ManageWikiPermissions {
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-		$existingGroup = in_array( $group, self::availableGroups( $dbName ) );
+		$existingGroup = in_array( $group, static::availableGroups( $dbName ) );
 
 		if ( $existingGroup ) {
-			$groupData = (array)self::groupPermissions( $group, $dbName );
+			$groupData = (array)static::groupPermissions( $group, $dbName );
 			$perms = array_merge( $addp, array_diff( $groupData['permissions'], $removep ) );
 			$addGroups = array_merge( $addag, array_diff( $groupData['ag'], $removeag ) );
 			$removeGroups = array_merge( $addrg, array_diff( $groupData['rg'], $removerg ) );

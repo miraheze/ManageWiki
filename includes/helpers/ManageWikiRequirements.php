@@ -19,10 +19,7 @@ class ManageWikiRequirements {
 			}
 		}
 
-		$proceed = ( (bool)array_search( false, $stepResponse ) ) ? false : true;
-
-		return $proceed;
-
+		return !(bool)array_search( false, $stepResponse );
 	}
 
 	private static function permissions( array $data, IContextSource $context ) {

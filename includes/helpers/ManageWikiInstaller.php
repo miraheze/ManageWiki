@@ -1,7 +1,7 @@
 <?php
 
 class ManageWikiInstaller {
-	public static function process( string $dbname, string $type, array $actions ) {
+	public static function process( string $dbname, array $actions ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepresponse = [];
 
@@ -21,9 +21,7 @@ class ManageWikiInstaller {
 			}
 		}
 
-		$proceed = ( (bool)array_search( false, $stepresponse ) ) ? false : true;
-
-		return $proceed;
+		return !(bool)array_search( false, $stepresponse );
 
 	}
 
@@ -51,10 +49,8 @@ class ManageWikiInstaller {
 		foreach ( $data as $location => $source ) {
 			if ( substr( $location, -1 ) == '/' ) {
 				if ( $source === true ) {
-					if ( !is_dir( $baseloc . $location ) ) {
-						if ( !mkdir( $baseloc . $location ) ) {
-							return false;
-						}
+					if ( !is_dir( $baseloc . $location ) && !mkdir( $baseloc . $location ) ) {
+						return false;
 					}
 				} else {
 					$files = array_diff( scandir( $source, [ '.', '..' ] ) );
@@ -118,7 +114,7 @@ class ManageWikiInstaller {
 
 			$mwJob = new MWScriptJob( $dbname, $params );
 
-			JobQueueGroup::singleton()->push( $job );
+			JobQueueGroup::singleton()->push( $mwJob );
 		}
 	}
 }

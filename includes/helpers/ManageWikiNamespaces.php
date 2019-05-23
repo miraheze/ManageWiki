@@ -122,7 +122,7 @@ class ManageWikiNamespaces {
 		return (array)$ns;
 	}
 
-	public static function modifyNamespace( int $id, string $name, int $search, int $subpages, string $protection, int $content, string $model, int $core, array $aliases, array $additional, string $wiki = NULL ) {
+	public static function modifyNamespace( int $id, string $name, int $search, int $subpages, string $protection, int $content, string $model, int $core, array $aliases, array $additional, string $wiki = null ) {
 		global $wgDBname, $wgCreateWikiDatabase;
 
 		$dbName = $wiki ?? $wgDBname;

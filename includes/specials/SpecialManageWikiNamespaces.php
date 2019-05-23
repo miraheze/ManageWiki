@@ -1,10 +1,10 @@
 <?php
 class SpecialManageWikiNamespaces extends SpecialPage {
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'ManageWikiNamespaces' );
 	}
 
-	function execute( $par ) {
+	public function execute( $par ) {
 		global $wgManageWikiHelpUrl, $wgDBname;
 
 		$out = $this->getOutput();
@@ -25,9 +25,9 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 		}
 	}
 
-	function showMain() {
+	private function showMain() {
 		$out = $this->getOutput();
-		$namespaces = ManageWikiNamespaces::configurableNamespaces( $id = true, $readable = true, $main = true );
+		$namespaces = ManageWikiNamespaces::configurableNamespaces( true, true, true );
 		$craftedNamespaces = [];
 
 		foreach( $namespaces as $id => $namespace ) {
@@ -63,7 +63,7 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 		}
 	}
 
-	function onSubmitRedirectToNamespacePage( array $params ) {
+	private function onSubmitRedirectToNamespacePage( array $params ) {
 		if ( isset( $params['namespaces'] ) ) {
 			$namespaceID = $params['namespaces'];
 		} else {
@@ -75,7 +75,7 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 		return true;
 	}
 
-	function showNamespace( $id ) {
+	private function showNamespace( $id ) {
 		global $wgDBname;
 
 		$out = $this->getOutput();
@@ -109,7 +109,7 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 		$htmlForm->show();
 	}
 
-	function validateNamespaceName( $namespace, $nullForm ) {
+	private function validateNamespaceName( $namespace, $nullForm ) {
 		global $wgCanonicalNamespaceNames;
 
 		if ( in_array( str_replace( ' ', '_', ucfirst( $namespace ) ), $wgCanonicalNamespaceNames ) ) {

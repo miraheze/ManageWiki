@@ -7,11 +7,7 @@ if ( $IP === false ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 class ManageWikiPopulateNamespaces extends Maintenance {
-	public function __construct() {
-		parent::__construct();
-	}
-
-	function execute() {
+	public function execute() {
 		global $wgCreateWikiDatabase, $wgDBname, $wgCanonicalNamespaceNames, $wgNamespaceAliases;
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
@@ -79,7 +75,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 				'ns_content' => (int)$wgContentNamespaces[$id],
 				'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
 				'ns_aliases' => (string)json_encode( $nsAliases ),
-				'ns_core' => ( $id < 1000 ) ? 1 : 0 // we assume less than < is "core", could do with smarter logic!
+				'ns_core' => (int)( $id < 1000 )
 			],
 			__METHOD__
 		);

@@ -60,7 +60,7 @@ class ManageWikiFormFactoryBuilder {
 		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis,
 			$wgCreateWikiUseInactiveWikis, $wgCreateWikiGlobalWiki, $wgDBname;
 
-		$languages = Language::fetchLanguageNames( NULL, 'wmfile' );
+		$languages = Language::fetchLanguageNames( null, 'wmfile' );
 		ksort( $languages );
 		$options = [];
 		foreach ( $languages as $code => $name ) {
@@ -215,7 +215,7 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $wgManageWikiSettings as $name => $set ) {
-			$add = ( $set['from'] == 'mediawiki' ) ? true : $wiki->hasExtension( $set['from'] );
+			$add = ( $set['from'] == 'mediawiki' ) || $wiki->hasExtension( $set['from'] );
 			$sType = $set['type'];
 
 			if ( $add ) {
@@ -230,9 +230,6 @@ class ManageWikiFormFactoryBuilder {
 						$mwOptions = $set['options'];
 						break;
 					case 'list-multi':
-						$mwType = 'multiselect';
-						$mwOptions = $set['options'];
-						break;
 					case 'list-multi-bool':
 						$mwType = 'multiselect';
 						$mwOptions = $set['options'];
@@ -345,7 +342,7 @@ class ManageWikiFormFactoryBuilder {
 				"namespace-$name" => [
 					'type' => 'text',
 					'label-message' => "namespaces-$name",
-					'default' => ( $nsData ) ? $nsData->ns_namespace_name : NULL,
+					'default' => ( $nsData ) ? $nsData->ns_namespace_name : null,
 					'disabled' => ( ( $nsData && $nsData->ns_core ) || !$ceMW ),
 					'required' => true,
 					'section' => $name
@@ -416,14 +413,14 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor["aliases-$name"] = [
 				'type' => 'textarea',
 				'label-message' => 'namespaces-aliases',
-				'default' => ( $nsData ) ? implode( "\n", json_decode( $nsData->ns_aliases, true ) ) : NULL,
+				'default' => ( $nsData ) ? implode( "\n", json_decode( $nsData->ns_aliases, true ) ) : null,
 				'disabled' => !$ceMW,
 				'section' => $name
 			];
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
-			$namespaces = ManageWikiNamespaces::configurableNamespaces( $id = true, $readable = true, $main = true );
+			$namespaces = ManageWikiNamespaces::configurableNamespaces( true, true, true );
 			$craftedNamespaces = [];
 			$canDelete = false;
 
@@ -431,7 +428,8 @@ class ManageWikiFormFactoryBuilder {
 				if ( $id !== $nsID['namespace'] ) {
 					$craftedNamespaces[$namespace] = $id;
 				} else {
-					$canDelete = true; // existing namespace
+					// Existing namespace
+					$canDelete = true;
 				}
 			}
 
@@ -641,7 +639,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$rows = [
 				'wiki_deleted' => (int)$delete,
-				'wiki_deleted_timestamp' => ( $delete ) ? $dbw->timestamp() : NULL
+				'wiki_deleted_timestamp' => ( $delete ) ? $dbw->timestamp() : null
 			];
 
 			$dbw->update(
@@ -837,7 +835,7 @@ class ManageWikiFormFactoryBuilder {
 		$changedArray = [];
 
 		if ( $wgCreateWikiUsePrivateWikis ) {
-			$private = ( $formData['private'] == true ) ? 1 : 0;
+			$private = (int)$formData['private'];
 			if ( $wiki->isPrivate() != $formData['private'] ) {
 				if ( $formData['private'] ) {
 					Hooks::run( 'CreateWikiStatePrivate', [ $dbName ] );
@@ -853,7 +851,6 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $wgCreateWikiUseClosedWikis ) {
 			$closed = $wiki->isClosed();
-			$closedDate = $wiki->getClosureDate();
 			$newClosed = $formData['closed'];
 
 			if ( $newClosed && ( $closed != $newClosed ) ) {
@@ -865,19 +862,18 @@ class ManageWikiFormFactoryBuilder {
 				$changedArray[] = 'closed';
 			} elseif ( !$newClosed && ( $closed != $newClosed ) ) {
 				$closed = 0;
-				$closedDate = NULL;
+				$closedDate = null;
 
 				Hooks::run( 'CreateWikiStateOpen', [ $dbName ] );
 
 				$changedArray[] = 'opened';
 			} else {
-				$closed = $closed;
 				$closedDate = $wiki->closureDate();
 			}
 
 		} else {
 			$closed = 0;
-			$closedDate = NULL;
+			$closedDate = null;
 		}
 
 		if ( $wgCreateWikiUseInactiveWikis ) {
@@ -902,7 +898,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		} else {
 			$inactive = 0;
-			$inactiveDate = NULL;
+			$inactiveDate = null;
 			$inactiveExempt = 0;
 		}
 
@@ -951,16 +947,14 @@ class ManageWikiFormFactoryBuilder {
 			$value = $formData["ext-$name"];
 			$current = $wiki->hasExtension( $name );
 
-			if ( $ext['conflicts'] && $value ) {
-				if ( $formData["ext-{$ext['conflicts']}"] ) {
-					$errors[] = "Conflict with {$ext['conflicts']}. The extension $name can not be enabled until this is disabled.";
-					continue;
-				}
+			if ( $ext['conflicts'] && $value && $formData["ext-{$ext['conflicts']}"] ) {
+				$errors[] = "Conflict with {$ext['conflicts']}. The extension $name can not be enabled until this is disabled.";
+				continue;
 			}
 
 			if ( $value ) {
 				if ( $requiresMet ) {
-					$installed = ( !isset( $ext['install'] ) || $current ) ? true : ManageWikiInstaller::process( $dbName, 'install', $ext['install'] );
+					$installed = ( !isset( $ext['install'] ) || $current ) || ManageWikiInstaller::process( $dbName, $ext['install'] );
 
 					if ( $installed ) {
 						$extensionsArray[] = $name;
@@ -1006,7 +1000,7 @@ class ManageWikiFormFactoryBuilder {
 			$current = $wiki->getSettingsValue( $name );
 			$mwAllowed = ( $set['restricted'] && $context->getUser()->isAllowed( 'managewiki-restricted' ) || !$set['restricted'] );
 			$type = $set['type'];
-			$fromMet = ( $set['from'] != 'mediawiki' ) ? $wiki->hasExtension( $set['from'] ) : true;
+			$fromMet = ( $set['from'] == 'mediawiki' ) || $wiki->hasExtension( $set['from'] );
 
 			if ( $fromMet ) {
 				$value = $formData["set-$name"];
@@ -1060,7 +1054,7 @@ class ManageWikiFormFactoryBuilder {
 			'cdb' => false,
 			'changes' => implode( ', ', $changedSettings ),
 			'data' => json_encode( $settingsArray ),
-			'errors' => false,
+			'errors' => $errors,
 			'log' => 'settings',
 			'table' => 'cw_wikis'
 		];
@@ -1172,10 +1166,10 @@ class ManageWikiFormFactoryBuilder {
 
 		$logBuild = [
 			'added' => [
-				'permissions' => ( $addedPerms ) ? implode( ', ', $addedPerms ) : NULL
+				'permissions' => ( $addedPerms ) ? implode( ', ', $addedPerms ) : null
 			],
 			'removed' => [
-				'permissions' => ( $removedPerms ) ? implode( ', ', $removedPerms ) : NULL
+				'permissions' => ( $removedPerms ) ? implode( ', ', $removedPerms ) : null
 			]
 		];
 
@@ -1246,7 +1240,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		$dataArray['autopromote'] = ( count( $aPBuild ) <= 1 ) ? NULL : json_encode( $aPBuild );
+		$dataArray['autopromote'] = ( count( $aPBuild ) <= 1 ) ? null : json_encode( $aPBuild );
 
 		$logBuild['modified']['autopromote'] = ( $groupData['autopromote'] != $aE );
 

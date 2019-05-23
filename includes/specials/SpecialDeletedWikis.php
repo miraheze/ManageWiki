@@ -1,11 +1,10 @@
 <?php
 class SpecialDeletedWikis extends SpecialPage {
-	function __construct() {
+	public function __construct() {
 		parent::__construct( 'DeletedWikis' );
 	}
 
-	function execute( $par ) {
-		$out = $this->getOutput();
+	public function execute( $par ) {
 		$this->setHeaders();
 
 		$pager = new ManageWikiDeletedWikiPager();

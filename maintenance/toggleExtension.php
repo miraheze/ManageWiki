@@ -13,14 +13,14 @@ class ManageWikiToggleExtension extends Maintenance {
 		$this->addOption( 'disable', 'Disable the extension. If not given, enabling is assumed.' );
 	}
 
-	function execute() {
+	public function execute() {
 		global $wgDBname, $wgCreateWikiDatabase;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 		$ext = $this->getArg( 0 );
 
-		$enable = (bool)( $this->getOption( 'disable' ) ) ? false : true;
+		$enable = !(bool)$this->getOption( 'disable' );
 
 		$exts = (string)$dbw->selectRow(
 			'cw_wikis',

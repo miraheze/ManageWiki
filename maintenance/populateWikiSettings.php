@@ -13,7 +13,7 @@ class ManageWikiPopulateSettings extends Maintenance {
 		$this->addOption( 'sourcelist', 'File in format of "wiki|value" for the $wg setting above.' );
 	}
 
-	function execute() {
+	public function execute() {
 		global $wgCreateWikiDatabase;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
@@ -34,7 +34,7 @@ class ManageWikiPopulateSettings extends Maintenance {
 
 			if ( $settingsarray[$this->getOption('wgsetting')] === "true" ) {
 				$settingsarray[$this->getOption('wgsetting')] = true;
-			} else if ( $settingsarray[$this->getOption('wgsetting')] === "false" ) {
+			} elseif ( $settingsarray[$this->getOption('wgsetting')] === "false" ) {
 				$settingsarray[$this->getOption('wgsetting')] = false;
 			}
 
