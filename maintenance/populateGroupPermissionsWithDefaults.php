@@ -9,21 +9,38 @@ require_once "$IP/maintenance/Maintenance.php";
 class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
+
+		$this->addOption( 'overwrite', 'This overwrites perms to reset them back to the default.', false, false );
 	}
 
 	function execute() {
 		global $wgCreateWikiDatabase, $wgDBname, $wmgPrivateWiki;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-		$dbw->delete(
+
+		if ( $this->getOption( 'overwrite' ) ) {
+			$dbw->delete(
+				'mw_permissions',
+				[
+					'perm_dbname' => $wgDBname
+				],
+				__METHOD__
+			);
+		}
+
+		$checkRow = $dbw->selectRow(
 			'mw_permissions',
 			[
-				'perm_dbname' => $wgDBname
+				'*'
 			],
-			__METHOD__
+			[
+				'perm_dbname' => $wgDBname
+			]
 		);
 
-		ManageWikiHooks::onCreateWikiCreation( $wgDBname, $wmgPrivateWiki );
+		if ( !$checkRow ) {
+			ManageWikiHooks::onCreateWikiCreation( $wgDBname, $wmgPrivateWiki );
+		}
 	}
 }
 
