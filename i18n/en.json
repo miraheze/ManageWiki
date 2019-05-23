@@ -8,7 +8,7 @@
 			"John Lewis"
 		]
 	},
-	"action-managewiki": "manage wiki settings",
+	"action-managewiki": "Manage wiki settings",
 	"apihelp-query+wikiconfig-param-prop": "Select properties to return:",
 	"apihelp-query+wikiconfig-param-wikis": "Which wikis to check.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Check if the wiki is marked as closed",
