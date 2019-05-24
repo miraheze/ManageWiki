@@ -46,7 +46,7 @@ class SpecialManageWikiSettings extends SpecialPage {
 		return true;
 	}
 
-	private function onSubmitRedirectToWikiForm( array $params ) {
+	public function onSubmitRedirectToWikiForm( array $params ) {
 		if ( $params['dbname'] !== '' ) {
 			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWikiSettings' )->getFullUrl() . '/' . $params['dbname'] );
 		} else {
