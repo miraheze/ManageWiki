@@ -48,7 +48,7 @@ class SpecialManageWikiExtensions extends SpecialPage {
 		return true;
 	}
 
-	private function onSubmitRedirectToWikiForm( array $params ) {
+	public function onSubmitRedirectToWikiForm( array $params ) {
 		if ( $params['dbname'] !== '' ) {
 			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWikiExtensions' )->getFullUrl() . '/' . $params['dbname'] );
 		} else {
