@@ -263,7 +263,7 @@ class ManageWikiFormFactoryBuilder {
 						$mwType = 'multiselect';
 						$rights = [];
 						foreach( User::getAllRights() as $right ) {
-							$rights[$right] = $perm;
+							$rights[$right] = $right;
 						}
 						$mwOptions = isset( $set['options'] ) ? array_merge( $rights, $set['options'] ) : $rights;
 						break;
