@@ -251,6 +251,14 @@ class ManageWikiFormFactoryBuilder {
 					case 'wikipage':
 						$mwType = 'title';
 						break;
+					case 'usergroups':
+						$mwType = 'multiselect';
+						$groups = [];
+						foreach( ManageWikiPermissions::availableGroups( $dbName ) as $group ) {
+							$groups[UserGroupMembership::getGroupName( $group )] = $group;
+						}
+						$mwOptions = isset( $set['options'] ) ? array_merge( $groups, $set['options'] ) : $groups;
+						break;
 					case 'userrights':
 						$mwType = 'multiselect';
 						$rights = [];
@@ -281,7 +289,7 @@ class ManageWikiFormFactoryBuilder {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? ManageWiki::handleMatrix( $wiki->getSettingsValue ( $name ), 'php' ) : $set['overridedefault'];
 				} elseif( $sType == 'list-multi-bool' ) {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? array_keys( $wiki->getSettingsValue( $name ), true ) : array_keys( $set['overridedefault'], true );
-				} elseif( $sType == 'list-multi' || $sType == 'userrights' ) {
+				} elseif( $sType == 'list-multi' || $sType == 'usergroups' || $sType == 'userrights' ) {
 					$formDescriptor["set-$name"]['default'] = ( !is_null( $wiki->getSettingsValue( $name ) ) ) ? $wiki->getSettingsValue( $name ) : $set['overridedefault'];
 				} else {
 					$formDescriptor["set-$name"]['default'] = $wiki->getSettingsValue( $name ) ?? $set['overridedefault'];
@@ -1017,7 +1025,7 @@ class ManageWikiFormFactoryBuilder {
 					if ( is_null( $current ) && $settingsArray[$name] != $set['overridedefault'] || !is_null( $current ) && $settingsArray[$name] != $current  ) {
 						$changedSettings[] = "setting-$name";
 					}
-				} elseif( $type == 'list-multi' ||  $type == 'usergroups' ) {
+				} elseif( $type == 'list-multi' ||  $type == 'usergroups' ||  $type == 'userrights' ) {
 					$settingsArray[$name] = $value;
 
 					if ( is_null( $current ) && $settingsArray[$name] != $set['overridedefault'] || !is_null( $current ) && $settingsArray[$name] != $current ) {
