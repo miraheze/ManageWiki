@@ -63,7 +63,7 @@ class SpecialManageWikiNamespaces extends SpecialPage {
 		}
 	}
 
-	private function onSubmitRedirectToNamespacePage( array $params ) {
+	public function onSubmitRedirectToNamespacePage( array $params ) {
 		if ( isset( $params['namespaces'] ) ) {
 			$namespaceID = $params['namespaces'];
 		} else {
