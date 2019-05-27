@@ -8,7 +8,8 @@
 			"Phenolla",
 			"Angrydog001",
 			"Abijeet Patro",
-			"科劳"
+			"科劳",
+			"LNDDYL"
 		]
 	},
 	"action-managewiki": "管理wiki设置",
@@ -54,12 +55,12 @@
 	"managewiki-extensions-link": "管理Wiki的扩展",
 	"managewiki-permissions-link": "管理wiki的权限",
 	"managewiki-settings-link": "管理wiki的其他设置",
-	"namespaces-aliases": "在新的行中输入所有未定义的命名空间，这些命名空间应该重定向到这一个",
-	"namespaces-content": "这个命名空间包含主wiki材质（内容）吗？",
-	"namespaces-namespace": "命名空间的名称",
-	"namespaces-namespacetalk": "命名空间讨论页的名称",
-	"namespaces-search": "这个命名空间是否可以默认搜索？",
-	"namespaces-subpages": "这个命名空间是否应该启用子页面？",
+	"namespaces-aliases": "在新的行中输入所有未定义的名字空间，这些名字空间应该重定向到这一个",
+	"namespaces-content": "这个名字空间包含主wiki材质（内容）吗？",
+	"namespaces-namespace": "主名字空间",
+	"namespaces-namespacetalk": "讨论名字空间",
+	"namespaces-search": "这个名字空间是否可以默认搜索？",
+	"namespaces-subpages": "这个名字空间是否应该启用子页面？",
 	"permissions-assigned": "已指定的许可：",
 	"right-managewiki": "管理维基（设置）",
 	"right-managewiki-restricted": "管理受限wiki设置",

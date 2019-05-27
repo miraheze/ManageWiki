@@ -81,7 +81,7 @@
 	"managewiki-permissions-addall": "Peut ajouter à d'autres",
 	"managewiki-permissions-addself": "Peut ajouter à soi-même",
 	"managewiki-permissions-assigned": "Les droits utilisateur ci-dessous ne sont actuellement assigné à aucun groupe d'utilisateurs.",
-	"managewiki-permissions-autopromote": "Ci-dessous vous pouvez gérer la promotion automatique des utilisateurs dans ce groupe. Notez que si un utilisateur correspond aux critères que vous avez définis ci-dessous, il héritera de tous les droits de ce groupe et vous ne pourrez en aucun cas le supprimer de ce groupe, à moins de choisir de le promouvoir une seule fois avant qu’il ne correspond aux critères.",
+	"managewiki-permissions-autopromote": "Ci-dessous vous pouvez gérer la promotion automatique des utilisateurs dans ce groupe. Notez que si un utilisateur correspond aux critères que vous avez définis ci-dessous, il héritera de tous les droits de ce groupe et vous ne pourrez en aucun cas le supprimer de ce groupe, à moins de choisir de le promouvoir une seule fois avant qu’il ne corresponde aux critères.",
 	"managewiki-permissions-autopromote-age": "Doit avoir été un utilisateur pendant le nombre de jours suivant",
 	"managewiki-permissions-autopromote-blocked": "Doit être bloqué",
 	"managewiki-permissions-autopromote-bot": "Doit être un compte de robot",
