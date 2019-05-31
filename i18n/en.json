@@ -49,7 +49,7 @@
 	"managewiki-disabled": "This feature ($1) has not been enabled on this wiki yet.",
 	"managewiki-header": "Select what you would like to manage below, and click submit!",
 	"managewiki-extensions-header": "The extensions here are the ones that are currently installed, but you can always <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features request]</span> another one to be added. <br>To manage the settings for this wiki please see <b>[[Special:ManageWiki|this page]]</b>. <br> Once you are done, press the \"submit\" tab to save your changes.",
-	"managewiki-settings-header": "This page is used to manage the wiki settings of wiki <b>'$1'</b>. If a feature you would like is not available here yet, please use <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> to request it.<br>To manage the extensions for this wiki please see <b>[[Special:ManageWikiExtensions|this page]]</b> instead. <br> Once you are done, press the \"submit\" tab to save your changes.",
+	"managewiki-settings-header": "This page is used to manage the wiki settings of wiki <b>'$1'</b>. If a feature you would like is restricted or not available here yet, please use <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> to request it.<br>To manage the extensions for this wiki please see <b>[[Special:ManageWikiExtensions|this page]]</b> instead. <br> Once you are done, press the \"submit\" tab to save your changes.",
 	"managewiki-label-category": "Category",
 	"managewiki-label-closed": "Closed",
 	"managewiki-label-creationdate": "Creation Date",
