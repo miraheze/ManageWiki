@@ -64,6 +64,7 @@
 	"managewiki-label-reason": "Reason",
 	"managewiki-label-sitename": "Sitename",
 	"managewiki-label-undeletewiki": "Undelete this wiki?",
+        "managewiki-label-lockwiki": "Lock",
 	"managewiki-missing": "That wiki does not exist.",
 	"managewiki-mwlocked": "This wiki has had it's ability to use ManageWiki restricted.",
 	"managewiki-namespace-conflicts": "Cannot modify \"$1\", a namespace with that name already exists",
