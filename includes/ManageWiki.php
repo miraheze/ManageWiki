@@ -45,14 +45,13 @@ class ManageWiki {
 			return false;
 		}
 
-		// Early implementation of MWLocked feature - down as RemoteWiki but will be WikiManager
-		//if ( $rm->isMWLocked() ) {
-		//	if ( $verbose ) {
-		//		return wfMessage( 'managewiki-mwlocked' )->plain();
-		//	}
+		if ( $rm->isMWLocked() ) {
+			if ( $verbose ) {
+				return wfMessage( 'managewiki-mwlocked' )->plain();
+			}
 
-		//	return false;
-		//}
+			return false;
+		}
 
 		return true;
 	}

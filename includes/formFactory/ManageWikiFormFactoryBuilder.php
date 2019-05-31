@@ -144,15 +144,20 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
-		if ( $ceMW && ( $wgDBname == $wgCreateWikiGlobalWiki ) && !$wiki->isInactiveExempt() ) {
-			$mwAction = ( $wiki->isDeleted() ) ? 'undelete' : 'delete';
-
-			$formDescriptor[$mwAction] = [
-				'type' => 'check',
-				'label-message' => "managewiki-label-{$mwAction}wiki",
-				'default' => false,
-				'section' => 'handling'
+		if ( $ceMW && ( $wgDBname == $wgCreateWikiGlobalWiki ) ) {
+			$mwActions = [
+				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
+				( $wiki->isLocked() ) ? 'unlock' : 'lock'
 			];
+
+			foreach ( $mwActions as $mwAction ) {
+				$formDescriptor[$mwAction] = [
+					'type' => 'check',
+					'label-message' => "managewiki-label-{$mwAction}wiki",
+					'default' => false,
+					'section' => 'handling'
+				];
+			}
 		}
 
 		return $formDescriptor;
@@ -642,13 +647,28 @@ class ManageWikiFormFactoryBuilder {
 				break;
 		}
 
-		if ( $mwReturn === 'deleted' || $mwReturn === 'undeleted' ) {
-			$delete = ( $mwReturn === 'deleted' );
+		if ( !is_array( $mwReturn ) ) {
+			if ( $mwReturn === 'deleted' || $mwReturn === 'undeleted' ) {
+				$delete = ( $mwReturn === 'deleted' );
 
-			$rows = [
-				'wiki_deleted' => (int)$delete,
-				'wiki_deleted_timestamp' => ( $delete ) ? $dbw->timestamp() : null
-			];
+				$rows = [
+					'wiki_deleted' => (int)$delete,
+					'wiki_deleted_timestamp' => ( $delete ) ? $dbw->timestamp() : null
+				];
+
+				$logAction = ( $delete ) ? 'delete' : 'undelete';
+			} elseif ( $mwReturn === 'lock' || $mwReturn === 'unlock' ) {
+				$lock = ( $mwReturn === 'lock' );
+
+				$rows = [
+					'wiki_locked' => (int)$lock,
+				];
+
+				$logAction = ( $lock ) ? 'lock' : 'unlock';
+			} else {
+				$rows = [];
+				$logAction = 'settings';
+			}
 
 			$dbw->update(
 				'cw_wikis',
@@ -658,17 +678,15 @@ class ManageWikiFormFactoryBuilder {
 				]
 			);
 
-			$logAction = ( $delete ) ? 'delete' : 'undelete';
+			$actionLog = new ManualLogEntry( 'managewiki', $logAction );
+			$actionLog->setPerformer( $context->getUser() );
+			$actionLog->setTarget( $form->getTitle() );
+			$actionLog->setComment( $formData['reason'] );
+			$actionLog->setParameters( [ '4::wiki' => $dbName ] );
+			$logID = $actionLog->insert();
+			$actionLog->publish( $logID );
 
-			$deleteLog = new ManualLogEntry( 'managewiki', $logAction );
-			$deleteLog->setPerformer( $context->getUser() );
-			$deleteLog->setTarget( $form->getTitle() );
-			$deleteLog->setComment( $formData['reason'] );
-			$deleteLog->setParameters( [ '4::wiki' => $dbName ] );
-			$logID = $deleteLog->insert();
-			$deleteLog->publish( $logID );
-
-			return "Wiki has been {$mwReturn}";
+			return "Wiki has been {$mwReturn}d";
 		}
 
 		if ( $mwReturn['errors'] ) {
@@ -834,10 +852,17 @@ class ManageWikiFormFactoryBuilder {
 	) {
 		global $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
 
-		if ( isset( $formData['delete'] ) && $formData['delete'] ) {
-			return 'deleted';
-		} elseif ( isset( $formData['undelete'] ) && $formData['undelete'] ) {
-			return 'undeleted';
+		$mwActions = [
+			'delete',
+			'undelete',
+			'lock',
+			'unlock'
+		];
+
+		foreach ( $mwActions as $mwAction ) {
+			if ( isset( $formData[$mwAction] ) && $formData[$mwAction] ) {
+				return $mwAction;
+			}
 		}
 
 		$changedArray = [];
@@ -1109,7 +1134,9 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			if ( $existingName && ( $existingName->ns_namespace_id != $id ) ) {
-				return false;
+				return [
+					'errors' => 'Namespace already exists'
+				];
 			}
 
 			$build[$name] = [
