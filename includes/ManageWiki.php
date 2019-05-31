@@ -45,7 +45,7 @@ class ManageWiki {
 			return false;
 		}
 
-		if ( $rm->isMWLocked() ) {
+		if ( $rm->isLocked() ) {
 			if ( $verbose ) {
 				return wfMessage( 'managewiki-mwlocked' )->plain();
 			}
