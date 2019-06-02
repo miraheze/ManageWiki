@@ -75,4 +75,15 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 			],
 		];
 	}
+
+	/**
+	 * @see ApiBase::getExamplesMessages()
+	 * @return array
+	 */
+	protected function getExamplesMessages() {
+		return [
+			'action=query&list=wikiconfig&wcfwikis=metawiki'
+				=> 'apihelp-query+wikiconfig-example-1',
+		];
+	}
 }
