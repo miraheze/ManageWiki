@@ -9,6 +9,8 @@
 		]
 	},
 	"action-managewiki": "manage wiki settings",
+	"apihelp-query+wikiconfig-summary": "View sitename, inactive, inactive-exempt, closed, private, extensions, settings and permissions for the specified wiki.",
+	"apihelp-query+wikiconfig-example-1": "View wiki config for metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Select properties to return:",
 	"apihelp-query+wikiconfig-param-wikis": "Which wikis to check.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Check if the wiki is marked as closed",
