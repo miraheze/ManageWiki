@@ -670,7 +670,6 @@ class ManageWikiFormFactoryBuilder {
 				$logAction = 'settings';
 			}
 
-			if ( $rows
 			$dbw->update(
 				'cw_wikis',
 				$rows,
