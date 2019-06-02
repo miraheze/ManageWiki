@@ -648,8 +648,8 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		if ( !is_array( $mwReturn ) ) {
-			if ( $mwReturn === 'deleted' || $mwReturn === 'undeleted' ) {
-				$delete = ( $mwReturn === 'deleted' );
+			if ( $mwReturn === 'delete' || $mwReturn === 'undelete' ) {
+				$delete = ( $mwReturn === 'delete' );
 
 				$rows = [
 					'wiki_deleted' => (int)$delete,
@@ -670,6 +670,7 @@ class ManageWikiFormFactoryBuilder {
 				$logAction = 'settings';
 			}
 
+			if ( $rows
 			$dbw->update(
 				'cw_wikis',
 				$rows,
