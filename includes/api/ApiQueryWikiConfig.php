@@ -72,6 +72,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 			],
 			'wikis' => [
 				ApiBase::PARAM_ISMULTI => true,
+				ApiBase::PARAM_REQUIRED => true
 			],
 		];
 	}
