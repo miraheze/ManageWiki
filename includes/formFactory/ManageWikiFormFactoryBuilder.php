@@ -1130,7 +1130,9 @@ class ManageWikiFormFactoryBuilder {
 			$additionalBuilt = [];
 
 			foreach ( (array)$wgManageWikiNamespacesAdditional as $key => $a ) {
-				$additionalBuilt[$key] = $formData["$key-$name"];
+				if ( isset( $formData["$key-$name"] ) ) {
+					$additionalBuilt[$key] = $formData["$key-$name"];
+				}
 			}
 
 			if ( $existingName && ( $existingName->ns_namespace_id != $id ) ) {
