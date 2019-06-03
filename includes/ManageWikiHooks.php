@@ -365,17 +365,11 @@ class ManageWikiHooks {
 			$skin->getUser()->isAllowed( 'managewiki' )
 			&& $wgManageWikiSidebarLinks
 		) {
-			$bar['Administration'][] = [
-				'text' => wfMessage( 'managewiki-link' )->plain(),
-				'id' => 'managewikilink',
-				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki' )->getFullURL() )
-			];
-
 			foreach ( (array)ManageWiki::listModules() as $module ) {
 				$bar['Administration'][] = [
-					'text' => wfMessage( 'managewiki-' . $module . '-link' )->plain(),
-					'id' => 'managewiki' . $module . 'link',
-					'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki' . ucfirst( $module ) )->getFullURL() )
+					'text' => wfMessage( "managewiki-link-{$module}" )->plain(),
+					'id' => "managewiki{$module}link",
+					'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() )
 				];
 			}
 		}

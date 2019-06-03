@@ -5,7 +5,9 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	public function execute( $par ) {
-		global $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname;
+		global $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname, $wgManageWiki, $wgManageWikiBackendModules;
+
+		$par = explode( '/', $par, 3 );
 
 		$out = $this->getOutput();
 		$this->setHeaders();
@@ -14,16 +16,26 @@ class SpecialManageWiki extends SpecialPage {
 			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
-		if ( !ManageWiki::checkSetup( 'core', true, $out ) ) {
+		if ( in_array( $par[0], array_diff( array_keys( $wgManageWiki ), $wgManageWikiBackendModules ) ) ) {
+			$module = $par[0];
+		} else {
+			$module = 'core';
+		}
+
+		$additional = $par[1] ?? '';
+
+		if ( !ManageWiki::checkSetup( $module, true, $out ) ) {
 			return false;
 		}
 
 		if ( $wgCreateWikiGlobalWiki !== $wgDBname ) {
-			$this->showWikiForm( $wgDBname );
-		} elseif ( !is_null( $par ) && $par !== '' ) {
-			$this->showWikiForm( $par );
-		} else {
+			$this->showWikiForm( $wgDBname, $module, $additional );
+		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
+		} elseif ( $module == 'core' ) {
+			$this->showWikiForm( $par[0], 'core', '' );
+		} else {
+			$this->showWikiForm( $wgDBname, $module, $additional );
 		}
 	}
 
@@ -49,7 +61,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function onSubmitRedirectToWikiForm( array $params ) {
 		if ( $params['dbname'] !== '' ) {
-			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki' )->getFullUrl() . '/' . $params['dbname'] );
+			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', 'core' )->getFullUrl() . '/' . $params['dbname'] );
 		} else {
 			return 'Invalid url.';
 		}
@@ -57,32 +69,83 @@ class SpecialManageWiki extends SpecialPage {
 		return true;
 	}
 
-	public function showWikiForm( $wiki ) {
+	public function showWikiForm( $wiki, $module, $special ) {
 		$out = $this->getOutput();
 
 		$out->addModules( 'ext.createwiki.oouiform' );
 
-		$dbName = $wiki;
-
-		if ( !$this->getRequest()->wasPosted() ) {
-			$out->addWikiMsg( 'managewiki-header' );
+		if ( !$special ) {
+			$out->addWikiMsg( "managewiki-header-{$module}" );
 		}
 
-		$formFactory = new ManageWikiFormFactory();
-		$htmlForm = $formFactory->getForm( $dbName, $this->getContext(), 'core' );
-		$sectionTitles = $htmlForm->getFormSections();
+		if ( $module == 'permissions' && !$special ) {
+			$groups = ManageWikiPermissions::availableGroups();
 
-		$sectTabs = [];
-		foreach ( $sectionTitles as $key ) {
-			$sectTabs[] = [
-				'name' => $key,
-				'label' => $htmlForm->getLegend( $key )
+			foreach ( $groups as $group ) {
+				$options[UserGroupMembership::getGroupName( $group )] = $group;
+			}
+
+			$this->reusableFormDescriptor( $module, $options );
+		} elseif ( $module == 'namespaces' && !$special ) {
+			$namespaces = ManageWikiNamespaces::configurableNamespaces( true, true, true );
+
+			foreach ( $namespaces as $id => $namespace ) {
+				$options[$namespace] = $id;
+			}
+
+			$this->reusableFormDescriptor( $module, $options );
+		} else {
+			$formFactory = new ManageWikiFormFactory();
+			$htmlForm = $formFactory->getForm( $wiki, $this->getContext(), $module, $special );
+			$sectionTitles = $htmlForm->getFormSections();
+
+			$sectTabs = [];
+			foreach ( $sectionTitles as $key ) {
+				$sectTabs[] = [
+					'name' => $key,
+					'label' => $htmlForm->getLegend( $key )
+				];
+			}
+
+			$out->addJsConfigVars( 'wgCreateWikiOOUIFormTabs', $sectTabs );
+
+			$htmlForm->show();
+		}
+	}
+
+	private function reusableFormDescriptor( string $module, array $options ) {
+		$hidden['module'] = [
+			'type' => 'hidden',
+			'default' => $module
+		];
+
+		$selector['out'] = [
+			'type' => 'select',
+			'label-message' => "managewiki-{$module}-select",
+			'options' => $options
+		];
+
+		$selectForm = HTMLForm::factory( 'ooui', $hidden + $selector, $this->getContext(), 'selector' );
+		$selectForm->setMethod( 'post' )->setFormIdentifier( 'selector' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->prepareForm()->show();
+
+		if ( $this->getContext()->getUser()->isAllowed( 'managewiki' ) ) {
+			$create['out'] = [
+				'type' => 'text',
+				'label-message' => "managewiki-{$module}-create",
 			];
+
+			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
+			$createForm->setMethod( 'post' )->setFormIdentifier( 'create' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->prepareForm()->show();
 		}
+	}
 
-		$out->addJsConfigVars( 'wgCreateWikiOOUIFormTabs', $sectTabs );
+	public function reusableFormSubmission( array $formData ) {
+		$module = $formData['module'];
+		$url = ( $module == 'namespaces' ) ? ManageWikiNamespaces::netNamespaceID() : $formData['out'];
 
-		$htmlForm->show();
+		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullUrl() . "/{$url}" );
+
+		return true;
 	}
 
 	protected function getGroupName() {
