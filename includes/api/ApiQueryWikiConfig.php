@@ -40,6 +40,13 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				$wikiData['extensions'] = $extensions;
 			}
 
+			if ( isset( $prop['namespaces'] ) ) {
+				$namespaces = ManageWikiNamespaces::configurableNamespaces( true, true, true );
+				foreach ( $namespaces as $id => $namespace ) {
+					$options[$namespace] = $id;
+				}
+			}
+
 			if ( isset( $prop['permissions'] ) ) {
 				foreach ( ManageWikiPermissions::availableGroups( $wiki ) as $group ) {
 					$wikiData['permissions'][$group] = ManageWikiPermissions::groupPermissions( $group, $wiki );
@@ -65,6 +72,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 					'private',
 					'extensions',
 					'settings',
+					'namespaces',
 					'permissions'
 				],
 				ApiBase::PARAM_DFLT => 'sitename|extensions|settings',
