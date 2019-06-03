@@ -25,11 +25,7 @@
 	"SpecialPages": {
 		"DeletedWikis": "SpecialDeletedWikis",
 		"ManageWiki": "SpecialManageWiki",
-		"ManageWikiDefaultPermissions": "SpecialManageWikiDefaultPermissions",
-		"ManageWikiExtensions": "SpecialManageWikiExtensions",
-		"ManageWikiNamespaces": "SpecialManageWikiNamespaces",
-		"ManageWikiPermissions": "SpecialManageWikiPermissions",
-		"ManageWikiSettings": "SpecialManageWikiSettings"
+		"ManageWikiDefaultPermissions": "SpecialManageWikiDefaultPermissions"
 	},
 	"JobClasses": {
 		"MWScriptJob": "MWScriptJob",
@@ -69,11 +65,7 @@
 		"NamespaceMigrationJob": "includes/jobs/NamespaceMigrationJob.php",
 		"SpecialDeletedWikis": "includes/specials/SpecialDeletedWikis.php",
 		"SpecialManageWiki": "includes/specials/SpecialManageWiki.php",
-		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php",
-		"SpecialManageWikiExtensions": "includes/specials/SpecialManageWikiExtensions.php",
-		"SpecialManageWikiNamespaces": "includes/specials/SpecialManageWikiNamespaces.php",
-		"SpecialManageWikiPermissions": "includes/specials/SpecialManageWikiPermissions.php",
-		"SpecialManageWikiSettings": "includes/specials/SpecialManageWikiSettings.php"
+		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php"
 	},
 	"Hooks": {
 		"CreateWikiCreation": [
@@ -130,8 +122,7 @@
 			"description": "Array. List of backend ManageWiki modules. Shouldn't be changed.",
 			"public": true,
 			"value": [
-				"cdb",
-				"core"
+				"cdb"
 			]
 		},
 		"ManageWikiCDBDirectory": {
