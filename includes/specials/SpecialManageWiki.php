@@ -33,7 +33,8 @@ class SpecialManageWiki extends SpecialPage {
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
-			$this->showWikiForm( $par[0], 'core', '' );
+			$dbName = $par[1] ?? $wgDBname;
+			$this->showWikiForm( $dbName, 'core', '' );
 		} else {
 			$this->showWikiForm( $wgDBname, $module, $additional );
 		}
@@ -141,7 +142,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function reusableFormSubmission( array $formData ) {
 		$module = $formData['module'];
-		$url = ( $module == 'namespaces' ) ? ManageWikiNamespaces::netNamespaceID() : $formData['out'];
+		$url = ( $module == 'namespaces' ) ? ManageWikiNamespaces::nextNamespaceID() : $formData['out'];
 
 		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullUrl() . "/{$url}" );
 
