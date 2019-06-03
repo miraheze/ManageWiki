@@ -43,7 +43,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 			if ( isset( $prop['namespaces'] ) ) {
 				$namespaces = ManageWikiNamespaces::configurableNamespaces( true, true, true );
 				foreach ( $namespaces as $id => $namespace ) {
-					$options[$namespace] = $id;
+					$wikiData['namespaces'][$namespace] = $id;
 				}
 			}
 
