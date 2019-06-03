@@ -11,6 +11,7 @@
 		]
 	},
 	"action-managewiki": "Button to manage the settings of a wiki.",
+	"apihelp-query+wikiconfig-summary": "{{doc-apihelp-summary|wikiconfig}}",
 	"logentry-managewiki-settings": "Used as log message.",
 	"managewiki": "User right to manage a wiki",
 	"managewiki-desc": "ManageWiki extension description.",

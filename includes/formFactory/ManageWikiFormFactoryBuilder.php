@@ -648,8 +648,8 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		if ( !is_array( $mwReturn ) ) {
-			if ( $mwReturn === 'deleted' || $mwReturn === 'undeleted' ) {
-				$delete = ( $mwReturn === 'deleted' );
+			if ( $mwReturn === 'delete' || $mwReturn === 'undelete' ) {
+				$delete = ( $mwReturn === 'delete' );
 
 				$rows = [
 					'wiki_deleted' => (int)$delete,
@@ -1130,7 +1130,9 @@ class ManageWikiFormFactoryBuilder {
 			$additionalBuilt = [];
 
 			foreach ( (array)$wgManageWikiNamespacesAdditional as $key => $a ) {
-				$additionalBuilt[$key] = $formData["$key-$name"];
+				if ( isset( $formData["$key-$name"] ) ) {
+					$additionalBuilt[$key] = $formData["$key-$name"];
+				}
 			}
 
 			if ( $existingName && ( $existingName->ns_namespace_id != $id ) ) {

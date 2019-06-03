@@ -9,6 +9,8 @@
 		]
 	},
 	"action-managewiki": "manage wiki settings",
+	"apihelp-query+wikiconfig-summary": "View sitename, inactive, inactive-exempt, closed, private, extensions, settings and permissions for the specified wiki.",
+	"apihelp-query+wikiconfig-example-1": "View wiki config for metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Select properties to return:",
 	"apihelp-query+wikiconfig-param-wikis": "Which wikis to check.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Check if the wiki is marked as closed",
@@ -66,6 +68,8 @@
 	"managewiki-label-reason": "Reason",
 	"managewiki-label-sitename": "Sitename",
 	"managewiki-label-undeletewiki": "Undelete this wiki?",
+        "managewiki-label-lockwiki": "Lock this wiki from being modified",
+        "managewiki-label-unlockwiki": "Unlock this wiki",
 	"managewiki-missing": "That wiki does not exist.",
 	"managewiki-mwlocked": "This wiki has had it's ability to use ManageWiki restricted.",
 	"managewiki-namespace-conflicts": "Cannot modify \"$1\", a namespace with that name already exists",

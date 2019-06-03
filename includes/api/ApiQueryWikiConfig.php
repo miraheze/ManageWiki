@@ -72,7 +72,19 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 			],
 			'wikis' => [
 				ApiBase::PARAM_ISMULTI => true,
+				ApiBase::PARAM_REQUIRED => true
 			],
+		];
+	}
+
+	/**
+	 * @see ApiBase::getExamplesMessages()
+	 * @return array
+	 */
+	protected function getExamplesMessages() {
+		return [
+			'action=query&list=wikiconfig&wcfwikis=metawiki'
+				=> 'apihelp-query+wikiconfig-example-1',
 		];
 	}
 }
