@@ -142,7 +142,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function reusableFormSubmission( array $formData ) {
 		$module = $formData['module'];
-		$url = ( $module == 'namespaces' ) ? ManageWikiNamespaces::nextNamespaceID() : $formData['out'];
+		$url = ( $module == 'namespaces' && !is_int( $formData['out'] ) ) ? ManageWikiNamespaces::nextNamespaceID() : $formData['out'];
 
 		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullUrl() . "/{$url}" );
 
