@@ -19,7 +19,7 @@
 	"managewikinamespaces": "Gestisci i namespace di un wiki",
 	"managewikipermissions": "Gestisci le autorizzazioni di un wiki",
 	"managewiki-disabled": "Questa funzione ($1) non è ancora stata attivata su questo wiki.",
-	"managewiki-settings-header": "Questa pagina è usata per gestire le impostazioni del wiki <b>$1</b>. Se una funzionalità che ti piacerebbe usare non è ancora disponibile qui, per favore usa <span class=“plainlinks”> [https://meta.miraheze.org/wiki/Request_features Phabricator]</span> per richiederla. Invece, per gestire le estensioni in questo wiki vedi <b>[[Special:ManageWikiExtensions|questa pagina]]</b>. <br> Una volta terminato, premi la scheda \"invia\" per salvare le modifiche.",
+	"managewiki-settings-header": "Questa pagina è usata per gestire le impostazioni del wiki <b>$1</b>. Se una funzionalità che ti piacerebbe usare è limitata o non è ancora disponibile qui, per favore usa <span class=\"plainlinks\"> [https://meta.miraheze.org/wiki/Request_features Phabricator]</span> per richiederla. Invece, per gestire le estensioni in questo wiki vedi <b>[[Special:ManageWikiExtensions|questa pagina]]</b>. <br> Una volta terminato, premi la scheda \"invia\" per salvare le modifiche.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Chiuso",
 	"managewiki-label-creationdate": "Data di creazione",

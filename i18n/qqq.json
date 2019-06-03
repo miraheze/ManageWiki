@@ -11,6 +11,7 @@
 		]
 	},
 	"action-managewiki": "Button to manage the settings of a wiki.",
+	"apihelp-query+wikiconfig-summary": "{{doc-apihelp-summary|wikiconfig}}",
 	"logentry-managewiki-settings": "Used as log message.",
 	"managewiki": "User right to manage a wiki",
 	"managewiki-desc": "ManageWiki extension description.",
@@ -28,9 +29,5 @@
 	"managewiki-permissions-autopromote": "{{Doc-singularthey}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent.",
 	"namespaces-delete": "{{Identical|Delete}}",
-	"right-managewiki": "{{doc-right|managewiki}}",
-	"apihelp-query+wikiconfig-summary": "{{doc-apihelp-summary|wikiconfig}}",
-	"apihelp-wikiconfig-example-1": "{{doc-apihelp-example|wikiconfig}}",
-	"apihelp-wikiconfig-param-prop": "{{doc-apihelp-param|wikiconfig|prop}}",
-	"apihelp-wikiconfig-param-wikis": "{{doc-apihelp-param|wikiconfig|wikis}}"
+	"right-managewiki": "{{doc-right|managewiki}}"
 }

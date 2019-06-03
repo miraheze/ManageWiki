@@ -45,6 +45,7 @@
 	"managewiki-label-inactive": "不活跃",
 	"managewiki-label-reason": "原因",
 	"managewiki-label-sitename": "网站名称",
+	"managewiki-label-unlockwiki": "解锁这个维基",
 	"managewiki-missing": "该wiki不存在。",
 	"managewiki-permissions-creategroup": "创建新用户组",
 	"managewiki-permissions-header": "选择下面已经存在的组来修改或创建它下面的框中的新用户组！",

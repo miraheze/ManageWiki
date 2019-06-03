@@ -9,6 +9,7 @@
 		]
 	},
 	"action-managewiki": "위키 설정 관리",
+	"apihelp-query+wikiconfig-example-1": "메타위키의 위키 구성을 봅니다.",
 	"apihelp-query+wikiconfig-param-prop": "반환할 속성을 선택합니다:",
 	"apihelp-query+wikiconfig-param-wikis": "확인할 위키입니다.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "위키가 닫힌 것으로 표시되어 있는지 확인합니다",
@@ -51,6 +52,7 @@
 	"managewiki-label-reason": "이유",
 	"managewiki-label-sitename": "사이트 이름",
 	"managewiki-label-undeletewiki": "이 위키의 삭제를 복구하시겠습니까?",
+	"managewiki-label-unlockwiki": "이 위키의 잠금 해제",
 	"managewiki-missing": "해당 위키는 존재하지 않습니다.",
 	"managewiki-ns-createnamespace": "새 이름공간 만들기",
 	"managewiki-ns-createnamespaceinfo": "이 위키에 새 이름공간을 만들려면 아래의 버튼을 누르십시오. 다음 페이지에서 이름을 정의하고 구성할 수 있습니다.",
