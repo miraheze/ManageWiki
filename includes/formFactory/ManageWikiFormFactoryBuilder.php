@@ -1198,7 +1198,7 @@ class ManageWikiFormFactoryBuilder {
 			'wgAddGroups' => 'ag',
 			'wgRemoveGroups' => 'rg',
 			'wgGroupsAddToSelf' => 'ags',
-			'wgGroupRemoveFromSelf' => 'rgs'
+			'wgGroupsRemoveFromSelf' => 'rgs'
 		];
 
 		$logBuild = [
