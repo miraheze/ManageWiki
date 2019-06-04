@@ -35,6 +35,23 @@ class ManageWikiNamespaces {
 		return $arrayOut;
 	}
 
+	public static function namespaceID( $namepace ) {
+		global $wgCreateWikiDatabase, $wgDBname;
+
+		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+
+		$exists = $dbr->selectRow(
+			'mw_namespaces',
+			'ns_namespace_id',
+			[
+				'ns_dbname' => $wgDBname,
+				'ns_namespace_name' => $namespace
+			]
+		);
+
+		return ( $exists ) ? $exists->ns_namespace_id : static::nextNamespaceID();
+	}
+
 	public static function nextNamespaceID() {
 		global $wgCreateWikiDatabase, $wgDBname;
 
