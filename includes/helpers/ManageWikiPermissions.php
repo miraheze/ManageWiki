@@ -41,13 +41,17 @@ class ManageWikiPermissions {
 			]
 		);
 
+		$groupAssigns = [
+			'wgAddGroups' => [],
+			'wgRemoveGroups' => [],
+			'wgGroupsAddToSelf' => [],
+			'wgGroupsRemoveFromSelf' => [],
+		];
 		if ( $row ) {
-			$groupAssigns = [
-				'wgAddGroups' => json_decode( $row->perm_addgroups, true ),
-				'wgRemoveGroups' => json_decode( $row->perm_removegroups, true ),
-				'wgGroupsAddToSelf' => json_decode( $row->perm_addgroupstoself, true ),
-				'wgGroupsRemoveFromSelf' => json_decode( $row->perm_removegroupsfromself, true )
-			];
+			$groupAssigns['wgAddGroups'] = json_decode( $row->perm_addgroups, true );
+			$groupAssigns['wgRemoveGroups'] = json_decode( $row->perm_removegroups, true );
+			$groupAssigns['wgGroupsAddToSelf'] = json_decode( $row->perm_addgroupstoself, true );
+			$groupAssigns['wgGroupsRemoveFromSelf'] = json_decode( $row->perm_removegroupsfromself, true );
 
 			$data = [
 				'permissions' => json_decode( $row->perm_permissions, true ),
@@ -61,12 +65,12 @@ class ManageWikiPermissions {
 		} else {
 			$data = [
 				'permissions' => [],
-				'ag' => [],
-				'rg' => [],
-				'ags' => [],
-				'rgs' => [],
+				'ag' => $groupAssigns['wgAddGroups'],
+				'rg' => $groupAssigns['wgRemoveGroups'],
+				'ags' => $groupAssigns['wgGroupsAddToSelf'],
+				'rgs' => $groupAssigns['wgGroupsRemoveFromSelf'],
 				'autopromote' => [],
-				'matrix' => []
+				'matrix' => ManageWiki::handleMatrix( json_encode( $groupAssigns ), 'php' ),
 			];
 		}
 
