@@ -45,7 +45,7 @@ class ManageWikiNamespaces {
 			'ns_namespace_id',
 			[
 				'ns_dbname' => $wgDBname,
-				'ns_namespace_name' => $namespace
+				'ns_namespace_id' => $namespace
 			]
 		);
 
