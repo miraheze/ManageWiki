@@ -65,7 +65,7 @@ class ManageWikiPermissions {
 				'rg' => [],
 				'ags' => [],
 				'rgs' => [],
-				'autopromote' => [],
+				'autopromote' => null,
 				'matrix' => []
 			];
 		}
