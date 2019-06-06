@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Alireza Ivaz",
-			"Sjazz"
+			"Sjazz",
+			"Abijeet Patro"
 		]
 	},
 	"action-managewiki": "مدیریت تنظیمات ویکی",
@@ -28,19 +29,19 @@
 	"managewiki-label-reason": "دلیل",
 	"managewiki-label-sitename": "نام تارنما",
 	"managewiki-missing": "آن ویکی وجرد ندارد.",
-	"managewiki-ns-createnamespace": "ساختن فضای نام تازه",
+	"managewiki-namespaces-create": "ساختن فضای نام تازه",
 	"managewiki-permissions-addall": "می‌توان به دیگران افزود",
-	"managewiki-permissions-creategroup": "ساختن گروه کاربری تازه",
+	"managewiki-permissions-create": "ساختن گروه کاربری تازه",
 	"managewiki-permissions-removeall": "می‌توان از دیگران حذف کرد",
 	"managewiki-permissions-resetgroups": "بازتنظیم همهٔ گروه‌ها به پیش‌فرض",
 	"managewiki-permissions-select": "انتخاب گروه موجود برای ویرایش",
 	"managewiki-success": "تنظیمات با موفقیت تغییر داده شدند.",
 	"managewiki-extension-name": "[$1 $2]",
-	"managewiki-link": "مدیریت تنظیمات این‌ویکی",
-	"managewiki-extensions-link": "مدیریت افزونه‌های این‌ویکی",
-	"managewiki-namespaces-link": "مدیریت فضاهای‌نام این‌ویکی",
-	"managewiki-permissions-link": "مدیریت دسترسی‌های این‌ویکی",
-	"managewiki-settings-link": "مدیریت تنظیمات اضافی این‌ویکی",
+	"managewiki-link-core": "مدیریت تنظیمات این‌ویکی",
+	"managewiki-link-extensions": "مدیریت افزونه‌های این‌ویکی",
+	"managewiki-link-namespaces": "مدیریت فضاهای‌نام این‌ویکی",
+	"managewiki-link-permissions": "مدیریت دسترسی‌های این‌ویکی",
+	"managewiki-link-settings": "مدیریت تنظیمات اضافی این‌ویکی",
 	"namespaces-aliases": "همهٔ فضاهای نام تعریف‌نشده‌ای که باید به این فضای‌نام تغییرمسیر داده شوند را در یک خط تازه بنویسید (هر فضای‌نام را با 'Enter' از هم جدا کنید؛ هم‌چنین توجه کنید که فضای‌نامی که وارد می‌کنید، نباید وجود داشته باشند)",
 	"namespaces-delete": "حذف",
 	"namespaces-handling": "اعمال",

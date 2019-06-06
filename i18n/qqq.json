@@ -7,7 +7,8 @@
 			"Nike",
 			"Vlad5250",
 			"Shirayuki",
-			"McDutchie"
+			"McDutchie",
+			"Abijeet Patro"
 		]
 	},
 	"action-managewiki": "Button to manage the settings of a wiki.",
@@ -16,7 +17,7 @@
 	"managewiki": "User right to manage a wiki",
 	"managewiki-desc": "ManageWiki extension description.",
 	"managewiki-disabled": "Message that indicates that a feature is not yet enabled on a wiki.",
-	"managewiki-settings-header": "Header for the ManageWiki extension.",
+	"managewiki-header-settings": "Header for the ManageWiki extension.",
 	"managewiki-label-category": "{{Identical|Category}}",
 	"managewiki-label-closed": "Used as a label for 'closed'.\n{{Identical|Closed}}",
 	"managewiki-label-dbname": "Used as a label for 'dbname'.\n{{Identical|Database name}}",

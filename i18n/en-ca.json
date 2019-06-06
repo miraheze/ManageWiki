@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"LegoFan4000",
-			"MacFan4000"
+			"MacFan4000",
+			"Abijeet Patro"
 		]
 	},
 	"action-managewiki": "manage wiki settings",
@@ -10,7 +11,7 @@
 	"managewiki": "Manage a wiki",
 	"managewiki-desc": "Allows people to manage wikis through a web interface",
 	"managewiki-disabled": "This feature has not been enabled on this wiki yet.",
-	"managewiki-settings-header": "This page is used to manage the wiki settings of wiki '$1'. Please note that you may not be able to change all wiki settings of this wiki, in that case you should contact a system administrator. ManageWiki is still being developed, so new features should be available in the future.",
+	"managewiki-header-settings": "This page is used to manage the wiki settings of wiki '$1'. Please note that you may not be able to change all wiki settings of this wiki, in that case you should contact a system administrator. ManageWiki is still being developed, so new features should be available in the future.",
 	"managewiki-label-closed": "Closed",
 	"managewiki-label-dbname": "Database name",
 	"managewiki-label-language": "Language",
