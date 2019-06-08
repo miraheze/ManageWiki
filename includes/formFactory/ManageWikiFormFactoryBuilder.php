@@ -608,7 +608,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-autopromote-groups',
 				'options' => $rowsBuilt,
 				'hide-if' => [ '!==', 'wpenable', '1' ],
-				'default' => isset( $aPArray[APCOND_INGROUPS] ) ? $aPArray[AP_INGROUPS] : [],
+				'default' => isset( $aPArray[APCOND_INGROUPS] ) ? $aPArray[APCOND_INGROUPS] : [],
 				'section' => 'autopromote'
 			]
 		];
