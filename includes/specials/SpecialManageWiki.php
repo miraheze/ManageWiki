@@ -136,13 +136,14 @@ class SpecialManageWiki extends SpecialPage {
 			];
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
-			$createForm->setMethod( 'post' )->setFormIdentifier( 'create' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->prepareForm()->show();
+			$createForm->setMethod( 'post' )->setFormIdentifier( 'create' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->setSubmitText( $this->msg( "managewiki-{$module}-create-submit" )->plain() )->prepareForm()->show();
 		}
 	}
 
-	public function reusableFormSubmission( array $formData ) {
+	public function reusableFormSubmission( array $formData, HTMLForm $form ) {
 		$module = $formData['module'];
-		$url = ( $module == 'namespaces' ) ? ManageWikiNamespaces::namespaceID( $formData['out'] ) : $formData['out'];
+		$createNamespace = ( $form->getSubmitText() == $this->msg( 'managewiki-namespaces-create-submit' )->plain() ) ? '' : $formData['out'];
+		$url = ( $module == 'namespaces' ) ? ManageWikiNamespaces::namespaceID( $createNamespace ) : $formData['out'];
 
 		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullUrl() . "/{$url}" );
 
