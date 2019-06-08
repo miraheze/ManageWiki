@@ -87,7 +87,7 @@ class SpecialManageWiki extends SpecialPage {
 			}
 
 			$this->reusableFormDescriptor( $module, $options );
-		} elseif ( $module == 'namespaces' && !$special ) {
+		} elseif ( $module == 'namespaces' && $special == '' ) {
 			$namespaces = ManageWikiNamespaces::configurableNamespaces( true, true, true );
 
 			foreach ( $namespaces as $id => $namespace ) {
