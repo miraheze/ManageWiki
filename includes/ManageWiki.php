@@ -34,22 +34,14 @@ class ManageWiki {
 		return $enabledModules;
 	}
 
-	public static function checkPermission( RemoteWiki $rm, User $user, bool $verbose = false, string $perm = "" ) {
+	public static function checkPermission( RemoteWiki $rm, User $user, string $perm = "" ) {
 		$maxPerm = ( (bool)$perm ) ? $perm : 'managewiki';
 
-		if ( !$user->isAllowed( $maxPerm ) ) {
-			if ( $verbose ) {
-				throw new PermissionsError( $maxPerm );
-			}
-
+		if ( $rm->isLocked() && !$user->isAllowed( 'managewiki-restricted' ) ) {
 			return false;
 		}
 
-		if ( $rm->isLocked() ) {
-			if ( $verbose ) {
-				return wfMessage( 'managewiki-mwlocked' )->plain();
-			}
-
+		if ( !$user->isAllowed( $maxPerm ) ) {
 			return false;
 		}
 
