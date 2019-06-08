@@ -34,12 +34,14 @@
 	"LogActionsHandlers": {
 		"managewiki/delete": "LogFormatter",
 		"managewiki/delete-group": "LogFormatter",
+		"managewiki/lock": "LogFormatter",
 		"managewiki/settings": "LogFormatter",
 		"managewiki/rename": "LogFormatter",
 		"managewiki/rights": "LogFormatter",
 		"managewiki/namespaces": "LogFormatter",
 		"managewiki/namespaces-delete": "LogFormatter",
-		"managewiki/undelete": "LogFormatter"
+		"managewiki/undelete": "LogFormatter",
+		"managewiki/unlock": "LogFormatter"
 	},
 	"LogTypes": [
 		"managewiki"
