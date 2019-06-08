@@ -40,7 +40,7 @@ class ManageWikiNamespaces {
 
 		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
 
-		$exists = ( $namespaces == '' ) ? false : $dbr->selectRow(
+		$exists = ( $namespace == '' ) ? false : $dbr->selectRow(
 			'mw_namespaces',
 			'ns_namespace_id',
 			[
