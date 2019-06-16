@@ -1273,7 +1273,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			if ( $formData['groups'] ) {
-				$aPBuild[] = [ APCOND_INGROUPS, $formData['groups'] ];
+				$aPBuild[] = [ APCOND_INGROUPS, $formData['groups'][0] ];
 			}
 		}
 
