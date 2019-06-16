@@ -76,7 +76,7 @@ class SpecialManageWiki extends SpecialPage {
 		$out->addModules( 'ext.createwiki.oouiform' );
 
 		if ( !$special ) {
-			$out->addWikiMsg( "managewiki-header-{$module}" );
+			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
 		}
 
 		if ( $module == 'permissions' && !$special ) {
