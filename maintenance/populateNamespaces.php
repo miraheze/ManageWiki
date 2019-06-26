@@ -73,7 +73,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 				'ns_searchable' => (int)$wgNamespacesToBeSearchedDefault[$id],
 				'ns_subpages' => (int)$wgNamespacesWithSubpages[$id],
 				'ns_content' => (int)$wgContentNamespaces[$id],
-				'ns_content_model' => (string)$wgNamespaceContentModels[$id],
+				'ns_content_model' => isset( $wgNamespaceContentModels[$id] ) ? (string)$wgNamespaceContentModels[$id] : 'wikitext',
 				'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
 				'ns_aliases' => (string)json_encode( $nsAliases ),
 				'ns_core' => (int)( $id < 1000 ),
