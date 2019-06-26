@@ -39,15 +39,13 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 		);
 
 		if ( !$checkRow ) {
-			ManageWikiHooks::onCreateWikiCreation( $wgDBname, $wmgPrivateWiki );
-
 			$defaultGroups = array_diff( (array)ManageWikiPermissions::availableGroups( 'default' ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
 			foreach ( $defaultGroups as $newgroup ) {
 				$groupArray = ManageWikiPermissions::groupPermissions( $newgroup, 'default' );
 				$dbw->insert(
 					'mw_permissions',
 					[
-						'perm_dbname' => $dbname,
+						'perm_dbname' => $wgDBname,
 						'perm_group' => $newgroup,
 						'perm_permissions' => json_encode( $groupArray['permissions'] ),
 						'perm_addgroups' => json_encode( $groupArray['ag'] ),
