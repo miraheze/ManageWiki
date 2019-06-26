@@ -14,7 +14,7 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgCreateWikiDatabase, $wgDBname, $wmgPrivateWiki;
+		global $wgCreateWikiDatabase, $wgDBname, $wmgPrivateWiki, $wgManageWikiPermissionsDefaultPrivateGroup;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
@@ -39,7 +39,29 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 		);
 
 		if ( !$checkRow ) {
-			ManageWikiHooks::onCreateWikiCreation( $wgDBname, $wmgPrivateWiki );
+			$defaultGroups = array_diff( (array)ManageWikiPermissions::availableGroups( 'default' ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+			foreach ( $defaultGroups as $newgroup ) {
+				$groupArray = ManageWikiPermissions::groupPermissions( $newgroup, 'default' );
+				$dbw->insert(
+					'mw_permissions',
+					[
+						'perm_dbname' => $wgDBname,
+						'perm_group' => $newgroup,
+						'perm_permissions' => json_encode( $groupArray['permissions'] ),
+						'perm_addgroups' => json_encode( $groupArray['ag'] ),
+						'perm_removegroups' => json_encode( $groupArray['rg'] ),
+						'perm_addgroupstoself' => json_encode( $groupArray['ags'] ),
+						'perm_removegroupsfromself' => json_encode( $groupArray['rgs'] ),
+						'perm_autopromote' => ( is_null( $groupArray['autopromote'] ) ) ? null : json_encode( $groupArray['autopromote'] )
+					],
+					__METHOD__
+				);
+			}
+			if ( $wmgPrivateWiki ) {
+				ManageWikiHooks::onCreateWikiStatePrivate( $wgDBname );
+			}
+
+			ManageWikiCDB::changes( 'permissions' );
 		}
 	}
 }
