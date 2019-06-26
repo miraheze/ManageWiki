@@ -11,13 +11,13 @@ class ManageWikiAddNamespaces extends Maintenance {
 		parent::__construct();
 		$this->addOption( 'default', 'Wheather to add the namespace to the \'default\' db name (Defaults to wgDBname).' );
 		$this->addOption( 'id', 'The namespace id e.g 1.', true, true );
-		$this->addOption( 'name', 'The name of the namespace e.g \'Module\'.' );
-		$this->addOption( 'searchable', 'Whether the namespace is searchable.' );
-		$this->addOption( 'subpages', 'Whether the namespace has a subpage.' );
-		$this->addOption( 'content', 'Whether the namespace has content' );
-		$this->addOption( 'contentmodel', 'The content model to use for the namespace.' );
-		$this->addOption( 'protection', 'Whether this namespace has protection.' );
-		$this->addOption( 'core', 'Whether to allow the namespaces to be renamed or not.' );
+		$this->addOption( 'name', 'The name of the namespace e.g \'Module\'.', true, true );
+		$this->addOption( 'searchable', 'Whether the namespace is searchable.', true, true );
+		$this->addOption( 'subpages', 'Whether the namespace has a subpage.', true, true );
+		$this->addOption( 'content', 'Whether the namespace has content', true, true );
+		$this->addOption( 'contentmodel', 'The content model to use for the namespace.', true, true );
+		$this->addOption( 'protection', 'Whether this namespace has protection.', true, true );
+		$this->addOption( 'core', 'Whether to allow the namespaces to be renamed or not.', true, true );
 	}
 
 	public function execute() {
