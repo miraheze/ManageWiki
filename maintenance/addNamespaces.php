@@ -9,7 +9,7 @@ require_once "$IP/maintenance/Maintenance.php";
 class ManageWikiAddNamespaces extends Maintenance {
 	public function __construct() {
 		parent::__construct();
-		$this->addOption( 'defaultdb', 'Wheather to add the namespace to the \'default\' db name (Defaults to wgDBname.' );
+		$this->addOption( 'default', 'Wheather to add the namespace to the \'default\' db name (Defaults to wgDBname).' );
 		$this->addOption( 'id', 'The id for the namespace e.g 1.', true, true );
 		$this->addOption( 'name', 'Name of the namespace e.g Module.', true, true );
 		$this->addOption( 'searchable', 'Wheather the namespace is searchable.', true, true );
@@ -30,7 +30,7 @@ class ManageWikiAddNamespaces extends Maintenance {
 		$contentmodel = (string)$this->getOption( 'contentmodel' );
 		$core = (int)$this->getOption( 'core' );
 		$model = (string)$this->getOption( 'contentmodel' );
-		$dbname = $this->getOption( 'defaultdb' ) ? 'default' : null;
+		$dbname = $this->getOption( 'default' ) ? 'default' : null;
 
 		ManageWikiNamespaces::modifyNamespace( $id, $name, $searchable, $subpages, $protection, $content, $contentmodel, $core, [], [], $dbname );
 
