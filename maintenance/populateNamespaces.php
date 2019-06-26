@@ -77,7 +77,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 				'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
 				'ns_aliases' => (string)json_encode( $nsAliases ),
 				'ns_core' => (int)( $id < 1000 ),
-				'ns_additional' => [],
+				'ns_additional' => (string)json_encode( [] ),
 			],
 			__METHOD__
 		);
