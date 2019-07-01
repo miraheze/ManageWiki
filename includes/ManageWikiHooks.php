@@ -14,6 +14,8 @@ class ManageWikiHooks {
 					__DIR__ . '/../sql/patches/patch-autopromote.sql', true );
 			$updater->modifyTable( 'mw_namespaces',
 					__DIR__ . '/../sql/patches/patch-namespaces-additional.sql', true );
+			$updater->modifyTable( 'mw_namespaces',
+					__DIR__ . '/../sql/patches/patch-namespace-core-alter.sql', true );
 		}
 	}
 
