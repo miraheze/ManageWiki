@@ -10,7 +10,8 @@
 			"Cgalindo",
 			"GOTILON",
 			"Ucronistaw",
-			"Abijeet Patro"
+			"Abijeet Patro",
+			"Anarhistička Maca"
 		]
 	},
 	"action-managewiki": "gestionar configuración del wiki",
@@ -31,8 +32,8 @@
 	"managewiki-desc": "Permite a las personas gestionar wikis a través de una interfaz web.",
 	"managewiki-disabled": "Esta función ($1) aún no está activada en este wiki.",
 	"managewiki-header-core": "Selecciona qué te gustaría administrar abajo y ¡envía!",
-	"managewiki-header-extensions": "Las extensiones aquí son las que están actualmente instaladas, pero  puedes siempre [https://meta.miraheze.org/wiki/request_features pedir] otras para ser añadidas. Para gistionar la configuración de este wiki, vea [[Special:ManageWiki|esta página]].<br><br>",
-	"managewiki-header-permissions": "Seleccionar un grupo que ya existe para modificar o crear un grupo en el cuadro debajo!",
+	"managewiki-header-extensions": "Las extensiones aquí son las que están actualmente instaladas, pero  puedes siempre [https://meta.miraheze.org/wiki/request_features pedir] otras para ser añadidas. <br> Una vez que has hecho, presiona el tabulador que se llama \"presenta\" para guardar tus cambios.",
+	"managewiki-header-permissions": "Seleccionar un grupo que ya existe para modificar o crear un grupo en el cuadro debajo.",
 	"managewiki-header-settings": "Esta página permite gestionar la configuración del wiki «<b>$1</b>». Si falta alguna función que te gustaría usar, utiliza <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> para solicitarla. <br> Cuando termines, pulsa en «Enviar» para guardar los cambios.",
 	"managewiki-label-category": "Categoría",
 	"managewiki-label-closed": "Cerrada",
@@ -53,7 +54,7 @@
 	"managewiki-permissions-create-submit": "Crear grupo",
 	"managewiki-success": "La configuración se modificó correctamente.",
 	"managewiki-extension-name": "[$1 $2]",
-	"managewiki-link-core": "Administra los ajustes de este wiki",
+	"managewiki-link-core": "Administra los ajustes centrales de este wiki",
 	"managewiki-link-extensions": "Administra las extensiones de este wiki",
 	"managewiki-link-namespaces": "Gestionar los espacios de nombres de este wiki",
 	"managewiki-link-permissions": "Administra los permisos de este wiki",
