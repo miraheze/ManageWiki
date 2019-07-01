@@ -1,2 +1,2 @@
 ALTER TABLE /*$wgDBprefix*/mw_namespaces
-  MODIFY ns_core INT(1)) NOT NULL DEFAULT 0;
+  ALTER COLUMN ns_core SET DEFAULT 0;
