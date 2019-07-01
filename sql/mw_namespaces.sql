@@ -8,7 +8,7 @@ CREATE TABLE /*_*/mw_namespaces (
   `ns_content_model` VARCHAR(32) NOT NULL,
   `ns_protection` VARCHAR(32) NOT NULL,
   `ns_aliases` LONGTEXT NOT NULL,
-  `ns_core` INT(1) NOT NULL,
+  `ns_core` INT(1) NOT NULL DEFAULT 0,
   `ns_additional` LONGTEXT NOT NULL
 ) /*$wgDBTableOptions*/;
 
