@@ -288,7 +288,10 @@ class ManageWikiHooks {
 						'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup,
 						'perm_permissions' => json_encode( $defaultarray['permissions'] ),
 						'perm_addgroups' => json_encode( $defaultarray['ag'] ),
-						'perm_removegroups' => json_encode( $defaultarray['rg'] )
+						'perm_removegroups' => json_encode( $defaultarray['rg'] ),
+						'perm_addgroupstoself' => json_encode( $defaultarray['ags'] ),
+						'perm_removegroupsfromself' => json_encode( $defaultarray['rgs'] ),
+						'perm_autopromote' => ( is_null( $defaultarray['autopromote'] ) ) ? null : json_encode( $defaultarray['autopromote'] )
 					],
 					__METHOD__
 				);
