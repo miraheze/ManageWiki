@@ -56,7 +56,7 @@
 	"managewiki-permissions-resetgroups": "Ресетуј све групе на подразумевано",
 	"managewiki-success": "Подешавања су успешно промењена.",
 	"managewiki-extension-name": "[$1 $2]",
-	"managewiki-link-core": "Управљај главним подешавањима овог викија",
+	"managewiki-link-core": "Управљај основним подешавањима овог викија",
 	"managewiki-link-extensions": "Управљај додацима овог викија",
 	"managewiki-link-namespaces": "Управљање именским просторима викија",
 	"managewiki-link-permissions": "Управљај дозволама овог викија",
