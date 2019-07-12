@@ -36,7 +36,7 @@ class ManageWikiRequirements {
 		$remoteWiki = RemoteWiki::newFromName( $dbname );
 
 		foreach ( $data as $extension ) {
-			if ( !$remoteWiki->hasExtension( $extension ) || isset( $formData["ext-$extension"] ) && !$formData["ext-$extension"] ) {
+			if ( isset( $formData["ext-$extension"] ) && !$formData["ext-$extension"] ) {
 				return false;
 			}
 		}
