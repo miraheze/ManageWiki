@@ -4,7 +4,8 @@
 			"Liuxinyu970226",
 			"Kly",
 			"LNDDYL",
-			"Abijeet Patro"
+			"Abijeet Patro",
+			"Winston Sung"
 		]
 	},
 	"action-managewiki": "管理 wiki 設定",
@@ -45,10 +46,10 @@
 	"managewiki-desc": "允許人們透過 web 介面來管理 wiki",
 	"managewiki-disabled": "此功能（$1）尚未在此 wiki 啟用。",
 	"managewiki-header-core": "在以下選擇您所想要管理的內容，然後點擊提交！",
-	"managewiki-header-extensions": "在此為目前已安裝的擴充，而您也可以隨時<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features 請求]</span>其它要添加的項目。<br>要管理此 wiki 的設定，請查看<b>[[Special:ManageWiki|此頁面]]</b>。<br>一旦您完成後，按下「提交」分頁來保存您的更改。",
+	"managewiki-header-extensions": "在此為目前已安裝的擴充，而您也可以隨時<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features 請求]</span>其它要添加的項目。<br>一旦您完成後，按下「提交」分頁來保存您的更改。",
 	"managewiki-header-permissions": "選擇下方已存在的群組來進行變動，或是在下方方框來建立新的使用者群組！",
 	"managewiki-header-namespaces": "在下方選擇要編輯的命名空間（若您想編輯對話命名空間，請選擇它所關聯的主命名空間）或壓下按鈕來建立新的命名空間！",
-	"managewiki-header-settings": "此頁面用來管理<b>「$1」</b>的 wiki 設定。若尚未有您想使用的功能，請使用 <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> 來做出申請。<br>若要管理用於此 wiki 的擴充，請改在<b>[[Special:ManageWikiExtensions|此頁面]]</b>查看。<br>一旦您完成後，按下「提交」分頁來保存您的更改。",
+	"managewiki-header-settings": "此頁面用來管理<b>「$1」</b>的 wiki 設定。若尚未有您想使用的功能，請使用 <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> 來做出申請。<br>一旦您完成後，按下「提交」來保存您的變更。",
 	"managewiki-label-category": "分類",
 	"managewiki-label-closed": "已關閉",
 	"managewiki-label-creationdate": "建立日期",
@@ -94,7 +95,7 @@
 	"managewiki-permissions-unassigned": "以下使用者權限目前未指派給使用者群組。",
 	"managewiki-success": "設定已成功變更。",
 	"managewiki-extension-name": "[$1 $2]",
-	"managewiki-link-core": "管理此 wiki 的設定",
+	"managewiki-link-core": "管理此 wiki 的核心設定",
 	"managewiki-link-extensions": "管理此 wiki 的擴充功能",
 	"managewiki-link-namespaces": "管理此 wiki 的命名空間",
 	"managewiki-link-permissions": "管理此 wiki 的權限",
