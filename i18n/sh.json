@@ -4,7 +4,13 @@
 			"Vlad5250"
 		]
 	},
+	"apihelp-query+wikiconfig-summary": "Pogl. ime, neaktivnost, izuzetost od neaktivnosti, zatvorenost, privatnost, dodaci, podešavanja i dozvole za navedeni wiki.",
 	"apihelp-query+wikiconfig-param-prop": "Koja svojstva za davanje:",
+	"apihelp-query+wikiconfig-param-wikis": "Koji wikiji da se provijere.",
+	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Provijeri je li wiki označen kao zatvoren",
+	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Provijeri je li wiki označen kao neaktivan",
+	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Provijeri je li wiki izuzet s neaktivnosti",
+	"apihelp-query+wikiconfig-paramvalue-prop-private": "Provijeri je li wiki označen kao privatan",
 	"apiwarn-wikiconfig-nopermission": "Nije vam dozvoljeno gledati postavljenost wikija '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki \"$1\" ne postoji.",
 	"core-main": "Glavna podešavanja",
@@ -80,7 +86,7 @@
 	"managewiki-permissions-removeall": "Može uklanjati sa drugih",
 	"managewiki-permissions-removeself": "Može uklanjati iz sebe",
 	"managewiki-permissions-resetgroups": "Vrati sve grupe na podrazumjevano",
-	"managewiki-permissions-resetgroups-header": "Klikom na gumb ispod brišete sve postavke grupe i vraćate podrazumjevani položaj wikija. Time ćete ukloniti sve prilagođene promjene osim čitljivosti wikija. Nastavite samo ako ste sigurni.",
+	"managewiki-permissions-resetgroups-header": "Klikom na gumb ispod ćete obrišati sve postavke grupe i ćete povratiti podrazumjevani položaj wikija. Time ćete ukloniti sve prilagođene promjene osim čitljivosti wikija. Nastavite s ovim postupkom samo ako ste sigurni.",
 	"managewiki-permissions-select": "Izaberite postojeću grupu za izmjenu",
 	"managewiki-permissions-unassigned": "Za korisničku grupu trenutačno ne se primjenjuju korisnička prava ispod.",
 	"managewiki-requires": "Zahtjeva",
