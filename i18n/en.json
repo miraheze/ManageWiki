@@ -110,6 +110,8 @@
 	"managewiki-link-namespaces": "Manage this wiki's namespaces",
 	"managewiki-link-permissions": "Manage this wiki's permissions",
 	"managewiki-link-settings": "Manage this wiki's additional settings",
+	"managewiki-setting-wgAbuseFilterActions-name": "AbuseFilter Actions",
+	"managewiki-setting-wgAbuseFilterActions-help": "The possible actions that can be taken by abuse filters. When adding a new action, check if it is restricted in $wgAbuseFilterRestrictions and, if it is, don\'t forget to add the abusefilter-modify-restricted right to the appropriate user groups.",
 	"namespaces-aliases": "Enter on a new line all undefined namespaces which should redirect to this one",
 	"namespaces-content": "Does this namespace contain main wiki material (content)?",
 	"namespaces-contentmodel": "What should this namespaces' content model be?",
