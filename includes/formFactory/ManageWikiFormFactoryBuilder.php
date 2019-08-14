@@ -1137,7 +1137,7 @@ class ManageWikiFormFactoryBuilder {
 
 			if ( $existingName && ( $existingName->ns_namespace_id != $id ) ) {
 				return [
-					'errors' => [ 'Namespace already exists']
+					'errors' => [ 'Namespace already exists' ]
 				];
 			}
 
