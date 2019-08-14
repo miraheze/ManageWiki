@@ -690,7 +690,7 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		if ( $mwReturn['errors'] ) {
-			return $mwReturn['errors'];
+			return [ $mwReturn['errors'] ];
 		}
 
 		$mwLogParams = [
