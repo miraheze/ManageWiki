@@ -366,17 +366,14 @@ class ManageWikiHooks {
 	public static function fnNewSidebarItem( $skin, &$bar ) {
 		global $wgManageWikiSidebarLinks, $wgManageWiki;
 
-		if (
-			$skin->getUser()->isAllowed( 'managewiki' )
-			&& $wgManageWikiSidebarLinks
-		) {
-			foreach ( (array)ManageWiki::listModules() as $module ) {
-				$bar['Administration'][] = [
-					'text' => wfMessage( "managewiki-link-{$module}" )->plain(),
-					'id' => "managewiki{$module}link",
-					'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() )
-				];
-			}
+		$append = ( $skin->getUser()->isAllowed( 'managewiki' ) ) ? '' : '-view';
+
+		foreach ( (array)ManageWiki::listModules() as $module ) {
+			$bar['Administration'][] = [
+				'text' => wfMessage( "managewiki-link-{$module}{$append}" )->plain(),
+				'id' => "managewiki{$module}link",
+				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() )
+			];
 		}
 	}
 }

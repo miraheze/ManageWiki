@@ -203,11 +203,6 @@
 			"description": "String. URL of a help page for ManageWiki on the local wiki farm.",
 			"public": true,
 			"value": false
-		},
-		"ManageWikiSidebarLinks": {
-			"description": "Boolean. Whether to show quick links to ManageWiki pages in the side bar.",
-			"public": true,
-			"value": true
 		}
 	},
 	"callback": "ManageWikiHooks::onRegistration",
