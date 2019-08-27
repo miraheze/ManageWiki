@@ -101,7 +101,7 @@ class ManageWikiCDB {
 						}
 					}
 
-					$cacheArray['availabeGroups'][] = $group;
+					$cacheArray['availableGroups'][] = $group;
 				}
 			} elseif ( $module == 'namespaces' ) {
 				foreach ( $moduleRes as $row ) {
