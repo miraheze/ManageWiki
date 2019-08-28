@@ -115,7 +115,7 @@
 	"managewiki-link-permissions-view": "View this wiki's permissions",
 	"managewiki-link-settings": "Manage this wiki's additional settings",
 	"managewiki-link-settings-view": "View this wiki's additional settings",
-	"managewiki-toggle-sidebar": "Force the display of ManageWiki links in the sidebar.",
+	"managewiki-toggle-forcesidebar": "Force the display of ManageWiki links in the sidebar.",
 	"namespaces-aliases": "Enter on a new line all undefined namespaces which should redirect to this one",
 	"namespaces-content": "Does this namespace contain main wiki material (content)?",
 	"namespaces-contentmodel": "What should this namespaces' content model be?",
