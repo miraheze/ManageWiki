@@ -373,7 +373,7 @@ class ManageWikiHooks {
 			if ( !$wgManageWikiForceSidebarLinks && !$user->getOption( 'managewikisidebar', 0 ) ) {
 				return;
 			}
-			$append = '-view'
+			$append = '-view';
 		}
 
 		foreach ( (array)ManageWiki::listModules() as $module ) {
