@@ -364,9 +364,17 @@ class ManageWikiHooks {
 	}
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {
-		global $wgManageWikiSidebarLinks, $wgManageWiki;
+		global $wgManageWikiForceSidebarLinks, $wgManageWiki;
 
-		$append = ( $skin->getUser()->isAllowed( 'managewiki' ) ) ? '' : '-view';
+		$append = '';
+
+		$user = $skin->getUser();
+		if ( !$user->isAllowed( 'managewiki' ) ) {
+			if ( !$wgManageWikiForceSidebarLinks && !$user->getOption( 'managewikisidebar', 0 ) ) {
+				return;
+			}
+			$append = '-view'
+		}
 
 		foreach ( (array)ManageWiki::listModules() as $module ) {
 			$bar['Administration'][] = [
@@ -375,5 +383,13 @@ class ManageWikiHooks {
 				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() )
 			];
 		}
+	}
+
+	public static function onGetPreferences( User $user, array &$preferences ) {
+		$preferences['managewikisidebar'] = [
+			'type' => 'toggle',
+			'label-message' => 'managewiki-toggle-forcesidebar',
+			'section' => 'rendering',
+		];
 	}
 }
