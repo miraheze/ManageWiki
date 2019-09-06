@@ -13,7 +13,8 @@
 			"Alno",
 			"DSwissK",
 			"Abijeet Patro",
-			"McDutchie"
+			"McDutchie",
+			"Verdy p"
 		]
 	},
 	"action-managewiki": "Régler les paramètres du wiki",
@@ -123,7 +124,7 @@
 	"managewiki-link-permissions-view": "Afficher les permissions de ce wiki",
 	"managewiki-link-settings": "Gérer les paramètres complémentaires de ce wiki",
 	"managewiki-link-settings-view": "Afficher les paramètres supplémentaires de ce wiki",
-	"managewiki-toggle-forcesidebar": "Forcer l’affichage des liens ManageWiki dans la barre latérale.",
+	"managewiki-toggle-forcesidebar": "Forcer l’affichage des liens ''ManageWiki'' dans la barre latérale.",
 	"namespaces-aliases": "Veillez saisir sur une nouvelle ligne tous les espaces de noms indéfnis qui doivent être redirigés vers celui-ci",
 	"namespaces-content": "Est-ce que cet espace de noms doit contenir les matériaux du wiki principal (le contenu) ?",
 	"namespaces-contentmodel": "Quel devrait être le modèle de contenu de ces espaces de noms ?",
