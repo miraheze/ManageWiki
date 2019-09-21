@@ -6,7 +6,7 @@
 		"MacFan4000",
 		"Reception123"
 	],
-	"url": "https://github.com/miraheze/ManageWiki",
+	"url": "https://mediawiki.org/Extension:ManageWiki",
 	"descriptionmsg": "managewiki-desc",
 	"type": "specialpage",
 	"requires": {
