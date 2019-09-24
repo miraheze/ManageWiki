@@ -976,9 +976,9 @@ class ManageWikiFormFactoryBuilder {
 		$changedExtensions = [];
 
 		foreach ( $wgManageWikiExtensions as $name => $ext ) {
-			$requiresMet = ManageWikiRequirements::process( $dbName, $ext['requires'], $context, $formData );
-			$value = $formData["ext-$name"];
 			$current = $wiki->hasExtension( $name );
+			$requiresMet = ManageWikiRequirements::process( $dbName, $ext['requires'], $context, $formData, $current );
+			$value = $formData["ext-$name"];
 
 			if ( $ext['conflicts'] && $value && $formData["ext-{$ext['conflicts']}"] ) {
 				$errors[] = "Conflict with {$ext['conflicts']}. The extension $name can not be enabled until this is disabled.";
