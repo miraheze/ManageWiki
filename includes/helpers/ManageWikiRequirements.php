@@ -1,12 +1,12 @@
 <?php
 
 class ManageWikiRequirements {
-	public static function process( string $dbname, array $actions, IContextSource $context, array $formData = [] ) {
+	public static function process( string $dbname, array $actions, IContextSource $context, array $formData = [], bool $ignorePerms = false ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
 		foreach ( $actions as $action => $data ) {
-			if ( $action == 'permissions' ) {
+			if ( $action == 'permissions' && !$ignorePerms ) {
 				$stepResponse['permissions'] = self::permissions( $data, $context );
 			} elseif ( $action == 'extensions' ) {
 				$stepResponse['extensions'] = self::extensions( $dbname, $data, $formData );
