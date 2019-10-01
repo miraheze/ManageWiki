@@ -48,7 +48,7 @@
 	"managewiki-label-reason": "Причина",
 	"managewiki-label-sitename": "Наименование на сайта",
 	"managewiki-missing": "Такова уики не съществува.",
-	"managewiki-mwlocked": "Това уики има ограничена способност за използването на Управление на уики.",
+	"managewiki-mwlocked": "Това уики има ограничена възможност за употреба на ManageWiki.",
 	"managewiki-namespace-conflicts": "Не можете да промените „$1“, тъй като именно пространство с такова име вече съществува",
 	"managewiki-namespaces-create": "Създаване на ново именно пространство",
 	"managewiki-ns-invalidid": "Идентификаторът на именното пространството трябва да бъде четно цяло число, за да може да се редактира чрез ManageWiki.",
