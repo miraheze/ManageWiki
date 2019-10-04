@@ -412,7 +412,7 @@ class ManageWikiFormFactoryBuilder {
 			$additionalArray = ( $nsData ) ? json_decode( $nsData->ns_additional, true ) : [];
 
 			foreach( (array)$wgManageWikiNamespacesAdditional as $key => $a ) {
-				if ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) {
+				if ( ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
 					$formDescriptor["$key-$name"] = [
 						'type' => 'check',
 						'label' => $a['name'],
