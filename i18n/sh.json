@@ -5,6 +5,7 @@
 		]
 	},
 	"apihelp-query+wikiconfig-summary": "Pogl. ime, neaktivnost, izuzetost od neaktivnosti, zatvorenost, privatnost, dodaci, podešavanja i dozvole za navedeni wiki.",
+	"apihelp-query+wikiconfig-example-1": "Pogl. postavljenost wikija za метавики.",
 	"apihelp-query+wikiconfig-param-prop": "Koja svojstva za davanje:",
 	"apihelp-query+wikiconfig-param-wikis": "Koji wikiji da se provijere.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Provijeri je li wiki označen kao zatvoren",
@@ -102,6 +103,7 @@
 	"managewiki-link-permissions-view": "Vidi dozvole na ovom wikiju",
 	"managewiki-link-settings": "Upravljanje dodatnim postavkama ovog wikija",
 	"managewiki-link-settings-view": "Vidi dodatne postavke ovog wikija",
+	"managewiki-toggle-forcesidebar": "Nametni prikaz linkova za Раководење со викија u alatnoj traci.",
 	"namespaces-aliases": "U novom retku unesite sve nedefinirane imenske prostore što bi trebali voditi do ovoga",
 	"namespaces-content": "Da li ovaj imenski prostor sadrži glavni wikimaterijal (sadržaj)?",
 	"namespaces-contentmodel": "Koji sadržajni model da ima ovaj imenski prostor?",
