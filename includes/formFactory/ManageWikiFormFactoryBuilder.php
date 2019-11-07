@@ -8,7 +8,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		RemoteWiki $wiki,
 		string $special,
-		Database $dbw
+		DBConnRef $dbw
 	) {
 		switch ( $module ) {
 			case 'core':
@@ -330,7 +330,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		bool $ceMW,
 		string $special,
-		Database $dbw
+		DBConnRef $dbw
 	) {
 		global $wgManageWikiNamespacesAdditional, $wgManageWikiNamespacesExtraContentModels;
 
@@ -623,7 +623,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		IContextSource $context,
 		RemoteWiki $wiki,
-		Database $dbw,
+		DBConnRef $dbw,
 		string $special = ''
 	) {
 		switch ( $module ) {
@@ -848,7 +848,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		IContextSource $context,
 		RemoteWiki $wiki,
-		Database $dbw
+		DBConnRef $dbw
 	) {
 		global $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
 
@@ -1097,7 +1097,7 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbName,
 		string $special,
-		Database $dbw
+		DBConnRef $dbw
 	) {
 		global $wgManageWikiNamespacesAdditional;
 

@@ -10,6 +10,7 @@
 	"descriptionmsg": "managewiki-desc",
 	"type": "specialpage",
 	"requires": {
+		"MediaWiki": ">= 1.34.0",
 		"extensions": {
 			"CreateWiki": "*"
 		}
