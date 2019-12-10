@@ -66,7 +66,7 @@ class ManageWikiFormFactory {
 		bool $ceMW,
 		string $dbName,
 		RemoteWiki $wiki,
-		DBConnRef $dbw,
+		Database $dbw,
 		string $special = ''
 	) {
 		$context = $form->getContext();
