@@ -7,7 +7,7 @@ class ManageWikiFormFactory {
 		bool $ceMW,
 		IContextSource $context,
 		RemoteWiki $wiki,
-		DBConnRef $dbw,
+		Database $dbw,
 		string $special = ''
 	) {
 		OutputPage::setupOOUI(
