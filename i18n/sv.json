@@ -11,7 +11,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Kolla om wikin är markerad som stängd",
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Visa vilka tillägg som är aktiverade på wikin",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Kolla om wikin är markerad som inaktiv",
-	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Visa behörigheterna för användargrupperna",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Visa behörigheterna för dessa användargrupper",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Kolla om wikin är markerad som privat",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Visa wikins inställningar",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Visa wikins webbplatsnamn",
