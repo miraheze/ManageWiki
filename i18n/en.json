@@ -17,7 +17,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "View which extensions are enabled on the wiki",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Check if the wiki is marked as inactive",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Check if the wiki is exempt from inactivity",
-	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "View the permissions of this user groups",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "View the permissions of these user groups",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Check if the wiki is marked as private",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "View the settings of the wiki",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "View the sitename of the wiki",
