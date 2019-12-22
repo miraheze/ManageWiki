@@ -680,7 +680,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$actionLog = new ManualLogEntry( 'managewiki', $logAction );
 			$actionLog->setPerformer( $context->getUser() );
-			$actionLog->setTarget( $form->getPageTitle() );
+			$actionLog->setTarget( $form->getTitle() );
 			$actionLog->setComment( $formData['reason'] );
 			$actionLog->setParameters( [ '4::wiki' => $dbName ] );
 			$logID = $actionLog->insert();
@@ -836,7 +836,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn['log'] );
 		$mwLogEntry->setPerformer( $context->getUser() );
-		$mwLogEntry->setTarget( $form->getPageTitle() );
+		$mwLogEntry->setTarget( $form->getTitle() );
 		$mwLogEntry->setComment( $formData['reason'] );
 		$mwLogEntry->setParameters( $mwLogParams );
 		$mwLogID = $mwLogEntry->insert();
