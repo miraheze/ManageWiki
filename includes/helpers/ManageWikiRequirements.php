@@ -6,8 +6,8 @@ class ManageWikiRequirements {
 		$stepResponse = [];
 
 		foreach ( $actions as $action => $data ) {
-			if ( $action == 'permissions' && !$ignorePerms ) {
-				$stepResponse['permissions'] = self::permissions( $data, $context );
+			if ( $action == 'permissions' ) {
+				$stepResponse['permissions'] = ( $ignorePerms ) ? true : self::permissions( $data, $context );
 			} elseif ( $action == 'extensions' ) {
 				$stepResponse['extensions'] = self::extensions( $dbname, $data, $formData );
 			} elseif ( $action == 'articles' ) {
