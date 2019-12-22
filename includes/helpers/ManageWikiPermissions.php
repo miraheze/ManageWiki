@@ -6,7 +6,7 @@ class ManageWikiPermissions {
 
 		$dbName = $wiki ?? $wgDBname;
 
-		$dbr = wfGetDB( DB_SLAVE, [], $wgCreateWikiDatabase );
+		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
 
 		$res = $dbr->select(
 			'mw_permissions',
@@ -30,7 +30,7 @@ class ManageWikiPermissions {
 
 		$dbName = $wiki ?? $wgDBname;
 
-		$dbr = wfGetDB( DB_SLAVE, [], $wgCreateWikiDatabase );
+		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
 
 		$row = $dbr->selectRow(
 			'mw_permissions',
