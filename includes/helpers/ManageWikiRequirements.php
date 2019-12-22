@@ -33,8 +33,6 @@ class ManageWikiRequirements {
 	}
 
 	private static function extensions( string $dbname, array $data, array $formData ) {
-		$remoteWiki = RemoteWiki::newFromName( $dbname );
-
 		foreach ( $data as $extension ) {
 			if ( isset( $formData["ext-$extension"] ) && !$formData["ext-$extension"] ) {
 				return false;
