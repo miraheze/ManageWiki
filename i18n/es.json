@@ -12,7 +12,8 @@
 			"Ucronistaw",
 			"Abijeet Patro",
 			"Anarhistička Maca",
-			"Dark Dragoon"
+			"Dark Dragoon",
+			"Silverie04"
 		]
 	},
 	"action-managewiki": "gestionar configuración del wiki",
@@ -24,7 +25,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Ver cuáles extensiones están activas en el wiki",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Verificar si el wiki está marcado como inactivo",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Verificar si el wiki está marcado como exento de inactividad",
-	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Ver los permisos de los grupos de usuarios",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Ver los permisos de este grupos de usuarios",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Verificar si el wiki está marcado como privado",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Ver la configuración del wiki",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Ver el nombre del sitio del wiki",
@@ -86,10 +87,11 @@
 	"managewiki-namespaces-select": "Selecciona un espacio de nombres de la lista siguiente y pulsa en «Enviar»",
 	"managewiki-permissions-addall": "Puede añadir a otros",
 	"managewiki-permissions-addself": "Puede añadirse a sí mismo",
-	"managewiki-permissions-assigned": "Los derechos de usuarios de abajo son asignados actualmente al grupo de usuario.",
+	"managewiki-permissions-assigned": "Los derechos de usuarios de abajo son asignados actualmente a este grupo de usuario.",
 	"managewiki-permissions-autopromote": "Abajo  puedes administrar la autopromoción de usuarios a este grupo. Nota que si un usuario empareja el criterio puesto abajo, heredará todos los  permisos de este grupo y tú no les pueden sacar de este grupo bajo cualquier circunstancia a no ser que selecciones promoverles una vez antes de que conozcan los criterios.",
 	"managewiki-permissions-create": "Crear un nuevo grupo de usuarios",
 	"managewiki-permissions-create-submit": "Crear grupo",
+	"managewiki-permissions-unassigned": "El abajo derechos de usuario son actualmente no asignados a este grupo de usuario.",
 	"managewiki-success": "La configuración se modificó correctamente.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Administra los ajustes centrales de este wiki",

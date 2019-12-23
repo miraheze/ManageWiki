@@ -12,7 +12,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Провера да ли је вики означен као затворен",
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Преглед додатака који су омогућени на викију",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Провера да ли је вики означен као неактиван",
-	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Преглед дозвола корисничких група",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Преглед дозвола ових корисничких група",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Провера ли је вики означен као приватан",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Преглед подешавања викија",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Преглед имена сајта викија",

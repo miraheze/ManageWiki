@@ -17,7 +17,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "檢視在 wiki 上啟用的擴充",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "若 wiki 被標記為失效則檢查",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "檢查此 wiki 是否可免除失效",
-	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "檢視此使用者群組的權限",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "檢視這些使用者群組的權限",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "若 wiki 被標記為私有則檢查",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "檢視 wiki 的設定",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "檢視 wiki 的站台名稱",
