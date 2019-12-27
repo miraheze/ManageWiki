@@ -27,18 +27,21 @@ class ManageWikiMigrateSettingsAndExtensions extends Maintenance {
 
 		foreach ( $res as $row ) {
 			$extensionsArray = explode( ',', $row->wiki_extensions );
-			unset( $extensions[array_search( 'zzzz', $extensionsArray )] );
+			$extensions = [];
 
-			$dbw->update(
+			foreach ( $extensionsArray as $int => $ext ) {
+				if ( $ext != 'zzzz' ) {
+					$extensions[$ext] = true;
+				}
+			}
+
+			$dbw->insert(
 				'mw_settings',
 				[
-					's_settings' => $row->wiki_dbname,
+					's_dbname' => $row->wiki_dbname,
+					's_settings' => $row->wiki_settings,
 					's_extensions' => json_encode( $extensionsArray )
-				],
-				[
-					's_dbname' => $row->wiki_dbname
-				],
-				__METHOD__
+				]
 			);
 		}
 	}
