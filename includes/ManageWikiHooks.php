@@ -8,6 +8,8 @@ class ManageWikiHooks {
 					__DIR__ . '/../sql/mw_namespaces.sql' );
 			$updater->addExtensionTable( 'mw_permissions',
 					__DIR__ . '/../sql/mw_permissions.sql' );
+			$updater->addExtensionTable( 'mw_settings',
+					__DIR__ . '/../sql/mw_settings.sql' );
 			$updater->modifyTable( 'mw_permissions',
 					__DIR__ . '/../sql/patches/patch-groups-self.sql', true );
 			$updater->modifyTable( 'mw_permissions',
