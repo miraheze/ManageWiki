@@ -729,7 +729,7 @@ class ManageWikiFormFactoryBuilder {
 			if ( isset( $formData['delete-checkbox'] ) && $formData['delete-checkbox'] ) {
 				$mwReturn['log'] .= '-delete';
 
-				foreach ( [ 'namespace', 'namespace-talk' ] as $name ) {
+				foreach ( [ 'namespace', 'namespacetalk' ] as $name ) {
 					$dbw->delete(
 						'mw_namespaces',
 						[
