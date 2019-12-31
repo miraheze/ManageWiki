@@ -387,7 +387,7 @@ class ManageWikiFormFactoryBuilder {
 					'default' => ( $nsData ) ? $nsData->ns_content_model : 'wikitext',
 					'options' => array_merge( [
 						'CSS' => 'css',
-						'None' => '',
+						'Extension Default' => '',
 						'JavaScript' => 'javascript',
 						'JSON' => 'json',
 						'Wikitext' => 'wikitext'
