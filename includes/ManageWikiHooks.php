@@ -263,7 +263,7 @@ class ManageWikiHooks {
 			}
 
 			if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-				$fileNS = $wgManageWikiCDBDirectory . '/' . $old . '-namespaces.cdb'
+				$fileNS = $wgManageWikiCDBDirectory . '/' . $old . '-namespaces.cdb';
 				if ( file_exists( $fileNS ) ) {
 					unlink( $fileNS );
 				}
