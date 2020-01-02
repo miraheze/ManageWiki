@@ -256,11 +256,17 @@ class ManageWikiHooks {
 
 		if ( ManageWiki::checkSetup( 'cdb' ) ) {
 			if ( ManageWiki::checkSetup( 'permissions' ) ) {
-				unlink( $wgManageWikiCDBDirectory . '/' . $old . '-permissions.cdb' );
+				$filePM = $wgManageWikiCDBDirectory . '/' . $old . '-permissions.cdb';
+				if ( file_exists( $filePM ) ) {
+					unlink( $filePM );
+				}
 			}
 
 			if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-				unlink( $wgManageWikiCDBDirectory . '/' . $old . '-namespaces.cdb' );
+				$fileNS = $wgManageWikiCDBDirectory . '/' . $old . '-namespaces.cdb'
+				if ( file_exists( $fileNS ) ) {
+					unlink( $fileNS );
+				}
 			}
 		}
 	}
