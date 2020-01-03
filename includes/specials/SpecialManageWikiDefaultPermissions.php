@@ -94,9 +94,16 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function buildGroupView( $group ) {
+		global $wgCreateWikiGlobalWiki;
+
 		$out = $this->getOutput();
 
 		$out->addModules( 'ext.createwiki.oouiform' );
+
+		if ( RemoteWiki::newFromName( $wgCreateWikiGlobalWiki ) == null ) {
+			$this->getContext()->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
+			return false;
+		}
 
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm( 'default', $this->getContext(), 'permissions', $group );
