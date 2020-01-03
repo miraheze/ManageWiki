@@ -98,6 +98,9 @@ class SpecialManageWiki extends SpecialPage {
 		} else {
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $this->getContext(), $module, $special );
+			if ( !(bool)$htmlForm ) {
+				return false;
+			}
 			$sectionTitles = $htmlForm->getFormSections();
 
 			$sectTabs = [];
