@@ -28,18 +28,6 @@ class ManageWikiFormFactory {
 	) {
 		global $wgCreateWikiDatabase, $wgCreateWikiGlobalWiki;
 
-		if ( $wiki == 'default' ) {
-			// If wiki is default, we mean it but we can't use RM this way
-			$remoteWiki = RemoteWiki::newFromName( $wgCreateWikiGlobalWiki );
-		} else {
-			$remoteWiki = RemoteWiki::newFromName( $wiki );
-		}
-
-		if ( $remoteWiki == null ) {
-			$context->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
-			return false;
-		}
-
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
