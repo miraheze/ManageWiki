@@ -21,12 +21,13 @@ class ManageWikiFormFactory {
 
 	public function getForm(
 		string $wiki,
+		RemoteWiki $remoteWiki,
 		IContextSource $context,
 		string $module,
 		string $special = '',
 		$formClass = CreateWikiOOUIForm::class
 	) {
-		global $wgCreateWikiDatabase, $wgCreateWikiGlobalWiki;
+		global $wgCreateWikiDatabase;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
