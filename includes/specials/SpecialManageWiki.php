@@ -96,11 +96,12 @@ class SpecialManageWiki extends SpecialPage {
 
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
-			$formFactory = new ManageWikiFormFactory();
-			$htmlForm = $formFactory->getForm( $wiki, $this->getContext(), $module, $special );
-			if ( !(bool)$htmlForm ) {
+			if ( RemoteWiki::newFromName( $wiki ) == null ) {
+				$this->getContext()->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 				return false;
 			}
+			$formFactory = new ManageWikiFormFactory();
+			$htmlForm = $formFactory->getForm( $wiki, $this->getContext(), $module, $special );
 			$sectionTitles = $htmlForm->getFormSections();
 
 			$sectTabs = [];
