@@ -100,13 +100,14 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$out->addModules( 'ext.createwiki.oouiform' );
 
-		if ( RemoteWiki::newFromName( $wgCreateWikiGlobalWiki ) == null ) {
-			$this->getContext()->getOutput()->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
+		$remoteWiki = RemoteWiki::newFromName( $wgCreateWikiGlobalWiki );
+		if ( $remoteWiki == null ) {
+			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;
 		}
 
 		$formFactory = new ManageWikiFormFactory();
-		$htmlForm = $formFactory->getForm( 'default', $this->getContext(), 'permissions', $group );
+		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), 'permissions', $group );
 		$sectionTitles = $htmlForm->getFormSections();
 
 		$sectTabs = [];
