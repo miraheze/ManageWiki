@@ -91,7 +91,7 @@
 	"managewiki-permissions-autopromote": "Abajo  puedes administrar la autopromoción de usuarios a este grupo. Nota que si un usuario empareja el criterio puesto abajo, heredará todos los  permisos de este grupo y tú no les pueden sacar de este grupo bajo cualquier circunstancia a no ser que selecciones promoverles una vez antes de que conozcan los criterios.",
 	"managewiki-permissions-create": "Crear un nuevo grupo de usuarios",
 	"managewiki-permissions-create-submit": "Crear grupo",
-	"managewiki-permissions-unassigned": "El abajo derechos de usuario son actualmente no asignados a este grupo de usuario.",
+	"managewiki-permissions-unassigned": "Los privilegios de usuario a continuación no se han asignado actualmente a este grupo de usuarios.",
 	"managewiki-success": "La configuración se modificó correctamente.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Administra los ajustes centrales de este wiki",

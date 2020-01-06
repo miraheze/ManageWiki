@@ -3,7 +3,8 @@
 		"authors": [
 			"Vlad5250",
 			"StanProg",
-			"Abijeet Patro"
+			"Abijeet Patro",
+			"Ted Masters"
 		]
 	},
 	"action-managewiki": "управление на настройките на уики",
@@ -13,7 +14,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Вижте кои разширения са включени на уикито",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Проверете дали уикито е отбелязано като неактивно",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Проверете дали уикито е изключено от неактивните",
-	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Преглед на правата на потребителските групи",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Преглед на правата на тези потребителски групи",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Провери, дали уикито е отбелязано като частно",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Вижте настройките на уикито",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Вижте името на уикито",
