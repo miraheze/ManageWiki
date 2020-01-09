@@ -12,3 +12,4 @@ CREATE TABLE /*_*/mw_namespaces (
   `ns_additional` LONGTEXT NOT NULL
 ) /*$wgDBTableOptions*/;
 
+CREATE INDEX /*i*/ns_dbname ON /*_*/mw_namespaces (ns_dbname);
