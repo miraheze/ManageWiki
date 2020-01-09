@@ -10,7 +10,8 @@
 			"Abijeet Patro",
 			"科劳",
 			"LNDDYL",
-			"Aunst"
+			"Aunst",
+			"沈澄心"
 		]
 	},
 	"action-managewiki": "管理wiki设置",
@@ -76,7 +77,7 @@
 	"managewiki-permissions-create-submit": "创建组",
 	"managewiki-permissions-resetgroups": "重置所有用户组至默认值",
 	"managewiki-permissions-select": "选择要编辑的现有组",
-	"managewiki-permissions-unassigned": "以下用户权限目前未分配给用户组。",
+	"managewiki-permissions-unassigned": "以下用户权限目前未分配给该用户组。",
 	"managewiki-requires": "需求",
 	"managewiki-success": "设置已成功更改。",
 	"managewiki-extension-name": "[$1 $2]",
