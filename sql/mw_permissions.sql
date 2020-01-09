@@ -9,3 +9,4 @@ CREATE TABLE /*_*/mw_permissions (
   `perm_autopromote` LONGTEXT
 ) /*$wgDBTableOptions*/;
 
+CREATE INDEX /*i*/perm_dbname ON /*_*/mw_permissions (perm_dbname);
