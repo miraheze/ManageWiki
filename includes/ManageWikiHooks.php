@@ -18,6 +18,10 @@ class ManageWikiHooks {
 					__DIR__ . '/../sql/patches/patch-namespaces-additional.sql', true );
 			$updater->modifyTable( 'mw_namespaces',
 					__DIR__ . '/../sql/patches/patch-namespace-core-alter.sql', true );
+			$updater->modifyTable( 'mw_namespaces',
+					__DIR__ . '/../sql/patches/patch-namespaces-add-indexes.sql', true );
+			$updater->modifyTable( 'mw_permissions',
+					__DIR__ . '/../sql/patches/patch-permissions-add-indexes.sql', true );
 		}
 	}
 
