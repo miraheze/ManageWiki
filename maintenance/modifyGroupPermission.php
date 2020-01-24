@@ -10,7 +10,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addArg( 'group', 'The group name you want to change.' );
-		$this->addOption( 'all', 'Gets all perm group names.', false, true );
+		$this->addOption( 'all', 'Gets all perm group names.', false );
 		$this->addOption( 'addperms', 'Comma separated list of permissions to add.', false, true );
 		$this->addOption( 'removeperms', 'Comma separated list of permissions to remove.', false, true );
 		$this->addOption( 'newaddgroups', 'Comma separated list of groups to add to the list of addable groups.', false, true );
