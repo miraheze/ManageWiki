@@ -40,6 +40,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 				$removerg
 			);
 		} elseif ( $this->getOption( 'all' ) ) {
+			$dbw = wfGetDB( DB_MASTER );
 			$res = $dbw->select(
 				'mw_permissions',
 				[
