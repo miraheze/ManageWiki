@@ -39,6 +39,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 				$addrg,
 				$removerg
 			);
+			ManageWikiCDB::changes( 'permissions' );
 		} elseif ( $this->getOption( 'all' ) ) {
 			$dbw = wfGetDB( DB_MASTER );
 			$res = $dbw->select(
@@ -67,7 +68,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 			$this->output( 'You must supply either the group as a arg or use --all' );
 		}
 	}
-	
+
 	private function modifyPermissions( $groupName, $addp, $removep, $addag, $removeag, $addrg, $removerg ) {
 		ManageWikiPermissions::modifyPermissions( $groupName, $addp, $removep, $addag, $removeag, $addrg, $removerg, [], [], [], [] );
 	}
