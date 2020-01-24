@@ -9,7 +9,7 @@ require_once "$IP/maintenance/Maintenance.php";
 class ManageWikiModifyGroupPermission extends Maintenance {
 	public function __construct() {
 		parent::__construct();
-		$this->addArg( 'group', 'The group name you want to change.' );
+		$this->addArg( 'group', 'The group name you want to change.', false );
 		$this->addOption( 'all', 'Gets all perm group names.', false );
 		$this->addOption( 'addperms', 'Comma separated list of permissions to add.', false, true );
 		$this->addOption( 'removeperms', 'Comma separated list of permissions to remove.', false, true );
@@ -20,7 +20,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgDBname;
+		global $wgCreateWikiDatabase, $wgDBname;
 
 		$addp = (array)explode( ',', $this->getOption( 'addperms', '' ) );
 		$removep = (array)explode( ',', $this->getOption( 'removeperms', '' ) );
@@ -28,7 +28,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 		$removeag = (array)explode( ',', $this->getOption( 'removeaddgroups', '' ) );
 		$addrg = (array)explode( ',', $this->getOption( 'newremovegroups', '' ) );
 		$removerg = (array)explode( ',', $this->getOption( 'removeremovegroups', '' ) );
-		
+
 		if ( $this->getArg( 0 ) ) {
 			$this->modifyPermissions(
 				$this->getArg( 0 ),
@@ -41,7 +41,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 			);
 			ManageWikiCDB::changes( 'permissions' );
 		} elseif ( $this->getOption( 'all' ) ) {
-			$dbw = wfGetDB( DB_MASTER );
+			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 			$res = $dbw->select(
 				'mw_permissions',
 				[
