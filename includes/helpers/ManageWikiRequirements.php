@@ -24,7 +24,7 @@ class ManageWikiRequirements {
 
 	private static function permissions( array $data, IContextSource $context ) {
 		foreach ( $data as $perm ) {
-			$mwService = MediaWikiServices::getInstance()->getPermissionManager();
+			$mwService = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
 			if ( !$mwService->userHasRight( $context->getUser(), $perm ) ) {
 				return false;
 			}
