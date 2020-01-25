@@ -42,7 +42,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
 		$selectForm->setMethod('post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
-		$mwService = MediaWikiServices::getInstance()->getPermissionManager();
+		$mwService = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
  		if ( $mwService->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
 			$createDescriptor['groups'] = [
 				'type' => 'text',
