@@ -37,17 +37,12 @@ class ManageWiki {
 	public static function checkPermission( RemoteWiki $rm, User $user, string $perm = "" ) {
 		$maxPerm = ( (bool)$perm ) ? $perm : 'managewiki';
 
-		if (
-			$rm->isLocked() &&
-			!MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $user, 'managewiki-restricted' )
-		) {
+		$mwService = MediaWikiServices::getInstance()->getPermissionManager();
+		if ( $rm->isLocked() && !$mwService->userHasRight( $user, 'managewiki-restricted' ) ) {
 			return false;
 		}
 
-		if (
-			$rm->isLocked() &&
-			!MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $user, $maxPerm )
-		) {
+		if ( $rm->isLocked() && !$mwService->userHasRight( $user, $maxPerm ) ) {
 			return false;
 		}
 
