@@ -94,6 +94,8 @@ class ManageWikiFormFactoryBuilder {
 			]
 		];
 
+		$mwService = MediaWikiServices::getInstance()->getPermissionManager();
+
 		$addedModules = [
 			'private' => [
 				'if' => $wgCreateWikiUsePrivateWikis,
@@ -117,7 +119,7 @@ class ManageWikiFormFactoryBuilder {
 				'if' => $wgCreateWikiUseInactiveWikis,
 				'type' => 'check',
 				'default' => $wiki->isInactiveExempt(),
-				'access' => !$context->getUser()->isAllowed( 'managewiki-restricted' )
+				'access' => !$mwService->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			]
 		];
 
@@ -277,7 +279,8 @@ class ManageWikiFormFactoryBuilder {
 						break;
 				}
 
-				$disabled = !( !$set['restricted'] || ( $set['restricted'] && $context->getUser()->isAllowed( 'managewiki-restricted' ) ) );
+				$mwService = MediaWikiServices::getInstance()->getPermissionManager();
+				$disabled = !( !$set['restricted'] || ( $set['restricted'] && $mwService->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) );
 
 				$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 				$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
@@ -932,7 +935,8 @@ class ManageWikiFormFactoryBuilder {
 				$changedArray[] = ( $newInactive ) ? 'inactive' : 'active';
 			}
 
-			if ( $newInactiveExempt && $context->getUser()->isAllowed( 'managewiki-restricted' ) ) {
+			$mwService = MediaWikiServices::getInstance()->getPermissionManager();
+			if ( $newInactiveExempt && $mwService->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
 				$inactiveExempt = 1;
 
 				$changedArray[] = 'inactive-exempt';
@@ -1041,7 +1045,8 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $wgManageWikiSettings as $name => $set ) {
 			$current = $wiki->getSettingsValue( $name );
-			$mwAllowed = ( $set['restricted'] && $context->getUser()->isAllowed( 'managewiki-restricted' ) || !$set['restricted'] );
+			$mwService = MediaWikiServices::getInstance()->getPermissionManager();
+			$mwAllowed = ( $set['restricted'] && $mwService->userHasRight( $context->getUser(), 'managewiki-restricted' ) || !$set['restricted'] );
 			$type = $set['type'];
 			$fromMet = ( $set['from'] == 'mediawiki' ) || $wiki->hasExtension( $set['from'] );
 
