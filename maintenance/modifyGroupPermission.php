@@ -22,12 +22,12 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 	public function execute() {
 		global $wgCreateWikiDatabase, $wgDBname;
 
-		$addp = (array)explode( ',', $this->getOption( 'addperms', '' ) );
-		$removep = (array)explode( ',', $this->getOption( 'removeperms', '' ) );
-		$addag = (array)explode( ',', $this->getOption( 'newaddgroups', '' ) );
-		$removeag = (array)explode( ',', $this->getOption( 'removeaddgroups', '' ) );
-		$addrg = (array)explode( ',', $this->getOption( 'newremovegroups', '' ) );
-		$removerg = (array)explode( ',', $this->getOption( 'removeremovegroups', '' ) );
+		$addp = (array)explode( ',', $this->getOption( 'addperms', [] ) );
+		$removep = (array)explode( ',', $this->getOption( 'removeperms', [] ) );
+		$addag = (array)explode( ',', $this->getOption( 'newaddgroups', [] ) );
+		$removeag = (array)explode( ',', $this->getOption( 'removeaddgroups', [] ) );
+		$addrg = (array)explode( ',', $this->getOption( 'newremovegroups', [] ) );
+		$removerg = (array)explode( ',', $this->getOption( 'removeremovegroups', [] ) );
 
 		if ( $this->getArg( 0 ) ) {
 			$this->modifyPermissions(
