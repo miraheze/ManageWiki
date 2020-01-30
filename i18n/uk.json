@@ -4,7 +4,8 @@
 			"Vlad5250",
 			"Piramidion",
 			"Abijeet Patro",
-			"Ата"
+			"Ата",
+			"VolodymyrF"
 		]
 	},
 	"action-managewiki": "керувати налаштуваннями вікі",
@@ -77,6 +78,7 @@
 	"managewiki-link-namespaces": "Керувати просторами назв цієї вікі",
 	"managewiki-link-permissions": "Керування правами цієї вікі",
 	"managewiki-link-settings": "Керування додатковими налаштуваннями цієї вікі",
+	"managewiki-toggle-forcesidebar": "Примусово відображати посилання ManageWiki в бічній панелі.",
 	"namespaces-aliases": "У новому рядку введіть всі невизначені простори назв, які повинні перенаправляти на цей",
 	"namespaces-content": "Чи цей простір назв містить основні матеріали (контент) цієї вікі?",
 	"namespaces-delete": "Вилучити",
