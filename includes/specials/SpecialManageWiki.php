@@ -83,7 +83,8 @@ class SpecialManageWiki extends SpecialPage {
 			$groups = ManageWikiPermissions::availableGroups();
 
 			foreach ( $groups as $group ) {
-				$options[UserGroupMembership::getGroupName( $group )] = $group;
+				$lowerCaseGroupName = strtolower( $group );
+				$options[UserGroupMembership::getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
 			$this->reusableFormDescriptor( $module, $options );
