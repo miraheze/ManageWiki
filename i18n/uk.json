@@ -5,7 +5,8 @@
 			"Piramidion",
 			"Abijeet Patro",
 			"Ата",
-			"VolodymyrF"
+			"VolodymyrF",
+			"Movses"
 		]
 	},
 	"action-managewiki": "керувати налаштуваннями вікі",
@@ -15,7 +16,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Подивитися, які розширення увімкнені у вікі",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Перевірити, чи позначена вікі як неактивна",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Перевірити, чи вікі є виключення з політики щодо неактивності",
-	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Переглянути права груп користувачів",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Переглянути права цих груп користувачів",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Перевірити, чи позначена вікі як приватна",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Переглянути налаштування вікі",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Переглянути назву сайту вікі",
