@@ -9,7 +9,7 @@
 			"Movses"
 		]
 	},
-	"action-managewiki": "керувати налаштуваннями вікі",
+	"action-managewiki": "керування налаштуваннями вікі",
 	"apihelp-query+wikiconfig-summary": "Перегляд: назви сайту, неактивних, виключення з неактивних, закритих, приватних, розширень та дозволів для зазначеної вікі.",
 	"apihelp-query+wikiconfig-example-1": "Перегляд конфігурації вікі для метавікі.",
 	"apihelp-query+wikiconfig-param-prop": "Оберіть властивості для виведення:",
@@ -134,7 +134,7 @@
 	"permissions-unassigned": "Непризначені права",
 	"permissions-group": "Призначення групи",
 	"permissions-handling": "Надіслати",
-	"right-managewiki": "керування налаштуваннями вікі",
+	"right-managewiki": "Керування налаштуваннями вікі",
 	"right-managewiki-restricted": "керування обмеженими налаштуваннями вікі",
 	"right-managewiki-editdefault": "керування правами стандартних груп",
 	"settings-other": "Інші",
