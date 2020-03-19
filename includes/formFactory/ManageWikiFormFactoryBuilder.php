@@ -1125,8 +1125,18 @@ class ManageWikiFormFactoryBuilder {
 			]
 		);
 
+		$errors = [];
+		$disallowedNamespaces = [
+			'special',
+			'media'
+		];
+
 		foreach ( $nsID as $name => $id ) {
 			$namespaceName = str_replace( ' ', '_', $formData["namespace-$name"] );
+
+			if ( in_array( strtolower( $namespaceName ), $disallowedNamespaces ) ) {
+				$errors[] = "The namespace name, '{$namespaceName}', is not valid.";
+			}
 
 			$existingName = $dbw->selectRow(
 				'mw_namespaces',
@@ -1170,7 +1180,7 @@ class ManageWikiFormFactoryBuilder {
 			'cdb' => 'namespaces',
 			'changes' => $existingNamespace,
 			'data' => $build,
-			'errors' => false,
+			'errors' => $errors,
 			'log' => 'namespaces',
 			'table' => 'mw_namespaces'
 		];
