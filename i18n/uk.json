@@ -135,8 +135,8 @@
 	"permissions-group": "Призначення групи",
 	"permissions-handling": "Надіслати",
 	"right-managewiki": "Керування налаштуваннями вікі",
-	"right-managewiki-restricted": "керування обмеженими налаштуваннями вікі",
-	"right-managewiki-editdefault": "керування правами стандартних груп",
+	"right-managewiki-restricted": "Керування обмеженими налаштуваннями вікі",
+	"right-managewiki-editdefault": "Керування правами стандартних груп",
 	"settings-other": "Інші",
 	"settings-handling": "Надіслати"
 }
