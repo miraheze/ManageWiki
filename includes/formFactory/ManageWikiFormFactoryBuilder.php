@@ -1191,6 +1191,8 @@ class ManageWikiFormFactoryBuilder {
 		string $wiki,
 		string $group
 	) {
+		global $wgManageWikiPermissionsPermanentGroups;
+
 		$groupData = ManageWikiPermissions::groupAssignBuilder( $group, $wiki );
 
 		$addedPerms = [];
@@ -1301,7 +1303,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$logBuild['modified']['autopromote'] = ( $groupData['autopromote'] != $aE );
 
-		if ( ( count( $newPerms ) == 0 ) && !in_array( $group, [ '*', 'user', 'sysop', 'bureaucrat' ] ) ) {
+		if ( ( count( $newPerms ) == 0 ) && !in_array( $group, $wgManageWikiPermissionsPermanentGroups ) ) {
 			$dataArray['state'] = 'delete';
 		} elseif ( count( $groupData['assignedPermissions'] ) == 0 ) {
 			$dataArray['state'] = 'create';
