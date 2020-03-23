@@ -13,7 +13,7 @@ class SpecialManageWiki extends SpecialPage {
 		$this->setHeaders();
 
 		if ( $wgManageWikiHelpUrl ) {
-			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
+			$out->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
 		if ( in_array( $par[0], array_diff( array_keys( $wgManageWiki ), $wgManageWikiBackendModules ) ) ) {
@@ -21,6 +21,8 @@ class SpecialManageWiki extends SpecialPage {
 		} else {
 			$module = 'core';
 		}
+
+		$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
 
 		$additional = $par[1] ?? '';
 
