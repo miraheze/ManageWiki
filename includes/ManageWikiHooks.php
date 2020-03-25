@@ -395,6 +395,8 @@ class ManageWikiHooks {
 				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() )
 			];
 		}
+		
+		Hooks::run( 'CreateWikiCreation', [ $user, $bar ] );
 	}
 
 	public static function onGetPreferences( User $user, array &$preferences ) {
