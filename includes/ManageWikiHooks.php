@@ -396,7 +396,7 @@ class ManageWikiHooks {
 			];
 		}
 		
-		Hooks::run( 'CreateWikiCreation', [ $user, $bar ] );
+		Hooks::run( 'ManageWikiSideBar', [ $user, $bar ] );
 	}
 
 	public static function onGetPreferences( User $user, array &$preferences ) {
