@@ -80,6 +80,9 @@
 		"CreateWikiDeletion": [
 			"ManageWikiHooks::onCreateWikiDeletion"
 		],
+		"CreateWikiJsonBuilder": [
+			"ManageWikiHooks::onCreateWikiJsonBuilder"
+		],
 		"CreateWikiRename": [
 			"ManageWikiHooks::onCreateWikiRename"
 		],

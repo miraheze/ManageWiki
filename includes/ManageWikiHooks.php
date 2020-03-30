@@ -33,6 +33,69 @@ class ManageWikiHooks {
 		}
 	}
 
+	public static function onCreateWikiJsonBuilder( string $wiki, Database $dbr, array &$jsonArray ) {
+		global $wgManageWikiExtensions;
+
+		$setObject = $dbr->selectRow(
+			'mw_settings',
+			'*',
+			[
+				's_dbname' => $wiki
+			]
+		);
+
+		// Don't need to manipulate this much
+		$jsonArray['settings'] = json_decode( $setObject->s_settings, true );
+
+		// Let's create an array of variables so we can easily loop these to enable
+		foreach ( json_decode( $setObject->s_extensions, true ) as $ext ) {
+			$jsonArray['extensions'][] = $wgManageWikiExtensions[$ext]['var'];
+		}
+
+		// Collate NS entries and decode their entries for the array
+		$nsObjects = $dbr->select(
+			'mw_namespaces',
+			'*',
+			[
+				'ns_dbname' => $wiki
+			]
+		);
+
+		foreach ( $nsObjects as $ns ) {
+			$jsonArray['namespaces'][$ns->ns_namespace_name] = [
+				'id' => $ns->ns_namespace_id,
+				'core' => (bool)$ns->ns_core,
+				'searchable' => (bool)$ns->ns_searchable,
+				'subpages' => (bool)$ns->ns_subpages,
+				'content' => (bool)$ns->ns_content,
+				'contentmodel' => $ns->ns_content_model,
+				'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
+				'aliases' => json_decode( $ns->ns_aliases, true ),
+				'additional' => json_decode( $ns->ns_additional, true )
+			];
+		}
+
+		// Same as NS above but for permissions
+		$permObjects = $dbr->select(
+			'mw_permissions',
+			'*',
+			[
+				'perm_dbname' => $wiki
+			]
+		);
+
+		foreach ( $permObjects as $perm ) {
+			$jsonArray['permissions'][$perm->perm_group] = [
+				'permissions' => json_decode( $perm->perm_permissions, true ),
+				'addgroups' => json_decode( $perm->perm_addgroups, true ),
+				'removegroups' => json_decode( $perm->perm_removegroups, true ),
+				'addself' => json_decode( $perm->perm_addgroupstoself, true ),
+				'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
+				'autopromote' => json_decode( $perm->perm_autopromote, true )
+			];
+		}
+	}
+
 	public static function onSetupAfterCache() {
 		global $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory,
 			$wgManageWikiNamespacesCore, $wgContentNamespaces, $wgExtraNamespaces, $wgNamespaceProtection, $wgNamespacesToBeSearchedDefault, $wgNamespaceAliases, $wgNamespacesWithSubpages, $wgManageWikiPermissionsAdditionalAddGroupsSelf,
