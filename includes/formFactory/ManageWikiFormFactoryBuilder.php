@@ -58,7 +58,7 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWiki $wiki
 	) {
 		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis,
-			$wgCreateWikiUseInactiveWikis, $wgCreateWikiGlobalWiki, $wgDBname;
+			$wgCreateWikiUseInactiveWikis, $wgCreateWikiGlobalWiki, $wgDBname, $wgCreateWikiUseCustomDomains;
 
 		$languages = Language::fetchLanguageNames( null, 'wmfile' );
 		ksort( $languages );
@@ -117,6 +117,12 @@ class ManageWikiFormFactoryBuilder {
 				'if' => $wgCreateWikiUseInactiveWikis,
 				'type' => 'check',
 				'default' => $wiki->isInactiveExempt(),
+				'access' => !$context->getUser()->isAllowed( 'managewiki-restricted' )
+			],
+			'server' => [
+				'if' => $wgCreateWikiUseCustomDomains,
+				'type' => 'text',
+				'default' => $wiki->getServerName(),
 				'access' => !$context->getUser()->isAllowed( 'managewiki-restricted' )
 			]
 		];
@@ -859,7 +865,7 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWiki $wiki,
 		MaintainableDBConnRef $dbw
 	) {
-		global $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
+		global $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories, $wgCreateWikiUseCustomDomains;
 
 		$mwActions = [
 			'delete',
@@ -950,9 +956,16 @@ class ManageWikiFormFactoryBuilder {
 			$changedArray[] = 'category';
 		}
 
+		$serverName = ( $wgCreateWikiUseCustomDomains ) ? ( ( $formData['server'] == '' ) ? false : $formData['server'] ) : false;
+
+		if ( $serverName != $wiki->getServerName() ) {
+			$changedArray[] = 'servername';
+		}
+
 		$data = [
 			'wiki_sitename' => $formData['sitename'],
 			'wiki_language' => $formData['language'],
+			'wiki_url' => $serverName,
 			'wiki_closed' => $closed,
 			'wiki_closed_timestamp' => $closedDate,
 			'wiki_inactive' => $inactive,

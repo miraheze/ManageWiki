@@ -100,9 +100,6 @@
 		"LoadExtensionSchemaUpdates": [
 			"ManageWikiHooks::fnManageWikiSchemaUpdates"
 		],
-		"SetupAfterCache": [
-			"ManageWikiHooks::onSetupAfterCache"
-		],
 		"SkinBuildSidebar": [
 			"ManageWikiHooks::fnNewSidebarItem"
 		]

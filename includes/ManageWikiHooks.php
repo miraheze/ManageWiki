@@ -33,7 +33,7 @@ class ManageWikiHooks {
 		}
 	}
 
-	public static function onCreateWikiJsonBuilder( string $wiki, Database $dbr, array &$jsonArray ) {
+	public static function onCreateWikiJsonBuilder( string $wiki, MaintainableDBConnRef $dbr, array &$jsonArray ) {
 		global $wgManageWikiExtensions, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups;
 
 		$setObject = $dbr->selectRow(
@@ -107,7 +107,7 @@ class ManageWikiHooks {
 			foreach ( $permObjects as $perm ) {
 				$addPerms =[];
 
-				foreach ( ( $wgManageWikiPermissionsAdditionalRights ?? [] ) as $right => $bool ) {
+				foreach ( ( $wgManageWikiPermissionsAdditionalRights[$perm->perm_group] ?? [] ) as $right => $bool ) {
 					if ( $bool ) {
 						$addPerms[] = $right;
 					}
@@ -128,7 +128,7 @@ class ManageWikiHooks {
 			foreach ( $diffKeys as $missingKey ) {
 				$missingPermissions = [];
 
-				foreach ( $wgManageWikiPermissionsAdditionalRights as $right => $bool ) {
+				foreach ( $wgManageWikiPermissionsAdditionalRights[$missingKey] as $right => $bool ) {
 					if ( $bool ) {
 						$missingPermissions[] = $right;
 					}
