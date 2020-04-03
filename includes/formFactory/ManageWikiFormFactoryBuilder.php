@@ -840,9 +840,8 @@ class ManageWikiFormFactoryBuilder {
 			return [ 'Error processing.' ];
 		}
 
-		if ( $mwReturn['cdb' ] ) {
-			ManageWikiCDB::changes( $mwReturn['cdb'] );
-		}
+		$cWJ = new CreateWikiJson( $dbName );
+		$cWJ->resetWiki();
 
 		$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn['log'] );
 		$mwLogEntry->setPerformer( $context->getUser() );
@@ -964,7 +963,6 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		return [
-			'cdb' => false,
 			'changes' => implode( ', ', $changedArray ),
 			'data' => $data,
 			'errors' => false,
@@ -1019,7 +1017,6 @@ class ManageWikiFormFactoryBuilder {
 		$extensionsArray[] = 'zzzz';
 
 		return [
-			'cdb' => false,
 			'changes' => implode( ', ', $changedExtensions ),
 			'data' => implode( ',', $extensionsArray ),
 			'errors' => $errors,
@@ -1094,7 +1091,6 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return [
-			'cdb' => false,
 			'changes' => implode( ', ', $changedSettings ),
 			'data' => json_encode( $settingsArray ),
 			'errors' => $errors,
@@ -1177,7 +1173,6 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return [
-			'cdb' => 'namespaces',
 			'changes' => $existingNamespace,
 			'data' => $build,
 			'errors' => $errors,
@@ -1312,7 +1307,6 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return [
-			'cdb' => 'permissions',
 			'changes' => $logBuild,
 			'data' => $dataArray,
 			'errors' => false,

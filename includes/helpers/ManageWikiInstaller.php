@@ -86,9 +86,10 @@ class ManageWikiInstaller {
 			}
 
 			ManageWikiPermissions::modifyPermissions( $group, $mod['permissions'], [], $mod['addgroups'], [], $mod['removegroups' ], [], [], [], [], [], $dbname );
-
-			ManageWikiCDB::changes( 'permissions' );
 		}
+
+		$cWJ = new CreateWikiJson( $dbname );
+		$cWJ->resetWiki();
 
 		return true;
 	}

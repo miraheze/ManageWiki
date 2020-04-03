@@ -5,7 +5,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	public function execute( $par ) {
-		global $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname, $wgManageWiki, $wgManageWikiBackendModules;
+		global $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname, $wgManageWiki;
 
 		$par = explode( '/', $par, 3 );
 
@@ -16,7 +16,7 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
-		if ( in_array( $par[0], array_diff( array_keys( $wgManageWiki ), $wgManageWikiBackendModules ) ) ) {
+		if ( in_array( $par[0], array_keys( $wgManageWiki ) ) ) {
 			$module = $par[0];
 		} else {
 			$module = 'core';

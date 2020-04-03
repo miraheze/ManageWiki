@@ -58,7 +58,6 @@
 	"AutoloadClasses": {
 		"ApiQueryWikiConfig": "includes/api/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
-		"ManageWikiCDB": "includes/helpers/ManageWikiCDB.php",
 		"ManageWikiDeletedWikiPager": "includes/helpers/ManageWikiDeletedWikiPager.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
@@ -122,25 +121,12 @@
 			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
 			"public": true,
 			"value": {
-				"cdb": false,
 				"core": false,
 				"extensions": false,
 				"namespaces": false,
 				"permissions": false,
 				"settings": false
 			}
-		},
-		"ManageWikiBackendModules": {
-			"description": "Array. List of backend ManageWiki modules. Shouldn't be changed.",
-			"public": true,
-			"value": [
-				"cdb"
-			]
-		},
-		"ManageWikiCDBDirectory": {
-			"description": "String. Directory to store CDB files in. This will enable CDB capabilities in ManageWiki.",
-			"public": true,
-			"value": false
 		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",

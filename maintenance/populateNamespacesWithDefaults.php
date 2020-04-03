@@ -61,7 +61,8 @@ class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
 				);
 			}
 
-			ManageWikiCDB::changes( 'namespaces' );
+			$cWJ = new CreateWikiJson( $wgDBname );
+			$cWJ->resetWiki();
 		}
 	}
 }
