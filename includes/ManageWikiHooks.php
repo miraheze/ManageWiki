@@ -34,7 +34,7 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiJsonBuilder( string $wiki, MaintainableDBConnRef $dbr, array &$jsonArray ) {
-		global $wgManageWikiExtensions, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups;
+		global $wgManageWikiExtensions, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiNamespacesAdditional;
 
 		$setObject = $dbr->selectRow(
 			'mw_settings',
