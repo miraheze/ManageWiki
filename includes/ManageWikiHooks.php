@@ -114,7 +114,7 @@ class ManageWikiHooks {
 				}
 
 				$jsonArray['permissions'][$perm->perm_group] = [
-					'permissions' => array_merge( json_decode( $perm->perm_permissions, true ), $addPerms ),
+					'permissions' => array_replace( json_decode( $perm->perm_permissions, true ), $addPerms ),
 					'addgroups' => array_merge( json_decode( $perm->perm_addgroups, true ), $wgManageWikiPermissionsAdditionalAddGroups[$perm->perm_group] ?? [] ),
 					'removegroups' => array_merge( json_decode( $perm->perm_removegroups, true ), $wgManageWikiPermissionsAdditionalRemoveGroups[$perm->perm_group] ?? [] ),
 					'addself' => json_decode( $perm->perm_addgroupstoself, true ),
@@ -183,22 +183,20 @@ class ManageWikiHooks {
 		if ( $wgManageWikiExtensions && $wgManageWikiExtensionsDefault ) {
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-			$cur = explode( ",",
-				(string)$dbw->selectRow(
-					'cw_wikis',
-					[ 'wiki_extensions' ],
-					[ 'wiki_dbname' => $dbname ],
-					__METHOD__
-				)->wiki_extensions
+			$cur = json_decode(
+				$dbw->selectRow(
+					'mw_settings',
+					[ 's_extensions' ],
+					[ 's_dbname' => $dbname ]
+				)->s_extensions, true
 			);
 
-			$newlist = implode( ",", array_merge( $cur, $wgManageWikiExtensionsDefault ) );
+			$newlist = json_encode( array_merge( $cur, $wgManageWikiExtensionsDefault ) );
 
 			$dbw->update(
-				'cw_wikis',
-				[ 'wiki_extensions' => $newlist ],
-				[ 'wiki_dbname' => $dbname ],
-				__METHOD__
+				'mw_settings',
+				[ 's_extensions' => $newlist ],
+				[ 's_dbname' => $dbname ]
 			);
 		}
 

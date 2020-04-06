@@ -731,6 +731,20 @@ class ManageWikiFormFactoryBuilder {
 			);
 
 			$mwLogParams['5::changes'] = $mwReturn['changes'];
+		} elseif ( $mwReturn['table'] == 'mw_settings' ) {
+			$row = [
+				"s_{$module}" => $mwReturn['data']
+			];
+
+			$dbw->update(
+				'mw_settings',
+				$rows,
+				[
+					's_dbname' => $dbname
+				]
+			);
+
+			$mwLogParams['5::changes'] = $mwReturn['changes'];
 		} elseif ( $mwReturn['table'] == 'mw_namespaces' ) {
 			if ( isset( $formData['delete-checkbox'] ) && $formData['delete-checkbox'] ) {
 				$mwReturn['log'] .= '-delete';
@@ -956,7 +970,7 @@ class ManageWikiFormFactoryBuilder {
 			$changedArray[] = 'category';
 		}
 
-		$serverName = ( $wgCreateWikiUseCustomDomains ) ? ( ( $formData['server'] == '' ) ? false : $formData['server'] ) : false;
+		$serverName = ( $wgCreateWikiUseCustomDomains ) ? ( ( $formData['server'] == '' ) ? null : $formData['server'] ) : null;
 
 		if ( $serverName != $wiki->getServerName() ) {
 			$changedArray[] = 'servername';
@@ -1026,15 +1040,12 @@ class ManageWikiFormFactoryBuilder {
 
 		}
 
-		// HACK - Should convert either to JSON or singular param management
-		$extensionsArray[] = 'zzzz';
-
 		return [
 			'changes' => implode( ', ', $changedExtensions ),
-			'data' => implode( ',', $extensionsArray ),
+			'data' => json_encode( $extensionsArray ),
 			'errors' => $errors,
 			'log' => 'settings',
-			'table' => 'cw_wikis'
+			'table' => 'mw_settings'
 		];
 	}
 
@@ -1108,7 +1119,7 @@ class ManageWikiFormFactoryBuilder {
 			'data' => json_encode( $settingsArray ),
 			'errors' => $errors,
 			'log' => 'settings',
-			'table' => 'cw_wikis'
+			'table' => 'mw_settings'
 		];
 	}
 
