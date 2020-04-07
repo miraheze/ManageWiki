@@ -81,8 +81,8 @@ class ManageWikiHooks {
 
 				$nsAdditional = json_decode( $ns->ns_additional, true );
 
-				foreach ( $nsAdditional as $var => $val ) {
-					if ( $val ) {
+				foreach ( (array)$nsAdditional as $var => $val ) {
+					if ( $val && isset( $wgManageWikiNamespacesAdditional[$var] ) ) {
 						if ( $wgManageWikiNamespacesAdditional[$var]['vestyle'] ) {
 							$jsonArray['settings'][$var][$ns->ns_namespace_id] = true;
 						} else {
