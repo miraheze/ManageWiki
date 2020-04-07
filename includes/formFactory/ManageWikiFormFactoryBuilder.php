@@ -732,7 +732,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$mwLogParams['5::changes'] = $mwReturn['changes'];
 		} elseif ( $mwReturn['table'] == 'mw_settings' ) {
-			$row = [
+			$rows = [
 				"s_{$module}" => $mwReturn['data']
 			];
 
