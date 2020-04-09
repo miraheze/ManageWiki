@@ -1,11 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Chrumps",
-			"Railfail536",
 			"Abijeet Patro",
+			"Chrumps",
 			"Pirr",
-			"Rail"
+			"Rail",
+			"Railfail536"
 		]
 	},
 	"action-managewiki": "zarządzaj ustawieniami wiki",

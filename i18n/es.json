@@ -1,19 +1,19 @@
 {
 	"@metadata": {
 		"authors": [
-			"AlvaroMolina",
-			"The-Voidwalker",
-			"Fitoschido",
-			"RisingVoices",
-			"MarcoAurelio",
-			"Tiberius1701",
-			"Cgalindo",
-			"GOTILON",
-			"Ucronistaw",
 			"Abijeet Patro",
+			"AlvaroMolina",
 			"Anarhistička Maca",
+			"Cgalindo",
 			"Dark Dragoon",
-			"Silverie04"
+			"Fitoschido",
+			"GOTILON",
+			"MarcoAurelio",
+			"RisingVoices",
+			"Silverie04",
+			"The-Voidwalker",
+			"Tiberius1701",
+			"Ucronistaw"
 		]
 	},
 	"action-managewiki": "gestionar configuración del wiki",

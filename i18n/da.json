@@ -1,8 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Saederup92",
-			"Abijeet Patro"
+			"Abijeet Patro",
+			"Saederup92"
 		]
 	},
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Tjek om wikien er markeret som lukket",
