@@ -190,20 +190,12 @@ class ManageWikiHooks {
 		if ( $wgManageWikiExtensions && $wgManageWikiExtensionsDefault ) {
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-			$cur = json_decode(
-				$dbw->selectRow(
-					'mw_settings',
-					[ 's_extensions' ],
-					[ 's_dbname' => $dbname ]
-				)->s_extensions, true
-			);
-
-			$newlist = json_encode( array_merge( $cur, $wgManageWikiExtensionsDefault ) );
-
-			$dbw->update(
+			$dbw->insert(
 				'mw_settings',
-				[ 's_extensions' => $newlist ],
-				[ 's_dbname' => $dbname ]
+				[
+					's_settings' => json_encode( [] ),
+					's_extensions' => json_encode( $wgManageWikiExtensionsDefault )
+				]
 			);
 		}
 
