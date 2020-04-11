@@ -1,4 +1,7 @@
 <?php
+
+use MediaWiki\MediaWikiServices;
+
 class ManageWikiHooks {
 	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
 		global $wgCreateWikiDatabase, $wgDBname;
@@ -66,8 +69,12 @@ class ManageWikiHooks {
 				]
 			);
 
+			$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $jsonArray['core']['wgLanguageCode'], 'namespaceNames' );
+
 			foreach ( $nsObjects as $ns ) {
-				$jsonArray['namespaces'][$ns->ns_namespace_name] = [
+				$nsName = $lcName[$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
+
+				$jsonArray['namespaces'][$nsName] = [
 					'id' => $ns->ns_namespace_id,
 					'core' => (bool)$ns->ns_core,
 					'searchable' => (bool)$ns->ns_searchable,
@@ -114,7 +121,7 @@ class ManageWikiHooks {
 				}
 
 				$jsonArray['permissions'][$perm->perm_group] = [
-					'permissions' => array_replace( json_decode( $perm->perm_permissions, true ), $addPerms ),
+					'permissions' => array_merge( json_decode( $perm->perm_permissions, true ), $addPerms ),
 					'addgroups' => array_merge( json_decode( $perm->perm_addgroups, true ), $wgManageWikiPermissionsAdditionalAddGroups[$perm->perm_group] ?? [] ),
 					'removegroups' => array_merge( json_decode( $perm->perm_removegroups, true ), $wgManageWikiPermissionsAdditionalRemoveGroups[$perm->perm_group] ?? [] ),
 					'addself' => json_decode( $perm->perm_addgroupstoself, true ),
