@@ -1,10 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Vlad5250",
-			"StanProg",
 			"Abijeet Patro",
-			"Ted Masters"
+			"StanProg",
+			"Ted Masters",
+			"Vlad5250"
 		]
 	},
 	"action-managewiki": "управление на настройките на уики",

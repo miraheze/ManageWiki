@@ -1,9 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
+			"Abijeet Patro",
 			"Aira",
-			"Metalhead64",
-			"Abijeet Patro"
+			"Metalhead64"
 		]
 	},
 	"action-managewiki": "die Wikieinstellungen zu verwalten",

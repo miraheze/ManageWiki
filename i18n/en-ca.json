@@ -1,9 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
+			"Abijeet Patro",
 			"LegoFan4000",
-			"MacFan4000",
-			"Abijeet Patro"
+			"MacFan4000"
 		]
 	},
 	"action-managewiki": "manage wiki settings",

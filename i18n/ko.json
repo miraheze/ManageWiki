@@ -1,13 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Revi",
-			"Ykhwong",
-			"Jerrykim306",
-			"Void",
 			"Abijeet Patro",
 			"Gongsoonyee",
-			"PlavorSeol"
+			"Jerrykim306",
+			"PlavorSeol",
+			"Revi",
+			"Void",
+			"Ykhwong"
 		]
 	},
 	"action-managewiki": "위키 설정 관리",
