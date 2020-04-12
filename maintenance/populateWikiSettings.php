@@ -40,12 +40,12 @@ class ManageWikiPopulateSettings extends Maintenance {
 
 			$settings = json_encode( $settingsarray );
 
-			$dbw->update( 'cw_wikis',
+			$dbw->update( 'mw_settings',
 				[
-					'wiki_settings' => $settings
+					's_settings' => $settings
 				],
 				[
-					'wiki_dbname' => $DBname
+					's_dbname' => $DBname
 				],
 				__METHOD__
 			);
