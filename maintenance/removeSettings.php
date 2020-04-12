@@ -20,7 +20,7 @@ class ManageWikiRemoveSettings extends Maintenance {
 		$remoteWiki = RemoteWiki::newFromName( $wgDBname );
 		$settingsarray = $remoteWiki->getSettings();
 
-		if ( isset( $settingsarray[ $this->getOption( 'wgsetting' ) ] ) {
+		if ( isset( $settingsarray[ $this->getOption( 'wgsetting' ) ] ) ) {
 			unset( $settingsarray[ $this->getOption( 'wgsetting' ) ] );
 		}
 
