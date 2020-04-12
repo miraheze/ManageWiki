@@ -31,7 +31,7 @@ class ManageWikiRemoveSettings extends Maintenance {
 				's_settings' => $settings
 			],
 			[
-				's_dbname' => $DBname
+				's_dbname' => $wgDBname
 			],
 			__METHOD__
 		);
