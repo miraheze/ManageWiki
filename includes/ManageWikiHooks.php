@@ -193,6 +193,7 @@ class ManageWikiHooks {
 			$dbw->insert(
 				'mw_settings',
 				[
+					's_dbname' => $dbname,
 					's_settings' => json_encode( [] ),
 					's_extensions' => json_encode( $wgManageWikiExtensionsDefault )
 				]
