@@ -123,7 +123,7 @@ class ManageWikiFormFactoryBuilder {
 				'if' => $wgCreateWikiUseCustomDomains,
 				'type' => 'text',
 				'default' => $wiki->getServerName(),
-				'access' => !$context->getUser()->isAllowed( 'managewiki-restricted' )
+				'access' => $context->getUser()->isAllowed( 'managewiki-restricted' )
 			]
 		];
 
