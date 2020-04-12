@@ -16,16 +16,16 @@ class ManageWikiRemoveSettings extends Maintenance {
 		global $wgCreateWikiDatabase, $wgDBname;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-		
+
 		$remoteWiki = RemoteWiki::newFromName( $wgDBname );
 		$settingsarray = $remoteWiki->getSettings();
-		
+
 		if ( isset( $settingsarray[ $this->getOption( 'wgsetting' ) ] ) {
 			unset( $settingsarray[ $this->getOption( 'wgsetting' ) ] );
 		}
-		
+
 		$settings = json_encode( $settingsarray );
-		
+
 		$dbw->update( 'mw_settings',
 			[
 				's_settings' => $settings
