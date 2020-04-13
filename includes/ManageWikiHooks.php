@@ -71,8 +71,13 @@ class ManageWikiHooks {
 
 			$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $jsonArray['core']['wgLanguageCode'], 'namespaceNames' );
 
+			if ( $jsonArray['core']['wgLanguageCode'] != 'en' ) {
+				$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
+			}
+
 			foreach ( $nsObjects as $ns ) {
 				$nsName = $lcName[$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
+				$lcAlias = $lcEN[$ns->ns_namespace_id] ?? '';
 
 				$jsonArray['namespaces'][$nsName] = [
 					'id' => $ns->ns_namespace_id,
@@ -82,7 +87,7 @@ class ManageWikiHooks {
 					'content' => (bool)$ns->ns_content,
 					'contentmodel' => $ns->ns_content_model,
 					'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
-					'aliases' => json_decode( $ns->ns_aliases, true ),
+					'aliases' => array_merge( json_decode( $ns->ns_aliases, true ), [ $lcAlias ] ),
 					'additional' => json_decode( $ns->ns_additional, true )
 				];
 
