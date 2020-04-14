@@ -64,6 +64,7 @@
 	"managewiki-label-inactive": "Etkin değil",
 	"managewiki-label-inactive-exempt": "Hareketsizlikten Muaf",
 	"managewiki-label-reason": "Gerekçe",
+	"managewiki-label-server": "Sunucu Adı",
 	"managewiki-label-sitename": "Site adı",
 	"managewiki-label-undeletewiki": "Bu viki geri getirilsin mi?",
 	"managewiki-label-lockwiki": "Bu vikinin değiştirilmesini engelleyin",

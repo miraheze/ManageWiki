@@ -65,6 +65,7 @@
 	"managewiki-label-inactive": "Inativo",
 	"managewiki-label-inactive-exempt": "Isento de Inatividade",
 	"managewiki-label-reason": "Razão:",
+	"managewiki-label-server": "Nome do servidor",
 	"managewiki-label-sitename": "Nome do site",
 	"managewiki-label-undeletewiki": "Restaurar esta wiki?",
 	"managewiki-label-lockwiki": "Bloquear essa wiki que seja modificada",

@@ -29,6 +29,7 @@
 	"managewiki-label-private": "Privato",
 	"managewiki-label-inactive": "Inattivo",
 	"managewiki-label-reason": "Motivo",
+	"managewiki-label-server": "Nome del server",
 	"managewiki-label-undeletewiki": "Ripristinare questo wiki?",
 	"managewiki-missing": "Questo wiki non esiste.",
 	"managewiki-namespaces-create": "Crea nuovo namespace",

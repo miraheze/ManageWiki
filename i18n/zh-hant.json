@@ -67,6 +67,7 @@
 	"managewiki-label-inactive": "失效",
 	"managewiki-label-inactive-exempt": "免除失效",
 	"managewiki-label-reason": "原因",
+	"managewiki-label-server": "伺服器名稱",
 	"managewiki-label-sitename": "網站名稱",
 	"managewiki-label-undeletewiki": "取消刪除此 wiki？",
 	"managewiki-label-lockwiki": "鎖定此 wiki 防止被變動",

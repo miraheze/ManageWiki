@@ -44,6 +44,7 @@
 	"managewiki-label-private": "Privat",
 	"managewiki-label-inactive": "Inaktiv",
 	"managewiki-label-reason": "Anledning",
+	"managewiki-label-server": "Servernamn",
 	"managewiki-label-sitename": "Webbplatsnamn",
 	"managewiki-missing": "Denna wiki finns inte.",
 	"managewiki-mwlocked": "Denna wiki har begränsat sin förmåga att använda ManageWiki.",

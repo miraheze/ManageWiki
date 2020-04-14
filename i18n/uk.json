@@ -67,6 +67,7 @@
 	"managewiki-label-inactive": "Неактивна",
 	"managewiki-label-inactive-exempt": "Виключення з політики щодо неактивності",
 	"managewiki-label-reason": "Причина",
+	"managewiki-label-server": "Ім'я серверу",
 	"managewiki-label-sitename": "Назва сайту",
 	"managewiki-label-undeletewiki": "Відновити цю вікі?",
 	"managewiki-label-lockwiki": "Закрити для цієї вікі можливість внесення змін",
