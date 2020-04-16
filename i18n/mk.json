@@ -64,6 +64,7 @@
 	"managewiki-label-inactive": "Неактивно",
 	"managewiki-label-inactive-exempt": "Изземено од неактивност",
 	"managewiki-label-reason": "Причина",
+	"managewiki-label-server": "Назив на опслужувачот",
 	"managewiki-label-sitename": "Назив на викито",
 	"managewiki-label-undeletewiki": "Да го повратам ова вики?",
 	"managewiki-label-lockwiki": "Заклучи го викиво за промени",
