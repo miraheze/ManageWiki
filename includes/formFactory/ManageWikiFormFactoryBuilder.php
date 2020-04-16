@@ -863,6 +863,10 @@ class ManageWikiFormFactoryBuilder {
 		$cWJ = new CreateWikiJson( $dbName );
 		$cWJ->resetWiki();
 
+		if ( $module == 'core' ) {
+			$cWJ->resetDatabaseList();
+		}
+
 		$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn['log'] );
 		$mwLogEntry->setPerformer( $context->getUser() );
 		$mwLogEntry->setTarget( $form->getTitle() );
