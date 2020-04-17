@@ -32,11 +32,11 @@ class ManageWikiAddNamespaces extends Maintenance {
 		$contentmodel = (string)$this->getOption( 'contentmodel' );
 		$core = (int)$this->getOption( 'core' );
 		$model = (string)$this->getOption( 'contentmodel' );
-		$dbname = $this->getOption( 'default' ) ? 'default' : null;
+		$dbname = $this->getOption( 'default' ) ? 'default' : $wgDBname;
 
 		ManageWikiNamespaces::modifyNamespace( $id, $name, $searchable, $subpages, $protection, $content, $contentmodel, $core, [], [], $dbname );
 
-		$cWJ = new CreateWikiJson( $wgDBname );
+		$cWJ = new CreateWikiJson( $dbname );
 		$cWJ->resetWiki();
 	}
 }
