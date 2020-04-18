@@ -245,6 +245,75 @@ class ManageWikiHooks {
 		}
 	}
 
+	public static function onCreateWikiDeletion( $dbw, $wiki ) {
+		$dbw->delete(
+			'mw_settings',
+			[
+				's_dbname' => $wiki,
+			],
+			__METHOD__
+		);
+
+		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+			$dbw->delete(
+				'mw_permissions',
+				[
+					'perm_dbname' => $wiki,
+				],
+				__METHOD__
+			);
+		}
+
+		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+			$dbw->delete(
+				'mw_namespaces',
+				[
+					'ns_dbname' => $wiki,
+				],
+				__METHOD__
+			);
+		}
+ 	}
+
+	public static function onCreateWikiRename( $dbw, $old, $new ) {
+		$dbw->update(
+			'mw_settings',
+			[
+				's_dbname' => $new,
+			],
+			[
+				's_dbname' => $old,
+			],
+			__METHOD__
+		);
+
+		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+			$dbw->update(
+				'mw_permissions',
+				[
+					'perm_dbname' => $new,
+				],
+				[
+					'perm_dbname' => $old,
+				],
+				__METHOD__
+			);
+		}
+
+		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+			$dbw->update(
+				'mw_namespaces',
+				[
+					'ns_dbname' => $new,
+				],
+				[
+					'ns_dbname' => $old,
+				],
+				__METHOD__
+			);
+		}
+	}
+
 	public static function onCreateWikiStatePrivate( $dbname ) {
 		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
 
