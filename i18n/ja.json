@@ -5,7 +5,8 @@
 			"Aefgh39622",
 			"Kkairri",
 			"Shirayuki",
-			"Suyama"
+			"Suyama",
+			"そらたこ"
 		]
 	},
 	"action-managewiki": "ウィキの設定の管理",
@@ -34,6 +35,7 @@
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-extensions": "このウィキの拡張機能を管理する",
 	"managewiki-link-settings": "このウィキのその他の設定を管理する",
+	"managewiki-toggle-forcesidebar": "サイドバーにManageWikiリンクを強制的に表示します。",
 	"namespaces-delete": "削除",
 	"namespaces-handling": "送信",
 	"permissions-assigned": "割り当てられた権限",

@@ -62,6 +62,7 @@
 	"managewiki-label-inactive": "비활성",
 	"managewiki-label-inactive-exempt": "비활성 상태에서 제외",
 	"managewiki-label-reason": "이유",
+	"managewiki-label-server": "서버 이름",
 	"managewiki-label-sitename": "사이트 이름",
 	"managewiki-label-undeletewiki": "이 위키를 복구하시겠습니까?",
 	"managewiki-label-lockwiki": "이 위키를 수정하지 못하도록 잠그기",
