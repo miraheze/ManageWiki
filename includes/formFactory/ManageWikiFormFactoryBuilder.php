@@ -266,7 +266,8 @@ class ManageWikiFormFactoryBuilder {
 						$mwType = 'multiselect';
 						$groups = [];
 						foreach( ManageWikiPermissions::availableGroups( $dbName ) as $group ) {
-							$groups[UserGroupMembership::getGroupName( $group )] = $group;
+							$lowerCaseGroupName = strtolower( $group );
+							$groups[UserGroupMembership::getGroupName( $group )] = $lowerCaseGroupName;
 						}
 						$mwOptions = isset( $set['options'] ) ? array_merge( $groups, $set['options'] ) : $groups;
 						break;
