@@ -805,9 +805,10 @@ class ManageWikiFormFactoryBuilder {
 		} elseif ( $mwReturn['table'] == 'mw_permissions' ) {
 			$state = $mwReturn['data']['state'];
 
+			$lowerCaseGroupName = strtolower( $special );
 			$rows = [
 				'perm_dbname' => $dbName,
-				'perm_group' => $special,
+				'perm_group' => $lowerCaseGroupName,
 				'perm_permissions' => $mwReturn['data']['permissions'],
 				'perm_addgroups' => json_encode( $mwReturn['data']['groups']['wgAddGroups'] ),
 				'perm_removegroups' => json_encode( $mwReturn['data']['groups']['wgRemoveGroups'] ),
@@ -822,7 +823,7 @@ class ManageWikiFormFactoryBuilder {
 					$rows,
 					[
 						'perm_dbname' => $dbName,
-						'perm_group' => $special
+						'perm_group' => $lowerCaseGroupName
 					]
 				);
 			} elseif ( $state == 'delete' ) {
@@ -830,7 +831,7 @@ class ManageWikiFormFactoryBuilder {
 					'mw_permissions',
 					[
 						'perm_dbname' => $dbName,
-						'perm_group' => $special
+						'perm_group' => $lowerCaseGroupName
 					]
 				);
 			} elseif ( $state == 'create' ) {
