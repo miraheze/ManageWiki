@@ -104,6 +104,8 @@ class SpecialManageWiki extends SpecialPage {
 				$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 				return false;
 			}
+			
+			$special = strtolower( $special );
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $module, $special );
 			$sectionTitles = $htmlForm->getFormSections();
