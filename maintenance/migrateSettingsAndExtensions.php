@@ -12,7 +12,7 @@ class ManageWikiMigrateSettingsAndExtensions extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgCreateWikiDatabase;
+		global $wgCreateWikiDatabase, $wgManageWikiExtensions;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
@@ -29,9 +29,9 @@ class ManageWikiMigrateSettingsAndExtensions extends Maintenance {
 			$extensionsArray = explode( ',', $row->wiki_extensions );
 			$extensions = [];
 
-			foreach ( $extensionsArray as $int => $ext ) {
-				if ( $ext != 'zzzz' ) {
-					$extensions[$ext] = true;
+			foreach ( $extensionsArray as $ext ) {
+				if ( isset( $wgManageWikiExtensions[$ext] ) ) {
+					$extensions[] = $ext;
 				}
 			}
 
@@ -40,7 +40,7 @@ class ManageWikiMigrateSettingsAndExtensions extends Maintenance {
 				[
 					's_dbname' => $row->wiki_dbname,
 					's_settings' => $row->wiki_settings,
-					's_extensions' => json_encode( $extensionsArray )
+					's_extensions' => json_encode( $extensions )
 				]
 			);
 		}

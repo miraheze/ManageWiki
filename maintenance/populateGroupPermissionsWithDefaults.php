@@ -61,7 +61,8 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 				ManageWikiHooks::onCreateWikiStatePrivate( $wgDBname );
 			}
 
-			ManageWikiCDB::changes( 'permissions' );
+			$cWJ = new CreateWikiJson( $wgDBname );
+			$cWJ->resetWiki();
 		}
 	}
 }

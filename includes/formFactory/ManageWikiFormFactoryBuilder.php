@@ -58,7 +58,7 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWiki $wiki
 	) {
 		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis,
-			$wgCreateWikiUseInactiveWikis, $wgCreateWikiGlobalWiki, $wgDBname;
+			$wgCreateWikiUseInactiveWikis, $wgCreateWikiGlobalWiki, $wgDBname, $wgCreateWikiUseCustomDomains;
 
 		$languages = Language::fetchLanguageNames( null, 'wmfile' );
 		ksort( $languages );
@@ -119,6 +119,12 @@ class ManageWikiFormFactoryBuilder {
 				'if' => $wgCreateWikiUseInactiveWikis,
 				'type' => 'check',
 				'default' => $wiki->isInactiveExempt(),
+				'access' => !$mwService->userHasRight( $context->getUser(), 'managewiki-restricted' )
+			],
+			'server' => [
+				'if' => $wgCreateWikiUseCustomDomains,
+				'type' => 'text',
+				'default' => $wiki->getServerName(),
 				'access' => !$mwService->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			]
 		];
@@ -728,6 +734,20 @@ class ManageWikiFormFactoryBuilder {
 			);
 
 			$mwLogParams['5::changes'] = $mwReturn['changes'];
+		} elseif ( $mwReturn['table'] == 'mw_settings' ) {
+			$rows = [
+				"s_{$module}" => $mwReturn['data']
+			];
+
+			$dbw->update(
+				'mw_settings',
+				$rows,
+				[
+					's_dbname' => $dbName
+				]
+			);
+
+			$mwLogParams['5::changes'] = $mwReturn['changes'];
 		} elseif ( $mwReturn['table'] == 'mw_namespaces' ) {
 			if ( isset( $formData['delete-checkbox'] ) && $formData['delete-checkbox'] ) {
 				$mwReturn['log'] .= '-delete';
@@ -843,8 +863,11 @@ class ManageWikiFormFactoryBuilder {
 			return [ 'Error processing.' ];
 		}
 
-		if ( $mwReturn['cdb' ] ) {
-			ManageWikiCDB::changes( $mwReturn['cdb'] );
+		$cWJ = new CreateWikiJson( $dbName );
+		$cWJ->resetWiki();
+
+		if ( $module == 'core' ) {
+			$cWJ->resetDatabaseList();
 		}
 
 		$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn['log'] );
@@ -863,7 +886,7 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWiki $wiki,
 		MaintainableDBConnRef $dbw
 	) {
-		global $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories;
+		global $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis, $wgCreateWikiUseInactiveWikis, $wgCreateWikiUseCategories, $wgCreateWikiCategories, $wgCreateWikiUseCustomDomains;
 
 		$mwActions = [
 			'delete',
@@ -955,9 +978,16 @@ class ManageWikiFormFactoryBuilder {
 			$changedArray[] = 'category';
 		}
 
+		$serverName = ( $wgCreateWikiUseCustomDomains ) ? ( ( $formData['server'] == '' ) ? null : $formData['server'] ) : null;
+
+		if ( $serverName != $wiki->getServerName() ) {
+			$changedArray[] = 'servername';
+		}
+
 		$data = [
 			'wiki_sitename' => $formData['sitename'],
 			'wiki_language' => $formData['language'],
+			'wiki_url' => $serverName,
 			'wiki_closed' => $closed,
 			'wiki_closed_timestamp' => $closedDate,
 			'wiki_inactive' => $inactive,
@@ -968,7 +998,6 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		return [
-			'cdb' => false,
 			'changes' => implode( ', ', $changedArray ),
 			'data' => $data,
 			'errors' => false,
@@ -1019,16 +1048,12 @@ class ManageWikiFormFactoryBuilder {
 
 		}
 
-		// HACK - Should convert either to JSON or singular param management
-		$extensionsArray[] = 'zzzz';
-
 		return [
-			'cdb' => false,
 			'changes' => implode( ', ', $changedExtensions ),
-			'data' => implode( ',', $extensionsArray ),
+			'data' => json_encode( $extensionsArray ),
 			'errors' => $errors,
 			'log' => 'settings',
-			'table' => 'cw_wikis'
+			'table' => 'mw_settings'
 		];
 	}
 
@@ -1099,12 +1124,11 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return [
-			'cdb' => false,
 			'changes' => implode( ', ', $changedSettings ),
 			'data' => json_encode( $settingsArray ),
 			'errors' => $errors,
 			'log' => 'settings',
-			'table' => 'cw_wikis'
+			'table' => 'mw_settings'
 		];
 	}
 
@@ -1130,8 +1154,18 @@ class ManageWikiFormFactoryBuilder {
 			]
 		);
 
+		$errors = [];
+		$disallowedNamespaces = [
+			'special',
+			'media'
+		];
+
 		foreach ( $nsID as $name => $id ) {
 			$namespaceName = str_replace( ' ', '_', $formData["namespace-$name"] );
+
+			if ( in_array( strtolower( $namespaceName ), $disallowedNamespaces ) ) {
+				$errors[] = "The namespace name, '{$namespaceName}', is not valid.";
+			}
 
 			$existingName = $dbw->selectRow(
 				'mw_namespaces',
@@ -1172,10 +1206,9 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return [
-			'cdb' => 'namespaces',
 			'changes' => $existingNamespace,
 			'data' => $build,
-			'errors' => false,
+			'errors' => $errors,
 			'log' => 'namespaces',
 			'table' => 'mw_namespaces'
 		];
@@ -1184,9 +1217,11 @@ class ManageWikiFormFactoryBuilder {
 	private static function submissionPermissions(
 		array $formData,
 		string $wiki,
-		string $special
+		string $group
 	) {
-		$groupData = ManageWikiPermissions::groupAssignBuilder( $special, $wiki );
+		global $wgManageWikiPermissionsPermanentGroups;
+
+		$groupData = ManageWikiPermissions::groupAssignBuilder( $group, $wiki );
 
 		$addedPerms = [];
 		$removedPerms = [];
@@ -1296,7 +1331,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$logBuild['modified']['autopromote'] = ( $groupData['autopromote'] != $aE );
 
-		if ( count( $newPerms ) == 0 ) {
+		if ( ( count( $newPerms ) == 0 ) && !in_array( $group, $wgManageWikiPermissionsPermanentGroups ) ) {
 			$dataArray['state'] = 'delete';
 		} elseif ( count( $groupData['assignedPermissions'] ) == 0 ) {
 			$dataArray['state'] = 'create';
@@ -1305,7 +1340,6 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return [
-			'cdb' => 'permissions',
 			'changes' => $logBuild,
 			'data' => $dataArray,
 			'errors' => false,

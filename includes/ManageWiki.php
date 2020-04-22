@@ -2,36 +2,26 @@
 
 class ManageWiki {
 	public static function checkSetup( string $module, bool $verbose = false, $out = false ) {
-		global $wgManageWiki, $wgManageWikiCDBDirectory;
+		global $wgManageWiki;
 
 		// Checks ManageWiki module is enabled before doing anything
 		// $verbose means output an error. Otherwise return true/false.
 
-		if ( $wgManageWiki[$module] ) {
-			if ( $module == 'cdb' ) {
-				return (bool)$wgManageWikiCDBDirectory;
-			}
-
-			return true;
-		} else {
+		if ( !$wgManageWiki[$module] ) {
 			if ( $verbose && $out ) {
 				$out->addWikiMsg( 'managewiki-disabled', $module );
 			}
 
 			return false;
 		}
+
+		return true;
 	}
 
-	public static function listModules( bool $public = true ) {
-		global $wgManageWiki, $wgManageWikiBackendModules;
+	public static function listModules() {
+		global $wgManageWiki;
 
-		$enabledModules = array_keys( $wgManageWiki, true );
-
-		if ( $public ) {
-			return array_diff( $enabledModules, $wgManageWikiBackendModules );
-		}
-
-		return $enabledModules;
+		return array_keys( $wgManageWiki, true );
 	}
 
 	public static function checkPermission( RemoteWiki $rm, User $user, string $perm = "" ) {

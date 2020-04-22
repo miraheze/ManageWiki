@@ -1,11 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"محمد أحمد عبد الفتاح",
-			"ديفيد",
-			"Meno25",
 			"Abijeet Patro",
-			"Kassem7899"
+			"Kassem7899",
+			"Meno25",
+			"ديفيد",
+			"محمد أحمد عبد الفتاح"
 		]
 	},
 	"action-managewiki": "إدارة إعدادات الويكي",
@@ -66,6 +66,7 @@
 	"managewiki-label-inactive": "غير نشط",
 	"managewiki-label-inactive-exempt": "معفى من عدم النشاط",
 	"managewiki-label-reason": "السبب",
+	"managewiki-label-server": "اسم الخادم:",
 	"managewiki-label-sitename": "اسم الموقع",
 	"managewiki-label-undeletewiki": "استرجاع هذا الويكي؟",
 	"managewiki-label-lockwiki": "اقفل هذه الويكي لكي تمنع تعديلها",

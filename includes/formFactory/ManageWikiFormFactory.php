@@ -73,7 +73,5 @@ class ManageWikiFormFactory {
 		}
 
 		$out->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
-
-		return true;
 	}
 }

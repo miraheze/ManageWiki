@@ -1,9 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
-			"Hedda",
+			"BaRaN6161 TURK",
 			"Dual",
-			"BaRaN6161 TURK"
+			"Hedda"
 		]
 	},
 	"action-managewiki": "viki ayarlarını yönet",
@@ -64,6 +64,7 @@
 	"managewiki-label-inactive": "Etkin değil",
 	"managewiki-label-inactive-exempt": "Hareketsizlikten Muaf",
 	"managewiki-label-reason": "Gerekçe",
+	"managewiki-label-server": "Sunucu Adı",
 	"managewiki-label-sitename": "Site adı",
 	"managewiki-label-undeletewiki": "Bu viki geri getirilsin mi?",
 	"managewiki-label-lockwiki": "Bu vikinin değiştirilmesini engelleyin",
@@ -115,7 +116,7 @@
 	"managewiki-link-settings-view": "Bu vikinin ek ayarlarını görüntüle",
 	"managewiki-toggle-forcesidebar": "Kenar çubuğunda ManageWiki bağlantılarının görüntülenmesini zorlayın.",
 	"namespaces-aliases": "Bu alana yönlendirmesi gereken tanımlanmamış tüm ad alanlarını yeni bir satıra girin",
-	"namespaces-content": "Bu ad alanı ana wiki materyali (içerik) içeriyor mu?",
+	"namespaces-content": "Bu ad alanı ana viki materyali (içerik) içeriyor mu?",
 	"namespaces-contentmodel": "Bu ad alanlarının içerik modeli ne olmalı?",
 	"namespaces-delete": "Sil",
 	"namespaces-delete-checkbox": "Bu kutunun işaretlenmesi, bu ad alanının silinmesine neden olur",

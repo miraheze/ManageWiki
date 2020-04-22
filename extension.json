@@ -58,7 +58,6 @@
 	"AutoloadClasses": {
 		"ApiQueryWikiConfig": "includes/api/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
-		"ManageWikiCDB": "includes/helpers/ManageWikiCDB.php",
 		"ManageWikiDeletedWikiPager": "includes/helpers/ManageWikiDeletedWikiPager.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
@@ -77,11 +76,8 @@
 		"CreateWikiCreation": [
 			"ManageWikiHooks::onCreateWikiCreation"
 		],
-		"CreateWikiDeletion": [
-			"ManageWikiHooks::onCreateWikiDeletion"
-		],
-		"CreateWikiRename": [
-			"ManageWikiHooks::onCreateWikiRename"
+		"CreateWikiJsonBuilder": [
+			"ManageWikiHooks::onCreateWikiJsonBuilder"
 		],
 		"CreateWikiStatePrivate": [
 			"ManageWikiHooks::onCreateWikiStatePrivate"
@@ -97,9 +93,6 @@
 		],
 		"LoadExtensionSchemaUpdates": [
 			"ManageWikiHooks::fnManageWikiSchemaUpdates"
-		],
-		"SetupAfterCache": [
-			"ManageWikiHooks::onSetupAfterCache"
 		],
 		"SkinBuildSidebar": [
 			"ManageWikiHooks::fnNewSidebarItem"
@@ -119,25 +112,12 @@
 			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
 			"public": true,
 			"value": {
-				"cdb": false,
 				"core": false,
 				"extensions": false,
 				"namespaces": false,
 				"permissions": false,
 				"settings": false
 			}
-		},
-		"ManageWikiBackendModules": {
-			"description": "Array. List of backend ManageWiki modules. Shouldn't be changed.",
-			"public": true,
-			"value": [
-				"cdb"
-			]
-		},
-		"ManageWikiCDBDirectory": {
-			"description": "String. Directory to store CDB files in. This will enable CDB capabilities in ManageWiki.",
-			"public": true,
-			"value": false
 		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
@@ -205,6 +185,16 @@
 			"description": "String. Name of a group to add to private wikis. False disables this function.",
 			"public": true,
 			"value": false
+		},
+		"ManageWikiPermissionsPermanentGroups": {
+			"description": "Array. List of user groups that should always exist on the permissions selector.",
+			"public": true,
+			"value": [
+				"*",
+				"user",
+				"sysop",
+				"bureaucrat"
+			]
 		},
 		"ManageWikiHelpUrl": {
 			"description": "String. URL of a help page for ManageWiki on the local wiki farm.",

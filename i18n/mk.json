@@ -1,9 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
+			"Abijeet Patro",
 			"Bjankuloski06",
-			"Vlad5250",
-			"Abijeet Patro"
+			"Vlad5250"
 		]
 	},
 	"action-managewiki": "раков. со википоставки",
@@ -15,7 +15,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Види кои додатоци се вклучени на викито",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Провери дали викито е означено како неактивно",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Провери дали викито е изземено од неактивност",
-	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Погл. дозволите на корисничките групи",
+	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Погл. дозволите на овие кориснички групи",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Провери дали викито е означено како приватно",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Погл. поставките на викито",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Погл. името на викито",
@@ -64,6 +64,7 @@
 	"managewiki-label-inactive": "Неактивно",
 	"managewiki-label-inactive-exempt": "Изземено од неактивност",
 	"managewiki-label-reason": "Причина",
+	"managewiki-label-server": "Назив на опслужувачот",
 	"managewiki-label-sitename": "Назив на викито",
 	"managewiki-label-undeletewiki": "Да го повратам ова вики?",
 	"managewiki-label-lockwiki": "Заклучи го викиво за промени",
@@ -77,7 +78,7 @@
 	"managewiki-namespaces-select": "Изберете именски простор од списокот подолу и стиснете на „Поднеси“",
 	"managewiki-permissions-addall": "Може додава во други",
 	"managewiki-permissions-addself": "Може да додава себеси",
-	"managewiki-permissions-assigned": "За корисничката група тековно важат долунаведените кориснички права.",
+	"managewiki-permissions-assigned": "За оваа корисничка група тековно важат долунаведените кориснички права.",
 	"managewiki-permissions-autopromote": "Подолу можете да раководите со автоунапредувањето на корисници во оваа група. Имајте на ум дека ако еден корисник ги задоволува условите кои ќе ги зададете подолу, истиот ќе ги добие сите дозволи од групата и тогаш нема да можете да го отстраните од неа под ниедна околност, освен ако не одберете да ги унапредите еднаш пред да ги задоволат условите.",
 	"managewiki-permissions-autopromote-age": "Мора да бил корисник олку денови",
 	"managewiki-permissions-autopromote-blocked": "Мора да е блокиран",
@@ -99,7 +100,7 @@
 	"managewiki-permissions-resetgroups": "Врати ги сите групи по основно",
 	"managewiki-permissions-resetgroups-header": "Стискајќи на копчето подолу ќе ги избришете сите поставки на групите и ќе ја повратите основната поставеност на викито. Со ова ќе ги отстраните сите прилагодени промени освен читливоста на викито. Продолжете со постапкава само ако сте сигурни.",
 	"managewiki-permissions-select": "Изберете постоечка група за измена",
-	"managewiki-permissions-unassigned": "За корисничката група тековно не важат долунаведените кориснички права.",
+	"managewiki-permissions-unassigned": "За оваа корисничка група тековно не важат долунаведените кориснички права.",
 	"managewiki-requires": "Бара",
 	"managewiki-success": "Поставките се успешно изменети.",
 	"managewiki-extension-name": "[$1 $2]",

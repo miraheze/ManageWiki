@@ -5,7 +5,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	public function execute( $par ) {
-		global $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname, $wgManageWiki, $wgManageWikiBackendModules;
+		global $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname, $wgManageWiki;
 
 		$par = explode( '/', $par, 3 );
 
@@ -13,14 +13,16 @@ class SpecialManageWiki extends SpecialPage {
 		$this->setHeaders();
 
 		if ( $wgManageWikiHelpUrl ) {
-			$this->getOutput()->addHelpLink( $wgManageWikiHelpUrl, true );
+			$out->addHelpLink( $wgManageWikiHelpUrl, true );
 		}
 
-		if ( in_array( $par[0], array_diff( array_keys( $wgManageWiki ), $wgManageWikiBackendModules ) ) ) {
+		if ( in_array( $par[0], array_keys( $wgManageWiki ) ) ) {
 			$module = $par[0];
 		} else {
 			$module = 'core';
 		}
+
+		$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
 
 		$additional = $par[1] ?? '';
 
@@ -83,7 +85,8 @@ class SpecialManageWiki extends SpecialPage {
 			$groups = ManageWikiPermissions::availableGroups();
 
 			foreach ( $groups as $group ) {
-				$options[UserGroupMembership::getGroupName( $group )] = $group;
+				$lowerCaseGroupName = strtolower( $group );
+				$options[UserGroupMembership::getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
 			$this->reusableFormDescriptor( $module, $options );

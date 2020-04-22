@@ -1,14 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Reception123",
+			"Abijeet Patro",
 			"Liuxinyu970226",
-			"Robby",
-			"Nike",
-			"Vlad5250",
-			"Shirayuki",
 			"McDutchie",
-			"Abijeet Patro"
+			"Nike",
+			"Reception123",
+			"Robby",
+			"Shirayuki",
+			"Vlad5250"
 		]
 	},
 	"action-managewiki": "Button to manage the settings of a wiki.",

@@ -21,6 +21,8 @@ class ManageWikiAddNamespaces extends Maintenance {
 	}
 
 	public function execute() {
+		global $wgDBname;
+
 		$id = (int)$this->getOption( 'id' );
 		$name = (string)$this->getOption( 'name' );
 		$searchable = (int)$this->getOption( 'searchable' );
@@ -34,7 +36,8 @@ class ManageWikiAddNamespaces extends Maintenance {
 
 		ManageWikiNamespaces::modifyNamespace( $id, $name, $searchable, $subpages, $protection, $content, $contentmodel, $core, [], [], $dbname );
 
-		ManageWikiCDB::changes( 'namespaces' );
+		$cWJ = new CreateWikiJson( $wgDBname );
+		$cWJ->resetWiki();
 	}
 }
 

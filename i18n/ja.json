@@ -1,16 +1,46 @@
 {
 	"@metadata": {
 		"authors": [
-			"Suyama"
+			"Abijeet Patro",
+			"Aefgh39622",
+			"Kkairri",
+			"Shirayuki",
+			"Suyama",
+			"そらたこ"
 		]
 	},
+	"action-managewiki": "ウィキの設定の管理",
+	"apihelp-query+wikiconfig-param-prop": "返すプロパティを選択：",
+	"apihelp-query+wikiconfig-paramvalue-prop-settings": "このウィキの設定を見る",
+	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "このウィキのサイト名を見る",
+	"apiwarn-wikiconfig-nopermission": "ウィキ「$1」の設定を見ることはできません。",
+	"apiwarn-wikiconfig-wikidoesnotexist": "ウィキ「$1」は存在しません。",
+	"core-main": "主な設定",
+	"core-handling": "送信",
+	"deletedwikis": "削除されたウィキ",
+	"extensions-other": "その他",
+	"extensions-handling": "送信",
+	"log-name-managewiki": "ManageWikiログ",
 	"managewiki-desc": "Web インターフェースを通してウィキを管理できるようにします",
+	"managewiki-label-category": "カテゴリ",
+	"managewiki-label-creationdate": "作成日",
 	"managewiki-label-dbname": "データベース名",
 	"managewiki-label-language": "言語",
+	"managewiki-label-private": "非公開",
+	"managewiki-label-inactive": "非アクティブ",
 	"managewiki-label-reason": "理由",
 	"managewiki-label-sitename": "サイト名",
 	"managewiki-missing": "そのウィキは存在しません。",
+	"managewiki-requires": "必要",
 	"managewiki-extension-name": "[$1 $2]",
-	"managewiki-extensions-link": "このウィキの拡張機能を管理する",
-	"managewiki-settings-link": "このウィキの設定を管理する"
+	"managewiki-link-extensions": "このウィキの拡張機能を管理する",
+	"managewiki-link-settings": "このウィキのその他の設定を管理する",
+	"managewiki-toggle-forcesidebar": "サイドバーにManageWikiリンクを強制的に表示します。",
+	"namespaces-delete": "削除",
+	"namespaces-handling": "送信",
+	"permissions-assigned": "割り当てられた権限",
+	"permissions-handling": "送信",
+	"right-managewiki": "ウィキの設定を管理",
+	"settings-other": "その他",
+	"settings-handling": "送信"
 }

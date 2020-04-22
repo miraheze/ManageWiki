@@ -1,19 +1,19 @@
 {
 	"@metadata": {
 		"authors": [
-			"AlvaroMolina",
-			"The-Voidwalker",
-			"Fitoschido",
-			"RisingVoices",
-			"MarcoAurelio",
-			"Tiberius1701",
-			"Cgalindo",
-			"GOTILON",
-			"Ucronistaw",
 			"Abijeet Patro",
+			"AlvaroMolina",
 			"Anarhistička Maca",
+			"Cgalindo",
 			"Dark Dragoon",
-			"Silverie04"
+			"Fitoschido",
+			"GOTILON",
+			"MarcoAurelio",
+			"RisingVoices",
+			"Silverie04",
+			"The-Voidwalker",
+			"Tiberius1701",
+			"Ucronistaw"
 		]
 	},
 	"action-managewiki": "gestionar configuración del wiki",
@@ -74,6 +74,7 @@
 	"managewiki-label-inactive": "Inactivo",
 	"managewiki-label-inactive-exempt": "Exento de inactividad",
 	"managewiki-label-reason": "Motivo",
+	"managewiki-label-server": "Nombre de servidor",
 	"managewiki-label-sitename": "Nombre del sitio",
 	"managewiki-label-undeletewiki": "¿Restaurar este wiki?",
 	"managewiki-label-lockwiki": "Cerrar este wiki para prevenir edicioned",

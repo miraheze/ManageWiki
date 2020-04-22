@@ -66,6 +66,7 @@
 	"managewiki-label-inactive": "Inactive",
 	"managewiki-label-inactive-exempt": "Exempt from Inactivity",
 	"managewiki-label-reason": "Reason",
+	"managewiki-label-server": "Server Name",
 	"managewiki-label-sitename": "Sitename",
 	"managewiki-label-undeletewiki": "Undelete this wiki?",
 	"managewiki-label-lockwiki": "Lock this wiki from being modified",

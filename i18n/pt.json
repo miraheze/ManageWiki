@@ -1,10 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Hamilton Abreu",
+			"Abijeet Patro",
 			"Athena in Wonderland",
-			"Vitorvicentevalente",
-			"Abijeet Patro"
+			"Hamilton Abreu",
+			"Vitorvicentevalente"
 		]
 	},
 	"action-managewiki": "gerir as configurações da wiki",

@@ -1,4 +1,7 @@
 <?php
+
+use MediaWiki\MediaWikiServices;
+
 class ManageWikiHooks {
 	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
 		global $wgCreateWikiDatabase, $wgDBname;
@@ -33,112 +36,124 @@ class ManageWikiHooks {
 		}
 	}
 
-	public static function onSetupAfterCache() {
-		global $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgCreateWikiDatabase, $wgDBname, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiCDBDirectory,
-			$wgManageWikiNamespacesCore, $wgContentNamespaces, $wgExtraNamespaces, $wgNamespaceProtection, $wgNamespacesToBeSearchedDefault, $wgNamespaceAliases, $wgNamespacesWithSubpages, $wgManageWikiPermissionsAdditionalAddGroupsSelf,
-			$wgManageWikiPermissionsAdditionalRemoveGroupsSelf, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote, $wgNamespaceContentModels, $wgManageWikiNamespacesAdditional;
+	public static function onCreateWikiJsonBuilder( string $wiki, MaintainableDBConnRef $dbr, array &$jsonArray ) {
+		global $wgManageWikiExtensions, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiNamespacesAdditional;
 
-		// Safe guard if - should not remove all existing settigs if we're not managing permissions with in.
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$wgGroupPermissions = [];
-			$wgAddGroups = [];
-			$wgRemoveGroups = [];
-			$wgGroupsAddToSelf = [];
-			$wgGroupsRemoveFromSelf = [];
-			$wgAutopromote = [];
+		$setObject = $dbr->selectRow(
+			'mw_settings',
+			'*',
+			[
+				's_dbname' => $wiki
+			]
+		);
 
-			if ( !ManageWikiCDB::latest( 'permissions' ) ) {
-				ManageWikiCDB::upsert( 'permissions' );
-			}
+		// Don't need to manipulate this much
+		if ( ManageWiki::checkSetup( 'settings' ) ) {
+			$jsonArray['settings'] = json_decode( $setObject->s_settings, true );
+		}
 
-			$permsArray = ManageWikiCDB::get( 'permissions', [ 'wgGroupPermissions', 'wgAddGroups', 'wgRemoveGroups', 'wgGroupsAddToSelf', 'wgGroupsRemoveFromSelf', 'wgAutopromote' ] );
-
-			foreach( $permsArray as $key => $json ) {
-				$permsArray[$key] = json_decode( $json, true );
-			}
-
-			foreach ( $permsArray as $key => $array ) {
-				if ( $key == 'wgGroupPermissions' ) {
-					foreach ( $array as $group => $perms ) {
-						foreach ( $perms as $i => $perm ) {
-							$$key[$group][$perm] = true;
-						}
-					}
-				} elseif ( $key == 'wgAutopromote' ) {
-					if ( !is_null( $array ) ) {
-						$$key = $array;
-					}
-				} else {
-					foreach ( $array as $i => $groups ) {
-						if ( is_array( $groups ) && count( $groups ) >= 1 ) {
-							foreach ( $groups as $id => $group ) {
-								$$key[$i][] = $group;
-							}
-						}
-					}
-				}
-			}
-
-			if ( $wgManageWikiPermissionsAdditionalRights ) {
-				$wgGroupPermissions = array_merge_recursive( $wgGroupPermissions, $wgManageWikiPermissionsAdditionalRights );
-			}
-
-			if ( $wgManageWikiPermissionsAdditionalAddGroups ) {
-				$wgAddGroups = array_merge_recursive( $wgAddGroups, $wgManageWikiPermissionsAdditionalAddGroups );
-			}
-
-			if ( $wgManageWikiPermissionsAdditionalRemoveGroups ) {
-				$wgRemoveGroups = array_merge_recursive( $wgRemoveGroups, $wgManageWikiPermissionsAdditionalRemoveGroups );
-			}
-
-			if ( $wgManageWikiPermissionsAdditionalAddGroupsSelf ) {
-				$wgGroupsAddToSelf = array_merge_recursive( $wgGroupsAddToSelf, $wgManageWikiPermissionsAdditionalAddGroupsSelf );
-			}
-
-			if ( $wgManageWikiPermissionsAdditionalRemoveGroupsSelf ) {
-				$wgGroupsRemoveFromSelf = array_merge_recursive( $wgGroupsRemoveFromSelf, $wgManageWikiPermissionsAdditionalRemoveGroupsSelf );
+		// Let's create an array of variables so we can easily loop these to enable
+		if ( ManageWiki::checkSetup( 'extensions' ) ) {
+			foreach ( json_decode( $setObject->s_extensions, true ) as $ext ) {
+				$jsonArray['extensions'][] = $wgManageWikiExtensions[$ext]['var'];
 			}
 		}
 
-		// Safe guard if - should not remove existing namespaces if we're not going to manage them
+		// Collate NS entries and decode their entries for the array
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-			$wgContentNamespaces = [];
-			$wgExtraNamespaces = [];
-			$wgNamespaceProtection = [];
-			$wgNamespacesToBeSearchedDefault = [];
-			$wgNamespacesWithSubpages = [];
-			$wgNamespaceAliases = [];
+			$nsObjects = $dbr->select(
+				'mw_namespaces',
+				'*',
+				[
+					'ns_dbname' => $wiki
+				]
+			);
 
-			if ( !ManageWikiCDB::latest( 'namespaces' ) ) {
-				ManageWikiCDB::upsert( 'namespaces' );
+			$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $jsonArray['core']['wgLanguageCode'], 'namespaceNames' );
+
+			if ( $jsonArray['core']['wgLanguageCode'] != 'en' ) {
+				$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
 			}
 
-			$nsArray = ManageWikiCDB::get( 'namespaces', [ 'wgContentNamespaces', 'wgNamespaceContentModels', 'wgExtraNamespaces', 'wgNamespaceProtection', 'wgNamespacesToBeSearchedDefault', 'wgNamespacesWithSubpages', 'wgNamespaceAliases', 'wgManageWikiNamespacesCore', 'mwAdditional' ] );
+			foreach ( $nsObjects as $ns ) {
+				$nsName = $lcName[$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
+				$lcAlias = $lcEN[$ns->ns_namespace_id] ?? null;
 
-			foreach ( $nsArray as $key => $json ) {
-				$nsArray[$key] = json_decode( $json, true );
-			}
+				$jsonArray['namespaces'][$nsName] = [
+					'id' => $ns->ns_namespace_id,
+					'core' => (bool)$ns->ns_core,
+					'searchable' => (bool)$ns->ns_searchable,
+					'subpages' => (bool)$ns->ns_subpages,
+					'content' => (bool)$ns->ns_content,
+					'contentmodel' => $ns->ns_content_model,
+					'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
+					'aliases' => array_merge( json_decode( $ns->ns_aliases, true ), (array)$lcAlias ),
+					'additional' => json_decode( $ns->ns_additional, true )
+				];
 
-			foreach ( $nsArray as $key => $array ) {
-				if ( !is_array( $array ) ) {
-					continue;
-				}
+				$nsAdditional = json_decode( $ns->ns_additional, true );
 
-				if ( $key == 'mwAdditional' ) {
-					foreach ( $array as $key => $id ) {
-						global $$key;
-
-						if ( !empty( $id ) && isset( $wgManageWikiNamespacesAdditional[$key] ) ) {
-							foreach ( $id as $nsID ) {
-								$$key[$nsID] = ( $wgManageWikiNamespacesAdditional[$key]['vestyle'] ) ? true : $nsID;
-							}
+				foreach ( (array)$nsAdditional as $var => $val ) {
+					if ( $val && isset( $wgManageWikiNamespacesAdditional[$var] ) ) {
+						if ( $wgManageWikiNamespacesAdditional[$var]['vestyle'] ) {
+							$jsonArray['settings'][$var][$ns->ns_namespace_id] = true;
+						} else {
+							$jsonArray['settings'][$var][] = $ns->ns_namespace_id;
 						}
 					}
-				} else {
-					foreach ( $array as $id => $val ) {
-						$$key[$id] = $val;
+				}
+			}
+
+		}
+
+		// Same as NS above but for permissions
+		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+			$permObjects = $dbr->select(
+				'mw_permissions',
+				'*',
+				[
+					'perm_dbname' => $wiki
+				]
+			);
+
+			foreach ( $permObjects as $perm ) {
+				$addPerms =[];
+
+				foreach ( ( $wgManageWikiPermissionsAdditionalRights[$perm->perm_group] ?? [] ) as $right => $bool ) {
+					if ( $bool ) {
+						$addPerms[] = $right;
 					}
 				}
+
+				$jsonArray['permissions'][$perm->perm_group] = [
+					'permissions' => array_merge( json_decode( $perm->perm_permissions, true ), $addPerms ),
+					'addgroups' => array_merge( json_decode( $perm->perm_addgroups, true ), $wgManageWikiPermissionsAdditionalAddGroups[$perm->perm_group] ?? [] ),
+					'removegroups' => array_merge( json_decode( $perm->perm_removegroups, true ), $wgManageWikiPermissionsAdditionalRemoveGroups[$perm->perm_group] ?? [] ),
+					'addself' => json_decode( $perm->perm_addgroupstoself, true ),
+					'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
+					'autopromote' => json_decode( $perm->perm_autopromote, true )
+				];
+			}
+
+			$diffKeys = array_keys( array_diff_key( $wgManageWikiPermissionsAdditionalRights, $jsonArray['permissions'] ) );
+
+			foreach ( $diffKeys as $missingKey ) {
+				$missingPermissions = [];
+
+				foreach ( $wgManageWikiPermissionsAdditionalRights[$missingKey] as $right => $bool ) {
+					if ( $bool ) {
+						$missingPermissions[] = $right;
+					}
+				}
+
+				$jsonArray['permissions'][$missingKey] = [
+					'permissions' => $missingPermissions,
+					'addgroups' => $wgManageWikiPermissionsAdditionalAddGroups[$missingKey] ?? [],
+					'removegroups' => $wgManageWikiPermissionsAdditionalRemoveGroups[$missingKey] ?? [],
+					'addself' => [],
+					'removeself' => [],
+					'autopromote' => []
+				];
 			}
 		}
 	}
@@ -175,28 +190,18 @@ class ManageWikiHooks {
 				ManageWikiHooks::onCreateWikiStatePrivate( $dbname );
 			}
 
-			ManageWikiCDB::changes( 'permissions' );
 		}
 
 		if ( $wgManageWikiExtensions && $wgManageWikiExtensionsDefault ) {
 			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-			$cur = explode( ",",
-				(string)$dbw->selectRow(
-					'cw_wikis',
-					[ 'wiki_extensions' ],
-					[ 'wiki_dbname' => $dbname ],
-					__METHOD__
-				)->wiki_extensions
-			);
-
-			$newlist = implode( ",", array_merge( $cur, $wgManageWikiExtensionsDefault ) );
-
-			$dbw->update(
-				'cw_wikis',
-				[ 'wiki_extensions' => $newlist ],
-				[ 'wiki_dbname' => $dbname ],
-				__METHOD__
+			$dbw->insert(
+				'mw_settings',
+				[
+					's_dbname' => $dbname,
+					's_settings' => json_encode( [] ),
+					's_extensions' => json_encode( $wgManageWikiExtensionsDefault )
+				]
 			);
 		}
 
@@ -227,7 +232,6 @@ class ManageWikiHooks {
 				);
 			}
 
-			ManageWikiCDB::changes( 'namespaces' );
 		}
 	}
 
@@ -238,40 +242,6 @@ class ManageWikiHooks {
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 			$tables['mw_namespaces'] = 'ns_dbname';
-		}
-	}
-
-	public static function onCreateWikiDeletion( $dbw, $wiki ) {
-		global $wgManageWikiCDBDirectory;
-
-		if ( ManageWiki::checkSetup( 'cdb' ) ) {
-			if ( ManageWiki::checkSetup( 'permissions' ) ) {
-				unlink( $wgManageWikiCDBDirectory . '/' . $wiki . '-permissions.cdb' );
-			}
-
-			if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-				unlink( $wgManageWikiCDBDirectory . '/' . $wiki . '-namespaces.cdb' );
-			}
-		}
-	}
-
-	public static function onCreateWikiRename( $dbw, $old, $new ) {
-		global $wgManageWikiCDBDirectory;
-
-		if ( ManageWiki::checkSetup( 'cdb' ) ) {
-			if ( ManageWiki::checkSetup( 'permissions' ) ) {
-				$filePM = $wgManageWikiCDBDirectory . '/' . $old . '-permissions.cdb';
-				if ( file_exists( $filePM ) ) {
-					unlink( $filePM );
-				}
-			}
-
-			if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-				$fileNS = $wgManageWikiCDBDirectory . '/' . $old . '-namespaces.cdb';
-				if ( file_exists( $fileNS ) ) {
-					unlink( $fileNS );
-				}
-			}
 		}
 	}
 
@@ -327,7 +297,8 @@ class ManageWikiHooks {
 			);
 		}
 
-		ManageWikiCDB::changes( 'permissions' );
+		$cWJ = new CreateWikiJson( $dbname );
+		$cWJ->resetWiki();
 	}
 
 	public static function onCreateWikiStatePublic( $dbname ) {
@@ -372,7 +343,8 @@ class ManageWikiHooks {
 			}
 		}
 
-		ManageWikiCDB::changes( 'permissions' );
+		$cWJ = new CreateWikiJson( $dbname );
+		$cWJ->resetWiki();
 	}
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {

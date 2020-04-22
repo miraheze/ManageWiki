@@ -1,10 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Liuxinyu970226",
+			"Abijeet Patro",
 			"Kly",
 			"LNDDYL",
-			"Abijeet Patro",
+			"Liuxinyu970226",
+			"Tiger",
 			"Winston Sung"
 		]
 	},
@@ -66,6 +67,7 @@
 	"managewiki-label-inactive": "失效",
 	"managewiki-label-inactive-exempt": "免除失效",
 	"managewiki-label-reason": "原因",
+	"managewiki-label-server": "伺服器名稱",
 	"managewiki-label-sitename": "網站名稱",
 	"managewiki-label-undeletewiki": "取消刪除此 wiki？",
 	"managewiki-label-lockwiki": "鎖定此 wiki 防止被變動",
@@ -129,7 +131,7 @@
 	"namespaces-search": "此命名空間在預設上是否可被搜尋？",
 	"namespaces-subpages": "此命名空間具有已啟用子頁面？",
 	"permissions-assigned": "已指派的權限",
-	"permissions-autopromote": "自動提升",
+	"permissions-autopromote": "自動授權",
 	"permissions-unassigned": "取消指派的權限：",
 	"permissions-group": "群組指派",
 	"permissions-handling": "提交",
