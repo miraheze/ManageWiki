@@ -656,7 +656,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn = self::submissionNamespaces( $formData, $dbName, $special, $dbw );
 				break;
 			case 'permissions':
-				$mwReturn = self::submissionPermissions( $formData, $dbName, $special );
+				$mwReturn = self::submissionPermissions( $formData, $dbName, strtolower( $special ) );
 				break;
 			default:
 				throw new MWException( "{$module} not recognised" );
