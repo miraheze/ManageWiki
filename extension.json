@@ -98,15 +98,6 @@
 			"ManageWikiHooks::fnNewSidebarItem"
 		]
 	},
-	"ResourceModules": {
-		"ext.managewiki.permissions": {
-			"styles": "ext.managewiki.permissions.css"
-		}
-	},
-	"ResourceFileModulePaths": {
-		"localBasePath": "modules",
-		"remoteExtPath": "ManageWiki/modules"
-	},
 	"config": {
 		"ManageWiki": {
 			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
