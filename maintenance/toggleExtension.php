@@ -23,9 +23,9 @@ class ManageWikiToggleExtension extends Maintenance {
 		$enable = !(bool)$this->getOption( 'disable' );
 
 		$exts = (string)$dbw->selectRow(
-			'cw_wikis',
-			[ 'wiki_extensions' ],
-			[ 'wiki_dbname' => $wgDBname ],
+			'mw_settings',
+			[ 's_extensions' ],
+			[ 's_dbname' => $wgDBname ],
 			__METHOD__
 		)->wiki_extensions;
 
@@ -47,9 +47,9 @@ class ManageWikiToggleExtension extends Maintenance {
 			return false;
 		}
 
-		$dbw->update( 'cw_wikis',
-			[ 'wiki_extensions' => (string)implode( ',', $newextensions ) ],
-			[ 'wiki_dbname' => $wgDBname ],
+		$dbw->update( 'mw_settings',
+			[ 's_extensions' => (string)implode( ',', $newextensions ) ],
+			[ 's_dbname' => $wgDBname ],
 			__METHOD__
 		);
 
