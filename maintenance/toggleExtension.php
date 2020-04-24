@@ -32,7 +32,7 @@ class ManageWikiToggleExtension extends Maintenance {
 		if ( is_null( $exts ) ) {
 			$extensions = [];
 		} else {
-			$extensions = (array)explode( ',', $exts );
+			$extensions = (array)json_decode( $exts, true );
 		}
 
 		if ( in_array( (string)$ext, $extensions ) && !$enable ) {
@@ -48,7 +48,7 @@ class ManageWikiToggleExtension extends Maintenance {
 		}
 
 		$dbw->update( 'mw_settings',
-			[ 's_extensions' => (string)implode( ',', $newextensions ) ],
+			[ 's_extensions' => (array)json_encode( $newextensions ) ],
 			[ 's_dbname' => $wgDBname ],
 			__METHOD__
 		);
