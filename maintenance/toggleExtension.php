@@ -27,7 +27,7 @@ class ManageWikiToggleExtension extends Maintenance {
 			[ 's_extensions' ],
 			[ 's_dbname' => $wgDBname ],
 			__METHOD__
-		)->wiki_extensions;
+		)->s_extensions;
 
 		if ( is_null( $exts ) ) {
 			$extensions = [];
