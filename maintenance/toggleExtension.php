@@ -23,16 +23,16 @@ class ManageWikiToggleExtension extends Maintenance {
 		$enable = !(bool)$this->getOption( 'disable' );
 
 		$exts = (string)$dbw->selectRow(
-			'cw_wikis',
-			[ 'wiki_extensions' ],
-			[ 'wiki_dbname' => $wgDBname ],
+			'mw_settings',
+			[ 's_extensions' ],
+			[ 's_dbname' => $wgDBname ],
 			__METHOD__
-		)->wiki_extensions;
+		)->s_extensions;
 
 		if ( is_null( $exts ) ) {
 			$extensions = [];
 		} else {
-			$extensions = (array)explode( ',', $exts );
+			$extensions = (array)json_decode( $exts, true );
 		}
 
 		if ( in_array( (string)$ext, $extensions ) && !$enable ) {
@@ -47,14 +47,16 @@ class ManageWikiToggleExtension extends Maintenance {
 			return false;
 		}
 
-		$dbw->update( 'cw_wikis',
-			[ 'wiki_extensions' => (string)implode( ',', $newextensions ) ],
-			[ 'wiki_dbname' => $wgDBname ],
+		$dbw->update( 'mw_settings',
+			[ 's_extensions' => json_encode( $newextensions ) ],
+			[ 's_dbname' => $wgDBname ],
 			__METHOD__
 		);
 
 		Hooks::run( 'ManageWikiModifiedSettings', [ $wgDBname ] );
 
+		$cWJ = new CreateWikiJson( $wgDBname );
+		$cWJ->resetWiki();
 	}
 }
 
