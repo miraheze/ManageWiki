@@ -48,7 +48,7 @@ class ManageWikiToggleExtension extends Maintenance {
 		}
 
 		$dbw->update( 'mw_settings',
-			[ 's_extensions' => (array)json_encode( $newextensions ) ],
+			[ 's_extensions' => json_encode( $newextensions ) ],
 			[ 's_dbname' => $wgDBname ],
 			__METHOD__
 		);
