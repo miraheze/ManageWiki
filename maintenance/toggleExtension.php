@@ -55,6 +55,8 @@ class ManageWikiToggleExtension extends Maintenance {
 
 		Hooks::run( 'ManageWikiModifiedSettings', [ $wgDBname ] );
 
+		$cWJ = new CreateWikiJson( $wgDBname );
+		$cWJ->resetWiki();
 	}
 }
 
