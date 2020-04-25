@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class ManageWikiRequirements {
 	public static function process( string $dbname, array $actions, IContextSource $context, array $formData = [], bool $ignorePerms = false ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
@@ -24,7 +26,8 @@ class ManageWikiRequirements {
 
 	private static function permissions( array $data, IContextSource $context ) {
 		foreach ( $data as $perm ) {
-			if ( !$context->getUser()->isAllowed( $perm ) ) {
+			$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+			if ( !$permissionManager->userHasRight( $context->getUser(), $perm ) ) {
 				return false;
 			}
 		}

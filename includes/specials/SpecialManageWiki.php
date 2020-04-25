@@ -1,4 +1,7 @@
 <?php
+
+use MediaWiki\MediaWikiServices;
+
 class SpecialManageWiki extends SpecialPage {
 	public function __construct() {
 		parent::__construct( 'ManageWiki' );
@@ -137,7 +140,8 @@ class SpecialManageWiki extends SpecialPage {
 		$selectForm = HTMLForm::factory( 'ooui', $hidden + $selector, $this->getContext(), 'selector' );
 		$selectForm->setMethod( 'post' )->setFormIdentifier( 'selector' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->prepareForm()->show();
 
-		if ( $this->getContext()->getUser()->isAllowed( 'managewiki' ) ) {
+		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki' ) ) {
 			$create['out'] = [
 				'type' => 'text',
 				'label-message' => "managewiki-{$module}-create",
