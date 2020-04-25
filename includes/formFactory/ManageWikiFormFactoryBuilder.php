@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class ManageWikiFormFactoryBuilder {
 	public static function buildDescriptor(
 		string $module,
