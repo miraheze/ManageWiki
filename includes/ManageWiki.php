@@ -34,7 +34,7 @@ class ManageWiki {
 			return false;
 		}
 
-		if ( $permissionManager->userHasRight( $user, $maxPerm ) ) {
+		if ( !$permissionManager->userHasRight( $user, $maxPerm ) ) {
 			return false;
 		}
 
