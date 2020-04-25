@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function __construct() {
 		parent::__construct( 'ManageWikiDefaultPermissions' );
@@ -42,7 +44,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
 		$selectForm->setMethod('post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
-		$permissionManager = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
+		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
  		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
 			$createDescriptor['groups'] = [
 				'type' => 'text',
