@@ -353,7 +353,7 @@ class ManageWikiHooks {
 		$append = '';
 
 		$user = $skin->getUser();
-		$permissionManager = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
+		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		if ( !$permissionManager->userHasRight( $user, 'managewiki' ) ) {
 			if ( !$wgManageWikiForceSidebarLinks && !$user->getOption( 'managewikisidebar', 0 ) ) {
 				return;
