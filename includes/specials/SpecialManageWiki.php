@@ -137,8 +137,8 @@ class SpecialManageWiki extends SpecialPage {
 		$selectForm = HTMLForm::factory( 'ooui', $hidden + $selector, $this->getContext(), 'selector' );
 		$selectForm->setMethod( 'post' )->setFormIdentifier( 'selector' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->prepareForm()->show();
 
-		$mwService = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
-		if ( $mwService->userHasRight( $this->getContext()->getUser(), 'managewiki' ) ) {
+		$permissionManager = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
+		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki' ) ) {
 			$create['out'] = [
 				'type' => 'text',
 				'label-message' => "managewiki-{$module}-create",
