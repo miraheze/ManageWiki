@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class ManageWikiRequirements {
 	public static function process( string $dbname, array $actions, IContextSource $context, array $formData = [], bool $ignorePerms = false ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
