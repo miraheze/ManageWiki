@@ -1,6 +1,13 @@
 <?php
 
 class ManageWikiFormFactoryBuilder {
+	private $permissionManager = null;
+
+	public function __construct() {
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'incidentreporting' );
+		$this->permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+	}
+
 	public static function buildDescriptor(
 		string $module,
 		string $dbName,
@@ -94,8 +101,6 @@ class ManageWikiFormFactoryBuilder {
 			]
 		];
 
-		$mwService = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
-
 		$addedModules = [
 			'private' => [
 				'if' => $wgCreateWikiUsePrivateWikis,
@@ -119,13 +124,13 @@ class ManageWikiFormFactoryBuilder {
 				'if' => $wgCreateWikiUseInactiveWikis,
 				'type' => 'check',
 				'default' => $wiki->isInactiveExempt(),
-				'access' => !$mwService->userHasRight( $context->getUser(), 'managewiki-restricted' )
+				'access' => !$this->permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			],
 			'server' => [
 				'if' => $wgCreateWikiUseCustomDomains,
 				'type' => 'text',
 				'default' => $wiki->getServerName(),
-				'access' => !$mwService->userHasRight( $context->getUser(), 'managewiki-restricted' )
+				'access' => !$this->permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			]
 		];
 
@@ -285,8 +290,7 @@ class ManageWikiFormFactoryBuilder {
 						break;
 				}
 
-				$mwService = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
-				$disabled = !( !$set['restricted'] || ( $set['restricted'] && $mwService->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) );
+				$disabled = !( !$set['restricted'] || ( $set['restricted'] && $this->permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) );
 
 				$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 				$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
@@ -958,8 +962,7 @@ class ManageWikiFormFactoryBuilder {
 				$changedArray[] = ( $newInactive ) ? 'inactive' : 'active';
 			}
 
-			$mwService = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
-			if ( $newInactiveExempt && $mwService->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
+			if ( $newInactiveExempt && $this->permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
 				$inactiveExempt = 1;
 
 				$changedArray[] = 'inactive-exempt';
@@ -1070,8 +1073,7 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $wgManageWikiSettings as $name => $set ) {
 			$current = $wiki->getSettingsValue( $name );
-			$mwService = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
-			$mwAllowed = ( $set['restricted'] && $mwService->userHasRight( $context->getUser(), 'managewiki-restricted' ) || !$set['restricted'] );
+			$mwAllowed = ( $set['restricted'] && $this->permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) || !$set['restricted'] );
 			$type = $set['type'];
 			$fromMet = ( $set['from'] == 'mediawiki' ) || $wiki->hasExtension( $set['from'] );
 
