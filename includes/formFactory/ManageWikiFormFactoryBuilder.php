@@ -4,7 +4,6 @@ class ManageWikiFormFactoryBuilder {
 	private $permissionManager = null;
 
 	public function __construct() {
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'incidentreporting' );
 		$this->permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 	}
 
