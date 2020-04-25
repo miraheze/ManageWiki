@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class ManageWiki {
 	public static function checkSetup( string $module, bool $verbose = false, $out = false ) {
 		global $wgManageWiki;
@@ -27,7 +29,7 @@ class ManageWiki {
 	public static function checkPermission( RemoteWiki $rm, User $user, string $perm = "" ) {
 		$maxPerm = ( (bool)$perm ) ? $perm : 'managewiki';
 
-		$permissionManager = MediaWiki\MediaWikiServices::getInstance()->getPermissionManager();
+		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		if ( $rm->isLocked() && !$permissionManager->userHasRight( $user, 'managewiki-restricted' ) ) {
 			return false;
 		}
