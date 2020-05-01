@@ -14,49 +14,21 @@ class ManageWikiToggleExtension extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgDBname, $wgCreateWikiDatabase;
+		global $wgDBname;
 
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+		$mwExt = new ManageWikiExtensions( $wgDBname );
 
 		$ext = $this->getArg( 0 );
 
 		$enable = !(bool)$this->getOption( 'disable' );
 
-		$exts = (string)$dbw->selectRow(
-			'mw_settings',
-			[ 's_extensions' ],
-			[ 's_dbname' => $wgDBname ],
-			__METHOD__
-		)->s_extensions;
-
-		if ( is_null( $exts ) ) {
-			$extensions = [];
+		if ( $enable ) {
+			$mwExt->add( $ext );
 		} else {
-			$extensions = (array)json_decode( $exts, true );
+			$mwExt->remove( $ext );
 		}
 
-		if ( in_array( (string)$ext, $extensions ) && !$enable ) {
-			$newextensions = array_diff( $extensions, (array)$ext );
-		} elseif ( !in_array( $ext, $extensions ) && $enable ) {
-			$newextensions = $extensions;
-			$newextensions[] = (string)$ext;
-			sort( $newextensions );
-		} else {
-			$this->output( "No change to extension ($ext) state on $wgDBname." );
-
-			return false;
-		}
-
-		$dbw->update( 'mw_settings',
-			[ 's_extensions' => json_encode( $newextensions ) ],
-			[ 's_dbname' => $wgDBname ],
-			__METHOD__
-		);
-
-		Hooks::run( 'ManageWikiModifiedSettings', [ $wgDBname ] );
-
-		$cWJ = new CreateWikiJson( $wgDBname );
-		$cWJ->resetWiki();
+		$mwExt->commit();
 	}
 }
 

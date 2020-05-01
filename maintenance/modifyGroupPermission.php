@@ -22,56 +22,37 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 	public function execute() {
 		global $wgCreateWikiDatabase, $wgDBname;
 
-		$addp = (array)explode( ',', $this->getOption( 'addperms', '' ) );
-		$removep = (array)explode( ',', $this->getOption( 'removeperms', '' ) );
-		$addag = (array)explode( ',', $this->getOption( 'newaddgroups', '' ) );
-		$removeag = (array)explode( ',', $this->getOption( 'removeaddgroups', '' ) );
-		$addrg = (array)explode( ',', $this->getOption( 'newremovegroups', '' ) );
-		$removerg = (array)explode( ',', $this->getOption( 'removeremovegroups', '' ) );
+		$mwPermissions = new ManageWikiPermissions( $wgDBname );
 
-		if ( $this->getArg( 0 ) ) {
-			$this->modifyPermissions(
-				$this->getArg( 0 ),
-				$addp,
-				$removep,
-				$addag,
-				$removeag,
-				$addrg,
-				$removerg
-			);
-		} elseif ( $this->getOption( 'all' ) ) {
-			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-			$res = $dbw->select(
-				'mw_permissions',
-				[
-					'perm_group',
-				],
-				[
-					'perm_dbname' => $wgDBname
-				],
-				__METHOD__
-			);
-			foreach ( $res as $row ) {
-				$this->modifyPermissions(
-					$row->perm_group,
-					$addp,
-					$removep,
-					$addag,
-					$removeag,
-					$addrg,
-					$removerg
-				);
+		$permData = [
+			'permissions' => [
+				'add' => (array)explode( ',', $this->getOption( 'addperms', '' ) ),
+				'remove' => (array)explode( ',', $this->getOption( 'removeperms', '' ) )
+			],
+			'addgroups' => [
+				'add' => (array)explode( ',', $this->getOption( 'newaddgroups', '' ) ),
+				'remove' => (array)explode( ',', $this->getOption( 'removeaddgroups', '' ) )
+			],
+			'removegroups' => [
+				'add' => (array)explode( ',', $this->getOption( 'newremovegroups', '' ) ),
+				'remove' => (array)explode( ',', $this->getOption( 'removeremovegroups', '' ) )
+			]
+		];
+
+		if ( $this->getOption( 'all' ) ) {
+			$groups = array_keys ( $mwPermissions->list() );
+
+			foreach ( $groups as $group ) {
+				$mwPermissions->modify( $group, $permData );
 			}
+		} elseif ( $this->getArg( 0 ) ) {
+			$mwPermissions->modify($this->getArg(0), $permData);
 		} else {
 			$this->output( 'You must supply either the group as a arg or use --all' );
 		}
 
-		$cWJ = new CreateWikiJson( $wgDBname );
-		$cWJ->resetWiki();
-	}
+		$mwPermissions->commit();
 
-	private function modifyPermissions( $groupName, $addp, $removep, $addag, $removeag, $addrg, $removerg ) {
-		ManageWikiPermissions::modifyPermissions( $groupName, $addp, $removep, $addag, $removeag, $addrg, $removerg, [], [], [], [] );
 	}
 }
 

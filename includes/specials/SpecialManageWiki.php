@@ -85,7 +85,8 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( $module == 'permissions' && !$special ) {
-			$groups = ManageWikiPermissions::availableGroups();
+			$mwPermissions = new ManageWikiPermissions( $wiki );
+			$groups = array_keys( $mwPermissions->list() );
 
 			foreach ( $groups as $group ) {
 				$lowerCaseGroupName = strtolower( $group );
@@ -94,9 +95,14 @@ class SpecialManageWiki extends SpecialPage {
 
 			$this->reusableFormDescriptor( $module, $options );
 		} elseif ( $module == 'namespaces' && $special == '' ) {
-			$namespaces = ManageWikiNamespaces::configurableNamespaces( true, true, true );
+			$mwNamespaces = new ManageWikiNamespaces( $wiki );
+			$namespaces = $mwNamespaces->list();
 
 			foreach ( $namespaces as $id => $namespace ) {
+				if ( $id % 2 ) {
+					continue;
+				}
+
 				$options[$namespace] = $id;
 			}
 
@@ -155,7 +161,7 @@ class SpecialManageWiki extends SpecialPage {
 	public function reusableFormSubmission( array $formData, HTMLForm $form ) {
 		$module = $formData['module'];
 		$createNamespace = ( $form->getSubmitText() == $this->msg( 'managewiki-namespaces-create-submit' )->plain() ) ? '' : $formData['out'];
-		$url = ( $module == 'namespaces' ) ? ManageWikiNamespaces::namespaceID( $createNamespace ) : $formData['out'];
+		$url = ( $module == 'namespaces' ) ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
 
 		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullUrl() . "/{$url}" );
 

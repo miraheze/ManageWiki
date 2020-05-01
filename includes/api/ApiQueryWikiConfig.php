@@ -40,9 +40,10 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				$wikiData['extensions'] = $extensions;
 			}
 
+			$mwPerms = new ManageWikiPermissions( $wiki );
 			if ( isset( $prop['permissions'] ) ) {
-				foreach ( ManageWikiPermissions::availableGroups( $wiki ) as $group ) {
-					$wikiData['permissions'][$group] = ManageWikiPermissions::groupPermissions( $group, $wiki );
+				foreach ( $mwPerms->list() as $group => $data ) {
+					$wikiData['permissions'][$group] = $data['permissions'];
 				}
 			}
 

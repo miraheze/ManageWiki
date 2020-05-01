@@ -1,188 +1,216 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
+/**
+ * Handler for interacting with Namespace configuration
+ */
 class ManageWikiNamespaces {
-	public static function configurableNamespaces( bool $id = false, bool $readable = false, bool $main = false ) {
-		global $wgCreateWikiDatabase, $wgDBname;
+	/** @var bool Whether changes are committed to the database */
+	private $committed = false;
+	/** @var Config Configuration object */
+	private $config;
+	/** @var MaintainableDBConnRef Database connection */
+	private $dbw;
+	/** @var array Namespace IDs to be deleted */
+	private $deleteNamespaces = [];
+	/** @var array Known namespaces configuration */
+	private $liveNamespaces = [];
+	/** @var string WikiID */
+	private $wiki;
 
-		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+	/** @var array Changes to be committed */
+	public $changes = [];
+	/** @var array Errors */
+	public $errors = [];
 
-		$arrayOut = [];
+	/**
+	 * ManageWikiNamespaces constructor.
+	 * @param string $wiki WikiID
+	 */
+	public function __construct( string $wiki ) {
+		$this->wiki = $wiki;
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$this->dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
 
-		$res = $dbr->select(
-			'mw_namespaces',
-			[
-				'ns_namespace_name',
-				'ns_namespace_id'
-			],
-			[
-				'ns_dbname' => $wgDBname
-			],
-			__METHOD__
-		);
-
-		foreach ( $res as $row ) {
-			if ( $main && !( $row->ns_namespace_id % 2 == 0 ) ) {
-				continue;
-			}
-
-			if ( $id ) {
-				$arrayOut[$row->ns_namespace_id] = ( $readable ) ? str_replace( '_', ' ', $row->ns_namespace_name ) : $row->ns_namespace_name;
-			} else {
-				$arrayOut[] = ( $readable ) ? str_replace( '_', ' ', $row->ns_namespace_name ) : $row->ns_namespace_name;
-			}
-		}
-
-		return $arrayOut;
-	}
-
-	public static function namespaceID( $namespace ) {
-		global $wgCreateWikiDatabase, $wgDBname;
-
-		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
-
-		$exists = ( $namespace == '' ) ? false : $dbr->selectRow(
-			'mw_namespaces',
-			'ns_namespace_id',
-			[
-				'ns_dbname' => $wgDBname,
-				'ns_namespace_id' => $namespace
-			]
-		);
-
-		return ( $exists ) ? (int)$exists->ns_namespace_id : static::nextNamespaceID();
-	}
-
-	public static function nextNamespaceID() {
-		global $wgCreateWikiDatabase, $wgDBname;
-
-		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
-
-		$lastID = $dbr->selectRow(
-			'mw_namespaces',
-			'ns_namespace_id',
-			[
-				'ns_dbname' => $wgDBname,
-				'ns_namespace_id >= 3000'
-			],
-			__METHOD__,
-			[
-				'ORDER BY' => 'ns_namespace_id DESC'
-			]
-		);
-
-		if ( $lastID ) {
-			return $lastID->ns_namespace_id + 1;
-		}
-
-		return 3000;
-	}
-
-	public static function defaultCanonicalNamespaces() {
-		global $wgCreateWikiDatabase;
-
-		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
-
-		$res = $dbr->select(
-			'mw_namespaces',
-			'ns_namespace_id',
-			[
-				'ns_dbname' => 'default'
-			]
-		);
-
-		$namespaces = [];
-
-		foreach( $res as $row ) {
-			$namespaces[] = $row->ns_namespace_id;
-		}
-
-		return $namespaces;
-	}
-
-	public static function defaultNamespaces( $namespace ) {
-		global $wgCreateWikiDatabase;
-
-		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
-
-		$row = $dbr->selectRow(
-			'mw_namespaces',
-			[
-				'ns_namespace_name',
-				'ns_searchable',
-				'ns_subpages',
-				'ns_content',
-				'ns_content_model',
-				'ns_protection',
-				'ns_aliases',
-				'ns_core',
-				'ns_additional'
-			],
-			[
-				'ns_dbname' => 'default',
-				'ns_namespace_id' => $namespace
-			]
-		);
-
-		$ns = [];
-
-		$ns['ns_namespace_name'] = $row->ns_namespace_name;
-		$ns['ns_searchable'] = $row->ns_searchable;
-		$ns['ns_subpages'] = $row->ns_subpages;
-		$ns['ns_subpages'] = $row->ns_subpages;
-		$ns['ns_content'] = $row->ns_content;
-		$ns['ns_content_model'] = $row->ns_content_model;
-		$ns['ns_protection'] = $row->ns_protection;
-		$ns['ns_aliases'] = $row->ns_aliases;
-		$ns['ns_core'] = $row->ns_core;
-		$ns['ns_additional'] = $row->ns_additional;
-
-		return (array)$ns;
-	}
-
-	public static function modifyNamespace( int $id, string $name, int $search, int $subpages, string $protection, int $content, string $model, int $core, array $aliases, array $additional, string $wiki = null ) {
-		global $wgDBname, $wgCreateWikiDatabase;
-
-		$dbName = $wiki ?? $wgDBname;
-
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-
-		$row = [
-			'ns_dbname' => $dbName,
-			'ns_namespace_id' => $id,
-			'ns_namespace_name' => $name,
-			'ns_searchable' => $search,
-			'ns_subpages' => $subpages,
-			'ns_protection' => $protection,
-			'ns_content' => $content,
-			'ns_content_model' => $model,
-			'ns_core' => $core,
-			'ns_aliases' => json_encode( $aliases ),
-			'ns_additional' => json_encode( $additional )
-		];
-
-		$check = $dbw->selectRow(
+		$namespaces = $this->dbw->select(
 			'mw_namespaces',
 			'*',
 			[
-				'ns_dbname' => $dbName,
-				'ns_namespace_id' => $id
+				'ns_dbname' => $wiki
 			]
 		);
 
-		if ( $check ) {
-			$dbw->update(
-				'mw_namespaces',
-				$row,
-				[
-					'ns_dbname' => $dbName,
-					'ns_namespace_id' => $id
-				]
-			);
+		// Bring database values to class scope
+		foreach ( $namespaces as $ns ) {
+			$this->liveNamespaces[$ns->ns_namespace_id] = [
+				'name' => $ns->ns_namespace_name,
+				'searchable' => $ns->ns_searchable,
+				'subpages' => $ns->ns_subpages,
+				'content' => $ns->ns_content,
+				'contentmodel' => $ns->ns_content_model,
+				'protection' => $ns->ns_protection,
+				'aliases' => json_decode( $ns->ns_aliases, true ),
+				'core' => $ns->ns_core,
+				'additional' => json_decode( $ns->ns_additional, true )
+			];
+		}
+	}
+
+	/**
+	 * Lists either all namespaces or a specific one
+	 * @param int|null $id Namespace ID wanted (null for all)
+	 * @return array Namespace configuration
+	 */
+	public function list( int $id = null ) {
+		if ( is_null( $id ) ) {
+			return $this->liveNamespaces;
 		} else {
-			$dbw->insert(
-				'mw_namespaces',
-				$row
-			);
+			return $this->liveNamespaces[$id] ?? [
+					'name' => null,
+					'searchable' => 0,
+					'subpages' => 0,
+					'content' => 0,
+					'contentmodel' => 'wikitext',
+					'protection' => '',
+					'aliases' => [],
+					'core' => 0,
+					'additional' => []
+				];
+		}
+	}
+
+	/**
+	 * Modify a namespace handler
+	 * @param int $id Namespace ID
+	 * @param array $data Overriding information about the namespace
+	 */
+	public function modify( int $id, array $data ) {
+		if ( in_array( $data['name'], $this->config->get( 'ManageWikiNamespacesBlacklistedNames') ) ) {
+			$this->errors[] = [
+				'managewiki-error-disallowednamespace' => [
+					$data['name']
+				]
+			];
+		}
+
+		// We will handle all processing in final stages
+		$nsData = [
+			'name' => $this->liveNamespaces[$id]['name'] ?? null,
+			'searchable' => $this->liveNamespaces[$id]['searchable'] ?? 0,
+			'subpages' => $this->liveNamespaces[$id]['subpages'] ?? 0,
+			'content' => $this->liveNamespaces[$id]['content'] ?? 0,
+			'contentmodel' => $this->liveNamespaces[$id]['contentmodel'] ?? 'wikitext',
+			'protection' => $this->liveNamespaces[$id]['protection'] ?? '',
+			'aliases' => $this->liveNamespaces[$id]['aliases'] ?? [],
+			'core' => $this->liveNamespaces[$id]['core'] ?? 0,
+			'additional' => $this->liveNamespaces[$id]['additional'] ?? []
+		];
+
+		// Overwrite the defaults above with our new modified values
+		foreach ( $data as $name => $value ) {
+			if ( $nsData[$name] != $value ) {
+				$this->changes[$id][$name] = [
+					'old' => $nsData[$name],
+					'new' => $value
+				];
+
+				$nsData[$name] = $value;
+			}
+		}
+
+		$this->liveNamespaces[$id] = $nsData;
+	}
+
+	/**
+	 * Remove a namespace
+	 * @param int $id Namespace ID
+	 * @param int $newNamespace Namespace ID to migrate to
+	 */
+	public function remove( int $id, int $newNamespace ) {
+		// Utilise changes differently in this case
+		$this->changes[$id] = [
+			'old' => $this->liveNamespaces[$id]['name'],
+			'new' => $newNamespace
+		];
+
+		// We will handle all processing in final stages
+		unset( $this->liveNamespaces[$id] );
+
+		// Push to a deletion queue
+		$this->deleteNamespaces[] = $id;
+	}
+
+	/**
+	 * Commits all changes to database. Also files a job to move pages into or out of namespace
+	 */
+	public function commit() {
+		foreach ( array_keys( $this->changes ) as $id ) {
+			if ( in_array( $id, $this->deleteNamespaces ) ) {
+				$this->dbw->delete(
+					'mw_namespaces',
+					[
+						'ns_dbname' => $this->wiki,
+						'ns_namespace_id' => $id
+					]
+				);
+
+				$jobParams = [
+					'action' => 'delete',
+					'nsID' => $id,
+					'nsName' => $this->changes[$id]['old'],
+					'nsNew' => $this->changes[$id]['new']
+				];
+			} else {
+				$builtTable = [
+					'ns_namespace_name' => $this->liveNamespaces[$id]['name'],
+					'ns_searchable' => $this->liveNamespaces[$id]['searchable'],
+					'ns_subpages' => $this->liveNamespaces[$id]['subpages'],
+					'ns_content' => $this->liveNamespaces[$id]['content'],
+					'ns_content_model' => $this->liveNamespaces[$id]['contentmodel'],
+					'ns_protection' => $this->liveNamespaces[$id]['protection'],
+					'ns_aliases' => json_encode( $this->liveNamespaces[$id]['aliases'] ),
+					'ns_core' => $this->liveNamespaces[$id]['core'],
+					'ns_additional' => json_encode( $this->liveNamespaces[$id]['additional'] )
+				];
+
+				$jobParams = [
+					'action' => 'rename',
+					'nsID' => $id,
+					'nsName' => $this->liveNamespaces[$id]['name']
+				];
+
+				$this->dbw->upsert(
+					'mw_namespaces',
+					[
+						'ns_dbname' => $this->wiki,
+						'ns_namespace_id' => $id
+					] + $builtTable,
+					[
+						'ns_dbname',
+						'ns_namespace_id'
+					],
+					$builtTable
+				);
+			}
+
+			$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
+			JobQueueGroup::singleton()->push( $job );
+		}
+
+		if ( $this->wiki != 'default' ) {
+			$cWJ = new CreateWikiJson( $this->wiki );
+			$cWJ->resetWiki();
+		}
+		$this->committed = true;
+	}
+
+	/**
+	 * Checks if changes are committed to the database or not
+	 */
+	public function __destruct() {
+		if ( !$this->committed && !empty( $this->changes ) ) {
+			print 'Changes have not been committed to the database!';
 		}
 	}
 }

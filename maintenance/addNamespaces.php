@@ -23,21 +23,22 @@ class ManageWikiAddNamespaces extends Maintenance {
 	public function execute() {
 		global $wgDBname;
 
-		$id = (int)$this->getOption( 'id' );
-		$name = (string)$this->getOption( 'name' );
-		$searchable = (int)$this->getOption( 'searchable' );
-		$subpages = (int)$this->getOption( 'subpages' );
-		$protection = (string)$this->getOption( 'protection' );
-		$content = (int)$this->getOption( 'content' );
-		$contentmodel = (string)$this->getOption( 'contentmodel' );
-		$core = (int)$this->getOption( 'core' );
-		$model = (string)$this->getOption( 'contentmodel' );
-		$dbname = $this->getOption( 'default' ) ? 'default' : null;
+		$dbname = $this->getOption( 'default' ) ? 'default' : $wgDBname;
 
-		ManageWikiNamespaces::modifyNamespace( $id, $name, $searchable, $subpages, $protection, $content, $contentmodel, $core, [], [], $dbname );
+		$mwNamespaces = new ManageWikiNamespaces( $dbname );
 
-		$cWJ = new CreateWikiJson( $wgDBname );
-		$cWJ->resetWiki();
+		$nsData = [
+			'name' => (string)$this->getOption( 'name' ),
+			'searchable' => (int)$this->getOption( 'searchable' ),
+			'subpages' => (int)$this->getOption( 'subpages' ),
+			'protection' => (string)$this->getOption( 'protection' ),
+			'content' => (int)$this->getOption( 'content' ),
+			'contentmodel' => (string)$this->getOption( 'contentmodel' ),
+			'core' => (int)$this->getOption( 'core' )
+		];
+
+		$mwNamespaces->modify( (int)$this->getOption( 'id' ), $nsData );
+		$mwNamespaces->commit();
 	}
 }
 

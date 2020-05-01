@@ -26,7 +26,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public function buildMainView() {
 		$out = $this->getOutput();
-		$groups = ManageWikiPermissions::availableGroups( 'default' );
+		$mwPermissions = new ManageWikiPermissions( 'default' );
+		$groups = array_keys( $mwPermissions->list() );
 		$craftedGroups = [];
 
 		foreach( $groups as $group ) {
@@ -69,7 +70,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitResetForm( $formData ) {
-		global $wgDBname, $wmgPrivateWiki, $wgCreateWikiDatabase;
+		global $wgDBname, $cwPrivate, $wgCreateWikiDatabase;
 
 		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
@@ -81,7 +82,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			__METHOD__
 		);
 
-		ManageWikiHooks::onCreateWikiCreation( $wgDBname, $wmgPrivateWiki );
+		ManageWikiHooks::onCreateWikiCreation( $wgDBname, $cwPrivate );
 
 		return true;
 	}

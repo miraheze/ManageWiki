@@ -2,16 +2,27 @@
 
 use MediaWiki\MediaWikiServices;
 
+/**
+ * Helper class for de-centralising requirement checking
+ */
 class ManageWikiRequirements {
-	public static function process( string $dbname, array $actions, IContextSource $context, array $formData = [], bool $ignorePerms = false ) {
+	/**
+	 * Master class for evaluating whether requirements are met, and at what level
+	 *
+	 * @param array $actions Requirements that need to be met
+	 * @param array $extensionList Enabled extensions on the wiki
+	 * @param bool $ignorePerms Whether a permissions check should be carried out
+	 * @return bool Whether the extension can be enabled
+	 */
+	public static function process( array $actions, array $extensionList = [], bool $ignorePerms = false ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
 		foreach ( $actions as $action => $data ) {
 			if ( $action == 'permissions' ) {
-				$stepResponse['permissions'] = ( $ignorePerms ) ? true : self::permissions( $data, $context );
+				$stepResponse['permissions'] = ( $ignorePerms ) ? true : self::permissions( $data );
 			} elseif ( $action == 'extensions' ) {
-				$stepResponse['extensions'] = self::extensions( $dbname, $data, $formData );
+				$stepResponse['extensions'] = self::extensions( $data, $extensionList );
 			} elseif ( $action == 'articles' ) {
 				$stepResponse['articles'] = self::articles( $data );
 			} elseif ( $action == 'pages' ) {
@@ -24,10 +35,14 @@ class ManageWikiRequirements {
 		return !(bool)array_search( false, $stepResponse );
 	}
 
-	private static function permissions( array $data, IContextSource $context ) {
+	/**
+	 * @param array $data Array of permissions needed
+	 * @return bool Whether permissions requirements are met
+	 */
+	private static function permissions( array $data ) {
+		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		foreach ( $data as $perm ) {
-			$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-			if ( !$permissionManager->userHasRight( $context->getUser(), $perm ) ) {
+			if ( !$permissionManager->userHasRight( RequestContext::getMain()->getUser(), $perm ) ) {
 				return false;
 			}
 		}
@@ -35,9 +50,14 @@ class ManageWikiRequirements {
 		return true;
 	}
 
-	private static function extensions( string $dbname, array $data, array $formData ) {
+	/**
+	 * @param array $data Array of extensions needed
+	 * @param array $extensionList Extensions already enabled on the wiki
+	 * @return bool Whether extension requirements are met
+	 */
+	private static function extensions( array $data, array $extensionList ) {
 		foreach ( $data as $extension ) {
-			if ( isset( $formData["ext-$extension"] ) && !$formData["ext-$extension"] ) {
+			if ( isset( $extensionList[$extension] ) ) {
 				return false;
 			}
 		}
@@ -45,11 +65,19 @@ class ManageWikiRequirements {
 		return true;
 	}
 
+	/**
+	 * @param string $lim String-based comparison for limit
+	 * @return bool Whether limit is exceeded or not
+	 */
 	private static function articles( string $lim ) {
-		return eval( "return " . SiteStats::articles() . " $lim;" );
+		return (bool)eval( "return " . SiteStats::articles() . " $lim;" );
 	}
 
+	/**
+	 * @param string $lim String-based comparison for limit
+	 * @return bool Whether limit is exceeded or not
+	 */
 	private static function pages( string $lim ) {
-		return eval( "return " . SiteStats::pages() . " $lim;" );
+		return (bool)eval( "return " . SiteStats::pages() . " $lim;" );
 	}
 }

@@ -92,4 +92,38 @@ class ManageWiki {
 
 		return null;
 	}
+
+	public static function namespaceID( string $namespace ) {
+		global $wgCreateWikiDatabase, $wgDBname;
+
+		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+
+		$nsID = ( $namespace == '' ) ? false : $dbr->selectRow(
+			'mw_namespaces',
+			'ns_namespace_id',
+			[
+				'ns_dbname' => $wgDBname,
+				'ns_namespace_id' => $namespace
+			]
+		)->ns_namespace_id;
+
+		if ( is_bool( $nsID ) ) {
+			$lastID = $dbr->selectRow(
+				'mw_namespaces',
+				'ns_namespace_id',
+				[
+					'ns_dbname' => $wgDBname,
+					'ns_namespace_id >= 3000'
+				],
+				__METHOD__,
+				[
+					'ORDER BY' => 'ns_namespace_id DESC'
+				]
+			);
+
+			$nsID = ( $lastID ) ? $lastID->ns_namespace_id + 1 : 3000;
+		}
+
+		return $nsID;
+	}
 }

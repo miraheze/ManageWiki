@@ -1,143 +1,185 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
+/**
+ * Handler for interacting with Permissions
+ */
 class ManageWikiPermissions {
-	public static function availableGroups( string $wiki = null ) {
-		global $wgDBname, $wgCreateWikiDatabase;
+	/** @var bool Whether changes are committed to the database */
+	private $committed = false;
+	/** @var Config Configuration object */
+	private $config;
+	/** @var MaintainableDBConnRef Database connection */
+	private $dbw;
+	/** @var array Deletion queue */
+	private $deleteGroups = [];
+	/** @var array Permissions configuration */
+	private $livePermissions = [];
+	/** @var string WikiID */
+	private $wiki;
 
-		$dbName = $wiki ?? $wgDBname;
+	/** @var array Changes to be committed */
+	public $changes = [];
+	/** @var array Errors */
+	public $errors = [];
 
-		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+	/**
+	 * ManageWikiNamespaces constructor.
+	 * @param string $wiki WikiID
+	 */
+	public function __construct( string $wiki ) {
+		$this->wiki = $wiki;
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$this->dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
 
-		$res = $dbr->select(
-			'mw_permissions',
-			'perm_group',
-			[
-				'perm_dbname' => $dbName
-			]
-		);
-
-		$groups = [];
-
-		foreach ( $res as $row ) {
-			$groups[] = $row->perm_group;
-		}
-
-		return $groups;
-	}
-
-	public static function groupPermissions( string $group, string $wiki = null ) {
-		global $wgDBname, $wgCreateWikiDatabase;
-
-		$dbName = $wiki ?? $wgDBname;
-
-		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
-
-		$row = $dbr->selectRow(
+		$perms = $this->dbw->select(
 			'mw_permissions',
 			'*',
 			[
-				'perm_dbname' => $dbName,
-				'perm_group' => $group
+				'perm_dbname' => $wiki
 			]
 		);
 
-		if ( $row ) {
-			$groupAssigns = [
-				'wgAddGroups' => json_decode( $row->perm_addgroups, true ),
-				'wgRemoveGroups' => json_decode( $row->perm_removegroups, true ),
-				'wgGroupsAddToSelf' => json_decode( $row->perm_addgroupstoself, true ),
-				'wgGroupsRemoveFromSelf' => json_decode( $row->perm_removegroupsfromself, true )
+		// Bring database values to class scope
+		foreach ( $perms as $perm ) {
+			$this->livePermissions[$perm->perm_group] = [
+				'permissions' => json_decode( $perm->perm_permissions, true ),
+				'addgroups' => json_decode( $perm->perm_addgroups, true ),
+				'removegroups' => json_decode( $perm->perm_removegroups, true ),
+				'addself' => json_decode( $perm->perm_addgroupstoself, true ),
+				'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
+				'autopromote' => json_decode( $perm->perm_autopromote, true )
 			];
+		}
+	}
 
-			$data = [
-				'permissions' => json_decode( $row->perm_permissions, true ),
-				'ag' => $groupAssigns['wgAddGroups'],
-				'rg' => $groupAssigns['wgRemoveGroups'],
-				'ags' => $groupAssigns['wgGroupsAddToSelf'],
-				'rgs' => $groupAssigns['wgGroupsRemoveFromSelf'],
-				'autopromote' => json_decode( $row->perm_autopromote, true ),
-				'matrix' => ManageWiki::handleMatrix( json_encode( $groupAssigns ), 'php' ),
-			];
+	/**
+	 * Lists either all groups or a specific one
+	 * @param string|null Group wanted (null for all)
+	 * @return array Group configuration
+	 */
+	public function list( string $group = null ) {
+		if ( is_null( $group ) ) {
+			return $this->livePermissions;
 		} else {
-			$data = [
-				'permissions' => [],
-				'ag' => [],
-				'rg' => [],
-				'ags' => [],
-				'rgs' => [],
-				'autopromote' => null,
-				'matrix' => []
+			return $this->livePermissions[$group] ?? [
+					'permissions' => [],
+					'addgroups' => [],
+					'removegroups' => [],
+					'addself' => [],
+					'removeself' => [],
+					'autopromote' => []
+				];
+		}
+	}
+
+	/**
+	 * Modify a group handler
+	 * @param string $group Group name
+	 * @param array $data Merging information about the group
+	 */
+	public function modify( string $group, array $data ) {
+		// We will handle all processing in final stages
+		$permData = [
+			'permissions' => $this->livePermissions[$group]['permissions'] ?? [],
+			'addgroups' => $this->livePermissions[$group]['addgroups'] ?? [],
+			'removegroups' => $this->livePermissions[$group]['removegroups'] ?? [],
+			'addself' => $this->livePermissions[$group]['addself'] ?? [],
+			'removeself' => $this->livePermissions[$group]['removeself'] ?? [],
+			'autopromote' => $this->livePermissions[$group]['autopromote'] ?? null
+		];
+
+		// Overwrite the defaults above with our new modified values
+		foreach ( $data as $name => $array ) {
+			if ( $name != 'autopromote' ) {
+				foreach ( $array as $type => $value ) {
+					$permData[$name] = ( $type == 'add' ) ? array_merge( $permData[$name], $value ) : array_diff( $permData[$name], $value );
+
+					$this->changes[$group][$name][$type] = $value;
+				}
+			} else {
+				$permData['autopromote'] = $data['autopromote'];
+
+				$this->changes[$group]['autopromote'] = true;
+			}
+		}
+
+		$this->livePermissions[$group] = $permData;
+	}
+
+	/**
+	 * Remove a group
+	 * @param string Group name
+	 */
+	public function remove( string $group ) {
+		// Utilise changes differently in this case
+		foreach ( $this->livePermissions[$group] as $name => $value ) {
+			$this->changes[$group][$name] = [
+				'add' => null,
+				'remove' => $value
 			];
 		}
 
-		return $data;
+		// We will handle all processing in final stages
+		unset( $this->livePermissions[$group] );
+
+		// Push to a deletion queue
+		$this->deleteGroups[] = $group;
 	}
 
-	public static function groupAssignBuilder( string $group, string $wiki = null ) {
-		global $wgDBname, $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
+	/**
+	 * Commits all changes to database
+	 */
+	public function commit() {
+		foreach ( array_keys( $this->changes ) as $group ) {
+			if ( in_array( $group, $this->deleteGroups ) ) {
+				$this->dbw->delete(
+					'mw_permissions',
+					[
+						'perm_dbname' => $this->wiki,
+						'perm_group' => $group
+					]
+				);
+			} else {
+				$builtTable = [
+					'perm_permissions' => json_encode( $this->livePermissions[$group]['permissions'] ),
+					'perm_addgroups' => json_encode( $this->livePermissions[$group]['addgroups'] ),
+					'perm_removegroups' => json_encode( $this->livePermissions[$group]['removegroups'] ),
+					'perm_addgroupstoself' => json_encode( $this->livePermissions[$group]['addself'] ),
+					'perm_removegroupsfromself' => json_encode( $this->livePermissions[$group]['removeself'] ),
+					'perm_autopromote' => json_encode( $this->livePermissions[$group]['autopromote'] )
+				];
 
-		$dbName = $wiki ?? $wgDBname;
-
-		$groupData = static::groupPermissions( $group, $dbName );
-
-		return [
-			'allPermissions' => array_diff( User::getAllRights(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] ),
-			'assignedPermissions' => $groupData['permissions'],
-			'allGroups' => array_diff( static::availableGroups( $dbName ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
-			'groupMatrix' => $groupData['matrix'],
-			'autopromote' => $groupData['autopromote']
-		];
-	}
-
-	public static function modifyPermissions( string $group, array $addp = [], array $removep = [], array $addag = [], array $removeag = [], array $addrg = [], array $removerg = [], array $addags = [], array $removeags = [], array $addrgs = [], array $removergs = [], string $wiki = null ) {
-		global $wgDBname, $wgCreateWikiDatabase;
-
-		$dbName = $wiki ?? $wgDBname;
-
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-
-		$existingGroup = in_array( $group, static::availableGroups( $dbName ) );
-
-		if ( $existingGroup ) {
-			$groupData = (array)static::groupPermissions( $group, $dbName );
-			$perms = array_merge( $addp, array_diff( $groupData['permissions'], $removep ) );
-			$addGroups = array_merge( $addag, array_diff( $groupData['ag'], $removeag ) );
-			$removeGroups = array_merge( $addrg, array_diff( $groupData['rg'], $removerg ) );
-			$addGroupsToSelf = array_merge( $addags, array_diff( $groupData['ags'], $removeags ) );
-			$removeGroupsFromSelf = array_merge( $removergs, array_diff( $groupData['rgs'], $removergs ) );
-		} else {
-			// Not an existing group
-			$perms = $addp;
-			$addGroups = $addag;
-			$removeGroups = $addrg;
-			$addGroupsToSelf = $addags;
-			$removeGroupsFromSelf = $addrgs;
+				$this->dbw->upsert(
+					'mw_permissions',
+					[
+						'perm_dbname' => $this->wiki,
+						'perm_group' => $group
+					] + $builtTable,
+					[
+						'perm_dbname',
+						'perm_group'
+					],
+					$builtTable
+				);
+			}
 		}
 
-		$row = [
-			'perm_dbname' => $dbName,
-			'perm_group' => $group,
-			'perm_permissions' => json_encode( array_unique( $perms ) ),
-			'perm_addgroups' => json_encode( array_unique( $addGroups ) ),
-			'perm_removegroups' => json_encode( array_unique( $removeGroups ) ),
-			'perm_addgroupstoself' => json_encode( array_unique( $addGroupsToSelf ) ),
-			'perm_removegroupsfromself' => json_encode( array_unique( $removeGroupsFromSelf ) )
-		];
+		if ( $this->wiki != 'default' ) {
+			$cWJ = new CreateWikiJson( $this->wiki );
+			$cWJ->resetWiki();
+		}
+		$this->committed = true;
+	}
 
-		if ( $existingGroup ) {
-			$dbw->update(
-				'mw_permissions',
-				$row,
-				[
-					'perm_dbname' => $dbName,
-					'perm_group' => $group
-				]
-			);
-		} else {
-			$dbw->insert(
-				'mw_permissions',
-				$row
-			);
+	/**
+	 * Checks if changes are committed to the database or not
+	 */
+	public function __destruct() {
+		if ( !$this->committed && !empty( $this->changes ) ) {
+			print 'Changes have not been committed to the database!';
 		}
 	}
 }
+

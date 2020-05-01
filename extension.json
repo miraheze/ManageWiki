@@ -59,6 +59,7 @@
 		"ApiQueryWikiConfig": "includes/api/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
 		"ManageWikiDeletedWikiPager": "includes/helpers/ManageWikiDeletedWikiPager.php",
+		"ManageWikiExtensions": "includes/helpers/ManageWikiExtensions.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
@@ -66,6 +67,7 @@
 		"ManageWikiNamespaces": "includes/helpers/ManageWikiNamespaces.php",
 		"ManageWikiPermissions": "includes/helpers/ManageWikiPermissions.php",
 		"ManageWikiRequirements": "includes/helpers/ManageWikiRequirements.php",
+		"ManageWikiSettings": "includes/helpers/ManageWikiSettings.php",
 		"MWScriptJob": "includes/jobs/MWScriptJob.php",
 		"NamespaceMigrationJob": "includes/jobs/NamespaceMigrationJob.php",
 		"SpecialDeletedWikis": "includes/specials/SpecialDeletedWikis.php",
@@ -124,6 +126,14 @@
 			"description": "Array. Additional settings available for namespaces.",
 			"public": true,
 			"value": false
+		},
+		"ManageWikiNamespacesBlacklistedNames": {
+			"description": "Array. Namespaces that can not be used.",
+			"public": true,
+			"value": [
+				"special",
+				"media"
+			]
 		},
 		"ManageWikiNamespacesExtraContentModels": {
 			"description": "Array. Additional content models not known.",
@@ -197,6 +207,9 @@
 			"public": true,
 			"value": false
 		}
+	},
+	"ConfigRegistry": {
+		"managewiki": "GlobalVarConfig::newInstance"
 	},
 	"callback": "ManageWikiHooks::onRegistration",
 	"manifest_version": 2

@@ -14,10 +14,6 @@ class ManageWikiPopulateSettings extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgCreateWikiDatabase;
-
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-
 		$settingsource = file( $this->getOption( 'sourcelist' ) );
 
 		foreach ( $settingsource as $input ) {
@@ -26,29 +22,17 @@ class ManageWikiPopulateSettings extends Maintenance {
 
 			$this->output( "Setting $settingvalue for $DBname\n" );
 
-			$remoteWiki = RemoteWiki::newFromName( $DBname );
+			$setting = str_replace( "\n", '', $settingvalue );
 
-			$settingsarray = $remoteWiki->getSettings();
-
-			$settingsarray[$this->getOption('wgsetting')] = str_replace( "\n", '', $settingvalue );
-
-			if ( $settingsarray[$this->getOption('wgsetting')] === "true" ) {
-				$settingsarray[$this->getOption('wgsetting')] = true;
-			} elseif ( $settingsarray[$this->getOption('wgsetting')] === "false" ) {
-				$settingsarray[$this->getOption('wgsetting')] = false;
+			if ( $setting === "true" ) {
+				$setting = true;
+			} elseif ( $setting === "false" ) {
+				$setting = false;
 			}
 
-			$settings = json_encode( $settingsarray );
-
-			$dbw->update( 'cw_wikis',
-				[
-					'wiki_settings' => $settings
-				],
-				[
-					'wiki_dbname' => $DBname
-				],
-				__METHOD__
-			);
+			$mwSettings = new ManageWikiSettings( $DBname );
+			$mwSettings->modify( [ $this->getOption( 'wgsetting' ) => $setting ] );
+			$mwSettings->commit();
 		}
 	}
 }

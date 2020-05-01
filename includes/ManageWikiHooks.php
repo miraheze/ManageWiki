@@ -163,28 +163,22 @@ class ManageWikiHooks {
 			$wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces, $wgNamespaceProtection;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$defaultGroups = array_diff( (array)ManageWikiPermissions::availableGroups( 'default' ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
-
-			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
+			$mwPermissions = new ManageWikiPermissions( $dbname );
+			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
 
 			foreach ( $defaultGroups as $newgroup ) {
-				$groupArray = ManageWikiPermissions::groupPermissions( $newgroup, 'default' );
+				$groupData = $mwPermissionsDefault->list( $newgroup );
+				$groupArray = [];
 
-				$dbw->insert(
-					'mw_permissions',
-					[
-						'perm_dbname' => $dbname,
-						'perm_group' => $newgroup,
-						'perm_permissions' => json_encode( $groupArray['permissions'] ),
-						'perm_addgroups' => json_encode( $groupArray['ag'] ),
-						'perm_removegroups' => json_encode( $groupArray['rg'] ),
-						'perm_addgroupstoself' => json_encode( $groupArray['ags'] ),
-						'perm_removegroupsfromself' => json_encode( $groupArray['rgs'] ),
-						'perm_autopromote' => ( is_null( $groupArray['autopromote'] ) ) ? null : json_encode( $groupArray['autopromote'] )
-					],
-					__METHOD__
-				);
+				foreach ( $groupData as $name => $value ) {
+					$groupArray[$name]['add'] = $value;
+				}
+
+				$mwPermissions->modify( $newgroup, $groupArray );
 			}
+
+			$mwPermissions->commit();
 
 			if ( $private ) {
 				ManageWikiHooks::onCreateWikiStatePrivate( $dbname );
@@ -193,45 +187,20 @@ class ManageWikiHooks {
 		}
 
 		if ( $wgManageWikiExtensions && $wgManageWikiExtensionsDefault ) {
-			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-
-			$dbw->insert(
-				'mw_settings',
-				[
-					's_dbname' => $dbname,
-					's_settings' => json_encode( [] ),
-					's_extensions' => json_encode( $wgManageWikiExtensionsDefault )
-				]
-			);
+			$mwExt = new ManageWikiExtensions( $dbname );
+			$mwExt->add( $wgManageWikiExtensions );
+			$mwExt->commit();
 		}
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-			$defaultCanonicalNamespaces = (array)ManageWikiNamespaces::defaultCanonicalNamespaces();
+			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
+			$defaultNamespaces = array_keys( $mwNamespacesDefault->list() );
+			$mwNamespaces = new ManageWikiNamespaces( $dbname );
 
-			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-
-			foreach ( $defaultCanonicalNamespaces as $newnamespace ) {
-				$namespacesArray = ManageWikiNamespaces::defaultNamespaces( $newnamespace );
-
-				$dbw->insert(
-					'mw_namespaces',
-					[
-						'ns_dbname' => $dbname,
-						'ns_namespace_id' => $newnamespace,
-						'ns_namespace_name' => (string)$namespacesArray['ns_namespace_name'],
-						'ns_searchable' => (int)$namespacesArray['ns_searchable'],
-						'ns_subpages' => (int)$namespacesArray['ns_subpages'],
-						'ns_content' => (int)$namespacesArray['ns_content'],
-						'ns_content_model' => $namespacesArray['ns_content_model'],
-						'ns_protection' => $namespacesArray['ns_protection'],
-						'ns_aliases' => (string)$namespacesArray['ns_aliases'],
-						'ns_core' => (int)$namespacesArray['ns_core'],
-						'ns_additional' => $namespacesArray['ns_additional']
-					],
-					__METHOD__
-				);
+			foreach ( $defaultNamespaces as $namespace ) {
+				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
+				$mwNamespaces->commit();
 			}
-
 		}
 	}
 
@@ -253,102 +222,36 @@ class ManageWikiHooks {
 		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) && $wgManageWikiPermissionsDefaultPrivateGroup ) {
+			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
+			$mwPermissions = new ManageWikiPermissions( $dbname );
 
-			$defaultarray = ManageWikiPermissions::groupPermissions( $wgManageWikiPermissionsDefaultPrivateGroup, 'default' );
+			$defaultPrivate = $mwPermissionsDefault->list();
+			$privateArray = [];
 
-			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
-
-			$check = $dbw->selectRow( 'mw_permissions',
-				[ 'perm_dbname' ],
-				[
-					'perm_dbname' => $dbname,
-					'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup
-				],
-				__METHOD__
-			);
-
-			if ( !$check ) {
-				$dbw->insert( 'mw_permissions',
-					[
-						'perm_dbname' => $dbname,
-						'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup,
-						'perm_permissions' => json_encode( $defaultarray['permissions'] ),
-						'perm_addgroups' => json_encode( $defaultarray['ag'] ),
-						'perm_removegroups' => json_encode( $defaultarray['rg'] ),
-						'perm_addgroupstoself' => json_encode( $defaultarray['ags'] ),
-						'perm_removegroupsfromself' => json_encode( $defaultarray['rgs'] ),
-						'perm_autopromote' => ( is_null( $defaultarray['autopromote'] ) ) ? null : json_encode( $defaultarray['autopromote'] )
-					],
-					__METHOD__
-				);
+			foreach ( $defaultPrivate as $name => $value ) {
+				$privateArray[$name]['add'] = $value;
 			}
 
-			$sysopMeta = ManageWikiPermissions::groupPermissions( 'sysop' );
-			$sysopAdd = array_merge( $sysopMeta['ag'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
-			$sysopRemove = array_merge( $sysopMeta['rg'], [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
-
-			$dbw->update(
-				'mw_permissions',
-				[
-					'perm_addgroups' => json_encode( $sysopAdd ),
-					'perm_removegroups' => json_encode( $sysopRemove ),
-				],
-				[
-					'perm_dbname' => $dbname,
-					'perm_group' => 'sysop'
-				],
-				__METHOD__
-			);
+			$mwPermissions->modify( $wgManageWikiPermissionsDefaultPrivateGroup, $privateArray );
+			$mwPermissions->modify( 'sysop', [ 'addgroups' => [ 'add' => $wgManageWikiPermissionsDefaultPrivateGroup ], 'removegroups' => [ 'add' => $wgManageWikiPermissionsDefaultPrivateGroup ] ] );
+			$mwPermissions->commit();
 		}
-
-		$cWJ = new CreateWikiJson( $dbname );
-		$cWJ->resetWiki();
 	}
 
 	public static function onCreateWikiStatePublic( $dbname ) {
 		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) && $wgManageWikiPermissionsDefaultPrivateGroup ) {
-			$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+			$mwPermissions = new ManageWikiPermissions( $dbname );
 
-			$dbw->delete(
-				'mw_permissions',
-				[
-					'perm_dbname' => $dbname,
-					'perm_group' => $wgManageWikiPermissionsDefaultPrivateGroup
-				],
-				__METHOD__
-			);
+			$mwPermissions->remove( $wgManageWikiPermissionsDefaultPrivateGroup );
 
-			// Fully delete group by removing all other groups' ability to manage it
-			$groups = ManageWikiPermissions::availableGroups();
-			foreach ( $groups as $group ) {
-				$rights = ManageWikiPermissions::groupPermissions( $group );
-				$addGroups = $rights['ag'];
-				$removeGroups = $rights['rg'];
-
-				if ( in_array( $wgManageWikiPermissionsDefaultPrivateGroup, $addGroups ) || in_array( $wgManageWikiPermissionsDefaultPrivateGroup, $removeGroups ) ) {
-					$addGroups = array_diff( $addGroups, [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
-					$removeGroups = array_diff( $removeGroups, [ $wgManageWikiPermissionsDefaultPrivateGroup ] );
-
-					$dbw->update(
-						'mw_permissions',
-						[
-							'perm_addgroups' => json_encode( $addGroups ),
-							'perm_removegroups' => json_encode( $removeGroups ),
-						],
-						[
-							'perm_dbname' => $dbname,
-							'perm_group' => $group
-						],
-						__METHOD__
-					);
-				}
+			foreach ( array_keys( $mwPermissions->list() ) as $group ) {
+				$mwPermissions->modify( $group, [ 'addgroups' => [ 'remove' => $wgManageWikiPermissionsDefaultPrivateGroup ], 'removegroups' => [ 'remove' => $wgManageWikiPermissionsDefaultPrivateGroup ] ] );
 			}
-		}
 
-		$cWJ = new CreateWikiJson( $dbname );
-		$cWJ->resetWiki();
+			$mwPermissions->commit();
+		}
 	}
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {

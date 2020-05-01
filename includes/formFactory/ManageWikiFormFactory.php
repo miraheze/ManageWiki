@@ -67,8 +67,15 @@ class ManageWikiFormFactory {
 
 		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $special );
 
-		if ( is_array( $mwReturn ) ) {
-			$out->addHTML( '<div class="errorbox">The following errors occurred:' . implode( '<br>', $mwReturn ) . '</div>' );
+		if ( !empty( $mwReturn ) ) {
+			$errorOut = [];
+			foreach ( $mwReturn as $errors ) {
+				foreach ( $errors as $msg => $params ) {
+					$errorOut[] = wfMessage( $msg, $params )->inContentLanguage()->text();
+				}
+			}
+
+			$out->addHTML( '<div class="errorbox">The following errors occurred:<br>' . implode( '<br>', $errorOut ) . '</div>' );
 			return null;
 		}
 
