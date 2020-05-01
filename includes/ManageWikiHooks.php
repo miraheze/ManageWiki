@@ -236,6 +236,10 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiTables( &$tables ) {
+		if ( ManageWiki::checkSetup( 'extensions' ) || ManageWiki::checkSetup( 'settings' ) ) {
+			$tables['mw_settings'] = 's_dbname';
+		}
+
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$tables['mw_permissions'] = 'perm_dbname';
 		}
