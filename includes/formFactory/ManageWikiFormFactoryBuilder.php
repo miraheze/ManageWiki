@@ -760,7 +760,7 @@ class ManageWikiFormFactoryBuilder {
 			// TODO move to method for logging? This is *REALLY* ugly and hacky
 			$mwLogParams['5::namespace'] = $mwReturn->list( $special )['name'];
 		} elseif ( $module == 'permissions' ) {
-			$mwLog = 'permissions';
+			$mwLog = 'rights';
 			$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
 			$logAP = !is_null( $mwReturn->changes[$special]['autopromote'] ) ? 'htmlform-yes' : 'htmlform-no';
 
