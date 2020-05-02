@@ -172,7 +172,11 @@ class ManageWikiHooks {
 				$groupArray = [];
 
 				foreach ( $groupData as $name => $value ) {
-					$groupArray[$name]['add'] = $value;
+					if ( $name == 'autopromote' ) {
+						$groupArray[$name] = $value;
+					} else {
+						$groupArray[$name]['add'] = $value;
+					}
 				}
 
 				$mwPermissions->modify( $newgroup, $groupArray );
