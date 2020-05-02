@@ -72,32 +72,40 @@ class ManageWikiInstaller {
 	}
 
 	private static function permissions( string $dbname, array $data ) {
+		$mwPermissions = new ManageWikiPermissions( $dbname );
+
 		foreach ( $data as $group => $mod ) {
-			if ( !isset( $mod['permissions'] ) ) {
-				$mod['permissions'] = [];
-			}
+			$groupData = [
+				'permissions' => [
+					'add' => $mod['permissions'] ?? []
+				],
+				'addgroups' => [
+					'add' => $mod['addgroups'] ?? []
+				],
+				'removegroups' => [
+					'add' => $mod['removegroups'] ?? []
+				]
+			];
 
-			if ( !isset( $mod['addgroups'] ) ) {
-				$mod['addgroups'] = [];
-			}
-
-			if ( !isset( $mod['removegroups'] ) ) {
-				$mod['removegroups'] = [];
-			}
-
-			ManageWikiPermissions::modifyPermissions( $group, $mod['permissions'], [], $mod['addgroups'], [], $mod['removegroups' ], [], [], [], [], [], $dbname );
+			$mwPermissions->modify( $group, $groupData );
 		}
 
-		$cWJ = new CreateWikiJson( $dbname );
-		$cWJ->resetWiki();
+		$mwPermissions->commit();
 
 		return true;
 	}
 
 	private static function namespaces( string $dbname, array $data ) {
+		$mwNamespaces = new ManageWikiNamespaces( $dbname );
 		foreach ( $data as $name => $i ) {
-			ManageWikiNamespaces::modifyNamespace( $i['id'], $name, $i['searchable'], $i['subpages'], $i['protection'], $i['content'], $i['contentmodel'], 1, $i['aliases'], $i['additional'], $dbname );
+			$id = $i['id'];
+			unset( $i['id'] );
+			$i['name'] = $name;
+
+			$mwNamespaces->modify( $id, $i );
 		}
+
+		$mwNamespaces->commit();
 
 		return true;
 	}

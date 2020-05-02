@@ -103,7 +103,7 @@ class SpecialManageWiki extends SpecialPage {
 					continue;
 				}
 
-				$options[$namespace] = $id;
+				$options[$namespace['name']] = $id;
 			}
 
 			$this->reusableFormDescriptor( $module, $options );
