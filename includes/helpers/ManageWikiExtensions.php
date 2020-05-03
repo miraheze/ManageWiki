@@ -164,13 +164,18 @@ class ManageWikiExtensions {
 	 * Function to write changes to the databases
 	 */
 	private function write() {
-		$this->dbw->update(
+		$this->dbw->upsert(
 			'mw_settings',
 			[
+				's_dbname' => $this->wiki,
+				's_settings' => json_encode( [] ),
 				's_extensions' => json_encode( $this->list() )
 			],
 			[
-				's_dbname' => $this->wiki
+				's_dbname'
+			],
+			[
+				's_extensions' => json_encode( $this->list() )
 			]
 		);
 	}

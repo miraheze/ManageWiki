@@ -112,13 +112,18 @@ class ManageWikiSettings {
 	 * Commits all changes to the database
 	 */
 	public function commit() {
-		$this->dbw->update(
+		$this->dbw->upsert(
 			'mw_settings',
 			[
+				's_dbname' => $this->wiki,
+				's_extensions' => json_encode( [] ),
 				's_settings' => json_encode( $this->liveSettings )
 			],
 			[
-				's_dbname' => $this->wiki
+				's_dbname'
+			],
+			[
+				's_settings' => json_encode( $this->liveSettings )
 			]
 		);
 
