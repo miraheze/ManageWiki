@@ -98,7 +98,7 @@ class ManageWikiPermissions {
 
 					$this->changes[$group][$name][$type] = $value;
 				}
-			} else {
+			} elseif ( $permData['autopromote'] != $data['autopromote'] ) {
 				$permData['autopromote'] = $data['autopromote'];
 
 				$this->changes[$group]['autopromote'] = true;
@@ -148,7 +148,7 @@ class ManageWikiPermissions {
 					'perm_removegroups' => json_encode( $this->livePermissions[$group]['removegroups'] ),
 					'perm_addgroupstoself' => json_encode( $this->livePermissions[$group]['addself'] ),
 					'perm_removegroupsfromself' => json_encode( $this->livePermissions[$group]['removeself'] ),
-					'perm_autopromote' => json_encode( $this->livePermissions[$group]['autopromote'] )
+					'perm_autopromote' => is_null( $this->livePermissions[$group]['autopromote'] ) ? null : json_decode( $this->livePermissions[$group]['autopromote'] )
 				];
 
 				$this->dbw->upsert(

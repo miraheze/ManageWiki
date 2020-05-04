@@ -765,16 +765,16 @@ class ManageWikiFormFactoryBuilder {
 			$logAP = !is_null( $mwReturn->changes[$special]['autopromote'] ) ? 'htmlform-yes' : 'htmlform-no';
 
 			$mwLogParams = [
-				'4::ar' => $mwReturn->changes['permissions']['add'] ?? $logNULL,
-				'5::rr' => $mwReturn->changes['permissions']['remove'] ?? $logNULL,
-				'6::aag' => $mwReturn->changes['addgroups']['add'] ?? $logNULL,
-				'7::rag' => $mwReturn->changes['addgroups']['remove'] ?? $logNULL,
-				'8::arg' => $mwReturn->changes['removegroups']['add'] ?? $logNULL,
-				'9::rrg' => $mwReturn->changes['removegroups']['remove'] ?? $logNULL,
-				'10::aags' => $mwReturn->changes['addself']['add'] ?? $logNULL,
-				'11::rags' => $mwReturn->changes['addself']['remove'] ?? $logNULL,
-				'12::args' => $mwReturn->changes['removeself']['add'] ?? $logNULL,
-				'13::rrgs' => $mwReturn->changes['removeself']['remove'] ?? $logNULL,
+				'4::ar' => is_null ( $mwReturn->changes[$special]['permissions']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['permissions']['add'] ) : $logNULL,
+				'5::rr' => is_null ( $mwReturn->changes[$special]['permissions']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['permissions']['remove'] ) : $logNULL,
+				'6::aag' => is_null ( $mwReturn->changes[$special]['addgroups']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['addgroups']['add'] ) : $logNULL,
+				'7::rag' => is_null ( $mwReturn->changes[$special]['addgroups']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['addgroups']['remove'] ) : $logNULL,
+				'8::arg' => is_null ( $mwReturn->changes[$special]['removegroups']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['removegroups']['add'] ) : $logNULL,
+				'9::rrg' => is_null ( $mwReturn->changes[$special]['removegroups']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['removegroups']['remove'] ) : $logNULL,
+				'10::aags' => is_null ( $mwReturn->changes[$special]['addself']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['addself']['add'] ) : $logNULL,
+				'11::rags' => is_null ( $mwReturn->changes[$special]['addself']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['addself']['remove'] ) : $logNULL,
+				'12::args' => is_null ( $mwReturn->changes[$special]['removeself']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['removeself']['add'] ) : $logNULL,
+				'13::rrgs' => is_null ( $mwReturn->changes[$special]['removeself']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['removeself']['remove'] ) : $logNULL,
 				'14::ap' => strtolower( wfMessage( $logAP )->inContentLanguage()->text() )
 			];
 		} else {
@@ -1135,7 +1135,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		$permData['autopromote'] = ( count( $aPBuild ) <= 1 && ( $permList['autopromote'] != $aE ) ) ? null : $aPBuild;
+		$permData['autopromote'] = empty( $aPBuild ) ? null : $aPBuild;
 
 		if ( !in_array( $group, $wgManageWikiPermissionsPermanentGroups ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
 			$mwPermissions->remove($group);
