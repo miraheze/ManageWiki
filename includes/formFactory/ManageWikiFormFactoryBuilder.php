@@ -354,7 +354,7 @@ class ManageWikiFormFactoryBuilder {
 		global $wgManageWikiNamespacesAdditional, $wgManageWikiNamespacesExtraContentModels;
 
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
-		$namespaceList = $mwNamespace->list( $special );
+		$namespaceList = $mwNamespace->list();
 
 		$formDescriptor = [];
 
@@ -440,7 +440,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor["aliases-$name"] = [
 				'type' => 'textarea',
 				'label-message' => 'namespaces-aliases',
-				'default' => $namespaceData['aliases'],
+				'default' => implode( '\n', $namespaceData['aliases'] ),
 				'disabled' => !$ceMW,
 				'section' => $name
 			];
