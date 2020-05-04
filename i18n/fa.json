@@ -3,6 +3,7 @@
 		"authors": [
 			"Abijeet Patro",
 			"Alireza Ivaz",
+			"FarsiNevis",
 			"Sjazz"
 		]
 	},
@@ -19,6 +20,8 @@
 	"managewikipermissions": "مدیریت دسترسی‌های یک ویکی",
 	"managewikidefaultpermissions": "مدیریت دسترسی‌های پیش‌فرض یک مزرعهٔ ویکی",
 	"managewiki-desc": "به افراد این امکان را می‌دهد، ویکی را از طریق یک رابط وب مدیریت کنند",
+	"managewiki-error-disallowednamespace": "فضای نام $1 مجاز نیست.",
+	"managewiki-error-install": "نصب افزونهٔ $1 با شکست مواجه شد.",
 	"managewiki-label-category": "رده‌بندی",
 	"managewiki-label-closed": "بسته‌شده",
 	"managewiki-label-dbname": "نام پایگاه داده",
