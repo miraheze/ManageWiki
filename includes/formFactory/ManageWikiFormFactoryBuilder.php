@@ -1082,7 +1082,7 @@ class ManageWikiFormFactoryBuilder {
 			'addgroups' => array_diff( $newMatrix['wgAddGroups'], $permList['addgroups'] ),
 			'removegroups' => array_diff( $newMatrix['wgRemoveGroups'], $permList['removegroups'] ),
 			'addself' => array_diff( $newMatrix['wgGroupsAddToSelf'], $permList['addself'] ),
-			'removeself' => array_diff( $newMatrix['wgGroupsRemoveFromself'], $permList['removeself'] )
+			'removeself' => array_diff( $newMatrix['wgGroupsRemoveFromSelf'], $permList['removeself'] )
 		];
 
 		$matrixOld = [
