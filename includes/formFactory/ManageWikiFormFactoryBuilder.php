@@ -876,7 +876,7 @@ class ManageWikiFormFactoryBuilder {
 
 			if ( $newInactive != $inactive ) {
 				$inactive = $newInactive;
-				$inactiveDate = $dbw->timestamp();
+				$inactiveDate = ( $inactive ) ? $dbw->timestamp() : null;
 
 				$changedArray[] = ( $newInactive ) ? 'inactive' : 'active';
 			}
