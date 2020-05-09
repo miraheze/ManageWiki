@@ -1035,7 +1035,7 @@ class ManageWikiFormFactoryBuilder {
 				'subpages' => (int)$formData["subpages-$name"],
 				'protection' => $formData["protection-$name"],
 				'content' => (int)$formData["content-$name"],
-				'content_model' => $formData["contentmodel-$name"],
+				'contentmodel' => $formData["contentmodel-$name"],
 				'aliases' => ( $formData["aliases-$name"] == '' ) ? [] : explode( "\n", $formData["aliases-$name"] ),
 				'additional' => $additionalBuilt
 			];
