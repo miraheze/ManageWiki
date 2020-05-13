@@ -39,24 +39,27 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 		);
 
 		if ( !$checkRow ) {
-			$defaultGroups = array_diff( (array)ManageWikiPermissions::availableGroups( 'default' ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+			$mwPermissions = new ManageWikiPermissions( $wgDBname );
+			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
+			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+
 			foreach ( $defaultGroups as $newgroup ) {
-				$groupArray = ManageWikiPermissions::groupPermissions( $newgroup, 'default' );
-				$dbw->insert(
-					'mw_permissions',
-					[
-						'perm_dbname' => $wgDBname,
-						'perm_group' => $newgroup,
-						'perm_permissions' => json_encode( $groupArray['permissions'] ),
-						'perm_addgroups' => json_encode( $groupArray['ag'] ),
-						'perm_removegroups' => json_encode( $groupArray['rg'] ),
-						'perm_addgroupstoself' => json_encode( $groupArray['ags'] ),
-						'perm_removegroupsfromself' => json_encode( $groupArray['rgs'] ),
-						'perm_autopromote' => ( is_null( $groupArray['autopromote'] ) ) ? null : json_encode( $groupArray['autopromote'] )
-					],
-					__METHOD__
-				);
+				$groupData = $mwPermissionsDefault->list( $newgroup );
+				$groupArray = [];
+
+				foreach ( $groupData as $name => $value ) {
+					if ( $name == 'autopromote' ) {
+						$groupArray[$name] = $value;
+					} else {
+						$groupArray[$name]['add'] = $value;
+					}
+				}
+
+				$mwPermissions->modify( $newgroup, $groupArray );
 			}
+
+			$mwPermissions->commit();
+
 			if ( $wmgPrivateWiki ) {
 				ManageWikiHooks::onCreateWikiStatePrivate( $wgDBname );
 			}
