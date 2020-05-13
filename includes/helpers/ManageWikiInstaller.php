@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Shell;
+
 class ManageWikiInstaller {
 	public static function process( string $dbname, array $actions ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
