@@ -29,7 +29,7 @@ class MWScriptJob extends Job {
 			$scriptParams
 		)->limits( [ 'memory' => 0, 'filesize' => 0 ] )->execute()->getExitCode();
 
-		// An execute higher then 0 indicates failure.
+		// An execute code higher then 0 indicates failure.
 		if ( $result ) {
 			wfDebugLog( 'ManageWiki', "MWScriptJob failure. Status {$result} running {$this->params['script']}" );
 		}
