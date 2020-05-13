@@ -1,6 +1,6 @@
 <?php
 
-use MediaWiki\Shell;
+use MediaWiki\Shell\Shell;
 
 class ManageWikiInstaller {
 	public static function process( string $dbname, array $actions ) {
