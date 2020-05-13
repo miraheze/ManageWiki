@@ -7,13 +7,13 @@ class MWScriptJob extends Job {
 
 	public function __construct( $dbname, $params ) {
 		parent::__construct( 'mwScript', $params );
-		self::$dbname = $dbname;
+		$this->$dbname = $dbname;
 	}
 
 	public function run() {
 		$scriptParams = [
 			'--wiki',
-			self::$dbname
+			$this->$dbname
 		];
 
 		foreach ( (array)$this->params['options'] as $name => $val ) {
@@ -29,7 +29,8 @@ class MWScriptJob extends Job {
 			$scriptParams
 		)->limits( [ 'memory' => 0, 'filesize' => 0 ] )->execute()->getExitCode();
 
-		if ( !$result ) {
+		// An execute code higher then 0 indicates failure.
+		if ( $result ) {
 			wfDebugLog( 'ManageWiki', "MWScriptJob failure. Status {$result} running {$this->params['script']}" );
 		}
 	}

@@ -127,5 +127,7 @@ class ManageWikiInstaller {
 
 			JobQueueGroup::singleton()->push( $mwJob );
 		}
+
+		return true;
 	}
 }
