@@ -6,7 +6,7 @@ class MWScriptJob extends Job {
 	private $dbname;
 
 	public function __construct( $dbname, $params ) {
-		parent::construct( 'mwScript', SpecialPage::getTitleFor( 'ManageWiki' ), $params );
+		parent::__construct( 'mwScript', $params );
 		self::$dbname = $dbname;
 	}
 
