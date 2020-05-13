@@ -39,27 +39,14 @@ class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
 		);
 
 		if ( !$checkRow ) {
-			$defaultCanonicalNamespaces = (array)ManageWikiNamespaces::defaultCanonicalNamespaces();
-			foreach ( $defaultCanonicalNamespaces as $newnamespace ) {
-				$namespacesArray = ManageWikiNamespaces::defaultNamespaces( $newnamespace );
-				$dbw->insert(
-					'mw_namespaces',
-					[
-						'ns_dbname' => $wgDBname,
-						'ns_namespace_id' => $newnamespace,
-						'ns_namespace_name' => (string)$namespacesArray['ns_namespace_name'],
-						'ns_searchable' => (int)$namespacesArray['ns_searchable'],
-						'ns_subpages' => (int)$namespacesArray['ns_subpages'],
-						'ns_content' => (int)$namespacesArray['ns_content'],
-						'ns_content_model' => $namespacesArray['ns_content_model'],
-						'ns_protection' => $namespacesArray['ns_protection'],
-						'ns_aliases' => (string)$namespacesArray['ns_aliases'],
-						'ns_core' => (int)$namespacesArray['ns_core'],
-						'ns_additional' => $namespacesArray['ns_additional']
-					],
-					__METHOD__
-				);
-			}
+ 			$mwNamespaces = new ManageWikiNamespaces( $wgDBname );
+			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
+ 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list() );
+
+ 			foreach ( $defaultNamespaces as $namespace ) {
+ 				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
+ 				$mwNamespaces->commit();
+ 			}
 
 			$cWJ = new CreateWikiJson( $wgDBname );
 			$cWJ->resetWiki();
