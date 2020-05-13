@@ -49,7 +49,8 @@ class ManageWikiPermissions {
 				'removegroups' => json_decode( $perm->perm_removegroups, true ),
 				'addself' => json_decode( $perm->perm_addgroupstoself, true ),
 				'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
-				'autopromote' => json_decode( $perm->perm_autopromote, true )
+				'autopromote' => is_null( $perm->perm_autopromote) ?
+					null : json_decode( $perm->perm_autopromote, true )
 			];
 		}
 	}
