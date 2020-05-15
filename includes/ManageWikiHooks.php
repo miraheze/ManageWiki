@@ -13,18 +13,18 @@ class ManageWikiHooks {
 					__DIR__ . '/../sql/mw_permissions.sql' );
 			$updater->addExtensionTable( 'mw_settings',
 					__DIR__ . '/../sql/mw_settings.sql' );
-			$updater->modifyTable( 'mw_permissions',
-					__DIR__ . '/../sql/patches/patch-groups-self.sql', true );
-			$updater->modifyTable( 'mw_permissions',
-					__DIR__ . '/../sql/patches/patch-autopromote.sql', true );
-			$updater->modifyTable( 'mw_namespaces',
-					__DIR__ . '/../sql/patches/patch-namespaces-additional.sql', true );
-			$updater->modifyTable( 'mw_namespaces',
-					__DIR__ . '/../sql/patches/patch-namespace-core-alter.sql', true );
-			$updater->modifyTable( 'mw_namespaces',
-					__DIR__ . '/../sql/patches/patch-namespaces-add-indexes.sql', true );
-			$updater->modifyTable( 'mw_permissions',
-					__DIR__ . '/../sql/patches/patch-permissions-add-indexes.sql', true );
+			$updater->modifyExtensionTable( 'mw_permissions',
+					__DIR__ . '/../sql/patches/patch-groups-self.sql' );
+			$updater->modifyExtensionTable( 'mw_permissions',
+					__DIR__ . '/../sql/patches/patch-autopromote.sql' );
+			$updater->modifyExtensionTable( 'mw_namespaces',
+					__DIR__ . '/../sql/patches/patch-namespaces-additional.sql' );
+			$updater->modifyExtensionTable( 'mw_namespaces',
+					__DIR__ . '/../sql/patches/patch-namespace-core-alter.sql' );
+			$updater->modifyExtensionTable( 'mw_namespaces',
+					__DIR__ . '/../sql/patches/patch-namespaces-add-indexes.sql' );
+			$updater->modifyExtensionTable( 'mw_permissions',
+					__DIR__ . '/../sql/patches/patch-permissions-add-indexes.sql' );
 		}
 	}
 
