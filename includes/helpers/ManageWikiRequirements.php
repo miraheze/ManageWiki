@@ -57,7 +57,7 @@ class ManageWikiRequirements {
 	 */
 	private static function extensions( array $data, array $extensionList ) {
 		foreach ( $data as $extension ) {
-			if ( isset( $extensionList[$extension] ) ) {
+			if ( !in_array( $extension, $extensionList ) ) {
 				return false;
 			}
 		}
