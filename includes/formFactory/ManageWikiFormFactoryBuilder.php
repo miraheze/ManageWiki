@@ -799,7 +799,7 @@ class ManageWikiFormFactoryBuilder {
 		$mwLogID = $mwLogEntry->insert();
 		$mwLogEntry->publish( $mwLogID );
 
-		return $mwReturn->errors;
+		return $mwReturn['errors'];
 	}
 
 	private static function submissionCore(
