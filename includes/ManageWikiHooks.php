@@ -192,7 +192,7 @@ class ManageWikiHooks {
 
 		if ( $wgManageWikiExtensions && $wgManageWikiExtensionsDefault ) {
 			$mwExt = new ManageWikiExtensions( $dbname );
-			$mwExt->add( $wgManageWikiExtensions );
+			$mwExt->add( $wgManageWikiExtensionsDefault );
 			$mwExt->commit();
 		}
 
