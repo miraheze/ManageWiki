@@ -692,7 +692,7 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		// TODO Convert to new style
-		if ( $module == 'core'  && !is_array( $mwReturn ) ) {
+		if ( $module == 'core'  && !is_object( $mwReturn ) ) {
 			if ( $mwReturn === 'delete' || $mwReturn === 'undelete' ) {
 				$delete = ( $mwReturn === 'delete' );
 
