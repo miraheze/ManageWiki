@@ -62,7 +62,7 @@ class ManageWikiExtensions {
 	 */
 	public function add( $extensions ) {
 		// We allow adding either one extension (string) or many (array)
-		//// We will handle all processing in final stages
+		// We will handle all processing in final stages
 		foreach ( (array)$extensions as $ext ) {
 			$this->liveExts[$ext] = $this->extConfig[$ext];
 
