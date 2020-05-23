@@ -923,7 +923,7 @@ class ManageWikiFormFactoryBuilder {
 		return [
 			'changes' => implode( ', ', $changedArray ),
 			'data' => $data,
-			'errors' => false,
+			'errors' => [],
 			'log' => 'settings',
 			'table' => 'cw_wikis'
 		];
