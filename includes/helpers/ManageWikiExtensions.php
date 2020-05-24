@@ -16,6 +16,8 @@ class ManageWikiExtensions {
 	private $extConfig;
 	/** @var array Array of enabled extensions with their configuration */
 	private $liveExts = [];
+	/** @var array Array of extensions to be removed with configuration */
+	private $removedExts = [];
 	/** @var string WikiID */
 	private $wiki;
 
@@ -81,6 +83,7 @@ class ManageWikiExtensions {
 		// We allow remove either one extension (string) or many (array)
 		// We will handle all processing in final stages
 		foreach ( (array)$extensions as $ext ) {
+			$this->removedExts[$ext] = $this->liveExts[$ext];
 			unset ( $this->liveExts[$ext] );
 
 			$this->changes[$ext] = [
@@ -151,6 +154,13 @@ class ManageWikiExtensions {
 						$extConfig['name']
 					]
 				];
+			}
+		}
+
+		foreach ( $this->removedExts as $name => $extConfig ) {
+			// Unlike installing, we are not too fussed about whether this fails, let us just do it
+			if ( isset( $extConfig['remove'] ) ) {
+				ManageWikiInstaller::process( $this->wiki, $extConfig['remove'] );
 			}
 		}
 

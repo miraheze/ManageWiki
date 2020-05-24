@@ -16,8 +16,10 @@ class ManageWikiInstaller {
 				$stepresponse['permissions'] = self::permissions( $dbname, $data );
 			} elseif ( $action == 'namespaces' ) {
 				$stepresponse['namespaces'] = self::namespaces( $dbname, $data );
-			} elseif( $action == 'mwscript' ) {
+			} elseif ( $action == 'mwscript' ) {
 				$stepresponse['mwscript'] = self::mwscript( $dbname, $data );
+			} elseif ( $action == 'settings' ) {
+				$stepresponse['settings'] = self::settings( $dbname, $data );
 			} else {
 				return false;
 			}
@@ -127,6 +129,14 @@ class ManageWikiInstaller {
 
 			JobQueueGroup::singleton()->push( $mwJob );
 		}
+
+		return true;
+	}
+
+	private static function settings( string $dbname, array $data ) {
+		$mwSettings = new ManageWikiSettings( $dbname );
+		$mwSettings->modify( $data );
+		$mwSettings->commit();
 
 		return true;
 	}
