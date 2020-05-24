@@ -1017,6 +1017,11 @@ class ManageWikiFormFactoryBuilder {
 
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		foreach ( $wgManageWikiSettings as $name => $set ) {
+			// No need to do anything if setting does not 'exist'
+			if ( !isset( $formData[$name] ) ) {
+				continue;
+			}
+
 			$current = $settingsList[$name];
 			$mwAllowed = ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) || !$set['restricted'] );
 			$type = $set['type'];
