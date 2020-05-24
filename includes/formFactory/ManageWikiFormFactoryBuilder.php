@@ -237,108 +237,159 @@ class ManageWikiFormFactoryBuilder {
 		$mwPermissions = new ManageWikiPermissions( $dbName );
 		$groupList = array_keys( $mwPermissions->list() );
 
+		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+
 		$formDescriptor = [];
 
 		foreach ( $wgManageWikiSettings as $name => $set ) {
 			$add = ( $set['from'] == 'mediawiki' ) ||  in_array( $set['from'], $extList ) ;
-			$sType = $set['type'];
+			$disabled = ( $ceMW ) ? !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
+			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
+			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
 			if ( $add ) {
-				switch ( $sType ) {
-					case 'check':
-					case 'text':
-					case 'url':
-						$mwType = $set['type'];
+				switch ( $set['type'] ) {
+					case 'integer':
+						$config = [
+							'type' => 'int',
+							'min' => $set['minint'],
+							'max' => $set['maxint'],
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						break;
+					case 'language': //test
+						$config = [
+							'type' => 'language',
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
 						break;
 					case 'list':
-						$mwType = 'select';
-						$mwOptions = $set['options'];
+						$config = [
+							'type' => 'select',
+							'options' => $set['options'],
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
 						break;
 					case 'list-multi':
+						$config = [
+							'type' => 'multiselect',
+							'options' => $set['options'],
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						if ( !$disabled ) {
+							$config['dropdown'] = true;
+						}
+						break;
 					case 'list-multi-bool':
-						$mwType = 'multiselect';
-						$mwOptions = $set['options'];
+						$config = [
+							'type' => 'multiselect',
+							'options' => $set['options'],
+							'default' => ( !is_null( $setList[$name] ) ) ? array_keys( $setList[$name], true ) : array_keys( $set['overridedefault'], true )
+						];
+						if ( !$disabled ) {
+							$config['dropdown'] = true;
+						}
 						break;
 					case 'matrix':
-						$mwType = 'checkmatrix';
-						$mwCols = $set['cols'];
-						$mwRows = $set['rows'];
+						$config = [
+							'type' => 'checkmatrix',
+							'rows' => $set['rows'],
+							'columns' => $set['cols'],
+							'default' => ( !is_null( $setList[$name] ) ) ? ManageWiki::handleMatrix( $setList[$name], 'php' ) : $set['overridedefault']
+						];
 						break;
-					case 'integer':
-						$mwType = 'int';
-						$mwMin = $set['minint'];
-						$mwMax = $set['maxint'];
+					case 'namespace':
+						$config = [
+							'type' => 'namespaceselect',
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						break;
+					case 'namespaces':
+						$config = [
+							'type' => 'namespacesmultiselect',
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
 						break;
 					case 'timezone':
-						$mwType = 'select';
-						$mwOptions = ManageWiki::getTimezoneList();
+						$config = [
+							'type' => 'select',
+							'options' => ManageWiki::getTimezoneList(),
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
 						break;
-					case 'wikipage':
-						$mwType = 'title';
+					case 'user':
+						$config = [
+							'type' => 'user',
+							'exists' => true,
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						break;
+					case 'users':
+						$config = [
+							'type' => 'usersmultiselect',
+							'exists' => true,
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
 						break;
 					case 'usergroups':
-						$mwType = 'multiselect';
 						$groups = [];
 						foreach( $groupList as $group ) {
 							$groups[UserGroupMembership::getGroupName( $group )] = $group;
 						}
-						$mwOptions = isset( $set['options'] ) ? array_merge( $groups, $set['options'] ) : $groups;
+						$config = [
+							'type' => 'multiselect',
+							'options' => isset( $set['options'] ) ? array_merge( $groups, $set['options'] ) : $groups,
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						if ( !$disabled ) {
+							$config['dropdown'] = true;
+						}
 						break;
 					case 'userrights':
-						$mwType = 'multiselect';
 						$rights = [];
 						foreach( User::getAllRights() as $right ) {
 							$rights[$right] = $right;
 						}
-						$mwOptions = isset( $set['options'] ) ? array_merge( $rights, $set['options'] ) : $rights;
+						$config = [
+							'type' => 'multiselect',
+							'options' => $rights,
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						if ( !$disabled ) {
+							$config['dropdown'] = true;
+						}
+						break;
+					case 'wikipage':
+						$config = [
+							'type' => 'title',
+							'exists' => true,
+							'default' => $setList[$name] ?? $set['overridedefault'],
+							'required' => false
+						];
+						break;
+					case 'wikipages':
+						$config = [
+							'type' => 'titlesmultiselect',
+							'exists' => true,
+							'default' => $setList[$name] ?? $set['overridedefault'],
+							'required' => false
+						];
 						break;
 					default:
-						throw new MWException( "{$sType} not recognised" );
+						$config = [
+							'type' => $set['type'],
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
 						break;
 				}
 
-				$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-				$disabled = !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) );
-
-				$msgName = wfMessage( "managewiki-setting-{$name}-name" );
-				$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
-
 				$formDescriptor["set-$name"] = [
-					'type' => $mwType,
 					'label' => ( $msgName->exists() ) ? $msgName->text() : $set['name'],
-					'disabled' => ( $ceMW ) ? $disabled : 1,
+					'disabled' => $disabled,
 					'help' => ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'],
+					'cssclass' => 'createwiki-infuse',
 					'section' => ( isset( $set['section'] ) ) ? $set['section'] : 'other'
-				];
-
-				if ( $mwType == 'matrix' ) {
-					$formDescriptor["set-$name"]['default'] = ( !is_null( $setList[$name] ) ) ? ManageWiki::handleMatrix( $setList[$name], 'php' ) : $set['overridedefault'];
-				} elseif( $sType == 'list-multi-bool' ) {
-					$formDescriptor["set-$name"]['default'] = ( !is_null( $setList[$name] ) ) ? array_keys( $setList[$name], true ) : array_keys( $set['overridedefault'], true );
-				} else {
-					$formDescriptor["set-$name"]['default'] = $setList[$name] ?? $set['overridedefault'];
-				}
-
-				if ( isset( $mwOptions ) ) {
-					$formDescriptor["set-$name"]['options'] = $mwOptions;
-				}
-
-				if ( isset( $mwCols ) ) {
-					$formDescriptor["set-$name"]['columns'] = $mwCols;
-				}
-
-				if ( isset( $mwRows ) ) {
-					$formDescriptor["set-$name"]['rows'] = $mwRows;
-				}
-
-				if ( isset( $mwMin ) ) {
-					$formDescriptor["set-$name"]['min'] = $mwMin;
-				}
-
-				if ( isset( $mwMax ) ) {
-					$formDescriptor["set-$name"]['max'] = $mwMax;
-				}
-
+				] + $config;
 			}
 		}
 
