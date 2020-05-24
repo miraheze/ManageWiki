@@ -1168,17 +1168,17 @@ class ManageWikiFormFactoryBuilder {
 				$formData['conds']
 		] : [];
 
-		$loopBuild = [
-			'once' => 'once',
-			'editcount' => [ APCOND_EDITCOUNT, (int)$formData['editcount'] ],
-			'age' => [ APCOND_AGE, (int)$formData['age'] * 86400 ],
-			'emailconfirmed' => APCOND_EMAILCONFIRMED,
-			'blocked' => APCOND_BLOCKED,
-			'bot' => APCOND_ISBOT,
-			'groups' => [ APCOND_INGROUPS, $formData['groups'][0] ]
-		];
-
 		if ( count( $aPBuild ) != 0 ) {
+			$loopBuild = [
+				'once' => 'once',
+				'editcount' => [ APCOND_EDITCOUNT, (int)$formData['editcount'] ],
+				'age' => [ APCOND_AGE, (int)$formData['age'] * 86400 ],
+				'emailconfirmed' => APCOND_EMAILCONFIRMED,
+				'blocked' => APCOND_BLOCKED,
+				'bot' => APCOND_ISBOT,
+				'groups' => [ APCOND_INGROUPS, $formData['groups'][0] ]
+			];
+
 			foreach ( $loopBuild as $type => $value ) {
 				if ( $formData[$type] ) {
 					$aPBuild[] = $value;
