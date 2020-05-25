@@ -94,6 +94,7 @@ class ManageWikiPermissions {
 		foreach ( $data as $name => $array ) {
 			if ( $name != 'autopromote' ) {
 				foreach ( $array as $type => $value ) {
+					$value = $value ?? [];
 					$permData[$name] = ( $type == 'add' ) ? array_merge( $permData[$name], $value ) : array_diff( $permData[$name], $value );
 
 					$this->changes[$group][$name][$type] = $value;
