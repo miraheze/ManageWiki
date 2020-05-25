@@ -254,27 +254,27 @@ class ManageWikiFormFactoryBuilder {
 							'type' => 'int',
 							'min' => $set['minint'],
 							'max' => $set['maxint'],
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						break;
 					case 'language': //test
 						$config = [
 							'type' => 'language',
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						break;
 					case 'list':
 						$config = [
 							'type' => 'select',
 							'options' => $set['options'],
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						break;
 					case 'list-multi':
 						$config = [
 							'type' => 'multiselect',
 							'options' => $set['options'],
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						if ( !$disabled ) {
 							$config['dropdown'] = true;
@@ -295,40 +295,40 @@ class ManageWikiFormFactoryBuilder {
 							'type' => 'checkmatrix',
 							'rows' => $set['rows'],
 							'columns' => $set['cols'],
-							'default' => ( !is_null( $setList[$name] ) ) ? ManageWiki::handleMatrix( $setList[$name], 'php' ) : $set['overridedefault']
+							'default' => ( !is_null( $setList[$name] ) ) ? ManageWiki::handleMatrix( $setList[$name], 'php' ) : static::checkValueForNull( $set['overridedefault'] )
 						];
 						break;
 					case 'namespace':
 						$config = [
 							'type' => 'namespaceselect',
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						break;
 					case 'namespaces':
 						$config = [
 							'type' => 'namespacesmultiselect',
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						break;
 					case 'timezone':
 						$config = [
 							'type' => 'select',
 							'options' => ManageWiki::getTimezoneList(),
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						break;
 					case 'user':
 						$config = [
 							'type' => 'user',
 							'exists' => true,
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						break;
 					case 'users':
 						$config = [
 							'type' => 'usersmultiselect',
 							'exists' => true,
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						break;
 					case 'usergroups':
@@ -339,7 +339,7 @@ class ManageWikiFormFactoryBuilder {
 						$config = [
 							'type' => 'multiselect',
 							'options' => isset( $set['options'] ) ? array_merge( $groups, $set['options'] ) : $groups,
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						if ( !$disabled ) {
 							$config['dropdown'] = true;
@@ -353,7 +353,7 @@ class ManageWikiFormFactoryBuilder {
 						$config = [
 							'type' => 'multiselect',
 							'options' => $rights,
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] )
 						];
 						if ( !$disabled ) {
 							$config['dropdown'] = true;
@@ -363,7 +363,7 @@ class ManageWikiFormFactoryBuilder {
 						$config = [
 							'type' => 'title',
 							'exists' => true,
-							'default' => $setList[$name] ?? $set['overridedefault'],
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] ),
 							'required' => false
 						];
 						break;
@@ -371,7 +371,7 @@ class ManageWikiFormFactoryBuilder {
 						$config = [
 							'type' => 'titlesmultiselect',
 							'exists' => true,
-							'default' => $setList[$name] ?? $set['overridedefault'],
+							'default' => $setList[$name] ?? static::checkValueForNull( $set['overridedefault'] ),
 							'required' => false
 						];
 						break;
@@ -394,6 +394,14 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return $formDescriptor;
+	}
+	
+	private static function checkValueForNull ( $value ) {
+		if ( is_null( $value ) ) {
+			return null;
+		}
+		
+		return $value;
 	}
 
 	private static function buildDescriptorNamespaces(
