@@ -102,7 +102,7 @@ class ManageWikiSettings {
 		foreach ( $this->settingsConfig as $var => $setConfig ) {
 			if ( !in_array( $var, array_keys( $settings ) ) && in_array( $var, array_keys( $overwrittenSettings ) ) ) {
 				$this->remove( $var );
-			} elseif ( !is_null( $settings[$var] ) ) {
+			} elseif ( isset( $settings[$var] ) && !is_null( $settings[$var] ) ) {
 				$this->modify( [ $var => $settings[$var] ] );
 			}
 		}
