@@ -233,7 +233,11 @@ class ManageWikiHooks {
 			$privateArray = [];
 
 			foreach ( $defaultPrivate as $name => $value ) {
-				$privateArray[$name]['add'] = $value;
+				if ( $name == 'autopromote' ) {
+					$privateArray[$name] = $value;
+				} else {
+					$privateArray[$name]['add'] = $value;
+				}
 			}
 
 			$mwPermissions->modify( $wgManageWikiPermissionsDefaultPrivateGroup, $privateArray );
