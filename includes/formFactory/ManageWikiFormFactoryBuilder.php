@@ -1022,7 +1022,7 @@ class ManageWikiFormFactoryBuilder {
 				continue;
 			}
 
-			$current = $settingsList[$name];
+			$current = $settingsList[$name] ?? $set['overridedefault'];
 			$mwAllowed = ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) || !$set['restricted'] );
 			$type = $set['type'];
 
@@ -1040,12 +1040,9 @@ class ManageWikiFormFactoryBuilder {
 				}
 			} elseif ( $type != 'text' || $value ) {
 				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} else {
-				if ( !$mwAllowed && !is_null( $current ) ) {
+			} elseif ( !$mwAllowed ) {
 					$settingsArray[$name] = $current;
-				}
 			}
-
 		}
 
 		$mwSettings->overwriteAll( $settingsArray );
