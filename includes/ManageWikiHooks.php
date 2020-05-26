@@ -229,7 +229,7 @@ class ManageWikiHooks {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
 
-			$defaultPrivate = $mwPermissionsDefault->list();
+			$defaultPrivate = $mwPermissionsDefault->list( $wgManageWikiPermissionsDefaultPrivateGroup );
 			$privateArray = [];
 
 			foreach ( $defaultPrivate as $name => $value ) {

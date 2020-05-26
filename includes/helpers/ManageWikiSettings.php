@@ -12,7 +12,7 @@ class ManageWikiSettings {
 	private $config;
 	/** @var MaintainableDBConnRef Database object */
 	private $dbw;
-	/** @var bool Settings configuration ($wgManageWikiSettings) */
+	/** @var array Settings configuration ($wgManageWikiSettings) */
 	private $settingsConfig;
 	/** @var array Current settings with their respective values */
 	private $liveSettings = [];
