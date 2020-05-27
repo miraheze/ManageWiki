@@ -83,6 +83,8 @@ class ManageWikiExtensions {
 		// We allow remove either one extension (string) or many (array)
 		// We will handle all processing in final stages
 		foreach ( (array)$extensions as $ext ) {
+			if ( !isset( $this->liveExts[$ext] ) ) continue;
+
 			$this->removedExts[$ext] = $this->liveExts[$ext];
 			unset ( $this->liveExts[$ext] );
 
