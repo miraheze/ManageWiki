@@ -241,7 +241,7 @@ class ManageWikiHooks {
 			}
 
 			$mwPermissions->modify( $wgManageWikiPermissionsDefaultPrivateGroup, $privateArray );
-			$mwPermissions->modify( 'sysop', [ 'addgroups' => [ 'add' => $wgManageWikiPermissionsDefaultPrivateGroup ], 'removegroups' => [ 'add' => $wgManageWikiPermissionsDefaultPrivateGroup ] ] );
+			$mwPermissions->modify( 'sysop', [ 'addgroups' => [ 'add' => [ $wgManageWikiPermissionsDefaultPrivateGroup ] ], 'removegroups' => [ 'add' => [ $wgManageWikiPermissionsDefaultPrivateGroup ] ] ] );
 			$mwPermissions->commit();
 		}
 	}
