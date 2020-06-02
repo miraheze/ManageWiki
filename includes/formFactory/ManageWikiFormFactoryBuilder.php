@@ -228,7 +228,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		RemoteWiki $wiki
 	) {
-		global $wgManageWikiSettings;
+		global $wgManageWikiSettings, $wgLocalDatabases;
 
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
@@ -249,6 +249,15 @@ class ManageWikiFormFactoryBuilder {
 
 			if ( $add ) {
 				switch ( $set['type'] ) {
+					case 'databases':
+						$config = [
+							'type' => 'select',
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						foreach ( $wgLocalDatabases as $db ) {
+							$config['options'][$db] = $db;
+						}
+						break;
 					case 'integer':
 						$config = [
 							'type' => 'int',
