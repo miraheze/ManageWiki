@@ -284,7 +284,7 @@ class ManageWikiFormFactoryBuilder {
 						$config = [
 							'type' => 'multiselect',
 							'options' => $set['options'],
-							'default' => ( !is_null( $setList[$name] ) ) ? array_keys( $setList[$name], true ) : array_keys( $set['overridedefault'], true )
+							'default' => ( isset( $setList[$name] ) && !is_null( $setList[$name] ) ) ? array_keys( $setList[$name], true ) : array_keys( $set['overridedefault'], true )
 						];
 						if ( !$disabled ) {
 							$config['dropdown'] = true;
@@ -295,7 +295,7 @@ class ManageWikiFormFactoryBuilder {
 							'type' => 'checkmatrix',
 							'rows' => $set['rows'],
 							'columns' => $set['cols'],
-							'default' => ( !is_null( $setList[$name] ) ) ? ManageWiki::handleMatrix( $setList[$name], 'php' ) : $set['overridedefault']
+							'default' => ( isset( $setList[$name] ) && !is_null( $setList[$name] ) ) ? ManageWiki::handleMatrix( $setList[$name], 'php' ) : $set['overridedefault']
 						];
 						break;
 					case 'namespace':
@@ -555,10 +555,10 @@ class ManageWikiFormFactoryBuilder {
 
 		$groupData = [
 			'allPermissions' => array_diff( User::getAllRights(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] ),
-			'assignedPermissions' => $permList[$group]['permissions'],
+			'assignedPermissions' => $permList[$group]['permissions'] ?? [],
 			'allGroups' => array_diff( array_keys( $permList ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
-			'autopromote' => $permList[$group]['autopromote']
+			'autopromote' => $permList[$group]['autopromote'] ?? null
 		];
 
 		$formDescriptor = [
