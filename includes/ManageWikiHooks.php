@@ -255,7 +255,7 @@ class ManageWikiHooks {
 			$mwPermissions->remove( $wgManageWikiPermissionsDefaultPrivateGroup );
 
 			foreach ( array_keys( $mwPermissions->list() ) as $group ) {
-				$mwPermissions->modify( $group, [ 'addgroups' => [ 'remove' => $wgManageWikiPermissionsDefaultPrivateGroup ], 'removegroups' => [ 'remove' => $wgManageWikiPermissionsDefaultPrivateGroup ] ] );
+				$mwPermissions->modify( $group, [ 'addgroups' => [ 'remove' => [ $wgManageWikiPermissionsDefaultPrivateGroup ] ], 'removegroups' => [ 'remove' => [ $wgManageWikiPermissionsDefaultPrivateGroup ] ] ] );
 			}
 
 			$mwPermissions->commit();
