@@ -6,6 +6,8 @@ if ( $IP === false ) {
 }
 require_once "$IP/maintenance/Maintenance.php";
 
+use Wikimedia\AtEase\AtEase;
+
 class ManageWikiPopulateNamespaces extends Maintenance {
 	public function execute() {
 		global $wgCreateWikiDatabase, $wgDBname, $wgCanonicalNamespaceNames, $wgNamespaceAliases;
@@ -18,7 +20,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 
 		$namespaces = $wgCanonicalNamespaceNames + [ 0 => '<Main>' ];
 
-		Wikimedia\suppressWarnings();
+		AtEase::suppressWarnings();
 
 		foreach ( $namespaces as $id => $name ) {
 			if ( $id < 0 ) {
@@ -57,7 +59,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 			}
 		}
 
-		Wikimedia\restoreWarnings();
+		AtEase::restoreWarnings();
 	}
 	
 	public function insertNamespace( $dbw, $id, $name, $nsAliases ) {

@@ -62,13 +62,6 @@ class ManageWikiFormFactoryBuilder {
 		global $wgCreateWikiCategories, $wgCreateWikiUseCategories, $wgCreateWikiUsePrivateWikis, $wgCreateWikiUseClosedWikis,
 			$wgCreateWikiUseInactiveWikis, $wgCreateWikiGlobalWiki, $wgDBname, $wgCreateWikiUseCustomDomains;
 
-		$languages = Language::fetchLanguageNames( null, 'wmfile' );
-		ksort( $languages );
-		$options = [];
-		foreach ( $languages as $code => $name ) {
-			$options["$code - $name"] = $code;
-		}
-
 		$formDescriptor = [
 			'dbname' => [
 				'label-message' => 'managewiki-label-dbname',
@@ -87,9 +80,8 @@ class ManageWikiFormFactoryBuilder {
 			],
 			'language' => [
 				'label-message' => 'managewiki-label-language',
-				'type' => 'select',
+				'type' => 'language',
 				'default' => $wiki->getLanguage(),
-				'options' => $options,
 				'disabled' => !$ceMW,
 				'required' => true,
 				'section' => 'main'
@@ -356,7 +348,7 @@ class ManageWikiFormFactoryBuilder {
 						break;
 					case 'userrights':
 						$rights = [];
-						foreach( User::getAllRights() as $right ) {
+						foreach( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions() as $right ) {
 							$rights[$right] = $right;
 						}
 						$config = [
@@ -566,7 +558,7 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		$groupData = [
-			'allPermissions' => array_diff( User::getAllRights(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] ),
+			'allPermissions' => array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] ),
 			'assignedPermissions' => $permList[$group]['permissions'] ?? [],
 			'allGroups' => array_diff( array_keys( $permList ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
@@ -1120,7 +1112,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$mwPermissions = new ManageWikiPermissions( $wiki );
 		$permList = $mwPermissions->list( $group );
-		$assignablePerms = array_diff( User::getAllRights(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] );
+		$assignablePerms = array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] );
 
 		$permData = [];
 
