@@ -459,6 +459,7 @@ class ManageWikiFormFactoryBuilder {
 				"contentmodel-$name" => [
 					'type' => 'select',
 					'label-message' => 'namespaces-contentmodel',
+					'cssclass' => 'createwiki-infuse',
 					'default' => $namespaceData['contentmodel'],
 					'options' => array_merge( [
 						'CSS' => 'css',
@@ -473,6 +474,7 @@ class ManageWikiFormFactoryBuilder {
 				"protection-$name" => [
 					'type' => 'selectorother',
 					'label-message' => 'namespaces-protection',
+					'cssclass' => 'createwiki-infuse',
 					'default' => $namespaceData['protection'],
 					'options' => [
 						'None' => '',
@@ -534,6 +536,7 @@ class ManageWikiFormFactoryBuilder {
 				'delete-migrate-to' => [
 					'type' => 'select',
 					'label-message' => 'namespaces-migrate-to',
+					'cssclass' => 'createwiki-infuse',
 					'options' => $craftedNamespaces,
 					'default' => 0,
 					'disabled' => !$canDelete,
