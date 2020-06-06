@@ -54,7 +54,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 		$result->addValue( 'query', $this->getModuleName(), $data );
 	}
 
-	public function getAllowedParams() {
+	protected function getAllowedParams() {
 		return [
 			'prop' => [
 				ApiBase::PARAM_ISMULTI => true,
