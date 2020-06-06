@@ -67,7 +67,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function onSubmitRedirectToWikiForm( array $params ) {
 		if ( $params['dbname'] !== '' ) {
-			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', 'core' )->getFullUrl() . '/' . $params['dbname'] );
+			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', 'core' )->getFullURL() . '/' . $params['dbname'] );
 		} else {
 			return 'Invalid url.';
 		}
@@ -163,7 +163,7 @@ class SpecialManageWiki extends SpecialPage {
 		$createNamespace = ( $form->getSubmitText() == $this->msg( 'managewiki-namespaces-create-submit' )->plain() ) ? '' : $formData['out'];
 		$url = ( $module == 'namespaces' ) ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
 
-		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullUrl() . "/{$url}" );
+		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() . "/{$url}" );
 
 		return true;
 	}

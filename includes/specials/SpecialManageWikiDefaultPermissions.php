@@ -64,7 +64,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitRedirectToPermissionsPage( array $params ) {
-		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWikiDefaultPermissions' )->getFullUrl() . '/' . $params['groups'] );
+		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWikiDefaultPermissions' )->getFullURL() . '/' . $params['groups'] );
 
 		return true;
 	}
