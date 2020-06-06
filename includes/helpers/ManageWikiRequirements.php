@@ -66,18 +66,18 @@ class ManageWikiRequirements {
 	}
 
 	/**
-	 * @param string $lim String-based comparison for limit
+	 * @param int $lim Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function articles( string $lim ) {
-		return (bool)eval( "return " . SiteStats::articles() . " $lim;" );
+	private static function articles( int $lim ) {
+		return (bool)( SiteStats::articles() <= $lim );
 	}
 
 	/**
-	 * @param string $lim String-based comparison for limit
+	 * @param int $lim Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function pages( string $lim ) {
-		return (bool)eval( "return " . SiteStats::pages() . " $lim;" );
+	private static function pages( int $lim ) {
+		return (bool)( SiteStats::pages() <= $lim );
 	}
 }
