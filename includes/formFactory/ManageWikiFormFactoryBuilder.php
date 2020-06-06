@@ -1066,7 +1066,7 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $formData['delete-checkbox'] ) {
 			$mwNamespaces->remove( $special, $formData['delete-migrate-to'] );
-			$mwNamespaces->remove( $special + 1, $formData['delete-migrate-to'] + 1 );
+			$mwNamespaces->remove( (int)$special + 1, $formData['delete-migrate-to'] + 1 );
 			return $mwNamespaces;
 		}
 
