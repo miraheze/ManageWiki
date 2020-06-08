@@ -1135,17 +1135,17 @@ class ManageWikiFormFactoryBuilder {
 		$newMatrix = ManageWiki::handleMatrix( $formData['group-matrix'], 'phparray' );
 
 		$matrixNew = [
-			'addgroups' => array_diff( (array)$newMatrix['wgAddGroups'], $permList['addgroups'] ),
-			'removegroups' => array_diff( (array)$newMatrix['wgRemoveGroups'], $permList['removegroups'] ),
-			'addself' => array_diff( (array)$newMatrix['wgGroupsAddToSelf'], $permList['addself'] ),
-			'removeself' => array_diff( (array)$newMatrix['wgGroupsRemoveFromSelf'], $permList['removeself'] )
+			'addgroups' => array_diff( $newMatrix['wgAddGroups'] ?? [], $permList['addgroups'] ),
+			'removegroups' => array_diff( $newMatrix['wgRemoveGroups'] ?? [], $permList['removegroups'] ),
+			'addself' => array_diff( $newMatrix['wgGroupsAddToSelf'] ?? [], $permList['addself'] ),
+			'removeself' => array_diff( $newMatrix['wgGroupsRemoveFromSelf'] ?? [], $permList['removeself'] )
 		];
 
 		$matrixOld = [
-			'addgroups' => array_diff( $permList['addgroups'], (array)$newMatrix['wgAddGroups'] ),
-			'removegroups' => array_diff( $permList['removegroups'], (array)$newMatrix['wgRemoveGroups'] ),
-			'addself' => array_diff( $permList['addself'], (array)$newMatrix['wgGroupsAddToSelf'] ),
-			'removeself' => array_diff( $permList['removeself'], (array)$newMatrix['wgGroupsRemoveFromSelf'] )
+			'addgroups' => array_diff( $permList['addgroups'], $newMatrix['wgAddGroups'] ?? [] ),
+			'removegroups' => array_diff( $permList['removegroups'], $newMatrix['wgRemoveGroups'] ?? [] ),
+			'addself' => array_diff( $permList['addself'], $newMatrix['wgGroupsAddToSelf'] ?? [] ),
+			'removeself' => array_diff( $permList['removeself'], $newMatrix['wgGroupsRemoveFromSelf'] ?? [] )
 		];
 
 		foreach ( $matrixNew as $type => $array ) {
