@@ -406,7 +406,6 @@ class ManageWikiFormFactoryBuilder {
 		global $wgManageWikiNamespacesAdditional, $wgManageWikiNamespacesExtraContentModels;
 
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
-		$namespaceList = $mwNamespace->list();
 
 		$formDescriptor = [];
 
@@ -416,7 +415,7 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		foreach ( $nsID as $name => $id ) {
-			$namespaceData = $namespaceList[$id];
+			$namespaceData = $mwNamespace->list( $id );
 
 			$formDescriptor += [
 				"namespace-$name" => [
@@ -504,7 +503,7 @@ class ManageWikiFormFactoryBuilder {
 			$craftedNamespaces = [];
 			$canDelete = false;
 
-			foreach ( $namespaceList as $id => $config ) {
+			foreach ( $mwNamespace->list() as $id => $config ) {
 				if ( $id % 2 ) {
 					continue;
 				}
