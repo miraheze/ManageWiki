@@ -41,7 +41,7 @@ class ManageWikiExtensions {
 			[
 				's_dbname' => $wiki
 			]
-		)->s_extensions;
+		)->s_extensions ?? '[]';
 
 		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
 		// populate extension lists with config associated with them.

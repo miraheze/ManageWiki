@@ -40,7 +40,7 @@ class ManageWikiSettings {
 			[
 				's_dbname' => $wiki
 			]
-		)->s_settings;
+		)->s_settings ?? '[]';
 
 		// Bring json_decoded values to class scope
 		$this->liveSettings = (array)json_decode( $settings, true );
