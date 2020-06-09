@@ -547,21 +547,21 @@ class ManageWikiFormFactoryBuilder {
 		global $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
 
 		$mwPermissions = new ManageWikiPermissions( $wiki );
-		$permList = $mwPermissions->list();
+		$permList = $mwPermissions->list( $group );
 
 		$matrixConstruct = [
-			'wgAddGroups' => $permList[$group]['addgroups'],
-			'wgRemoveGroups' => $permList[$group]['removegroups'],
-			'wgGroupsAddToSelf' => $permList[$group]['addself'],
-			'wgGroupsRemoveFromSelf' => $permList[$group]['removeself']
+			'wgAddGroups' => $permList['addgroups'],
+			'wgRemoveGroups' => $permList['removegroups'],
+			'wgGroupsAddToSelf' => $permList['addself'],
+			'wgGroupsRemoveFromSelf' => $permList['removeself']
 		];
 
 		$groupData = [
 			'allPermissions' => array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] ),
-			'assignedPermissions' => $permList[$group]['permissions'] ?? [],
+			'assignedPermissions' => $permList['permissions'] ?? [],
 			'allGroups' => array_diff( array_keys( $permList ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
-			'autopromote' => $permList[$group]['autopromote'] ?? null
+			'autopromote' => $permList['autopromote'] ?? null
 		];
 
 		$formDescriptor = [
