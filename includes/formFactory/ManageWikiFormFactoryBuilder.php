@@ -559,7 +559,7 @@ class ManageWikiFormFactoryBuilder {
 		$groupData = [
 			'allPermissions' => array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] ),
 			'assignedPermissions' => $permList['permissions'] ?? [],
-			'allGroups' => array_diff( array_keys( $permList ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
+			'allGroups' => array_diff( array_keys( $mwPermissions->list() ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $permList['autopromote'] ?? null
 		];
