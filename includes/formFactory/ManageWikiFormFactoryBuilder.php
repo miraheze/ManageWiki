@@ -816,7 +816,7 @@ class ManageWikiFormFactoryBuilder {
 		} elseif ( $module == 'permissions' ) {
 			$mwLog = 'rights';
 			$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
-			$logAP = !is_null( $mwReturn->changes[$special]['autopromote'] ) ? 'htmlform-yes' : 'htmlform-no';
+			$logAP = ( $mwReturn->changes[$special]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
 
 			$mwLogParams = [
 				'4::ar' => !empty( $mwReturn->changes[$special]['permissions']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['permissions']['add'] ) : $logNULL,
@@ -1181,7 +1181,7 @@ class ManageWikiFormFactoryBuilder {
 				'emailconfirmed' => APCOND_EMAILCONFIRMED,
 				'blocked' => APCOND_BLOCKED,
 				'bot' => APCOND_ISBOT,
-				'groups' => [ APCOND_INGROUPS, $formData['groups'][0] ]
+				'groups' => [ APCOND_INGROUPS, $formData['groups'] ]
 			];
 
 			foreach ( $loopBuild as $type => $value ) {
@@ -1191,10 +1191,10 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		$permData['autopromote'] = empty( $aPBuild ) ? null : $aPBuild;
+		$permData['autopromote'] = ( count( $aPBuild ) <= 1 )  ? null : $aPBuild;
 
 		if ( !in_array( $group, $wgManageWikiPermissionsPermanentGroups ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
-			$mwPermissions->remove($group);
+			$mwPermissions->remove( $group );
 		} else {
 			$mwPermissions->modify( $group, $permData );
 		}
