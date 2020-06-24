@@ -541,10 +541,14 @@ class ManageWikiFormFactoryBuilder {
 
 	private static function buildDescriptorPermissions(
 		string $wiki,
-		bool $ceMW,
+		bool &$ceMW,
 		string $group
 	) {
 		global $wgManageWikiPermissionsBlacklistRights, $wgManageWikiPermissionsBlacklistGroups;
+
+		if ( in_array( $group, $wgManageWikiPermissionsBlacklistGroups ) ) {
+			$ceMW = false;
+		}
 
 		$mwPermissions = new ManageWikiPermissions( $wiki );
 		$permList = $mwPermissions->list( $group );
