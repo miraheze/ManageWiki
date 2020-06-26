@@ -37,6 +37,9 @@ class FixRCMaxAge extends Maintenance {
 			],
 			__METHOD__
 		);
+
+		$cWJ = new CreateWikiJson( $wgDBname );
+		$cWJ->resetWiki();
 	}
 }
 
