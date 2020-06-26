@@ -6,7 +6,7 @@ if ( $IP === false ) {
 }
 require_once "$IP/maintenance/Maintenance.php";
 
-class ManageWikiRemoveSettings extends Maintenance {
+class FixRCMaxAge extends Maintenance {
 
 	public function execute() {
 		global $wgCreateWikiDatabase, $wgDBname;
@@ -34,5 +34,5 @@ class ManageWikiRemoveSettings extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiRemoveSettings';
+$maintClass = 'FixRCMaxAge';
 require_once RUN_MAINTENANCE_IF_MAIN;
