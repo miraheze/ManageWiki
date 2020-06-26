@@ -19,7 +19,7 @@ class FixRCMaxAge extends Maintenance {
 		if ( isset( $settingsarray['wgRCMaxAge'] ) ) {
 			if ( (int)$settingsarray['wgRCMaxAge'] < 1 ) {
 				$settingsarray['wgRCMaxAge'] = 1;
-			} else if ( (int)$settingsarray['wgRCMaxAge'] > 15552000 ) 
+			} else if ( (int)$settingsarray['wgRCMaxAge'] > 15552000 ) {
 				$settingsarray['wgRCMaxAge'] = 15552000;
 			} else {
 				$settingsarray['wgRCMaxAge'] = (int)$settingsarray['wgRCMaxAge'];
