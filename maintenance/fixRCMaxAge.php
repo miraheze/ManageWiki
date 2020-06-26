@@ -17,13 +17,13 @@ class FixRCMaxAge extends Maintenance {
 		$settingsarray = $remoteWiki->getSettings();
 
 		if ( isset( $settingsarray['wgRCMaxAge'] ) ) {
-			$settingsarray['wgRCMaxAge'] = (int)$settingsarray['wgRCMaxAge'];
-			if ( $settingsarray['wgRCMaxAge'] < 1 ) {
-                              $settingsarray['wgRCMaxAge'] = 1;
-                        }
-                        if ( $settingsarray['wgRCMaxAge'] > 15552000 ) {
-                              $settingsarray['wgRCMaxAge'] = 15552000;
-                        }
+			if ( (int)$settingsarray['wgRCMaxAge'] < 1 ) {
+				$settingsarray['wgRCMaxAge'] = 1;
+			} else if ( (int)$settingsarray['wgRCMaxAge'] > 15552000 ) 
+				$settingsarray['wgRCMaxAge'] = 15552000;
+			} else {
+				$settingsarray['wgRCMaxAge'] = (int)$settingsarray['wgRCMaxAge'];
+			}
 		}
 
 		$settings = json_encode( $settingsarray );
