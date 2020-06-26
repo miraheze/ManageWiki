@@ -16,8 +16,8 @@ class ManageWikiRemoveSettings extends Maintenance {
 		$remoteWiki = RemoteWiki::newFromName( $wgDBname );
 		$settingsarray = $remoteWiki->getSettings();
 
-		if ( isset( $settingsarray['wgRCMaxAge' ) ] ) ) {
-			#something here
+		if ( isset( $settingsarray['wgRCMaxAge'] ) ) {
+			$settingsarray['wgRCMaxAge'] = (int)$settingsarray['wgRCMaxAge'];
 		}
 
 		$settings = json_encode( $settingsarray );
