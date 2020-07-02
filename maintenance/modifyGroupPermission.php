@@ -52,15 +52,15 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 		}
 	}
 
-	private function changeGroup( string $name, array $data, object $mwPermissions ) {
+	private function changeGroup( string $name, array $permData, object $mwPermissions ) {
 		global $wgManageWikiPermissionsPermanentGroups;
 
 		$permList = $mwPermissions->list( $name );
 
-		if ( !in_array( $name, $wgManageWikiPermissionsPermanentGroups ) && ( count( $data['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $data['permissions']['remove'] ) ) ) {
+		if ( !in_array( $name, $wgManageWikiPermissionsPermanentGroups ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
 			$mwPermissions->remove( $name );
 		} else {
-			$mwPermissions->modify( $name, $data );
+			$mwPermissions->modify( $name, $permData );
 		}
 
 		$mwPermissions->commit();
