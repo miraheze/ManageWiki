@@ -24,20 +24,28 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 
 		$mwPermissions = new ManageWikiPermissions( $wgDBname );
 
-		$permData = [
-			'permissions' => [
-				'add' => (array)explode( ',', $this->getOption( 'addperms', '' ) ),
-				'remove' => (array)explode( ',', $this->getOption( 'removeperms', '' ) )
-			],
-			'addgroups' => [
-				'add' => (array)explode( ',', $this->getOption( 'newaddgroups', '' ) ),
-				'remove' => (array)explode( ',', $this->getOption( 'removeaddgroups', '' ) )
-			],
-			'removegroups' => [
-				'add' => (array)explode( ',', $this->getOption( 'newremovegroups', '' ) ),
-				'remove' => (array)explode( ',', $this->getOption( 'removeremovegroups', '' ) )
-			]
-		];
+		$permData = [];
+		
+		if ( $this->getOption( 'addperms', '' ) ) {
+			$permData['permissions']['add'] = (array)explode( ',', $this->getOption( 'addperms', '' ) );
+		}
+		
+		if ( $this->getOption( 'removeperms', '' ) ) {
+			$permData['permissions']['remove'] = (array)explode( ',', $this->getOption( 'removeperms', '' ) );
+		}
+
+		if ( $this->getOption( 'newaddgroups', '' ) ) {
+			$permData['addgroups']['add'] = (array)explode( ',', $this->getOption( 'newaddgroups', '' ) );
+		}
+		if ( $this->getOption( 'removeaddgroups', '' ) ) {
+			$permData['addgroups']['remove'] = (array)explode( ',', $this->getOption( 'removeaddgroups', '' ) );
+		}
+		if ( $this->getOption( 'newremovegroups', '' ) ) {
+			$permData['removegroups']['add'] = (array)explode( ',', $this->getOption( 'newremovegroups', '' ) );
+		}
+		if ( $this->getOption( 'removeremovegroups', '' ) ) {
+			$permData['removegroups']['remove'] = (array)explode( ',', $this->getOption( 'removeremovegroups', '' ) );
+		}
 
 		if ( $this->getOption( 'all' ) ) {
 			$groups = array_keys ( $mwPermissions->list() );
