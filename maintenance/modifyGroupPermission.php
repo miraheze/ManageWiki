@@ -26,16 +26,16 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 
 		$permData = [
 			'permissions' => [
-				'add' => (array)explode( ',', $this->getOption( 'addperms', '' ) ),
-				'remove' => (array)explode( ',', $this->getOption( 'removeperms', '' ) )
+				'add' => (array)$this->getValue( 'addperms' ),
+				'remove' => (array)$this->getValue( 'removeperms' ),
 			],
 			'addgroups' => [
-				'add' => (array)explode( ',', $this->getOption( 'newaddgroups', '' ) ),
-				'remove' => (array)explode( ',', $this->getOption( 'removeaddgroups', '' ) )
+				'add' => (array)$this->getValue( 'newaddgroups' ),
+				'remove' => (array)$this->getValue( 'removeaddgroups' ),
 			],
 			'removegroups' => [
-				'add' => (array)explode( ',', $this->getOption( 'newremovegroups', '' ) ),
-				'remove' => (array)explode( ',', $this->getOption( 'removeremovegroups', '' ) )
+				'add' => (array)$this->getValue( 'newremovegroups' ),
+				'remove' => (array)$this->getValue( 'removeremovegroups' ),
 			]
 		];
 
@@ -43,16 +43,32 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 			$groups = array_keys ( $mwPermissions->list() );
 
 			foreach ( $groups as $group ) {
-				$mwPermissions->modify( $group, $permData );
+				$this->changeGroup( $group, $permData, $mwPermissions );
 			}
 		} elseif ( $this->getArg( 0 ) ) {
-			$mwPermissions->modify($this->getArg(0), $permData);
+			$this->changeGroup( $this->getArg(0), $permData, $mwPermissions );
 		} else {
 			$this->output( 'You must supply either the group as a arg or use --all' );
 		}
+	}
+
+	private function changeGroup( string $name, array $permData, object $mwPermissions ) {
+		global $wgManageWikiPermissionsPermanentGroups;
+
+		$permList = $mwPermissions->list( $name );
+
+		if ( !in_array( $name, $wgManageWikiPermissionsPermanentGroups ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
+			$mwPermissions->remove( $name );
+		} else {
+			$mwPermissions->modify( $name, $permData );
+		}
 
 		$mwPermissions->commit();
+	}
 
+	private function getValue( string $option ) {
+		return $this->getOption( $option, '' ) === '' ?
+			[] : explode( ',', $this->getOption( $option, '' ) );
 	}
 }
 
