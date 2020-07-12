@@ -708,7 +708,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'multiselect',
 				'label-message' => 'managewiki-permissions-autopromote-groups',
 				'options' => $rowsBuilt,
-				'hide-if' => [ '!==', 'wpenable', '1' ],
+				'hide-if' => [ 'OR', ['!==', 'wpenable', '1' ], [ '===', 'wpconds', '|' ] ],
 				'default' => isset( $aPArray[APCOND_INGROUPS] ) ? $aPArray[APCOND_INGROUPS] : [],
 				'disabled' => !$ceMW,
 				'section' => 'autopromote'
