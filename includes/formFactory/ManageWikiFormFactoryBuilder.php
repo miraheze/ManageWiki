@@ -385,7 +385,7 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				$formDescriptor["set-$name"] = [
-					'label' => ( $msgName->exists() ) ? $msgName->text() : $set['name'],
+					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
 					'disabled' => $disabled,
 					'help' => ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'],
 					'cssclass' => 'createwiki-infuse',
