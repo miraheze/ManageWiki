@@ -20,7 +20,7 @@ class ChangeDbCluster extends Maintenance {
 		
 		$this->dbObj = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
-		if ( $this->getOption( 'file' ) ) {
+		if ( (bool)$this->getOption( 'file' ) ) {
 			$file = fopen( $this->getOption( 'file' ), 'r' );
 			if ( !$file ) {
 				$this->fatalError( "Unable to read file, exiting" );
