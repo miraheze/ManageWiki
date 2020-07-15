@@ -16,7 +16,7 @@ class ChangeDbCluster extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgDBname;
+		global $wgCreateWikiDatabase, $wgDBname;
 		
 		$this->dbObj = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
 
