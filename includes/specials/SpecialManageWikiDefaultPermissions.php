@@ -34,7 +34,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$craftedGroups[UserGroupMembership::getGroupName( $group )] = $group;
 		}
 
-		$out->addWikiMsg( 'managewiki-permissions-header' );
+		$out->addWikiMsg( 'managewiki-header-permissions' );
 
 		$groupSelector['groups'] = [
 			'label-message' => 'managewiki-permissions-select',
