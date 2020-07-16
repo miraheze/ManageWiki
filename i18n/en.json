@@ -101,6 +101,7 @@
 	"managewiki-permissions-create": "Create a new user group",
 	"managewiki-permissions-create-submit": "Create Group",
 	"managewiki-permissions-group": "Below you can allow how this user group can assign/unassign other user groups.",
+	"managewiki-permissions-header": "Select a group below that already exists to modify or create a new user group in the box below it!",
 	"managewiki-permissions-removeall": "Can remove from others",
 	"managewiki-permissions-removeself": "Can remove from self",
 	"managewiki-permissions-resetgroups": "Reset all groups to default",
