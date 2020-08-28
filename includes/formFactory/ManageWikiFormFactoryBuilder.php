@@ -610,6 +610,17 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+		foreach ( $groupData['revokePermissions'] as $perm ) {
+			$formDescriptor["right-{$perm}"] = [
+				'type' => 'check',
+				'label' => $perm,
+				'help' => User::getRightDescription( $perm ),
+				'section' => revoked,
+				'default' => false,
+				'disabled' => !$ceMW
+			];
+		}
+
 		$rowsBuilt = [];
 
 		foreach ( $groupData['allGroups'] as $group ) {
