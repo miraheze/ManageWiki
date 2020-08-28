@@ -47,6 +47,7 @@ class ManageWikiPermissions {
 				'permissions' => json_decode( $perm->perm_permissions, true ),
 				'addgroups' => json_decode( $perm->perm_addgroups, true ),
 				'removegroups' => json_decode( $perm->perm_removegroups, true ),
+				'revoke' => json_decode( $perm->perm_revoke, true ),
 				'addself' => json_decode( $perm->perm_addgroupstoself, true ),
 				'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
 				'autopromote' => json_decode( $perm->perm_autopromote, true )
@@ -67,6 +68,7 @@ class ManageWikiPermissions {
 					'permissions' => [],
 					'addgroups' => [],
 					'removegroups' => [],
+					'revoke' => [],
 					'addself' => [],
 					'removeself' => [],
 					'autopromote' => []
@@ -85,6 +87,7 @@ class ManageWikiPermissions {
 			'permissions' => $this->livePermissions[$group]['permissions'] ?? [],
 			'addgroups' => $this->livePermissions[$group]['addgroups'] ?? [],
 			'removegroups' => $this->livePermissions[$group]['removegroups'] ?? [],
+			'revoke' => $this->livePermissions[$group]['revoke'] ?? [],
 			'addself' => $this->livePermissions[$group]['addself'] ?? [],
 			'removeself' => $this->livePermissions[$group]['removeself'] ?? [],
 			'autopromote' => $this->livePermissions[$group]['autopromote'] ?? null
@@ -146,6 +149,7 @@ class ManageWikiPermissions {
 					'perm_permissions' => json_encode( $this->livePermissions[$group]['permissions'] ),
 					'perm_addgroups' => json_encode( $this->livePermissions[$group]['addgroups'] ),
 					'perm_removegroups' => json_encode( $this->livePermissions[$group]['removegroups'] ),
+					'perm_revoke' => json_encode( $this->livePermissions[$group]['revoke'] ),
 					'perm_addgroupstoself' => json_encode( $this->livePermissions[$group]['addself'] ),
 					'perm_removegroupsfromself' => json_encode( $this->livePermissions[$group]['removeself'] ),
 					'perm_autopromote' => is_null( $this->livePermissions[$group]['autopromote'] ) ? null : json_encode( $this->livePermissions[$group]['autopromote'] )
