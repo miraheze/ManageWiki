@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 class ManageWikiPopulatePermissions extends Maintenance {
 	public function execute() {
-		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistGroups, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgDBname, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote;
+		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistGroups, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgRevokePermissions, $wgDBname, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote;
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
@@ -57,6 +57,12 @@ class ManageWikiPopulatePermissions extends Maintenance {
 			}
 		}
 
+		foreach ( $wgRevokePermissions as $group => $revokes ) {
+			if ( !in_array( $group, $blacklist ) ) {
+				$grouparray[$group]['revoke'] = json_encode( $revokes );
+			}
+		}
+
 		foreach ( $wgAutopromote as $group => $promo ) {
 			if ( !in_array( $group, $blacklist ) ) {
 				$grouparray[$group]['autopromote'] = json_encode( $promo );
@@ -86,6 +92,7 @@ class ManageWikiPopulatePermissions extends Maintenance {
 						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
 						'perm_addgroupstoself' => empty( $groupatr['adds'] ) ? json_encode( [] ) : $groupatr['adds'],
 						'perm_removegroupsfromself' => empty( $groupatr['removes'] ) ? json_encode( [] ) : $groupatr['removes'],
+						'perm_revoke' => empty( $groupatr['revokes'] ) ? json_encode( [] ) : $groupatr['revokes'],
 						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote']
 					],
 					__METHOD__
