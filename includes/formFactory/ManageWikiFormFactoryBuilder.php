@@ -563,6 +563,7 @@ class ManageWikiFormFactoryBuilder {
 		$groupData = [
 			'allPermissions' => array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $wgManageWikiPermissionsBlacklistRights[$group] ) ) ? array_merge( $wgManageWikiPermissionsBlacklistRights[$group], $wgManageWikiPermissionsBlacklistRights['any'] ) : $wgManageWikiPermissionsBlacklistRights['any'] ),
 			'assignedPermissions' => $permList['permissions'] ?? [],
+			'revokePermissions' => $permList['revoke'] ?? [],
 			'allGroups' => array_diff( array_keys( $mwPermissions->list() ), $wgManageWikiPermissionsBlacklistGroups, User::getImplicitGroups() ),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $permList['autopromote'] ?? null
@@ -578,6 +579,11 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'info',
 				'default' => wfMessage( 'managewiki-permissions-unassigned' )->text(),
 				'section' => 'unassigned'
+			],
+			'revoked' => [
+				'type' => 'info',
+				'default' => wfMessage( 'managewiki-permissions-revoked' )->text(),
+				'section' => 'revoked'
 			],
 			'group' => [
 				'type' => 'info',
