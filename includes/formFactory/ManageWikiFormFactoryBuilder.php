@@ -353,7 +353,7 @@ class ManageWikiFormFactoryBuilder {
 						}
 						$config = [
 							'type' => 'multiselect',
-							'options' => $rights,
+							'options' => isset( $set['options'] ) ? array_merge( $rights, $set['options'] ) : $rights,
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						if ( !$disabled ) {
