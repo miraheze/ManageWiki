@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
@@ -21,9 +23,7 @@ class ManageWikiAddNamespaces extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgDBname;
-
-		$dbname = $this->getOption( 'default' ) ? 'default' : $wgDBname;
+		$dbname = $this->getOption( 'default' ) ? 'default' : MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'DBname' );
 
 		$mwNamespaces = new ManageWikiNamespaces( $dbname );
 

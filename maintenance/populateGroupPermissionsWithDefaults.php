@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
@@ -7,22 +9,22 @@ if ( $IP === false ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
+	private $config;
+
 	public function __construct() {
 		parent::__construct();
-
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->addOption( 'overwrite', 'This overwrites perms to reset them back to the default.', false, false );
 	}
 
 	public function execute() {
-		global $wgCreateWikiDatabase, $wgDBname, $wmgPrivateWiki, $wgManageWikiPermissionsDefaultPrivateGroup;
-
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+		$dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		if ( $this->getOption( 'overwrite' ) ) {
 			$dbw->delete(
 				'mw_permissions',
 				[
-					'perm_dbname' => $wgDBname
+					'perm_dbname' => $this->config->get( 'DBname' )
 				],
 				__METHOD__
 			);
@@ -34,14 +36,14 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 				'*'
 			],
 			[
-				'perm_dbname' => $wgDBname
+				'perm_dbname' => $this->config->get( 'DBname' )
 			]
 		);
 
 		if ( !$checkRow ) {
-			$mwPermissions = new ManageWikiPermissions( $wgDBname );
+			$mwPermissions = new ManageWikiPermissions( $this->config->get( 'DBname' ) );
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)$this->config->get( 'ManageWikiPermissionsDefaultPrivateGroup' ) );
 
 			foreach ( $defaultGroups as $newgroup ) {
 				$groupData = $mwPermissionsDefault->list( $newgroup );
@@ -60,11 +62,7 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 
 			$mwPermissions->commit();
 
-			if ( $wmgPrivateWiki ) {
-				ManageWikiHooks::onCreateWikiStatePrivate( $wgDBname );
-			}
-
-			$cWJ = new CreateWikiJson( $wgDBname );
+			$cWJ = new CreateWikiJson( $this->config->get( 'DBname' ) );
 			$cWJ->resetWiki();
 		}
 	}

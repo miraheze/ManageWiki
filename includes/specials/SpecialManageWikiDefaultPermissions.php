@@ -3,17 +3,18 @@
 use MediaWiki\MediaWikiServices;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
+	private $config;
+
 	public function __construct() {
 		parent::__construct( 'ManageWikiDefaultPermissions' );
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 	}
 
 	public function execute( $par ) {
-		global $wgDBname, $wgCreateWikiGlobalWiki;
-
 		$this->setHeaders();
 		$out = $this->getOutput();
 
-		if ( !ManageWiki::checkSetup( 'permissions', true, $out ) || !( $wgCreateWikiGlobalWiki == $wgDBname ) ) {
+		if ( !ManageWiki::checkSetup( 'permissions', true, $out ) || !( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) ) {
 			return false;
 		}
 
@@ -70,27 +71,24 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitResetForm( $formData ) {
-		global $wgDBname, $cwPrivate, $wgCreateWikiDatabase;
-
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+		$dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		$dbw->delete(
 			'mw_permissions',
 			[
-				'perm_dbname' => $wgDBname
+				'perm_dbname' => $this->config->get( 'DBname' )
 			],
 			__METHOD__
 		);
 
-		ManageWikiHooks::onCreateWikiCreation( $wgDBname, $cwPrivate );
+		$cwConfig = new GlobalVarConfig( 'wc' );
+		ManageWikiHooks::onCreateWikiCreation( $this->config->get( 'DBname' ), $cwConfig->get( 'Private' ) );
 
 		return true;
 	}
 
 	public static function validateNewGroupName( $newGroup, $nullForm ) {
-		global $wgManageWikiPermissionsBlacklistGroups;
-
-		if ( in_array( $newGroup, $wgManageWikiPermissionsBlacklistGroups ) ) {
+		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsBlacklistGroups' ) ) ) {
 			return 'Blacklisted Group.';
 		}
 
@@ -98,13 +96,11 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function buildGroupView( $group ) {
-		global $wgCreateWikiGlobalWiki;
-
 		$out = $this->getOutput();
 
 		$out->addModules( 'ext.createwiki.oouiform' );
 
-		$remoteWiki = RemoteWiki::newFromName( $wgCreateWikiGlobalWiki );
+		$remoteWiki = RemoteWiki::newFromName( $this->config->get( 'CreateWikiGlobalWiki' ) );
 		if ( $remoteWiki == null ) {
 			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;

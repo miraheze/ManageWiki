@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
@@ -8,18 +10,18 @@ require_once "$IP/maintenance/Maintenance.php";
 
 class ManageWikiPopulatePermissions extends Maintenance {
 	public function execute() {
-		global $wgCreateWikiDatabase, $wgManageWikiPermissionsBlacklistGroups, $wgGroupPermissions, $wgAddGroups, $wgRemoveGroups, $wgDBname, $wgGroupsAddToSelf, $wgGroupsRemoveFromSelf, $wgAutopromote;
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
 
-		$blacklist = $wgManageWikiPermissionsBlacklistGroups;
+		$blacklist = $config->get( 'ManageWikiPermissionsBlacklistGroups' );
 
 		$grouparray = [];
 
-		foreach ( $wgGroupPermissions as $group => $perm ) {
+		foreach ( $config->get( 'GroupPermissions' ) as $group => $perm ) {
 			$permsarray = [];
 
 			if ( !in_array( $group, $blacklist) ) {
@@ -33,44 +35,44 @@ class ManageWikiPopulatePermissions extends Maintenance {
 			}
 		}
 
-		foreach ( $wgAddGroups as $group => $add ) {
+		foreach ( $config->get( 'AddGroups' ) as $group => $add ) {
 			if ( !in_array( $group, $blacklist ) ) {
 				$grouparray[$group]['add'] = json_encode( $add );
 			}
 		}
 
-		foreach ( $wgRemoveGroups as $group => $remove ) {
+		foreach ( $config->get( 'RemoveGroups' ) as $group => $remove ) {
 			if ( !in_array( $group, $blacklist ) ) {
 				$grouparray[$group]['remove'] = json_encode( $remove );
 			}
 		}
 
-		foreach ( $wgGroupsAddToSelf as $group => $adds ) {
+		foreach ( $config->get( 'GroupsAddToSelf' ) as $group => $adds ) {
 			if ( !in_array( $group, $blacklist ) ) {
 				$grouparray[$group]['addself'] = json_encode( $adds );
 			}
 		}
 
-		foreach ( $wgGroupsRemoveFromSelf as $group => $removes ) {
+		foreach ( $config->get( 'GroupsRemoveFromSelf' ) as $group => $removes ) {
 			if ( !in_array( $group, $blacklist ) ) {
 				$grouparray[$group]['removeself'] = json_encode( $removes );
 			}
 		}
 
-		foreach ( $wgAutopromote as $group => $promo ) {
+		foreach ( $config->get( 'Autopromote' ) as $group => $promo ) {
 			if ( !in_array( $group, $blacklist ) ) {
 				$grouparray[$group]['autopromote'] = json_encode( $promo );
 			}
 		}
 
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+		$dbw = wfGetDB( DB_MASTER, [], $config->get( 'CreateWikiDatabase' ) );
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
 			$check = $dbw->selectRow(
 				'mw_permissions',
 				[ 'perm_group' ],
 				[
-					'perm_dbname' => $wgDBname,
+					'perm_dbname' => $config->get( 'DBname' ),
 					'perm_group' => $groupname
 				],
 				__METHOD__
@@ -79,7 +81,7 @@ class ManageWikiPopulatePermissions extends Maintenance {
 			if ( !$check ) {
 				$dbw->insert( 'mw_permissions',
 					[
-						'perm_dbname' => $wgDBname,
+						'perm_dbname' => $config->get( 'DBname' ),
 						'perm_group' => $groupname,
 						'perm_permissions' => $groupatr['perms'],
 						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],

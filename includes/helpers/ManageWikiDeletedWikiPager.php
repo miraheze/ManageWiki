@@ -1,10 +1,12 @@
 <?php
+
+use MediaWiki\MediaWikiServices;
+
 class ManageWikiDeletedWikiPager extends TablePager {
 	public function __construct() {
-		global $wgCreateWikiDatabase;
-
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		parent::__construct( $this->getContext() );
-		$this->mDb = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+		$this->mDb = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
 	}
 
 	public function getFieldNames() {

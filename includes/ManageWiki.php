@@ -4,12 +4,9 @@ use MediaWiki\MediaWikiServices;
 
 class ManageWiki {
 	public static function checkSetup( string $module, bool $verbose = false, $out = false ) {
-		global $wgManageWiki;
-
 		// Checks ManageWiki module is enabled before doing anything
 		// $verbose means output an error. Otherwise return true/false.
-
-		if ( !$wgManageWiki[$module] ) {
+		if ( !MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki')->get( 'ManageWiki')[$module] ) {
 			if ( $verbose && $out ) {
 				$out->addWikiMsg( 'managewiki-disabled', $module );
 			}
@@ -21,9 +18,7 @@ class ManageWiki {
 	}
 
 	public static function listModules() {
-		global $wgManageWiki;
-
-		return array_keys( $wgManageWiki, true );
+		return array_keys( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki')->get( 'ManageWiki'), true );
 	}
 
 	public static function checkPermission( RemoteWiki $rm, User $user, string $perm = "" ) {
@@ -94,15 +89,15 @@ class ManageWiki {
 	}
 
 	public static function namespaceID( string $namespace ) {
-		global $wgCreateWikiDatabase, $wgDBname;
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki');
 
-		$dbr = wfGetDB( DB_REPLICA, [], $wgCreateWikiDatabase );
+		$dbr = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
 
 		$nsID = ( $namespace == '' ) ? false : $dbr->selectRow(
 			'mw_namespaces',
 			'ns_namespace_id',
 			[
-				'ns_dbname' => $wgDBname,
+				'ns_dbname' => $config->get( 'DBname' ),
 				'ns_namespace_id' => $namespace
 			]
 		)->ns_namespace_id;
@@ -112,7 +107,7 @@ class ManageWiki {
 				'mw_namespaces',
 				'ns_namespace_id',
 				[
-					'ns_dbname' => $wgDBname,
+					'ns_dbname' => $config->get( 'DBname' ),
 					'ns_namespace_id >= 3000'
 				],
 				__METHOD__,

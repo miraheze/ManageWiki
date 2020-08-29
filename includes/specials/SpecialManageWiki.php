@@ -3,23 +3,24 @@
 use MediaWiki\MediaWikiServices;
 
 class SpecialManageWiki extends SpecialPage {
+	private $config;
+
 	public function __construct() {
 		parent::__construct( 'ManageWiki' );
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 	}
 
 	public function execute( $par ) {
-		global $wgManageWikiHelpUrl, $wgCreateWikiGlobalWiki, $wgDBname, $wgManageWiki;
-
 		$par = explode( '/', $par, 3 );
 
 		$out = $this->getOutput();
 		$this->setHeaders();
 
-		if ( $wgManageWikiHelpUrl ) {
-			$out->addHelpLink( $wgManageWikiHelpUrl, true );
+		if ( $this->config->get( 'ManageWikiHelpUrl' ) ) {
+			$out->addHelpLink( $this->config->get( 'ManageWikiHelpUrl' ), true );
 		}
 
-		if ( in_array( $par[0], array_keys( $wgManageWiki ) ) ) {
+		if ( in_array( $par[0], array_keys( $this->config->get( 'ManageWiki' ) ) ) ) {
 			$module = $par[0];
 		} else {
 			$module = 'core';
@@ -33,15 +34,15 @@ class SpecialManageWiki extends SpecialPage {
 			return false;
 		}
 
-		if ( $wgCreateWikiGlobalWiki !== $wgDBname ) {
-			$this->showWikiForm( $wgDBname, $module, $additional );
+		if ( $this->config->get( 'CreateWikiGlobalWiki' ) !== $this->config->get( 'DBname' ) ) {
+			$this->showWikiForm( $this->config->get( 'DBname'), $module, $additional );
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
-			$dbName = $par[1] ?? $wgDBname;
+			$dbName = $par[1] ?? $this->config->get( 'DBname' );
 			$this->showWikiForm( $dbName, 'core', '' );
 		} else {
-			$this->showWikiForm( $wgDBname, $module, $additional );
+			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional );
 		}
 	}
 

@@ -3,10 +3,12 @@
 use MediaWiki\MediaWikiServices;
 
 class ManageWikiHooks {
-	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
-		global $wgCreateWikiDatabase, $wgDBname;
+	private static function getConfig( string $var ) {
+		return MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( $var );
+	}
 
-		if ( $wgCreateWikiDatabase === $wgDBname ) {
+	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
+		if ( self::getConfig( 'CreateWikiDatabase' ) === self::getConfig( 'DBname' ) ) {
 			$updater->addExtensionTable( 'mw_namespaces',
 					__DIR__ . '/../sql/mw_namespaces.sql' );
 			$updater->addExtensionTable( 'mw_permissions',
@@ -37,8 +39,6 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiJsonBuilder( string $wiki, MaintainableDBConnRef $dbr, array &$jsonArray ) {
-		global $wgManageWikiExtensions, $wgManageWikiPermissionsAdditionalRights, $wgManageWikiPermissionsAdditionalAddGroups, $wgManageWikiPermissionsAdditionalRemoveGroups, $wgManageWikiNamespacesAdditional;
-
 		$setObject = $dbr->selectRow(
 			'mw_settings',
 			'*',
@@ -55,7 +55,7 @@ class ManageWikiHooks {
 		// Let's create an array of variables so we can easily loop these to enable
 		if ( ManageWiki::checkSetup( 'extensions' ) ) {
 			foreach ( json_decode( $setObject->s_extensions, true ) as $ext ) {
-				$jsonArray['extensions'][] = $wgManageWikiExtensions[$ext]['var'];
+				$jsonArray['extensions'][] = self::getConfig( 'ManageWikiExtensions' )[$ext]['var'];
 			}
 		}
 
@@ -94,8 +94,8 @@ class ManageWikiHooks {
 				$nsAdditional = json_decode( $ns->ns_additional, true );
 
 				foreach ( (array)$nsAdditional as $var => $val ) {
-					if ( $val && isset( $wgManageWikiNamespacesAdditional[$var] ) ) {
-						if ( $wgManageWikiNamespacesAdditional[$var]['vestyle'] ) {
+					if ( $val && isset( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var] ) ) {
+						if ( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var]['vestyle'] ) {
 							$jsonArray['settings'][$var][$ns->ns_namespace_id] = true;
 						} else {
 							$jsonArray['settings'][$var][] = $ns->ns_namespace_id;
@@ -119,7 +119,7 @@ class ManageWikiHooks {
 			foreach ( $permObjects as $perm ) {
 				$addPerms =[];
 
-				foreach ( ( $wgManageWikiPermissionsAdditionalRights[$perm->perm_group] ?? [] ) as $right => $bool ) {
+				foreach ( ( self::getConfig( 'ManageWikiPermissionsAdditionalRights' )[$perm->perm_group] ?? [] ) as $right => $bool ) {
 					if ( $bool ) {
 						$addPerms[] = $right;
 					}
@@ -127,20 +127,20 @@ class ManageWikiHooks {
 
 				$jsonArray['permissions'][$perm->perm_group] = [
 					'permissions' => array_merge( json_decode( $perm->perm_permissions, true ), $addPerms ),
-					'addgroups' => array_merge( json_decode( $perm->perm_addgroups, true ), $wgManageWikiPermissionsAdditionalAddGroups[$perm->perm_group] ?? [] ),
-					'removegroups' => array_merge( json_decode( $perm->perm_removegroups, true ), $wgManageWikiPermissionsAdditionalRemoveGroups[$perm->perm_group] ?? [] ),
+					'addgroups' => array_merge( json_decode( $perm->perm_addgroups, true ), self::getConfig( 'ManageWikiPermissionsAdditionalAddGroups' )[$perm->perm_group] ?? [] ),
+					'removegroups' => array_merge( json_decode( $perm->perm_removegroups, true ), self::getConfig( 'ManageWikiPermissionsAdditionalRemoveGroups' )[$perm->perm_group] ?? [] ),
 					'addself' => json_decode( $perm->perm_addgroupstoself, true ),
 					'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
 					'autopromote' => json_decode( $perm->perm_autopromote, true )
 				];
 			}
 
-			$diffKeys = array_keys( array_diff_key( $wgManageWikiPermissionsAdditionalRights, $jsonArray['permissions'] ) );
+			$diffKeys = array_keys( array_diff_key( self::getConfig( 'ManageWikiPermissionsAdditionalRights' ), $jsonArray['permissions'] ) );
 
 			foreach ( $diffKeys as $missingKey ) {
 				$missingPermissions = [];
 
-				foreach ( $wgManageWikiPermissionsAdditionalRights[$missingKey] as $right => $bool ) {
+				foreach ( self::getConfig( 'ManageWikiPermissionsAdditionalRights' )[$missingKey] as $right => $bool ) {
 					if ( $bool ) {
 						$missingPermissions[] = $right;
 					}
@@ -148,8 +148,8 @@ class ManageWikiHooks {
 
 				$jsonArray['permissions'][$missingKey] = [
 					'permissions' => $missingPermissions,
-					'addgroups' => $wgManageWikiPermissionsAdditionalAddGroups[$missingKey] ?? [],
-					'removegroups' => $wgManageWikiPermissionsAdditionalRemoveGroups[$missingKey] ?? [],
+					'addgroups' => self::getConfig( 'ManageWikiPermissionsAdditionalAddGroups' )[$missingKey] ?? [],
+					'removegroups' => self::getConfig( 'ManageWikiPermissionsAdditionalRemoveGroups' )[$missingKey] ?? [],
 					'addself' => [],
 					'removeself' => [],
 					'autopromote' => []
@@ -159,13 +159,10 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiCreation( $dbname, $private ) {
-		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase, $wgManageWikiExtensions, $wgManageWikiExtensionsDefault, $wgCanonicalNamespaceNames, $wgNamespaceAliases,
-			$wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages, $wgContentNamespaces, $wgNamespaceProtection;
-
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)$wgManageWikiPermissionsDefaultPrivateGroup );
+			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) );
 
 			foreach ( $defaultGroups as $newgroup ) {
 				$groupData = $mwPermissionsDefault->list( $newgroup );
@@ -190,9 +187,9 @@ class ManageWikiHooks {
 
 		}
 
-		if ( $wgManageWikiExtensions && $wgManageWikiExtensionsDefault ) {
+		if ( self::getConfig( 'ManageWikiExtensions' ) && self::getConfig( 'ManageWikiExtensionsDefault' ) ) {
 			$mwExt = new ManageWikiExtensions( $dbname );
-			$mwExt->add( $wgManageWikiExtensionsDefault );
+			$mwExt->add( self::getConfig( 'ManageWikiExtensionsDefault' ) );
 			$mwExt->commit();
 		}
 
@@ -223,13 +220,11 @@ class ManageWikiHooks {
 	}
 
 	public static function onCreateWikiStatePrivate( $dbname ) {
-		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
-
-		if ( ManageWiki::checkSetup( 'permissions' ) && $wgManageWikiPermissionsDefaultPrivateGroup ) {
+		if ( ManageWiki::checkSetup( 'permissions' ) && self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
 
-			$defaultPrivate = $mwPermissionsDefault->list( $wgManageWikiPermissionsDefaultPrivateGroup );
+			$defaultPrivate = $mwPermissionsDefault->list( self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) );
 			$privateArray = [];
 
 			foreach ( $defaultPrivate as $name => $value ) {
@@ -240,22 +235,20 @@ class ManageWikiHooks {
 				}
 			}
 
-			$mwPermissions->modify( $wgManageWikiPermissionsDefaultPrivateGroup, $privateArray );
-			$mwPermissions->modify( 'sysop', [ 'addgroups' => [ 'add' => [ $wgManageWikiPermissionsDefaultPrivateGroup ] ], 'removegroups' => [ 'add' => [ $wgManageWikiPermissionsDefaultPrivateGroup ] ] ] );
+			$mwPermissions->modify( self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ), $privateArray );
+			$mwPermissions->modify( 'sysop', [ 'addgroups' => [ 'add' => [ self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ] ], 'removegroups' => [ 'add' => [ self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ] ] ] );
 			$mwPermissions->commit();
 		}
 	}
 
 	public static function onCreateWikiStatePublic( $dbname ) {
-		global $wgManageWikiPermissionsDefaultPrivateGroup, $wgCreateWikiDatabase;
-
-		if ( ManageWiki::checkSetup( 'permissions' ) && $wgManageWikiPermissionsDefaultPrivateGroup ) {
+		if ( ManageWiki::checkSetup( 'permissions' ) && self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ) {
 			$mwPermissions = new ManageWikiPermissions( $dbname );
 
-			$mwPermissions->remove( $wgManageWikiPermissionsDefaultPrivateGroup );
+			$mwPermissions->remove( self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) );
 
 			foreach ( array_keys( $mwPermissions->list() ) as $group ) {
-				$mwPermissions->modify( $group, [ 'addgroups' => [ 'remove' => [ $wgManageWikiPermissionsDefaultPrivateGroup ] ], 'removegroups' => [ 'remove' => [ $wgManageWikiPermissionsDefaultPrivateGroup ] ] ] );
+				$mwPermissions->modify( $group, [ 'addgroups' => [ 'remove' => [ self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ] ], 'removegroups' => [ 'remove' => [ self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ] ] ] );
 			}
 
 			$mwPermissions->commit();
@@ -263,14 +256,11 @@ class ManageWikiHooks {
 	}
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {
-		global $wgManageWikiForceSidebarLinks, $wgManageWiki;
-
 		$append = '';
-
 		$user = $skin->getUser();
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		if ( !$permissionManager->userHasRight( $user, 'managewiki' ) ) {
-			if ( !$wgManageWikiForceSidebarLinks && !$user->getOption( 'managewikisidebar', 0 ) ) {
+			if ( !self::getConfig( 'ManageWikiForceSidebarLinks' ) && !$user->getOption( 'managewikisidebar', 0 ) ) {
 				return;
 			}
 			$append = '-view';

@@ -6,19 +6,25 @@ if ( $IP === false ) {
 }
 require_once "$IP/maintenance/Maintenance.php";
 
+use MediaWiki\MediaWikiServices;
 use Wikimedia\AtEase\AtEase;
 
 class ManageWikiPopulateNamespaces extends Maintenance {
-	public function execute() {
-		global $wgCreateWikiDatabase, $wgDBname, $wgCanonicalNamespaceNames, $wgNamespaceAliases;
+	private $config;
 
+	public function __construct() {
+		parent::__construct();
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+	}
+
+	public function execute() {
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
 
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+		$dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
 
-		$namespaces = $wgCanonicalNamespaceNames + [ 0 => '<Main>' ];
+		$namespaces = $this->config->get( 'CanonicalNamespaceNames' ) + [ 0 => '<Main>' ];
 
 		AtEase::suppressWarnings();
 
@@ -28,7 +34,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 				continue;
 			}
 
-			$matchedNSKeys = array_keys( $wgNamespaceAliases, $id );
+			$matchedNSKeys = array_keys( $this->config->get( 'NamespaceAliases' ), $id );
 			$nsAliases = [];
 
 			foreach ( $matchedNSKeys as $o => $n ) {
@@ -42,7 +48,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 					'ns_namespace_id'
 				],
 				[
-					'ns_dbname' => $wgDBname
+					'ns_dbname' => $this->config->get( 'DBname' )
 				],
 				__METHOD__
 			);
@@ -63,20 +69,17 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 	}
 	
 	public function insertNamespace( $dbw, $id, $name, $nsAliases ) {
-		global $wgDBname, $wgNamespacesToBeSearchedDefault, $wgNamespacesWithSubpages,
-			$wgContentNamespaces, $wgNamespaceProtection, $wgNamespaceContentModels;
-
 		$dbw->insert(
 			'mw_namespaces',
 			[
-				'ns_dbname' => $wgDBname,
+				'ns_dbname' => $this->config->get( 'DBname' ),
 				'ns_namespace_id' => (int)$id,
 				'ns_namespace_name' => (string)$name,
-				'ns_searchable' => (int)$wgNamespacesToBeSearchedDefault[$id],
-				'ns_subpages' => (int)$wgNamespacesWithSubpages[$id],
-				'ns_content' => (int)$wgContentNamespaces[$id],
-				'ns_content_model' => isset( $wgNamespaceContentModels[$id] ) ? (string)$wgNamespaceContentModels[$id] : 'wikitext',
-				'ns_protection' => ( is_array( $wgNamespaceProtection[$id] ) ) ? (string)$wgNamespaceProtection[$id][0] : (string)$wgNamespaceProtection[$id],
+				'ns_searchable' => (int)$this->config->get( 'NamespacesToBeSearchedDefault' )[$id],
+				'ns_subpages' => (int)$this->config->get( 'NamespacesWithSubpages' )[$id],
+				'ns_content' => (int)$this->config->get( 'ContentNamespaces' )[$id],
+				'ns_content_model' => isset( $this->config->get( 'NamespaceContentModels' )[$id] ) ? (string)$this->config->get( 'NamespaceContentModels' )[$id] : 'wikitext',
+				'ns_protection' => ( is_array( $this->config->get( 'NamespaceProtection' )[$id] ) ) ? (string)$this->config->get( 'NamespaceProtection' )[$id][0] : (string)$this->config->get( 'NamespaceProtection' )[$id],
 				'ns_aliases' => (string)json_encode( $nsAliases ),
 				'ns_core' => (int)( $id < 1000 ),
 				'ns_additional' => (string)json_encode( [] ),

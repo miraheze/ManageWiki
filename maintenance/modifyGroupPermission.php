@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
@@ -20,9 +22,7 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgCreateWikiDatabase, $wgDBname;
-
-		$mwPermissions = new ManageWikiPermissions( $wgDBname );
+		$mwPermissions = new ManageWikiPermissions( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'DBname' ) );
 
 		$permData = [
 			'permissions' => [

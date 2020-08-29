@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 
 class ManageWikiInstaller {
@@ -46,9 +47,9 @@ class ManageWikiInstaller {
 	}
 
 	private static function files( string $dbname, array $data ) {
-		global $wgUploadDirectory;
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 
-		$baseloc = $wgUploadDirectory . $dbname;
+		$baseloc = $config->get( 'UploadDirectory' ) . $dbname;
 
 		foreach ( $data as $location => $source ) {
 			if ( substr( $location, -1 ) == '/' ) {

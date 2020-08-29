@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
@@ -14,9 +16,7 @@ class ManageWikiToggleExtension extends Maintenance {
 	}
 
 	public function execute() {
-		global $wgDBname;
-
-		$mwExt = new ManageWikiExtensions( $wgDBname );
+		$mwExt = new ManageWikiExtensions( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'DBname' ) );
 
 		$ext = $this->getArg( 0 );
 

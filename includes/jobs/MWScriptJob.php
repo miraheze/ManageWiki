@@ -7,13 +7,13 @@ class MWScriptJob extends Job {
 
 	public function __construct( $dbname, $params ) {
 		parent::__construct( 'mwScript', $params );
-		$this->$dbname = $dbname;
+		$this->dbname = $dbname;
 	}
 
 	public function run() {
 		$scriptParams = [
 			'--wiki',
-			$this->$dbname
+			$this->dbname
 		];
 
 		foreach ( (array)$this->params['options'] as $name => $val ) {

@@ -7,7 +7,7 @@ class ManageWikiFormFactory {
 		bool $ceMW,
 		IContextSource $context,
 		RemoteWiki $wiki,
-		MaintainableDBConnRef $dbw,
+		Config $config,
 		string $special = ''
 	) {
 		OutputPage::setupOOUI(
@@ -15,7 +15,7 @@ class ManageWikiFormFactory {
 			$context->getLanguage()->getDir()
 		);
 
-		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $dbw );
+		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $config );
 	}
 
 
@@ -23,25 +23,24 @@ class ManageWikiFormFactory {
 		string $wiki,
 		RemoteWiki $remoteWiki,
 		IContextSource $context,
+		Config $config,
 		string $module,
 		string $special = '',
 		$formClass = CreateWikiOOUIForm::class
 	) {
-		global $wgCreateWikiDatabase;
-
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+		$dbw = wfGetDB( DB_MASTER, [], $config->get( 'CreateWikiDatabase' ) );
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
 
-		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $dbw, $special );
+		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
 		$htmlForm->setId( 'mw-baseform-' . $module );
 		$htmlForm->suppressDefaultSubmit();
 		$htmlForm->setSubmitCallback(
-			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special, $dbw, $wiki ) {
-				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $special );
+			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special, $dbw, $wiki, $config ) {
+				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $config );
 			}
 		);
 
@@ -55,8 +54,8 @@ class ManageWikiFormFactory {
 		bool $ceMW,
 		string $dbName,
 		RemoteWiki $wiki,
-		MaintainableDBConnRef $dbw,
-		string $special = ''
+		DBConnRef $dbw,
+		Config $config
 	) {
 		$context = $form->getContext();
 		$out = $context->getOutput();
@@ -65,7 +64,7 @@ class ManageWikiFormFactory {
 			throw new MWException( "User '{$context->getUser()->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
 		}
 
-		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $special );
+		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $config );
 
 		if ( !empty( $mwReturn ) ) {
 			$errorOut = [];

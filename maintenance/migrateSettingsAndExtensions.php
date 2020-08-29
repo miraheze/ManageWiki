@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
@@ -7,14 +9,15 @@ if ( $IP === false ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 class ManageWikiMigrateSettingsAndExtensions extends Maintenance {
+	private $config;
+
 	public function __construct() {
 		parent::__construct();
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 	}
 
 	public function execute() {
-		global $wgCreateWikiDatabase, $wgManageWikiExtensions;
-
-		$dbw = wfGetDB( DB_MASTER, [], $wgCreateWikiDatabase );
+		$dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		$res = $dbw->select(
 			'cw_wikis',
@@ -30,7 +33,7 @@ class ManageWikiMigrateSettingsAndExtensions extends Maintenance {
 			$extensions = [];
 
 			foreach ( $extensionsArray as $ext ) {
-				if ( isset( $wgManageWikiExtensions[$ext] ) ) {
+				if ( isset( $this->config->get( 'ManageWikiExtensions' )[$ext] ) ) {
 					$extensions[] = $ext;
 				}
 			}
