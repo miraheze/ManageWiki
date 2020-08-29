@@ -14,6 +14,8 @@ class ManageWikiHooks {
 			$updater->addExtensionTable( 'mw_settings',
 					__DIR__ . '/../sql/mw_settings.sql' );
 			$updater->modifyExtensionTable( 'mw_permissions',
+					__DIR__ . '/../sql/patches/patch-revoke-permissions.sql' );
+			$updater->modifyExtensionTable( 'mw_permissions',
 					__DIR__ . '/../sql/patches/patch-groups-self.sql' );
 			$updater->modifyExtensionTable( 'mw_permissions',
 					__DIR__ . '/../sql/patches/patch-autopromote.sql' );
