@@ -615,7 +615,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'check',
 				'label' => $perm,
 				'help' => User::getRightDescription( $perm ),
-				'section' => revoked,
+				'section' => 'revoked',
 				'default' => false,
 				'disabled' => !$ceMW
 			];
