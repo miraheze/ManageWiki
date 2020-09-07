@@ -124,7 +124,7 @@
 	"namespaces-namespacetalk": "Espacio de nombres de discusión",
 	"namespaces-protection": "¿Qué permisos de usuario deberían ser necesarios para editar este espacio de nombres?",
 	"namespaces-search": "¿Debe este espacio de nombres ser buscable de forma predeterminada?",
-	"namespaces-subpages": "¿Debe este espacio de nombres permitir subpáginas?",
+	"namespaces-subpages": "¿Se deben permitir las subpáginas en este espacio de nombres?",
 	"permissions-assigned": "Permisos asignados:",
 	"permissions-autopromote": "Autopromoción",
 	"permissions-unassigned": "Permisos sin asignar",
