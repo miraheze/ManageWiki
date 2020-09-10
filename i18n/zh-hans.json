@@ -80,7 +80,7 @@
 	"managewiki-permissions-group": "此处可以设定该用户组将用户加入或移除用户组的权限",
 	"managewiki-permissions-resetgroups": "重置所有用户组至默认值",
 	"managewiki-permissions-select": "选择要编辑的现有组",
-	"managewiki-permissions-unassigned": "以下用户权限目前未赋予给该用户组。",
+	"managewiki-permissions-unassigned": "以下用户权限目前未赋予该用户组。",
 	"managewiki-requires": "需求",
 	"managewiki-success": "设置已成功更改。",
 	"managewiki-extension-name": "[$1 $2]",
