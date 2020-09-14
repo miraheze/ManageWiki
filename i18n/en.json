@@ -123,7 +123,7 @@
 	"managewiki-toggle-forcesidebar": "Force the display of ManageWiki links in the sidebar.",
 	"namespaces-aliases": "Enter on a new line all undefined namespaces which should redirect to this one",
 	"namespaces-content": "Does this namespace contain main wiki material (content)?",
-	"namespaces-contentmodel": "What should this namespaces' content model be?",
+	"namespaces-contentmodel": "What should this namespace's content model be?",
 	"namespaces-delete": "Delete",
 	"namespaces-delete-checkbox": "Checking this box will cause this namespace to be deleted",
 	"namespaces-handling": "Submit",
