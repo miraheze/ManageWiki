@@ -115,7 +115,7 @@ class SpecialManageWiki extends SpecialPage {
 				return false;
 			}
 			$formFactory = new ManageWikiFormFactory();
-			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $module, strtolower( $special ) );
+			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ) );
 			$sectionTitles = $htmlForm->getFormSections();
 
 			$sectTabs = [];
