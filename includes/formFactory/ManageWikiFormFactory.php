@@ -40,7 +40,7 @@ class ManageWikiFormFactory {
 		$htmlForm->suppressDefaultSubmit();
 		$htmlForm->setSubmitCallback(
 			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special, $dbw, $wiki, $config ) {
-				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $config );
+				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $config, $special );
 			}
 		);
 
@@ -55,7 +55,8 @@ class ManageWikiFormFactory {
 		string $dbName,
 		RemoteWiki $wiki,
 		DBConnRef $dbw,
-		Config $config
+		Config $config,
+		string $special = ''
 	) {
 		$context = $form->getContext();
 		$out = $context->getOutput();
@@ -64,7 +65,7 @@ class ManageWikiFormFactory {
 			throw new MWException( "User '{$context->getUser()->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
 		}
 
-		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $config );
+		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $config, $special );
 
 		if ( !empty( $mwReturn ) ) {
 			$errorOut = [];
