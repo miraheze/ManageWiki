@@ -234,16 +234,16 @@ class ManageWikiFormFactoryBuilder {
 			if ( $add ) {
 				switch ( $set['type'] ) {
 					case 'databases':
-						$config = [
+						$configs = [
 							'type' => 'select',
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						foreach ( $config->get( 'LocalDatabases' ) as $db ) {
-							$config['options'][$db] = $db;
+							$configs['options'][$db] = $db;
 						}
 						break;
 					case 'integer':
-						$config = [
+						$configs = [
 							'type' => 'int',
 							'min' => $set['minint'],
 							'max' => $set['maxint'],
@@ -251,40 +251,40 @@ class ManageWikiFormFactoryBuilder {
 						];
 						break;
 					case 'language': //test
-						$config = [
+						$configs = [
 							'type' => 'language',
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
 					case 'list':
-						$config = [
+						$configs = [
 							'type' => 'select',
 							'options' => $set['options'],
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
 					case 'list-multi':
-						$config = [
+						$configs = [
 							'type' => 'multiselect',
 							'options' => $set['options'],
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						if ( !$disabled ) {
-							$config['dropdown'] = true;
+							$configs['dropdown'] = true;
 						}
 						break;
 					case 'list-multi-bool':
-						$config = [
+						$configs = [
 							'type' => 'multiselect',
 							'options' => $set['options'],
 							'default' => ( isset( $setList[$name] ) && !is_null( $setList[$name] ) ) ? array_keys( $setList[$name], true ) : array_keys( $set['overridedefault'], true )
 						];
 						if ( !$disabled ) {
-							$config['dropdown'] = true;
+							$configs['dropdown'] = true;
 						}
 						break;
 					case 'matrix':
-						$config = [
+						$configs = [
 							'type' => 'checkmatrix',
 							'rows' => $set['rows'],
 							'columns' => $set['cols'],
@@ -292,33 +292,33 @@ class ManageWikiFormFactoryBuilder {
 						];
 						break;
 					case 'namespace':
-						$config = [
+						$configs = [
 							'type' => 'namespaceselect',
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
 					case 'namespaces':
-						$config = [
+						$configs = [
 							'type' => 'namespacesmultiselect',
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
 					case 'timezone':
-						$config = [
+						$configs = [
 							'type' => 'select',
 							'options' => ManageWiki::getTimezoneList(),
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
 					case 'user':
-						$config = [
+						$configs = [
 							'type' => 'user',
 							'exists' => true,
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
 					case 'users':
-						$config = [
+						$configs = [
 							'type' => 'usersmultiselect',
 							'exists' => true,
 							'default' => $setList[$name] ?? $set['overridedefault']
@@ -329,13 +329,13 @@ class ManageWikiFormFactoryBuilder {
 						foreach( $groupList as $group ) {
 							$groups[UserGroupMembership::getGroupName( $group )] = $group;
 						}
-						$config = [
+						$configs = [
 							'type' => 'multiselect',
 							'options' => isset( $set['options'] ) ? array_merge( $groups, $set['options'] ) : $groups,
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						if ( !$disabled ) {
-							$config['dropdown'] = true;
+							$configs['dropdown'] = true;
 						}
 						break;
 					case 'userrights':
@@ -343,17 +343,17 @@ class ManageWikiFormFactoryBuilder {
 						foreach( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions() as $right ) {
 							$rights[$right] = $right;
 						}
-						$config = [
+						$configs = [
 							'type' => 'multiselect',
 							'options' => isset( $set['options'] ) ? array_merge( $rights, $set['options'] ) : $rights,
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						if ( !$disabled ) {
-							$config['dropdown'] = true;
+							$configs['dropdown'] = true;
 						}
 						break;
 					case 'wikipage':
-						$config = [
+						$configs = [
 							'type' => 'title',
 							'exists' => true,
 							'default' => $setList[$name] ?? $set['overridedefault'],
@@ -361,7 +361,7 @@ class ManageWikiFormFactoryBuilder {
 						];
 						break;
 					case 'wikipages':
-						$config = [
+						$configs = [
 							'type' => 'titlesmultiselect',
 							'exists' => true,
 							'default' => $setList[$name] ?? $set['overridedefault'],
@@ -369,7 +369,7 @@ class ManageWikiFormFactoryBuilder {
 						];
 						break;
 					default:
-						$config = [
+						$configs = [
 							'type' => $set['type'],
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
@@ -382,7 +382,7 @@ class ManageWikiFormFactoryBuilder {
 					'help' => ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'],
 					'cssclass' => 'createwiki-infuse',
 					'section' => ( isset( $set['section'] ) ) ? $set['section'] : 'other'
-				] + $config;
+				] + $configs;
 			}
 		}
 
