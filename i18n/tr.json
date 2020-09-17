@@ -3,7 +3,8 @@
 		"authors": [
 			"BaRaN6161 TURK",
 			"Dual",
-			"Hedda"
+			"Hedda",
+			"MuratTheTurkish"
 		]
 	},
 	"action-managewiki": "viki ayarlarını yönet",
@@ -121,7 +122,7 @@
 	"managewiki-toggle-forcesidebar": "Kenar çubuğunda ManageWiki bağlantılarının görüntülenmesini zorlayın.",
 	"namespaces-aliases": "Bu alana yönlendirmesi gereken tanımlanmamış tüm ad alanlarını yeni bir satıra girin",
 	"namespaces-content": "Bu ad alanı ana viki materyali (içerik) içeriyor mu?",
-	"namespaces-contentmodel": "Bu ad alanlarının içerik modeli ne olmalı?",
+	"namespaces-contentmodel": "Bu ad alanın içerik modeli ne olmalı?",
 	"namespaces-delete": "Sil",
 	"namespaces-delete-checkbox": "Bu kutunun işaretlenmesi, bu ad alanının silinmesine neden olur",
 	"namespaces-handling": "Gönder",
