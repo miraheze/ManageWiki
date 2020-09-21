@@ -14,18 +14,17 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addOption( 'overwrite', 'This overwrites perms to reset them back to the default.', false, false );
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 	}
 
 	public function execute() {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-
 		$dbw = wfGetDB( DB_MASTER, [], $config->get( 'CreateWikiDatabase' ) );
 
 		if ( $this->getOption( 'overwrite' ) ) {
 			$dbw->delete(
 				'mw_permissions',
 				[
-					'perm_dbname' => $config->get( 'DBname' )
+					'perm_dbname' => $this->config->get( 'DBname' )
 				],
 				__METHOD__
 			);
@@ -37,14 +36,14 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 				'*'
 			],
 			[
-				'perm_dbname' => $config->get( 'DBname' )
+				'perm_dbname' => $this->config->get( 'DBname' )
 			]
 		);
 
 		if ( !$checkRow ) {
-			$mwPermissions = new ManageWikiPermissions( $config->get( 'DBname' ) );
+			$mwPermissions = new ManageWikiPermissions( $this->config->get( 'DBname' ) );
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)$config->get( 'ManageWikiPermissionsDefaultPrivateGroup' ) );
+			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)$this->config->get( 'ManageWikiPermissionsDefaultPrivateGroup' ) );
 
 			foreach ( $defaultGroups as $newgroup ) {
 				$groupData = $mwPermissionsDefault->list( $newgroup );
@@ -63,7 +62,7 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 
 			$mwPermissions->commit();
 
-			$cWJ = new CreateWikiJson( $config->get( 'DBname' ) );
+			$cWJ = new CreateWikiJson( $this->config->get( 'DBname' ) );
 			$cWJ->resetWiki();
 		}
 	}
