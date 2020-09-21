@@ -14,10 +14,11 @@ class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.', false, false );
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 	}
 
 	public function execute() {
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+
 		$dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		if ( $this->getOption( 'overwrite' ) ) {
@@ -36,7 +37,7 @@ class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
 				'*'
 			],
 			[
-				'ns_dbname' => $config->get( 'DBname' )
+				'ns_dbname' => $this->config->get( 'DBname' )
 			]
 		);
 
