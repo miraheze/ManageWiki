@@ -12,8 +12,8 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	private $config;
 
 	public function __construct() {
-		parent::__construct();
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		parent::__construct();
 		$this->addOption( 'overwrite', 'This overwrites perms to reset them back to the default.', false, false );
 	}
 
