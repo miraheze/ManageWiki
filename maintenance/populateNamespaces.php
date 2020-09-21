@@ -14,10 +14,11 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 	}
 
 	public function execute() {
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
