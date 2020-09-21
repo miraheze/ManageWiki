@@ -18,6 +18,8 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	}
 
 	public function execute() {
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+
 		$dbw = wfGetDB( DB_MASTER, [], $config->get( 'CreateWikiDatabase' ) );
 
 		if ( $this->getOption( 'overwrite' ) ) {
