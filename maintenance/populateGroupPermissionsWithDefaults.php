@@ -12,19 +12,20 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	private $config;
 
 	public function __construct() {
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		parent::__construct();
 		$this->addOption( 'overwrite', 'This overwrites perms to reset them back to the default.', false, false );
 	}
 
 	public function execute() {
-		$dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+
+		$dbw = wfGetDB( DB_MASTER, [], $config->get( 'CreateWikiDatabase' ) );
 
 		if ( $this->getOption( 'overwrite' ) ) {
 			$dbw->delete(
 				'mw_permissions',
 				[
-					'perm_dbname' => $this->config->get( 'DBname' )
+					'perm_dbname' => $config->get( 'DBname' )
 				],
 				__METHOD__
 			);
@@ -36,14 +37,14 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 				'*'
 			],
 			[
-				'perm_dbname' => $this->config->get( 'DBname' )
+				'perm_dbname' => $config->get( 'DBname' )
 			]
 		);
 
 		if ( !$checkRow ) {
-			$mwPermissions = new ManageWikiPermissions( $this->config->get( 'DBname' ) );
+			$mwPermissions = new ManageWikiPermissions( $config->get( 'DBname' ) );
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)$this->config->get( 'ManageWikiPermissionsDefaultPrivateGroup' ) );
+			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)$config->get( 'ManageWikiPermissionsDefaultPrivateGroup' ) );
 
 			foreach ( $defaultGroups as $newgroup ) {
 				$groupData = $mwPermissionsDefault->list( $newgroup );
@@ -62,7 +63,7 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 
 			$mwPermissions->commit();
 
-			$cWJ = new CreateWikiJson( $this->config->get( 'DBname' ) );
+			$cWJ = new CreateWikiJson( $config->get( 'DBname' ) );
 			$cWJ->resetWiki();
 		}
 	}
