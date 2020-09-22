@@ -1,30 +1,28 @@
 <?php
 
-use MediaWiki\MediaWikiServices;
-
 $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
 }
 require_once "$IP/maintenance/Maintenance.php";
 
-class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
-	private $config;
+use MediaWiki\MediaWikiServices;
 
+class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.', false, false );
 	}
 
 	public function execute() {
-		$dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$dbw = wfGetDB( DB_MASTER, [], $config->get( 'CreateWikiDatabase' ) );
 
 		if ( $this->getOption( 'overwrite' ) ) {
 			$dbw->delete(
 				'mw_namespaces',
 				[
-					'ns_dbname' => $this->config->get( 'DBname' )
+					'ns_dbname' => $config->get( 'DBname' )
 				],
 				__METHOD__
 			);
@@ -36,12 +34,12 @@ class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
 				'*'
 			],
 			[
-				'ns_dbname' => $this->config->get( 'DBname' )
+				'ns_dbname' => $config->get( 'DBname' )
 			]
 		);
 
 		if ( !$checkRow ) {
- 			$mwNamespaces = new ManageWikiNamespaces( $this->config->get( 'DBname' ) );
+ 			$mwNamespaces = new ManageWikiNamespaces( $config->get( 'DBname' ) );
 			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
  			$defaultNamespaces = array_keys( $mwNamespacesDefault->list() );
 
@@ -50,7 +48,7 @@ class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
  				$mwNamespaces->commit();
  			}
 
-			$cWJ = new CreateWikiJson( $this->config->get( 'DBname' ) );
+			$cWJ = new CreateWikiJson( $config->get( 'DBname' ) );
 			$cWJ->resetWiki();
 		}
 	}
