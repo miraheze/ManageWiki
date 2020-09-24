@@ -22,7 +22,7 @@ class populateWikiSettingsWithDefaults extends Maintenance {
 			]
 		);
 
-		$this->recacheWikiJson( 'ldapwikiwiki' );
+		$this->recacheWikiJson( $config->get( 'DBname' ) );
 	}
 
 	private function recacheWikiJson( string $wiki ) {
