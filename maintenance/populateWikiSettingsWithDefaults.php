@@ -14,7 +14,7 @@ class populateWikiSettingsWithDefaults extends Maintenance {
 		$dbw = wfGetDB( DB_MASTER, [], $config->get( 'CreateWikiDatabase' ) );
 
 		$dbw->insert(
-			'cw_wikis',
+			'mw_settings',
 			[
 				's_dbname' => $config->get( 'DBname' ),
 				's_extensions' => json_encode( [] ),
