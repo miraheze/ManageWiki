@@ -107,7 +107,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		}
 
 		$formFactory = new ManageWikiFormFactory();
-		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), 'permissions', $group );
+		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), $this->config, 'permissions', $group );
 		$sectionTitles = $htmlForm->getFormSections();
 
 		$sectTabs = [];
