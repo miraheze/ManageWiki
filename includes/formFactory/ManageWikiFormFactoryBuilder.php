@@ -777,8 +777,7 @@ class ManageWikiFormFactoryBuilder {
 			$actionLog->setParameters( [ '4::wiki' => $dbName ] );
 			$logID = $actionLog->insert();
 			$actionLog->publish( $logID );
-			
-			
+
 			$cWJ = new CreateWikiJson( $config->get( 'CreateWikiGlobalWiki' ) );
 			$cWJ->resetDatabaseList();
 			$cWJ->update();
