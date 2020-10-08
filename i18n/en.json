@@ -135,6 +135,7 @@
 	"namespaces-subpages": "Should this namespace have subpages enabled?",
 	"permissions-assigned": "Assigned Permissions",
 	"permissions-autopromote": "Autopromotion",
+	"permissions-delete-checkbox": "Delete this user group",
 	"permissions-unassigned": "Unassigned Permissions",
 	"permissions-group": "Group Assignments",
 	"permissions-handling": "Submit",

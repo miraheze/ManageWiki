@@ -704,6 +704,15 @@ class ManageWikiFormFactoryBuilder {
 			]
 		];
 
+		if ( $ceMW && ( count( $permList['permissions'] ) > 0 ) ) {
+			$formDescriptor['delete-checkbox'] = [
+				'type' => 'check',
+				'label-message' => 'permissions-delete-checkbox',
+				'default' => 0,
+				'section' => 'handle'
+			];
+		}
+
 		return $formDescriptor;
 	}
 
@@ -1100,6 +1109,12 @@ class ManageWikiFormFactoryBuilder {
 		$mwPermissions = new ManageWikiPermissions( $wiki );
 		$permList = $mwPermissions->list( $group );
 		$assignablePerms = array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsBlacklistRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsBlacklistRights' )[$group], $config->get( 'ManageWikiPermissionsBlacklistRights' )['any'] ) : $config->get( 'ManageWikiPermissionsBlacklistRights' )['any'] );
+
+		// Early escape for deletion
+		if ( isset( $formData['delete-checkbox'] ) && $formData['delete-checkbox'] ) {
+			$mwPermissions->remove( $group );
+			return $mwPermissions;
+		}
 
 		$permData = [];
 
