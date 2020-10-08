@@ -34,6 +34,10 @@ class SpecialManageWiki extends SpecialPage {
 			return false;
 		}
 
+		if ( ( $module === 'permissions' ) && $additional ) {
+			$out->addSubtitle( $out->msg( 'editing' )->params( $additional ) );
+		}
+
 		if ( $this->config->get( 'CreateWikiGlobalWiki' ) !== $this->config->get( 'DBname' ) ) {
 			$this->showWikiForm( $this->config->get( 'DBname'), $module, $additional );
 		} elseif ( $par[0] == '' ) {
