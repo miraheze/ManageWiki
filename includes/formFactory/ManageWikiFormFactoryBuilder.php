@@ -709,7 +709,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'permissions-delete-checkbox',
 				'default' => 0,
-				'section' => 'handle'
+				'section' => 'handling'
 			];
 		}
 
