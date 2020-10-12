@@ -51,6 +51,7 @@
 	"namespaces-namespace": "Namespace principale",
 	"namespaces-namespacetalk": "Namespace di discussione",
 	"permissions-assigned": "Permessi assegnati",
+	"permissions-delete-checkbox": "Cancella questo gruppo utente",
 	"permissions-handling": "Invia",
 	"settings-other": "Altro",
 	"settings-handling": "Invia"

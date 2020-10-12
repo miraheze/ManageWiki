@@ -133,6 +133,7 @@
 	"namespaces-subpages": "Bør dette navnerommet ha undersider slått på?",
 	"permissions-assigned": "Tildelte tillatelser",
 	"permissions-autopromote": "Autoforfremmelse",
+	"permissions-delete-checkbox": "Slett denne brukergruppa",
 	"permissions-unassigned": "Ikke-tildelte tillatelser",
 	"permissions-group": "Gruppetildelinger",
 	"permissions-handling": "Send",

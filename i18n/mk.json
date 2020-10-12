@@ -133,6 +133,7 @@
 	"namespaces-subpages": "Дали да се овозможат потстраници во овој именски простор?",
 	"permissions-assigned": "Доделени дозволи",
 	"permissions-autopromote": "Автоунапредување",
+	"permissions-delete-checkbox": "Избриши ја корисничкава група",
 	"permissions-unassigned": "Недоделени дозволи",
 	"permissions-group": "Групни задачи",
 	"permissions-handling": "Поднеси",

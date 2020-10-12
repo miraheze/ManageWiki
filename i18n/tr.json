@@ -134,6 +134,7 @@
 	"namespaces-subpages": "Bu ad alanında alt sayfalar etkin olmalı mı?",
 	"permissions-assigned": "Atanan İzinler",
 	"permissions-autopromote": "Otomatik tanıtım",
+	"permissions-delete-checkbox": "Bu kullanıcı grubu sil",
 	"permissions-unassigned": "Atanmamış İzinler",
 	"permissions-group": "Grup Atamaları",
 	"permissions-handling": "Gönder",

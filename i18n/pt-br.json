@@ -134,6 +134,7 @@
 	"namespaces-subpages": "Este espaço nominal deve ter ativada a possibilidade de subpáginas?",
 	"permissions-assigned": "Permissões atribuídas",
 	"permissions-autopromote": "Autopromoção",
+	"permissions-delete-checkbox": "Excluir esse grupo",
 	"permissions-unassigned": "Permissões não atribuídas",
 	"permissions-group": "Atribuições de grupo",
 	"permissions-handling": "Enviar",

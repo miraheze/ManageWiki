@@ -147,6 +147,7 @@
 	"namespaces-subpages": "Est-ce que cet espace de noms doit avoir activé ses sous-pages ?",
 	"permissions-assigned": "Permissions attribuées",
 	"permissions-autopromote": "Promotion automatique",
+	"permissions-delete-checkbox": "Supprimer ce groupe utilisateur",
 	"permissions-unassigned": "Permissions non assignées",
 	"permissions-group": "Affectations aux groupes",
 	"permissions-handling": "Soumettre",
