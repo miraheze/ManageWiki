@@ -100,7 +100,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$out->addModules( 'ext.createwiki.oouiform' );
 
-		$remoteWiki = RemoteWiki::newFromName( $this->config->get( 'CreateWikiGlobalWiki' ) );
+		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
 		if ( $remoteWiki == null ) {
 			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
 			return false;

@@ -91,25 +91,25 @@ class ManageWikiFormFactoryBuilder {
 			'private' => [
 				'if' => $config->get( 'CreateWikiUsePrivateWikis' ),
 				'type' => 'check',
-				'default' => $wiki->isPrivate(),
+				'default' => (bool)$wiki->isPrivate(),
 				'access' => !$ceMW
 			],
 			'closed' => [
 				'if' => $config->get( 'CreateWikiUseClosedWikis' ),
 				'type' => 'check',
-				'default' => $wiki->isClosed(),
+				'default' => (bool)$wiki->isClosed(),
 				'access' => !$ceMW
 			],
 			'inactive' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
 				'type' => 'check',
-				'default' => $wiki->isInactive(),
+				'default' => (bool)$wiki->isInactive(),
 				'access' => !$ceMW
 			],
 			'inactive-exempt' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
 				'type' => 'check',
-				'default' => $wiki->isInactiveExempt(),
+				'default' => (bool)$wiki->isInactiveExempt(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			],
 			'server' => [
@@ -747,74 +747,17 @@ class ManageWikiFormFactoryBuilder {
 				throw new MWException( "{$module} not recognised" );
 		}
 
-		// TODO Convert to new style
-		if ( $module == 'core'  && !is_array( $mwReturn ) ) {
-			if ( $mwReturn === 'delete' || $mwReturn === 'undelete' ) {
-				$delete = ( $mwReturn === 'delete' );
-
-				$rows = [
-					'wiki_deleted' => (int)$delete,
-					'wiki_deleted_timestamp' => ( $delete ) ? $dbw->timestamp() : null
-				];
-
-				$logAction = ( $delete ) ? 'delete' : 'undelete';
-			} elseif ( $mwReturn === 'lock' || $mwReturn === 'unlock' ) {
-				$lock = ( $mwReturn === 'lock' );
-
-				$rows = [
-					'wiki_locked' => (int)$lock,
-				];
-
-				$logAction = ( $lock ) ? 'lock' : 'unlock';
-			} else {
-				$rows = [];
-				$logAction = 'settings';
-			}
-
-			$dbw->update(
-				'cw_wikis',
-				$rows,
-				[
-					'wiki_dbname' => $dbName
-				]
-			);
-
-			$actionLog = new ManualLogEntry( 'managewiki', $logAction );
-			$actionLog->setPerformer( $context->getUser() );
-			$actionLog->setTarget( $form->getTitle() );
-			$actionLog->setComment( $formData['reason'] );
-			$actionLog->setParameters( [ '4::wiki' => $dbName ] );
-			$logID = $actionLog->insert();
-			$actionLog->publish( $logID );
-
-			$cWJ = new CreateWikiJson( $config->get( 'CreateWikiGlobalWiki' ) );
-			$cWJ->resetDatabaseList();
-			$cWJ->update();
-
-			return "Wiki has been {$mwReturn}d";
-		}
-
 		$mwLogParams = [
 			'4::wiki' => $dbName
 		];
 
-		// TODO convert core to new style
-		if ( $module == 'core' ) {
-			$rows = $mwReturn['data'];
-			$mwLog = 'settings';
-
-			$dbw->update(
-				'cw_wikis',
-				$rows,
-				[
-					'wiki_dbname' => $dbName
-				]
-			);
-
-			$mwLogParams['5::changes'] = $mwReturn['changes'];
-		} elseif ( in_array( $module, [ 'settings', 'extensions' ] ) ) {
-			$mwLog = 'settings';
-			$mwLogParams['5::changes'] = implode( ', ', array_keys( $mwReturn->changes ) );
+		if ( in_array( $module, [ 'core', 'settings', 'extensions' ] ) ) {
+			if ( $module == 'core' && $mwReturn->specialLog ) {
+				$mwLog = $mwReturn->specialLog;
+			} else {
+				$mwLog = 'settings';
+				$mwLogParams['5::changes'] = implode( ', ', array_keys( $mwReturn->changes ) );
+			}
 		} elseif ( $module == 'namespaces' ) {
 			$mwLog = 'namespaces';
 			// TODO move to method for logging? This is *REALLY* ugly and hacky
@@ -841,15 +784,7 @@ class ManageWikiFormFactoryBuilder {
 			return [ 'Error processing.' ];
 		}
 
-		if ( $module == 'core' ) {
-			$cWJ = new CreateWikiJson( $dbName );
-			$cWJ->resetWiki();
-			$cWJ->resetDatabaseList();
-		}
-
-		if ( $module != 'core' ) {
-			$mwReturn->commit();
-		}
+		$mwReturn->commit();
 
 		$mwLogEntry = new ManualLogEntry( 'managewiki', $mwLog );
 		$mwLogEntry->setPerformer( $context->getUser() );
@@ -859,7 +794,7 @@ class ManageWikiFormFactoryBuilder {
 		$mwLogID = $mwLogEntry->insert();
 		$mwLogEntry->publish( $mwLogID );
 
-		return is_array( $mwReturn ) ? $mwReturn['errors'] : $mwReturn->errors;
+		return $mwReturn->errors ?? [];
 	}
 
 	private static function submissionCore(
@@ -879,113 +814,55 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $mwActions as $mwAction ) {
 			if ( isset( $formData[$mwAction] ) && $formData[$mwAction] ) {
-				return $mwAction;
+				$wiki->$mwAction();
+
+				return $wiki;
 			}
 		}
 
-		$changedArray = [];
-
-		if ( $config->get( 'CreateWikiUsePrivateWikis' ) ) {
-			$private = (int)$formData['private'];
-			if ( $wiki->isPrivate() != $formData['private'] ) {
-				if ( $formData['private'] ) {
-					Hooks::run( 'CreateWikiStatePrivate', [ $dbName ] );
-					$changedArray[] = 'private';
-				} else {
-					Hooks::run( 'CreateWikiStatePublic', [ $dbName ] );
-					$changedArray[] = 'public';
-				}
-			}
-		} else {
-			$private = 0;
+		if ( $config->get( 'CreateWikiUsePrivateWikis' ) && ( $wiki->isPrivate() != $formData['private'] ) ) {
+				( $formData['private'] ) ? $wiki->markPrivate() : $wiki->markPublic();
 		}
 
 		if ( $config->get( 'CreateWikiUseClosedWikis' ) ) {
-			$closed = $wiki->isClosed();
+			$closed = (bool)$wiki->isClosed();
 			$newClosed = $formData['closed'];
 
 			if ( $newClosed && ( $closed != $newClosed ) ) {
-				$closed = 1;
-				$closedDate = $dbw->timestamp();
-
-				Hooks::run( 'CreateWikiStateClosed', [ $dbName ] );
-
-				$changedArray[] = 'closed';
+				$wiki->markClosed();
 			} elseif ( !$newClosed && ( $closed != $newClosed ) ) {
-				$closed = 0;
-				$closedDate = null;
-
-				Hooks::run( 'CreateWikiStateOpen', [ $dbName ] );
-
-				$changedArray[] = 'opened';
-			} else {
-				$closedDate = $wiki->closureDate();
+				$wiki->markActive();
 			}
-
-		} else {
-			$closed = 0;
-			$closedDate = null;
 		}
 
 		if ( $config->get( 'CreateWikiUseInactiveWikis' ) ) {
 			$newInactive = $formData['inactive'];
-			$inactive = $wiki->isInactive();
-			$inactiveDate = $wiki->getInactiveDate();
+			$inactive = (bool)$wiki->isInactive();
 			$newInactiveExempt = $formData['inactive-exempt'];
 
 			if ( $newInactive != $inactive ) {
-				$inactive = $newInactive;
-				$inactiveDate = ( $inactive ) ? $dbw->timestamp() : null;
-
-				$changedArray[] = ( $newInactive ) ? 'inactive' : 'active';
+				( $newInactive ) ? $wiki->markInactive() : $wiki->markActive();
 			}
 
 			$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-			if ( $newInactiveExempt && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
-				$inactiveExempt = 1;
-
-				$changedArray[] = 'inactive-exempt';
-			} else {
-				$inactiveExempt = $wiki->isInactiveExempt();
+			if ( ( $newInactiveExempt != $wiki->isInactiveExempt() ) && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
+				if ( $newInactiveExempt ) {
+					$wiki->markExempt();
+				} else {
+					$wiki->unExempt();
+				}
 			}
-		} else {
-			$inactive = 0;
-			$inactiveDate = null;
-			$inactiveExempt = 0;
 		}
 
-		$category = ( $config->get( 'CreateWikiUseCategories' ) ) ? $formData['category'] : 'uncategorised';
-
-		if ( $category != $wiki->getCategory() ) {
-			$changedArray[] = 'category';
+		if ( $config->get( 'CreateWikiUseCategories' ) && ( $formData['category'] != $wiki->getCategory() ) ) {
+			$wiki->setCategory( $formData['category'] );
 		}
 
-		$serverName = ( $config->get( 'CreateWikiUseCustomDomains' ) ) ? ( ( $formData['server'] == '' ) ? null : $formData['server'] ) : null;
-
-		if ( $serverName != $wiki->getServerName() ) {
-			$changedArray[] = 'servername';
+		if ( $config->get( 'CreateWikiUseCustomDomains' ) && ( $formData['server'] != $wiki->getServerName() ) ) {
+			$wiki->setServerName( $formData['server'] );
 		}
 
-		$data = [
-			'wiki_sitename' => $formData['sitename'],
-			'wiki_language' => $formData['language'],
-			'wiki_url' => $serverName,
-			'wiki_closed' => $closed,
-			'wiki_closed_timestamp' => $closedDate,
-			'wiki_inactive' => $inactive,
-			'wiki_inactive_timestamp' => $inactiveDate,
-			'wiki_inactive_exempt' => $inactiveExempt,
-			'wiki_private' => $private,
-			'wiki_category' => $category
-		];
-
-		return [
-			'changes' => implode( ', ', $changedArray ),
-			'data' => $data,
-			'errors' => false,
-			'log' => 'settings',
-			'table' => 'cw_wikis'
-		];
+		return $wiki;
 	}
 
 	private static function submissionExtensions(

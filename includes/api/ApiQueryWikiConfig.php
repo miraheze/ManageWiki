@@ -12,7 +12,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 		$data = [];
 
 		foreach ( $params['wikis'] as $wiki ) {
-			$wikiObj = RemoteWiki::newFromName( $wiki );
+			$wikiObj = new RemoteWiki( $wiki );
 
 			if ( is_null( $wikiObj ) ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
@@ -22,22 +22,20 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 			$wikiData = [
 				'name' => $wiki,
 				'sitename' => $wikiObj->getSitename(),
-				'closed' => (int)$wikiObj->isClosed(),
-				'inactive' => (int)$wikiObj->isInactive(),
-				'inactive-exempt' => (int)$wikiObj->isInactiveExempt(),
-				'private' => (int)$wikiObj->isPrivate()
+				'closed' => (bool)$wikiObj->isClosed(),
+				'inactive' => (bool)$wikiObj->isInactive(),
+				'inactive-exempt' => (bool)$wikiObj->isInactiveExempt(),
+				'private' => (bool)$wikiObj->isPrivate()
 			];
 
+			$mwSet = new ManageWikiSettings( $wiki );
 			if ( isset( $prop['settings'] ) ) {
-				$wikiData['settings'] = $wikiObj->getSettings();
+				$wikiData['settings'] = $mwSet->list();
 			}
 
+			$mwExt = new ManageWikiExtensions( $wiki );
 			if ( isset( $prop['extensions'] ) ) {
-				$extensions = explode( ',', $wikiObj->getExtensions() );
-
-				// Delete dummy entry from extensions
-				$extensions = array_values( array_diff( $extensions, [ 'zzzz' ] ) );
-				$wikiData['extensions'] = $extensions;
+				$wikiData['extensions'] = $mwExt->list();
 			}
 
 			$mwPerms = new ManageWikiPermissions( $wiki );
