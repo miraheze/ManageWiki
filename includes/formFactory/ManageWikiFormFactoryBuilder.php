@@ -794,6 +794,12 @@ class ManageWikiFormFactoryBuilder {
 		$mwLogID = $mwLogEntry->insert();
 		$mwLogEntry->publish( $mwLogID );
 
+		if ( $module == 'core' && $mwReturn->specialLog ) {
+			$cWJ = new CreateWikiJson( $config->get( 'CreateWikiGlobalWiki' ) );
+ 			$cWJ->resetDatabaseList();
+ 			$cWJ->update();
+		}
+
 		return $mwReturn->errors ?? [];
 	}
 
