@@ -258,9 +258,11 @@ class ManageWikiHooks {
 	public static function fnNewSidebarItem( $skin, &$bar ) {
 		$append = '';
 		$user = $skin->getUser();
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+		$services = MediaWikiServices::getInstance();
+		$permissionManager = $services->getPermissionManager();
+		$userOptionsLookup = $services->getUserOptionsLookup();
 		if ( !$permissionManager->userHasRight( $user, 'managewiki' ) ) {
-			if ( !self::getConfig( 'ManageWikiForceSidebarLinks' ) && !$user->getOption( 'managewikisidebar', 0 ) ) {
+			if ( !self::getConfig( 'ManageWikiForceSidebarLinks' ) && !$userOptionsLookup->getOption( $user, 'managewikisidebar', 0 ) ) {
 				return;
 			}
 			$append = '-view';
