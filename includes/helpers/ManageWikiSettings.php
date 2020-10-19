@@ -66,12 +66,14 @@ class ManageWikiSettings {
 	public function modify( array $settings ) {
 		// We will handle all processing in final stages
 		foreach ( $settings as $var => $value ) {
-			$this->changes[$var] = [
-				'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'],
-				'new' => $value
-			];
+			if ( $value != ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ) ) {
+				$this->changes[$var] = [
+					'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'],
+					'new' => $value
+				];
 
-			$this->liveSettings[$var] = $value;
+				$this->liveSettings[$var] = $value;
+			}
 		}
 	}
 
