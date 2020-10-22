@@ -143,6 +143,18 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+		if ( $config->get( 'CreateWikiDatabaseClusters' ) ) {
+			$clusterList = array_merge( (array)$config->get( 'CreateWikiDatabaseClusters' ), (array)$config->get( 'CreateWikiDatabaseClustersInactive' ) );
+			$formDescriptor['dbcluster'] = [
+				'type' => 'select',
+				'label-message' => 'managewiki-label-dbcluster',
+				'options' => array_combine( $clusterList, $clusterList ),
+				'default' => $wiki->getDBCluster(),
+				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'section' => 'main'
+			];
+		}
+
 		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
 			$mwActions = [
 				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
@@ -860,6 +872,14 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $config->get( 'CreateWikiUseCustomDomains' ) && ( $formData['server'] != $wiki->getServerName() ) ) {
 			$wiki->setServerName( $formData['server'] );
+		}
+
+		if ( $formData['sitename'] != $wiki->getSitename() ) {
+			$wiki->setSitename( $formData['sitename'] );
+		}
+
+		if ( $config->get( 'CreateWikiDatabaseClusters' ) && ( $formData['dbcluster'] != $wiki->getDBCluster() ) ) {
+			$wiki->setDBCluster( $formData['dbcluster'] );
 		}
 
 		return $wiki;
