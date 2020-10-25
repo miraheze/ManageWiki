@@ -878,6 +878,10 @@ class ManageWikiFormFactoryBuilder {
 			$wiki->setSitename( $formData['sitename'] );
 		}
 
+		if ( $formData['language'] != $wiki->getLanguage() ) {
+			$wiki->setLanguage( $formData['language'] );
+		}
+
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) && ( $formData['dbcluster'] != $wiki->getDBCluster() ) ) {
 			$wiki->setDBCluster( $formData['dbcluster'] );
 		}
