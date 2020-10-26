@@ -73,6 +73,7 @@
 	"managewiki-label-category": "Catégorie",
 	"managewiki-label-closed": "Fermé",
 	"managewiki-label-creationdate": "Date de création",
+	"managewiki-label-dbcluster": "Grappe de base de données",
 	"managewiki-label-deletewiki": "Supprimer ce wiki ?",
 	"managewiki-label-deletiondate": "Date de suppression",
 	"managewiki-label-dbname": "Nom de base de données",

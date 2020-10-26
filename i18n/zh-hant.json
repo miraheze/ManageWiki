@@ -62,6 +62,7 @@
 	"managewiki-label-category": "分類",
 	"managewiki-label-closed": "已關閉",
 	"managewiki-label-creationdate": "建立日期",
+	"managewiki-label-dbcluster": "資料庫叢集",
 	"managewiki-label-deletewiki": "刪除此 wiki？",
 	"managewiki-label-deletiondate": "刪除日期",
 	"managewiki-label-dbname": "資料庫名稱",

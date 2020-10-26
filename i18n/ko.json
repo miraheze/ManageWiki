@@ -54,6 +54,7 @@
 	"managewiki-label-category": "분류",
 	"managewiki-label-closed": "닫힘",
 	"managewiki-label-creationdate": "생성일",
+	"managewiki-label-dbcluster": "데이터베이스 클러스터",
 	"managewiki-label-deletewiki": "이 위키를 삭제하시겠습니까?",
 	"managewiki-label-deletiondate": "삭제일",
 	"managewiki-label-dbname": "데이터베이스 이름",

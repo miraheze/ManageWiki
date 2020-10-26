@@ -36,6 +36,7 @@
 	"namespaces-handling": "Indsend",
 	"namespaces-namespace": "Hovednavnerum",
 	"namespaces-search": "Skal dette navnerum være søgbart som standard?",
+	"permissions-delete-checkbox": "Slet denne brugergruppe",
 	"permissions-handling": "Indsend",
 	"settings-other": "Andet",
 	"settings-handling": "Indsend"

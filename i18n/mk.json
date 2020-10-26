@@ -59,6 +59,7 @@
 	"managewiki-label-category": "Категорија",
 	"managewiki-label-closed": "Затворено",
 	"managewiki-label-creationdate": "Датум на создавање",
+	"managewiki-label-dbcluster": "Базен грст",
 	"managewiki-label-deletewiki": "Да го избришам викито?",
 	"managewiki-label-deletiondate": "Датум на бришење",
 	"managewiki-label-dbname": "Назив на базата",

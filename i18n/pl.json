@@ -60,6 +60,7 @@
 	"managewiki-label-category": "Kategoria",
 	"managewiki-label-closed": "Zamknięta",
 	"managewiki-label-creationdate": "Data utworzenia",
+	"managewiki-label-dbcluster": "Klaster bazy danych",
 	"managewiki-label-deletewiki": "Usunąć tę wiki?",
 	"managewiki-label-deletiondate": "Data usunięcia",
 	"managewiki-label-dbname": "Nazwa bazy danych",
