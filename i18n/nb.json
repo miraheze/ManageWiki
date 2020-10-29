@@ -59,6 +59,7 @@
 	"managewiki-label-category": "Kategori",
 	"managewiki-label-closed": "Stengt",
 	"managewiki-label-creationdate": "Opprettelsesdato",
+	"managewiki-label-dbcluster": "Databaseklynge",
 	"managewiki-label-deletewiki": "Slette denne wikien?",
 	"managewiki-label-deletiondate": "Slettedato",
 	"managewiki-label-dbname": "Databasenavn",
