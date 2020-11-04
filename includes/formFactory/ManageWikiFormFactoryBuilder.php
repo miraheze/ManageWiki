@@ -753,7 +753,7 @@ class ManageWikiFormFactoryBuilder {
 			case 'core':
 				$mwReturn = self::submissionCore( $formData, $dbName, $context, $wiki, $dbw, $config );
 				break;
-			case '\sions':
+			case 'extensions':
 				$mwReturn = self::submissionExtensions( $formData, $dbName, $config );
 				break;
 			case 'settings':
