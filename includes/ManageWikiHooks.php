@@ -95,7 +95,9 @@ class ManageWikiHooks {
 
 				foreach ( (array)$nsAdditional as $var => $val ) {
 					if ( $val && isset( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var] ) ) {
-						if ( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var]['vestyle'] ) {
+						if ( isset( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var]['type'] ) && self::getConfig( 'ManageWikiNamespacesAdditional' )[$var]['type'] !== 'check' ) {
+							$jsonArray['settings'][$var][$ns->ns_namespace_id] = $val;
+						} elseif ( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var]['vestyle'] ) {
 							$jsonArray['settings'][$var][$ns->ns_namespace_id] = true;
 						} else {
 							$jsonArray['settings'][$var][] = $ns->ns_namespace_id;
