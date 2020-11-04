@@ -481,7 +481,7 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
-				if ( ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
+				if ( ( !isset( $a['type'] ) || $a['type'] == 'check' ) && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
 					$formDescriptor["$key-$name"] = [
 						'type' => 'check',
 						'label' => $a['name'],
@@ -490,8 +490,18 @@ class ManageWikiFormFactoryBuilder {
 						'section' => $name
 					];
 				}
+				
+				if ( ( isset( $a['type'] ) && $a['type'] !== 'check' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
+					$formDescriptor["$key-$name"] = [
+						'type' => $a['type'],
+						'label' => $a['name'],
+						'default' => $namespaceData['additional'][$key] ?? $a['overridedefault'],
+						'disabled' => !$ceMW,
+						'section' => $name
+					];
+				}
 			}
-
+			
 			$formDescriptor["aliases-$name"] = [
 				'type' => 'textarea',
 				'label-message' => 'namespaces-aliases',
@@ -743,7 +753,7 @@ class ManageWikiFormFactoryBuilder {
 			case 'core':
 				$mwReturn = self::submissionCore( $formData, $dbName, $context, $wiki, $dbw, $config );
 				break;
-			case 'extensions':
+			case '\sions':
 				$mwReturn = self::submissionExtensions( $formData, $dbName, $config );
 				break;
 			case 'settings':
