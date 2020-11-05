@@ -254,6 +254,14 @@ class ManageWikiFormFactoryBuilder {
 							$configs['options'][$db] = $db;
 						}
 						break;
+					case 'float':
+						$configs = [
+							'type' => 'float',
+							'min' => $set['minfloat'],
+							'max' => $set['maxfloat'],
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						break;
 					case 'integer':
 						$configs = [
 							'type' => 'int',
@@ -314,6 +322,20 @@ class ManageWikiFormFactoryBuilder {
 							'type' => 'namespacesmultiselect',
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
+						break;
+					case 'preferences':
+						$preferences = [];
+						foreach( MediaWikiServices::getInstance()->getUserOptionsLookup()->getOptions( $context->getUser() ) as $preference => $val ) {
+							$preferences[$preference] = $preference;
+						}
+						$configs = [
+							'type' => 'multiselect',
+							'options' => isset( $set['options'] ) ? array_merge( $preferences, $set['options'] ) : $preferences,
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						if ( !$disabled ) {
+							$configs['dropdown'] = true;
+						}
 						break;
 					case 'timezone':
 						$configs = [
