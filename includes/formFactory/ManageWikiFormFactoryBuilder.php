@@ -337,6 +337,26 @@ class ManageWikiFormFactoryBuilder {
 							$configs['dropdown'] = true;
 						}
 						break;
+					case 'skins':
+  						$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getSkinNames();
+						
+						unset( $enabledSkins['fallback'] );
+						unset( $enabledSkins['apioutput'] );
+						
+						foreach ( $config->get( 'SkipSkins' ) as $skip ) {
+							unset( $enabledSkins[$skip] );
+						}
+						
+						foreach ( $enabledSkins as $skin => $skinName ){
+							$availableSkins[$skinName] = $skin;
+						}
+						
+						$configs = [
+							'type' => 'select',
+							'options' => isset( $set['options'] ) ? array_merge( $availableSkins, $set['options'] ) : $availableSkins,
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						break;
 					case 'timezone':
 						$configs = [
 							'type' => 'select',
