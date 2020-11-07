@@ -57,7 +57,18 @@ class ManageWikiRequirements {
 	 */
 	private static function extensions( array $data, array $extensionList ) {
 		foreach ( $data as $extension ) {
-			if ( !in_array( $extension, $extensionList ) ) {
+			if ( is_array( $extension ) ) {
+				$count = 0;
+				foreach ( $extension as $or ) {
+					if ( in_array( $or, $extensionList ) ) {
+						$count++;
+					}
+				}
+
+				if ( !$count ) {
+					return false;
+				}
+			} elseif ( !in_array( $extension, $extensionList ) ) {
 				return false;
 			}
 		}

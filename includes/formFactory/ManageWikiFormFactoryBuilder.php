@@ -191,12 +191,18 @@ class ManageWikiFormFactoryBuilder {
 
 
 			if ( $ext['conflicts'] ) {
-				$help[] = "{$conflictLabel} {$ext['conflicts']}";
+				$help[] = "{$conflictLabel} {$ext['conflicts']}<br>";
 			}
 
 			if ( $ext['requires'] ) {
 				$requires = [];
 				foreach ( $ext['requires'] as $require => $data ) {
+					foreach ( $data as $index => $element ) {
+						if ( is_array( $element ) ) {
+							$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
+						}
+					}
+
 					$requires[] = ucfirst( $require ) . " - " . implode( ', ', $data );
 				}
 
