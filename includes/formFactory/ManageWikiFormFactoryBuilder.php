@@ -254,6 +254,14 @@ class ManageWikiFormFactoryBuilder {
 							$configs['options'][$db] = $db;
 						}
 						break;
+					case 'float':
+						$configs = [
+							'type' => 'float',
+							'min' => $set['minfloat'],
+							'max' => $set['maxfloat'],
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						break;
 					case 'integer':
 						$configs = [
 							'type' => 'int',
@@ -312,6 +320,22 @@ class ManageWikiFormFactoryBuilder {
 					case 'namespaces':
 						$configs = [
 							'type' => 'namespacesmultiselect',
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						break;
+					case 'skins':
+  						$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getSkinNames();
+
+						unset( $enabledSkins['fallback'] );
+						unset( $enabledSkins['apioutput'] );
+
+						foreach ( $config->get( 'SkipSkins' ) as $skip ) {
+							unset( $enabledSkins[$skip] );
+						}
+						
+						$configs = [
+							'type' => 'select',
+							'options' => isset( $set['options'] ) ? array_merge( array_flip($enabledSkins), $set['options'] ) : array_flip($enabledSkins),
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
