@@ -323,37 +323,19 @@ class ManageWikiFormFactoryBuilder {
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
-					case 'preferences':
-						$preferences = [];
-						foreach( MediaWikiServices::getInstance()->getUserOptionsLookup()->getOptions( $context->getUser() ) as $preference => $val ) {
-							$preferences[$preference] = $preference;
-						}
-						$configs = [
-							'type' => 'multiselect',
-							'options' => isset( $set['options'] ) ? array_merge( $preferences, $set['options'] ) : $preferences,
-							'default' => $setList[$name] ?? $set['overridedefault']
-						];
-						if ( !$disabled ) {
-							$configs['dropdown'] = true;
-						}
-						break;
 					case 'skins':
   						$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getSkinNames();
-						
+
 						unset( $enabledSkins['fallback'] );
 						unset( $enabledSkins['apioutput'] );
-						
+
 						foreach ( $config->get( 'SkipSkins' ) as $skip ) {
 							unset( $enabledSkins[$skip] );
 						}
 						
-						foreach ( $enabledSkins as $skin => $skinName ){
-							$availableSkins[$skinName] = $skin;
-						}
-						
 						$configs = [
 							'type' => 'select',
-							'options' => isset( $set['options'] ) ? array_merge( $availableSkins, $set['options'] ) : $availableSkins,
+							'options' => isset( $set['options'] ) ? array_merge( array_flip($enabledSkins), $set['options'] ) : array_flip($enabledSkins),
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
