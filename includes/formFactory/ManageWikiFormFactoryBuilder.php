@@ -328,6 +328,61 @@ class ManageWikiFormFactoryBuilder {
 							'type' => 'namespacesmultiselect',
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
+						break;		
+					case 'preferences':
+						$preferences = [];
+						
+						foreach( MediaWikiServices::getInstance()->getUserOptionsLookup()->getDefaultOptions() as $preference => $val ) {
+							$preferences[$preference] = $preference;
+                            
+							// Don't show preferences hidden by configuration
+							$excludedPrefs = [];
+							if( !$config->get( 'AllowUserCssPrefs' ) ) {
+							    $excludedPrefs[] = [ 'underline', 'editfont' ];
+							}
+							
+							if( $config->get( 'DisableLangConversion' ) ) {
+							    $excludedPrefs[] = [ 'variant' ];
+							} elseif( preg_match( '/variant-[A-Za-z0-9]/', $preferences[ $preference ] ) ) {
+							    $excludedPrefs[] = $preferences[ $preference ];
+							}
+							
+							if( $config->get( 'ForceHTTPS' ) || !$config->get( 'SecureLogin' ) ){
+							    $excludedPrefs[] = [ 'prefershttps' ];
+							}
+							
+							if( !$config->get( 'RCShowWatchingUsers' ) ){
+							    $excludedPrefs[] = [ 'shownumberswatching' ];
+							}
+							
+							if( !$config->get( 'RCWatchCategoryMembership' ) ){
+							    $excludedPrefs[] = [ 'hidecategorization', 'watchlisthidecategorization' ];
+							}
+							
+							if( !$config->get( 'SearchMatchRedirectPreference' ) ){
+							    $excludedPrefs[] = [ 'search-match-redirect' ];
+							}
+							
+							// Don't show search-Ns* prefs
+							if( preg_match( '/searchNs[0-9]/', $preferences[ $preference ] ) ) {
+							    $excludedPrefs[] = $preferences[ $preference ];
+							}
+							
+							// Unset prefs we should not show
+							if ( in_array( $preferences[$preference], $excludedPrefs ) ) {
+							    unset( $preferences[ $preference ] );
+							}
+						}
+						
+						$configs = [
+							'type' => 'multiselect',
+							'options' => isset( $set['options'] ) ? array_merge( $preferences, $set['options'] ) : $preferences,
+							'default' => $setList[$name] ?? $set['overridedefault']
+						];
+						
+						if ( !$disabled ) {
+							$configs['dropdown'] = true;
+						}
 						break;
 					case 'skins':
   						$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getSkinNames();
