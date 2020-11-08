@@ -328,50 +328,48 @@ class ManageWikiFormFactoryBuilder {
 							'type' => 'namespacesmultiselect',
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
-						break;		
+						break;	
 					case 'preferences':
 						$preferences = [];
 						
 						foreach( MediaWikiServices::getInstance()->getUserOptionsLookup()->getDefaultOptions() as $preference => $val ) {
 							$preferences[$preference] = $preference;
-                            
-							// Don't show preferences hidden by configuration
-							$excludedPrefs = [];
-							if( !$config->get( 'AllowUserCssPrefs' ) ) {
-							    $excludedPrefs[] = [ 'underline', 'editfont' ];
-							}
+						}
+						
+						// Don't show preferences hidden by configuratiom
+						if( !$config->get( 'AllowUserCssPrefs' ) ) {
+						    unset( $preferences[ 'underline' ] );
+						    unset( $preferences[ 'editfont' ] );
+						}
 							
-							if( $config->get( 'DisableLangConversion' ) ) {
-							    $excludedPrefs[] = [ 'variant' ];
-							} elseif( preg_match( '/variant-[A-Za-z0-9]/', $preferences[ $preference ] ) ) {
-							    $excludedPrefs[] = $preferences[ $preference ];
-							}
+						if( $config->get( 'DisableLangConversion' ) ) {
+						    unset( $preferences[ 'variant' ] );
+						} else {
+						    foreach( preg_grep( '/searchNs[0-9]/', $preferences ) as $pref ) {
+							    unset( $preferences[$pref] );
+						    }
+						}
 							
-							if( $config->get( 'ForceHTTPS' ) || !$config->get( 'SecureLogin' ) ){
-							    $excludedPrefs[] = [ 'prefershttps' ];
-							}
+					    if( $config->get( 'ForceHTTPS' ) || !$config->get( 'SecureLogin' ) ) {
+					        unset( $preferences[ 'prefershttps' ] );
+						}
 							
-							if( !$config->get( 'RCShowWatchingUsers' ) ){
-							    $excludedPrefs[] = [ 'shownumberswatching' ];
-							}
+					    if( !$config->get( 'RCShowWatchingUsers' ) ) {
+						    unset( $preferences[ 'shownumberswatching' ] );
+						}
 							
-							if( !$config->get( 'RCWatchCategoryMembership' ) ){
-							    $excludedPrefs[] = [ 'hidecategorization', 'watchlisthidecategorization' ];
-							}
+						if( !$config->get( 'RCWatchCategoryMembership' ) ) {
+						    unset( $preferences[ 'hidecategorization' ] );
+							unset( $preferences[ 'watchlisthidecategorization' ] );
+						}
 							
-							if( !$config->get( 'SearchMatchRedirectPreference' ) ){
-							    $excludedPrefs[] = [ 'search-match-redirect' ];
-							}
+					    if( !$config->get( 'SearchMatchRedirectPreference' ) ) {
+						    unset( $preferences[ 'search-match-redirect' ]);
+						}
 							
-							// Don't show search-Ns* prefs
-							if( preg_match( '/searchNs[0-9]/', $preferences[ $preference ] ) ) {
-							    $excludedPrefs[] = $preferences[ $preference ];
-							}
-							
-							// Unset prefs we should not show
-							if ( in_array( $preferences[$preference], $excludedPrefs ) ) {
-							    unset( $preferences[ $preference ] );
-							}
+					    // Don't show search-Ns* prefs
+						foreach( preg_grep( '/variant-[A-Za-z0-9]/', $preferences ) as $pref ) {
+						    unset( $preferences[$pref] );
 						}
 						
 						$configs = [
