@@ -338,10 +338,11 @@ class ManageWikiFormFactoryBuilder {
 						foreach ( $config->get( 'SkipSkins' ) as $skip ) {
 							unset( $enabledSkins[$skip] );
 						}
-						
+
+						$skin = isset( $set['options'] ) ? array_merge( array_flip( $enabledSkins ), $set['options'] ) : array_flip( $enabledSkins );
 						$configs = [
 							'type' => 'select',
-							'options' => isset( $set['options'] ) ? array_merge( array_flip($enabledSkins), $set['options'] ) : array_flip($enabledSkins),
+							'options' => ksort( $skin ),
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
