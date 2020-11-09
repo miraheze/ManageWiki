@@ -331,50 +331,55 @@ class ManageWikiFormFactoryBuilder {
 						break;	
 					case 'preferences':
 						$preferences = [];
+						$excludePrefs = [];
+						$allPreferences = MediaWikiServices::getInstance()->getUserOptionsLookup()->getDefaultOptions();
 						
-						foreach( MediaWikiServices::getInstance()->getUserOptionsLookup()->getDefaultOptions() as $preference => $val ) {
-							$preferences[$preference] = $preference;
-						}
 						
 						// Don't show preferences hidden by configuratiom
 						if( !$config->get( 'AllowUserCssPrefs' ) ) {
-						    unset( $preferences[ 'underline' ] );
-						    unset( $preferences[ 'editfont' ] );
+							$excludePrefs[] = 'underline';
+							$excludePrefs[] = 'editfont';
 						}
 							
 						if( $config->get( 'DisableLangConversion' ) ) {
-						    unset( $preferences[ 'variant' ] );
+							$excludePrefs[] = 'variant';
 						} else {
-						    foreach( preg_grep( '/searchNs[0-9]/', $preferences ) as $pref ) {
-							    unset( $preferences[$pref] );
-						    }
+							foreach( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $value ) {
+								$excludePrefs[] = array_keys( $allPreferences )[$pref];
+							}
 						}
 							
-					    if( $config->get( 'ForceHTTPS' ) || !$config->get( 'SecureLogin' ) ) {
-					        unset( $preferences[ 'prefershttps' ] );
+						if( $config->get( 'ForceHTTPS' ) || !$config->get( 'SecureLogin' ) ) {
+							$excludePrefs[] = 'prefershttps';
 						}
 							
-					    if( !$config->get( 'RCShowWatchingUsers' ) ) {
-						    unset( $preferences[ 'shownumberswatching' ] );
+						if( !$config->get( 'RCShowWatchingUsers' ) ) {
+							$excludePrefs[] = 'shownumberswatching';
 						}
 							
 						if( !$config->get( 'RCWatchCategoryMembership' ) ) {
-						    unset( $preferences[ 'hidecategorization' ] );
-							unset( $preferences[ 'watchlisthidecategorization' ] );
+							$excludePrefs[] = 'hidecategorization';
+							$excludePrefs[] = 'watchlisthidecategorization';
 						}
 							
-					    if( !$config->get( 'SearchMatchRedirectPreference' ) ) {
-						    unset( $preferences[ 'search-match-redirect' ]);
+						if( !$config->get( 'SearchMatchRedirectPreference' ) ) {
+							$excludePrefs[] = 'search-match-redirect';
 						}
-							
-					    // Don't show search-Ns* prefs
-						foreach( preg_grep( '/variant-[A-Za-z0-9]/', $preferences ) as $pref ) {
-						    unset( $preferences[$pref] );
+					   
+						// Don't show search-Ns* prefs
+						foreach( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $value ) {
+							$excludePrefs[] = array_keys( $allPreferences )[$pref];
+						}
+						
+						foreach( $allPreferences as $preference => $val ) {
+							if ( !in_array( $preference, $excludePrefs ) ) {
+								$preferences[$preference] = $preference;
+							}
 						}
 						
 						$configs = [
 							'type' => 'multiselect',
-							'options' => isset( $set['options'] ) ? array_merge( $preferences, $set['options'] ) : $preferences,
+							'options' => $preferences,
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						
