@@ -399,6 +399,11 @@ class ManageWikiFormFactoryBuilder {
 							$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 						}
 						
+						// Blacklist echo-subscriptions preferences
+						foreach( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $value ) {
+							$excludedPrefs[] = array_keys( $allPreferences )[$pref];
+						}
+						
 						foreach( $allPreferences as $preference => $val ) {
 							if ( !in_array( $preference, $excludedPrefs ) ) {
 								$preferences[$preference] = $preference;
