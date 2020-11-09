@@ -331,48 +331,76 @@ class ManageWikiFormFactoryBuilder {
 						break;	
 					case 'preferences':
 						$preferences = [];
-						$excludePrefs = [];
+						$excludedPrefs = [];
 						$allPreferences = MediaWikiServices::getInstance()->getUserOptionsLookup()->getDefaultOptions();
 						
 						
 						// Don't show preferences hidden by configuratiom
 						if( !$config->get( 'AllowUserCssPrefs' ) ) {
-							$excludePrefs[] = 'underline';
-							$excludePrefs[] = 'editfont';
+							$excludedPrefs[] = 'underline';
+							$excludedPrefs[] = 'editfont';
 						}
 							
 						if( $config->get( 'DisableLangConversion' ) ) {
-							$excludePrefs[] = 'variant';
+							$excludedPrefs[] = 'variant';
 						} else {
 							foreach( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $value ) {
-								$excludePrefs[] = array_keys( $allPreferences )[$pref];
+								$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 							}
 						}
 							
 						if( $config->get( 'ForceHTTPS' ) || !$config->get( 'SecureLogin' ) ) {
-							$excludePrefs[] = 'prefershttps';
+							$excludedPrefs[] = 'prefershttps';
 						}
 							
 						if( !$config->get( 'RCShowWatchingUsers' ) ) {
-							$excludePrefs[] = 'shownumberswatching';
+							$excludedPrefs[] = 'shownumberswatching';
 						}
 							
 						if( !$config->get( 'RCWatchCategoryMembership' ) ) {
-							$excludePrefs[] = 'hidecategorization';
-							$excludePrefs[] = 'watchlisthidecategorization';
+							$excludedPrefs[] = 'hidecategorization';
+							$excludedPrefs[] = 'watchlisthidecategorization';
 						}
 							
 						if( !$config->get( 'SearchMatchRedirectPreference' ) ) {
-							$excludePrefs[] = 'search-match-redirect';
+							$excludedPrefs[] = 'search-match-redirect';
 						}
-					   
-						// Don't show search-Ns* prefs
+						
+						if ( !$config->get( 'EnableEmail' ) ) {
+							if ( !$config->get( 'AllowRequiringEmailForResets' ) ) {
+								$excludedPrefs[] = 'requireemail';
+							}
+							if ( !$config->get( 'EnableUserEmail' ) ) {
+								$excludedPrefs[] = 'disablemail';
+								$excludedPrefs[] = 'email-allow-new-users';
+								$excludedPrefs[] = 'ccmeonemails';
+								if ( !$this->options->get( 'EnableUserEmailBlacklist' ) ) {
+									$excludedPrefs[] = 'EnableUserEmailBlacklist';
+								}
+							}
+							if ( !$config->get( 'EnotifWatchlist' ) ) {
+								$excludedPrefs[] = 'enotifwatchlistpages';
+							}
+							if ( !$config->get( 'EnotifUserTalk' ) ) {
+								$excludedPrefs[] = 'enotifusertalkpages';
+							}
+							if (!$config->get( 'EnotifUserTalk' ) && !$config->get( 'EnotifWatchlist' ) ) {
+								if ( !$config->get( 'EnotifMinorEdits' ) ) {
+									$excludedPrefs[] = 'enotifminoredits';
+								}
+								if ( !$config->get( 'EnotifRevealEditorAddress' ) ) {
+									$excludedPrefs[] = 'enotifrevealaddr';
+								}
+							}
+						}
+						
+						// Never show searchNs* prefs
 						foreach( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $value ) {
-							$excludePrefs[] = array_keys( $allPreferences )[$pref];
+							$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 						}
 						
 						foreach( $allPreferences as $preference => $val ) {
-							if ( !in_array( $preference, $excludePrefs ) ) {
+							if ( !in_array( $preference, $excludedPrefs ) ) {
 								$preferences[$preference] = $preference;
 							}
 						}
