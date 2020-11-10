@@ -626,14 +626,25 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
+				switch ( $a['type'] ) {
+					case 'vestyle':
+						$configs = [
+							'type' => 'check',
+						];
+					break;
+					default:
+						$configs = [
+							'type' => $a['type'],
+						];
+					break;
+				}
 				if ( ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
 					$formDescriptor["$key-$name"] = [
-						'type' => $a['type'],
 						'label' => $a['name'],
 						'default' => $namespaceData['additional'][$key] ?? $a['overridedefault'],
 						'disabled' => !$ceMW,
-						'section' => $name
-					];
+						'section' => $name,
+					] + $configs;
 				}
 			}
 
