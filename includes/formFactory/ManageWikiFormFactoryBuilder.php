@@ -631,12 +631,12 @@ class ManageWikiFormFactoryBuilder {
 						$configs = [
 							'type' => 'check',
 						];
-					break;
+						break;
 					default:
 						$configs = [
 							'type' => $a['type'],
 						];
-					break;
+						break;
 				}
 				if ( ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
 					$formDescriptor["$key-$name"] = [
