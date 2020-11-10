@@ -360,6 +360,10 @@ class ManageWikiFormFactoryBuilder {
 							'options' => isset( $set['options'] ) ? array_merge( array_flip($enabledSkins), $set['options'] ) : array_flip($enabledSkins),
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
+						
+						if ( !$disabled ) {
+							$configs['dropdown'] = true;
+						}
 						break;
 					case 'timezone':
 						$configs = [
