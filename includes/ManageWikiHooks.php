@@ -98,13 +98,13 @@ class ManageWikiHooks {
 						switch ( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var]['type'] ) {
 							case 'text':
 								$jsonArray['settings'][$var][$ns->ns_namespace_id] = $val;
-							break;
+								break;
 							case 'vestyle':
 								$jsonArray['settings'][$var][$ns->ns_namespace_id] = true;
-							break;
+								break;
 							case 'check':
 								$jsonArray['settings'][$var][] = $ns->ns_namespace_id;
-							break;
+								break;
 						}
 					}
 				}
