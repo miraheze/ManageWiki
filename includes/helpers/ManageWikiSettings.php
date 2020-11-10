@@ -15,7 +15,9 @@ class ManageWikiSettings {
 	/** @var array Settings configuration ($wgManageWikiSettings) */
 	private $settingsConfig;
 	/** @var array Current settings with their respective values */
-	private $liveSettings = [];
+	private $liveSettings;
+	/** @var array Maintenance scripts that need to be ran on enabling/disabling a setting */
+	private $scripts = [];
 	/** @var string WikiID */
 	private $wiki;
 
@@ -73,13 +75,17 @@ class ManageWikiSettings {
 				];
 
 				$this->liveSettings[$var] = $value;
+
+				if ( isset( $this->settingsConfig[$var]['script'] ) ) {
+					$this->scripts[] = $this->settingsConfig[$var]['script'];
+				}
 			}
 		}
 	}
 
 	/**
 	 * Removes a setting
-	 * @param string[] $settings Settings to remove
+	 * @param string|string[] $settings Settings to remove
 	 */
 	public function remove( $settings ) {
 		// We allow removing of a single variable or many variables
@@ -128,6 +134,10 @@ class ManageWikiSettings {
 				's_settings' => json_encode( $this->liveSettings )
 			]
 		);
+
+		if ( !empty( $this->scripts ) ) {
+			ManageWikiInstaller::process( $this->wiki, [ 'mwscript' => $this->scripts ] );
+		}
 
 		$cWJ = new CreateWikiJson( $this->wiki );
 		$cWJ->resetWiki();

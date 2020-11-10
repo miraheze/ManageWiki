@@ -3,17 +3,14 @@
 use MediaWiki\Shell\Shell;
 
 class MWScriptJob extends Job {
-	private $dbname;
-
-	public function __construct( $dbname, $params ) {
+	public function __construct( Title $title, $params ) {
 		parent::__construct( 'mwScript', $params );
-		$this->dbname = $dbname;
 	}
 
 	public function run() {
 		$scriptParams = [
 			'--wiki',
-			$this->dbname
+			$this->params['dbname']
 		];
 
 		foreach ( (array)$this->params['options'] as $name => $val ) {

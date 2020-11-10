@@ -122,11 +122,12 @@ class ManageWikiInstaller {
 
 		foreach ( $data as $script => $options ) {
 			$params = [
+				'dbname' => $dbname,
 				'script' => $script,
 				'options' => $options
 			];
 
-			$mwJob = new MWScriptJob( $dbname, $params );
+			$mwJob = new MWScriptJob( Title::newMainPage(), $params );
 
 			JobQueueGroup::singleton()->push( $mwJob );
 		}
