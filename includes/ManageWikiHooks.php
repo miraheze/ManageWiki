@@ -96,14 +96,14 @@ class ManageWikiHooks {
 				foreach ( (array)$nsAdditional as $var => $val ) {
 					if ( $val && isset( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var] ) ) {
 						switch ( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var]['type'] ) {
+							case 'check':
+								$jsonArray['settings'][$var][] = $ns->ns_namespace_id;
+								break;
 							case 'text':
 								$jsonArray['settings'][$var][$ns->ns_namespace_id] = $val;
 								break;
 							case 'vestyle':
 								$jsonArray['settings'][$var][$ns->ns_namespace_id] = true;
-								break;
-							case 'check':
-								$jsonArray['settings'][$var][] = $ns->ns_namespace_id;
 								break;
 						}
 					}
