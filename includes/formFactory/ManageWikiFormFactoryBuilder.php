@@ -628,7 +628,7 @@ class ManageWikiFormFactoryBuilder {
 			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
 				if ( ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
 					$formDescriptor["$key-$name"] = [
-						'type' => 'check',
+						'type' => $a['type'],
 						'label' => $a['name'],
 						'default' => $namespaceData['additional'][$key] ?? $a['overridedefault'],
 						'disabled' => !$ceMW,
