@@ -491,7 +491,7 @@ class ManageWikiFormFactoryBuilder {
 					];
 				}
 			}
-			
+
 			$formDescriptor["aliases-$name"] = [
 				'type' => 'textarea',
 				'label-message' => 'namespaces-aliases',
