@@ -426,8 +426,10 @@ class ManageWikiFormFactoryBuilder {
 						unset( $enabledSkins['fallback'] );
 						unset( $enabledSkins['apioutput'] );
 
-						foreach ( $config->get( 'SkipSkins' ) as $skip ) {
-							unset( $enabledSkins[$skip] );
+						if ( !isset( $set['whitelistSkipSkins'] ) ) {
+							foreach ( $config->get( 'SkipSkins' ) as $skip ) {
+								unset( $enabledSkins[$skip] );
+							}
 						}
 						
 						$configs = [
@@ -442,8 +444,10 @@ class ManageWikiFormFactoryBuilder {
 						unset( $enabledSkins['fallback'] );
 						unset( $enabledSkins['apioutput'] );
 
-						foreach ( $config->get( 'SkipSkins' ) as $skip ) {
-							unset( $enabledSkins[$skip] );
+						if ( !isset( $set['whitelistSkipSkins'] ) ) {
+							foreach ( $config->get( 'SkipSkins' ) as $skip ) {
+								unset( $enabledSkins[$skip] );
+							}
 						}
 						
 						$configs = [
