@@ -627,6 +627,18 @@ class ManageWikiFormFactoryBuilder {
 
 			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
 				if ( ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
+					if ( is_array( $a['overridedefault'] ) ) {
+						if ( in_array( $id, array_keys( $a['overridedefault'] ) ) ) {
+							foreach ( $a['overridedefault'] as $nID => $value ) {
+								if( $id === $nID ) {
+									$a['overridedefault'] = $value;
+								}
+							}
+						} else {
+							$a['overridedefault'] = false;
+						}
+					}
+					
 					$formDescriptor["$key-$name"] = [
 						'label' => $a['name'],
 						'type' => $a['type'] === 'vestyle'  ? 'check' : $a['type'],
