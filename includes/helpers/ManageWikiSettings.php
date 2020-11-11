@@ -136,7 +136,9 @@ class ManageWikiSettings {
 		);
 
 		if ( !empty( $this->scripts ) ) {
-			ManageWikiInstaller::process( $this->wiki, [ 'mwscript' => $this->scripts ] );
+			foreach ( $this->scripts as $script ) {
+				ManageWikiInstaller::process( $this->wiki, [ 'mwscript' => $script ] );
+			}
 		}
 
 		$cWJ = new CreateWikiJson( $this->wiki );
