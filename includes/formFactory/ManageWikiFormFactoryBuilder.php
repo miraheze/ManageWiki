@@ -632,13 +632,10 @@ class ManageWikiFormFactoryBuilder {
 				$add = ( $a['from'] == 'mediawiki' ) || in_array( $a['from'], $extList );
 
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
+					
 					if ( is_array( $a['overridedefault'] ) ) {
 						if ( in_array( $id, array_keys( $a['overridedefault'] ) ) ) {
-							foreach ( $a['overridedefault'] as $nID => $value ) {
-								if( $id === $nID ) {
-									$a['overridedefault'] = $value;
-								}
-							}
+							$a['overridedefault'] = $a['overridedefault'][$id];
 						} else {
 							$a['overridedefault'] = false;
 						}
