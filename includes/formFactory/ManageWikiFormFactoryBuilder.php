@@ -244,7 +244,7 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
-			$add = ( $set['from'] == 'mediawiki' ) ||  in_array( $set['from'], $extList ) ;
+			$add = ( $set['from'] == 'mediawiki' ) ||  in_array( $set['from'], $extList );
 			$disabled = ( $ceMW ) ? !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
@@ -553,7 +553,10 @@ class ManageWikiFormFactoryBuilder {
 		Config $config
 	) {
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
-
+		
+		$mwExt = new ManageWikiExtensions( $dbName );
+		$extList = $mwExt->list();
+		
 		$formDescriptor = [];
 
 		$nsID = [
@@ -626,7 +629,9 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
-				if ( ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
+				$add = ( $a['from'] === 'mediawiki' ) || in_array( $a['from'], $extList );
+				
+				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
 					$formDescriptor["$key-$name"] = [
 						'label' => $a['name'],
 						'type' => $a['type'] === 'vestyle'  ? 'check' : $a['type'],
