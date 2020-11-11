@@ -5,7 +5,7 @@
  */
 class NamespaceMigrationJob extends Job {
 	public function __construct( $title, $params ) {
-		parent::__construct( 'NamespaceMigrationJob', $title, $params );
+		parent::__construct( 'NamespaceMigrationJob', $params );
 	}
 
 	public function run() {
