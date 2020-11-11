@@ -629,7 +629,7 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
-				$add = ( $a['from'] === 'mediawiki' ) || in_array( $a['from'], $extList );
+				$add = ( $a['from'] == 'mediawiki' ) || in_array( $a['from'], $extList );
 				
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
 					$formDescriptor["$key-$name"] = [
