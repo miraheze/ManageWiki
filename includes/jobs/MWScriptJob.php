@@ -4,7 +4,7 @@ use MediaWiki\Shell\Shell;
 
 class MWScriptJob extends Job {
 	public function __construct( Title $title, $params ) {
-		parent::__construct( 'MWScriptJob', $title, $params );
+		parent::__construct( 'MWScriptJob', $params );
 	}
 
 	public function run() {
