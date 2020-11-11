@@ -77,8 +77,8 @@ class ManageWikiSettings {
 				$this->liveSettings[$var] = $value;
 
 				if ( isset( $this->settingsConfig[$var]['script'] ) ) {
-					foreach ( $this->settingsConfig[$var]['script'] as $script ) {
-						$this->scripts[] = $script;
+					foreach ( $this->settingsConfig[$var]['script'] as $script => $opts ) {
+						$this->scripts[$script] = $opts;
 					}
 				}
 			}
