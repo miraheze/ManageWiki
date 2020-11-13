@@ -637,7 +637,7 @@ class ManageWikiFormFactoryBuilder {
 						if ( in_array( $id, array_keys( $a['overridedefault'] ) ) ) {
 							$a['overridedefault'] = $a['overridedefault'][$id];
 						} else {
-							$a['overridedefault'] = false;
+							$a['overridedefault'] = $a['overridedefault']['default'];
 						}
 					}
 
