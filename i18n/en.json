@@ -109,6 +109,7 @@
 	"managewiki-permissions-select": "Select existing group to edit",
 	"managewiki-permissions-unassigned": "The below user rights are currently not assigned to this user group.",
 	"managewiki-requires": "Requires",
+	"managewiki-sidebar-header" : "Administration" ,
 	"managewiki-success": "The settings have been successfully changed.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Manage this wiki's core settings",
