@@ -217,7 +217,7 @@ class ManageWikiFormFactoryBuilder {
 					$ext['name']
 				],
 				'default' => in_array( $name, $extList ),
-				'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $ext['requires'], $extList  ) : 1,
+				'disabled' => ( $ceMW && $config->get( 'DefaultSkin' ) !== $name ) ? !ManageWikiRequirements::process( $ext['requires'], $extList  ) : 1,
 				'help' => (string)implode( ' ', $help ),
 				'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 			];
