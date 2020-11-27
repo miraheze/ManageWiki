@@ -274,7 +274,7 @@ class ManageWikiHooks {
 		}
 
 		foreach ( (array)ManageWiki::listModules() as $module ) {
-			$bar['Administration'][] = [
+			$bar['managewiki-sidebar-header'][] = [
 				'text' => wfMessage( "managewiki-link-{$module}{$append}" )->plain(),
 				'id' => "managewiki{$module}link",
 				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() )
