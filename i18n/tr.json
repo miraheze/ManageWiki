@@ -108,6 +108,7 @@
 	"managewiki-permissions-select": "Düzenlemek için mevcut grubu seçin",
 	"managewiki-permissions-unassigned": "Aşağıdaki kullanıcı hakları şu anda bu kullanıcı grubuna atanmamış.",
 	"managewiki-requires": "Gerekli",
+	"managewiki-sidebar-header": "Yönetim",
 	"managewiki-success": "Ayarlar başarıyla değiştirildi.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Bu vikinin temel ayarlarını yönetin",

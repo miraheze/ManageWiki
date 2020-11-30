@@ -101,6 +101,7 @@
 	"managewiki-permissions-select": "Wybierz istniejącą grupę, by edytować",
 	"managewiki-permissions-unassigned": "Poniższe uprawnienia nie są przypisane do tej grupy użytkowników.",
 	"managewiki-requires": "Wymaga",
+	"managewiki-sidebar-header": "Administracja",
 	"managewiki-success": "Ustawienia zostały pomyślnie zmienione.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Zarządzaj podstawowymi ustawieniami",

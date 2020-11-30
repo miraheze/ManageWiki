@@ -110,6 +110,7 @@
 	"managewiki-permissions-select": "選擇存在的群組來編輯",
 	"managewiki-permissions-unassigned": "以下使用者權限目前未指派給此使用者群組。",
 	"managewiki-requires": "需要",
+	"managewiki-sidebar-header": "管理",
 	"managewiki-success": "設定已成功變更。",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "管理此 wiki 的核心設定",
