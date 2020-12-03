@@ -107,6 +107,7 @@
 	"managewiki-permissions-select": "Изберете постоечка група за измена",
 	"managewiki-permissions-unassigned": "За оваа корисничка група тековно не важат долунаведените кориснички права.",
 	"managewiki-requires": "Бара",
+	"managewiki-sidebar-header": "Администрација",
 	"managewiki-success": "Поставките се успешно изменети.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Раководење со основните поставки на викиво",
