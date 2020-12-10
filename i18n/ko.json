@@ -92,6 +92,7 @@
 	"managewiki-permissions-select": "편집할 기존 그룹을 선택하십시오",
 	"managewiki-permissions-unassigned": "아래의 사용자 권한은 현재 이 사용자 그룹에 할당되어 있지 않습니다.",
 	"managewiki-requires": "요구 사항",
+	"managewiki-sidebar-header": "관리",
 	"managewiki-success": "설정이 성공적으로 업데이트되었습니다.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "이 위키의 핵심 설정을 관리하기",

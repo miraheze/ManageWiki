@@ -108,6 +108,7 @@
 	"managewiki-permissions-select": "Selecionar um grupo existente para editá-lo",
 	"managewiki-permissions-unassigned": "Os direitos de utilizador abaixo não estão atualmente atribuídos a este grupo de utilizadores.",
 	"managewiki-requires": "Requer",
+	"managewiki-sidebar-header": "Administração",
 	"managewiki-success": "As configurações foram alteradas.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Gerir as configurações centrais desta wiki",
