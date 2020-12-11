@@ -82,6 +82,14 @@ class ManageWikiFormFactoryBuilder {
 				'disabled' => !$ceMW,
 				'required' => true,
 				'section' => 'main'
+			],
+			'description' => [
+				'label-message' => 'managewiki-label-description',
+				'type' => 'text',
+				'maxlength' => 512,
+				'default' => $wiki->getDescription(),
+				'required' => true,
+				'section' => 'main'
 			]
 		];
 
@@ -1035,6 +1043,10 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $formData['language'] != $wiki->getLanguage() ) {
 			$wiki->setLanguage( $formData['language'] );
+		}
+		
+		if ( $formData['description'] != $wiki->getDescription() ) {
+			$wiki->setDescription( $formData['description'] );
 		}
 
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) && ( $formData['dbcluster'] != $wiki->getDBCluster() ) ) {
