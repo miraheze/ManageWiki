@@ -141,6 +141,8 @@ class ManageWikiPermissions {
 						'perm_group' => $group
 					]
 				);
+
+				$this->deleteUsersFromGroup( $group );
 			} else {
 				$builtTable = [
 					'perm_permissions' => json_encode( $this->livePermissions[$group]['permissions'] ),
@@ -171,6 +173,23 @@ class ManageWikiPermissions {
 			$cWJ->resetWiki();
 		}
 		$this->committed = true;
+	}
+
+	private function deleteUsersFromGroup( string $group ) {
+		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
+		$dbr = wfGetDB( DB_REPLICA, [], $this->wiki );
+
+		$res = $dbr->select(
+			'user_groups',
+			'ug_user',
+			[
+				'ug_group' => $group
+			]
+		);
+
+		foreach ( $res as $row ) {
+			$groupManager->removeUserFromGroup( User::newFromId( $row->ug_user ), $group );
+		}
 	}
 
 	/**
