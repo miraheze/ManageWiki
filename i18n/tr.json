@@ -56,7 +56,7 @@
 	"managewiki-header-extensions": "Buradaki uzantılar şu anda yüklü olanlardır, ancak her zaman <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features istek]</span> eklenecek başka bir uzantı olabilir.<br>İşiniz bittiğinde, değişikliklerinizi kaydetmek için \"gönder\" sekmesine basın.",
 	"managewiki-header-permissions": "Aşağıdaki kutuda değiştirmek veya yeni bir kullanıcı grubu oluşturmak için zaten var olan bir grubu seçin.",
 	"managewiki-header-namespaces": "Aşağıdan düzenlemek için bir ad alanı seçin (konuşma ad alanları ana ad alanlarıyla ilişkilendirilir) veya yeni bir ana ad alanı oluşturmak için düğmeye basın.",
-	"managewiki-header-settings": "Bu sayfa viki <b>'$1'</b> viki ayarlarını yönetmek için kullanılır. İstediğiniz bir özellik henüz burada yoksa, lütfen istemek için <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>'u kullanın. <br>İşiniz bittiğinde, değişikliklerinizi kaydetmek için \"gönder\" sekmesine basın.",
+	"managewiki-header-settings": "Bu sayfa <b>'$1'</b> viki ayarlarını yönetmek için kullanılır. İstediğiniz bir özellik henüz burada yoksa, lütfen talep etmek için <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features/tr Phabricator]</span>'u kullanın. <br>İşiniz bittiğinde, değişikliklerinizi kaydetmek için \"gönder\" sekmesine basın.",
 	"managewiki-label-category": "Kategori",
 	"managewiki-label-closed": "Kapandı",
 	"managewiki-label-creationdate": "Oluşturulma Tarihi",
