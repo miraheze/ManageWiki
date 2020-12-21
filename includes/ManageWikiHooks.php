@@ -97,13 +97,13 @@ class ManageWikiHooks {
 					if ( $val && isset( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var] ) ) {
 						switch ( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var]['type'] ) {
 							case 'check':
-								$jsonArray['settings'][$var][] = $ns->ns_namespace_id;
+								$jsonArray['settings'][$var][] = (int)$ns->ns_namespace_id;
 								break;
 							case 'text':
-								$jsonArray['settings'][$var][$ns->ns_namespace_id] = $val;
+								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
 								break;
 							case 'vestyle':
-								$jsonArray['settings'][$var][$ns->ns_namespace_id] = true;
+								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = true;
 								break;
 						}
 					}
