@@ -118,6 +118,7 @@
 	"managewiki-permissions-select": "Выбрать существующую группу для редактирования",
 	"managewiki-permissions-unassigned": "Указанные ниже права пользователя сейчас не назначены этой группе пользователей.",
 	"managewiki-requires": "Требует",
+	"managewiki-sidebar-header": "Администрирование",
 	"managewiki-success": "Настройки были успешно изменены.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Управление ключевыми настройками вики",
