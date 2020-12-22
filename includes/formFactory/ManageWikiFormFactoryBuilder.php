@@ -1240,7 +1240,7 @@ class ManageWikiFormFactoryBuilder {
 				'emailconfirmed' => APCOND_EMAILCONFIRMED,
 				'blocked' => APCOND_BLOCKED,
 				'bot' => APCOND_ISBOT,
-				'groups' => [ APCOND_INGROUPS, $formData['groups'] ]
+				'groups' => array_merge( [ APCOND_INGROUPS ], $formData['groups'] )
 			];
 
 			foreach ( $loopBuild as $type => $value ) {
