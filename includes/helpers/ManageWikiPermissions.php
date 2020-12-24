@@ -23,6 +23,10 @@ class ManageWikiPermissions {
 	public $changes = [];
 	/** @var array Errors */
 	public $errors = [];
+	/** @var string Log type */
+	public $log = 'rights';
+	/** @var array Log parameters */
+	public $logParams = [];
 
 	/**
 	 * ManageWikiNamespaces constructor.
@@ -132,6 +136,8 @@ class ManageWikiPermissions {
 	 * Commits all changes to database
 	 */
 	public function commit() {
+		$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
+
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( in_array( $group, $this->deleteGroups ) ) {
 				$this->dbw->delete(
@@ -165,6 +171,21 @@ class ManageWikiPermissions {
 					],
 					$builtTable
 				);
+
+				$logAP = ( $mwReturn->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
+				$this->logParams = [
+					'4::ar' => !empty( $this->changes[$group]['permissions']['add'] ) ? implode( ', ', $this->changes[$group]['permissions']['add'] ) : $logNULL,
+					'5::rr' => !empty( $this->changes[$group]['permissions']['remove'] ) ? implode( ', ', $this->changes[$group]['permissions']['remove'] ) : $logNULL,
+					'6::aag' => !empty( $this->changes[$group]['addgroups']['add'] ) ? implode( ', ', $this->changes[$group]['addgroups']['add'] ) : $logNULL,
+					'7::rag' => !empty( $this->changes[$group]['addgroups']['remove'] ) ? implode( ', ', $this->changes[$group]['addgroups']['remove'] ) : $logNULL,
+					'8::arg' => !empty( $this->changes[$group]['removegroups']['add'] ) ? implode( ', ', $this->changes[$group]['removegroups']['add'] ) : $logNULL,
+					'9::rrg' => !empty( $this->changes[$group]['removegroups']['remove'] ) ? implode( ', ', $this->changes[$group]['removegroups']['remove'] ) : $logNULL,
+					'10::aags' => !empty( $this->changes[$group]['addself']['add'] ) ? implode( ', ', $this->changes[$group]['addself']['add'] ) : $logNULL,
+					'11::rags' => !empty( $this->changes[$group]['addself']['remove'] ) ? implode( ', ', $this->changes[$group]['addself']['remove'] ) : $logNULL,
+					'12::args' => !empty( $this->changes[$group]['removeself']['add'] ) ? implode( ', ', $this->changes[$group]['removeself']['add'] ) : $logNULL,
+					'13::rrgs' => !empty( $this->changes[$group]['removeself']['remove'] ) ? implode( ', ', $this->changes[$group]['removeself']['remove'] ) : $logNULL,
+					'14::ap' => strtolower( wfMessage( $logAP )->inContentLanguage()->text() )
+				];
 			}
 		}
 

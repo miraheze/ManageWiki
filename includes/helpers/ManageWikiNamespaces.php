@@ -23,6 +23,10 @@ class ManageWikiNamespaces {
 	public $changes = [];
 	/** @var array Errors */
 	public $errors = [];
+	/** @var string Log type */
+	public $log = 'namespaces';
+	/** @var array Log parameters */
+	public $logParams = [];
 
 	/**
 	 * ManageWikiNamespaces constructor.
@@ -192,6 +196,10 @@ class ManageWikiNamespaces {
 					],
 					$builtTable
 				);
+
+				$this->logParams = [
+					'5::namespace' => $this->liveNamespaces[$id]['name']
+				];
 			}
 
 			$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );

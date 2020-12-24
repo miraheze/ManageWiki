@@ -25,6 +25,10 @@ class ManageWikiExtensions {
 	public $changes = [];
 	/** @var array Errors */
 	public $errors = [];
+	/** @var string Log type */
+	public $log = 'settings';
+	/** @var array Log parameters */
+	public $logParams = [];
 
 	/**
 	 * @param string $wiki WikiID
@@ -172,6 +176,10 @@ class ManageWikiExtensions {
 		$cWJ = new CreateWikiJson( $this->wiki );
 		$cWJ->resetWiki();
 		$this->committed = true;
+
+		$this->logParams = [
+			'5::changes' => implode( ', ', array_keys( $this->changes ) )
+		];
 	}
 
 	/**

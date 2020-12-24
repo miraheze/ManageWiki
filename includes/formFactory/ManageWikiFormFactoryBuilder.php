@@ -276,7 +276,7 @@ class ManageWikiFormFactoryBuilder {
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
-					case 'language': //test
+					case 'language':
 						$configs = [
 							'type' => 'language',
 							'default' => $setList[$name] ?? $set['overridedefault']
@@ -374,7 +374,7 @@ class ManageWikiFormFactoryBuilder {
 								$excludedPrefs[] = 'disablemail';
 								$excludedPrefs[] = 'email-allow-new-users';
 								$excludedPrefs[] = 'ccmeonemails';
-								if ( !$this->options->get( 'EnableUserEmailBlacklist' ) ) {
+								if ( !$config->get( 'EnableUserEmailBlacklist' ) ) {
 									$excludedPrefs[] = 'EnableUserEmailBlacklist';
 								}
 							}
@@ -914,50 +914,17 @@ class ManageWikiFormFactoryBuilder {
 				throw new MWException( "{$module} not recognised" );
 		}
 
-		$mwLogParams = [
-			'4::wiki' => $dbName
-		];
-
-		if ( in_array( $module, [ 'core', 'settings', 'extensions' ] ) ) {
-			if ( $module == 'core' && $mwReturn->specialLog ) {
-				$mwLog = $mwReturn->specialLog;
-			} else {
-				$mwLog = 'settings';
-				$mwLogParams['5::changes'] = implode( ', ', array_keys( $mwReturn->changes ) );
-			}
-		} elseif ( $module == 'namespaces' ) {
-			$mwLog = 'namespaces';
-			// TODO move to method for logging? This is *REALLY* ugly and hacky
-			$mwLogParams['5::namespace'] = $mwReturn->list( $special )['name'];
-		} elseif ( $module == 'permissions' ) {
-			$mwLog = 'rights';
-			$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
-			$logAP = ( $mwReturn->changes[$special]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
-
-			$mwLogParams = [
-				'4::ar' => !empty( $mwReturn->changes[$special]['permissions']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['permissions']['add'] ) : $logNULL,
-				'5::rr' => !empty( $mwReturn->changes[$special]['permissions']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['permissions']['remove'] ) : $logNULL,
-				'6::aag' => !empty( $mwReturn->changes[$special]['addgroups']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['addgroups']['add'] ) : $logNULL,
-				'7::rag' => !empty( $mwReturn->changes[$special]['addgroups']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['addgroups']['remove'] ) : $logNULL,
-				'8::arg' => !empty( $mwReturn->changes[$special]['removegroups']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['removegroups']['add'] ) : $logNULL,
-				'9::rrg' => !empty( $mwReturn->changes[$special]['removegroups']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['removegroups']['remove'] ) : $logNULL,
-				'10::aags' => !empty( $mwReturn->changes[$special]['addself']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['addself']['add'] ) : $logNULL,
-				'11::rags' => !empty( $mwReturn->changes[$special]['addself']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['addself']['remove'] ) : $logNULL,
-				'12::args' => !empty( $mwReturn->changes[$special]['removeself']['add'] ) ? implode( ', ', $mwReturn->changes[$special]['removeself']['add'] ) : $logNULL,
-				'13::rrgs' => !empty( $mwReturn->changes[$special]['removeself']['remove'] ) ? implode( ', ', $mwReturn->changes[$special]['removeself']['remove'] ) : $logNULL,
-				'14::ap' => strtolower( wfMessage( $logAP )->inContentLanguage()->text() )
-			];
-		} else {
-			return [ 'Error processing.' ];
-		}
-
 		$mwReturn->commit();
 
-		$mwLogEntry = new ManualLogEntry( 'managewiki', $mwLog );
+		if ( $module != 'permissions' ) {
+			$mwReturn->logParams['4::wiki'] = $dbName;
+		}
+
+		$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->log );
 		$mwLogEntry->setPerformer( $context->getUser() );
 		$mwLogEntry->setTarget( $form->getTitle() );
 		$mwLogEntry->setComment( $formData['reason'] );
-		$mwLogEntry->setParameters( $mwLogParams );
+		$mwLogEntry->setParameters( $mwReturn->logParams );
 		$mwLogID = $mwLogEntry->insert();
 		$mwLogEntry->publish( $mwLogID );
 
