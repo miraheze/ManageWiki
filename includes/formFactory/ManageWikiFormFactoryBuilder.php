@@ -633,7 +633,7 @@ class ManageWikiFormFactoryBuilder {
 
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
 
-					if ( isset( $a['overridedefault'] ) && is_array( $a['overridedefault'] ) ) {
+					if ( is_array( $a['overridedefault'] ) && !empty( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
