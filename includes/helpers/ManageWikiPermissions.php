@@ -73,7 +73,7 @@ class ManageWikiPermissions {
 					'removegroups' => [],
 					'addself' => [],
 					'removeself' => [],
-					'autopromote' => []
+					'autopromote' => null
 				];
 		}
 	}
