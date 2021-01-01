@@ -431,10 +431,13 @@ class ManageWikiFormFactoryBuilder {
 								unset( $enabledSkins[$skip] );
 							}
 						}
+
+						$enabledSkins = array_flip( $enabledSkins );
+						ksort( $enabledSkins );
 						
 						$configs = [
 							'type' => 'select',
-							'options' => isset( $set['options'] ) ? array_merge( array_flip($enabledSkins), $set['options'] ) : array_flip($enabledSkins),
+							'options' => isset( $set['options'] ) ? array_merge( $enabledSkins, $set['options'] ) : $enabledSkins,
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						break;
@@ -449,10 +452,13 @@ class ManageWikiFormFactoryBuilder {
 								unset( $enabledSkins[$skip] );
 							}
 						}
+
+						$enabledSkins = array_flip( $enabledSkins );
+						ksort( $enabledSkins );
 						
 						$configs = [
 							'type' => 'multiselect',
-							'options' => isset( $set['options'] ) ? array_merge( array_flip($enabledSkins), $set['options'] ) : array_flip($enabledSkins),
+							'options' => isset( $set['options'] ) ? array_merge( $enabledSkins, $set['options'] ) : $enabledSkins,
 							'default' => $setList[$name] ?? $set['overridedefault']
 						];
 						
