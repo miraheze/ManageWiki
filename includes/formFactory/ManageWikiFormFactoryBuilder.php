@@ -238,13 +238,15 @@ class ManageWikiFormFactoryBuilder {
 		$setList = $mwSettings->list();
 		$mwPermissions = new ManageWikiPermissions( $dbName );
 		$groupList = array_keys( $mwPermissions->list() );
+		$remoteWiki = new RemoteWiki( $dbName );
 
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
-			$add = ( $set['from'] == 'mediawiki' ) ||  in_array( $set['from'], $extList );
+			$visible =  ( isset( $set['visibility'] ) ? ( $set['visibility'] == 'private' && $remoteWiki->isPrivate() ) || ( $set['visibility'] == 'public' && !$remoteWiki->isPrivate() ) : true );
+			$add =  ( $set['from'] == 'mediawiki' && $visible ) || ( in_array( $set['from'], $extList ) && $visible );
 			$disabled = ( $ceMW ) ? !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
