@@ -245,10 +245,11 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
-			$visible = ( isset( $set['visibility'] ) ? ( $set['visibility'] == 'private' && $wiki->isPrivate() ) || ( $set['visibility'] == 'public' && !$wiki->isPrivate() ) : true );
+			$visible = ( isset( $set['requires']['visibility'] ) ? ( $set['requires']['visibility'] == 'private' && $wiki->isPrivate() ) || ( $set['requires']['visibility'] == 'public' && !$wiki->isPrivate() ) : true );
 			$mwRequirements = ( isset( $set['requires'] ) ? ManageWikiRequirements::process( $set['requires'] ) : true );
-			$add = ( $set['from'] == 'mediawiki' && $mwRequirements && $visible ) || ( in_array( $set['from'], $extList ) && $mwRequirements && $visible );
-			$disabled = ( $ceMW ) ? !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
+
+			$add = ( $set['from'] == 'mediawiki' && $visible ) || ( in_array( $set['from'], $extList ) && $visible );
+			$disabled = ( $ceMW ) ? !$mwRequirements || !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
@@ -542,10 +543,28 @@ class ManageWikiFormFactoryBuilder {
 						break;
 				}
 
+				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
+				if ( isset( $set['requires'] ) && $set['requires'] ) {
+					$requires = [];
+					$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+
+					foreach ( $set['requires'] as $require => $data ) {
+						foreach ( $data as $index => $element ) {
+							if ( is_array( $element ) ) {
+								$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
+							}
+						}
+
+						$requires[] = ucfirst( $require ) . " - " . implode( ', ', $data );
+					}
+
+					$help .= "\n\n{$requiresLabel}: " . implode( ' & ', $requires );
+				}
+
 				$formDescriptor["set-$name"] = [
 					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
 					'disabled' => $disabled,
-					'help' => ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'],
+					'help' => $help,
 					'cssclass' => 'createwiki-infuse',
 					'section' => ( isset( $set['section'] ) ) ? $set['section'] : 'other'
 				] + $configs;
