@@ -197,13 +197,15 @@ class ManageWikiFormFactoryBuilder {
 			if ( $ext['requires'] ) {
 				$requires = [];
 				foreach ( $ext['requires'] as $require => $data ) {
-					foreach ( $data as $index => $element ) {
-						if ( is_array( $element ) ) {
-							$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
+					if ( is_array( $data ) ) {
+						foreach ( $data as $index => $element ) {
+							if ( is_array( $element ) ) {
+								$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
+							}
 						}
 					}
 
-					$requires[] = ucfirst( $require ) . " - " . implode( ', ', $data );
+					$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 				}
 
 				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires );
