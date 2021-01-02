@@ -248,10 +248,10 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
-			$mwRequirements = isset( $set['requires'] ) ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
+			$mwRequirements = ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki );
 			$visible = isset( $set['requires']['visibility'] ) || isset( $set['requires']['extensions'] ) ? $mwRequirements : true;
 
-			$add = ( $set['from'] == 'mediawiki' && $visible ) || ( in_array( $set['from'], $extList ) && $visible );
+			$add = $visible && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
 			$disabled = ( $ceMW ) ? !$mwRequirements || !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
