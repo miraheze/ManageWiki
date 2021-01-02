@@ -17,7 +17,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorCore( $dbName, $ceMW, $context, $wiki, $config );
 				break;
 			case 'extensions':
-				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $config );
+				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $wiki, $config );
 				break;
 			case 'settings':
 				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config );
@@ -177,6 +177,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function buildDescriptorExtensions(
 		string $dbName,
 		bool $ceMW,
+		RemoteWiki $wiki,
 		Config $config
 	) {
 		$mwExt = new ManageWikiExtensions( $dbName );
@@ -219,7 +220,7 @@ class ManageWikiFormFactoryBuilder {
 					$ext['name']
 				],
 				'default' => in_array( $name, $extList ),
-				'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $ext['requires'], $extList  ) : 1,
+				'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : 1,
 				'help' => (string)implode( ' ', $help ),
 				'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 			];
@@ -247,8 +248,8 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
-			$mwRequirements = isset( $set['requires'] ) ? ManageWikiRequirements::process( $set['requires'], [], false, $wiki ) : true;
-			$visible = isset( $set['requires']['visibility'] ) ? $mwRequirements : true;
+			$mwRequirements = isset( $set['requires'] ) ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
+			$visible = isset( $set['requires']['visibility'] ) || isset( $set['requires']['extensions'] ) ? $mwRequirements : true;
 
 			$add = ( $set['from'] == 'mediawiki' && $visible ) || ( in_array( $set['from'], $extList ) && $visible );
 			$disabled = ( $ceMW ) ? !$mwRequirements || !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
