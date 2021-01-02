@@ -12,23 +12,32 @@ class ManageWikiRequirements {
 	 * @param array $actions Requirements that need to be met
 	 * @param array $extensionList Enabled extensions on the wiki
 	 * @param bool $ignorePerms Whether a permissions check should be carried out
+	 * @param RemoteWiki $wiki
 	 * @return bool Whether the extension can be enabled
 	 */
-	public static function process( array $actions, array $extensionList = [], bool $ignorePerms = false ) {
+	public static function process( array $actions, array $extensionList = [], bool $ignorePerms = false, RemoteWiki $wiki = null ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
 		foreach ( $actions as $action => $data ) {
-			if ( $action == 'permissions' ) {
-				$stepResponse['permissions'] = ( $ignorePerms ) ? true : self::permissions( $data );
-			} elseif ( $action == 'extensions' ) {
-				$stepResponse['extensions'] = self::extensions( $data, $extensionList );
-			} elseif ( $action == 'articles' ) {
-				$stepResponse['articles'] = self::articles( $data );
-			} elseif ( $action == 'pages' ) {
-				$stepResponse['pages'] = self::pages( $data );
-			} else {
-				return false;
+			switch ( $action ) {
+				case 'permissions':
+					$stepResponse['permissions'] = ( $ignorePerms ) ? true : self::permissions( $data );
+					break;
+				case 'extensions':
+					$stepResponse['extensions'] = self::extensions( $data, $extensionList );
+					break;
+				case 'articles':
+					$stepResponse['articles'] = self::articles( $data );
+					break;
+				case 'pages':
+					$stepResponse['pages'] = self::pages( $data );
+					break;
+				case 'visibility':
+					$stepResponse['visibility'] = self::visibility( $data, $wiki );
+					break;
+				default:
+					return false;
 			}
 		}
 
@@ -90,5 +99,14 @@ class ManageWikiRequirements {
 	 */
 	private static function pages( int $lim ) {
 		return (bool)( SiteStats::pages() <= $lim );
+	}
+
+	/**
+	 * @param String $state
+	 * @param RemoteWiki $wiki
+	 * @return bool
+	 */
+	private static function visibility( String $state, RemoteWiki $wiki ) {
+		return (bool)( $state == 'private' && $wiki->isPrivate() ) || ( $state == 'public' && !$wiki->isPrivate() );
 	}
 }
