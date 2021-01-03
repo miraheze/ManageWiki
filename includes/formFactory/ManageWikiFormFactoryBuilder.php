@@ -17,10 +17,10 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorCore( $dbName, $ceMW, $context, $wiki, $config );
 				break;
 			case 'extensions':
-				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $config );
+				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $wiki, $config );
 				break;
 			case 'settings':
-				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $config );
+				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config );
 				break;
 			case 'namespaces':
 				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $special, $config );
@@ -177,6 +177,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function buildDescriptorExtensions(
 		string $dbName,
 		bool $ceMW,
+		RemoteWiki $wiki,
 		Config $config
 	) {
 		$mwExt = new ManageWikiExtensions( $dbName );
@@ -197,13 +198,15 @@ class ManageWikiFormFactoryBuilder {
 			if ( $ext['requires'] ) {
 				$requires = [];
 				foreach ( $ext['requires'] as $require => $data ) {
-					foreach ( $data as $index => $element ) {
-						if ( is_array( $element ) ) {
-							$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
+					if ( is_array( $data ) ) {
+						foreach ( $data as $index => $element ) {
+							if ( is_array( $element ) ) {
+								$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
+							}
 						}
 					}
 
-					$requires[] = ucfirst( $require ) . " - " . implode( ', ', $data );
+					$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 				}
 
 				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires );
@@ -217,7 +220,7 @@ class ManageWikiFormFactoryBuilder {
 					$ext['name']
 				],
 				'default' => in_array( $name, $extList ),
-				'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $ext['requires'], $extList  ) : 1,
+				'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : 1,
 				'help' => (string)implode( ' ', $help ),
 				'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 			];
@@ -230,6 +233,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
+		RemoteWiki $wiki,
 		Config $config
 	) {
 		$mwExt = new ManageWikiExtensions( $dbName );
@@ -244,8 +248,11 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
-			$add = ( $set['from'] == 'mediawiki' ) ||  in_array( $set['from'], $extList );
-			$disabled = ( $ceMW ) ? !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
+			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
+			$visible = isset( $set['requires']['visibility'] ) ? $mwRequirements : true;
+
+			$add = $visible && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
+			$disabled = ( $ceMW ) ? !$mwRequirements || !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
@@ -539,10 +546,30 @@ class ManageWikiFormFactoryBuilder {
 						break;
 				}
 
+				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
+				if ( $set['requires'] ) {
+					$requires = [];
+					$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+
+					foreach ( $set['requires'] as $require => $data ) {
+						if ( is_array( $data ) ) {
+							foreach ( $data as $index => $element ) {
+								if ( is_array( $element ) ) {
+									$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
+								}
+							}
+						}
+
+						$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
+					}
+
+					$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
+				}
+
 				$formDescriptor["set-$name"] = [
 					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
 					'disabled' => $disabled,
-					'help' => ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'],
+					'help' => $help,
 					'cssclass' => 'createwiki-infuse',
 					'section' => ( isset( $set['section'] ) ) ? $set['section'] : 'other'
 				] + $configs;
