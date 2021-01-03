@@ -23,7 +23,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config );
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $special, $config );
+				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $special, $wiki, $config );
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special, $config );
@@ -583,6 +583,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		bool $ceMW,
 		string $special,
+		RemoteWiki $wiki,
 		Config $config
 	) {
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
@@ -662,10 +663,34 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
-				$add = ( $a['from'] == 'mediawiki' ) || in_array( $a['from'], $extList );
+				$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
+				$visible = isset( $set['requires']['visibility'] ) ? $mwRequirements : true;
 
+				$add = $visible && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
+				$disabled = ( $ceMW ) ? !$mwRequirements || !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
+
+				$help = null;
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
 
+					if ( $a['requires'] ) {
+						$requires = [];
+						$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+
+						foreach ( $a['requires'] as $require => $data ) {
+							if ( is_array( $data ) ) {
+								foreach ( $data as $index => $element ) {
+									if ( is_array( $element ) ) {
+										$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
+									}
+								}
+							}
+
+							$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
+						}
+
+						$help = "<br />{$requiresLabel}: " . implode( ' & ', $requires );
+					}
+					
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
@@ -674,7 +699,8 @@ class ManageWikiFormFactoryBuilder {
 						'label' => $a['name'],
 						'type' => $a['type'] === 'vestyle'  ? 'check' : $a['type'],
 						'default' => $namespaceData['additional'][$key] ?? $a['overridedefault'],
-						'disabled' => !$ceMW,
+						'disabled' => $disabled,
+						'help' => $help,
 						'section' => $name
 					];
 				}
