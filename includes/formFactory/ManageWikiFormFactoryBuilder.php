@@ -663,11 +663,11 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
-				$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
-				$visible = isset( $set['requires']['visibility'] ) ? $mwRequirements : true;
+				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
+				$visible = isset( $a['requires']['visibility'] ) ? $mwRequirements : true;
 
-				$add = $visible && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
-				$disabled = ( $ceMW ) ? !$mwRequirements || !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
+				$add = $visible && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
+				$disabled = ( $ceMW ) ? !$mwRequirements || !( !$a['restricted'] || ( $a['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
 
 				$help = null;
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
