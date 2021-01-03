@@ -186,6 +186,8 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
+			$mwRequirements = $ext['requires'] ? !ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
+			
 			$help = [];
 			$conflictLabel = wfMessage( 'managewiki-conflicts' )->text();
 			$requiresLabel = wfMessage( 'managewiki-requires' )->text();
@@ -249,10 +251,9 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
 			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
-			$visible = isset( $set['requires']['visibility'] ) ? $mwRequirements : true;
 
-			$add = $visible && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
-			$disabled = ( $ceMW ) ? !$mwRequirements : true;
+			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
+
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
@@ -568,7 +569,7 @@ class ManageWikiFormFactoryBuilder {
 
 				$formDescriptor["set-$name"] = [
 					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
-					'disabled' => $disabled,
+					'disabled' => ( $ceMW ) ? !$mwRequirements : 1,
 					'help' => $help,
 					'cssclass' => 'createwiki-infuse',
 					'section' => ( isset( $set['section'] ) ) ? $set['section'] : 'other'
