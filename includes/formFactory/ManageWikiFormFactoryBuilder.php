@@ -686,7 +686,7 @@ class ManageWikiFormFactoryBuilder {
 							$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 						}
 
-						$help = "<br />{$requiresLabel}: " . implode( ' & ', $requires );
+						$help = "{$requiresLabel}: " . implode( ' & ', $requires );
 					}
 					
 					if ( is_array( $a['overridedefault'] ) ) {
