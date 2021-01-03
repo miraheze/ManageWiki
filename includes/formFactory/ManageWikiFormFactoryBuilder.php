@@ -186,7 +186,7 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
-			$mwRequirements = $ext['requires'] ? !ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
+			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
 			
 			$help = [];
 			$conflictLabel = wfMessage( 'managewiki-conflicts' )->text();
