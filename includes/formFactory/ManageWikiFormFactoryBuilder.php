@@ -547,7 +547,7 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
-				if ( isset( $set['requires'] ) && $set['requires'] ) {
+				if ( $set['requires'] ) {
 					$requires = [];
 					$requiresLabel = wfMessage( 'managewiki-requires' )->text();
 
