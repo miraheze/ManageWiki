@@ -252,7 +252,7 @@ class ManageWikiFormFactoryBuilder {
 			$visible = isset( $set['requires']['visibility'] ) ? $mwRequirements : true;
 
 			$add = $visible && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
-			$disabled = ( $ceMW ) ? !$mwRequirements || !( !$set['restricted'] || ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
+			$disabled = ( $ceMW ) ? !$mwRequirements : true;
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
