@@ -222,7 +222,7 @@ class ManageWikiFormFactoryBuilder {
 					$ext['name']
 				],
 				'default' => in_array( $name, $extList ),
-				'disabled' => ( $ceMW ) ? !$mwRequirements : 1,
+				'disabled' => ( $ceMW ) ? !$mwRequirements : true,
 				'help' => (string)implode( ' ', $help ),
 				'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 			];
@@ -254,6 +254,8 @@ class ManageWikiFormFactoryBuilder {
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
 
+			$disabled = ( $ceMW ) ? !$mwRequirements : true;
+			
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
@@ -569,7 +571,7 @@ class ManageWikiFormFactoryBuilder {
 
 				$formDescriptor["set-$name"] = [
 					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
-					'disabled' => ( $ceMW ) ? !$mwRequirements : 1,
+					'disabled' => $disabled,
 					'help' => $help,
 					'cssclass' => 'createwiki-infuse',
 					'section' => ( isset( $set['section'] ) ) ? $set['section'] : 'other'
@@ -698,7 +700,7 @@ class ManageWikiFormFactoryBuilder {
 						'label' => $a['name'],
 						'type' => $a['type'] === 'vestyle'  ? 'check' : $a['type'],
 						'default' => $namespaceData['additional'][$key] ?? $a['overridedefault'],
-						'disabled' => ( $ceMW ) ? !$mwRequirements : 1,
+						'disabled' => ( $ceMW ) ? !$mwRequirements : true,
 						'help' => $help,
 						'section' => $name
 					];
