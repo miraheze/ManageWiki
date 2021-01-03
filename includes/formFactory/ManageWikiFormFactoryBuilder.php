@@ -664,10 +664,8 @@ class ManageWikiFormFactoryBuilder {
 
 			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
-				$visible = isset( $a['requires']['visibility'] ) ? $mwRequirements : true;
 
-				$add = $visible && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
-				$disabled = ( $ceMW ) ? !$mwRequirements || !( !$a['restricted'] || ( $a['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) ) : true;
+				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
 
 				$help = null;
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
@@ -699,7 +697,7 @@ class ManageWikiFormFactoryBuilder {
 						'label' => $a['name'],
 						'type' => $a['type'] === 'vestyle'  ? 'check' : $a['type'],
 						'default' => $namespaceData['additional'][$key] ?? $a['overridedefault'],
-						'disabled' => $disabled,
+						'disabled' => ( $ceMW ) ? !$mwRequirements : 1,
 						'help' => $help,
 						'section' => $name
 					];
