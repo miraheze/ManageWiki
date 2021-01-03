@@ -222,7 +222,7 @@ class ManageWikiFormFactoryBuilder {
 					$ext['name']
 				],
 				'default' => in_array( $name, $extList ),
-				'disabled' => ( $ceMW ) ? !ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : 1,
+				'disabled' => ( $ceMW ) ? !mwRequirements : 1,
 				'help' => (string)implode( ' ', $help ),
 				'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
 			];
