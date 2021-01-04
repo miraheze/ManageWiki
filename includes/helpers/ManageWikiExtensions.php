@@ -121,6 +121,7 @@ class ManageWikiExtensions {
 	 * Commits all changes made to extension lists to the database
 	 */
 	public function commit() {
+		$remoteWiki = new RemoteWiki( $this->wiki );
 		foreach ( $this->liveExts as $name => $extConfig ) {
 			// Check if we have a conflict first
 			if ( in_array( $extConfig['conflicts'], $this->list() ) ) {
@@ -140,7 +141,7 @@ class ManageWikiExtensions {
 			// Define a 'current' extension as one with no changes entry
 			$enabledExt = !isset( $this->changes[$name] );
 			// Now we need to check if we fulfil the requirements to enable this extension
-			$requirementsCheck = ManageWikiRequirements::process( $extConfig['requires'], $this->list(), $enabledExt );
+			$requirementsCheck = ManageWikiRequirements::process( $extConfig['requires'], $this->list(), $enabledExt, $remoteWiki );
 
 			if ( $requirementsCheck ) {
 				$installResult = ( !isset( $extConfig['install'] ) || $enabledExt ) ? true : ManageWikiInstaller::process( $this->wiki, $extConfig['install'] );
