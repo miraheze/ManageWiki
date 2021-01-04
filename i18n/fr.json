@@ -137,7 +137,7 @@
 	"managewiki-link-settings-view": "Afficher les paramètres supplémentaires de ce wiki",
 	"managewiki-toggle-forcesidebar": "Forcer l’affichage des liens de ManageWiki dans la barre latérale.",
 	"namespaces-aliases": "Veillez saisir sur une nouvelle ligne tous les espaces de noms indéfinis qui doivent être redirigés vers celui-ci",
-	"namespaces-content": "Est-ce que cet espace de noms doit contenir les matériaux du wiki principal (le contenu) ?",
+	"namespaces-content": "Cet espace de noms contient-il le contenu principal du wiki ?",
 	"namespaces-contentmodel": "Quel devrait être le modèle de contenu de cet espace de noms ?",
 	"namespaces-delete": "Supprimer",
 	"namespaces-delete-checkbox": "En cochant cette case, vous allez supprimer cet espace de noms.",
