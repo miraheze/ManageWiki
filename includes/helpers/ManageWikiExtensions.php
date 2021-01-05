@@ -122,6 +122,7 @@ class ManageWikiExtensions {
 	 */
 	public function commit() {
 		$remoteWiki = new RemoteWiki( $this->wiki );
+
 		foreach ( $this->liveExts as $name => $extConfig ) {
 			// Check if we have a conflict first
 			if ( in_array( $extConfig['conflicts'], $this->list() ) ) {
