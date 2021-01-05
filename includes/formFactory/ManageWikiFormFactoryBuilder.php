@@ -962,7 +962,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn = self::submissionExtensions( $formData, $dbName, $config );
 				break;
 			case 'settings':
-				$mwReturn = self::submissionSettings( $formData, $dbName, $context, $config );
+				$mwReturn = self::submissionSettings( $formData, $dbName, $context, $wiki, $config );
 				break;
 			case 'namespaces':
 				$mwReturn = self::submissionNamespaces( $formData, $dbName, $special, $config );
@@ -1098,8 +1098,12 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbName,
 		IContextSource $context,
+		RemoteWiki $wiki,
 		Config $config
 	) {
+		$mwExt = new ManageWikiExtensions( $dbName );
+		$extList = $mwExt->list();
+
 		$mwSettings = new ManageWikiSettings( $dbName );
 		$settingsList = $mwSettings->list();
 
@@ -1113,7 +1117,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$current = $settingsList[$name] ?? $set['overridedefault'];
-			$mwAllowed = ( $set['restricted'] && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) || !$set['restricted'] );
+			$mwAllowed = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
 			$type = $set['type'];
 
 			$value = $formData["set-$name"];
