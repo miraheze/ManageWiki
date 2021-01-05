@@ -974,7 +974,11 @@ class ManageWikiFormFactoryBuilder {
 				throw new MWException( "{$module} not recognised" );
 		}
 
-		$mwReturn->commit();
+		if ( $mwReturn->changes ) {
+			$mwReturn->commit();
+		} else {
+			return [ 'managewiki-changes-none' => null ];
+		}
 
 		if ( $module != 'permissions' ) {
 			$mwReturn->logParams['4::wiki'] = $dbName;

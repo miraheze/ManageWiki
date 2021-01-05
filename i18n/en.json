@@ -46,6 +46,7 @@
 	"managewikinamespaces": "Manage a wiki's namespaces",
 	"managewikipermissions": "Manage a wiki's permissions",
 	"managewikidefaultpermissions": "Manage a wikifarm's default permissions",
+	"managewiki-changes-none": "No changes were made.",
 	"managewiki-conflicts": "Conflicts with",
 	"managewiki-desc": "Allows people to manage wikis through a web interface",
 	"managewiki-disabled": "This feature ($1) has not been enabled on this wiki yet.",
