@@ -263,11 +263,12 @@ class ManageWikiFormFactoryBuilder {
 				switch ( $set['type'] ) {
 					case 'databases':
 						$configs = [
-							'type' => 'select',
-							'default' => $setList[$name] ?? $set['overridedefault']
+							'type' => 'autocompleteselect',
+							'default' => $setList[$name] ?? $set['overridedefault'],
+							'require-match' => true
 						];
 						foreach ( $config->get( 'LocalDatabases' ) as $db ) {
-							$configs['options'][$db] = $db;
+							$configs['autocomplete'][$db] = $db;
 						}
 						break;
 					case 'float':
