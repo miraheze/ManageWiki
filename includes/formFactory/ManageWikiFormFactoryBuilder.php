@@ -528,7 +528,7 @@ class ManageWikiFormFactoryBuilder {
 					case 'wikipage':
 						$configs = [
 							'type' => 'title',
-							'exists' => true,
+							'exists' => isset( $set['exists'] ) ? $set['exists'] : true,
 							'default' => $setList[$name] ?? $set['overridedefault'],
 							'required' => false
 						];
@@ -536,7 +536,7 @@ class ManageWikiFormFactoryBuilder {
 					case 'wikipages':
 						$configs = [
 							'type' => 'titlesmultiselect',
-							'exists' => true,
+							'exists' => isset( $set['exists'] ) ? $set['exists'] : true,
 							'default' => $setList[$name] ?? $set['overridedefault'],
 							'required' => false
 						];
