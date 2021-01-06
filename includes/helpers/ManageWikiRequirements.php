@@ -27,6 +27,9 @@ class ManageWikiRequirements {
 				case 'extensions':
 					$stepResponse['extensions'] = self::extensions( $data, $extensionList );
 					break;
+				case 'activeusers':
+					$stepResponse['activeusers'] = self::activeUsers( $data );
+					break;
 				case 'articles':
 					$stepResponse['articles'] = self::articles( $data );
 					break;
@@ -83,6 +86,14 @@ class ManageWikiRequirements {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * @param int $lim Cut off number
+	 * @return bool Whether limit is exceeded or not
+	 */
+	private static function activeUsers( int $lim ) {
+		return (bool)( SiteStats::activeUsers() <= $lim );
 	}
 
 	/**
