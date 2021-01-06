@@ -263,7 +263,7 @@ class ManageWikiFormFactoryBuilder {
 				switch ( $set['type'] ) {
 					case 'databases':
 						$configs = [
-							'type' => 'autocompleteselect',
+							'class' => HTMLAutoCompleteSelectFieldWithOOUI::class,
 							'default' => $setList[$name] ?? $set['overridedefault'],
 							'require-match' => true
 						];
