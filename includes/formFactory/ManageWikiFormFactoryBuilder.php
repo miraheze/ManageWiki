@@ -978,7 +978,7 @@ class ManageWikiFormFactoryBuilder {
 		if ( $mwReturn->changes ) {
 			$mwReturn->commit();
 		} else {
-			return [ 'managewiki-changes-none' => [] ];
+			return [ [ 'managewiki-changes-none' => null ] ];
 		}
 
 		if ( $module != 'permissions' ) {
