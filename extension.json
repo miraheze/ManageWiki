@@ -56,6 +56,9 @@
 			"i18n"
 		]
 	},
+	"ExtensionMessagesFiles": {
+		"ManageWikiAliases": "ManageWiki.i18n.alias.php"
+	},
 	"AutoloadClasses": {
 		"ApiQueryWikiConfig": "includes/api/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
