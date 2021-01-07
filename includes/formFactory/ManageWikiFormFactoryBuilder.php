@@ -711,7 +711,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor["aliases-$name"] = [
 				'type' => 'textarea',
 				'label-message' => 'namespaces-aliases',
-				'default' => implode( '\n', $namespaceData['aliases'] ),
+				'default' => implode( "\n", $namespaceData['aliases'] ),
 				'disabled' => !$ceMW,
 				'section' => $name
 			];
