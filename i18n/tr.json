@@ -45,6 +45,7 @@
 	"managewikinamespaces": "Vikinin ad alanları yönet",
 	"managewikipermissions": "Vikinin yetkileri yönet",
 	"managewikidefaultpermissions": "Viki çiftliğin varsayılan izinlerini yönet",
+	"managewiki-changes-none": "Hiç değişiklik yapılmadı.",
 	"managewiki-conflicts": "İle çatışmalar",
 	"managewiki-desc": "İnsanların bir web arayüzü aracılığıyla viki'leri yönetmesine izin verir",
 	"managewiki-disabled": "Bu özellik ($1) bu vikide henüz etkinleştirilmedi.",

@@ -46,6 +46,7 @@
 	"managewikinamespaces": "Gerenciar um namespace de wiki",
 	"managewikipermissions": "Gerenciar permissões de uma wiki",
 	"managewikidefaultpermissions": "Gerenciar os privilégios padrão de uma wiki",
+	"managewiki-changes-none": "Nenhuma mudança foi feita.",
 	"managewiki-conflicts": "Conflitos com",
 	"managewiki-desc": "Permite que as pessoas gerenciem wikis através de uma interface da web",
 	"managewiki-disabled": "Esta funcionalidade ($1) ainda não foi ativada nesta wiki.",

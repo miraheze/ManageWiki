@@ -59,6 +59,7 @@
 	"managewikinamespaces": "Gérer les espaces de noms d’un wiki",
 	"managewikipermissions": "Gérer les droits d’un wiki",
 	"managewikidefaultpermissions": "Gérer les droits par défaut d’une ferme de wikis",
+	"managewiki-changes-none": "Aucun changement n’a été effectué.",
 	"managewiki-conflicts": "Conflits avec",
 	"managewiki-desc": "Permet aux utilisateurs de paramétrer un wiki dans une interface web",
 	"managewiki-disabled": "Cette fonctionnalité ($1) n’est pas encore activée sur ce wiki.",
