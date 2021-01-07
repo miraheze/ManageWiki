@@ -5,5 +5,5 @@ $specialPageAliases = [];
 $specialPageAliases['en'] = [
 	'DeletedWikis' => [ 'DeletedWikis' ],
 	'ManageWiki' => [ 'ManageWiki' ],
-  'ManageWikiDefaultPermissions' => [ 'ManageWikiDefaultPermissions' ],
+	'ManageWikiDefaultPermissions' => [ 'ManageWikiDefaultPermissions' ],
 ];
