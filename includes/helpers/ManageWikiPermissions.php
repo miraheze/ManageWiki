@@ -140,6 +140,8 @@ class ManageWikiPermissions {
 
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( in_array( $group, $this->deleteGroups ) ) {
+				$this->log = 'delete-group';
+				
 				$this->dbw->delete(
 					'mw_permissions',
 					[
