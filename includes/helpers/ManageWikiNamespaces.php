@@ -153,6 +153,10 @@ class ManageWikiNamespaces {
 			if ( in_array( $id, $this->deleteNamespaces ) ) {
 				$this->log = 'namespaces-delete';
 				
+				$this->logParams = [
+					'5::namespace' => $this->changes[$id]['old']
+				];
+				
 				$this->dbw->delete(
 					'mw_namespaces',
 					[
