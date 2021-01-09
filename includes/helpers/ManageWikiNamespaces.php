@@ -151,6 +151,8 @@ class ManageWikiNamespaces {
 	public function commit() {
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( in_array( $id, $this->deleteNamespaces ) ) {
+				$this->log = 'namespaces-delete';
+				
 				$this->dbw->delete(
 					'mw_namespaces',
 					[
