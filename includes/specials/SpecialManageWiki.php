@@ -161,11 +161,11 @@ class SpecialManageWiki extends SpecialPage {
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
 
 			$createForm->setMethod( 'post' );
-			
+
 			if( $module == 'namespaces' ) {
 				$createForm->setAction( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() . '/' . ManageWiki::namespaceID( '' ) );
 			}
-			
+
 			$createForm->setFormIdentifier( 'create' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->setSubmitText( $this->msg( "managewiki-{$module}-create-submit" )->plain() )->prepareForm()->show();
 		}
 	}
