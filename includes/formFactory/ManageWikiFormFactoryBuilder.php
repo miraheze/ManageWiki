@@ -604,12 +604,16 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $nsID as $name => $id ) {
 			$namespaceData = $mwNamespace->list( $id );
+			
+			$request = new WebRequest;
+			$defaultName = $request->getVal( 'create' ) ? ucfirst( $request->getVal( 'create' ) ) : $namespaceData['name'];
+			$defaultTalkName = $request->getVal( 'create' ) ? ucfirst( $request->getVal( 'create' ) ) . '_Talk' : $namespaceData['name'];
 
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
 					'label-message' => "namespaces-$name",
-					'default' => $namespaceData['name'],
+					'default' => $name == 'namespacetalk' ? $defaultTalkName : $defaultName,
 					'disabled' => ( $namespaceData['core'] || !$ceMW ),
 					'required' => true,
 					'section' => $name
