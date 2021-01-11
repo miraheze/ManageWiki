@@ -44,6 +44,7 @@
 	"managewikinamespaces": "Раководење со именски простори на вики",
 	"managewikipermissions": "Раководење дозволи на вики",
 	"managewikidefaultpermissions": "Раководење со основните дозволи на викифармата",
+	"managewiki-changes-none": "Нема направено промени.",
 	"managewiki-conflicts": "Се судира со",
 	"managewiki-desc": "Овозможува раководење со викија преку семрежен посредник",
 	"managewiki-disabled": "Оваа можност ($1) сè уште не е вклучена на ова вики.",
