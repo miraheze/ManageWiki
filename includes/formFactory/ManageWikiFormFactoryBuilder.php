@@ -23,7 +23,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config );
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $special, $wiki, $config );
+				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $wiki, $config );
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special, $config );
@@ -586,6 +586,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function buildDescriptorNamespaces(
 		string $dbName,
 		bool $ceMW,
+		IContextSource $context,
 		string $special,
 		RemoteWiki $wiki,
 		Config $config
@@ -604,12 +605,16 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $nsID as $name => $id ) {
 			$namespaceData = $mwNamespace->list( $id );
+			
+			$request = $context->getRequest();
+			$defaultName = $request->getVal( 'create' ) ? ucfirst( $request->getVal( 'create' ) ) : $namespaceData['name'];
+			$defaultTalkName = $request->getVal( 'create' ) ? ucfirst( $request->getVal( 'create' ) ) . '_talk' : $namespaceData['name'];
 
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
 					'label-message' => "namespaces-$name",
-					'default' => $namespaceData['name'],
+					'default' => $name == 'namespacetalk' ? $defaultTalkName : $defaultName,
 					'disabled' => ( $namespaceData['core'] || !$ceMW ),
 					'required' => true,
 					'section' => $name
