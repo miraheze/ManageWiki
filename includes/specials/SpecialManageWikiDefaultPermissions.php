@@ -50,7 +50,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
  		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
 			$createDescriptor['groups'] = [
 				'type' => 'text',
-				'label-message' => 'managewiki-permissions-creategroup',
+				'label-message' => 'managewiki-permissions-create',
 				'validation-callback' => [ $this, 'validateNewGroupName' ],
 			];
 
