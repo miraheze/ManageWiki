@@ -99,7 +99,7 @@ class ManageWikiSettings {
 		foreach ( (array)$settings as $var ) {
 			$this->changes[$var] = [
 				'old' => $this->liveSettings[$var],
-				'new' => $this->settingsConfig[$var]['overridedefault']
+				'new' => 'delete'
 			];
 
 			unset ( $this->liveSettings[$var] );
