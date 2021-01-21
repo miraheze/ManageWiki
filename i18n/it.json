@@ -18,6 +18,7 @@
 	"managewikiextensions": "Gestisci le estensioni di un wiki",
 	"managewikinamespaces": "Gestisci i namespace di un wiki",
 	"managewikipermissions": "Gestisci le autorizzazioni di un wiki",
+	"managewiki-changes-none": "Non è stata effettuata alcuna modifica.",
 	"managewiki-disabled": "Questa funzione ($1) non è ancora stata attivata su questo wiki.",
 	"managewiki-error-conflict": "L'estensione $1 non può essere attivata poiché in conflitti con $2.",
 	"managewiki-error-disallowednamespace": "Il namespace $1 non è consentito.",
