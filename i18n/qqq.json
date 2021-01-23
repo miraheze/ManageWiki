@@ -32,7 +32,7 @@
 	"deletedwikis": "Used as a heading in Special:DeletedWikis which is a page that lists deleted wikis",
 	"extensions-other": "{{Identical|Other}}",
 	"extensions-handling": "{{Identical|Submit}}",
-	"log-description-managewiki": "Description for the \"ManageWiki\" log",
+	"log-description-managewiki": "Description for the 'ManageWiki' log",
 	"log-name-managewiki": "Log name for ManageWiki",
 	"logentry-managewiki-delete": "A message that is logged when a wiki has been deleted using ManageWiki",
 	"logentry-managewiki-delete-group": "A message that is logged when a user group has been deleted using ManageWiki",
