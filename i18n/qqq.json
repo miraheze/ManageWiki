@@ -15,7 +15,7 @@
 	"action-managewiki": "Button to manage the settings of a wiki.",
 	"apihelp-query+wikiconfig-summary": "{{doc-apihelp-summary|wikiconfig}}",
 	"apihelp-query+wikiconfig-example-1": "{{doc-apihelp-example|wikiconfig}}",
-        "apihelp-query+wikiconfig-param-prop": "{{doc-apihelp-param|wikiconfig|prop}}",
+	"apihelp-query+wikiconfig-param-prop": "{{doc-apihelp-param|wikiconfig|prop}}",
 	"apihelp-query+wikiconfig-param-wikis": "{{doc-apihelp-param|wikiconfig|wikis}}",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "{{doc-apihelp-paramvalue|wikiconfig|prop|closed}}",
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "{{doc-apihelp-paramvalue|wikiconfig|prop|extensions}}",
