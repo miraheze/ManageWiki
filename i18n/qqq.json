@@ -65,6 +65,7 @@
 	"managewiki-label-sitename": "Used as a label for 'sitename'.\n{{Identical|Sitename}}",
 	"managewiki-missing": "Message if the wiki entered does not exist in the database.",
 	"managewiki-permissions-autopromote": "{{Doc-singularthey}}",
+	"managewiki-requires": "Text that indicates a particular setting needs something else to be enabled first",
 	"managewiki-sidebar-header": "Used as a label for the sidebar.\n{{Identical|Administration}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent.",
 	"namespaces-delete": "{{Identical|Delete}}",
