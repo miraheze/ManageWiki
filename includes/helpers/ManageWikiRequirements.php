@@ -113,11 +113,19 @@ class ManageWikiRequirements {
 	}
 
 	/**
-	 * @param String $state
+	 * @param array $data
 	 * @param RemoteWiki $wiki
 	 * @return bool
 	 */
-	private static function visibility( String $state, RemoteWiki $wiki ) {
-		return (bool)( $state == 'private' && $wiki->isPrivate() ) || ( $state == 'public' && !$wiki->isPrivate() );
+	private static function visibility( array $data, RemoteWiki $wiki ) {
+		foreach ( $data as $key => $val ) {
+			if ( $key == 'state' ) {
+				$ret = (bool)( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() );
+			} elseif ( $key == 'permissions' ) {
+				$ret = (bool)self::permissions( $val );
+			}
+		}
+
+		return $ret;
 	}
 }
