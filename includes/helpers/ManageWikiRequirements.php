@@ -120,10 +120,12 @@ class ManageWikiRequirements {
 	private static function visibility( array $data, RemoteWiki $wiki ) {
 		foreach ( $data as $key => $val ) {
 			if ( $key == 'state' ) {
-				return (bool)( ( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() ) );
+				$ret = (bool)( ( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() ) );
 			} elseif ( $key == 'permissions' ) {
-				return (bool)( self::permissions( $val ) );
+				$ret = (bool)( self::permissions( $val ) );
 			}
 		}
+
+		return $ret;
 	}
 }
