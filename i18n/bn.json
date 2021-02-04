@@ -2,16 +2,21 @@
 	"@metadata": {
 		"authors": [
 			"Aftabuzzaman",
+			"Tahmid02016",
 			"আফতাবুজ্জামান"
 		]
 	},
-	"logentry-farmer-managewiki": "$1 \"$4\"-এর জন্য সেটিংগুলি ($5) পরিবর্তন করেছেন",
+	"logentry-managewiki-settings": "$1 \"$4\"-এর জন্য সেটিংগুলি ($5) পরিবর্তন করেছেন",
 	"managewiki-label-category": "বিষয়শ্রেণী",
 	"managewiki-label-closed": "বন্ধ",
 	"managewiki-label-language": "ভাষা",
 	"managewiki-label-private": "ব্যক্তিগত",
 	"managewiki-label-reason": "কারণ",
+	"managewiki-label-server": "সার্ভারের নাম",
 	"managewiki-label-sitename": "সাইটের নাম",
+	"managewiki-permissions-removeall": "অন্যদের থেকে সরাতে পারেন",
 	"managewiki-success": "সেটিংগুলি সফলভাবে পরিবর্তিত হয়েছে।",
-	"managewiki-extension-name": "[$1 $2]"
+	"managewiki-extension-name": "[$1 $2]",
+	"namespaces-delete": "অপসারণ",
+	"permissions-handling": "জমা দিন"
 }
