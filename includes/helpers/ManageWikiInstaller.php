@@ -9,20 +9,27 @@ class ManageWikiInstaller {
 		$stepresponse = [];
 
 		foreach ( $actions as $action => $data ) {
-			if ( $action == 'sql' ) {
-				$stepresponse['sql'] = self::sql( $dbname, $data );
-			} elseif ( $action == 'files' ) {
-				$stepresponse['files'] = self::files( $dbname, $data );
-			} elseif ( $action == 'permissions' ) {
-				$stepresponse['permissions'] = self::permissions( $dbname, $data, $install );
-			} elseif ( $action == 'namespaces' ) {
-				$stepresponse['namespaces'] = self::namespaces( $dbname, $data, $install );
-			} elseif ( $action == 'mwscript' ) {
-				$stepresponse['mwscript'] = self::mwscript( $dbname, $data );
-			} elseif ( $action == 'settings' ) {
-				$stepresponse['settings'] = self::settings( $dbname, $data );
-			} else {
-				return false;
+			switch ( $action ) {
+				case 'sql':
+					$stepresponse['sql'] = self::sql( $dbname, $data );
+					break;
+				case 'files':
+					$stepresponse['files'] = self::files( $dbname, $data );
+					break;
+				case 'permissions':
+					$stepresponse['permissions'] = self::permissions( $dbname, $data, $install );
+					break;
+				case 'namespaces':
+					$stepresponse['namespaces'] = self::namespaces( $dbname, $data, $install );
+					break;
+				case 'mwscript':
+					$stepresponse['mwscript'] = self::mwscript( $dbname, $data );
+					break;
+				case 'settings':
+					$stepresponse['settings'] = self::settings( $dbname, $data );
+					break;
+				default:
+					return false;
 			}
 		}
 
