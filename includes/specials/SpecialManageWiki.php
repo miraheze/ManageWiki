@@ -93,6 +93,7 @@ class SpecialManageWiki extends SpecialPage {
 			$mwPermissions = new ManageWikiPermissions( $wiki );
 			$groups = array_keys( $mwPermissions->list() );
 
+			$options = [];
 			foreach ( $groups as $group ) {
 				$lowerCaseGroupName = strtolower( $group );
 				$options[UserGroupMembership::getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;

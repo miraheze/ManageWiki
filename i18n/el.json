@@ -1,6 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
+			"Abijeet Patro",
+			"NikosLikomitros",
 			"Nikosgranturismogt"
 		]
 	},
@@ -22,12 +24,9 @@
 	"managewiki-label-reason": "Αιτιολογία",
 	"managewiki-label-sitename": "Όνομα ιστοχώρου",
 	"managewiki-missing": "Αυτό το βίκι δεν υπάρχει.",
-	"managewiki-perm-display": "Τοπικοποιημένο όνομα ομάδας:",
-	"managewiki-perm-name": "Όνομα ομάδας:",
-	"managewiki-perm-reason": "Αιτία:",
 	"managewiki-success": "Αυτές οι ρυθμίσεις έχουν αλλαχθεί επιτυχώς.",
-	"managewiki-extensions-link": "Διαχείριση των επεκτάσεων του βίκι",
-	"managewiki-settings-link": "Διαχείριση των ρυθμίσεων του βίκι",
+	"managewiki-link-extensions": "Διαχείριση των επεκτάσεων του βίκι",
+	"managewiki-link-settings": "Διαχείριση των ρυθμίσεων του βίκι",
 	"namespaces-namespace": "Όνομα του ονοματοχώρου",
 	"settings-other": "Άλλο",
 	"settings-handling": "Υποβολή"
