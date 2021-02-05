@@ -642,7 +642,6 @@ class ManageWikiFormFactoryBuilder {
 					'default' => $namespaceData['contentmodel'],
 					'options' => array_merge( [
 						'CSS' => 'css',
-						'Extension Default' => '',
 						'JavaScript' => 'javascript',
 						'JSON' => 'json',
 						'Wikitext' => 'wikitext'
