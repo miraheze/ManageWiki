@@ -86,9 +86,14 @@ class ManageWikiInstaller {
 	private static function permissions( string $dbname, array $data, bool $install ) {
 		$mwPermissions = new ManageWikiPermissions( $dbname );
 
+		$groupData = $data['deleteGroup'] ?? $data;
+		$deleteGroup = $data['deleteGroup'] ?? false;
+
 		$action = ( $install ) ? 'add' : 'remove';
 
-		foreach ( $data as $group => $mod ) {
+		$script = __DIR__ . '../../../../maintenance/emptyUserGroup.php';
+
+		foreach ( $groupData as $group => $mod ) {
 			$groupData = [
 				'permissions' => [
 					$action => $mod['permissions'] ?? []
@@ -100,6 +105,12 @@ class ManageWikiInstaller {
 					$action => $mod['removegroups'] ?? []
 				]
 			];
+
+			if ( $action == 'remove' && $deleteGroup ) {
+				$mwJob = new MWScriptJob( Title::newMainPage(), [ 'dbname' => $dbname, 'script' => $script, 'options' => [ "$group" ] ] );
+
+				JobQueueGroup::singleton()->push( $mwJob );
+			}
 
 			$mwPermissions->modify( $group, $groupData );
 		}
