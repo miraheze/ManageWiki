@@ -125,6 +125,13 @@ class ManageWikiPermissions {
 			];
 		}
 
+		$script = __DIR__ . '../../../../maintenance/emptyUserGroup.php';
+
+		$mwJob = new MWScriptJob( Title::newMainPage(), [ 'dbname' => $this->wiki, 'script' => $script, 'options' => [ "$group" ] ] );
+
+		JobQueueGroup::singleton()->push( $mwJob );
+
+
 		// We will handle all processing in final stages
 		unset( $this->livePermissions[$group] );
 
