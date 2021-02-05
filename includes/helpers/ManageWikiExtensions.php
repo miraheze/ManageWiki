@@ -170,7 +170,7 @@ class ManageWikiExtensions {
 		foreach ( $this->removedExts as $name => $extConfig ) {
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it
 			if ( isset( $extConfig['remove'] ) ) {
-				ManageWikiInstaller::process( $this->wiki, $extConfig['remove'] );
+				ManageWikiInstaller::process( $this->wiki, $extConfig['remove'], false );
 			}
 		}
 

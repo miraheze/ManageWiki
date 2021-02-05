@@ -4,7 +4,7 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 
 class ManageWikiInstaller {
-	public static function process( string $dbname, array $actions ) {
+	public static function process( string $dbname, array $actions, bool $install = true ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepresponse = [];
 
@@ -14,9 +14,9 @@ class ManageWikiInstaller {
 			} elseif ( $action == 'files' ) {
 				$stepresponse['files'] = self::files( $dbname, $data );
 			} elseif ( $action == 'permissions' ) {
-				$stepresponse['permissions'] = self::permissions( $dbname, $data );
+				$stepresponse['permissions'] = self::permissions( $dbname, $data, $install );
 			} elseif ( $action == 'namespaces' ) {
-				$stepresponse['namespaces'] = self::namespaces( $dbname, $data );
+				$stepresponse['namespaces'] = self::namespaces( $dbname, $data, $install );
 			} elseif ( $action == 'mwscript' ) {
 				$stepresponse['mwscript'] = self::mwscript( $dbname, $data );
 			} elseif ( $action == 'settings' ) {
@@ -76,19 +76,21 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function permissions( string $dbname, array $data ) {
+	private static function permissions( string $dbname, array $data, bool $install ) {
 		$mwPermissions = new ManageWikiPermissions( $dbname );
+
+		$action = ( $install ) ? 'add' : 'remove';
 
 		foreach ( $data as $group => $mod ) {
 			$groupData = [
 				'permissions' => [
-					'add' => $mod['permissions'] ?? []
+					$action => $mod['permissions'] ?? []
 				],
 				'addgroups' => [
-					'add' => $mod['addgroups'] ?? []
+					$action => $mod['addgroups'] ?? []
 				],
 				'removegroups' => [
-					'add' => $mod['removegroups'] ?? []
+					$action => $mod['removegroups'] ?? []
 				]
 			];
 
@@ -100,14 +102,18 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function namespaces( string $dbname, array $data ) {
+	private static function namespaces( string $dbname, array $data, bool $install ) {
 		$mwNamespaces = new ManageWikiNamespaces( $dbname );
 		foreach ( $data as $name => $i ) {
-			$id = $i['id'];
-			unset( $i['id'] );
-			$i['name'] = $name;
+			if ( $install ) {
+				$id = $i['id'];
+				unset( $i['id'] );
+				$i['name'] = $name;
 
-			$mwNamespaces->modify( $id, $i );
+				$mwNamespaces->modify( $id, $i );
+			} else {
+				$mwNamespaces->remove( $i['id'], 0 );
+			}
 		}
 
 		$mwNamespaces->commit();
