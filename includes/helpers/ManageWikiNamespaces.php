@@ -135,7 +135,7 @@ class ManageWikiNamespaces {
 	public function remove( int $id, int $newNamespace, bool $maintainPrefix = false ) {
 		// Utilise changes differently in this case
 		$this->changes[$id] = [
-			'maintainprefix' => $maintainPrefix,
+			'maintainPrefix' => $maintainPrefix,
 			'old' => [
 				'name' => $this->liveNamespaces[$id]['name'],
 				'contentmodel' => $this->liveNamespaces[$id]['contentmodel']
@@ -180,7 +180,7 @@ class ManageWikiNamespaces {
 					'nsContentModel' => $this->changes[$id]['old']['contentmodel'],
 					'nsNew' => $this->changes[$id]['new']['name'],
 					'nsNewContentModel' => $this->changes[$id]['new']['contentmodel'],
-					'maintainprefix' => $this->changes[$id]['maintainprefix']
+					'maintainPrefix' => $this->changes[$id]['maintainPrefix']
 				];
 			} else {
 				$builtTable = [
@@ -200,7 +200,7 @@ class ManageWikiNamespaces {
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
 					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel'],
-					'maintainprefix' => false
+					'maintainPrefix' => false
 				];
 
 				$this->dbw->upsert(
