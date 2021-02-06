@@ -11,7 +11,7 @@ class NamespaceMigrationJob extends Job {
 	public function run() {
 		$dbw = wfGetDB( DB_MASTER );
 
-		$maintainPrefix = $this->params['maintainprefix'];
+		$maintainPrefix = $this->params['maintainPrefix'];
 
 		if ( $this->params['action'] == 'delete' ) {
 			$nsSearch = $this->params['nsID'];
