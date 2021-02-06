@@ -20,6 +20,7 @@ class NamespaceMigrationJob extends Job {
 			$nsSearch = 0;
 			$pagePrefix = $this->params['nsName'] . ':';
 			$nsTo = $this->params['nsID'];
+			$nsContentModel = $this->params['nsContentModel'];
 		}
 
 		$res = $dbw->select(
@@ -55,7 +56,7 @@ class NamespaceMigrationJob extends Job {
 				[
 					'page_namespace' => $nsTo,
 					'page_title' => $newTitle,
-					'page_content_model' => $nsContentModel ?? false
+					'page_content_model' => $nsContentModel
 				],
 				[
 					'page_id' => $pageID
