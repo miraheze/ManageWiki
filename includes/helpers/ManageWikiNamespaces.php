@@ -130,10 +130,12 @@ class ManageWikiNamespaces {
 	 * Remove a namespace
 	 * @param int $id Namespace ID
 	 * @param int $newNamespace Namespace ID to migrate to
+	 * @param bool $maintainPrefix|false
 	 */
-	public function remove( int $id, int $newNamespace ) {
+	public function remove( int $id, int $newNamespace, bool $maintainPrefix = false ) {
 		// Utilise changes differently in this case
 		$this->changes[$id] = [
+			'maintainprefix' => $maintainPrefix,
 			'old' => [
 				'name' => $this->liveNamespaces[$id]['name'],
 				'contentmodel' => $this->liveNamespaces[$id]['contentmodel']
@@ -177,7 +179,8 @@ class ManageWikiNamespaces {
 					'nsName' => $this->changes[$id]['old']['name'],
 					'nsContentModel' => $this->changes[$id]['old']['contentmodel'],
 					'nsNew' => $this->changes[$id]['new']['name'],
-					'nsNewContentModel' => $this->changes[$id]['new']['contentmodel']
+					'nsNewContentModel' => $this->changes[$id]['new']['contentmodel'],
+					'maintainprefix' => $this->changes[$id]['maintainprefix']
 				];
 			} else {
 				$builtTable = [
@@ -196,7 +199,8 @@ class ManageWikiNamespaces {
 					'action' => 'rename',
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
-					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel']
+					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel'],
+					'maintainprefix' => false
 				];
 
 				$this->dbw->upsert(
