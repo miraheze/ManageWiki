@@ -119,7 +119,7 @@ class ManageWikiInstaller {
 
 				$mwNamespaces->modify( $id, $i );
 			} else {
-				$mwNamespaces->remove( $i['id'], 0 );
+				$mwNamespaces->remove( $i['id'], 0, true );
 			}
 		}
 
