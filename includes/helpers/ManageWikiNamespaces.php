@@ -134,8 +134,14 @@ class ManageWikiNamespaces {
 	public function remove( int $id, int $newNamespace ) {
 		// Utilise changes differently in this case
 		$this->changes[$id] = [
-			'old' => $this->liveNamespaces[$id]['name'],
-			'new' => $newNamespace
+			'old' => [
+				'name' => $this->liveNamespaces[$id]['name'],
+				'contentmodel' => $this->liveNamespaces[$id]['contentmodel']
+			],
+			'new' => [
+				'name' => $newNamespace,
+				'contentmodel' => $this->liveNamespaces[$newNamespace]['contentmodel']
+			]
 		];
 
 		// We will handle all processing in final stages
@@ -154,7 +160,7 @@ class ManageWikiNamespaces {
 				$this->log = 'namespaces-delete';
 				
 				$this->logParams = [
-					'5::namespace' => $this->changes[$id]['old']
+					'5::namespace' => $this->changes[$id]['old']['name']
 				];
 				
 				$this->dbw->delete(
@@ -168,8 +174,10 @@ class ManageWikiNamespaces {
 				$jobParams = [
 					'action' => 'delete',
 					'nsID' => $id,
-					'nsName' => $this->changes[$id]['old'],
-					'nsNew' => $this->changes[$id]['new']
+					'nsName' => $this->changes[$id]['old']['name'],
+					'nsContentModel' => $this->changes[$id]['old']['contentmodel'],
+					'nsNew' => $this->changes[$id]['new']['name'],
+					'nsNewContentModel' => $this->changes[$id]['new']['contentmodel']
 				];
 			} else {
 				$builtTable = [
@@ -187,7 +195,8 @@ class ManageWikiNamespaces {
 				$jobParams = [
 					'action' => 'rename',
 					'nsID' => $id,
-					'nsName' => $this->liveNamespaces[$id]['name']
+					'nsName' => $this->liveNamespaces[$id]['name'],
+					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel']
 				];
 
 				$this->dbw->upsert(
