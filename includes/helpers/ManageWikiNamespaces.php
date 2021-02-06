@@ -195,7 +195,8 @@ class ManageWikiNamespaces {
 				$jobParams = [
 					'action' => 'rename',
 					'nsID' => $id,
-					'nsName' => $this->liveNamespaces[$id]['name']
+					'nsName' => $this->liveNamespaces[$id]['name'],
+					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel']
 				];
 
 				$this->dbw->upsert(
