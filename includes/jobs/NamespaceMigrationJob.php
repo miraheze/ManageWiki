@@ -45,6 +45,8 @@ class NamespaceMigrationJob extends Job {
 			if ( $nsSearch == 0 && !$maintainPrefix ) {
 				$replace = '';
 				$newTitle = str_replace( $pagePrefix, $replace, $pageTitle );
+			} elseif ( $nsSearch == 0 && $nsTo !== 0 && $maintainPrefix ) {
+				$newTitle = $this->params['nsName'] . ':' . $pageTitle;
 			} else {
 				$newTitle = $pageTitle;
 			}
