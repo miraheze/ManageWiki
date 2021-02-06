@@ -142,7 +142,7 @@ class ManageWikiNamespaces {
 			'new' => [
 				'name' => $newNamespace,
 				'contentmodel' => $this->liveNamespaces[$newNamespace]['contentmodel'],
-				'maintainprefix' => $maintainPrefix,
+				'maintainprefix' => $maintainPrefix
 			]
 		];
 
