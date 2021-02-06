@@ -136,11 +136,11 @@ class ManageWikiNamespaces {
 		$this->changes[$id] = [
 			'old' => [
 				'name' => $this->liveNamespaces[$id]['name'],
-				'contentmodel' => $this->liveNamespaces[$id]['contentmodel'] ?? 'wikitext'
+				'contentmodel' => $this->liveNamespaces[$id]['contentmodel']
 			],
 			'new' => [
 				'name' => $newNamespace,
-				'contentmodel' => $this->liveNamespaces[$newNamespace]['contentmodel'] ?? 'wikitext'
+				'contentmodel' => $this->liveNamespaces[$newNamespace]['contentmodel']
 			]
 		];
 
