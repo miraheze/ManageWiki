@@ -68,6 +68,13 @@ class NamespaceMigrationJob extends Job {
 				__METHOD__
 			);
 
+			$dbw->query( "UPDATE content SET content_model = 
+				( SELECT model_id FROM content_models WHERE model_name = '{$nsContentModel}' ) 
+				WHERE content.content_sha1 IN ( SELECT rev_sha1 FROM revision JOIN page 
+				ON revision.rev_page = page.page_id WHERE page.page_title = '{$newTitle}' )"
+			);
+
+
 			// Update recentchanges as this is not normally done
 			$dbw->update(
 				'recentchanges',
