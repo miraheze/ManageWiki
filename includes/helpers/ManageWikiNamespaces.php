@@ -21,6 +21,9 @@ class ManageWikiNamespaces {
 
 	/** @var array Changes to be committed */
 	public $changes = [];
+	/** @var bool $maintainPrefix */
+	public $maintainPrefix = false;
+
 	/** @var array Errors */
 	public $errors = [];
 	/** @var string Log type */
@@ -88,8 +91,11 @@ class ManageWikiNamespaces {
 	 * Modify a namespace handler
 	 * @param int $id Namespace ID
 	 * @param array $data Overriding information about the namespace
+	 * @param bool $maintainPrefix|false
 	 */
-	public function modify( int $id, array $data ) {
+	public function modify( int $id, array $data, bool $maintainPrefix = false ) {
+		$this->maintainPrefix = $maintainPrefix;
+
 		if ( in_array( $data['name'], $this->config->get( 'ManageWikiNamespacesBlacklistedNames') ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
@@ -200,7 +206,7 @@ class ManageWikiNamespaces {
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
 					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel'],
-					'maintainPrefix' => false
+					'maintainPrefix' => $this->maintainPrefix
 				];
 
 				$this->dbw->upsert(
