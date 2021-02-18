@@ -152,42 +152,48 @@ class ManageWikiPermissions {
 
 				$this->deleteUsersFromGroup( $group );
 			} else {
-				$builtTable = [
-					'perm_permissions' => json_encode( $this->livePermissions[$group]['permissions'] ),
-					'perm_addgroups' => json_encode( $this->livePermissions[$group]['addgroups'] ),
-					'perm_removegroups' => json_encode( $this->livePermissions[$group]['removegroups'] ),
-					'perm_addgroupstoself' => json_encode( $this->livePermissions[$group]['addself'] ),
-					'perm_removegroupsfromself' => json_encode( $this->livePermissions[$group]['removeself'] ),
-					'perm_autopromote' => is_null( $this->livePermissions[$group]['autopromote'] ) ? null : json_encode( $this->livePermissions[$group]['autopromote'] )
-				];
+				if ( empty( $this->livePermissions[$group]['permissions'] ) ) {
+					$this->errors[] = [
+						'managewiki-error-emptygroup' => []
+					];
+				} else {
+					$builtTable = [
+						'perm_permissions' => json_encode( $this->livePermissions[$group]['permissions'] ),
+						'perm_addgroups' => json_encode( $this->livePermissions[$group]['addgroups'] ),
+						'perm_removegroups' => json_encode( $this->livePermissions[$group]['removegroups'] ),
+						'perm_addgroupstoself' => json_encode( $this->livePermissions[$group]['addself'] ),
+						'perm_removegroupsfromself' => json_encode( $this->livePermissions[$group]['removeself'] ),
+						'perm_autopromote' => is_null( $this->livePermissions[$group]['autopromote'] ) ? null : json_encode( $this->livePermissions[$group]['autopromote'] )
+					];
 
-				$this->dbw->upsert(
-					'mw_permissions',
-					[
-						'perm_dbname' => $this->wiki,
-						'perm_group' => $group
-					] + $builtTable,
-					[
-						'perm_dbname',
-						'perm_group'
-					],
-					$builtTable
-				);
+					$this->dbw->upsert(
+						'mw_permissions',
+						[
+							'perm_dbname' => $this->wiki,
+							'perm_group' => $group
+						] + $builtTable,
+						[
+							'perm_dbname',
+							'perm_group'
+						],
+						$builtTable
+					);
 
-				$logAP = ( $mwReturn->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
-				$this->logParams = [
-					'4::ar' => !empty( $this->changes[$group]['permissions']['add'] ) ? implode( ', ', $this->changes[$group]['permissions']['add'] ) : $logNULL,
-					'5::rr' => !empty( $this->changes[$group]['permissions']['remove'] ) ? implode( ', ', $this->changes[$group]['permissions']['remove'] ) : $logNULL,
-					'6::aag' => !empty( $this->changes[$group]['addgroups']['add'] ) ? implode( ', ', $this->changes[$group]['addgroups']['add'] ) : $logNULL,
-					'7::rag' => !empty( $this->changes[$group]['addgroups']['remove'] ) ? implode( ', ', $this->changes[$group]['addgroups']['remove'] ) : $logNULL,
-					'8::arg' => !empty( $this->changes[$group]['removegroups']['add'] ) ? implode( ', ', $this->changes[$group]['removegroups']['add'] ) : $logNULL,
-					'9::rrg' => !empty( $this->changes[$group]['removegroups']['remove'] ) ? implode( ', ', $this->changes[$group]['removegroups']['remove'] ) : $logNULL,
-					'10::aags' => !empty( $this->changes[$group]['addself']['add'] ) ? implode( ', ', $this->changes[$group]['addself']['add'] ) : $logNULL,
-					'11::rags' => !empty( $this->changes[$group]['addself']['remove'] ) ? implode( ', ', $this->changes[$group]['addself']['remove'] ) : $logNULL,
-					'12::args' => !empty( $this->changes[$group]['removeself']['add'] ) ? implode( ', ', $this->changes[$group]['removeself']['add'] ) : $logNULL,
-					'13::rrgs' => !empty( $this->changes[$group]['removeself']['remove'] ) ? implode( ', ', $this->changes[$group]['removeself']['remove'] ) : $logNULL,
-					'14::ap' => strtolower( wfMessage( $logAP )->inContentLanguage()->text() )
-				];
+					$logAP = ( $mwReturn->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
+					$this->logParams = [
+						'4::ar' => !empty( $this->changes[$group]['permissions']['add'] ) ? implode( ', ', $this->changes[$group]['permissions']['add'] ) : $logNULL,
+						'5::rr' => !empty( $this->changes[$group]['permissions']['remove'] ) ? implode( ', ', $this->changes[$group]['permissions']['remove'] ) : $logNULL,
+						'6::aag' => !empty( $this->changes[$group]['addgroups']['add'] ) ? implode( ', ', $this->changes[$group]['addgroups']['add'] ) : $logNULL,
+						'7::rag' => !empty( $this->changes[$group]['addgroups']['remove'] ) ? implode( ', ', $this->changes[$group]['addgroups']['remove'] ) : $logNULL,
+						'8::arg' => !empty( $this->changes[$group]['removegroups']['add'] ) ? implode( ', ', $this->changes[$group]['removegroups']['add'] ) : $logNULL,
+						'9::rrg' => !empty( $this->changes[$group]['removegroups']['remove'] ) ? implode( ', ', $this->changes[$group]['removegroups']['remove'] ) : $logNULL,
+						'10::aags' => !empty( $this->changes[$group]['addself']['add'] ) ? implode( ', ', $this->changes[$group]['addself']['add'] ) : $logNULL,
+						'11::rags' => !empty( $this->changes[$group]['addself']['remove'] ) ? implode( ', ', $this->changes[$group]['addself']['remove'] ) : $logNULL,
+						'12::args' => !empty( $this->changes[$group]['removeself']['add'] ) ? implode( ', ', $this->changes[$group]['removeself']['add'] ) : $logNULL,
+						'13::rrgs' => !empty( $this->changes[$group]['removeself']['remove'] ) ? implode( ', ', $this->changes[$group]['removeself']['remove'] ) : $logNULL,
+						'14::ap' => strtolower( wfMessage( $logAP )->inContentLanguage()->text() )
+					];
+				}
 			}
 		}
 
