@@ -21,6 +21,8 @@ class ManageWikiNamespaces {
 
 	/** @var array Changes to be committed */
 	public $changes = [];
+	/** @var bool $maintainPrefix */
+	public $maintainPrefix = false;
 
 	/** @var array Errors */
 	public $errors = [];
@@ -91,7 +93,9 @@ class ManageWikiNamespaces {
 	 * @param array $data Overriding information about the namespace
 	 * @param bool $maintainPrefix|false
 	 */
-	public function modify( int $id, array $data ) {
+	public function modify( int $id, array $data, bool $maintainPrefix = false ) {
+		$this->maintainPrefix = $maintainPrefix;
+
 		if ( in_array( $data['name'], $this->config->get( 'ManageWikiNamespacesBlacklistedNames') ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
@@ -158,7 +162,7 @@ class ManageWikiNamespaces {
 	/**
 	 * Commits all changes to database. Also files a job to move pages into or out of namespace
 	 */
-	public function commit( bool $maintainPrefix = false ) {
+	public function commit() {
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( in_array( $id, $this->deleteNamespaces ) ) {
 				$this->log = 'namespaces-delete';
@@ -202,7 +206,7 @@ class ManageWikiNamespaces {
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
 					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel'],
-					'maintainPrefix' => $maintainPrefix
+					'maintainPrefix' => $this->maintainPrefix
 				];
 
 				$this->dbw->upsert(
@@ -231,7 +235,6 @@ class ManageWikiNamespaces {
 			$cWJ = new CreateWikiJson( $this->wiki );
 			$cWJ->resetWiki();
 		}
-
 		$this->committed = true;
 	}
 
