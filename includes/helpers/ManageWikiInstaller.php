@@ -117,13 +117,13 @@ class ManageWikiInstaller {
 				unset( $i['id'] );
 				$i['name'] = $name;
 
-				$mwNamespaces->modify( $id, $i, true );
+				$mwNamespaces->modify( $id, $i );
 			} else {
 				$mwNamespaces->remove( $i['id'], 0, true );
 			}
 		}
 
-		$mwNamespaces->commit();
+		$mwNamespaces->commit( $install );
 
 		return true;
 	}
