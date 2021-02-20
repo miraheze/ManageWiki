@@ -203,7 +203,7 @@ class ManageWikiNamespaces {
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
 					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel'],
-					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix']
+					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix'] ?? false
 				];
 
 				$this->dbw->upsert(
