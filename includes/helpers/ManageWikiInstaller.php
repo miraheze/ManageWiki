@@ -111,19 +111,21 @@ class ManageWikiInstaller {
 
 	private static function namespaces( string $dbname, array $data, bool $install ) {
 		$mwNamespaces = new ManageWikiNamespaces( $dbname );
+		$maintainPrefix = false;
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
 				$id = $i['id'];
 				unset( $i['id'] );
 				$i['name'] = $name;
 
-				$mwNamespaces->modify( $id, $i, true );
+				$maintainPrefix = true;
+				$mwNamespaces->modify( $id, $i );
 			} else {
 				$mwNamespaces->remove( $i['id'], 0, true );
 			}
 		}
 
-		$mwNamespaces->commit();
+		$mwNamespaces->commit( $maintainPrefix );
 
 		return true;
 	}
