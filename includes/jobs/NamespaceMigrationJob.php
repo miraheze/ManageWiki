@@ -77,7 +77,7 @@ class NamespaceMigrationJob extends Job {
 					ON revision.rev_page = page.page_id WHERE page.page_title = '{$newTitle}' )"
 				);
 			} elseif ( $maintainPrefix ) {
-				$namespaceIndex = MWNamespace::getCanonicalIndex( $this->params['nsName'] );
+				$namespaceIndex = MWNamespace::getCanonicalIndex( strtolower( $this->params['nsName'] ) );
 				$namespaceContentModel = MWNamespace::getNamespaceContentModel( $namespaceIndex );
 
 				$dbw->update(
