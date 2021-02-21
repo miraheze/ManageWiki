@@ -670,8 +670,8 @@ class ManageWikiFormFactoryBuilder {
 
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
 
-				$help = null;
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
+					$help = $a['help'];
 
 					if ( $a['requires'] ) {
 						$requires = [];
@@ -689,7 +689,7 @@ class ManageWikiFormFactoryBuilder {
 							$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 						}
 
-						$help = "{$requiresLabel}: " . implode( ' & ', $requires );
+						$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
 					}
 					
 					if ( is_array( $a['overridedefault'] ) ) {
@@ -697,7 +697,7 @@ class ManageWikiFormFactoryBuilder {
 					}
 
 					$formDescriptor["$key-$name"] = [
-						'label' => $a['name'],
+						'label' => $a['name'] . " (\${$key})",
 						'type' => $a['type'] === 'vestyle'  ? 'check' : $a['type'],
 						'default' => $namespaceData['additional'][$key] ?? $a['overridedefault'],
 						'disabled' => ( $ceMW ) ? !$mwRequirements : true,
