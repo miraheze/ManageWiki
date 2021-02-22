@@ -64,6 +64,7 @@
 	"managewiki-disabled": "Cette fonctionnalité ($1) n’est pas encore activée sur ce wiki.",
 	"managewiki-error-conflict": "L’extension $1 ne peut pas être activée car elle est en conflit avec $2.",
 	"managewiki-error-disallowednamespace": "L’espace de noms $1 n’est pas autorisé.",
+	"managewiki-error-emptygroup": "Vous ne pouvez pas créer un groupe sans aucun droit accordé.",
 	"managewiki-error-install": "L’extension $1 n’a pas pu être installée.",
 	"managewiki-error-requirements": "L’extension $1 ne peut pas être activée car elle ne répond pas à ses exigences.",
 	"managewiki-header-core": "Sélectionnez ce que vous désirez gérer ci-dessous et cliquez sur « envoyer » !",

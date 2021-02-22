@@ -52,6 +52,7 @@
 	"managewiki-disabled": "Esta funcionalidade ($1) ainda não foi ativada nesta wiki.",
 	"managewiki-error-conflict": "A extensão $1 não pode ser ativada porque entra em conflito com $2.",
 	"managewiki-error-disallowednamespace": "O espaço nominal $1 não é permitido.",
+	"managewiki-error-emptygroup": "Você não pode criar um grupo sem nenhuma permissão atribuída.",
 	"managewiki-error-install": "A extensão $1 falhou ao ser instalada.",
 	"managewiki-error-requirements": "A extensão $1 não pode ser ativada, pois falha em atender aos seus requisitos.",
 	"managewiki-header-core": "Selecione o que você gostaria de gerenciar abaixo e clique em enviar!",

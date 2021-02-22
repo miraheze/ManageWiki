@@ -4,6 +4,7 @@
 			"BaRaN6161 TURK",
 			"Dual",
 			"Hedda",
+			"Joseph",
 			"MuratTheTurkish"
 		]
 	},
@@ -51,6 +52,7 @@
 	"managewiki-disabled": "Bu özellik ($1) bu vikide henüz etkinleştirilmedi.",
 	"managewiki-error-conflict": "$1 uzantısı, $2 ile çakıştığı için etkinleştirilemiyor.",
 	"managewiki-error-disallowednamespace": "$1 ad alanına izin verilmiyor.",
+	"managewiki-error-emptygroup": "Hiçbir izin atamadan bir grup oluşturamazsınız.",
 	"managewiki-error-install": "$1 uzantısı yüklenemedi.",
 	"managewiki-error-requirements": "$1 uzantısı, gereksinimlerini karşılayamadığı için etkinleştirilemiyor.",
 	"managewiki-header-core": "Aşağıdakileri yönetmek istediğinizi seçin ve gönder'i tıklayın!",

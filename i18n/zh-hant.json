@@ -52,6 +52,7 @@
 	"managewiki-disabled": "此功能（$1）尚未在此 wiki 啟用。",
 	"managewiki-error-conflict": "擴充$1未啟動，因為與$2衝突。",
 	"managewiki-error-disallowednamespace": "不允許命名空間$1。",
+	"managewiki-error-emptygroup": "您要被分配權限才能建立群組。",
 	"managewiki-error-install": "擴充$1安裝失敗。",
 	"managewiki-error-requirements": "擴充$1無法啓動，因為未符合需求。",
 	"managewiki-header-core": "在以下選擇您所想要管理的內容，然後點擊提交！",
