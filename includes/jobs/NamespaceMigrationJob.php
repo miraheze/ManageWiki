@@ -42,10 +42,10 @@ class NamespaceMigrationJob extends Job {
 			$pageTitle = $row->page_title;
 			$pageID = $row->page_id;
 
-			if ( $nsSearch == 0 && !$maintainPrefix ) {
+			if ( $nsSearch == 0 ) {
 				$replace = '';
 				$newTitle = str_replace( $pagePrefix, $replace, $pageTitle );
-			} elseif ( $maintainPrefix ) {
+			} elseif ( $maintainPrefix && $this->params['action'] == 'delete' ) {
 				$pagePrefix = $this->params['nsName'] . ':';
 				$replace = '';
 				$newTitle = $pagePrefix . str_replace( $pagePrefix, $replace, $pageTitle );
@@ -70,7 +70,7 @@ class NamespaceMigrationJob extends Job {
 				__METHOD__
 			);
 
-			if ( $this->params['action'] == 'delete' && $maintainPrefix ) {
+			if ( $maintainPrefix && $this->params['action'] == 'delete' ) {
 				$dbw->query( "UPDATE content SET content_model = 
 					( SELECT model_id FROM content_models WHERE model_name = '{$nsContentModel}' ) 
 					WHERE content.content_sha1 IN ( SELECT rev_sha1 FROM revision JOIN page 
