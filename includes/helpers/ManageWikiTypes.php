@@ -16,7 +16,7 @@ class ManageWikiTypes {
 			case 'database':
 				$configs = [
 					'class' => HTMLAutoCompleteSelectFieldWithOOUI::class,
-					'default' => $value ?? $options['overridedefault'],
+					'default' => $value ?: $options['overridedefault'],
 					'require-match' => true
 				];
 
