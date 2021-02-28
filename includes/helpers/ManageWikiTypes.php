@@ -3,14 +3,12 @@
 use MediaWiki\MediaWikiServices;
 
 class ManageWikiTypes {
-	public static function process( $module, $config ) {
-		$stepResponse = [];
-		foreach ( $moduleConfig as $name => $options ) {
+	public static function process( $config, $data, $value ) {
 			switch ( $set['type'] ) {
 				case 'databases':
 					$configs = [
 						'class' => HTMLAutoCompleteSelectFieldWithOOUI::class,
-						'default' => $setList[$name] ?? $set['overridedefault'],
+						'default' => $setList[$name] ?? $data['overridedefault'],
 						'require-match' => true
 					];
 
