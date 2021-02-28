@@ -260,6 +260,8 @@ class ManageWikiFormFactoryBuilder {
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
 			if ( $add ) {
+				$configs = ManageWikiTypes::process( $config, $disabled, 'settings', $set, $setList[$name] ?? null, $groupList );
+
 				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
 				if ( $set['requires'] ) {
 					$requires = [];
@@ -381,6 +383,8 @@ class ManageWikiFormFactoryBuilder {
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
 
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
+					$configs = ManageWikiTypes::process( $config, ( $ceMW ) ? !$mwRequirements : true, 'namespaces', $a, $namespaceData['additional'][$key] ?? null );
+
 					$help = $a['help'];
 
 					if ( $a['requires'] ) {
@@ -408,12 +412,10 @@ class ManageWikiFormFactoryBuilder {
 
 					$formDescriptor["$key-$name"] = [
 						'label' => $a['name'] . " (\${$key})",
-						'type' => $a['type'] === 'vestyle'  ? 'check' : $a['type'],
-						'default' => $namespaceData['additional'][$key] ?? $a['overridedefault'],
 						'disabled' => ( $ceMW ) ? !$mwRequirements : true,
 						'help' => $help,
 						'section' => $name
-					];
+					] + $configs;
 				}
 			}
 
