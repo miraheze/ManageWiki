@@ -3,15 +3,15 @@
 use MediaWiki\MediaWikiServices;
 
 class ManageWikiTypes {
-	public static function process( $config, $disabled, $module, $options, $value ) {
+	public static function process( $config, $disabled, $module, $options, $value, $groupList = false ) {
 		if ( $module === 'namespaces' ) {
-			return self::namespaces( $config, $disabled, $options, $value ) ?? self::common( $config, $disabled, $options, $value );
+			return self::namespaces( $config, $disabled, $options, $value ) ?? self::common( $config, $disabled, $options, $value, $groupList );
 		}
 
-		return self::common( $config, $disabled, $options, $value );		
+		return self::common( $config, $disabled, $options, $value, $groupList );		
 	}
 
-	public static function common( $config, $disabled, $options, $value ) {
+	public static function common( $config, $disabled, $options, $value, $groupList ) {
 		switch ( $options['type'] ) {
 			case 'database':
 				$configs = [
