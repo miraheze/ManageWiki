@@ -383,8 +383,6 @@ class ManageWikiFormFactoryBuilder {
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
 
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
-					$configs = ManageWikiTypes::process( $config, ( $ceMW ) ? !$mwRequirements : true, 'namespaces', $a, $namespaceData['additional'][$key] ?? null );
-
 					$help = $a['help'];
 
 					if ( $a['requires'] ) {
@@ -409,6 +407,8 @@ class ManageWikiFormFactoryBuilder {
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
+
+					$configs = ManageWikiTypes::process( $config, ( $ceMW ) ? !$mwRequirements : true, 'namespaces', $a, $namespaceData['additional'][$key] ?? null );
 
 					$formDescriptor["$key-$name"] = [
 						'label' => $a['name'] . " (\${$key})",
