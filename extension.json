@@ -73,6 +73,7 @@
 		"ManageWikiPermissions": "includes/helpers/ManageWikiPermissions.php",
 		"ManageWikiRequirements": "includes/helpers/ManageWikiRequirements.php",
 		"ManageWikiSettings": "includes/helpers/ManageWikiSettings.php",
+		"ManageWikiTypes": "includes/helpers/ManageWikiTypes.php",
 		"MWScriptJob": "includes/jobs/MWScriptJob.php",
 		"NamespaceMigrationJob": "includes/jobs/NamespaceMigrationJob.php",
 		"SpecialDeletedWikis": "includes/specials/SpecialDeletedWikis.php",
