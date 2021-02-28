@@ -13,7 +13,7 @@ class ManageWikiTypes {
 
 	public static function common( $config, $disabled, $options, $value, $groupList ) {
 		switch ( $options['type'] ) {
-			case 'database':
+			case 'databases':
 				$configs = [
 					'class' => HTMLAutoCompleteSelectFieldWithOOUI::class,
 					'default' => $value ?: $options['overridedefault'],
