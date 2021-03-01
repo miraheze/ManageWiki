@@ -99,12 +99,11 @@ class ManageWikiHooks {
 							case 'check':
 								$jsonArray['settings'][$var][] = (int)$ns->ns_namespace_id;
 								break;
-							case 'text':
-								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
-								break;
 							case 'vestyle':
 								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = true;
 								break;
+							default:
+								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
 						}
 					}
 				}
