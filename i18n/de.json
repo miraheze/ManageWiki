@@ -4,6 +4,7 @@
 			"Aira",
 			"Ameisenigel",
 			"DraconicDark",
+			"HajFunk",
 			"Metalhead64"
 		]
 	},
@@ -44,6 +45,7 @@
 	"managewiki-conflicts": "Kollidiert mit",
 	"managewiki-desc": "Erlaubt es Personen, Wikis mithilfe einer Weboberfläche zu verwalten.",
 	"managewiki-disabled": "Diese Funktion ($1) wurde noch nicht auf diesem Wiki aktiviert.",
+	"managewiki-error-emptygroup": "Du kannst keine Gruppe erstellen, bis dir die Berechtigung zugeordnet wird.",
 	"managewiki-header-core": "Wähle unten aus, was du verwalten möchtest und klicke auf „Übertragen“!",
 	"managewiki-header-extensions": "Diese Erweiterungen sind derzeit installiert, du kannst jedoch immer weitere zur Ergänzung <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features anfordern]</span>. Sobald du fertig bist, klicke auf „Senden“, um die Änderungen zu speichern.",
 	"managewiki-header-permissions": "Wähle unten eine bereits vorhandene Gruppe zum Bearbeiten aus oder erstelle im Kasten unten eine neue Benutzergruppe.",

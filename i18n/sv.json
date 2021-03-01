@@ -47,6 +47,7 @@
 	"managewiki-disabled": "Denna funktion ($1) har ännu inte aktiverats på denna wiki.",
 	"managewiki-error-conflict": "Tillägget $1 kan inte aktiveras eftersom den är i konflikt med $2.",
 	"managewiki-error-disallowednamespace": "Namnrymden $1 tillåts inte.",
+	"managewiki-error-emptygroup": "Du kan inte skapa en grupp utan några tilldelade behörigheter.",
 	"managewiki-error-install": "Tillägget $1 misslyckades att installeras.",
 	"managewiki-error-requirements": "Tillägget $1 kan inte aktiveras eftersom det misslyckas att uppfylla sina krav.",
 	"managewiki-header-core": "Välj vad du skulle vilja hantera nedan och klicka på skicka!",
