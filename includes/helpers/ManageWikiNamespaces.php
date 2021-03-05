@@ -163,10 +163,12 @@ class ManageWikiNamespaces {
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( in_array( $id, $this->deleteNamespaces ) ) {
 				$this->log = 'namespaces-delete';
-				
-				$this->logParams = [
-					'5::namespace' => $this->changes[$id]['old']['name']
-				];
+
+				if ( !( $id % 2 ) ) {
+					$this->logParams = [
+						'5::namespace' => $this->changes[$id]['old']['name']
+					];
+				}
 				
 				$this->dbw->delete(
 					'mw_namespaces',
@@ -219,9 +221,11 @@ class ManageWikiNamespaces {
 					$builtTable
 				);
 
-				$this->logParams = [
-					'5::namespace' => $this->liveNamespaces[$id]['name']
-				];
+				if ( !( $id % 2 ) ) {
+					$this->logParams = [
+						'5::namespace' => $this->liveNamespaces[$id]['name']
+					];
+				}
 			}
 
 			$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
