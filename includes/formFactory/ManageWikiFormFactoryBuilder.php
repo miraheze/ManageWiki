@@ -328,28 +328,28 @@ class ManageWikiFormFactoryBuilder {
 				],
 				"content-$name" => [
 					'type' => 'check',
-					'label-message' => 'namespaces-content',
+					'label' => wfMessage( 'namespaces-content' ) . ' ($wgContentNamespaces)',
 					'default' => $namespaceData['content'],
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
 				"subpages-$name" => [
 					'type' => 'check',
-					'label-message' => 'namespaces-subpages',
+					'label' => wfMessage( 'namespaces-subpages' ) . ' ($wgNamespacesWithSubpages)',
 					'default' => $namespaceData['subpages'],
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
 				"search-$name" => [
 					'type' => 'check',
-					'label-message' => 'namespaces-search',
+					'label' => wfMessage( 'namespaces-search' ) . ' ($wgNamespacesToBeSearchedDefault)',
 					'default' => $namespaceData['searchable'],
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
 				"contentmodel-$name" => [
 					'type' => 'select',
-					'label-message' => 'namespaces-contentmodel',
+					'label' => wfMessage( 'namespaces-contentmodel' ) . ' ($wgNamespaceContentModels)',
 					'cssclass' => 'createwiki-infuse',
 					'default' => $namespaceData['contentmodel'],
 					'options' => array_merge( [
@@ -363,7 +363,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 				"protection-$name" => [
 					'type' => 'selectorother',
-					'label-message' => 'namespaces-protection',
+					'label' => wfMessage( 'namespaces-protection' ) . ' ($wgNamespaceProtection)',
 					'cssclass' => 'createwiki-infuse',
 					'default' => $namespaceData['protection'],
 					'options' => [
@@ -421,7 +421,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$formDescriptor["aliases-$name"] = [
 				'type' => 'textarea',
-				'label-message' => 'namespaces-aliases',
+				'label' => wfMessage( 'namespaces-aliases' ) . ' ($wgNamespaceAliases)',
 				'default' => implode( "\n", $namespaceData['aliases'] ),
 				'disabled' => !$ceMW,
 				'section' => $name
