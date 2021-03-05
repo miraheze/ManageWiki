@@ -320,7 +320,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label-message' => "namespaces-$name",
+					'label' => wfMessage( "namespaces-$name" ) . ' ($wgExtraNamespaces)',
 					'default' => $namespaceData['name'],
 					'disabled' => ( $namespaceData['core'] || !$ceMW ),
 					'required' => true,
