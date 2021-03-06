@@ -408,11 +408,11 @@ class ManageWikiFormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
+					$disabled = ( $ceMW ) ? !$mwRequirements : true;
+					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
 
 					$formDescriptor["$key-$name"] = [
 						'label' => $a['name'] . " (\${$key})",
-						'disabled' => ( $ceMW ) ? !$mwRequirements : true,
 						'help' => $help,
 						'section' => $name
 					] + $configs;
