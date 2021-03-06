@@ -260,7 +260,7 @@ class ManageWikiFormFactoryBuilder {
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
 			if ( $add ) {
-				$configs = ManageWikiTypes::process( $config, $disabled, 'settings', $set, $setList[$name] ?? null, $groupList );
+				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $setList[$name] ?? null );
 
 				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
 				if ( $set['requires'] ) {
@@ -408,7 +408,7 @@ class ManageWikiFormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = ManageWikiTypes::process( $config, ( $ceMW ) ? !$mwRequirements : true, 'namespaces', $a, $namespaceData['additional'][$key] ?? null );
+					$configs = ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
 
 					$formDescriptor["$key-$name"] = [
 						'label' => $a['name'] . " (\${$key})",
