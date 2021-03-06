@@ -331,8 +331,10 @@ class ManageWikiTypes {
 					continue;
 				}
 
-				$contentModels[ContentHandler::getLocalizedName( $model )] = $model;
+				$contentModels[ucfirst( ContentHandler::getLocalizedName( $model ) )] = $model;
 			}
+
+			uksort( $contentModels, 'strcasecmp' );
 
 			$configs = [
 				'type' => 'select',
