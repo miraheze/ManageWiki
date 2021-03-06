@@ -3,17 +3,17 @@
 use MediaWiki\MediaWikiServices;
 
 class ManageWikiTypes {
-	public static function process( $config, $disabled, $module, $options, $value, $groupList = false ) {
+	public static function process( $config, $disabled, $groupList, $module, $options, $value, $type = false, $overrideDefault = false ) {
 		if ( $module === 'namespaces' ) {
-			return self::namespaces( $config, $disabled, $options, $value ) ?? self::common( $config, $disabled, $options, $value, $groupList );
+			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $options, $value, $groupList );
 		}
 
 		return self::common( $config, $disabled, $options, $value, $groupList );		
 	}
 
-	public static function common( $config, $disabled, $options, $value, $groupList ) {
+	private static function common( $config, $disabled, $options, $value, $groupList ) {
 		switch ( $options['type'] ) {
-			case 'databases':
+			case 'database':
 				$configs = [
 					'class' => HTMLAutoCompleteSelectFieldWithOOUI::class,
 					'default' => $value ?? $options['overridedefault'],
@@ -293,7 +293,7 @@ class ManageWikiTypes {
 			case 'wikipage':
 				$configs = [
 					'type' => 'title',
-					'exists' => isset( $options['exists'] ) ? $options['exists'] : true,
+					'exists' => $options['exists'] ?? true,
 					'default' => $value ?? $options['overridedefault'],
 					'required' => false
 				];
@@ -301,7 +301,7 @@ class ManageWikiTypes {
 			case 'wikipages':
 				$configs = [
 					'type' => 'titlesmultiselect',
-					'exists' => isset( $options['exists'] ) ? $options['exists'] : true,
+					'exists' => $options['exists'] ?? true,
 					'default' => $value ?? $options['overridedefault'],
 					'required' => false
 				];
@@ -317,14 +317,35 @@ class ManageWikiTypes {
 		return $configs;
 	}
 
-	public static function namespaces( $config, $disabled, $options, $value ) {
-		if ( $options['type'] === 'vestyle' ) {
+	private static function namespaces( $overrideDefault, $type, $value ) {
+		$configs = [];
+
+		if ( $type === 'contentmodel' ) {
+			$contentHandlerFactory = MediaWikiServices::getInstance()->getContentHandlerFactory();
+
+			$models = $contentHandlerFactory->getContentModels();
+			$contentModels = [];
+			foreach ( $models as $model ) {
+				$handler = $contentHandlerFactory->getContentHandler( $model );
+				if ( !$handler->supportsDirectEditing() ) {
+					continue;
+				}
+
+				$contentModels[ContentHandler::getLocalizedName( $model )] = $model;
+			}
+
+			$configs = [
+				'type' => 'select',
+				'options' => $contentModels,
+				'default' => $value
+			];
+		} elseif ( $type === 'vestyle' ) {
 			$configs = [
 				'type' => 'check',
-				'default' => $value ?? $options['overridedefault']
+				'default' => $value ?? $overridedDefault
 			];
-
-			return $configs;
 		}
+
+		return $configs;
 	}
 }
