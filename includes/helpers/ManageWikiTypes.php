@@ -3,7 +3,7 @@
 use MediaWiki\MediaWikiServices;
 
 class ManageWikiTypes {
-	public static function process( $config, $disabled, $groupList, $module, $options, $value, $type = false, $overrideDefault = false ) {
+	public static function process( $config, $disabled, $groupList, $module, $options, $value, $overrideDefault = false, $type = false ) {
 		if ( $module === 'namespaces' ) {
 			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $options, $value, $groupList );
 		}
