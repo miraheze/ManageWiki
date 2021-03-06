@@ -253,7 +253,6 @@ class ManageWikiFormFactoryBuilder {
 			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
-
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
 			
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
@@ -372,10 +371,15 @@ class ManageWikiFormFactoryBuilder {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $wiki ) : true;
 
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
+				$disabled = ( $ceMW ) ? !$mwRequirements : true;
+
+				$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
+				$msgHelp = wfMessage( "managewiki-namespaces-{$key}-help" );
 
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
-					$help = $a['help'];
+					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
 
+					$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $a['help'];
 					if ( $a['requires'] ) {
 						$requires = [];
 						$requiresLabel = wfMessage( 'managewiki-requires' )->text();
@@ -399,11 +403,8 @@ class ManageWikiFormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$disabled = ( $ceMW ) ? !$mwRequirements : true;
-					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
-
 					$formDescriptor["$key-$name"] = [
-						'label' => $a['name'] . " (\${$key})",
+						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
 						'help' => $help,
 						'section' => $name
 					] + $configs;
