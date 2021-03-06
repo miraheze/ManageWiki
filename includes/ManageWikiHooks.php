@@ -94,8 +94,10 @@ class ManageWikiHooks {
 				$nsAdditional = json_decode( $ns->ns_additional, true );
 
 				foreach ( (array)$nsAdditional as $var => $val ) {
-					if ( $val && isset( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var] ) ) {
-						switch ( self::getConfig( 'ManageWikiNamespacesAdditional' )[$var]['type'] ) {
+					$additional = self::getConfig( 'ManageWikiNamespacesAdditional' );
+
+					if ( $val && isset( $additional[$var] ) ) {
+						switch ( $additional[$var]['type'] ) {
 							case 'check':
 								$jsonArray['settings'][$var][] = (int)$ns->ns_namespace_id;
 								break;
@@ -103,7 +105,11 @@ class ManageWikiHooks {
 								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = true;
 								break;
 							default:
-								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
+								if ( ( $additional[$var]['constant'] ) ?? false ) {
+									$jsonArray['settings'][$var] = str_replace( ' ', '_', $val );
+								} else {
+									$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
+								}
 						}
 					}
 				}
