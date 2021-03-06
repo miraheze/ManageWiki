@@ -320,7 +320,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label-message' => "namespaces-$name",
+					'label' => wfMessage( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
 					'default' => $namespaceData['name'],
 					'disabled' => ( $namespaceData['core'] || !$ceMW ),
 					'required' => true,
@@ -328,33 +328,33 @@ class ManageWikiFormFactoryBuilder {
 				],
 				"content-$name" => [
 					'type' => 'check',
-					'label-message' => 'namespaces-content',
+					'label' => wfMessage( 'namespaces-content' )->text() . ' ($wgContentNamespaces)',
 					'default' => $namespaceData['content'],
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
 				"subpages-$name" => [
 					'type' => 'check',
-					'label-message' => 'namespaces-subpages',
+					'label' => wfMessage( 'namespaces-subpages' )->text() . ' ($wgNamespacesWithSubpages)',
 					'default' => $namespaceData['subpages'],
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
 				"search-$name" => [
 					'type' => 'check',
-					'label-message' => 'namespaces-search',
+					'label' => wfMessage( 'namespaces-search' )->text() . ' ($wgNamespacesToBeSearchedDefault)',
 					'default' => $namespaceData['searchable'],
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
 				"contentmodel-$name" => [
-					'label-message' => 'namespaces-contentmodel',
+					'label' => wfMessage( 'namespaces-contentmodel' )->text() . ' ($wgNamespaceContentModels)',
 					'cssclass' => 'createwiki-infuse',
 					'section' => $name
 				] + ManageWikiTypes::process( false, !$ceMW, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
-					'label-message' => 'namespaces-protection',
+					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
 					'cssclass' => 'createwiki-infuse',
 					'default' => $namespaceData['protection'],
 					'options' => [
@@ -412,7 +412,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$formDescriptor["aliases-$name"] = [
 				'type' => 'textarea',
-				'label-message' => 'namespaces-aliases',
+				'label' => wfMessage( 'namespaces-aliases' )->text() . ' ($wgNamespaceAliases)',
 				'default' => implode( "\n", $namespaceData['aliases'] ),
 				'disabled' => !$ceMW,
 				'section' => $name
