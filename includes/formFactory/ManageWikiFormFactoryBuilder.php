@@ -348,21 +348,12 @@ class ManageWikiFormFactoryBuilder {
 					'section' => $name
 				],
 				"contentmodel-$name" => [
-					'type' => 'select',
 					'label-message' => 'namespaces-contentmodel',
 					'cssclass' => 'createwiki-infuse',
-					'default' => $namespaceData['contentmodel'],
-					'options' => array_merge( [
-						'CSS' => 'css',
-						'JavaScript' => 'javascript',
-						'JSON' => 'json',
-						'Wikitext' => 'wikitext'
-						], (array)$config->get( 'ManageWikiNamespacesExtraContentModels' ) ),
-					'disabled' => !$ceMW,
 					'section' => $name
-				],
+				] + ManageWikiTypes::process( false, !$ceMW, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
 				"protection-$name" => [
-					'type' => 'selectorother',
+					'type' => 'combobox',
 					'label-message' => 'namespaces-protection',
 					'cssclass' => 'createwiki-infuse',
 					'default' => $namespaceData['protection'],
@@ -403,7 +394,7 @@ class ManageWikiFormFactoryBuilder {
 
 						$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
 					}
-					
+
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
