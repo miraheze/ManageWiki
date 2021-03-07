@@ -377,6 +377,10 @@ class ManageWikiFormFactoryBuilder {
 				$msgHelp = wfMessage( "managewiki-namespaces-{$key}-help" );
 
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
+					if ( is_array( $a['overridedefault'] ) ) {
+						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
+					}
+
 					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
 
 					$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $a['help'];
@@ -397,10 +401,6 @@ class ManageWikiFormFactoryBuilder {
 						}
 
 						$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
-					}
-
-					if ( is_array( $a['overridedefault'] ) ) {
-						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
 					$formDescriptor["$key-$name"] = [
