@@ -253,14 +253,13 @@ class ManageWikiFormFactoryBuilder {
 			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
-
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
 			
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
 			if ( $add ) {
-				$configs = ManageWikiTypes::process( $config, $disabled, 'settings', $set, $setList[$name] ?? null, $groupList );
+				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $setList[$name] ?? null );
 
 				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
 				if ( $set['requires'] ) {
@@ -320,7 +319,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label-message' => "namespaces-$name",
+					'label' => wfMessage( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
 					'default' => $namespaceData['name'],
 					'disabled' => ( $namespaceData['core'] || !$ceMW ),
 					'required' => true,
@@ -328,42 +327,33 @@ class ManageWikiFormFactoryBuilder {
 				],
 				"content-$name" => [
 					'type' => 'check',
-					'label-message' => 'namespaces-content',
+					'label' => wfMessage( 'namespaces-content' )->text() . ' ($wgContentNamespaces)',
 					'default' => $namespaceData['content'],
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
 				"subpages-$name" => [
 					'type' => 'check',
-					'label-message' => 'namespaces-subpages',
+					'label' => wfMessage( 'namespaces-subpages' )->text() . ' ($wgNamespacesWithSubpages)',
 					'default' => $namespaceData['subpages'],
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
 				"search-$name" => [
 					'type' => 'check',
-					'label-message' => 'namespaces-search',
+					'label' => wfMessage( 'namespaces-search' )->text() . ' ($wgNamespacesToBeSearchedDefault)',
 					'default' => $namespaceData['searchable'],
 					'disabled' => !$ceMW,
 					'section' => $name
 				],
 				"contentmodel-$name" => [
-					'type' => 'select',
-					'label-message' => 'namespaces-contentmodel',
+					'label' => wfMessage( 'namespaces-contentmodel' )->text() . ' ($wgNamespaceContentModels)',
 					'cssclass' => 'createwiki-infuse',
-					'default' => $namespaceData['contentmodel'],
-					'options' => array_merge( [
-						'CSS' => 'css',
-						'JavaScript' => 'javascript',
-						'JSON' => 'json',
-						'Wikitext' => 'wikitext'
-						], (array)$config->get( 'ManageWikiNamespacesExtraContentModels' ) ),
-					'disabled' => !$ceMW,
 					'section' => $name
-				],
+				] + ManageWikiTypes::process( false, !$ceMW, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
 				"protection-$name" => [
-					'type' => 'selectorother',
-					'label-message' => 'namespaces-protection',
+					'type' => 'combobox',
+					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
 					'cssclass' => 'createwiki-infuse',
 					'default' => $namespaceData['protection'],
 					'options' => [
@@ -381,10 +371,15 @@ class ManageWikiFormFactoryBuilder {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $wiki ) : true;
 
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
+				$disabled = ( $ceMW ) ? !$mwRequirements : true;
+
+				$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
+				$msgHelp = wfMessage( "managewiki-namespaces-{$key}-help" );
 
 				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && ( !in_array( $id, (array)$a['blacklisted'] ) ) ) {
-					$help = $a['help'];
+					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
 
+					$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $a['help'];
 					if ( $a['requires'] ) {
 						$requires = [];
 						$requiresLabel = wfMessage( 'managewiki-requires' )->text();
@@ -403,16 +398,13 @@ class ManageWikiFormFactoryBuilder {
 
 						$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
 					}
-					
+
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = ManageWikiTypes::process( $config, ( $ceMW ) ? !$mwRequirements : true, 'namespaces', $a, $namespaceData['additional'][$key] ?? null );
-
 					$formDescriptor["$key-$name"] = [
-						'label' => $a['name'] . " (\${$key})",
-						'disabled' => ( $ceMW ) ? !$mwRequirements : true,
+						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
 						'help' => $help,
 						'section' => $name
 					] + $configs;
@@ -421,7 +413,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$formDescriptor["aliases-$name"] = [
 				'type' => 'textarea',
-				'label-message' => 'namespaces-aliases',
+				'label' => wfMessage( 'namespaces-aliases' )->text() . ' ($wgNamespaceAliases)',
 				'default' => implode( "\n", $namespaceData['aliases'] ),
 				'disabled' => !$ceMW,
 				'section' => $name

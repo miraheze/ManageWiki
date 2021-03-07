@@ -141,11 +141,6 @@
 				"media"
 			]
 		},
-		"ManageWikiNamespacesExtraContentModels": {
-			"description": "Array. Additional content models not known.",
-			"public": true,
-			"value": false
-		},
 		"ManageWikiSettings": {
 			"description": "Array. An array of settings that can be managed through Special:ManageWiki",
 			"public": true,
