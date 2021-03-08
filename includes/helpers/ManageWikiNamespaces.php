@@ -221,7 +221,7 @@ class ManageWikiNamespaces {
 					$builtTable
 				);
 
-				if ( !( $id % 2 ) ) {
+				if ( empty( $this->logParams ) || !( $id % 2 ) ) {
 					$this->logParams = [
 						'5::namespace' => $this->liveNamespaces[$id]['name']
 					];
