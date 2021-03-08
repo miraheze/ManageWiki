@@ -5,7 +5,8 @@
 			"The-Voidwalker",
 			"MacFan4000",
 			"Reception123",
-			"John Lewis"
+			"John Lewis",
+			"Universal Omega"
 		]
 	},
 	"action-managewiki": "manage wiki settings",
@@ -125,7 +126,7 @@
 	"managewiki-link-settings": "Manage this wiki's additional settings",
 	"managewiki-link-settings-view": "View this wiki's additional settings",
 	"managewiki-toggle-forcesidebar": "Force the display of ManageWiki links in the sidebar.",
-	"namespaces-aliases": "Enter on a new line all undefined namespaces which should redirect to this one",
+	"namespaces-aliases": "Enter on a new line all undefined namespaces which should redirect to this one.",
 	"namespaces-content": "Does this namespace contain main wiki material (content)?",
 	"namespaces-contentmodel": "What should this namespace's content model be?",
 	"namespaces-delete": "Delete",
