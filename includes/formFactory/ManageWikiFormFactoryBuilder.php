@@ -406,6 +406,7 @@ class ManageWikiFormFactoryBuilder {
 					$formDescriptor["$key-$name"] = [
 						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
 						'help' => $help,
+						'cssclass' => 'createwiki-infuse',
 						'section' => $name
 					] + $configs;
 				}
