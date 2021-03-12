@@ -89,9 +89,8 @@ class ManageWikiNamespaces {
 	 * Modify a namespace handler
 	 * @param int $id Namespace ID
 	 * @param array $data Overriding information about the namespace
-	 * @param bool $maintainPrefix|false
 	 */
-	public function modify( int $id, array $data, bool $maintainPrefix = false ) {
+	public function modify( int $id, array $data ) {
 		if ( in_array( $data['name'], $this->config->get( 'ManageWikiNamespacesBlacklistedNames') ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
@@ -111,7 +110,6 @@ class ManageWikiNamespaces {
 			'aliases' => $this->liveNamespaces[$id]['aliases'] ?? [],
 			'core' => $this->liveNamespaces[$id]['core'] ?? 0,
 			'additional' => $this->liveNamespaces[$id]['additional'] ?? [],
-			'maintainprefix' => $maintainPrefix
 		];
 
 		// Overwrite the defaults above with our new modified values
@@ -133,9 +131,8 @@ class ManageWikiNamespaces {
 	 * Remove a namespace
 	 * @param int $id Namespace ID
 	 * @param int $newNamespace Namespace ID to migrate to
-	 * @param bool $maintainPrefix|false
 	 */
-	public function remove( int $id, int $newNamespace, bool $maintainPrefix = false ) {
+	public function remove( int $id, int $newNamespace ) {
 		// Utilise changes differently in this case
 		$this->changes[$id] = [
 			'old' => [
@@ -145,7 +142,6 @@ class ManageWikiNamespaces {
 			'new' => [
 				'name' => $newNamespace,
 				'contentmodel' => $this->liveNamespaces[$newNamespace]['contentmodel'],
-				'maintainprefix' => $maintainPrefix
 			]
 		];
 
@@ -184,8 +180,7 @@ class ManageWikiNamespaces {
 					'nsName' => $this->changes[$id]['old']['name'],
 					'nsContentModel' => $this->changes[$id]['old']['contentmodel'],
 					'nsNew' => $this->changes[$id]['new']['name'],
-					'nsNewContentModel' => $this->changes[$id]['new']['contentmodel'],
-					'maintainPrefix' => $this->changes[$id]['new']['maintainprefix']
+					'nsNewContentModel' => $this->changes[$id]['new']['contentmodel']
 				];
 			} else {
 				$builtTable = [
@@ -204,8 +199,7 @@ class ManageWikiNamespaces {
 					'action' => 'rename',
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
-					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel'],
-					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix'] ?? false
+					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel']
 				];
 
 				$this->dbw->upsert(
