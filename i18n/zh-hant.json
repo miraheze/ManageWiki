@@ -125,7 +125,7 @@
 	"managewiki-link-settings": "管理此 wiki 的額外設定",
 	"managewiki-link-settings-view": "檢視此 wiki 的額外設定",
 	"managewiki-toggle-forcesidebar": "強制 ManageWiki 連結在側邊欄顯示",
-	"namespaces-aliases": "在新的一行上，輸入所有應重新導向至此的未定義命名空間",
+	"namespaces-aliases": "在新的一行上，輸入所有應重新導向至此的未定義命名空間。",
 	"namespaces-content": "此命名空間包含主 wiki 內容嗎？",
 	"namespaces-contentmodel": "此命名空間的內容模組應是？",
 	"namespaces-delete": "刪除",

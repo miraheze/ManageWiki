@@ -125,7 +125,7 @@
 	"managewiki-link-settings": "Gerenciar configurações adicionais desta wiki",
 	"managewiki-link-settings-view": "Ver as configurações adicionais dessa wiki",
 	"managewiki-toggle-forcesidebar": "Force a exibição dos links do ManageWiki na barra lateral.",
-	"namespaces-aliases": "Insira em uma nova linha todos os espaços de nomes indefinidos que devem redirecionar para este",
+	"namespaces-aliases": "Insira em uma nova linha todos os espaços de nomes indefinidos que devem redirecionar para este.",
 	"namespaces-content": "Este espaço nominal contém o material principal da wiki (o conteúdo)?",
 	"namespaces-contentmodel": "Qual deveria ser o modelo de conteúdo deste espaço nominal/domínio?",
 	"namespaces-delete": "Excluir",

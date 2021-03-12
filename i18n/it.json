@@ -44,7 +44,7 @@
 	"managewiki-link-core": "Gestisci le impostazioni principali di questo wiki",
 	"managewiki-link-extensions": "Gestisci le estensioni di questo wiki",
 	"managewiki-link-settings": "Gestisci le impostazioni aggiuntive di questo wiki",
-	"namespaces-aliases": "Inserisci su una nuova riga tutti i namespace non definiti che dovrebbero reindirizzare a questo",
+	"namespaces-aliases": "Inserisci su una nuova riga tutti i namespace non definiti che dovrebbero reindirizzare a questo.",
 	"namespaces-contentmodel": "Quale dovrebbe essere il modello di contenuti di questo namespace?",
 	"namespaces-delete": "Cancella",
 	"namespaces-handling": "Invia",
