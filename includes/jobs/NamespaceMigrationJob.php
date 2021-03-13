@@ -17,12 +17,10 @@ class NamespaceMigrationJob extends Job {
 			$nsSearch = $this->params['nsID'];
 			$pagePrefix = '';
 			$nsTo = $this->params['nsNew'];
-			$nsContentModel = $this->params['nsNewContentModel'];
 		} else {
 			$nsSearch = 0;
 			$pagePrefix = $this->params['nsName'] . ':';
 			$nsTo = $this->params['nsID'];
-			$nsContentModel = $this->params['nsContentModel'];
 		}
 
 		$res = $dbw->select(
@@ -62,42 +60,12 @@ class NamespaceMigrationJob extends Job {
 				[
 					'page_namespace' => $nsTo,
 					'page_title' => $newTitle,
-					'page_content_model' => $nsContentModel
 				],
 				[
 					'page_id' => $pageID
 				],
 				__METHOD__
 			);
-
-			if ( $maintainPrefix && $this->params['action'] == 'delete' ) {
-				$dbw->query( "UPDATE content SET content_model = 
-					( SELECT model_id FROM content_models WHERE model_name = '{$nsContentModel}' ) 
-					WHERE content.content_sha1 IN ( SELECT rev_sha1 FROM revision JOIN page 
-					ON revision.rev_page = page.page_id WHERE page.page_title = '{$newTitle}' )"
-				);
-			} elseif ( $maintainPrefix ) {
-				$namespaceIndex = MWNamespace::getCanonicalIndex( strtolower( $this->params['nsName'] ) );
-				$namespaceContentModel = MWNamespace::getNamespaceContentModel( $namespaceIndex );
-
-				$dbw->update(
-					'page',
-					[
-						'page_namespace' => $namespaceIndex,
-						'page_content_model' => $namespaceContentModel
-					],
-					[
-						'page_id' => $pageID
-					],
-					__METHOD__
-				);
-
-				$dbw->query( "UPDATE content SET content_model = 
-					( SELECT model_id FROM content_models WHERE model_name = '{$namespaceContentModel}' ) 
-					WHERE content.content_sha1 IN ( SELECT rev_sha1 FROM revision JOIN page 
-					ON revision.rev_page = page.page_id WHERE page.page_title = '{$newTitle}' )"
-				);
-			}
 
 			// Update recentchanges as this is not normally done
 			$dbw->update(
