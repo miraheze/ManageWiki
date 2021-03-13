@@ -81,6 +81,9 @@
 		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php"
 	},
 	"Hooks": {
+		"ContentHandlerForModelID": [
+		    "ManageWikiHooks::onContentHandlerForModelID"
+		],
 		"CreateWikiCreation": [
 			"ManageWikiHooks::onCreateWikiCreation"
 		],
