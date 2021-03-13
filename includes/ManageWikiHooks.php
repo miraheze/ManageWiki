@@ -37,6 +37,10 @@ class ManageWikiHooks {
 			$wgLogTypes[] = 'farmer';
 		}
 	}
+	
+	public static function onContentHandlerForModelID( $modelId, &$handler ) {
+		$handler = new WikitextContentHandler( $modelId );
+	}
 
 	public static function onCreateWikiJsonBuilder( string $wiki, MaintainableDBConnRef $dbr, array &$jsonArray ) {
 		$setObject = $dbr->selectRow(
