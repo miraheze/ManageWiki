@@ -39,7 +39,7 @@ class ManageWikiHooks {
 	}
 	
 	public static function onContentHandlerForModelID( $modelId, &$handler ) {
-		$handler = new WikitextContentHandler( $modelId );
+		$handler = new TextContentHandler( $modelId );
 	}
 
 	public static function onCreateWikiJsonBuilder( string $wiki, MaintainableDBConnRef $dbr, array &$jsonArray ) {
