@@ -36,6 +36,9 @@ class ManageWikiRequirements {
 				case 'pages':
 					$stepResponse['pages'] = self::pages( $data );
 					break;
+				case 'settings':
+					$stepResponse['settings'] = self::settings( $data );
+					break;
 				case 'visibility':
 					$stepResponse['visibility'] = self::visibility( $data, $wiki );
 					break;
@@ -110,6 +113,32 @@ class ManageWikiRequirements {
 	 */
 	private static function pages( int $lim ) {
 		return (bool)( SiteStats::pages() <= $lim );
+	}
+	
+	/**
+	 * @param array $data
+	 * @return bool
+	 */
+	private static function settings( array $data ) {
+		$config = MediaWikiServices::getInstance()->getMainConfig();
+		$dbr = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
+
+		$database = $data['dbname'] ?? $config->get( 'DBname' );
+		$setting = $data['setting'];
+		$value = $data['value'];
+
+		$selectSettings = $dbr->selectFieldValues( 'mw_settings', 's_settings', [ 's_dbname' => $database ] );
+		if ( isset( $selectSettings[0] ) && array_key_exists( $setting, (array)json_decode( $selectSettings[0], true ) ) ) { 
+			$settings = (array)json_decode( $selectSettings[0], true )[$setting];
+		}
+
+		if ( isset( $settings ) ) {
+			if ( $settings[0] === $value || ( is_array( $settings ) && in_array( $value, $settings ) ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
