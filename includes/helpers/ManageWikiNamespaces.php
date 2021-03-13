@@ -140,11 +140,9 @@ class ManageWikiNamespaces {
 		$this->changes[$id] = [
 			'old' => [
 				'name' => $this->liveNamespaces[$id]['name'],
-				'contentmodel' => $this->liveNamespaces[$id]['contentmodel']
 			],
 			'new' => [
 				'name' => $newNamespace,
-				'contentmodel' => $this->liveNamespaces[$newNamespace]['contentmodel'],
 				'maintainprefix' => $maintainPrefix
 			]
 		];
@@ -182,9 +180,7 @@ class ManageWikiNamespaces {
 					'action' => 'delete',
 					'nsID' => $id,
 					'nsName' => $this->changes[$id]['old']['name'],
-					'nsContentModel' => $this->changes[$id]['old']['contentmodel'],
 					'nsNew' => $this->changes[$id]['new']['name'],
-					'nsNewContentModel' => $this->changes[$id]['new']['contentmodel'],
 					'maintainPrefix' => $this->changes[$id]['new']['maintainprefix']
 				];
 			} else {
@@ -204,7 +200,6 @@ class ManageWikiNamespaces {
 					'action' => 'rename',
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
-					'nsContentModel' => $this->liveNamespaces[$id]['contentmodel'],
 					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix'] ?? false
 				];
 
