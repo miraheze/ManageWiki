@@ -40,6 +40,28 @@ class ManageWikiTypes {
 					'default' => $value ?? $options['overridedefault']
 				];
 				break;
+			case 'interwiki':
+				$interwikiPrefixes = [];
+
+				$interwikiLookup = MediaWikiServices::getInstance()->getInterwikiLookup();
+				$prefixes = $interwikiLookup->getAllPrefixes();
+
+				foreach ( $prefixes as $row ) {
+					$prefix = $row['iw_prefix'];
+
+					$interwikiPrefixes[$prefix] = $prefix;
+				}
+
+				$configs = [
+					'type' => 'multiselect',
+					'options' => $interwikiPrefixes,
+					'default' => $value ?? $options['overridedefault']
+				];
+
+				if ( !$disabled ) {
+					$configs['dropdown'] = true;
+				}
+				break;
 			case 'language':
 				$configs = [
 					'type' => 'language',
