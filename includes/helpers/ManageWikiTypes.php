@@ -361,14 +361,12 @@ class ManageWikiTypes {
 			$configs = [
 				'type' => 'select',
 				'options' => $contentModels,
-				'default' => $value,
-				'disabled' => $disabled
+				'default' => $value
 			];
 		} elseif ( $type === 'vestyle' ) {
 			$configs = [
 				'type' => 'check',
-				'default' => $value ?? $overrideDefault,
-				'disabled' => $disabled
+				'default' => $value ?? $overrideDefault
 			];
 		}
 
