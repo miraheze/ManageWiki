@@ -407,7 +407,8 @@ class ManageWikiFormFactoryBuilder {
 						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
 						'help' => $help,
 						'cssclass' => 'createwiki-infuse',
-						'section' => $name
+						'section' => $name,
+						'disabled' => $disabled
 					] + $configs;
 				}
 			}
