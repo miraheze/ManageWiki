@@ -5,7 +5,7 @@ use MediaWiki\MediaWikiServices;
 class ManageWikiTypes {
 	public static function process( $config, $disabled, $groupList, $module, $options, $value, $overrideDefault = false, $type = false ) {
 		if ( $module === 'namespaces' ) {
-			return self::namespaces( $disabled, $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $options, $value, $groupList );
+			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $options, $value, $groupList );
 		}
 
 		return self::common( $config, $disabled, $options, $value, $groupList );		
@@ -339,7 +339,7 @@ class ManageWikiTypes {
 		return $configs;
 	}
 
-	private static function namespaces( $disabled, $overrideDefault, $type, $value ) {
+	private static function namespaces( $overrideDefault, $type, $value ) {
 		$configs = [];
 
 		if ( $type === 'contentmodel' ) {
