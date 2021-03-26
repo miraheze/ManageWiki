@@ -349,6 +349,7 @@ class ManageWikiFormFactoryBuilder {
 				"contentmodel-$name" => [
 					'label' => wfMessage( 'namespaces-contentmodel' )->text() . ' ($wgNamespaceContentModels)',
 					'cssclass' => 'createwiki-infuse',
+					'disabled' => !$ceMW,
 					'section' => $name
 				] + ManageWikiTypes::process( false, !$ceMW, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
 				"protection-$name" => [
@@ -407,8 +408,8 @@ class ManageWikiFormFactoryBuilder {
 						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
 						'help' => $help,
 						'cssclass' => 'createwiki-infuse',
-						'section' => $name,
-						'disabled' => $disabled
+						'disabled' => $disabled,
+						'section' => $name
 					] + $configs;
 				}
 			}
