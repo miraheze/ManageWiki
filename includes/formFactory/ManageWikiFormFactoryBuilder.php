@@ -351,7 +351,7 @@ class ManageWikiFormFactoryBuilder {
 					'cssclass' => 'createwiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name
-				] + ManageWikiTypes::process( false, !$ceMW, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
+				] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
