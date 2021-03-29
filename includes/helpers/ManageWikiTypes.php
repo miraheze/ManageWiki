@@ -349,9 +349,6 @@ class ManageWikiTypes {
 			$contentModels = [];
 			foreach ( $models as $model ) {
 				$handler = $contentHandlerFactory->getContentHandler( $model );
-				if ( !$handler->supportsDirectEditing() ) {
-					continue;
-				}
 
 				$contentModels[ucfirst( ContentHandler::getLocalizedName( $model ) )] = $model;
 			}
