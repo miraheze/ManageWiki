@@ -349,7 +349,7 @@ class ManageWikiTypes {
 			$contentModels = [];
 			foreach ( $models as $model ) {
 				$handler = $contentHandlerFactory->getContentHandler( $model );
-				if ( !$handler->supportsDirectEditing() && $model !== 'flow' ) {
+				if ( !$handler->supportsDirectEditing() && $model !== 'flow-board' ) {
 					continue;
 				}
 
