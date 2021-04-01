@@ -179,7 +179,7 @@ class ManageWikiPermissions {
 						$builtTable
 					);
 
-					$logAP = ( $mwReturn->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
+					$logAP = ( $this->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
 					$this->logParams = [
 						'4::ar' => !empty( $this->changes[$group]['permissions']['add'] ) ? implode( ', ', $this->changes[$group]['permissions']['add'] ) : $logNULL,
 						'5::rr' => !empty( $this->changes[$group]['permissions']['remove'] ) ? implode( ', ', $this->changes[$group]['permissions']['remove'] ) : $logNULL,
