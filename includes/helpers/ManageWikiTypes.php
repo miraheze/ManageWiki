@@ -203,6 +203,8 @@ class ManageWikiTypes {
 					}
 				}
 
+				ksort( $preferences );
+
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $preferences,
@@ -219,7 +221,7 @@ class ManageWikiTypes {
 				unset( $enabledSkins['fallback'] );
 				unset( $enabledSkins['apioutput'] );
 
-				if ( !isset( $options['whitelistSkipSkins'] ) ) {
+				if ( $options['blacklistSkipSkins'] ?? false ) {
 					foreach ( $config->get( 'SkipSkins' ) as $skip ) {
 						unset( $enabledSkins[$skip] );
 					}
@@ -240,7 +242,7 @@ class ManageWikiTypes {
 				unset( $enabledSkins['fallback'] );
 				unset( $enabledSkins['apioutput'] );
 
-				if ( !isset( $options['whitelistSkipSkins'] ) ) {
+				if ( $options['blacklistSkipSkins'] ?? false ) {
 					foreach ( $config->get( 'SkipSkins' ) as $skip ) {
 						unset( $enabledSkins[$skip] );
 					}
