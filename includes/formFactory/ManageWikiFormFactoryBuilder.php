@@ -687,6 +687,10 @@ class ManageWikiFormFactoryBuilder {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}
 
+		if ( $mwReturn->errors && $module == 'permissions' ) {
+			return $mwReturn->errors;
+		}
+
 		if ( $module != 'permissions' ) {
 			$mwReturn->logParams['4::wiki'] = $dbName;
 		}
