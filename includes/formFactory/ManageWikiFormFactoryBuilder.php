@@ -687,7 +687,7 @@ class ManageWikiFormFactoryBuilder {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}
 
-		if ( $mwReturn->errors ) {
+		if ( $mwReturn->errors && $module == 'permissions' ) {
 			return $mwReturn->errors;
 		}
 
@@ -703,7 +703,7 @@ class ManageWikiFormFactoryBuilder {
 		$mwLogID = $mwLogEntry->insert();
 		$mwLogEntry->publish( $mwLogID );
 
-		return [];
+		return $mwReturn->errors ?? [];
 	}
 
 	private static function submissionCore(
