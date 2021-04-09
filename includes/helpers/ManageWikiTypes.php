@@ -131,7 +131,7 @@ class ManageWikiTypes {
 				if( $config->get( 'DisableLangConversion' ) ) {
 					$excludedPrefs[] = 'variant';
 				} else {
-					foreach( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $value ) {
+					foreach( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
 						$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 					}
 				}
@@ -188,12 +188,12 @@ class ManageWikiTypes {
 				}
 
 				// Blacklist searchNs* preferences
-				foreach( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $value ) {
+				foreach( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
 				// Blacklist echo-subscriptions-* preferences
-				foreach( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $value ) {
+				foreach( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $val ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
