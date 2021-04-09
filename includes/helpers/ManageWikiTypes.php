@@ -187,15 +187,18 @@ class ManageWikiTypes {
 					}
 				}
 
-				// Never show searchNs* prefs
+				// Blacklist searchNs* prefs
 				foreach( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $value ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
-				// Blacklist echo-subscriptions preferences
+				// Blacklist echo-subscriptions-* preferences
 				foreach( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $value ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
+
+				// Blacklist downloaduserdata preference
+				$excludedPrefs[] = 'downloaduserdata';
 
 				foreach( $allPreferences as $preference => $val ) {
 					if ( !in_array( $preference, $excludedPrefs ) ) {
