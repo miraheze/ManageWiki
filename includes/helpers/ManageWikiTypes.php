@@ -187,7 +187,7 @@ class ManageWikiTypes {
 					}
 				}
 
-				// Blacklist searchNs* prefs
+				// Blacklist searchNs* preferences
 				foreach( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $value ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
