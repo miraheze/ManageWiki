@@ -200,9 +200,9 @@ class ManageWikiTypes {
 				// Blacklist downloaduserdata preference
 				$excludedPrefs[] = 'downloaduserdata';
 
-				foreach( $allPreferences as $preference => $val ) {
-					if ( !in_array( $preference, $excludedPrefs ) ) {
-						$preferences[$preference] = $preference;
+				foreach( $allPreferences as $pref => $val ) {
+					if ( !in_array( $pref, $excludedPrefs ) ) {
+						$preferences[$pref] = $pref;
 					}
 				}
 
