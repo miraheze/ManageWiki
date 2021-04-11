@@ -224,7 +224,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => in_array( $name, $extList ),
 				'disabled' => ( $ceMW ) ? !$mwRequirements : true,
 				'help' => (string)implode( ' ', $help ),
-				'section' => ( isset( $ext['section'] ) ) ? $ext['section'] : 'other',
+				'section' => $ext['section'],
 			];
 		}
 
@@ -286,7 +286,7 @@ class ManageWikiFormFactoryBuilder {
 					'disabled' => $disabled,
 					'help' => $help,
 					'cssclass' => 'createwiki-infuse',
-					'section' => ( isset( $set['section'] ) ) ? $set['section'] : 'other'
+					'section' => $set['section']
 				] + $configs;
 			}
 		}
@@ -632,7 +632,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-autopromote-groups',
 				'options' => $rowsBuilt,
 				'hide-if' => [ 'OR', ['!==', 'wpenable', '1' ], [ '===', 'wpconds', '|' ] ],
-				'default' => isset( $aPArray[APCOND_INGROUPS] ) ? $aPArray[APCOND_INGROUPS] : [],
+				'default' => $aPArray[APCOND_INGROUPS] ?? [],
 				'disabled' => !$ceMW,
 				'section' => 'autopromote'
 			]
@@ -722,7 +722,7 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		foreach ( $mwActions as $mwAction ) {
-			if ( isset( $formData[$mwAction] ) && $formData[$mwAction] ) {
+			if ( $formData[$mwAction] ?? false ) {
 				$wiki->$mwAction();
 
 				return $wiki;
@@ -913,7 +913,7 @@ class ManageWikiFormFactoryBuilder {
 		$assignablePerms = array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsBlacklistRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsBlacklistRights' )[$group], $config->get( 'ManageWikiPermissionsBlacklistRights' )['any'] ) : $config->get( 'ManageWikiPermissionsBlacklistRights' )['any'] );
 
 		// Early escape for deletion
-		if ( isset( $formData['delete-checkbox'] ) && $formData['delete-checkbox'] ) {
+		if ( $formData['delete-checkbox'] ?? false ) {
 			$mwPermissions->remove( $group );
 			return $mwPermissions;
 		}
