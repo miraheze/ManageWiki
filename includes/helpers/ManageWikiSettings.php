@@ -38,7 +38,7 @@ class ManageWikiSettings {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->settingsConfig = $this->config->get( 'ManageWikiSettings' );
-		$this->dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = wfGetDB( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		$settings = $this->dbw->selectRow(
 			'mw_settings',
