@@ -37,7 +37,7 @@ class ManageWikiExtensions {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->extConfig = $this->config->get( 'ManageWikiExtensions' );
-		$this->dbw = wfGetDB( DB_MASTER, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = wfGetDB( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		$exts = $this->dbw->selectRow(
 			'mw_settings',
