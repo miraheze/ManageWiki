@@ -65,7 +65,7 @@ class ManageWikiPopulatePermissions extends Maintenance {
 			}
 		}
 
-		$dbw = wfGetDB( DB_MASTER, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
 			$check = $dbw->selectRow(
