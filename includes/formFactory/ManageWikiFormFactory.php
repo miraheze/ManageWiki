@@ -28,7 +28,7 @@ class ManageWikiFormFactory {
 		string $special = '',
 		$formClass = CreateWikiOOUIForm::class
 	) {
-		$dbw = wfGetDB( DB_MASTER, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
 
