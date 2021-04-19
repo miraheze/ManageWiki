@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Ajeje Brazorf",
 			"Beta16",
 			"Eindt",
 			"S4b1nuz E.656"
@@ -41,6 +42,7 @@
 	"managewiki-namespaces-select": "Seleziona un namespace dall'elenco sottostante e premi Invia",
 	"managewiki-permissions-create": "Crea un nuovo gruppo utenti",
 	"managewiki-permissions-create-submit": "Crea gruppo",
+	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Gestisci le impostazioni principali di questo wiki",
 	"managewiki-link-extensions": "Gestisci le estensioni di questo wiki",
 	"managewiki-link-settings": "Gestisci le impostazioni aggiuntive di questo wiki",
