@@ -122,6 +122,11 @@
 				"settings": false
 			}
 		},
+		"ManageWikiSensitiveSettings": {
+			"description": "Array. An array of sensitive settings that won't be displayed by the API",
+			"public": true
+			"value": []
+		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"public": true,
