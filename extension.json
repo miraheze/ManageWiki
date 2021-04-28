@@ -17,9 +17,6 @@
 			"CreateWiki": "*"
 		}
 	},
-	"APIListModules": {
-		"wikiconfig": "ApiQueryWikiConfig"
-	},
 	"AvailableRights": [
 		"managewiki",
 		"managewiki-editdefault",
@@ -61,7 +58,6 @@
 		"ManageWikiAliases": "includes/ManageWikiAliases.php"
 	},
 	"AutoloadClasses": {
-		"ApiQueryWikiConfig": "includes/api/ApiQueryWikiConfig.php",
 		"ManageWiki": "includes/ManageWiki.php",
 		"ManageWikiDeletedWikiPager": "includes/helpers/ManageWikiDeletedWikiPager.php",
 		"ManageWikiExtensions": "includes/helpers/ManageWikiExtensions.php",
