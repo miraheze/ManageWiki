@@ -122,11 +122,6 @@
 				"settings": false
 			}
 		},
-		"ManageWikiSensitiveSettings": {
-			"description": "Array. An array of sensitive settings that won't be displayed by the API",
-			"public": true
-			"value": []
-		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"public": true,
@@ -154,6 +149,11 @@
 			"description": "Array. An array of settings that can be managed through Special:ManageWiki",
 			"public": true,
 			"value": false
+		},
+		"ManageWikiSensitiveSettings": {
+			"description": "Array. An array of sensitive settings that won't be displayed by the API",
+			"public": true,
+			"value": []
 		},
 		"ManageWikiPermissionsAdditionalAddGroups": {
 			"description": "Array. ManageWiki's version of $wgAddGroups.",
