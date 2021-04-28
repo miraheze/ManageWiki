@@ -1,4 +1,7 @@
 <?php
+
+use MediaWiki\MediaWikiServices;
+
 class ApiQueryWikiConfig extends ApiQueryBase {
 	public function __construct( $query, $moduleName ) {
 		parent::__construct( $query, $moduleName, 'wcf' );
@@ -36,6 +39,12 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 			$mwExt = new ManageWikiExtensions( $wiki );
 			if ( isset( $prop['extensions'] ) ) {
 				$wikiData['extensions'] = $mwExt->list();
+				
+				$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+	
+				foreach ( $config->get( 'ManageWikiSensitiveSettings' ) as $setting ) {
+					unset( $wikiData['settings'][$setting] );
+				}
 			}
 
 			$mwPerms = new ManageWikiPermissions( $wiki );
