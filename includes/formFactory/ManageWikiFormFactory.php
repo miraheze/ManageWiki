@@ -59,7 +59,6 @@ class ManageWikiFormFactory {
 		string $special = ''
 	) {
 		$context = $form->getContext();
-		$out = $context->getOutput();
 
 		if ( !$ceMW ) {
 			throw new MWException( "User '{$context->getUser()->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
@@ -75,10 +74,10 @@ class ManageWikiFormFactory {
 				}
 			}
 
-			$out->addHTML( '<div class="errorbox">The following errors occurred:<br>' . implode( '<br>', $errorOut ) . '</div>' );
+			Html::errorBox( 'The following errors occurred:<br>' . implode( '<br>', $errorOut ) );
 			return null;
 		}
 
-		$out->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
+		Html::successBox( wfMessage( 'managewiki-success' )->escaped() );
 	}
 }
