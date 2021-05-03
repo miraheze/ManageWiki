@@ -116,7 +116,7 @@ class SpecialManageWiki extends SpecialPage {
 		} else {
 			$remoteWiki = new RemoteWiki( $wiki );
 			if ( $remoteWiki == null ) {
-				Html::errorBox( wfMessage( 'managewiki-missing' )->escaped() );
+				$out->addHTML( Html::errorBox( wfMessage( 'managewiki-missing' )->escaped() ) );
 				return false;
 			}
 			$formFactory = new ManageWikiFormFactory();
