@@ -71,14 +71,14 @@ class ManageWikiFormFactory {
 			$errorOut = [];
 			foreach ( $mwReturn as $errors ) {
 				foreach ( $errors as $msg => $params ) {
-					$errorOut[] = wfMessage( $msg, $params )->inContentLanguage()->text();
+					$errorOut[] = wfMessage( $msg, $params )->inContentLanguage()->escaped();
 				}
 			}
 
-			$out->addHTML( '<div class="errorbox">The following errors occurred:<br>' . implode( '<br>', $errorOut ) . '</div>' );
+			$out->addHTML( Html::errorBox( 'The following errors occurred:<br>' . implode( '<br>', $errorOut ) ) );
 			return null;
 		}
 
-		$out->addHTML( '<div class="successbox">' . wfMessage( 'managewiki-success' )->escaped() . '</div>' );
+		$out->addHTML( Html::successBox( wfMessage( 'managewiki-success' )->escaped() ) );
 	}
 }

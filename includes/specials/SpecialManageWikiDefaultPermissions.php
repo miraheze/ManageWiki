@@ -102,7 +102,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
 		if ( $remoteWiki == null ) {
-			$out->addHTML( '<div class="errorbox">' . wfMessage( 'managewiki-missing' )->escaped() . '</div>' );
+			$out->addHTML( Html::errorBox( wfMessage( 'managewiki-missing' )->escaped() ) );
 			return false;
 		}
 
