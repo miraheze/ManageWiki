@@ -112,6 +112,14 @@ class ManageWikiFormFactoryBuilder {
 				'default' => (bool)$wiki->isInactiveExempt(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			],
+			'inactive-exempt-reason' => [
+				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
+				'hide-if' => [ '!==', 'wpinactive-exempt', '1' ],
+				'type' => 'select',
+				'default' => $wiki->getInactiveExemptReason(),
+				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'options' => $config->get( 'CreateWikiInactiveExemptReasons' )
+			],
 			'server' => [
 				'if' => $config->get( 'CreateWikiUseCustomDomains' ),
 				'type' => 'text',
@@ -129,6 +137,14 @@ class ManageWikiFormFactoryBuilder {
 					'disabled' => $data['access'],
 					'section' => 'main'
 				];
+
+				if ( $data['hide-if'] ?? false ) {
+					$formDescriptor[$name]['hide-if'] = $data['hide-if'];
+				}
+
+				if ( $data['options'] ?? false ) {
+					$formDescriptor[$name]['options'] = $data['options'];
+				}
 			}
 		}
 
