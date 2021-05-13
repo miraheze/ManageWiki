@@ -118,7 +118,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'select',
 				'default' => $wiki->getInactiveExemptReason(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
-				'options' => $config->get( 'CreateWikiInactiveExemptReasons' )
+				'options' => $config->get( 'CreateWikiInactiveExemptReasonOptions' )
 			],
 			'server' => [
 				'if' => $config->get( 'CreateWikiUseCustomDomains' ),
