@@ -770,11 +770,18 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-			if ( ( $newInactiveExempt != $wiki->isInactiveExempt() ) && $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
-				if ( $newInactiveExempt ) {
-					$wiki->markExempt();
-				} else {
-					$wiki->unExempt();
+			if (  $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
+				if ( ( $newInactiveExempt != $wiki->isInactiveExempt() ) ) {
+					if ( $newInactiveExempt ) {
+						$wiki->markExempt();
+					} else {
+						$wiki->unExempt();
+					}
+				}
+
+				$newInactiveExemptReason = $formData['inactive-exempt-reason'];
+				if ( ( $newInactiveExemptReason != $wiki->getInactiveExemptReason() ) ) {
+					$wiki->setInactiveExemptReason();
 				}
 			}
 		}
