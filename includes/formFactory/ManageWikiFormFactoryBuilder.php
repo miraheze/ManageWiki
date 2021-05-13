@@ -781,7 +781,7 @@ class ManageWikiFormFactoryBuilder {
 
 				$newInactiveExemptReason = $formData['inactive-exempt-reason'];
 				if ( ( $newInactiveExemptReason != $wiki->getInactiveExemptReason() ) ) {
-					$wiki->setInactiveExemptReason();
+					$wiki->setInactiveExemptReason( $formData['inactive-exempt-reason'] );
 				}
 			}
 		}
