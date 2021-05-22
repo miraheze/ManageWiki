@@ -73,6 +73,7 @@
 	"managewiki-label-private": "Private",
 	"managewiki-label-inactive": "Inactive",
 	"managewiki-label-inactive-exempt": "Exempt from Inactivity",
+	"managewiki-label-inactive-exempt-reason": "Select the reason for this exemption from inactivity",
 	"managewiki-label-reason": "Reason",
 	"managewiki-label-server": "Server Name",
 	"managewiki-label-sitename": "Sitename",
