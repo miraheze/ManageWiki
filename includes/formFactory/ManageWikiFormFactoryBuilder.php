@@ -113,7 +113,7 @@ class ManageWikiFormFactoryBuilder {
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			],
 			'inactive-exempt-reason' => [
-				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
+				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( 'CreateWikiInactiveExemptReasonOptions' ),
 				'hide-if' => [ '!==', 'wpinactive-exempt', '1' ],
 				'type' => 'select',
 				'default' => $wiki->getInactiveExemptReason(),
