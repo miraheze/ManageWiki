@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Agent",
 			"AlvaroMolina",
 			"Anarhistička Maca",
 			"Cgalindo",
@@ -83,6 +84,7 @@
 	"managewiki-label-private": "Privado",
 	"managewiki-label-inactive": "Inactivo",
 	"managewiki-label-inactive-exempt": "Exento de inactividad",
+	"managewiki-label-inactive-exempt-reason": "Selecciona una razón para esta exención de inactividad.",
 	"managewiki-label-reason": "Motivo",
 	"managewiki-label-server": "Nombre de servidor",
 	"managewiki-label-sitename": "Nombre del sitio",

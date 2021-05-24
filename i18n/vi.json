@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Anpfraum",
 			"Leduyquang753",
 			"Wolf"
 		]
@@ -62,6 +63,7 @@
 	"managewiki-label-private": "Riêng tư",
 	"managewiki-label-inactive": "Không hoạt động (người ta hay gọi mỹ miều là wiki \"dead\" đó.)",
 	"managewiki-label-inactive-exempt": "Loại khỏi không hoạt động",
+	"managewiki-label-inactive-exempt-reason": "Vì lí do nào mà được miễn trừ trạng thái bất hoạt động?",
 	"managewiki-label-reason": "Lý do",
 	"managewiki-label-sitename": "Tên trang",
 	"managewiki-label-undeletewiki": "Hủy xóa wiki này?",
