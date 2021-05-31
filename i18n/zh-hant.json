@@ -72,6 +72,7 @@
 	"managewiki-label-private": "非公開",
 	"managewiki-label-inactive": "失效",
 	"managewiki-label-inactive-exempt": "免除失效",
+	"managewiki-label-inactive-exempt-reason": "選擇可免於失效的原因",
 	"managewiki-label-reason": "原因",
 	"managewiki-label-server": "伺服器名稱",
 	"managewiki-label-sitename": "網站名稱",
