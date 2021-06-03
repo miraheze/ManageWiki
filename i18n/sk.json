@@ -68,6 +68,7 @@
 	"managewiki-label-private": "Súkromná",
 	"managewiki-label-inactive": "Neaktívna",
 	"managewiki-label-inactive-exempt": "Výnimka pre neaktivitu",
+	"managewiki-label-inactive-exempt-reason": "Vyberte dôvod pre túto výnimku z nečinnosti",
 	"managewiki-label-reason": "Dôvod",
 	"managewiki-label-server": "Názov servera",
 	"managewiki-label-sitename": "Názov stránky",

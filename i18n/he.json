@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Amire80",
 			"Guycn2",
 			"Steeve815",
 			"Strayblues",
@@ -66,7 +67,7 @@
 	"managewiki-permissions-assigned": "הזכויות הבאות מוקצות כרגע לקבוצת משתמשים זו.",
 	"managewiki-permissions-autopromote-blocked": "חובה להיות בחסימה",
 	"managewiki-permissions-autopromote-bot": "חובה להיות חשבון בוט",
-	"managewiki-permissions-autopromote-conds": "כדי לקדם משתמש/ת...",
+	"managewiki-permissions-autopromote-conds": "כדי לקדם משתמש...",
 	"managewiki-permissions-autopromote-conds-and": "...על כל התנאים להתמלא",
 	"managewiki-permissions-autopromote-conds-not": "...על כל התנאים לא להתמלא",
 	"managewiki-permissions-autopromote-conds-or": "... על אחד מהתנאים הבאים להתמלא",

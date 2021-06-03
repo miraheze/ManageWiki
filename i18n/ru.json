@@ -80,6 +80,7 @@
 	"managewiki-label-private": "Скрытый",
 	"managewiki-label-inactive": "Неактивна",
 	"managewiki-label-inactive-exempt": "Исключено из неактивных",
+	"managewiki-label-inactive-exempt-reason": "Укажите причину для исключения из-за неактивности",
 	"managewiki-label-reason": "Причина",
 	"managewiki-label-server": "Название сервера",
 	"managewiki-label-sitename": "Название сайта",
