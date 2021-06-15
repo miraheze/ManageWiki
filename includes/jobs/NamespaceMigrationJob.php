@@ -9,7 +9,7 @@ class NamespaceMigrationJob extends Job {
 	}
 
 	public function run() {
-		$dbw = wfGetDB( DB_MASTER );
+		$dbw = wfGetDB( DB_PRIMARY );
 
 		$maintainPrefix = $this->params['maintainPrefix'];
 
