@@ -199,6 +199,8 @@ class ManageWikiFormFactoryBuilder {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 
+		$credits = SpecialVersion::getCredits( ExtensionRegistry::getInstance(), $config );
+
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
@@ -229,6 +231,8 @@ class ManageWikiFormFactoryBuilder {
 
 				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires );
 			}
+
+			$help[] = ( $credits[ $ext['name'] ]['descriptionmsg'] ? wfMessage( $credits[ $ext['name'] ]['descriptionmsg'] )->parse() : null ) ?? $credits[ $ext['name'] ]['description'] ?? $ext['help'];
 
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
