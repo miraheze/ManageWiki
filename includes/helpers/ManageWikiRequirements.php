@@ -36,6 +36,9 @@ class ManageWikiRequirements {
 				case 'pages':
 					$stepResponse['pages'] = self::pages( $data );
 					break;
+				case 'images':
+					$stepResponse['images'] = self::images( $data );
+					break;
 				case 'settings':
 					$stepResponse['settings'] = self::settings( $data );
 					break;
@@ -113,6 +116,14 @@ class ManageWikiRequirements {
 	 */
 	private static function pages( int $lim ) {
 		return (bool)( SiteStats::pages() <= $lim );
+	}
+
+	/**
+	 * @param int $lim Cut off number
+	 * @return bool Whether limit is exceeded or not
+	 */
+	private static function images( int $lim ) {
+		return (bool)( SiteStats::images() <= $lim );
 	}
 	
 	/**
