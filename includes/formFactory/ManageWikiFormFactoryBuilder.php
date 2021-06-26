@@ -393,7 +393,7 @@ class ManageWikiFormFactoryBuilder {
 				$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
 				$msgHelp = wfMessage( "managewiki-namespaces-{$key}-help" );
 
-				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && !( in_array( $id, (array)$a['blacklisted'] ) || in_array( 'new', (array)$a['blacklisted'] ) && !MWNamespace::exists( $id ) ) ) {
+				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && !( in_array( $id, (array)$a['blacklisted'] ) || ( in_array( 'new', (array)$a['blacklisted'] ) && !MWNamespace::exists( $id ) ) ) ) {
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
