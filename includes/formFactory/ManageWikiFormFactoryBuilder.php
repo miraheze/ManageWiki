@@ -246,6 +246,7 @@ class ManageWikiFormFactoryBuilder {
 			$extname = array_column( $credits, 'name', 'name' )[ $ext['name'] ] ?? null;
 
 			$extDescription = ( $ext['description'] ?? false ) ? ( wfMessage( $ext['description']  )->exists() ? wfMessage( $ext['description']  )->parse() : $ext['description'] ) : null;
+			$extDisplayName = ( $ext['displayname'] ?? false ) ? ( wfMessage( $ext['displayname']  )->exists() ? wfMessage( $ext['displayname']  )->parse() : $ext['displayname'] ) : null;
 
 			$help[] = ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description ?? $extDescription;
 
@@ -254,7 +255,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => [
 					'managewiki-extension-name',
 					$ext['linkPage'],
-					( $namemsg ? wfMessage( $namemsg )->text() : $extname ) ?? $ext['displayname'] ?? $ext['name']
+					$extDisplayName ?? ( $namemsg ? wfMessage( $namemsg )->text() : $extname ) ?? $ext['name']
 				],
 				'default' => in_array( $name, $extList ),
 				'disabled' => ( $ceMW ) ? !$mwRequirements : true,
