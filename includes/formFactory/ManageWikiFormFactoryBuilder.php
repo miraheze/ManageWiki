@@ -248,7 +248,7 @@ class ManageWikiFormFactoryBuilder {
 			$extDescription = ( $ext['description'] ?? false ) ? ( wfMessage( $ext['description']  )->exists() ? wfMessage( $ext['description']  )->parse() : $ext['description'] ) : null;
 			$extDisplayName = ( $ext['displayname'] ?? false ) ? ( wfMessage( $ext['displayname']  )->exists() ? wfMessage( $ext['displayname']  )->parse() : $ext['displayname'] ) : null;
 
-			$help[] = ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description ?? $extDescription;
+			$help[] = $extDescription ?? ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description;
 
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
