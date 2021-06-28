@@ -7,6 +7,7 @@
 			"S4b1nuz E.656"
 		]
 	},
+	"core-handling": "Invia",
 	"deletedwikis": "Wiki cancellati",
 	"extensions-other": "Altro",
 	"extensions-handling": "Invia",
@@ -35,6 +36,7 @@
 	"managewiki-label-inactive": "Inattivo",
 	"managewiki-label-reason": "Motivo",
 	"managewiki-label-server": "Nome del server",
+	"managewiki-label-sitename": "Nome del sito",
 	"managewiki-label-undeletewiki": "Ripristinare questo wiki?",
 	"managewiki-missing": "Questo wiki non esiste.",
 	"managewiki-namespaces-create": "Crea nuovo namespace",
@@ -42,6 +44,7 @@
 	"managewiki-namespaces-select": "Seleziona un namespace dall'elenco sottostante e premi Invia",
 	"managewiki-permissions-create": "Crea un nuovo gruppo utenti",
 	"managewiki-permissions-create-submit": "Crea gruppo",
+	"managewiki-sidebar-header": "Amministrazione",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Gestisci le impostazioni principali di questo wiki",
 	"managewiki-link-extensions": "Gestisci le estensioni di questo wiki",
