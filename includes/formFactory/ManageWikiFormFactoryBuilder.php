@@ -209,7 +209,7 @@ class ManageWikiFormFactoryBuilder {
 			$type = $ext['section'] === 'skins' ? 'skin' : 'extension';
 
 			try {
-				$credits[] = $reg->readFromQueue( $directory . '/' . $ext['pathname'] ?? $ext['name'] . "{$type}.json" );
+				$credits[] = $reg->readFromQueue( [ $directory . '/' . $ext['pathname'] ?? $ext['name'] . "{$type}.json" ] );
 			} catch ( Exception $e ) {
 				$credits[] = [];
 			}
