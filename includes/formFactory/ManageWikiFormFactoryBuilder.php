@@ -236,7 +236,7 @@ class ManageWikiFormFactoryBuilder {
 			$description = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'description', 'name' )[ $ext['name'] ] ?? null;
 
 			$namemsg = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'namemsg', 'name' )[ $ext['name'] ] ?? false;
-			$extname = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'name' )[ $ext['name'] ] ?? null;
+			$extname = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'name', 'name' )[ $ext['name'] ] ?? null;
 
 			$help[] = ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description ?? $ext['help'] ?? null;
 
