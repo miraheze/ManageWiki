@@ -199,11 +199,21 @@ class ManageWikiFormFactoryBuilder {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 
-		$credits = SpecialVersion::getCredits( ExtensionRegistry::getInstance(), $config );
+		$reg = new ExtensionRegistry();
+		$credits = [];
 
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
+			$directory = $ext['section'] === 'skins' ? $config->get( 'StyleDirectory' ) : $config->get( 'ExtensionDirectory' );
+			$type = $ext['section'] === 'skins' ? 'skin' : 'extension';
+
+			try {
+				$credits[] = $reg->readFromQueue( $directory . '/' . $ext['pathname'] ?? $ext['name'] . "{$type}.json" )
+			} catch ( Exception $e ) {
+				$credits = [];
+			}
+
 			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
 			
 			$help = [];
