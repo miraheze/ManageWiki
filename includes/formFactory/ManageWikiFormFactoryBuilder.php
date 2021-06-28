@@ -245,7 +245,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => [
 					'managewiki-extension-name',
 					$ext['linkPage'],
-					( $namemsg ? wfMessage( $namemsg )->text() : $extname ) ?? $ext['name']
+					( $namemsg ? wfMessage( $namemsg )->text() : $extname ) ?? $ext['displayname'] ?? $ext['name']
 				],
 				'default' => in_array( $name, $extList ),
 				'disabled' => ( $ceMW ) ? !$mwRequirements : true,
