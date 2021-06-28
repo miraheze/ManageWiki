@@ -245,7 +245,9 @@ class ManageWikiFormFactoryBuilder {
 			$namemsg = array_column( $credits, 'namemsg', 'name' )[ $ext['name'] ] ?? false;
 			$extname = array_column( $credits, 'name', 'name' )[ $ext['name'] ] ?? null;
 
-			$help[] = ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description ?? $ext['help'] ?? null;
+			$extDescription = ( $ext['description'] ?? false ) ? ( wfMessage( $ext['description']  )->exists() ? wfMessage( $ext['description']  )->parse() : $ext['description'] ) : null;
+
+			$help[] = ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description ?? $extDescription;
 
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
