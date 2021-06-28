@@ -232,7 +232,10 @@ class ManageWikiFormFactoryBuilder {
 				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires );
 			}
 
-			$help[] = ( $credits[ $ext['name'] ][0]['descriptionmsg'] ? wfMessage( $credits[ $ext['name'] ][0]['descriptionmsg'] )->parse() : null ) ?? $credits[ $ext['name'] ][0]['description'] ?? $ext['help'] ?? null;
+			$descriptionmsg = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
+			$description = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'description', 'name' )[ $ext['name'] ] ?? null;
+
+			$help[] = ( $descriptionmsg ? wfMessage( $descriptionmsg )->parse() : null ) ?? $description ?? $ext['help'] ?? null;
 
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
