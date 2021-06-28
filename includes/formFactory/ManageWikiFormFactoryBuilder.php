@@ -200,7 +200,7 @@ class ManageWikiFormFactoryBuilder {
 		$extList = $mwExt->list();
 
 		$reg = new ExtensionRegistry();
-		$queue = array_merge( glob( $config->get( 'ExtensionDirectory' ) . '/*/extension*.json' ), glob( $config->get( 'StyleDirectory' ) . '/*/skin.json' ) );
+		$queue = array_fill_keys( array_merge( glob( $config->get( 'ExtensionDirectory' ) . '/*/extension*.json' ), glob( $config->get( 'StyleDirectory' ) . '/*/skin.json' ) ), true );
 
 		$credits = $reg->readFromQueue( $queue );
 
