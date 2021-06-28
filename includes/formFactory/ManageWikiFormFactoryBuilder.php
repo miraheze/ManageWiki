@@ -200,16 +200,17 @@ class ManageWikiFormFactoryBuilder {
 		$extList = $mwExt->list();
 
 		$reg = new ExtensionRegistry();
-		$queue = array_fill_keys( array_merge( glob( $config->get( 'ExtensionDirectory' ) . '/*/extension*.json' ), glob( $config->get( 'StyleDirectory' ) . '/*/skin.json' ) ), true );
+		$queue = array_fill_keys( array_merge(
+				glob( $config->get( 'ExtensionDirectory' ) . '/*/extension*.json' ),
+				glob( $config->get( 'StyleDirectory' ) . '/*/skin.json' )
+			),
+		true );
 
-		$credits = $reg->readFromQueue( $queue );
+		$credits = $reg->readFromQueue( $queue )['credits'];
 
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
-			$directory = $ext['section'] === 'skins' ? $config->get( 'StyleDirectory' ) : $config->get( 'ExtensionDirectory' );
-			$type = $ext['section'] === 'skins' ? 'skin' : 'extension';
-
 			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
 			
 			$help = [];
