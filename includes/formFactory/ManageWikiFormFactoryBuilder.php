@@ -206,7 +206,7 @@ class ManageWikiFormFactoryBuilder {
 			),
 		true );
 
-		$credits = $reg->readFromQueue( $queue )['credits'];
+		$credits = array_merge( $reg->readFromQueue( $queue )['credits'], $config->get( 'ExtensionCredits' ) );
 
 		$formDescriptor = [];
 
