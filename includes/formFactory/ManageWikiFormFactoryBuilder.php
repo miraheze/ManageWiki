@@ -212,7 +212,7 @@ class ManageWikiFormFactoryBuilder {
 
 
 			if ( $ext['conflicts'] ) {
-				$help[] = "{$conflictLabel} {$ext['conflicts']}<br>";
+				$help[] = "{$conflictLabel} {$ext['conflicts']}<br/>";
 			}
 
 			if ( $ext['requires'] ) {
@@ -229,7 +229,7 @@ class ManageWikiFormFactoryBuilder {
 					$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 				}
 
-				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires );
+				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires ) . '<br/>';
 			}
 
 			$descriptionmsg = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
