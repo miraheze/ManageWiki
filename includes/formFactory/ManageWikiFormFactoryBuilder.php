@@ -200,6 +200,8 @@ class ManageWikiFormFactoryBuilder {
 		$extList = $mwExt->list();
 
 		$reg = new ExtensionRegistry();
+		$queue = array_merge( scandir( $config->get( 'ExtensionDirectory' ) ), scandir( $config->get( 'StyleDirectory' ) ) );
+
 		$credits = [];
 
 		$formDescriptor = [];
@@ -209,7 +211,7 @@ class ManageWikiFormFactoryBuilder {
 			$type = $ext['section'] === 'skins' ? 'skin' : 'extension';
 
 			try {
-				$credits = $reg->readFromQueue( [ $directory . '/' . $ext['pathname'] ?? $ext['name'] . "{$type}.json" ] );
+				$credits = $reg->readFromQueue( [ $directory . '/' . ( $ext['pathname'] ?? $ext['name'] ) . '/' . "{$type}.json" ] );
 			} catch ( Exception $e ) {
 				$credits = [];
 			}
