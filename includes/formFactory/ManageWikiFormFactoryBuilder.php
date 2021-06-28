@@ -239,11 +239,11 @@ class ManageWikiFormFactoryBuilder {
 				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires ) . '<br/>';
 			}
 
-			$descriptionmsg = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
-			$description = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'description', 'name' )[ $ext['name'] ] ?? null;
+			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
+			$description = array_column( $credits, 'description', 'name' )[ $ext['name'] ] ?? null;
 
-			$namemsg = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'namemsg', 'name' )[ $ext['name'] ] ?? false;
-			$extname = array_column( array_values( array_merge(...array_values( $credits ) ) ), 'name', 'name' )[ $ext['name'] ] ?? null;
+			$namemsg = array_column( $credits, 'namemsg', 'name' )[ $ext['name'] ] ?? false;
+			$extname = array_column( $credits, 'name', 'name' )[ $ext['name'] ] ?? null;
 
 			$help[] = ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description ?? $ext['help'] ?? null;
 
