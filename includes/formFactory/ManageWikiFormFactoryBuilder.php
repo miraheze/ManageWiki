@@ -261,8 +261,6 @@ class ManageWikiFormFactoryBuilder {
 		$mwPermissions = new ManageWikiPermissions( $dbName );
 		$groupList = array_keys( $mwPermissions->list() );
 
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
@@ -843,7 +841,6 @@ class ManageWikiFormFactoryBuilder {
 
 		$settingsArray = [];
 
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
 			// No need to do anything if setting does not 'exist'
 			if ( !isset( $formData["set-$name"] ) ) {
