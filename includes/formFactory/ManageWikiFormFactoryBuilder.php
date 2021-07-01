@@ -199,6 +199,19 @@ class ManageWikiFormFactoryBuilder {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 
+		$reg = new ExtensionRegistry();
+
+		$queue = array_fill_keys( array_merge(
+				glob( $config->get( 'ExtensionDirectory' ) . '/*/extension*.json' ),
+				glob( $config->get( 'StyleDirectory' ) . '/*/skin.json' )
+			),
+		true );
+
+		$credits = array_merge( $reg->readFromQueue( $queue )['credits'], array_values(
+				array_merge( ...array_values( $config->get( 'ExtensionCredits' ) ) )
+			)
+		);
+
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
@@ -210,7 +223,7 @@ class ManageWikiFormFactoryBuilder {
 
 
 			if ( $ext['conflicts'] ) {
-				$help[] = "{$conflictLabel} {$ext['conflicts']}<br>";
+				$help[] = "{$conflictLabel} {$ext['conflicts']}<br/>";
 			}
 
 			if ( $ext['requires'] ) {
@@ -227,15 +240,26 @@ class ManageWikiFormFactoryBuilder {
 					$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 				}
 
-				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires );
+				$help[] = "{$requiresLabel}: " . implode( ' & ', $requires ) . '<br/>';
 			}
+
+			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
+			$description = array_column( $credits, 'description', 'name' )[ $ext['name'] ] ?? null;
+
+			$namemsg = array_column( $credits, 'namemsg', 'name' )[ $ext['name'] ] ?? false;
+			$extname = array_column( $credits, 'name', 'name' )[ $ext['name'] ] ?? null;
+
+			$extDescription = ( $ext['description'] ?? false ) ? ( wfMessage( $ext['description']  )->exists() ? wfMessage( $ext['description']  )->parse() : $ext['description'] ) : null;
+			$extDisplayName = ( $ext['displayname'] ?? false ) ? ( wfMessage( $ext['displayname']  )->exists() ? wfMessage( $ext['displayname']  )->parse() : $ext['displayname'] ) : null;
+
+			$help[] = $extDescription ?? ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description;
 
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
 				'label-message' => [
 					'managewiki-extension-name',
 					$ext['linkPage'],
-					$ext['name']
+					$extDisplayName ?? ( $namemsg ? wfMessage( $namemsg )->text() : $extname ) ?? $ext['name']
 				],
 				'default' => in_array( $name, $extList ),
 				'disabled' => ( $ceMW ) ? !$mwRequirements : true,
