@@ -71,6 +71,7 @@
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/helpers/ManageWikiInstaller.php",
 		"ManageWikiNamespaces": "includes/helpers/ManageWikiNamespaces.php",
+		"ManageWikiOOUIForm": "includes/ManageWikiOOUIForm.php",
 		"ManageWikiPermissions": "includes/helpers/ManageWikiPermissions.php",
 		"ManageWikiRequirements": "includes/helpers/ManageWikiRequirements.php",
 		"ManageWikiSettings": "includes/helpers/ManageWikiSettings.php",
