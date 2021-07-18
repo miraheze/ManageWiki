@@ -39,7 +39,7 @@ class ManageWikiFormFactory {
 		if ( $ceMW ) {
 			$htmlForm->buttons = new OOUI\TextInputWidget( [
 				'infusable' => true,
-				'label' => wfMessage( 'managewiki-label-reason' )->text(),
+				'placeholder' => wfMessage( 'managewiki-label-reason' )->text(),
 				'framed' => true,
 				'required' => true,
 			] );
