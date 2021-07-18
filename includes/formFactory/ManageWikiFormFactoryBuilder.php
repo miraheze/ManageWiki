@@ -199,15 +199,25 @@ class ManageWikiFormFactoryBuilder {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 
-		$reg = new ExtensionRegistry();
-
 		$queue = array_fill_keys( array_merge(
 				glob( $config->get( 'ExtensionDirectory' ) . '/*/extension*.json' ),
 				glob( $config->get( 'StyleDirectory' ) . '/*/skin.json' )
 			),
 		true );
 
-		$credits = array_merge( $reg->readFromQueue( $queue )['credits'], array_values(
+		$processor = new ExtensionProcessor();
+
+		foreach ( $queue as $path => $mtime ) {
+			$json = file_get_contents( $path );
+			$info = json_decode( $json, true );
+			$version = $info['manifest_version'];
+
+			$processor->extractInfo( $path, $info, $version );
+		}
+
+		$data = $processor->getExtractedInfo();
+
+		$credits = array_merge( $data['credits'], array_values(
 				array_merge( ...array_values( $config->get( 'ExtensionCredits' ) ) )
 			)
 		);
