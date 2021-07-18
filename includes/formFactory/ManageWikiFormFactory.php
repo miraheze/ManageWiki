@@ -26,7 +26,7 @@ class ManageWikiFormFactory {
 		Config $config,
 		string $module,
 		string $special = '',
-		$formClass = CreateWikiOOUIForm::class
+		$formClass = ManageWikiOOUIForm::class
 	) {
 		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
@@ -36,14 +36,7 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
-		if ( $ceMW ) {
-			$htmlForm->buttons = new OOUI\TextInputWidget( [
-				'infusable' => true,
-				'placeholder' => wfMessage( 'managewiki-label-reason' )->text(),
-				'framed' => true,
-				'required' => true,
-			] );
-		} else {
+		if ( !$ceMW ) {
 			$htmlForm->suppressDefaultSubmit();
 		}
 
