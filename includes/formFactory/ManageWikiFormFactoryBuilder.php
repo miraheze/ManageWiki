@@ -32,23 +32,6 @@ class ManageWikiFormFactoryBuilder {
 				throw new MWException( "{$module} not recognised" );
 		}
 
-		if ( $ceMW ) {
-			$formDescriptor += [
-				'reason' => [
-					'type' => 'text',
-					'section' => 'handling',
-					'label-message' => 'managewiki-label-reason',
-					'size' => 45,
-					'required' => true
-				],
-				'submit' => [
-					'type' => 'submit',
-					'default' => wfMessage( 'htmlform-submit' )->text(),
-					'section' => 'handling'
-				]
-			];
-		}
-
 		return $formDescriptor;
 	}
 
