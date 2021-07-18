@@ -36,6 +36,13 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
+		$htmlForm->buttons = new OOUI\TextInputWidget( [
+                        'infusable' => true,
+                        'label' => wfMessage( 'managewiki-label-reason' )->text(),
+                        'framed' => true,
+                        'required' => true,
+                ] );
+
 		$htmlForm->setId( 'mw-baseform-' . $module );
 		$htmlForm->setSubmitCallback(
 			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special, $dbw, $wiki, $config ) {
