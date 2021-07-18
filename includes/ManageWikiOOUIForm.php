@@ -121,14 +121,14 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			return;
 		}
 
-		$html = parent::getButtons();
-
-		$html .= new OOUI\TextInputWidget( [
+		$html = new OOUI\TextInputWidget( [
 			'infusable' => true,
 			'placeholder' => wfMessage( 'managewiki-label-reason' )->text(),
 			'framed' => true,
 			'required' => true,
 		] );
+
+		$html .= parent::getButtons();
 
 		$html = Xml::tags( 'div', [ 'class' => 'managewiki-submit-formfields' ], $html );
 
