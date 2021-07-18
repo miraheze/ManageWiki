@@ -36,12 +36,16 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
-		$htmlForm->buttons = new OOUI\TextInputWidget( [
-                        'infusable' => true,
-                        'label' => wfMessage( 'managewiki-label-reason' )->text(),
-                        'framed' => true,
-                        'required' => true,
-                ] );
+		if ( $ceMW ) {
+			$htmlForm->buttons = new OOUI\TextInputWidget( [
+				'infusable' => true,
+				'label' => wfMessage( 'managewiki-label-reason' )->text(),
+				'framed' => true,
+				'required' => true,
+			] );
+		} else {
+			$htmlForm->suppressDefaultSubmit();
+		}
 
 		$htmlForm->setId( 'mw-baseform-' . $module );
 		$htmlForm->setSubmitCallback(
