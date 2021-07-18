@@ -701,7 +701,7 @@ class ManageWikiFormFactoryBuilder {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}
 
-		if ( $mwReturn->errors && $module == 'permissions' ) {
+		if ( $mwReturn->errors ?? [] && $module == 'permissions' ) {
 			return $mwReturn->errors;
 		}
 
