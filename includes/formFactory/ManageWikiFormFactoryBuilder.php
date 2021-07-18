@@ -209,7 +209,7 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $queue as $path => $mtime ) {
 			$json = file_get_contents( $path );
-			$info = json_decode( $json, true );|
+			$info = json_decode( $json, true );
 			$version = $info['manifest_version'];
 
 			$processor->extractInfo( $path, $info, $version );
