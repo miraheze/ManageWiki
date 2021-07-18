@@ -37,7 +37,6 @@ class ManageWikiFormFactory {
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
 		$htmlForm->setId( 'mw-baseform-' . $module );
-		$htmlForm->suppressDefaultSubmit();
 		$htmlForm->setSubmitCallback(
 			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special, $dbw, $wiki, $config ) {
 				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $config, $special );
