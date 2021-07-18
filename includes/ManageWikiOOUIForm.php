@@ -130,6 +130,8 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			'required' => true,
 		] );
 
+		$html = Xml::tags( 'div', [ 'class' => 'managewiki-submit-formfields' ], $html );
+
 		return $html;
 	}
 
