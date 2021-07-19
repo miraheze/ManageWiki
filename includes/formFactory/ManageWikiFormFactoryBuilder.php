@@ -103,33 +103,13 @@ class ManageWikiFormFactoryBuilder {
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 				'options' => $config->get( 'CreateWikiInactiveExemptReasonOptions' )
 			],
-		];
-
-		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
-			$mwActions = [
-				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
-				( $wiki->isLocked() ) ? 'unlock' : 'lock'
-			];
-
-			foreach ( $mwActions as $mwAction ) {
-				$formDescriptor[$mwAction] = [
-					'type' => 'check',
-					'label-message' => "managewiki-label-{$mwAction}wiki",
-					'default' => false,
-					'section' => 'main'
-				];
-			}
-		}
-
-		if ( $config->get( 'CreateWikiUseCustomDomains' ) ) {
-			$formDescriptor['server'] = [
+			'server' => [
+				'if' => $config->get( 'CreateWikiUseCustomDomains' ),
 				'type' => 'text',
-				'label-message' => 'managewiki-label-server',
 				'default' => $wiki->getServerName(),
-				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
-				'section' => 'main'
-			];
-		}
+				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
+			]
+		];
 
 		foreach ( $addedModules as $name => $data ) {
 			if ( $data['if'] ) {
@@ -172,6 +152,22 @@ class ManageWikiFormFactoryBuilder {
 				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 				'section' => 'main'
 			];
+		}
+
+		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
+			$mwActions = [
+				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
+				( $wiki->isLocked() ) ? 'unlock' : 'lock'
+			];
+
+			foreach ( $mwActions as $mwAction ) {
+				$formDescriptor[$mwAction] = [
+					'type' => 'check',
+					'label-message' => "managewiki-label-{$mwAction}wiki",
+					'default' => false,
+					'section' => 'main'
+				];
+			}
 		}
 
 		return $formDescriptor;
