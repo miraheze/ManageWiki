@@ -124,7 +124,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		$html = new OOUI\TextInputWidget( [
 			'infusable' => true,
 			'placeholder' => wfMessage( 'managewiki-label-reason' )->text(),
-			'name' => 'wpreason'
+			'name' => 'wpreason',
 			'framed' => true,
 			'required' => true,
 		] );
