@@ -9,7 +9,8 @@
 			"Reception123",
 			"Robby",
 			"Shirayuki",
-			"Vlad5250"
+			"Vlad5250",
+			"Universal Omega"
 		]
 	},
 	"action-managewiki": "Button to manage the settings of a wiki.",
@@ -70,5 +71,6 @@
 	"managewiki-sidebar-header": "Used as a label for the sidebar.\n{{Identical|Administration}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent.",
 	"namespaces-delete": "{{Identical|Delete}}",
+	"permissions-delete": "{{Identical|Delete}}",
 	"right-managewiki": "{{doc-right|managewiki}}"
 }
