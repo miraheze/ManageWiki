@@ -652,7 +652,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'multiselect',
 				'label-message' => 'managewiki-permissions-autopromote-groups',
 				'options' => $rowsBuilt,
-				'hide-if' => [ 'OR', ['!==', 'wpenable', '1' ], [ '===', 'wpconds', '|' ] ],
+				'hide-if' => [ 'OR', [ '!==', 'wpenable', '1' ], [ '===', 'wpconds', '|' ] ],
 				'default' => $aPArray[APCOND_INGROUPS] ?? [],
 				'disabled' => !$ceMW,
 				'section' => 'autopromote'
@@ -664,7 +664,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'permissions-delete-checkbox',
 				'default' => 0,
-				'section' => 'handling'
+				'section' => 'delete'
 			];
 		}
 
