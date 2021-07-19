@@ -47,24 +47,21 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-dbname',
 				'type' => 'text',
 				'default' => $dbName,
-				'disabled' => true,
-				'section' => 'main'
+				'disabled' => true
 			],
 			'sitename' => [
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
 				'default' => $wiki->getSitename(),
 				'disabled' => !$ceMW,
-				'required' => true,
-				'section' => 'main'
+				'required' => true
 			],
 			'language' => [
 				'label-message' => 'managewiki-label-language',
 				'type' => 'language',
 				'default' => $wiki->getLanguage(),
 				'disabled' => !$ceMW,
-				'required' => true,
-				'section' => 'main'
+				'required' => true
 			]
 		];
 
@@ -117,8 +114,7 @@ class ManageWikiFormFactoryBuilder {
 					'type' => $data['type'],
 					'label-message' => "managewiki-label-$name",
 					'default' => $data['default'],
-					'disabled' => $data['access'],
-					'section' => 'main'
+					'disabled' => $data['access']
 				];
 
 				if ( $data['hide-if'] ?? false ) {
@@ -137,8 +133,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-category',
 				'options' => $config->get( 'CreateWikiCategories' ),
 				'default' => $wiki->getCategory(),
-				'disabled' => !$ceMW,
-				'section' => 'main'
+				'disabled' => !$ceMW
 			];
 		}
 
@@ -149,8 +144,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-dbcluster',
 				'options' => array_combine( $clusterList, $clusterList ),
 				'default' => $wiki->getDBCluster(),
-				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
-				'section' => 'main'
+				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			];
 		}
 
@@ -164,8 +158,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor[$mwAction] = [
 					'type' => 'check',
 					'label-message' => "managewiki-label-{$mwAction}wiki",
-					'default' => false,
-					'section' => 'handling'
+					'default' => false
 				];
 			}
 		}
