@@ -111,6 +111,16 @@
 			"ManageWikiHooks::fnNewSidebarItem"
 		]
 	},
+	"ResourceModules": {
+		"ext.managewiki.oouiform.submit": {
+			"styles": "ext.managewiki.oouiform.submit.less",
+			"targets": [ "desktop", "mobile" ]
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "modules",
+		"remoteExtPath": "ManageWiki/modules"
+	},
 	"config": {
 		"ManageWiki": {
 			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
