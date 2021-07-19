@@ -25,10 +25,9 @@
 	"apiwarn-wikiconfig-nopermission": "You are not allowed to view the configuration for wiki '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki '$1' does not exist.",
 	"core-main": "Main Settings",
-	"core-handling": "Submit",
+	"core-handling": "Manage",
 	"deletedwikis": "Deleted Wikis",
 	"extensions-other": "Other",
-	"extensions-handling": "Submit",
 	"log-description-managewiki": "This log tracks all changes to a wikis settings through ManageWiki.",
 	"log-name-managewiki": "ManageWiki log",
 	"logentry-managewiki-delete": "$1 deleted the wiki \"$4\"",
@@ -132,7 +131,6 @@
 	"namespaces-contentmodel": "What should this namespace's content model be?",
 	"namespaces-delete": "Delete",
 	"namespaces-delete-checkbox": "Checking this box will cause this namespace to be deleted",
-	"namespaces-handling": "Submit",
 	"namespaces-migrate-to": "If this namespace is deleted, what namespace should the pages be moved to?",
 	"namespaces-namespace": "Main namespace",
 	"namespaces-namespacetalk": "Talk namespace",
@@ -145,10 +143,8 @@
 	"permissions-delete-checkbox": "Delete this user group",
 	"permissions-unassigned": "Unassigned Permissions",
 	"permissions-group": "Group Assignments",
-	"permissions-handling": "Submit",
 	"right-managewiki": "Manage wiki settings",
 	"right-managewiki-restricted": "Manage restricted wiki settings",
 	"right-managewiki-editdefault": "Manage default group permissions",
-	"settings-other": "Other",
-	"settings-handling": "Submit"
+	"settings-other": "Other"
 }
