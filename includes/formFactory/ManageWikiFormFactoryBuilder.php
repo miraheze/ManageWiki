@@ -42,14 +42,31 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWiki $wiki,
 		Config $config
 	) {
-		$formDescriptor = [
-			'dbname' => [
-				'label-message' => 'managewiki-label-dbname',
-				'type' => 'text',
-				'default' => $dbName,
-				'disabled' => true,
-				'section' => 'main'
-			],
+		$formDescriptor['dbname'] = [
+			'label-message' => 'managewiki-label-dbname',
+			'type' => 'text',
+			'default' => $dbName,
+			'disabled' => true,
+			'section' => 'main'
+		];
+
+		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
+			$mwActions = [
+				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
+				( $wiki->isLocked() ) ? 'unlock' : 'lock'
+			];
+
+			foreach ( $mwActions as $mwAction ) {
+				$formDescriptor[$mwAction] = [
+					'type' => 'check',
+					'label-message' => "managewiki-label-{$mwAction}wiki",
+					'default' => false,
+					'section' => 'main'
+				];
+			}
+		}
+
+		$formDescriptor += [
 			'sitename' => [
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
@@ -152,22 +169,6 @@ class ManageWikiFormFactoryBuilder {
 				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 				'section' => 'main'
 			];
-		}
-
-		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
-			$mwActions = [
-				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
-				( $wiki->isLocked() ) ? 'unlock' : 'lock'
-			];
-
-			foreach ( $mwActions as $mwAction ) {
-				$formDescriptor[$mwAction] = [
-					'type' => 'check',
-					'label-message' => "managewiki-label-{$mwAction}wiki",
-					'default' => false,
-					'section' => 'main'
-				];
-			}
 		}
 
 		return $formDescriptor;
