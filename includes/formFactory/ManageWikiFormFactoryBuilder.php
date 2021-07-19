@@ -47,21 +47,24 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-dbname',
 				'type' => 'text',
 				'default' => $dbName,
-				'disabled' => true
+				'disabled' => true,
+				'section' => 'main'
 			],
 			'sitename' => [
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
 				'default' => $wiki->getSitename(),
 				'disabled' => !$ceMW,
-				'required' => true
+				'required' => true,
+				'section' => 'main'
 			],
 			'language' => [
 				'label-message' => 'managewiki-label-language',
 				'type' => 'language',
 				'default' => $wiki->getLanguage(),
 				'disabled' => !$ceMW,
-				'required' => true
+				'required' => true,
+				'section' => 'main'
 			]
 		];
 
@@ -100,13 +103,33 @@ class ManageWikiFormFactoryBuilder {
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 				'options' => $config->get( 'CreateWikiInactiveExemptReasonOptions' )
 			],
-			'server' => [
-				'if' => $config->get( 'CreateWikiUseCustomDomains' ),
-				'type' => 'text',
-				'default' => $wiki->getServerName(),
-				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
-			]
 		];
+
+		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
+			$mwActions = [
+				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
+				( $wiki->isLocked() ) ? 'unlock' : 'lock'
+			];
+
+			foreach ( $mwActions as $mwAction ) {
+				$formDescriptor[$mwAction] = [
+					'type' => 'check',
+					'label-message' => "managewiki-label-{$mwAction}wiki",
+					'default' => false,
+					'section' => 'main'
+				];
+			}
+		}
+
+		if ( $config->get( 'CreateWikiUseCustomDomains' ) ) {
+			$formDescriptor['server'] = [
+				'type' => 'text',
+				'label-message' => 'managewiki-label-server',
+				'default' => $wiki->getServerName(),
+				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'section' => 'main'
+			];
+		}
 
 		foreach ( $addedModules as $name => $data ) {
 			if ( $data['if'] ) {
@@ -114,7 +137,8 @@ class ManageWikiFormFactoryBuilder {
 					'type' => $data['type'],
 					'label-message' => "managewiki-label-$name",
 					'default' => $data['default'],
-					'disabled' => $data['access']
+					'disabled' => $data['access'],
+					'section' => 'main'
 				];
 
 				if ( $data['hide-if'] ?? false ) {
@@ -133,7 +157,8 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-category',
 				'options' => $config->get( 'CreateWikiCategories' ),
 				'default' => $wiki->getCategory(),
-				'disabled' => !$ceMW
+				'disabled' => !$ceMW,
+				'section' => 'main'
 			];
 		}
 
@@ -144,23 +169,9 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-dbcluster',
 				'options' => array_combine( $clusterList, $clusterList ),
 				'default' => $wiki->getDBCluster(),
-				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
+				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'section' => 'main'
 			];
-		}
-
-		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
-			$mwActions = [
-				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
-				( $wiki->isLocked() ) ? 'unlock' : 'lock'
-			];
-
-			foreach ( $mwActions as $mwAction ) {
-				$formDescriptor[$mwAction] = [
-					'type' => 'check',
-					'label-message' => "managewiki-label-{$mwAction}wiki",
-					'default' => false
-				];
-			}
 		}
 
 		return $formDescriptor;
