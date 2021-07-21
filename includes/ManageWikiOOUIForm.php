@@ -116,7 +116,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		);
 	}
 
-	public function getButtons( $display = true ) {
+	public function getButtons() {
 		if ( !$this->mShowSubmit ) {
 			return;
 		}
@@ -130,10 +130,6 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		];
 
 		$field = $this->addFields( $descriptor )->getField( 'reason' );
-
-		if ( !$display ) {
-			return;
-		}
 
 		$html = $field->getInputOOUI( '' );
 
