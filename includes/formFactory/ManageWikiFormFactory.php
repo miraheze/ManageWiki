@@ -47,6 +47,8 @@ class ManageWikiFormFactory {
 			}
 		);
 
+		$htmlForm->loadData();
+
 		return $htmlForm;
 	}
 
