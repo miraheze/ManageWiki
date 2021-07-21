@@ -68,6 +68,9 @@ class ManageWikiFormFactory {
 			throw new MWException( "User '{$context->getUser()->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
 		}
 
+		$form->getButtons();
+		$formData['reason'] = $form->getField( 'reason' )->loadDataFromRequest( $form->getRequest() );
+
 		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $config, $special );
 
 		if ( !empty( $mwReturn ) ) {
