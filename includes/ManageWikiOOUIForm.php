@@ -131,7 +131,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 
 		$field = $this->addFields( $descriptor )->getField( 'reason' );
 
-		$html = $field->getInputHTML( '' );
+		$html = $field->getInputOOUI( '' );
 
 		$html .= parent::getButtons();
 
