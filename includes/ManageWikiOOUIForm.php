@@ -121,11 +121,17 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			return;
 		}
 
-		$field = parent::loadInputFromParameters( 'reason', [ 'type' => 'text', 'placeholder-message' => 'managewiki-label-reason', 'required' => true ], $this );
+		$descriptor = [];
 
-		$this->mFlatFields['reason'] = $field;
+		$descriptor['reason'] = [
+			'type' => 'text',
+			'placeholder-message' => 'managewiki-label-reason',
+			'required' => true
+		];
 
-		$html = $this->mFlatFields['reason']->getInputHTML( '' );
+		$field = $this->addFields( $descriptor )->getField( 'reason' );
+
+		$html = $field->getInputHTML( '' );
 
 		$html .= parent::getButtons();
 
