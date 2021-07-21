@@ -125,7 +125,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 
 		$this->mFlatFields['reason'] = $field;
 
-		$html = $this->mFlatFields['reason'];
+		return $this->mFlatFields['reason'];
 
 		$html .= parent::getButtons();
 
