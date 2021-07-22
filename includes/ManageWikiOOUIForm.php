@@ -16,7 +16,10 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 				'scrollable' => true,
 				'framed' => true,
 				'infusable' => false,
-				'classes' => [ 'oo-ui-stackLayout oo-ui-indexLayout-stackLayout' ]
+				'classes' => [
+					'oo-ui-stackLayout',
+					'oo-ui-indexLayout-stackLayout'
+				]
 			] );
 
 			$layout = new OOUI\PanelLayout( [
@@ -24,7 +27,9 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 				'scrollable' => true,
 				'framed' => true,
 				'infusable' => false,
-				'classes' => [ 'oo-ui-tabPanelLayout' ]
+				'classes' => [
+					'oo-ui-tabPanelLayout'
+				]
 			] );
 
 			$wrapper->appendContent( $layout );
@@ -55,17 +60,20 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 	public function getBody() {
 		$fakeTabs = [];
 
-		foreach( $this->getFormSections() as $i => $key ) {
+		foreach ( $this->getFormSections() as $i => $key ) {
 			$fakeTabs[] = Html::rawElement(
-				'div',
-				[
-					'class' =>
-						'oo-ui-widget oo-ui-widget-enabled oo-ui-optionWidget oo-ui-tabOptionsWidget oo-ui-labelElement' .
-						( $i === 0 ? 'oo-ui-optionWidget-selected' : '' )
+				'div', [
+					'class' => [
+						'oo-ui-widget',
+						'oo-ui-widget-enabled',
+						'oo-ui-optionWidget',
+						'oo-ui-tabOptionsWidget',
+						'oo-ui-labelElement',
+						'oo-ui-optionWidget-selected' => ( $i === 0 )
+					]
 				],
 				Html::element(
-					'a',
-					[
+					'a', [
 						'class' => 'oo-ui-labelElement-label',
 						'href' => '#mw-section-' . $key
 					],
@@ -75,40 +83,59 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		}
 
 		$fakeTabsHtml = Html::rawElement(
-			'div',
-			[
-				'class' => 'oo-ui-layout oo-ui-panelLayout oo-ui-indexLayout-tabPanel'
+			'div', [
+				'class' => [
+					'oo-ui-layout',
+					'oo-ui-panelLayout',
+					'oo-ui-indexLayout-tabPanel'
+				]
 			],
 			Html::rawElement(
-				'div',
-				[
-					'class' => 'oo-ui-widget oo-ui-widget-enabled ooui-selectWidget oo-ui-selectWidget-depressed oo-ui-tabSelectWidget'
+				'div', [
+					'class' => [
+						'oo-ui-widget',
+						'oo-ui-widget-enabled',
+						'ooui-selectWidget',
+						'oo-ui-selectWidget-depressed',
+						'oo-ui-tabSelectWidget'
+					]
 				],
 				implode( $fakeTabs )
 			)
 		);
 
 		return Html::rawElement(
-			'div',
-			[
-				'class' => 'oo-ui-layout oo-ui-panelLayout oo-ui-paenlLayout-framed mw-baseform-faketabs'
+			'div', [
+				'class' => [
+					'oo-ui-layout',
+					'oo-ui-panelLayout',
+					'oo-ui-paenlLayout-framed',
+					'mw-baseform-faketabs'
+				]
 			],
 			Html::rawElement(
-				'div',
-				[
-					'class' => 'oo-ui-layout oo-ui-menuLayout oo-ui-menuLayout-static oo-ui-menuLayout-top oo-ui-menuLayout-showMenu oo-ui-indexLayout'
+				'div', [
+					'class' => [
+						'oo-ui-layout',
+						'oo-ui-menuLayout',
+						'oo-ui-menuLayout-static',
+						'oo-ui-menuLayout-top',
+						'oo-ui-menuLayout-showMenu',
+						'oo-ui-indexLayout'
+					]
 				],
 				Html::rawElement(
-					'div',
-					[
+					'div', [
 						'class' => 'oo-ui-menuLayout-menu'
 					],
 					$fakeTabsHtml
 				) .
 				Html::rawElement(
-					'div',
-					[
-						'class' => 'oo-ui-menuLayout-content mw-htmlform-autoinfuse-lazy'
+					'div', [
+						'class' => [
+							'oo-ui-menuLayout-content',
+							'mw-htmlform-autoinfuse-lazy'
+						]
 					],
 					$this->displaySection( $this->mFieldTree, '', 'mw-section-' )
 				)
@@ -125,7 +152,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 
 		$descriptor['reason'] = [
 			'type' => 'text',
-			'placeholder-message' => 'managewiki-reason-placeholder',
+			'placeholder-message' => 'managewiki-placeholder-reason',
 			'required' => true
 		];
 
