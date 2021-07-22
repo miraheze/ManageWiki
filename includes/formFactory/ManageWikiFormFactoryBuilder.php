@@ -307,7 +307,7 @@ class ManageWikiFormFactoryBuilder {
 					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
 					'disabled' => $disabled,
 					'help' => $help,
-					'cssclass' => 'createwiki-infuse',
+					'cssclass' => 'managewiki-infuse',
 					'section' => $set['section']
 				] + $configs;
 			}
@@ -370,14 +370,14 @@ class ManageWikiFormFactoryBuilder {
 				],
 				"contentmodel-$name" => [
 					'label' => wfMessage( 'namespaces-contentmodel' )->text() . ' ($wgNamespaceContentModels)',
-					'cssclass' => 'createwiki-infuse',
+					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name
 				] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
-					'cssclass' => 'createwiki-infuse',
+					'cssclass' => 'managewiki-infuse',
 					'default' => $namespaceData['protection'],
 					'options' => [
 						'None' => '',
@@ -429,7 +429,7 @@ class ManageWikiFormFactoryBuilder {
 					$formDescriptor["$key-$name"] = [
 						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
 						'help' => $help,
-						'cssclass' => 'createwiki-infuse',
+						'cssclass' => 'managewiki-infuse',
 						'disabled' => $disabled,
 						'section' => $name
 					] + $configs;
@@ -473,7 +473,7 @@ class ManageWikiFormFactoryBuilder {
 				'delete-migrate-to' => [
 					'type' => 'select',
 					'label-message' => 'namespaces-migrate-to',
-					'cssclass' => 'createwiki-infuse',
+					'cssclass' => 'managewiki-infuse',
 					'options' => $craftedNamespaces,
 					'default' => 0,
 					'disabled' => !$canDelete,
