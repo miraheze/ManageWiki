@@ -307,7 +307,7 @@ class ManageWikiFormFactoryBuilder {
 					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
 					'disabled' => $disabled,
 					'help' => $help,
-					'cssclass' => $set['type'] == 'list-multi' || $set['type'] == 'list-multi-bool' ? null : 'createwiki-infuse',
+					'cssclass' => 'createwiki-infuse',
 					'section' => $set['section']
 				] + $configs;
 			}
