@@ -129,10 +129,6 @@
 			display: none;
 		}
 	}
-
-	.oo-ui-tabOptionWidget {
-   		 border-color: transparent;
-	}
 }
 
 /* Make the "Basic information" section more compact */
@@ -165,5 +161,16 @@
 }
 
 .oo-ui-fieldLayout-field .oo-ui-tagMultiselectWidget ~ :not(:first-child) {
-   display : none;
+	display : none;
+}
+
+.oo-ui-tabOptionWidget {
+	border-color: transparent;
+}
+
+.oo-ui-tabSelectWidget-framed .oo-ui-tabOptionWidget .oo-ui-labelElement-label {
+	border-bottom: 2px solid transparent;
+	-webkit-transition: none;
+	-moz-transition: none;
+	transition: none;
 }
