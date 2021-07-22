@@ -116,7 +116,7 @@
 			"styles": "ext.managewiki.oouiform.submit.less",
 			"targets": [ "desktop", "mobile" ]
 		},
-		"mediawiki.special.preferences.ooui": {
+		"ext.managewiki.oouiform.tabs": {
 			"targets": [ "desktop", "mobile" ],
 			"scripts": "ext.managewiki.oouiform.tabs.js",
 			"dependencies": [
