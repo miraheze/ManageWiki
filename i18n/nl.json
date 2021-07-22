@@ -3,6 +3,7 @@
 		"authors": [
 			"Duckson32",
 			"Elroy",
+			"McDutchie",
 			"Nieuwsgierige Gebruiker",
 			"Optilete",
 			"PonkoSasuke",
@@ -17,7 +18,7 @@
 	"logentry-managewiki-delete-group": "$1 verwijder groep $3",
 	"logentry-managewiki-lock": "$1 vergrendelde de wiki \"$4\"",
 	"logentry-managewiki-unlock": "$1 ontgrendelde de wiki \"$4\"",
-	"managewikipermissions": "Beheer een wiki (rechten)",
+	"managewikipermissions": "Beheer de rechten van een wiki",
 	"managewiki-conflicts": "Botst met",
 	"managewiki-header-settings": "Deze pagina wordt gebruikt voor het managen van de wikiinstellingen van wiki <b>'$1'</b>. Als een mogelijkheid die je wilt niet mogelijk is, gebruik aub <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> om het aan te vragen. <br> Als je dat gedaan hebt, klik dan op de \"submit\"-tabblad om je wijzigingen op te slaan.",
 	"managewiki-label-category": "Categorie",
@@ -36,5 +37,5 @@
 	"managewiki-requires": "Vereist",
 	"managewiki-success": "De instellingen zijn succesvol gewijzigd.",
 	"managewiki-toggle-forcesidebar": "Forceer de scherm van ManageWiki-links in de zijbalk.",
-	"permissions-assigned": "Toegekende rechten:"
+	"permissions-assigned": "Toegekende rechten"
 }
