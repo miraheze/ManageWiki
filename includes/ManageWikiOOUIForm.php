@@ -44,6 +44,9 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 
 		$layout->appendContent(
 			new OOUI\FieldsetLayout( [
+				'classes' => [
+					'mw-managewiki-section-fieldset'
+				],
 				'label' => $legend,
 				'infusable' => false,
 				'items' => [
