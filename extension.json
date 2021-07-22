@@ -67,7 +67,7 @@
 		"ManageWikiExtensions": "includes/helpers/ManageWikiExtensions.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
-		"HTMLAutoCompleteSelectFieldWithOOUI": "includes/formFactory/HTMLAutoCompleteSelectFieldWithOOUI.php",
+		"HTMLAutoCompleteSelectFieldWithOOUI": "includes/formFields/HTMLAutoCompleteSelectFieldWithOOUI.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/helpers/ManageWikiInstaller.php",
 		"ManageWikiNamespaces": "includes/helpers/ManageWikiNamespaces.php",
