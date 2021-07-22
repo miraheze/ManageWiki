@@ -61,91 +61,62 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 	}
 
 	public function getBody() {
-		$fakeTabs = [];
+		$tabPanels = [];
+		foreach ( $this->mFieldTree as $key => $val ) {
+			if ( !is_array( $val ) ) {
+				wfDebug( __METHOD__ . " encountered a field not attached to a section: '{$key}'" );
 
-		foreach ( $this->getFormSections() as $i => $key ) {
-			$fakeTabs[] = Html::rawElement(
-				'div', [
-					'class' => [
-						'oo-ui-widget',
-						'oo-ui-widget-enabled',
-						'oo-ui-optionWidget',
-						'oo-ui-tabOptionsWidget',
-						'oo-ui-labelElement',
-						'oo-ui-optionWidget-selected' => ( $i === 0 )
-					]
-				],
-				Html::element(
-					'a', [
-						'class' => 'oo-ui-labelElement-label',
-						'href' => '#mw-section-' . $key
+				continue;
+			}
+
+			$label = $this->getLegend( $key );
+
+			$content =
+				$this->getHeaderText( $key ) .
+				$this->displaySection(
+					$val,
+					'',
+					"mw-section-{$key}-"
+				) .
+				$this->getFooterText( $key );
+
+			$tabPanels[] = new OOUI\TabPanelLayout( 'mw-section-' . $key, [
+				'classes' => [ 'mw-htmlform-autoinfuse-lazy' ],
+				'label' => $label,
+				'content' => new OOUI\FieldsetLayout( [
+					'classes' => [ 'mw-managewiki-section-fieldset' ],
+					'id' => "mw-section-{$key}",
+					'label' => $label,
+					'items' => [
+						new OOUI\Widget( [
+							'content' => new OOUI\HtmlSnippet( $content )
+						] ),
 					],
-					$this->getLegend( $key )
-				)
-			);
+				] ),
+				'expanded' => false,
+				'framed' => true,
+			] );
 		}
 
-		$fakeTabsHtml = Html::rawElement(
-			'div', [
-				'class' => [
-					'oo-ui-layout',
-					'oo-ui-panelLayout',
-					'oo-ui-indexLayout-tabPanel'
-				]
-			],
-			Html::rawElement(
-				'div', [
-					'class' => [
-						'oo-ui-widget',
-						'oo-ui-widget-enabled',
-						'ooui-selectWidget',
-						'oo-ui-selectWidget-depressed',
-						'oo-ui-tabSelectWidget'
-					]
-				],
-				implode( $fakeTabs )
-			)
-		);
+		$indexLayout = new OOUI\IndexLayout( [
+			'infusable' => true,
+			'expanded' => false,
+			'autoFocus' => false,
+			'classes' => [ 'mw-managewiki-tabs' ],
+		] );
 
-		return Html::rawElement(
-			'div', [
-				'class' => [
-					'mw-managewiki-tabs-wrapper',
-					'oo-ui-layout',
-					'oo-ui-panelLayout',
-					'oo-ui-paenlLayout-framed',
-					'mw-baseform-faketabs'
-				]
-			],
-			Html::rawElement(
-				'div', [
-					'class' => [
-						'mw-managewiki-tabs',
-						'oo-ui-layout',
-						'oo-ui-menuLayout',
-						'oo-ui-menuLayout-static',
-						'oo-ui-menuLayout-top',
-						'oo-ui-menuLayout-showMenu',
-						'oo-ui-indexLayout'
-					]
-				],
-				Html::rawElement(
-					'div', [
-						'class' => 'oo-ui-menuLayout-menu'
-					],
-					$fakeTabsHtml
-				) .
-				Html::rawElement(
-					'div', [
-						'class' => [
-							'oo-ui-menuLayout-content',
-							'mw-htmlform-autoinfuse-lazy'
-						]
-					],
-					$this->displaySection( $this->mFieldTree, '', 'mw-section-' )
-				)
-			)
-		);
+		$indexLayout->addTabPanels( $tabPanels );
+
+		$header = $this->formatFormHeader();
+
+		$form = new OOUI\PanelLayout( [
+			'framed' => true,
+			'expanded' => false,
+			'classes' => [ 'mw-managewiki-tabs-wrapper' ],
+			'content' => $indexLayout
+		] );
+
+		return $header . $form;
 	}
 
 	public function getButtons() {
