@@ -28,6 +28,23 @@
 // disappear in RTL languages on Microsoft Edge. This magically fixes the issue. See T220706.
 #baseform {
 	filter: brightness( 1 );
+
+	.managewiki-submit-formfields {
+		display: flex;
+		align-items: center;
+		gap: 1em;
+		padding: 1em 0;
+		position: -webkit-sticky;
+		position: sticky;
+		bottom: 0;
+		background: #fff;
+		border-top: 1px solid #c8ccd1;
+		.box-shadow( 0 -4px 4px -4px rgba( 0, 0, 0, 0.25 ) );
+
+		.mw-htmlform-submit-buttons {
+			margin: 0;
+		}
+	}
 }
 
 /*
@@ -112,6 +129,10 @@
 			display: none;
 		}
 	}
+
+	.oo-ui-tabOptionWidget {
+   		 border-color: transparent;
+	}
 }
 
 /* Make the "Basic information" section more compact */
@@ -143,27 +164,6 @@
 	}
 }
 
-.oo-ui-tabOptionWidget {
-    border-color: transparent;
-}
-
 .oo-ui-fieldLayout-field .oo-ui-tagMultiselectWidget ~ :not(:first-child) {
    display : none;
-}
-
-.managewiki-submit-formfields {
-	display: flex;
-	align-items: center;
-	gap: 1em;
-	padding: 1em 0;
-	position: -webkit-sticky;
-	position: sticky;
-	bottom: 0;
-	background: #fff;
-	border-top: 1px solid #c8ccd1;
-	.box-shadow( 0 -4px 4px -4px rgba( 0, 0, 0, 0.25 ) );
-
-	.mw-htmlform-submit-buttons {
-		margin: 0;
-	}
 }
