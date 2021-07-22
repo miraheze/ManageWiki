@@ -115,6 +115,14 @@
 		"ext.managewiki.oouiform.submit": {
 			"styles": "ext.managewiki.oouiform.submit.less",
 			"targets": [ "desktop", "mobile" ]
+		},
+		"mediawiki.special.preferences.ooui": {
+			"targets": [ "desktop", "mobile" ],
+			"scripts": "ext.managewiki.oouiform.tabs.js",
+			"dependencies": [
+				"mediawiki.storage",
+				"oojs-ui-widgets"
+			]
 		}
 	},
 	"ResourceFileModulePaths": {
