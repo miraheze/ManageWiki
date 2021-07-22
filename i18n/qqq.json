@@ -66,7 +66,7 @@
 	"managewiki-permissions-autopromote": "{{Doc-singularthey}}",
 	"managewiki-reason-placeholder": "Used as a placeholder for 'reason'",
 	"managewiki-requires": "Text that indicates a particular setting needs something else to be enabled first",
-	"managewiki-save": "Text for the ManageWiki 'Save Changes' button.",
+	"managewiki-save": "Text for the ManageWiki 'Save' button.\n{{Identical|Save}}",
 	"managewiki-sidebar-header": "Used as a label for the sidebar.\n{{Identical|Administration}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent.",
 	"namespaces-delete": "{{Identical|Delete}}",
