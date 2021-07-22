@@ -1,17 +1,7 @@
 ( function () {
 	$( function () {
 		var tabs, previousTab, switchingNoHash;
-
-		// Make sure the accessibility tip is focussable so that keyboard users take notice,
-		// but hide it by default to reduce visual clutter.
-		// Make sure it becomes visible when focused.
-		/*$( '<div>' ).addClass( 'mw-navigation-hint' )
-			.text( mw.msg( 'managewiki-tabs-navigation-hint' ) )
-			.attr( {
-				tabIndex: 0
-			} )
-			.insertBefore( '.mw-htmlform-ooui-wrapper' );*/
-
+		
 		tabs = OO.ui.infuse( $( '.mw-managewiki-tabs' ) );
 
 		tabs.$element.addClass( 'mw-managewiki-tabs-infused' );
@@ -106,5 +96,10 @@
 			mw.storage.session.set( 'mwmanagewiki-prevTab', value );
 		} );
 
+	} );
+
+	infuse = $( document.body ).find( '[data-ooui*="createwiki-infuse"], .createwiki-infuse[name]' );
+	infuse.each( function () {
+		OO.ui.infuse( this );
 	} );
 }() );
