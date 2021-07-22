@@ -111,7 +111,7 @@
 	"managewiki-permissions-unassigned": "The below user rights are currently not assigned to this user group.",
 	"managewiki-reason-placeholder": "Reason for this change...",
 	"managewiki-requires": "Requires",
-	"managewiki-save": "Save Changes",
+	"managewiki-save": "Save",
 	"managewiki-sidebar-header": "Administration",
 	"managewiki-success": "The settings have been successfully changed.",
 	"managewiki-extension-name": "[$1 $2]",
