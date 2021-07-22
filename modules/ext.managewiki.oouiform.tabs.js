@@ -77,7 +77,7 @@
 			if ( hash.match( /^#mw-[\w-]+/ ) ) {
 				detectHash();
 			} else if ( hash === '' ) {
-				switchManageWikiTab( 'mw-section-anti-spam', true );
+				switchManageWikiTab( 'other', true );
 			}
 		} )
 			// Run the function immediately to select the proper tab on startup.
