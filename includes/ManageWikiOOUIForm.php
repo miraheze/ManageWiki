@@ -107,6 +107,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		return Html::rawElement(
 			'div', [
 				'class' => [
+					'mw-managewiki-tabs-wrapper',
 					'oo-ui-layout',
 					'oo-ui-panelLayout',
 					'oo-ui-paenlLayout-framed',
@@ -116,6 +117,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			Html::rawElement(
 				'div', [
 					'class' => [
+						'mw-managewiki-tabs',
 						'oo-ui-layout',
 						'oo-ui-menuLayout',
 						'oo-ui-menuLayout-static',
