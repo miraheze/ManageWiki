@@ -85,8 +85,10 @@ class SpecialManageWiki extends SpecialPage {
 
 		$out->addModules( [
 			'ext.createwiki.oouiform',
-			'ext.managewiki.oouiform.submit'
+			'ext.managewiki.oouiform.tabs'
 		] );
+
+		$out->addModuleStyles( [ 'ext.managewiki.oouiform.submit' ] );
 
 		if ( !$special ) {
 			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
