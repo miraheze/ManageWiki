@@ -76,8 +76,6 @@
 			var hash = location.hash;
 			if ( hash.match( /^#mw-[\w-]+/ ) ) {
 				detectHash();
-			} else if ( hash === '' ) {
-				switchManageWikiTab( 'other', true );
 			}
 		} )
 			// Run the function immediately to select the proper tab on startup.
@@ -91,7 +89,7 @@
 			mw.storage.session.remove( 'mwmanagewiki-prevTab' );
 		}
 
-		$( '#mw-baseform-settings' ).on( 'submit', function () {
+		$( "[id*=\"mw-baseform-\"]" ).on( 'submit', function () {
 			var value = tabs.getCurrentTabPanelName();
 			mw.storage.session.set( 'mwmanagewiki-prevTab', value );
 		} );
