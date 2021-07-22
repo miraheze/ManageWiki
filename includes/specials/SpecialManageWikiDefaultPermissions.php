@@ -100,7 +100,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$out->addModules( [ 'ext.managewiki.oouiform.tabs' ] );
 
-		$out->addModuleStyles( [ 'ext.managewiki.oouiform.submit' ] );
+		$out->addModuleStyles( [ 'ext.managewiki.oouiform.styles' ] );
 
 		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
 		if ( $remoteWiki == null ) {
@@ -111,16 +111,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), $this->config, 'permissions', $group );
 		$sectionTitles = $htmlForm->getFormSections();
-
-		$sectTabs = [];
-		foreach ( $sectionTitles as $key ) {
-			$sectTabs[] = [
-				'name' => $key,
-				'label' => $htmlForm->getLegend( $key )
-			];
-		}
-
-		$out->addJsConfigVars( 'wgCreateWikiOOUIFormTabs', $sectTabs );
 
 		$htmlForm->show();
 	}
