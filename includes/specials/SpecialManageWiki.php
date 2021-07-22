@@ -85,7 +85,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$out->addModules( [ 'ext.managewiki.oouiform.tabs' ] );
 
-		$out->addModuleStyles( [ 'ext.managewiki.oouiform.submit' ] );
+		$out->addModuleStyles( [ 'ext.managewiki.oouiform.styles' ] );
 
 		if ( !$special ) {
 			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
@@ -123,17 +123,6 @@ class SpecialManageWiki extends SpecialPage {
 			}
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ) );
-			$sectionTitles = $htmlForm->getFormSections();
-
-			$sectTabs = [];
-			foreach ( $sectionTitles as $key ) {
-				$sectTabs[] = [
-					'name' => $key,
-					'label' => $htmlForm->getLegend( $key )
-				];
-			}
-
-			$out->addJsConfigVars( 'wgCreateWikiOOUIFormTabs', $sectTabs );
 
 			$htmlForm->show();
 		}
