@@ -109,7 +109,7 @@
 	"managewiki-permissions-resetgroups-header": "By clicking the button below, all group configuration will be wiped and the default permissions configuration for the wiki will be restored. This will remove all custom changes except the readability of the wiki. Proceed only if you are sure you wish to do this.",
 	"managewiki-permissions-select": "Select existing group to edit",
 	"managewiki-permissions-unassigned": "The below user rights are currently not assigned to this user group.",
-	"managewiki-reason-placeholder": "Reason for this change...",
+	"managewiki-placeholder-reason": "Reason for this change...",
 	"managewiki-requires": "Requires",
 	"managewiki-save": "Save",
 	"managewiki-sidebar-header": "Administration",
