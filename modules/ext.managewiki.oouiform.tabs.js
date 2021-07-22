@@ -98,6 +98,5 @@
 			var value = tabs.getCurrentTabPanelName();
 			mw.storage.session.set( 'mwmanagewiki-prevTab', value );
 		} );
-
 	} );
 }() );
