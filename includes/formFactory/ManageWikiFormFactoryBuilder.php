@@ -81,6 +81,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $wiki->getLanguage(),
 				'disabled' => !$ceMW,
 				'required' => true,
+				'cssclass' => 'managewiki-infuse',
 				'section' => 'main'
 			]
 		];
@@ -135,6 +136,7 @@ class ManageWikiFormFactoryBuilder {
 					'label-message' => "managewiki-label-$name",
 					'default' => $data['default'],
 					'disabled' => $data['access'],
+					'cssclass' => 'managewiki-infuse',
 					'section' => 'main'
 				];
 
@@ -155,6 +157,7 @@ class ManageWikiFormFactoryBuilder {
 				'options' => $config->get( 'CreateWikiCategories' ),
 				'default' => $wiki->getCategory(),
 				'disabled' => !$ceMW,
+				'cssclass' => 'managewiki-infuse',
 				'section' => 'main'
 			];
 		}
@@ -167,6 +170,7 @@ class ManageWikiFormFactoryBuilder {
 				'options' => array_combine( $clusterList, $clusterList ),
 				'default' => $wiki->getDBCluster(),
 				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'cssclass' => 'managewiki-infuse',
 				'section' => 'main'
 			];
 		}
