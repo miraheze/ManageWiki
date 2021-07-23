@@ -23,7 +23,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config );
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $special, $wiki, $config );
+				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $wiki, $config );
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special, $config );
@@ -333,6 +333,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function buildDescriptorNamespaces(
 		string $dbName,
 		bool $ceMW,
+		IContextSource $context,
 		string $special,
 		RemoteWiki $wiki,
 		Config $config
@@ -356,7 +357,7 @@ class ManageWikiFormFactoryBuilder {
 				"namespace-$name" => [
 					'type' => 'text',
 					'label' => wfMessage( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
-					'default' => $namespaceData['name'],
+					'default' => $namespaceData['name'] ?: $context->getRequest()->getSessionData( 'create' ),
 					'disabled' => ( $namespaceData['core'] || !$ceMW ),
 					'required' => true,
 					'section' => $name
@@ -738,6 +739,8 @@ class ManageWikiFormFactoryBuilder {
 		$mwLogEntry->setParameters( $mwReturn->logParams );
 		$mwLogID = $mwLogEntry->insert();
 		$mwLogEntry->publish( $mwLogID );
+
+		$form->getRequest()->setSessionData( 'create', null );
 
 		return $mwReturn->errors ?? [];
 	}
