@@ -98,7 +98,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function buildGroupView( $group ) {
 		$out = $this->getOutput();
 
-		$out->addModules( [ 'ext.managewiki.oouiform.tabs' ] );
+		$out->addModules( [ 'ext.managewiki.oouiform' ] );
 		$out->addModuleStyles( [ 'ext.managewiki.oouiform.styles' ] );
 
 		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
