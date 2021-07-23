@@ -10,10 +10,8 @@ class ManageWikiFormFactory {
 		Config $config,
 		string $special = ''
 	) {
-		OutputPage::setupOOUI(
-			strtolower( $context->getSkin()->getSkinName() ),
-			$context->getLanguage()->getDir()
-		);
+
+		$context->getOutput()->enableOOUI();
 
 		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $config );
 	}
