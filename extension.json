@@ -67,10 +67,11 @@
 		"ManageWikiExtensions": "includes/helpers/ManageWikiExtensions.php",
 		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
 		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
-		"HTMLAutoCompleteSelectFieldWithOOUI": "includes/formFactory/HTMLAutoCompleteSelectFieldWithOOUI.php",
+		"HTMLAutoCompleteSelectFieldWithOOUI": "includes/formFields/HTMLAutoCompleteSelectFieldWithOOUI.php",
 		"ManageWikiHooks": "includes/ManageWikiHooks.php",
 		"ManageWikiInstaller": "includes/helpers/ManageWikiInstaller.php",
 		"ManageWikiNamespaces": "includes/helpers/ManageWikiNamespaces.php",
+		"ManageWikiOOUIForm": "includes/helpers/ManageWikiOOUIForm.php",
 		"ManageWikiPermissions": "includes/helpers/ManageWikiPermissions.php",
 		"ManageWikiRequirements": "includes/helpers/ManageWikiRequirements.php",
 		"ManageWikiSettings": "includes/helpers/ManageWikiSettings.php",
@@ -109,6 +110,24 @@
 		"SkinBuildSidebar": [
 			"ManageWikiHooks::fnNewSidebarItem"
 		]
+	},
+	"ResourceModules": {
+		"ext.managewiki.oouiform": {
+			"targets": [ "desktop", "mobile" ],
+			"scripts": "ext.managewiki.oouiform.js",
+			"dependencies": [
+				"mediawiki.storage",
+				"oojs-ui-widgets"
+			]
+		},
+		"ext.managewiki.oouiform.styles": {
+			"targets": [ "desktop", "mobile" ],
+			"styles": "ext.managewiki.oouiform.styles.less"
+		}
+	},
+	"ResourceFileModulePaths": {
+		"localBasePath": "modules",
+		"remoteExtPath": "ManageWiki/modules"
 	},
 	"config": {
 		"ManageWiki": {

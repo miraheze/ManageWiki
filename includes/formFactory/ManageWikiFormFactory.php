@@ -26,7 +26,7 @@ class ManageWikiFormFactory {
 		Config $config,
 		string $module,
 		string $special = '',
-		$formClass = CreateWikiOOUIForm::class
+		$formClass = ManageWikiOOUIForm::class
 	) {
 		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
@@ -36,8 +36,13 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
+		if ( !$ceMW ) {
+			$htmlForm->suppressDefaultSubmit();
+		}
+
+		$htmlForm->setSubmitTextMsg( 'managewiki-save' );
+
 		$htmlForm->setId( 'mw-baseform-' . $module );
-		$htmlForm->suppressDefaultSubmit();
 		$htmlForm->setSubmitCallback(
 			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special, $dbw, $wiki, $config ) {
 				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $config, $special );
@@ -64,6 +69,9 @@ class ManageWikiFormFactory {
 		if ( !$ceMW ) {
 			throw new MWException( "User '{$context->getUser()->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
 		}
+
+		$form->getButtons();
+		$formData['reason'] = $form->getField( 'reason' )->loadDataFromRequest( $form->getRequest() );
 
 		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $config, $special );
 

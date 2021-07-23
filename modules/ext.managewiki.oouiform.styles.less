@@ -1,0 +1,171 @@
+@import 'mediawiki.mixins.less';
+
+#baseform {
+	filter: brightness( 1 );
+
+	.managewiki-submit-formfields {
+		display: flex;
+		align-items: center;
+		gap: 1em;
+		padding: 1em 0;
+		position: -webkit-sticky;
+		position: sticky;
+		bottom: 0;
+		background: #fff;
+		border-top: 1px solid #c8ccd1;
+		.box-shadow( 0 -4px 4px -4px rgba( 0, 0, 0, 0.25 ) );
+
+		.mw-htmlform-submit-buttons {
+			margin: 0;
+		}
+	}
+}
+
+.mw-managewiki-tabs {
+	.mw-managewiki-fieldset-wrapper {
+		padding-left: 0;
+		padding-right: 0;
+
+		&:first-child {
+			padding-top: 0;
+		}
+
+		&:last-child {
+			padding-bottom: 0;
+		}
+	}
+
+	.oo-ui-tabOptionWidget {
+		display: inline-block;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		vertical-align: bottom;
+		margin: 6px 0 0 6px;
+		padding: 0 8px;
+		border-color: transparent;
+		border-style: solid;
+		font-weight: bold;
+		line-height: 1;
+		-webkit-transition: none;
+		-moz-transition: none;
+		transition: none;
+	}
+
+	.oo-ui-tabSelectWidget-framed .oo-ui-tabOptionWidget.oo-ui-optionWidget-selected {
+		background-color: #fff;
+		color: #000;
+	}
+
+	.oo-ui-tabSelectWidget-framed .oo-ui-tabOptionWidget .oo-ui-labelElement-label {
+		border-bottom: 2px solid transparent;
+		padding: 5px 5px 3px;
+		-webkit-transition: none;
+		-moz-transition: none;
+		transition: none;
+	}
+
+	.oo-ui-indexLayout-stackLayout > .oo-ui-panelLayout {
+		padding: 20px;
+	}
+
+	.oo-ui-tabSelectWidget-framed .oo-ui-tabOptionWidget {
+		border-width: 1px 1px 0 1px;
+	}
+
+	.oo-ui-tabSelectWidget-framed {
+		background-color: #eaecf0;
+	}
+}
+
+.mw-managewiki-tabs-wrapper.oo-ui-panelLayout-framed,
+.mw-managewiki-tabs > .oo-ui-menuLayout-content > .oo-ui-indexLayout-stackLayout > .oo-ui-tabPanelLayout {
+	/* Decrease contrast of `border` slightly as padding/border combination is sufficient
+	 * accessibility wise and focus of content is more important here. */
+	border-color: #c8ccd1;
+}
+
+/* JavaScript disabled */
+.client-nojs {
+	// Disable .oo-ui-panelLayout-framed on outer wrapper
+	.mw-managewiki-tabs-wrapper {
+		border-width: 0;
+		border-radius: 0;
+	}
+
+	.mw-managewiki-tabs {
+		// Hide the tab menu when JS is disabled as we can't use this feature
+		> .oo-ui-menuLayout-menu {
+			display: none;
+		}
+
+		.mw-managewiki-section-fieldset {
+			// <legend> is hard to style, so apply border to top of group
+			> .oo-ui-fieldsetLayout-group {
+				padding-top: 1.5em;
+				border-top: 1px solid #c8ccd1;
+			}
+
+			// Remove spacing between legend and underline
+			&.oo-ui-labelElement > .oo-ui-fieldsetLayout-header > .oo-ui-labelElement-label {
+				margin-bottom: 0;
+			}
+		}
+
+		// Spacing between sections
+		> .oo-ui-menuLayout-content > .oo-ui-indexLayout-stackLayout > .oo-ui-tabPanelLayout:not( :last-child ) {
+			margin-bottom: 1em;
+		}
+	}
+}
+
+/* JavaScript enabled */
+.client-js .mw-managewiki-tabs {
+	.oo-ui-tabPanelLayout {
+		// Panels don't need borders as the IndexLayout is inside a framed wrapper.
+		border: 0;
+
+		// Hide section legend, only used in nojs mode
+		> fieldset > legend {
+			display: none;
+		}
+	}
+
+	// Hide all but the first panel before infusion
+	&:not( .mw-managewiki-tabs-infused ) {
+		.oo-ui-tabPanelLayout:not( :first-child ) {
+			display: none;
+		}
+	}
+}
+
+#mw-htmlform-info {
+	> .oo-ui-fieldLayout-align-top > .oo-ui-fieldLayout-body > .oo-ui-fieldLayout-header {
+		display: inline-block;
+		width: 20%;
+		padding: 0;
+		vertical-align: middle;
+	}
+
+	> .oo-ui-fieldLayout-align-top .oo-ui-fieldLayout-help {
+		margin-right: 0;
+	}
+
+	> .oo-ui-fieldLayout.oo-ui-fieldLayout-align-top > .oo-ui-fieldLayout-body > .oo-ui-fieldLayout-field {
+		display: inline-block;
+		width: 80%;
+		vertical-align: middle;
+	}
+}
+
+/* Compact number inputs */
+.mw-htmlform-field-HTMLFloatField,
+.mw-htmlform-field-HTMLIntField {
+	.oo-ui-inputWidget {
+		max-width: 10em;
+	}
+}
+
+.oo-ui-fieldLayout-field .oo-ui-tagMultiselectWidget ~ :not(:first-child) {
+	display : none;
+}

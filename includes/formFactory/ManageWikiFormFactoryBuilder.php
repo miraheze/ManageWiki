@@ -32,23 +32,6 @@ class ManageWikiFormFactoryBuilder {
 				throw new MWException( "{$module} not recognised" );
 		}
 
-		if ( $ceMW ) {
-			$formDescriptor += [
-				'reason' => [
-					'type' => 'text',
-					'section' => 'handling',
-					'label-message' => 'managewiki-label-reason',
-					'size' => 45,
-					'required' => true
-				],
-				'submit' => [
-					'type' => 'submit',
-					'default' => wfMessage( 'htmlform-submit' )->text(),
-					'section' => 'handling'
-				]
-			];
-		}
-
 		return $formDescriptor;
 	}
 
@@ -59,14 +42,31 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWiki $wiki,
 		Config $config
 	) {
-		$formDescriptor = [
-			'dbname' => [
-				'label-message' => 'managewiki-label-dbname',
-				'type' => 'text',
-				'default' => $dbName,
-				'disabled' => true,
-				'section' => 'main'
-			],
+		$formDescriptor['dbname'] = [
+			'label-message' => 'managewiki-label-dbname',
+			'type' => 'text',
+			'default' => $dbName,
+			'disabled' => true,
+			'section' => 'main'
+		];
+
+		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
+			$mwActions = [
+				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
+				( $wiki->isLocked() ) ? 'unlock' : 'lock'
+			];
+
+			foreach ( $mwActions as $mwAction ) {
+				$formDescriptor[$mwAction] = [
+					'type' => 'check',
+					'label-message' => "managewiki-label-{$mwAction}wiki",
+					'default' => false,
+					'section' => 'main'
+				];
+			}
+		}
+
+		$formDescriptor += [
 			'sitename' => [
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
@@ -81,6 +81,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $wiki->getLanguage(),
 				'disabled' => !$ceMW,
 				'required' => true,
+				'cssclass' => 'managewiki-infuse',
 				'section' => 'main'
 			]
 		];
@@ -135,6 +136,7 @@ class ManageWikiFormFactoryBuilder {
 					'label-message' => "managewiki-label-$name",
 					'default' => $data['default'],
 					'disabled' => $data['access'],
+					'cssclass' => 'managewiki-infuse',
 					'section' => 'main'
 				];
 
@@ -155,6 +157,7 @@ class ManageWikiFormFactoryBuilder {
 				'options' => $config->get( 'CreateWikiCategories' ),
 				'default' => $wiki->getCategory(),
 				'disabled' => !$ceMW,
+				'cssclass' => 'managewiki-infuse',
 				'section' => 'main'
 			];
 		}
@@ -167,24 +170,9 @@ class ManageWikiFormFactoryBuilder {
 				'options' => array_combine( $clusterList, $clusterList ),
 				'default' => $wiki->getDBCluster(),
 				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'cssclass' => 'managewiki-infuse',
 				'section' => 'main'
 			];
-		}
-
-		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
-			$mwActions = [
-				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
-				( $wiki->isLocked() ) ? 'unlock' : 'lock'
-			];
-
-			foreach ( $mwActions as $mwAction ) {
-				$formDescriptor[$mwAction] = [
-					'type' => 'check',
-					'label-message' => "managewiki-label-{$mwAction}wiki",
-					'default' => false,
-					'section' => 'handling'
-				];
-			}
 		}
 
 		return $formDescriptor;
@@ -333,7 +321,7 @@ class ManageWikiFormFactoryBuilder {
 					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
 					'disabled' => $disabled,
 					'help' => $help,
-					'cssclass' => 'createwiki-infuse',
+					'cssclass' => 'managewiki-infuse',
 					'section' => $set['section']
 				] + $configs;
 			}
@@ -396,14 +384,14 @@ class ManageWikiFormFactoryBuilder {
 				],
 				"contentmodel-$name" => [
 					'label' => wfMessage( 'namespaces-contentmodel' )->text() . ' ($wgNamespaceContentModels)',
-					'cssclass' => 'createwiki-infuse',
+					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name
 				] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
-					'cssclass' => 'createwiki-infuse',
+					'cssclass' => 'managewiki-infuse',
 					'default' => $namespaceData['protection'],
 					'options' => [
 						'None' => '',
@@ -455,7 +443,7 @@ class ManageWikiFormFactoryBuilder {
 					$formDescriptor["$key-$name"] = [
 						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
 						'help' => $help,
-						'cssclass' => 'createwiki-infuse',
+						'cssclass' => 'managewiki-infuse',
 						'disabled' => $disabled,
 						'section' => $name
 					] + $configs;
@@ -499,7 +487,7 @@ class ManageWikiFormFactoryBuilder {
 				'delete-migrate-to' => [
 					'type' => 'select',
 					'label-message' => 'namespaces-migrate-to',
-					'cssclass' => 'createwiki-infuse',
+					'cssclass' => 'managewiki-infuse',
 					'options' => $craftedNamespaces,
 					'default' => 0,
 					'disabled' => !$canDelete,
@@ -679,7 +667,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'multiselect',
 				'label-message' => 'managewiki-permissions-autopromote-groups',
 				'options' => $rowsBuilt,
-				'hide-if' => [ 'OR', ['!==', 'wpenable', '1' ], [ '===', 'wpconds', '|' ] ],
+				'hide-if' => [ 'OR', [ '!==', 'wpenable', '1' ], [ '===', 'wpconds', '|' ] ],
 				'default' => $aPArray[APCOND_INGROUPS] ?? [],
 				'disabled' => !$ceMW,
 				'section' => 'autopromote'
@@ -691,7 +679,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'permissions-delete-checkbox',
 				'default' => 0,
-				'section' => 'handling'
+				'section' => 'delete'
 			];
 		}
 

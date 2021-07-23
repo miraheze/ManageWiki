@@ -9,7 +9,8 @@
 			"Reception123",
 			"Robby",
 			"Shirayuki",
-			"Vlad5250"
+			"Vlad5250",
+			"Universal Omega"
 		]
 	},
 	"action-managewiki": "Button to manage the settings of a wiki.",
@@ -28,10 +29,8 @@
 	"apiwarn-wikiconfig-nopermission": "{{doc-apierror}}",
 	"apiwarn-wikiconfig-wikidoesnotexist": "{{doc-apierror}}",
 	"core-main": "Used as a section header in Special:ManageWiki which is a page that allows administrators to manage their wiki's settings",
-	"core-handling": "Used as a section header in Special:ManageWiki that lets users save their changes",
 	"deletedwikis": "Used as a heading in Special:DeletedWikis which is a page that lists deleted wikis",
 	"extensions-other": "{{Identical|Other}}",
-	"extensions-handling": "{{Identical|Submit}}",
 	"log-description-managewiki": "Description for the 'ManageWiki' log",
 	"log-name-managewiki": "Log name for ManageWiki",
 	"logentry-managewiki-delete": "A message that is logged when a wiki has been deleted using ManageWiki",
@@ -62,13 +61,15 @@
 	"managewiki-label-private": "Used as a label for 'private'.\n{{Identical|Private}}",
 	"managewiki-label-inactive": "Used as a label for 'inactive'.\n{{Identical|Inactive}}",
 	"managewiki-label-inactive-exempt-reason": "Used as a label for 'inactive-exempt-reason'",
-	"managewiki-label-reason": "Used as a label for 'reason'.\n{{Identical|Reason}}",
 	"managewiki-label-sitename": "Used as a label for 'sitename'.\n{{Identical|Sitename}}",
 	"managewiki-missing": "Message if the wiki entered does not exist in the database.",
 	"managewiki-permissions-autopromote": "{{Doc-singularthey}}",
+	"managewiki-placeholder-reason": "Used as a placeholder for 'reason'",
 	"managewiki-requires": "Text that indicates a particular setting needs something else to be enabled first",
+	"managewiki-save": "Text for the ManageWiki 'Save' button.\n{{Identical|Save}}",
 	"managewiki-sidebar-header": "Used as a label for the sidebar.\n{{Identical|Administration}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent.",
 	"namespaces-delete": "{{Identical|Delete}}",
+	"permissions-delete": "{{Identical|Delete}}",
 	"right-managewiki": "{{doc-right|managewiki}}"
 }
