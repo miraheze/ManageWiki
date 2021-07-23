@@ -10,54 +10,12 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 	}
 
 	protected function wrapFieldSetSection( $legend, $section, $attributes, $isRoot ) {
-		if ( $isRoot ) {
-			$wrapper = new OOUI\PanelLayout( [
-				'expanded' => false,
-				'scrollable' => true,
-				'framed' => true,
-				'infusable' => false,
-				'classes' => [
-					'oo-ui-stackLayout',
-					'oo-ui-indexLayout-stackLayout'
-				]
-			] );
+		$layout = parent::wrapFieldSetSection( $legend, $section, $attributes, $isRoot );
 
-			$layout = new OOUI\PanelLayout( [
-				'expanded' => false,
-				'scrollable' => true,
-				'framed' => true,
-				'infusable' => false,
-				'classes' => [
-					'oo-ui-tabPanelLayout'
-				]
-			] );
+		$layout->addClasses( [ 'mw-managewiki-fieldset-wrapper' ] );
+		$layout->removeClasses( [ 'oo-ui-panelLayout-framed' ] );
 
-			$wrapper->appendContent( $layout );
-		} else {
-			$wrapper = $layout = new OOUI\PanelLayout( [
-				'expanded' => false,
-				'padded' => true,
-				'framed' => true,
-				'infusable' => false,
-			] );
-		}
-
-		$layout->appendContent(
-			new OOUI\FieldsetLayout( [
-				'classes' => [
-					'mw-managewiki-section-fieldset'
-				],
-				'label' => $legend,
-				'infusable' => false,
-				'items' => [
-					new OOUI\Widget( [
-						'content' => new OOUI\HtmlSnippet( $section )
-					] ),
-				],
-			] + $attributes )
-		);
-
-		return $wrapper;
+		return $layout;
 	}
 
 	public function getBody() {
