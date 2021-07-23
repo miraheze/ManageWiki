@@ -120,7 +120,17 @@ class ManageWikiTypes {
 			case 'preferences':
 				$preferences = [];
 				$excludedPrefs = [];
-				$allPreferences = MediaWikiServices::getInstance()->getUserOptionsLookup()->getDefaultOptions();
+				$defaultPreferences = MediaWikiServices::getInstance()->getPreferencesFactory()->getFormDescriptor( RequestContext::getMain()->getUser(), RequestContext::getMain() );
+
+				$filteredPreferences = array_filter(
+					$defaultPreferences,
+					static function ( $key ) use ( $desiredPref ) {
+						return in_array( $key, $desiredPref );
+					},
+					ARRAY_FILTER_USE_KEY
+				);
+
+				unset( $defaultPreferences );
 
 				// Don't show preferences hidden by configuratiom
 				if( !$config->get( 'AllowUserCssPrefs' ) ) {
@@ -131,8 +141,8 @@ class ManageWikiTypes {
 				if( $config->get( 'DisableLangConversion' ) ) {
 					$excludedPrefs[] = 'variant';
 				} else {
-					foreach( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
-						$excludedPrefs[] = array_keys( $allPreferences )[$pref];
+					foreach( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $filteredPreferences ) ) as $pref => $val ) {
+						$excludedPrefs[] = array_keys( $filteredPreferences )[$pref];
 					}
 				}
 
@@ -188,19 +198,19 @@ class ManageWikiTypes {
 				}
 
 				// Blacklist searchNs* preferences
-				foreach( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
-					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
+				foreach( preg_grep( '/searchNs[0-9]/', array_keys( $filteredPreferences ) ) as $pref => $val ) {
+					$excludedPrefs[] = array_keys( $filteredPreferences )[$pref];
 				}
 
 				// Blacklist echo-subscriptions-* preferences
-				foreach( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $val ) {
-					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
+				foreach( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $filteredPreferences ) ) as $pref => $val ) {
+					$excludedPrefs[] = array_keys( $filteredPreferences )[$pref];
 				}
 
 				// Blacklist downloaduserdata preference
 				$excludedPrefs[] = 'downloaduserdata';
 
-				foreach( $allPreferences as $pref => $val ) {
+				foreach( $filteredPreferences as $pref => $val ) {
 					if ( !in_array( $pref, $excludedPrefs ) ) {
 						$preferences[$pref] = $pref;
 					}
