@@ -113,8 +113,8 @@
 	},
 	"ResourceModules": {
 		"ext.managewiki.oouiform.styles": {
-			"styles": "ext.managewiki.oouiform.less",
-			"targets": [ "desktop", "mobile" ]
+			"targets": [ "desktop", "mobile" ],
+			"styles": "ext.managewiki.oouiform.styles.less"
 		},
 		"ext.managewiki.oouiform.tabs": {
 			"targets": [ "desktop", "mobile" ],
