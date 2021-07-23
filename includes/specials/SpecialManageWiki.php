@@ -84,7 +84,6 @@ class SpecialManageWiki extends SpecialPage {
 		$out = $this->getOutput();
 
 		$out->addModules( [ 'ext.managewiki.oouiform.tabs' ] );
-
 		$out->addModuleStyles( [ 'ext.managewiki.oouiform.styles' ] );
 
 		if ( !$special ) {
@@ -121,6 +120,7 @@ class SpecialManageWiki extends SpecialPage {
 				$out->addHTML( Html::errorBox( wfMessage( 'managewiki-missing' )->escaped() ) );
 				return false;
 			}
+
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ) );
 
