@@ -142,8 +142,4 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 
 		return $html;
 	}
-
-	public function getFormSections() {
-		return array_keys( array_filter( $this->mFieldTree, 'is_array' ) );
-	}
 }
