@@ -1,11 +1,6 @@
 ( function () {
 	$( function () {
 		var tabs, previousTab, switchingNoHash;
-
-		infuse = $( '.oo-ui-menuLayout-content' ).find( '[data-ooui*="managewiki-infuse"], .managewiki-infuse[name]' );
-		infuse.each( function () {
-			OO.ui.infuse( this );
-		} );
 		
 		tabs = OO.ui.infuse( $( '.mw-managewiki-tabs' ) );
 
@@ -97,6 +92,11 @@
 		$( "[id*=\"mw-baseform-\"]" ).on( 'submit', function () {
 			var value = tabs.getCurrentTabPanelName();
 			mw.storage.session.set( 'mwmanagewiki-prevTab', value );
+		} );
+
+		infuse = $( '.oo-ui-menuLayout-content' ).find( '[data-ooui*="managewiki-infuse"], .managewiki-infuse[name]' );
+		infuse.each( function () {
+			OO.ui.infuse( this );
 		} );
 	} );
 }() );
