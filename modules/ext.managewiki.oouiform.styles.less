@@ -1,24 +1,5 @@
 @import 'mediawiki.mixins.less';
 
-/* Uses standard message block colors, compare mediawiki.legacy/shared.css */
-.mw-email-not-authenticated .oo-ui-labelWidget,
-.mw-email-none .oo-ui-labelWidget {
-	color: #000;
-	border-width: 1px;
-	border-style: solid;
-	padding: 8px 12px;
-}
-
-.mw-email-not-authenticated .oo-ui-labelWidget {
-	background-color: #fef6e7;
-	border-color: #fc3;
-}
-
-.mw-email-none .oo-ui-labelWidget {
-	background-color: #eaecf0;
-	border-color: #a2a9b1;
-}
-
 #baseform {
 	filter: brightness( 1 );
 
@@ -38,14 +19,6 @@
 			margin: 0;
 		}
 	}
-}
-
-/*
- * Hide, when not keyboard focussed.
- */
-.client-js .mw-navigation-hint:not( :focus ) {
-	height: 0;
-	overflow: hidden;
 }
 
 .mw-managewiki-tabs {
@@ -166,7 +139,6 @@
 	}
 }
 
-/* OOUI's `align: 'left'` for FieldLayouts sucks, so we do our own */
 #mw-htmlform-info {
 	> .oo-ui-fieldLayout-align-top > .oo-ui-fieldLayout-body > .oo-ui-fieldLayout-header {
 		display: inline-block;
