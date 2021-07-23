@@ -112,17 +112,17 @@
 		]
 	},
 	"ResourceModules": {
-		"ext.managewiki.oouiform.styles": {
+		"ext.managewiki.oouiform": {
 			"targets": [ "desktop", "mobile" ],
-			"styles": "ext.managewiki.oouiform.styles.less"
-		},
-		"ext.managewiki.oouiform.tabs": {
-			"targets": [ "desktop", "mobile" ],
-			"scripts": "ext.managewiki.oouiform.tabs.js",
+			"scripts": "ext.managewiki.oouiform.js",
 			"dependencies": [
 				"mediawiki.storage",
 				"oojs-ui-widgets"
 			]
+		},
+		"ext.managewiki.oouiform.styles": {
+			"targets": [ "desktop", "mobile" ],
+			"styles": "ext.managewiki.oouiform.styles.less"
 		}
 	},
 	"ResourceFileModulePaths": {
