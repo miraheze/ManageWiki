@@ -120,17 +120,7 @@ class ManageWikiTypes {
 			case 'preferences':
 				$preferences = [];
 				$excludedPrefs = [];
-				$defaultPreferences = MediaWikiServices::getInstance()->getPreferencesFactory()->getFormDescriptor( RequestContext::getMain()->getUser(), RequestContext::getMain() );
-
-				$filteredPreferences = array_filter(
-					$defaultPreferences,
-					static function ( $key ) use ( $desiredPref ) {
-						return in_array( $key, $desiredPref );
-					},
-					ARRAY_FILTER_USE_KEY
-				);
-
-				unset( $defaultPreferences );
+				$filteredPreferences = MediaWikiServices::getInstance()->getPreferencesFactory()->getFormDescriptor( RequestContext::getMain()->getUser(), RequestContext::getMain() );
 
 				// Don't show preferences hidden by configuratiom
 				if( !$config->get( 'AllowUserCssPrefs' ) ) {
