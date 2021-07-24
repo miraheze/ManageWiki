@@ -60,7 +60,6 @@ class ManageWikiFormFactory {
 		);
 
 		if ( !(bool)$check ) {
-			$context->getOutput()->clearHtml();
 			$context->getOutput()->addHtml( Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() ) );
 		}
 
