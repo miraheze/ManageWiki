@@ -15,6 +15,20 @@ class ManageWikiFormFactory {
 			$context->getLanguage()->getDir()
 		);
 
+		$dbr = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
+
+		$check = $dbr->selectRow(
+			'cw_wikis',
+			'wiki_dbname', [
+				'wiki_dbname' => $wiki
+			],
+			__METHOD__
+		);
+
+		if ( !(bool)$check ) {
+			return Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() );
+		}
+
 		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $config );
 	}
 
@@ -31,18 +45,6 @@ class ManageWikiFormFactory {
 		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
-
-		$check = $dbw->selectRow(
-			'cw_wikis',
-			'wiki_dbname', [
-				'wiki_dbname' => $wiki
-			],
-			__METHOD__
-		);
-
-		if ( !(bool)$check ) {
-			return Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() );
-		}
 
 		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
 
