@@ -15,21 +15,6 @@ class ManageWikiFormFactory {
 			$context->getLanguage()->getDir()
 		);
 
-		$dbr = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
-
-		$check = $dbr->selectRow(
-			'cw_wikis',
-			'wiki_dbname', [
-				'wiki_dbname' => $dbName
-			],
-			__METHOD__
-		);
-
-		if ( !(bool)$check ) {
-			$context->getOutput()->clearHtml();
-			return $context->getOutput()->addHtml( Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() ) );
-		}
-
 		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $config );
 	}
 
@@ -47,11 +32,23 @@ class ManageWikiFormFactory {
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
 
-		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
+		$check = $dbw->selectRow(
+			'cw_wikis',
+			'wiki_dbname', [
+				'wiki_dbname' => $wiki
+			],
+			__METHOD__
+		);
+
+		if ( (bool)$check ) {
+			$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
+		} else {
+			$context->getOutput()->addHtml( Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() ) );
+		}
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
-		if ( !$ceMW ) {
+		if ( !$ceMW || !(bool)$check ) {
 			$htmlForm->suppressDefaultSubmit();
 		}
 
