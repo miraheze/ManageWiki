@@ -117,7 +117,7 @@
 			"scripts": "ext.managewiki.oouiform.js",
 			"dependencies": [
 				"mediawiki.storage",
-				"mediawiki.widgets",
+				"mediawiki.widgets.TitlesMultiselectWidget",
 				"oojs-ui-widgets"
 			]
 		},
