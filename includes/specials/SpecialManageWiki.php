@@ -164,6 +164,11 @@ class SpecialManageWiki extends SpecialPage {
 		$createNamespace = ( $form->getSubmitText() == $this->msg( 'managewiki-namespaces-create-submit' )->plain() ) ? '' : $formData['out'];
 		$url = ( $module == 'namespaces' ) ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
 
+
+		if ( $module === 'namespaces' ) {
+			$form->getRequest()->getSession()->set( 'create', $formData['out'] );
+		}
+
 		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() . "/{$url}" );
 
 		return true;
