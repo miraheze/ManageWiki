@@ -350,12 +350,12 @@ class ManageWikiFormFactoryBuilder {
 			'namespacetalk' => (int)$special + 1
 		];
 
-		$session = $context->getRequest()->getSessionData( 'create' );
+		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
 			$namespaceData = $mwNamespace->list( $id );
 
-			$create = ucfirst( $session ) . ( $name == 'namespacetalk' ? '_talk' : null );
+			$create = ucfirst( $session->get( 'create' ) ) . ( $name == 'namespacetalk' ? '_talk' : null );
 
 			$formDescriptor += [
 				"namespace-$name" => [
@@ -714,6 +714,7 @@ class ManageWikiFormFactoryBuilder {
 				break;
 			case 'namespaces':
 				$mwReturn = self::submissionNamespaces( $formData, $dbName, $special, $config );
+				$form->getRequest()->getSession()->remove( 'create' );
 				break;
 			case 'permissions':
 				$mwReturn = self::submissionPermissions( $formData, $dbName, $special, $config );
@@ -743,8 +744,6 @@ class ManageWikiFormFactoryBuilder {
 		$mwLogEntry->setParameters( $mwReturn->logParams );
 		$mwLogID = $mwLogEntry->insert();
 		$mwLogEntry->publish( $mwLogID );
-
-		$form->getRequest()->setSessionData( 'create', null );
 
 		return $mwReturn->errors ?? [];
 	}
@@ -910,6 +909,7 @@ class ManageWikiFormFactoryBuilder {
 		string $special,
 		Config $config
 	) {
+
 		$mwNamespaces = new ManageWikiNamespaces( $dbName );
 
 		if ( $formData['delete-checkbox'] ) {
