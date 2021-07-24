@@ -350,14 +350,18 @@ class ManageWikiFormFactoryBuilder {
 			'namespacetalk' => (int)$special + 1
 		];
 
+		$session = $context->getRequest()->getSessionData( 'create' );
+
 		foreach ( $nsID as $name => $id ) {
 			$namespaceData = $mwNamespace->list( $id );
+
+			$create = ucfirst( $session ) . ( $name == 'namespacetalk' ? '_talk' : null );
 
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
 					'label' => wfMessage( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
-					'default' => $namespaceData['name'] ?: $context->getRequest()->getSessionData( 'create' ),
+					'default' => $namespaceData['name'] ?: $create,
 					'disabled' => ( $namespaceData['core'] || !$ceMW ),
 					'required' => true,
 					'section' => $name
