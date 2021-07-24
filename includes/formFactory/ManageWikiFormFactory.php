@@ -32,6 +32,18 @@ class ManageWikiFormFactory {
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
 
+		$check = $dbw->selectRow(
+			'cw_wikis',
+			'wiki_dbname', [
+				'wiki_dbname' => $dbName
+			],
+			__METHOD__
+		);
+
+		if ( !(bool)$check ) {
+			return Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() );
+		}
+
 		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
