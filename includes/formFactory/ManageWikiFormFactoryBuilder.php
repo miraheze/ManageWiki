@@ -909,7 +909,6 @@ class ManageWikiFormFactoryBuilder {
 		string $special,
 		Config $config
 	) {
-
 		$mwNamespaces = new ManageWikiNamespaces( $dbName );
 
 		if ( $formData['delete-checkbox'] ) {
