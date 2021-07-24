@@ -84,7 +84,11 @@ class SpecialManageWiki extends SpecialPage {
 		$out = $this->getOutput();
 
 		$out->addModules( [ 'ext.managewiki.oouiform' ] );
-		$out->addModuleStyles( [ 'ext.managewiki.oouiform.styles' ] );
+		$out->addModuleStyles( [
+			'ext.managewiki.oouiform.styles',
+			'mediawiki.widgets.TagMultiselectWidget.styles',
+		] );
+		$out->addModuleStyles( 'oojs-ui-widgets.styles' );
 
 		if ( !$special ) {
 			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
