@@ -10,7 +10,6 @@ class ManageWikiFormFactory {
 		Config $config,
 		string $special = ''
 	) {
-
 		OutputPage::setupOOUI(
 			strtolower( $context->getSkin()->getSkinName() ),
 			$context->getLanguage()->getDir()
