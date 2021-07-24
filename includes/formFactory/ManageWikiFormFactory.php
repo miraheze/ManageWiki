@@ -40,7 +40,9 @@ class ManageWikiFormFactory {
 			__METHOD__
 		);
 
-		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
+		if ( (bool)$check ) {
+			$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
+		}
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
