@@ -355,7 +355,7 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $nsID as $name => $id ) {
 			$namespaceData = $mwNamespace->list( $id );
 
-			$create = ucfirst( $session->get( 'create' ) ) . ( $name == 'namespacetalk' ? '_talk' : null );
+			$create = ucfirst( $session->get( 'create' ) ) . ( $name == 'namespacetalk' && $session->get( 'create' ) ? '_talk' : null );
 
 			$formDescriptor += [
 				"namespace-$name" => [
