@@ -40,11 +40,7 @@ class ManageWikiFormFactory {
 			__METHOD__
 		);
 
-		if ( (bool)$check ) {
-			$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
-		} else {
-			$context->getOutput()->addHtml( Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() ) );
-		}
+		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
@@ -60,6 +56,11 @@ class ManageWikiFormFactory {
 				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $config, $special );
 			}
 		);
+
+		if ( !(bool)$check ) {
+			$context->getOutput()->clearHtml();
+			$context->getOutput()->addHtml( Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() ) );
+		}
 
 		return $htmlForm;
 	}
