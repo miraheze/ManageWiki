@@ -20,7 +20,7 @@ class ManageWikiFormFactory {
 		$check = $dbr->selectRow(
 			'cw_wikis',
 			'wiki_dbname', [
-				'wiki_dbname' => $wiki
+				'wiki_dbname' => $dbName
 			],
 			__METHOD__
 		);
