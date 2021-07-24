@@ -26,7 +26,8 @@ class ManageWikiFormFactory {
 		);
 
 		if ( !(bool)$check ) {
-			return Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() );
+			$context->getOutput()->clearHtml();
+			return $context->getOutput()->addHtml( Html::errorBox( wfMessage( 'managewiki-error-dbnotexists' )->parse() ) );
 		}
 
 		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $config );
