@@ -4,13 +4,13 @@
  */
 ( function () {
 	$( function () {
-		var allowCloseWindow, saveButton;
+		var allowCloseWindow, reasonField, saveButton;
 
 		// Check if all of the form values are unchanged.
 		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
 		// slower and more complicated. It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
-			var $inputs = $( '#managewiki-form :input[name]' ),
+			var $inputs = $( '#managewiki-form :input[name]:not( #managewiki-submit-reason )' ),
 				input, $input, inputType,
 				index, optIndex,
 				opt;
@@ -44,11 +44,13 @@
 			return false;
 		}
 
+		reasonField = OO.ui.infuse( $( '#managewiki-submit-reason' ) );
 		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
 		// Disable the button to save unless settings have changed
 		// Check if settings have been changed before JS has finished loading
 		saveButton.setDisabled( !isManageWikiChanged() );
+		reasonField.setDisabled( !isManageWikiChanged() );
 		// Attach capturing event handlers to the document, to catch events inside OOUI dropdowns:
 		// * Use capture because OO.ui.SelectWidget also does, and it stops event propagation,
 		//   so the event is not fired on descendant elements
@@ -59,6 +61,7 @@
 				// Make sure SelectWidget's event handlers run first
 				setTimeout( function () {
 					saveButton.setDisabled( !isManageWikiChanged() );
+					reasonField.setDisabled( !isManageWikiChanged() );
 				} );
 			}, true );
 		} );
