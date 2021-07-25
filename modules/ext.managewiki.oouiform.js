@@ -63,13 +63,13 @@
 			var hash = location.hash,
 				matchedElement, $parentSection;
 			if ( hash.match( /^#mw-section-[\w]+$/ ) ) {
-				mw.storage.session.remove( 'mwmanagewiki-prevTab' );
+				mw.storage.session.remove( 'managewiki-prevTab' );
 				switchManageWikiTab( hash.slice( 1 ) );
 			} else if ( hash.match( /^#mw-[\w-]+$/ ) ) {
 				matchedElement = document.getElementById( hash.slice( 1 ) );
-				$parentSection = $( matchedElement ).closest( '.mw-managewiki-section-fieldset' );
+				$parentSection = $( matchedElement ).closest( '.managewiki-section-fieldset' );
 				if ( $parentSection.length ) {
-					mw.storage.session.remove( 'mwmanagewiki-prevTab' );
+					mw.storage.session.remove( 'managewiki-prevTab' );
 					// Switch to proper tab and scroll to selected item.
 					switchManageWikiTab( $parentSection.attr( 'id' ), true );
 					matchedElement.scrollIntoView();
@@ -87,16 +87,16 @@
 			.trigger( 'hashchange' );
 
 		// Restore the active tab after saving the settings
-		previousTab = mw.storage.session.get( 'mwmanagewiki-prevTab' );
+		previousTab = mw.storage.session.get( 'managewiki-prevTab' );
 		if ( previousTab ) {
 			switchManageWikiTab( previousTab, true );
 			// Deleting the key, the tab states should be reset until we press Save
-			mw.storage.session.remove( 'mwmanagewiki-prevTab' );
+			mw.storage.session.remove( 'managewiki-prevTab' );
 		}
 
-		$( "[id*=\"mw-baseform-\"]" ).on( 'submit', function () {
+		$( "#managewiki-form" ).on( 'submit', function () {
 			var value = tabs.getCurrentTabPanelName();
-			mw.storage.session.set( 'mwmanagewiki-prevTab', value );
+			mw.storage.session.set( 'managewiki-prevTab', value );
 		} );
 	} );
 }() );
