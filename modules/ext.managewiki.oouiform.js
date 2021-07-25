@@ -7,9 +7,9 @@
 			OO.ui.infuse( this );
 		} );
 		
-		tabs = OO.ui.infuse( $( '.mw-managewiki-tabs' ) );
+		tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 
-		tabs.$element.addClass( 'mw-managewiki-tabs-infused' );
+		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
 			if ( !panel.$element.data( 'mw-section-infused' ) ) {
