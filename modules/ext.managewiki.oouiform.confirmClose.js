@@ -44,7 +44,7 @@
 			return false;
 		}
 
-		reasonField = OO.ui.infuse( $( '#managewiki-submit-reason' ) );
+		reasonField = $( '#managewiki-submit-reason' );
 		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
 		// Disable the button to save unless settings have changed
