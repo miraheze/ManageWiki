@@ -87,6 +87,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		$descriptor['reason'] = [
 			'type' => 'text',
 			'placeholder-message' => 'managewiki-placeholder-reason',
+			'id' => 'managewiki-submit-reason',
 			'required' => true
 		];
 
