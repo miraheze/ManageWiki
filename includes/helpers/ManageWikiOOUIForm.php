@@ -88,6 +88,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			'type' => 'text',
 			'placeholder-message' => 'managewiki-placeholder-reason',
 			'id' => 'managewiki-submit-reason',
+			'cssclass' => 'managewiki-infuse',
 			'required' => true
 		];
 
