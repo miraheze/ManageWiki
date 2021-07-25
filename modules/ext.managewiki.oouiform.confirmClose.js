@@ -10,7 +10,7 @@
 		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
 		// slower and more complicated. It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
-			var $inputs = $( '#managewiki-form :input[name]:not( #managewiki-submit-reason )' ),
+			var $inputs = $( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ),
 				input, $input, inputType,
 				index, optIndex,
 				opt;
