@@ -1,6 +1,6 @@
 @import 'mediawiki.mixins.less';
 
-#baseform {
+#managewiki {
 	filter: brightness( 1 );
 
 	.managewiki-submit-formfields {
@@ -21,8 +21,8 @@
 	}
 }
 
-.mw-managewiki-tabs {
-	.mw-managewiki-fieldset-wrapper {
+.managewiki-tabs {
+	.managewiki-fieldset-wrapper {
 		padding-left: 0;
 		padding-right: 0;
 
@@ -36,8 +36,8 @@
 	}
 }
 
-.mw-managewiki-tabs-wrapper.oo-ui-panelLayout-framed,
-.mw-managewiki-tabs > .oo-ui-menuLayout-content > .oo-ui-indexLayout-stackLayout > .oo-ui-tabPanelLayout {
+.managewiki-tabs-wrapper.oo-ui-panelLayout-framed,
+.managewiki-tabs > .oo-ui-menuLayout-content > .oo-ui-indexLayout-stackLayout > .oo-ui-tabPanelLayout {
 	/* Decrease contrast of `border` slightly as padding/border combination is sufficient
 	 * accessibility wise and focus of content is more important here. */
 	border-color: #c8ccd1;
@@ -46,18 +46,18 @@
 /* JavaScript disabled */
 .client-nojs {
 	// Disable .oo-ui-panelLayout-framed on outer wrapper
-	.mw-managewiki-tabs-wrapper {
+	.managewiki-tabs-wrapper {
 		border-width: 0;
 		border-radius: 0;
 	}
 
-	.mw-managewiki-tabs {
+	.managewiki-tabs {
 		// Hide the tab menu when JS is disabled as we can't use this feature
 		> .oo-ui-menuLayout-menu {
 			display: none;
 		}
 
-		.mw-managewiki-section-fieldset {
+		.managewiki-section-fieldset {
 			// <legend> is hard to style, so apply border to top of group
 			> .oo-ui-fieldsetLayout-group {
 				padding-top: 1.5em;
@@ -78,7 +78,7 @@
 }
 
 /* JavaScript enabled */
-.client-js .mw-managewiki-tabs {
+.client-js .managewiki-tabs {
 	.oo-ui-tabPanelLayout {
 		// Panels don't need borders as the IndexLayout is inside a framed wrapper.
 		border: 0;
@@ -90,7 +90,7 @@
 	}
 
 	// Hide all but the first panel before infusion
-	&:not( .mw-managewiki-tabs-infused ) {
+	&:not( .managewiki-tabs-infused ) {
 		.oo-ui-tabPanelLayout:not( :first-child ) {
 			display: none;
 		}

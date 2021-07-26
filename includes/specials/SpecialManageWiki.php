@@ -83,12 +83,16 @@ class SpecialManageWiki extends SpecialPage {
 	public function showWikiForm( $wiki, $module, $special ) {
 		$out = $this->getOutput();
 
-		$out->addModules( [ 'ext.managewiki.oouiform' ] );
-		$out->addModuleStyles( [
-			'ext.managewiki.oouiform.styles',
-			'mediawiki.widgets.TagMultiselectWidget.styles',
-		] );
-		$out->addModuleStyles( 'oojs-ui-widgets.styles' );
+		if ( $special !== '' || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
+			$out->addModules( [ 'ext.managewiki.oouiform' ] );
+
+			$out->addModuleStyles( [
+				'ext.managewiki.oouiform.styles',
+				'mediawiki.widgets.TagMultiselectWidget.styles',
+			] );
+
+			$out->addModuleStyles( 'oojs-ui-widgets.styles' );
+		}
 
 		if ( !$special ) {
 			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );

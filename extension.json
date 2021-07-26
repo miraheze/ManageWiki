@@ -114,8 +114,16 @@
 	"ResourceModules": {
 		"ext.managewiki.oouiform": {
 			"targets": [ "desktop", "mobile" ],
-			"scripts": "ext.managewiki.oouiform.js",
+			"scripts": [
+				"ext.managewiki.oouiform.js",
+				"ext.managewiki.oouiform.confirmClose.js"
+			],
+			"messages": [
+				"managewiki-warning-changes",
+				"managewiki-save"
+			],
 			"dependencies": [
+				"mediawiki.confirmCloseWindow",
 				"mediawiki.storage",
 				"mediawiki.widgets.TitlesMultiselectWidget",
 				"oojs-ui-widgets"
