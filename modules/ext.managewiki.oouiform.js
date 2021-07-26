@@ -7,7 +7,7 @@
 		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
-			infuse = $( panel.$element ).find( '.managewiki-infuse' );
+			var infuse = $( panel.$element ).find( '.managewiki-infuse' );
 			infuse.each( function () {
 				OO.ui.infuse( this );
 			} );
@@ -22,9 +22,6 @@
 		function onTabPanelSet( panel ) {
 			var scrollTop, active;
 
-			if ( switchingNoHash ) {
-				return;
-			}
 			// Handle hash manually to prevent jumping,
 			// therefore save and restore scrollTop to prevent jumping.
 			scrollTop = $( window ).scrollTop();
