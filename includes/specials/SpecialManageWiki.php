@@ -83,7 +83,7 @@ class SpecialManageWiki extends SpecialPage {
 	public function showWikiForm( $wiki, $module, $special ) {
 		$out = $this->getOutput();
 
-		if ( $special || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
+		if ( $special !== '' || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
 			$out->addModules( [ 'ext.managewiki.oouiform' ] );
 
 			$out->addModuleStyles( [
