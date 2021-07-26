@@ -27,8 +27,8 @@
 			return result;
 		}
 
-		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
-		reviewButton = OO.ui.infuse( $( '#managewiki-review' ) );
+		saveButton = $( '#managewiki-submit :input' );
+		reviewButton = $( '#managewiki-review :input' );
 
 		// Disable the buttons unless settings have changed
 		// Check if settings have been changed before JS has finished loading
