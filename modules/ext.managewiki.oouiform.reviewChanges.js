@@ -24,7 +24,7 @@
 			} );
 
 			var dialog = this;
-			$( '#managewiki-review-changes' ).click( function () {
+			$( '#managewiki-review' ).click( function () {
 				dialog.content.$element.html( '' );
 				$( '#managewiki-form :input:not( #managewiki-submit-reason :input )' ).each( function () {
 					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
@@ -64,7 +64,7 @@
 
 		windowManager.addWindows( [ processDialog ] );
 
-		$( '#managewiki-review-changes' ).click( function () {
+		$( '#managewiki-review' ).click( function () {
 			windowManager.openWindow( processDialog );
 		} );
 	} );
