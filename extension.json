@@ -120,8 +120,10 @@
 				"ext.managewiki.oouiform.reviewChanges.js"
 			],
 			"messages": [
-				"managewiki-warning-changes",
-				"managewiki-save"
+				"managewiki-review-close",
+				"managewiki-review-title",
+				"managewiki-save",
+				"managewiki-warning-changes"
 			],
 			"dependencies": [
 				"mediawiki.confirmCloseWindow",
