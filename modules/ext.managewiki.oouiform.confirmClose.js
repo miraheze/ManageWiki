@@ -1,10 +1,10 @@
 /*!
- * JavaScript for Special:ManageWiki: Enable save button and prevent the window being accidentally
+ * JavaScript for Special:ManageWiki: Enable save and review buttons and prevent the window being accidentally
  * closed when any form field is changed.
  */
 ( function () {
 	$( function () {
-		var allowCloseWindow, saveButton;
+		var allowCloseWindow, reviewButton, saveButton;
 
 		// Check if all of the form values are unchanged.
 		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
@@ -45,10 +45,13 @@
 		}
 
 		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
+		reviewButton = OO.ui.infuse( $( '#managewiki-review' ) );
 
-		// Disable the button to save unless settings have changed
+		// Disable the buttons unless settings have changed
 		// Check if settings have been changed before JS has finished loading
 		saveButton.setDisabled( !isManageWikiChanged() );
+		reviewButton.setDisabled( !isManageWikiChanged() );
+
 		// Attach capturing event handlers to the document, to catch events inside OOUI dropdowns:
 		// * Use capture because OO.ui.SelectWidget also does, and it stops event propagation,
 		//   so the event is not fired on descendant elements
@@ -59,6 +62,7 @@
 				// Make sure SelectWidget's event handlers run first
 				setTimeout( function () {
 					saveButton.setDisabled( !isManageWikiChanged() );
+					reviewButton.setDisabled( !isManageWikiChanged() );
 				} );
 			}, true );
 		} );
@@ -69,6 +73,7 @@
 			test: isManageWikiChanged,
 			message: mw.msg( 'managewiki-warning-changes', mw.msg( 'managewiki-save' ) )
 		} );
+
 		$( '#managewiki-form' ).on( 'submit', allowCloseWindow.release );
 	} );
 }() );
