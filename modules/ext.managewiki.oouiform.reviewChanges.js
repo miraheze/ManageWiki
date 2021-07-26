@@ -23,12 +23,12 @@
 				expanded: false
 			});
 
-			var $this = this;
+			var dialog = this;
 			$('#managewiki-form :input').each(function() {
 				if (this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked) {
-					$this.content.$element.append('<b>' + this.name.replace('wp', '').replace('[]', '[' + this.value + ']') + '</b>: ' + this.defaultChecked + ' —> ' + this.checked + '<br />');
+					dialog.content.$element.append('<b>' + this.name.replace('wp', '').replace('[]', '[' + this.value + ']') + '</b>: ' + this.defaultChecked + ' —> ' + this.checked + '<br />');
 				} else if (this.defaultValue != undefined && this.defaultValue != this.value) {
-					$this.content.$element.append('<b>' + this.name.replace('wp', '') + '</b>: ' + this.defaultValue + ' —> ' + this.value + '<br />');
+					dialog.content.$element.append('<b>' + this.name.replace('wp', '') + '</b>: ' + this.defaultValue + ' —> ' + this.value + '<br />');
 				}
 			});
 
