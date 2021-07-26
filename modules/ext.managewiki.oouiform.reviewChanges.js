@@ -11,8 +11,8 @@
 		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
 
 		ProcessDialog.static.actions = [ {
-			label: mw.msg( 'managewiki-review-close' ),
-			flags: 'safe'
+			label: OO.ui.deferMsg( 'managewiki-review-close' ),
+			flags: [ 'safe', 'close' ]
 		} ];
 
 		ProcessDialog.prototype.initialize = function () {
