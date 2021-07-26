@@ -30,7 +30,7 @@
 					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
 						dialog.content.$element.append( '<b>' + this.name.replace( 'wp', '' ).replace( '[]', '[' + this.value + ']' ) + '</b>: ' + this.defaultChecked + ' -> ' + this.checked + '<br />' );
 					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
-						dialog.content.$element.append( '<b>' + this.name.replace( 'wp', '' ) + '</b>: ' + ( this.defaultValue ? this.defaultValue : '<none>' ) + ' -> ' + this.value + '<br />' );
+						dialog.content.$element.append( '<b>' + this.name.replace( 'wp', '' ) + '</b>: ' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + ' -> ' + ( this.value ? this.value : '&lt;none&gt;' ) + '<br />' );
 					}
 				} );
 
