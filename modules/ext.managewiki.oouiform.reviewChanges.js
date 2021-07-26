@@ -62,7 +62,7 @@
 			size: 'medium'
 		} );
 
-		windowManager.addWindows( [processDialog] );
+		windowManager.addWindows( [ processDialog ] );
 
 		$( '#managewiki-review-changes' ).click( function () {
 			windowManager.openWindow( processDialog );
