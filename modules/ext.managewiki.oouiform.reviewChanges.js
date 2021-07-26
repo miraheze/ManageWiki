@@ -1,4 +1,4 @@
-$('#managewiki-review-changes').click(
+
 		function ProcessDialog(config) {
 			ProcessDialog.super.call(this, config);
 		}
@@ -22,16 +22,18 @@ $('#managewiki-review-changes').click(
 				expanded: false
 			});
 
-			var dialog = this;
-			$('#managewiki-form :input').each(function() {
-				if (this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked) {
-					dialog.content.$element.append('<b>' + this.name.replace('wp', '').replace('[]', '[' + this.value + ']') + '</b>: ' + this.defaultChecked + ' —> ' + this.checked + '<br />');
-				} else if (this.defaultValue != undefined && this.defaultValue != this.value) {
-					dialog.content.$element.append('<b>' + this.name.replace('wp', '') + '</b>: ' + this.defaultValue + ' —> ' + this.value + '<br />');
-				}
-			});
+			$('#managewiki-review-changes').click(
+				var dialog = this;
+				$('#managewiki-form :input').each(function() {
+					if (this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked) {
+						dialog.content.$element.append('<b>' + this.name.replace('wp', '').replace('[]', '[' + this.value + ']') + '</b>: ' + this.defaultChecked + ' —> ' + this.checked + '<br />');
+					} else if (this.defaultValue != undefined && this.defaultValue != this.value) {
+						dialog.content.$element.append('<b>' + this.name.replace('wp', '') + '</b>: ' + this.defaultValue + ' —> ' + this.value + '<br />');
+					}
+				});
 
-			this.$body.append(this.content.$element);
+				this.$body.append(this.content.$element);
+			});
 		};
 
 		ProcessDialog.prototype.getActionProcess = function(action) {
@@ -60,5 +62,6 @@ $('#managewiki-review-changes').click(
 
 		windowManager.addWindows([processDialog]);
 
-		windowManager.openWindow(processDialog)
-});
+		$('#managewiki-review-changes').click( function() {
+			windowManager.openWindow(processDialog);
+		});
