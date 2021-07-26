@@ -69,6 +69,7 @@
 	"managewiki-save": "Text for the ManageWiki 'Save' button.\n{{Identical|Save}}",
 	"managewiki-sidebar-header": "Used as a label for the sidebar.\n{{Identical|Administration}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent.",
+	"managewiki-warning-changes": "Warning shown (except in Firefox) when attempting to leave ManageWiki with unsaved changes.",
 	"namespaces-delete": "{{Identical|Delete}}",
 	"permissions-delete": "{{Identical|Delete}}",
 	"right-managewiki": "{{doc-right|managewiki}}"
