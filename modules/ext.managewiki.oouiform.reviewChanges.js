@@ -33,7 +33,7 @@
 					}
 				});
 
-				this.$body.append(this.content.$element);
+				dialog.$body.append(dialog.content.$element);
 			});
 		};
 
