@@ -34,6 +34,10 @@
 					}
 				} );
 
+				if ( !dialog.content.$element.html() ) {
+					dialog.content.$element.append( '<i>No changes made</i>' );
+				}
+
 				dialog.$body.append( dialog.content.$element );
 			} );
 		};
