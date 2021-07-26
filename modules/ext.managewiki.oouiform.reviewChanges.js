@@ -12,7 +12,7 @@
 
 		ProcessDialog.static.actions = [ {
 			label: OO.ui.deferMsg( 'managewiki-review-close' ),
-			flags: [ 'safe', 'close' ]
+			flags: 'safe'
 		} ];
 
 		ProcessDialog.prototype.initialize = function () {
