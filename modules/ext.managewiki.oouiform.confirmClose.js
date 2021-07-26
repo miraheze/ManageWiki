@@ -27,13 +27,13 @@
 			return result;
 		}
 
-		saveButton = $( '#managewiki-submit :input' );
-		reviewButton = $( '#managewiki-review :input' );
+		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
+		reviewButton =  OO.ui.infuse( $( '#managewiki-review' ) );
 
 		// Disable the buttons unless settings have changed
 		// Check if settings have been changed before JS has finished loading
-		saveButton.prop( 'disabled', !isManageWikiChanged() );
-		reviewButton.prop( 'disabled', !isManageWikiChanged() );
+		saveButton.setDisabled( !isManageWikiChanged() );
+		reviewButton.setDisabled( !isManageWikiChanged() );
 
 		// Attach capturing event handlers to the document, to catch events inside OOUI dropdowns:
 		// * Use capture because OO.ui.SelectWidget also does, and it stops event propagation,
@@ -44,8 +44,8 @@
 			document.addEventListener( eventType, function () {
 				// Make sure SelectWidget's event handlers run first
 				setTimeout( function () {
-					saveButton.prop( 'disabled', !isManageWikiChanged() );
-					reviewButton.prop( 'disabled', !isManageWikiChanged() );
+					saveButton.setDisabled( !isManageWikiChanged() );
+					reviewButton.setDisabled( !isManageWikiChanged() );
 				} );
 			}, true );
 		} );
