@@ -1,5 +1,4 @@
-(function() {
-	$(function() {
+$('#managewiki-review-changes').click(
 		function ProcessDialog(config) {
 			ProcessDialog.super.call(this, config);
 		}
@@ -61,8 +60,5 @@
 
 		windowManager.addWindows([processDialog]);
 
-		$('#managewiki-review-changes').click(function() {
-			windowManager.openWindow(processDialog)
-		});
-	});
-}());
+		windowManager.openWindow(processDialog)
+});
