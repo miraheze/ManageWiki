@@ -22,6 +22,9 @@
 		function onTabPanelSet( panel ) {
 			var scrollTop, active;
 
+			if ( switchingNoHash ) {
+				return;
+			}
 			// Handle hash manually to prevent jumping,
 			// therefore save and restore scrollTop to prevent jumping.
 			scrollTop = $( window ).scrollTop();
