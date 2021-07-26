@@ -30,12 +30,12 @@
 					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
 						dialog.content.$element.append( '<b>' + this.name.replace( 'wp', '' ).replace( '[]', '[' + this.value + ']' ) + '</b>: ' + this.defaultChecked + ' -> ' + this.checked + '<br />' );
 					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
-						dialog.content.$element.append( '<b>' + this.name.replace( 'wp', '' ) + '</b>: ' + this.defaultValue + ' -> ' + this.value + '<br />' );
+						dialog.content.$element.append( '<b>' + this.name.replace( 'wp', '' ) + '</b>: ' + this.defaultValue ? this.defaultValue : '<none>' + ' -> ' + this.value + '<br />' );
 					}
 				} );
 
 				if ( !dialog.content.$element.html() ) {
-					dialog.content.$element.append( '<i>No changes made</i>' );
+					dialog.content.$element.append( '<i>No changes made.</i>' );
 				}
 
 				dialog.$body.append( dialog.content.$element );
