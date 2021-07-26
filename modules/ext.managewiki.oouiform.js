@@ -62,7 +62,7 @@
 		function detectHash() {
 			var hash = location.hash,
 				matchedElement, $parentSection;
-			if ( hash.match( /^#mw-section-[\w]+$/ ) ) {
+			if ( hash.match( /^#mw-section-[\w-]+$/ ) ) {
 				mw.storage.session.remove( 'managewiki-prevTab' );
 				switchManageWikiTab( hash.slice( 1 ) );
 			} else if ( hash.match( /^#mw-[\w-]+$/ ) ) {
