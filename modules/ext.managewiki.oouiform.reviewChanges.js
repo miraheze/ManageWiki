@@ -61,6 +61,8 @@
 
 		windowManager.addWindows([processDialog]);
 
-		document.getElementById('#managewiki-review-changes').onclick = function() { windowManager.openWindow(processDialog) };
+		$('#managewiki-review-changes').click(function() {
+			windowManager.openWindow(processDialog)
+		});
 	});
 }());
