@@ -1,17 +1,17 @@
 ( function () {
 	$( function () {
 		var tabs, previousTab, switchingNoHash;
-
-		infuse = $( '.oo-ui-menuLayout-content' ).find( '[data-ooui*="managewiki-infuse"], .managewiki-infuse[name]' );
-		infuse.each( function () {
-			OO.ui.infuse( this );
-		} );
 		
 		tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 
 		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
+			infuse = $( panel.$element ).find( '.managewiki-infuse[name]' );
+			infuse.each( function () {
+				OO.ui.infuse( this );
+			} );
+
 			if ( !panel.$element.data( 'mw-section-infused' ) ) {
 				panel.$element.removeClass( 'mw-htmlform-autoinfuse-lazy' );
 				mw.hook( 'htmlform.enhance' ).fire( panel.$element );
@@ -81,6 +81,8 @@
 			var hash = location.hash;
 			if ( hash.match( /^#mw-[\w-]+/ ) ) {
 				detectHash();
+			} else if ( hash === '' ) {
+				switchManageWikiTab( $( '[id*=mw-section-]' ).attr( 'id' ), true );
 			}
 		} )
 			// Run the function immediately to select the proper tab on startup.
