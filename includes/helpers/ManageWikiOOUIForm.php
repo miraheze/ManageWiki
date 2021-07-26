@@ -91,6 +91,12 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			'required' => true
 		];
 
+		$descriptor['review'] = [
+			'type' => 'button',
+			'label-message' => 'managewiki-review',
+			'id' => 'managewiki-review-changes',
+		];
+
 		$field = $this->addFields( $descriptor )->getField( 'reason' );
 
 		$html = $field->getInputOOUI( '' );
