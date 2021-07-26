@@ -91,15 +91,14 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			'required' => true
 		];
 
-		$descriptor['review'] = [
-			'type' => 'button',
-			'label-message' => 'managewiki-review',
-			'id' => 'managewiki-review-changes',
-		];
-
 		$field = $this->addFields( $descriptor )->getField( 'reason' );
 
 		$html = $field->getInputOOUI( '' );
+
+		$html .= new OOUI\ButtonInputWidget( [
+			'label' => $this->msg( 'managewiki-review' )->text(),
+			'id' => 'managewiki-review-changes',
+		] );
 
 		$html .= parent::getButtons();
 
