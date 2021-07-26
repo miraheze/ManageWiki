@@ -8,10 +8,10 @@
 
 		ProcessDialog.static.name = 'managewiki-review';
 
-		ProcessDialog.static.title = 'Review changes';
+		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
 
 		ProcessDialog.static.actions = [{
-			label: 'Close',
+			label: mw.msg( 'managewiki-review-close' ),
 			flags: 'safe'
 		}];
 
