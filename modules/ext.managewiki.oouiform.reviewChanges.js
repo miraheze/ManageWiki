@@ -22,8 +22,8 @@
 				expanded: false
 			});
 
+			var dialog = this;
 			$('#managewiki-review-changes').click(
-				var dialog = this;
 				$('#managewiki-form :input').each(function() {
 					if (this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked) {
 						dialog.content.$element.append('<b>' + this.name.replace('wp', '').replace('[]', '[' + this.value + ']') + '</b>: ' + this.defaultChecked + ' —> ' + this.checked + '<br />');
