@@ -7,7 +7,7 @@
 		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
-			infuse = $( panel.$element ).find( '.managewiki-infuse[name]' );
+			infuse = $( panel.$element ).find( '.managewiki-infuse' );
 			infuse.each( function () {
 				OO.ui.infuse( this );
 			} );
