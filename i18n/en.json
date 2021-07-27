@@ -112,7 +112,7 @@
 	"managewiki-placeholder-reason": "Reason for this change...",
 	"managewiki-requires": "Requires",
 	"managewiki-review": "Review",
-	"managewiki-review-checkbox-changed": "<b>$1</b> was <i>{{int:managewiki-review-checkbox-$2}}</i>",
+	"managewiki-review-checkbox-changed": "<b>$1</b> was <i>{{int:managewiki-review-checkbox-enabled}}</i>",
 	"managewiki-review-checkbox-enabled": "enabled",
 	"managewiki-review-checkbox-disabled": "disabled",
 	"managewiki-review-close": "Close",
