@@ -35,7 +35,7 @@
 				} );
 
 				if ( !dialog.content.$element.html() ) {
-					dialog.content.$element.append( mw.message( 'managewiki-review-nochanges' ) );
+					dialog.content.$element.append( mw.msg( 'managewiki-review-nochanges' ) );
 				}
 
 				dialog.$body.append( dialog.content.$element );
