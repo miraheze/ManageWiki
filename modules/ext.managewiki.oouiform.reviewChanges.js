@@ -28,14 +28,14 @@
 				dialog.content.$element.html( '' );
 				$( '#managewiki-form :input:not( #managewiki-submit-reason :input )' ).each( function () {
 					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
-						dialog.content.$element.append( '<li>' + mw.msg( 'managewiki-review-checkboxchanged', this.name.replace( 'wp', '' ).replace( '[]', '[' + this.value + ']' ), ( this.checked == true ? mw.msg( 'managewiki-review-checkboxenabled' ) : mw.msg( 'managewiki-review-checkboxdisabled' ) ) ).parse() + '</li>' );
+						dialog.content.$element.append( '<li>' + mw.message( 'managewiki-review-checkboxchanged', this.name.replace( 'wp', '' ).replace( '[]', '[' + this.value + ']' ), ( this.checked == true ? mw.msg( 'managewiki-review-checkboxenabled' ) : mw.msg( 'managewiki-review-checkboxdisabled' ) ) ).parse() + '</li>' );
 					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
-						dialog.content.$element.append( '<li>' + mw.msg( 'managewiki-review-inputchanged', this.name.replace( 'wp', '' ), ( this.defaultValue ? this.defaultValue : mw.msg( 'managewiki-review-none' ) ), ( this.value ? this.value : mw.msg( 'managewiki-review-none' ) ) ).parse() + '</li>' );
+						dialog.content.$element.append( '<li>' + mw.message( 'managewiki-review-inputchanged', this.name.replace( 'wp', '' ), ( this.defaultValue ? this.defaultValue : mw.msg( 'managewiki-review-none' ) ), ( this.value ? this.value : mw.msg( 'managewiki-review-none' ) ) ).parse() + '</li>' );
 					}
 				} );
 
 				if ( !dialog.content.$element.html() ) {
-					dialog.content.$element.append( mw.msg( 'managewiki-review-nochanges' ).parse() );
+					dialog.content.$element.append( mw.message( 'managewiki-review-nochanges' ).parse() );
 				}
 
 				dialog.$body.append( dialog.content.$element );
