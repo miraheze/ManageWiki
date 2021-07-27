@@ -19,6 +19,7 @@
 				action: 'save',
 				label: OO.ui.deferMsg( 'managewiki-save' ),
 				flags: [ 'primary', 'progressive' ],
+				modes: [ 'save', 'review' ]
 			}
 		];
 
