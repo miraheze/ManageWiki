@@ -115,9 +115,9 @@
 		"ext.managewiki.oouiform": {
 			"targets": [ "desktop", "mobile" ],
 			"scripts": [
-				"ext.managewiki.oouiform.js",
 				"ext.managewiki.oouiform.confirmClose.js",
-				"ext.managewiki.oouiform.reviewChanges.js"
+				"ext.managewiki.oouiform.reviewChanges.js",
+				"ext.managewiki.oouiform.tabs.js"
 			],
 			"messages": [
 				"managewiki-review-close",
