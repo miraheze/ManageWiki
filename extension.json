@@ -120,12 +120,10 @@
 				"ext.managewiki.oouiform.tabs.js"
 			],
 			"messages": [
-				"managewiki-review-checkboxchanged",
-				"managewiki-review-checkboxenabled",
-				"managewiki-review-checkboxdisabled",
+				"managewiki-review-checkbox-changed",
 				"managewiki-review-close",
-				"managewiki-review-inputchanged",
-				"managewiki-review-nochanges",
+				"managewiki-review-input-changed",
+				"managewiki-review-no-changes",
 				"managewiki-review-none",
 				"managewiki-review-title",
 				"managewiki-save",
