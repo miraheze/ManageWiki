@@ -117,7 +117,7 @@
 	"managewiki-review-checkboxdisabled": "disabled",
 	"managewiki-review-close": "Close",
 	"managewiki-review-inputchanged": "<b>$1</b> was changed from <i>$2</i> to <i>$3</i>",
-	"managewiki-review-nochanges": "''No changes made.''",
+	"managewiki-review-nochanges": "<i>No changes made.</i>",
 	"managewiki-review-none": "<none>",
 	"managewiki-review-title": "Review changes",
 	"managewiki-save": "Save",
