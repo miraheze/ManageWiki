@@ -11,6 +11,7 @@
 		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
 
 		ProcessDialog.static.actions = [ {
+			icon: 'close',
 			flags: [ 'safe', 'close' ]
 		} ];
 
