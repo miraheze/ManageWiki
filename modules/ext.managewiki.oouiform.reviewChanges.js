@@ -63,7 +63,7 @@
 		$( document.body ).append( windowManager.$element );
 
 		var processDialog = new ProcessDialog( {
-			size: 'large'
+			size: 'medium'
 		} );
 
 		windowManager.addWindows( [ processDialog ] );
