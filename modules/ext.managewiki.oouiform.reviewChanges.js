@@ -11,8 +11,8 @@
 		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
 
 		ProcessDialog.static.actions = [ {
-			icon: 'close',
-			flags: [ 'safe', 'close' ]
+			label: OO.ui.deferMsg( 'managewiki-review-close' ),
+			flags: 'safe'
 		} ];
 
 		ProcessDialog.prototype.initialize = function () {
@@ -63,7 +63,7 @@
 		$( document.body ).append( windowManager.$element );
 
 		var processDialog = new ProcessDialog( {
-			size: 'medium'
+			size: 'large'
 		} );
 
 		windowManager.addWindows( [ processDialog ] );
