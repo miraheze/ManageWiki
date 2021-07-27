@@ -28,9 +28,9 @@
 				dialog.content.$element.html( '' );
 				$( '#managewiki-form :input:not( #managewiki-submit-reason :input )' ).each( function () {
 					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
-						dialog.content.$element.append( '<b>' + this.name.replace( 'wp', '' ).replace( '[]', '[' + this.value + ']' ) + '</b> ' + 'was toggled' + ( this.checked == true ? 'on' : 'off' ) + '<br />' );
+						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( '[]', '[' + this.value + ']' ) + '</b> ' + 'was toggled ' + ( this.checked == true ? 'on' : 'off' ) + '</li>' );
 					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ) + '</b> was changed from ' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + 'to' + ( this.value ? this.value : '&lt;none&gt;' ) + '</li>' );
+						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ) + '</b> was changed from ' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + ' to ' + ( this.value ? this.value : '&lt;none&gt;' ) + '</li>' );
 					}
 				} );
 
