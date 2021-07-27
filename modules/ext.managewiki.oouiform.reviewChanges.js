@@ -10,10 +10,17 @@
 
 		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
 
-		ProcessDialog.static.actions = [ {
-			icon: 'close',
-			flags: [ 'safe', 'close' ]
-		} ];
+		ProcessDialog.static.actions = [
+			{
+				label: OO.ui.deferMsg( 'managewiki-review-close' ),
+				flags: 'safe'
+			},
+			{
+				action: 'save',
+				label: OO.ui.deferMsg( 'managewiki-save' ),
+				flags: [ 'primary', 'progressive' ],
+			}
+		];
 
 		ProcessDialog.prototype.initialize = function () {
 			ProcessDialog.super.prototype.initialize.apply( this, arguments );
@@ -63,7 +70,7 @@
 		$( document.body ).append( windowManager.$element );
 
 		var processDialog = new ProcessDialog( {
-			size: 'medium'
+			size: 'large'
 		} );
 
 		windowManager.addWindows( [ processDialog ] );
