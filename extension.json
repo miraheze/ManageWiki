@@ -121,9 +121,12 @@
 			],
 			"messages": [
 				"managewiki-review-checkboxchanged",
+				"managewiki-review-checkboxenabled",
+				"managewiki-review-checkboxdisabled",
 				"managewiki-review-close",
 				"managewiki-review-inputchanged",
 				"managewiki-review-nochanges",
+				"managewiki-review-none",
 				"managewiki-review-title",
 				"managewiki-save",
 				"managewiki-warning-changes"
