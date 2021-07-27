@@ -66,9 +66,8 @@
 			size: 'medium'
 		} );
 
-		windowManager.addWindows( [ processDialog ] );
-
 		$( '#managewiki-review' ).click( function () {
+			windowManager.addWindows( [ processDialog ] );
 			windowManager.openWindow( processDialog );
 		} );
 	} );
