@@ -1,5 +1,5 @@
 /*!
- * JavaScript for Special:ManageWiki: Enable save and review buttons and prevent the window being accidentally
+ * JavaScript for Special:ManageWiki: Enable save button and prevent the window being accidentally
  * closed when any form field is changed.
  */
 ( function () {
@@ -29,7 +29,7 @@
 
 		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
-		// Disable the buttons unless settings have changed
+		// Disable the save button unless settings have changed
 		// Check if settings have been changed before JS has finished loading
 		saveButton.setDisabled( !isManageWikiChanged() );
 
