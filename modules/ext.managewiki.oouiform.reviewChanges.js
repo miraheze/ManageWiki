@@ -47,6 +47,8 @@
 								}
 							} ).$element
 						);
+
+						dialog.content.$element.append('</li>')
 					}
 				} );
 
