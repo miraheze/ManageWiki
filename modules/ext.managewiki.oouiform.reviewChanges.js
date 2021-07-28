@@ -45,7 +45,7 @@
 									padded: true,
 									align: 'forwards'
 								}
-							} ).$element + '</li>'
+							} ).$element
 						);
 					}
 				} );
