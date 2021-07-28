@@ -32,7 +32,7 @@
 					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
 						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
 
-						var label = $('span > label[for=' + this.id + ']:first-of-type');
+						var label = $('span > label[for=' + this.id + ']:first-of-type').contents();
 						dialog.content.$element.append(
 							new OO.ui.PopupButtonWidget( {
 								icon: 'info',
