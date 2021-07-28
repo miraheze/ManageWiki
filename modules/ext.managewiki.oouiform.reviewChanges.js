@@ -41,7 +41,7 @@
 								popup: {
 									head: true,
 									label: 'More information',
-									$content: $( '<p>' + $('span > label[for=' + this.id + ']:first-of-type').contents()[0] + '</p>' ),
+									$content: $( '<p>' + $( $('span > label[for=' + this.id + ']:first-of-type').contents()[0] ).text() + '</p>' ),
 									padded: true,
 									align: 'forwards'
 								}
