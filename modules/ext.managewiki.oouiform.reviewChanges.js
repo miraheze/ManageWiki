@@ -8,7 +8,7 @@
 
 		ProcessDialog.static.name = 'managewiki-review';
 
-		ProcessDialog.static.title = OO.ui.deferMsg( 'managewiki-review-title' );
+		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
 
 		ProcessDialog.static.actions = [ {
 			icon: 'close',
