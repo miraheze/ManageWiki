@@ -120,7 +120,6 @@
 				"ext.managewiki.oouiform.tabs.js"
 			],
 			"messages": [
-				"managewiki-review-close",
 				"managewiki-review-title",
 				"managewiki-save",
 				"managewiki-warning-changes"
