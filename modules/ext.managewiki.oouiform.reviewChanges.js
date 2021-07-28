@@ -32,6 +32,7 @@
 					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
 						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
 
+						var field = this;
 						dialog.content.$element.append(
 							new OO.ui.PopupButtonWidget( {
 								icon: 'info',
@@ -41,7 +42,7 @@
 								popup: {
 									head: true,
 									label: 'More information',
-									$content:  this.id ? $('span > label[for=' + this.id + ']:first-of-type').text() : null,
+									$content:  field.id ? $('span > label[for=' + field.id + ']:first-of-type').text() : null,
 									padded: true,
 									align: 'forwards'
 								}
