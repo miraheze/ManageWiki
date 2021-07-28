@@ -27,26 +27,24 @@
 			$( '#managewiki-review' ).click( function () {
 				dialog.content.$element.html( '' );
 				$( '#managewiki-form :input:not( #managewiki-submit-reason :input )' ).each( function () {
-					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> ' + 'was <i>' + ( this.checked == true ? 'enabled' : 'disabled' ) + '</i></li>' );
-					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
-
-						dialog.content.$element.append(
-							new OO.ui.PopupButtonWidget( {
-								icon: 'info',
-								framed: false,
+					var info = new OO.ui.PopupButtonWidget( {
+							icon: 'info',
+							framed: false,
+							label: 'More information',
+							invisibleLabel: true,
+							popup: {
+								head: true,
 								label: 'More information',
-								invisibleLabel: true,
-								popup: {
-									head: true,
-									label: 'More information',
-									$content: $( '<p>' + $( $('span > label[for=' + this.id + ']:first-of-type').contents()[0] ).text() + '</p>' ),
-									padded: true,
-									align: 'forwards'
-								}
-							} ).$element
-						);
+								$content: $( '<p>' + $( $('span > label[for=' + this.id + ']:first-of-type').contents()[0] ).text() + '</p>' ),
+								padded: true,
+								align: 'forwards'
+							}
+						} ).$element;
+
+					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
+						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b>' + info + ' was <i>' + ( this.checked == true ? 'enabled' : 'disabled' ) + '</i></li>' );
+					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
+						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b>' + info + ' was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
 					}
 				} );
 
