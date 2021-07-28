@@ -26,7 +26,7 @@
 			var dialog = this;
 			$( '#managewiki-review' ).click( function () {
 				dialog.content.$element.html( '' );
-				$( '#managewiki-form :input:not( #managewiki-submit-reason :input )' ).each( function () {
+				$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
 					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
 						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> ' + 'was <i>' + ( this.checked == true ? 'enabled' : 'disabled' ) + '</i></li>' );
 					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
