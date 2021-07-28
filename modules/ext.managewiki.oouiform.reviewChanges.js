@@ -41,8 +41,7 @@
 								popup: {
 									head: true,
 									label: 'More information',
-									$content: $( '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\u200e</p>' ),
-									$footer: $( '<p>And maybe a footer whilst we\'re at it?</p>' ),
+									$content:  this.id ? $('span > label[for=' + this.id + ']:first-of-type').text() : null,
 									padded: true,
 									align: 'forwards'
 								}
