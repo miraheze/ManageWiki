@@ -115,18 +115,21 @@
 		"ext.managewiki.oouiform": {
 			"targets": [ "desktop", "mobile" ],
 			"scripts": [
-				"ext.managewiki.oouiform.js",
-				"ext.managewiki.oouiform.confirmClose.js"
+				"ext.managewiki.oouiform.confirmClose.js",
+				"ext.managewiki.oouiform.reviewChanges.js",
+				"ext.managewiki.oouiform.tabs.js"
 			],
 			"messages": [
-				"managewiki-warning-changes",
-				"managewiki-save"
+				"managewiki-review-title",
+				"managewiki-save",
+				"managewiki-warning-changes"
 			],
 			"dependencies": [
 				"mediawiki.confirmCloseWindow",
 				"mediawiki.storage",
 				"mediawiki.widgets.TitlesMultiselectWidget",
-				"oojs-ui-widgets"
+				"oojs-ui-widgets",
+				"oojs-ui-windows"
 			]
 		},
 		"ext.managewiki.oouiform.styles": {

@@ -97,6 +97,11 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 
 		$html .= parent::getButtons();
 
+		$html .= new OOUI\ButtonInputWidget( [
+			'label' => $this->msg( 'managewiki-review' )->text(),
+			'id' => 'managewiki-review'
+		] );
+
 		$html = Xml::tags( 'div', [ 'class' => 'managewiki-submit-formfields' ], $html );
 
 		return $html;
