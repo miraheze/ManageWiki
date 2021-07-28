@@ -41,7 +41,7 @@
 									align: 'forwards'
 								}
 							} ).$element
-						: null;
+						: '';
 
 					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
 						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b>' + info + ' was <i>' + ( this.checked == true ? 'enabled' : 'disabled' ) + '</i></li>' );
