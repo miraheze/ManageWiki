@@ -8,11 +8,11 @@
 
 		ProcessDialog.static.name = 'managewiki-review';
 
-		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
+		ProcessDialog.static.title = OO.ui.deferMsg( 'managewiki-review-title' );
 
 		ProcessDialog.static.actions = [ {
-			label: OO.ui.deferMsg( 'managewiki-review-close' ),
-			flags: 'safe'
+			icon: 'close',
+			flags: [ 'safe', 'close' ]
 		} ];
 
 		ProcessDialog.prototype.initialize = function () {
