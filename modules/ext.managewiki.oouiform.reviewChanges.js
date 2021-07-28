@@ -27,19 +27,21 @@
 			$( '#managewiki-review' ).click( function () {
 				dialog.content.$element.html( '' );
 				$( '#managewiki-form :input:not( #managewiki-submit-reason :input )' ).each( function () {
-					var info = new OO.ui.PopupButtonWidget( {
-							icon: 'info',
-							framed: false,
-							label: 'More information',
-							invisibleLabel: true,
-							popup: {
-								head: true,
+					var info = this.id ?
+							new OO.ui.PopupButtonWidget( {
+								icon: 'info',
+								framed: false,
 								label: 'More information',
-								$content: $( '<p>' + $( $('span > label[for=' + this.id + ']:first-of-type').contents()[0] ).text() + '</p>' ),
-								padded: true,
-								align: 'forwards'
-							}
-						} ).$element;
+								invisibleLabel: true,
+								popup: {
+									head: true,
+									label: 'More information',
+									$content: $( '<p>' + $( $('span > label[for=' + this.id + ']:first-of-type').contents()[0] ).text() + '</p>' ),
+									padded: true,
+									align: 'forwards'
+								}
+							} ).$element
+						: null;
 
 					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
 						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b>' + info + ' was <i>' + ( this.checked == true ? 'enabled' : 'disabled' ) + '</i></li>' );
