@@ -27,7 +27,10 @@
 			$( '#managewiki-review' ).click( function () {
 				dialog.content.$element.html( '' );
 				$( '#managewiki-form :input:not( #managewiki-submit-reason :input )' ).each( function () {
-					var info = this.id ?
+					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
+						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> was <i>' + ( this.checked == true ? 'enabled' : 'disabled' ) + '</i></li>' );
+					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
+						var info = this.id ?
 							new OO.ui.PopupButtonWidget( {
 								icon: 'info',
 								framed: false,
@@ -42,10 +45,6 @@
 								}
 							} ).$element
 						: '';
-
-					if ( this.type == 'checkbox' && this.defaultChecked != undefined && this.defaultChecked != this.checked ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b>' + info + ' was <i>' + ( this.checked == true ? 'enabled' : 'disabled' ) + '</i></li>' );
-					} else if ( this.defaultValue != undefined && this.defaultValue != this.value ) {
 						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b>' + info + ' was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
 					}
 				} );
