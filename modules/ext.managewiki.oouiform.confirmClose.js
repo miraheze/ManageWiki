@@ -12,7 +12,7 @@
 		function isManageWikiChanged() {
 			 var result = false;
 
-			$( '#managewiki-form :input:not( #managewiki-submit-reason :input )' ).each( function () {
+			$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
 				if ( this.defaultChecked != undefined && this.type == 'checkbox' && this.defaultChecked != this.checked ) {
 					result = true;
 
