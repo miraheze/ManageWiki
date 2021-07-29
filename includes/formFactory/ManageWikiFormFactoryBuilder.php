@@ -175,6 +175,20 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+
+		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) ) {
+			$mwSettings = new ManageWikiSettings( $dbName );
+			$setList = $mwSettings->list();
+
+			$formDescriptor['description'] =
+				'label-message' => 'managewiki-label-description',
+				'type' => 'textarea',
+				'maxlength' => 512,
+				'default' => $setList['wgWikiDiscoverDescription'] ?? '',
+				'section' => 'main'
+			];
+		}
+
 		return $formDescriptor;
 	}
 
@@ -830,6 +844,18 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) && ( $formData['dbcluster'] != $wiki->getDBCluster() ) ) {
 			$wiki->setDBCluster( $formData['dbcluster'] );
+		}
+
+		if (
+			ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) &&
+			$config->get( 'WikiDiscoverDescription' ) &&
+			$formData['description'] ?? false &&
+			$formData['description'] != $config->get( 'WikiDiscoverDescription' )
+		) {
+			$mwSettings = new ManageWikiSettings( $dbName );
+			$mwSettings->modify( [ 'wgWikiDiscoverDescription' => $formData['description'] ] );
+
+			$mwSettings->commit();
 		}
 
 		return $wiki;
