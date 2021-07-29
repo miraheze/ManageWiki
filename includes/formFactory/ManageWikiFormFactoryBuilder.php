@@ -848,12 +848,17 @@ class ManageWikiFormFactoryBuilder {
 		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) ) {
 			$mwSettings = new ManageWikiSettings( $dbName );
 
-			$description = $mwSettings->list()['wgWikiDiscoverDescription'] ?? false;
+			$description = $mwSettings->list()['wgWikiDiscoverDescription'] ?? '';
 
 			if ( $formData['description'] != $description ) {
 				$mwSettings->modify( [ 'wgWikiDiscoverDescription' => $formData['description'] ] );
 
 				$mwSettings->commit();
+
+				$wiki->changes['description'] = [
+					'old' => $description,
+					'new' => $formData['description']
+				];
 			}
 		}
 
