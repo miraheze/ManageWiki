@@ -186,7 +186,6 @@ class ManageWikiFormFactoryBuilder {
 				'maxlength' => 512,
 				'rows' => 4,
 				'disabled' => !$ceMW,
-				'cssclass' => 'managewiki-infuse',
 				'section' => 'main'
 			];
 		}
