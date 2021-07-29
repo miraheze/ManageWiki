@@ -182,10 +182,11 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor['description'] = [
 				'label-message' => 'managewiki-label-description',
 				'type' => 'textarea',
+				'default' => $setList['wgWikiDiscoverDescription'] ?? '',
 				'maxlength' => 512,
 				'rows' => 4,
 				'disabled' => !$ceMW,
-				'default' => $setList['wgWikiDiscoverDescription'] ?? '',
+				'cssclass' => 'managewiki-infuse',
 				'section' => 'main'
 			];
 		}
