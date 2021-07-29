@@ -183,6 +183,8 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-description',
 				'type' => 'textarea',
 				'maxlength' => 512,
+				'rows' => 4,
+				'disabled' => !$ceMW,
 				'default' => $setList['wgWikiDiscoverDescription'] ?? '',
 				'section' => 'main'
 			];
