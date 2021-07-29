@@ -11,10 +11,8 @@
 	},
 	"action-managewiki": "উইকি সেটিংস ব্যবস্থাপনা",
 	"core-main": "মূল সেটিংস",
-	"core-handling": "জমা দিন",
 	"deletedwikis": "অপসারিত উইকিসমূহ",
 	"extensions-other": "অন্যান্য",
-	"extensions-handling": "জমা দিন",
 	"log-name-managewiki": "উইকি ব্যবস্থাপনা লগ",
 	"logentry-managewiki-delete": "$1 উইকি \"$4\" মুছে ফেলেছেন",
 	"logentry-managewiki-settings": "$1 \"$4\"-এর জন্য সেটিংগুলি ($5) পরিবর্তন করেছেন",
@@ -32,7 +30,6 @@
 	"managewiki-label-language": "ভাষা",
 	"managewiki-label-private": "ব্যক্তিগত",
 	"managewiki-label-inactive": "নিষ্ক্রিয়",
-	"managewiki-label-reason": "কারণ",
 	"managewiki-label-server": "সার্ভারের নাম",
 	"managewiki-label-sitename": "সাইটের নাম",
 	"managewiki-namespaces-create": "নতুন নামস্থান তৈরি করুন",
@@ -54,11 +51,8 @@
 	"managewiki-link-settings": "এই উইকির অতিরিক্ত সেটিংস পরিচালনা করুন",
 	"managewiki-link-settings-view": "এই উইকির অতিরিক্ত সেটিংস দেখুন",
 	"namespaces-delete": "অপসারণ",
-	"namespaces-handling": "জমা দিন",
 	"namespaces-namespace": "প্রধান নামস্থান",
 	"namespaces-namespacetalk": "আলাপ নামস্থান",
 	"permissions-delete-checkbox": "এই ব্যবহারকারী দল অপসারণ করুন",
-	"permissions-handling": "জমা দিন",
-	"settings-other": "অন্যান্য",
-	"settings-handling": "জমা দিন"
+	"settings-other": "অন্যান্য"
 }

@@ -8,7 +8,6 @@
 	"action-managewiki": "Διαχείριση ρυθμίσεων βίκι",
 	"apihelp-query+wikiconfig-param-wikis": "Ποια βίκι θα ελεγχθούν.",
 	"extensions-other": "Άλλο",
-	"extensions-handling": "Υποβολή",
 	"log-name-managewiki": "Μητρώο ManageWiki",
 	"logentry-managewiki-delete-group": "Ο $1 διέγραψε την ομάδα $3",
 	"managewiki": "Διαχείριση ενός βίκι",
@@ -20,13 +19,11 @@
 	"managewiki-label-language": "Γλώσσα",
 	"managewiki-label-private": "Ιδιωτικό",
 	"managewiki-label-inactive": "Ανενεργό",
-	"managewiki-label-reason": "Αιτιολογία",
 	"managewiki-label-sitename": "Όνομα ιστοχώρου",
 	"managewiki-missing": "Αυτό το βίκι δεν υπάρχει.",
 	"managewiki-success": "Αυτές οι ρυθμίσεις έχουν αλλαχθεί επιτυχώς.",
 	"managewiki-link-extensions": "Διαχείριση των επεκτάσεων του βίκι",
 	"managewiki-link-settings": "Διαχείριση των ρυθμίσεων του βίκι",
 	"namespaces-namespace": "Όνομα του ονοματοχώρου",
-	"settings-other": "Άλλο",
-	"settings-handling": "Υποβολή"
+	"settings-other": "Άλλο"
 }

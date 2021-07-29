@@ -10,7 +10,6 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "D'Astellunge vun der Wiki weisen",
 	"apiwarn-wikiconfig-wikidoesnotexist": "D'Wiki '$1' gëtt et net.",
 	"core-main": "Haapt-Astellungen",
-	"core-handling": "Schécken",
 	"deletedwikis": "Geläscht Wikien",
 	"logentry-managewiki-delete": "$1 huet d'Wiki \"$4\" geläscht",
 	"logentry-managewiki-delete-group": "$1 huet d'Grupp $3 geläscht",
@@ -25,7 +24,6 @@
 	"managewiki-label-language": "Sprooch",
 	"managewiki-label-private": "Privat",
 	"managewiki-label-inactive": "Inaktiv",
-	"managewiki-label-reason": "Grond",
 	"managewiki-label-server": "Numm vum Server",
 	"managewiki-label-undeletewiki": "Dës Wiki restauréieren?",
 	"managewiki-missing": "Déi Wiki gëtt et net.",
@@ -36,6 +34,5 @@
 	"managewiki-extension-name": "[$1 $2]",
 	"namespaces-delete": "Läschen",
 	"namespaces-namespace": "Haapt-Nummraum",
-	"permissions-delete-checkbox": "Dës Benotzergrupp läschen",
-	"permissions-handling": "Späicheren"
+	"permissions-delete-checkbox": "Dës Benotzergrupp läschen"
 }

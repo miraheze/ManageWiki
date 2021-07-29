@@ -21,10 +21,8 @@
 	"apiwarn-wikiconfig-nopermission": "Не ви е дозволено да ја гледате поставеноста на викито „$1“.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Викито „$1“ не постои.",
 	"core-main": "Главни нагодувања",
-	"core-handling": "Поднеси",
 	"deletedwikis": "Избришани викија",
 	"extensions-other": "Други",
-	"extensions-handling": "Поднеси",
 	"log-description-managewiki": "Овој дневник ги следи сите промени во нагодувања на викијата преку Викираководство",
 	"log-name-managewiki": "Дневник на Викираководството",
 	"logentry-managewiki-delete": "$1 го избриша викито „$4“",
@@ -70,7 +68,6 @@
 	"managewiki-label-inactive": "Неактивно",
 	"managewiki-label-inactive-exempt": "Изземено од неактивност",
 	"managewiki-label-inactive-exempt-reason": "Изберет причина за изземањето од неактивност",
-	"managewiki-label-reason": "Причина",
 	"managewiki-label-server": "Назив на опслужувачот",
 	"managewiki-label-sitename": "Назив на викито",
 	"managewiki-label-undeletewiki": "Да го повратам ова вики?",
@@ -128,7 +125,6 @@
 	"namespaces-contentmodel": "Кој содржински модел да го има овој именски простор?",
 	"namespaces-delete": "Избриши",
 	"namespaces-delete-checkbox": "Штиклирајќи го кутивчево ќе го избришете именскиот простор",
-	"namespaces-handling": "Поднеси",
 	"namespaces-migrate-to": "Ако го избришете овој именски простор, на кој именски простор да се преместат страниците?",
 	"namespaces-namespace": "Главен именски простор",
 	"namespaces-namespacetalk": "Разговорен именски простор",
@@ -140,10 +136,8 @@
 	"permissions-delete-checkbox": "Избриши ја корисничкава група",
 	"permissions-unassigned": "Недоделени дозволи",
 	"permissions-group": "Групни задачи",
-	"permissions-handling": "Поднеси",
 	"right-managewiki": "Поставки за раководење со вики",
 	"right-managewiki-restricted": "Раководење со ограничени википоставки",
 	"right-managewiki-editdefault": "Раководење со основни дозволи за групи",
-	"settings-other": "Други",
-	"settings-handling": "Поднеси"
+	"settings-other": "Други"
 }

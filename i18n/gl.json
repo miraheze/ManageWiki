@@ -19,7 +19,6 @@
 	"apiwarn-wikiconfig-nopermission": "Non ten autorización para ver a configuración da wiki '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "A wiki '$1' non existe.",
 	"extensions-other": "Outro",
-	"extensions-handling": "Enviar",
 	"log-description-managewiki": "Este rexistro documenta tódalas modificacións de configuración dunha wiki a feitos a través de ManageWiki.",
 	"log-name-managewiki": "Rexistro de ManageWiki",
 	"logentry-managewiki-delete-group": "$1 suprimiu o grupo $3",
@@ -41,7 +40,6 @@
 	"managewiki-label-language": "Lingua",
 	"managewiki-label-private": "Privado",
 	"managewiki-label-inactive": "Inactivo",
-	"managewiki-label-reason": "Motivo",
 	"managewiki-label-sitename": "Nome do sitio",
 	"managewiki-missing": "Esa wiki non existe.",
 	"managewiki-permissions-create": "Crear un novo grupo de usuarios",
@@ -54,6 +52,5 @@
 	"managewiki-link-settings": "Xestiona a configuración adicioanl deste wiki",
 	"permissions-assigned": "Permisos asignados:",
 	"right-managewiki": "Xestionar os parámetros da wiki",
-	"settings-other": "Outro",
-	"settings-handling": "Enviar"
+	"settings-other": "Outro"
 }

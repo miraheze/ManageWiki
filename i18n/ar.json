@@ -24,10 +24,8 @@
 	"apiwarn-wikiconfig-nopermission": "لا يُسمَح لك بعرض التهيئة للويكي '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "الويكي \"$1\" غير موجود.",
 	"core-main": "الإعدادات الرئيسية",
-	"core-handling": "إرسال",
 	"deletedwikis": "تم حذف الويكيات",
 	"extensions-other": "أخرى",
-	"extensions-handling": "إرسال",
 	"log-description-managewiki": "يتتبع هذا السجل كل التغييرات في إعدادات الويكي من خلال إدارة الويكي.",
 	"log-name-managewiki": "سجل إدارة الويكي",
 	"logentry-managewiki-delete": "$1 حذف الويكي \"$4\"",
@@ -72,7 +70,6 @@
 	"managewiki-label-private": "خاص",
 	"managewiki-label-inactive": "غير نشط",
 	"managewiki-label-inactive-exempt": "معفى من عدم النشاط",
-	"managewiki-label-reason": "السبب",
 	"managewiki-label-server": "اسم الخادم:",
 	"managewiki-label-sitename": "اسم الموقع",
 	"managewiki-label-undeletewiki": "استرجاع هذا الويكي؟",
@@ -130,7 +127,6 @@
 	"namespaces-contentmodel": "ماذا يجب أن يكون نموذج محتوى هذا النطاق؟",
 	"namespaces-delete": "حذف",
 	"namespaces-delete-checkbox": "سيؤدي تحديد هذا الصندوق إلى حذف هذا النطاق",
-	"namespaces-handling": "إرسال",
 	"namespaces-migrate-to": "إذا تم حذف هذا النطاق، فما هو النطاق الذي يجب نقل الصفحات إليه؟",
 	"namespaces-namespace": "النطاق الرئيسي",
 	"namespaces-namespacetalk": "نطاق النقاش",
@@ -142,10 +138,8 @@
 	"permissions-delete-checkbox": "حذف مجموعة المستخدمين هذه",
 	"permissions-unassigned": "الصلاحيات غير المعينة",
 	"permissions-group": "مهام المجموعة",
-	"permissions-handling": "إرسال",
 	"right-managewiki": "إدارة إعدادات الويكي",
 	"right-managewiki-restricted": "إدارة إعدادات الويكي المحظورة",
 	"right-managewiki-editdefault": "إدارة سماحات المجموعة الافتراضية",
-	"settings-other": "أخرى",
-	"settings-handling": "إرسال"
+	"settings-other": "أخرى"
 }

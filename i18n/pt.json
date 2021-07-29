@@ -22,10 +22,8 @@
 	"apiwarn-wikiconfig-nopermission": "Não tem autorização para ver a configuração da wiki '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "A wiki '$1' não existe.",
 	"core-main": "Definições principais",
-	"core-handling": "Enviar",
 	"deletedwikis": "Wikis eliminadas",
 	"extensions-other": "Outra",
-	"extensions-handling": "Enviar",
 	"log-description-managewiki": "Este registo documenta todas as alterações das configurações de uma wiki através do GerirWiki.",
 	"log-name-managewiki": "Registo do GerirWiki",
 	"logentry-managewiki-delete": "$1 eliminou a wiki \"$4\"",
@@ -68,7 +66,6 @@
 	"managewiki-label-private": "Privada",
 	"managewiki-label-inactive": "Inativa",
 	"managewiki-label-inactive-exempt": "Isenta de inatividade",
-	"managewiki-label-reason": "Motivo",
 	"managewiki-label-server": "Nome do servidor",
 	"managewiki-label-sitename": "Nome do sítio",
 	"managewiki-label-undeletewiki": "Restaurar esta wiki?",
@@ -126,7 +123,6 @@
 	"namespaces-contentmodel": "Qual deveria ser o modelo de conteúdo deste espaço nominal/domínio?",
 	"namespaces-delete": "Eliminar",
 	"namespaces-delete-checkbox": "Marcar esta caixa causará a eliminação deste espaço nominal",
-	"namespaces-handling": "Enviar",
 	"namespaces-migrate-to": "Se este espaço nominal for eliminado, para que outro espaço nominal devem ser movidas as respetivas páginas?",
 	"namespaces-namespace": "Espaço nominal principal",
 	"namespaces-namespacetalk": "Espaço nominal de discussão",
@@ -138,10 +134,8 @@
 	"permissions-delete-checkbox": "Eliminar este grupo de utilizadores",
 	"permissions-unassigned": "Permissões não atribuídas",
 	"permissions-group": "Atribuições a grupos",
-	"permissions-handling": "Enviar",
 	"right-managewiki": "Gerir as configurações da wiki",
 	"right-managewiki-restricted": "Gerir as configurações restritas da wiki",
 	"right-managewiki-editdefault": "Gerir os privilégios padrão dos grupos",
-	"settings-other": "Outra",
-	"settings-handling": "Enviar"
+	"settings-other": "Outra"
 }

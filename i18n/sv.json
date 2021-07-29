@@ -20,10 +20,8 @@
 	"apiwarn-wikiconfig-nopermission": "Du har inte tillstånd att visa konfigurationen för wikin '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wikin \"$1\" finns inte.",
 	"core-main": "Huvudinställningar",
-	"core-handling": "Skicka",
 	"deletedwikis": "Raderade wikier",
 	"extensions-other": "Andra",
-	"extensions-handling": "Skicka",
 	"log-description-managewiki": "Denna logg spårar alla ändringar i inställningarna för en wiki via ManageWiki.",
 	"log-name-managewiki": "ManageWiki-logg",
 	"logentry-managewiki-delete": "$1 raderade wikin \"$4\"",
@@ -67,7 +65,6 @@
 	"managewiki-label-private": "Privat",
 	"managewiki-label-inactive": "Inaktiv",
 	"managewiki-label-inactive-exempt": "Undantagen från inaktivitet",
-	"managewiki-label-reason": "Anledning",
 	"managewiki-label-server": "Servernamn",
 	"managewiki-label-sitename": "Webbplatsnamn",
 	"managewiki-label-undeletewiki": "Återställ denna wiki?",
@@ -116,7 +113,6 @@
 	"managewiki-toggle-forcesidebar": "Tvinga ManageWiki att visas i sidofältet.",
 	"namespaces-delete": "Radera",
 	"namespaces-delete-checkbox": "Om denna kryssruta markeras kommer denna namnrymd raderas",
-	"namespaces-handling": "Skicka",
 	"namespaces-migrate-to": "Till vilken namnrymd ska sidor flyttas om den här namnrymden raderas?",
 	"namespaces-namespace": "Huvudnamnrymd",
 	"namespaces-namespacetalk": "Diskussionsnamnrymd",
@@ -128,10 +124,8 @@
 	"permissions-delete-checkbox": "Radera användargruppen",
 	"permissions-unassigned": "Ej tilldelade rättigheter",
 	"permissions-group": "Grupptilldelningar",
-	"permissions-handling": "Skicka in",
 	"right-managewiki": "Hantera wikiinställningar",
 	"right-managewiki-restricted": "Hantera begränsade wikiinställningar",
 	"right-managewiki-editdefault": "Hantera standardbehörigheter för grupper",
-	"settings-other": "Andra",
-	"settings-handling": "Skicka"
+	"settings-other": "Andra"
 }

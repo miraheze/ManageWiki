@@ -22,10 +22,8 @@
 	"apiwarn-wikiconfig-nopermission": "Bạn không được phép xem cài đặt của wiki '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki '$1' không tồn tại.",
 	"core-main": "Cài đặt chính",
-	"core-handling": "Lưu thay đổi",
 	"deletedwikis": "Wiki bị xóa",
 	"extensions-other": "Tiện ích",
-	"extensions-handling": "Lưu thay đổi",
 	"log-description-managewiki": "Nhật trình này theo dõi tất cả các thay đổi cho wiki qua ManageWiki.",
 	"log-name-managewiki": "Nhật trình ManageWiki",
 	"logentry-managewiki-delete": "$1 đã xóa wiki \"$4\"",
@@ -64,7 +62,6 @@
 	"managewiki-label-inactive": "Không hoạt động (người ta hay gọi mỹ miều là wiki \"dead\" đó.)",
 	"managewiki-label-inactive-exempt": "Loại khỏi không hoạt động",
 	"managewiki-label-inactive-exempt-reason": "Vì lí do nào mà được miễn trừ trạng thái bất hoạt động?",
-	"managewiki-label-reason": "Lý do",
 	"managewiki-label-sitename": "Tên trang",
 	"managewiki-label-undeletewiki": "Hủy xóa wiki này?",
 	"managewiki-label-lockwiki": "Khóa wiki này không bị chỉnh sửa",
@@ -120,7 +117,6 @@
 	"namespaces-contentmodel": "Thể loại nội dung?",
 	"namespaces-delete": "Xóa",
 	"namespaces-delete-checkbox": "CẢNH BÁO: TICK VÀO BOX NÀY SẼ KHIẾN KHÔNG GIAN TÊN NÀY BỊ XÓA. BẠN ĐÃ ĐƯỢC CẢNH BÁO.",
-	"namespaces-handling": "Lưu thay đổi",
 	"namespaces-migrate-to": "Nếu không gian tên này bị xóa, các trang trong đây sẽ được chuyển tới đâu?",
 	"namespaces-namespace": "Không gian tên chính",
 	"namespaces-namespacetalk": "Không gian tên thảo luận",
@@ -131,10 +127,8 @@
 	"permissions-autopromote": "Nâng chức",
 	"permissions-unassigned": "Quyền chưa gán",
 	"permissions-group": "Quyền gán các nhóm",
-	"permissions-handling": "Lưu thay đổi",
 	"right-managewiki": "Quản lý cài đặt wiki",
 	"right-managewiki-restricted": "Quản lý các cài đặt wiki bị khóa",
 	"right-managewiki-editdefault": "Quản lý các quyền hạn mặc định",
-	"settings-other": "Cài đặt nâng cao",
-	"settings-handling": "Lưu thay đổi"
+	"settings-other": "Cài đặt nâng cao"
 }

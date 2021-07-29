@@ -22,9 +22,7 @@
 	"apiwarn-wikiconfig-nopermission": "אין לך הרשאה לצפות בתצורה של ויקי '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "ויקי '$1' לא קיימת.",
 	"core-main": "הגדרות ראשיות",
-	"core-handling": "שליחה",
 	"deletedwikis": "אתרי ויקי מחוקים",
-	"extensions-handling": "שליחה",
 	"log-name-managewiki": "יומן ניהול ויקי",
 	"logentry-managewiki-delete": "$1 מחק/ה את הוויקי \"$4\"",
 	"logentry-managewiki-delete-group": "$1 מחק/ה את הקבוצה $3",
@@ -55,7 +53,6 @@
 	"managewiki-label-language": "שפה",
 	"managewiki-label-private": "פרטי",
 	"managewiki-label-inactive": "לא פעיל",
-	"managewiki-label-reason": "סיבה",
 	"managewiki-label-server": "שם שרת",
 	"managewiki-label-sitename": "שם האתר",
 	"managewiki-label-undeletewiki": "לשחזר את הוויקי?",
@@ -98,7 +95,6 @@
 	"managewiki-link-settings-view": "הצגת ההגדרות הנוספות",
 	"managewiki-toggle-forcesidebar": "כפיית הצגת קישורי ניהול ויקי בסרגל הצד.",
 	"namespaces-delete": "מחיקה",
-	"namespaces-handling": "שליחה",
 	"namespaces-namespace": "המרחב הראשי",
 	"namespaces-namespacetalk": "מרחב השיחה",
 	"namespaces-protection": "אילו זכויות נדרשות לעריכת מרחב שם זה?",
@@ -108,9 +104,7 @@
 	"permissions-autopromote": "קידום אוטומטי",
 	"permissions-unassigned": "מניעת הרשאות",
 	"permissions-group": "הקצאת קבוצות",
-	"permissions-handling": "שליחה",
 	"right-managewiki": "ניהול הגדרות ויקי",
 	"right-managewiki-restricted": "ניהול הגדרות ויקי מוגבלות",
-	"right-managewiki-editdefault": "ניהול הרשאות ברירת המחדל לקבוצה",
-	"settings-handling": "שליחה"
+	"right-managewiki-editdefault": "ניהול הרשאות ברירת המחדל לקבוצה"
 }

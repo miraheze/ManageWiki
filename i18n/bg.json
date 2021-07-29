@@ -21,7 +21,6 @@
 	"apiwarn-wikiconfig-nopermission": "Нямате право да виждате конфигурацията на уики „$1“.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Уики „$1“ не съществува.",
 	"extensions-other": "Други",
-	"extensions-handling": "Изпращане",
 	"log-description-managewiki": "Този дневник проследява всички промени в настройките на уикитата чрез ManageWiki",
 	"log-name-managewiki": "Дневник на ManageWiki",
 	"logentry-managewiki-delete-group": "$1 изтри група $3",
@@ -46,7 +45,6 @@
 	"managewiki-label-private": "Скрито",
 	"managewiki-label-inactive": "Неактивно",
 	"managewiki-label-inactive-exempt": "Изключено от неактивните",
-	"managewiki-label-reason": "Причина",
 	"managewiki-label-sitename": "Наименование на сайта",
 	"managewiki-missing": "Такова уики не съществува.",
 	"managewiki-mwlocked": "Това уики има ограничена възможност за употреба на ManageWiki.",
@@ -66,7 +64,6 @@
 	"namespaces-aliases": "Въведете на нов ред всички недефинирани именни пространства, които трябва да пренасочват към това.",
 	"namespaces-delete": "Изтриване",
 	"namespaces-delete-checkbox": "Ако установите тази отметка, именното пространство ще бъде изтрито",
-	"namespaces-handling": "Изпращане",
 	"namespaces-migrate-to": "Ако това именно пространство се изтрие, към кое именно пространство трябва бъдат преместени страниците?",
 	"namespaces-namespace": "Основно именно пространство",
 	"namespaces-namespacetalk": "Именно пространство за беседа",
@@ -74,6 +71,5 @@
 	"right-managewiki": "Управление на настройки на уики",
 	"right-managewiki-restricted": "Управление на ограничените уики настройки",
 	"right-managewiki-editdefault": "Управление на основни права за групи",
-	"settings-other": "Друго",
-	"settings-handling": "Изпращане"
+	"settings-other": "Друго"
 }

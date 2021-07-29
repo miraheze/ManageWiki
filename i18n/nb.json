@@ -21,10 +21,8 @@
 	"apiwarn-wikiconfig-nopermission": "Du har ikke tillatelse til å vise konfigurasjonen for wikien «$1».",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wikien «$1» finnes ikke.",
 	"core-main": "Hovedinnstillinger",
-	"core-handling": "Send inn",
 	"deletedwikis": "Slettede wikier",
 	"extensions-other": "Andre",
-	"extensions-handling": "Send inn",
 	"log-description-managewiki": "Denne loggen sporer alle endringer i wikiinnstillinger via ManageWiki.",
 	"log-name-managewiki": "ManageWiki-logg",
 	"logentry-managewiki-delete": "$1 slettet wikien «$4»",
@@ -67,7 +65,6 @@
 	"managewiki-label-private": "Privat",
 	"managewiki-label-inactive": "Inaktiv",
 	"managewiki-label-inactive-exempt": "Unntatt fra inaktivitet",
-	"managewiki-label-reason": "Årsak",
 	"managewiki-label-server": "Tjenernavn",
 	"managewiki-label-sitename": "Nettstedsnavn",
 	"managewiki-label-undeletewiki": "Gjenopprette denne wikien?",
@@ -124,7 +121,6 @@
 	"namespaces-contentmodel": "Hva skal innholdsmodellen til dette navnerommet være?",
 	"namespaces-delete": "Slett",
 	"namespaces-delete-checkbox": "Hvis du merker av denne boksen vil navnerommet bli slettet",
-	"namespaces-handling": "Send",
 	"namespaces-migrate-to": "Hvis navnerommet slettes, hvilket navnerom skal de eksisterende sidene flyttes til?",
 	"namespaces-namespace": "Hovednavnerommet",
 	"namespaces-namespacetalk": "Diskusjonsnavnerommet",
@@ -136,10 +132,8 @@
 	"permissions-delete-checkbox": "Slett denne brukergruppa",
 	"permissions-unassigned": "Ikke-tildelte tillatelser",
 	"permissions-group": "Gruppetildelinger",
-	"permissions-handling": "Send",
 	"right-managewiki": "Behandle wikiinnstillinger",
 	"right-managewiki-restricted": "Behandle begrensede wikiinnstillinger",
 	"right-managewiki-editdefault": "Behandle standard gruppetillatelser",
-	"settings-other": "Annet",
-	"settings-handling": "Send"
+	"settings-other": "Annet"
 }

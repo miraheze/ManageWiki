@@ -24,10 +24,8 @@
 	"apiwarn-wikiconfig-nopermission": "У Вас немає прав на перегляд конфігурації вікі «$1».",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Вікі «$1» не існує.",
 	"core-main": "Основні налаштування",
-	"core-handling": "Надіслати",
 	"deletedwikis": "Вилучені вікі",
 	"extensions-other": "Інші",
-	"extensions-handling": "Надіслати",
 	"log-description-managewiki": "Цей журнал протоколює усі зміни налаштувань вікі через ManageWiki.",
 	"log-name-managewiki": "Журнал керування вікі",
 	"logentry-managewiki-delete": "$1 {{GENDER:$1|вилучив|вилучила}} вікі «$4»",
@@ -65,7 +63,6 @@
 	"managewiki-label-private": "Приватна",
 	"managewiki-label-inactive": "Неактивна",
 	"managewiki-label-inactive-exempt": "Виключення з політики щодо неактивності",
-	"managewiki-label-reason": "Причина",
 	"managewiki-label-server": "Ім'я серверу",
 	"managewiki-label-sitename": "Назва сайту",
 	"managewiki-label-undeletewiki": "Відновити цю вікі?",
@@ -122,7 +119,6 @@
 	"namespaces-contentmodel": "Якою має бути модель контенту цього простору назв?",
 	"namespaces-delete": "Вилучити",
 	"namespaces-delete-checkbox": "Якщо поставите тут галочку, цей простір назв буде вилучено",
-	"namespaces-handling": "Надіслати",
 	"namespaces-migrate-to": "Якщо цей простір назв буде вилучено, в який простір назв слід перейменувати сторінки?",
 	"namespaces-namespace": "Основний простір назв",
 	"namespaces-namespacetalk": "Простір назв для обговорень",
@@ -133,10 +129,8 @@
 	"permissions-autopromote": "Автопросування",
 	"permissions-unassigned": "Непризначені права",
 	"permissions-group": "Призначення групи",
-	"permissions-handling": "Надіслати",
 	"right-managewiki": "Керування налаштуваннями вікі",
 	"right-managewiki-restricted": "Керування обмеженими налаштуваннями вікі",
 	"right-managewiki-editdefault": "Керування правами стандартних груп",
-	"settings-other": "Інші",
-	"settings-handling": "Надіслати"
+	"settings-other": "Інші"
 }

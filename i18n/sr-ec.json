@@ -19,7 +19,6 @@
 	"apiwarn-wikiconfig-nopermission": "Није вам дозвољено да видите конфигурацију викија „$1”",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Вики „$1” не постоји.",
 	"extensions-other": "Друго",
-	"extensions-handling": "Пошаљи",
 	"log-description-managewiki": "Овај дневник прати све промене у подешавањима викија путем ManageWiki-ја.",
 	"log-name-managewiki": "Дневник ManageWiki-ја",
 	"logentry-managewiki-delete-group": "$1 је {{GENDER:$1|уклонио|уклонила}} групу $3",
@@ -44,7 +43,6 @@
 	"managewiki-label-language": "Језик",
 	"managewiki-label-private": "Приватно",
 	"managewiki-label-inactive": "Неактивно",
-	"managewiki-label-reason": "Разлог",
 	"managewiki-label-sitename": "Име сајта",
 	"managewiki-missing": "Овај вики не постоји.",
 	"managewiki-mwlocked": "Овај вики има ограничену способност да користи ManageWiki.",
@@ -65,7 +63,6 @@
 	"namespaces-content": "Да ли овај именски простор садржи главни wiki материјал (садржај)?",
 	"namespaces-delete": "Брисање",
 	"namespaces-delete-checkbox": "Означивањем овог поља избрисаћете именски простор",
-	"namespaces-handling": "Пошаљи",
 	"namespaces-migrate-to": "Ако избришете овај именски простор, у ком именском простору преместити странице?",
 	"namespaces-namespace": "Главни именски простор",
 	"namespaces-namespacetalk": "Именски простор разговор",
@@ -76,6 +73,5 @@
 	"right-managewiki": "управљање подешавањима викија",
 	"right-managewiki-restricted": "управљање ограниченим подешавањима викија",
 	"right-managewiki-editdefault": "управљање подразумеваним дозволама група",
-	"settings-other": "Друго",
-	"settings-handling": "Пошаљи"
+	"settings-other": "Друго"
 }

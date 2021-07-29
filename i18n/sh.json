@@ -15,10 +15,8 @@
 	"apiwarn-wikiconfig-nopermission": "Nije vam dozvoljeno gledati postavljenost wikija '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki \"$1\" ne postoji.",
 	"core-main": "Glavna podešavanja",
-	"core-handling": "Unesi",
 	"deletedwikis": "Obrisani wikija",
 	"extensions-other": "Ostali",
-	"extensions-handling": "Unesi",
 	"logentry-managewiki-delete": "$1 je obrisao wiki \"$4\"",
 	"logentry-managewiki-delete-group": "$1 je obrisao grupu $3",
 	"logentry-managewiki-lock": "$1 je zaključao wiki \"$4\"",
@@ -53,7 +51,6 @@
 	"managewiki-label-private": "Privatno",
 	"managewiki-label-inactive": "Neaktivan",
 	"managewiki-label-inactive-exempt": "Izuzeto od neaktivnosti",
-	"managewiki-label-reason": "Razlog",
 	"managewiki-label-sitename": "Naziv wikija",
 	"managewiki-label-undeletewiki": "Povratiti ovaj wiki?",
 	"managewiki-label-lockwiki": "Zaključaj wikivo radi promjena",
@@ -109,7 +106,6 @@
 	"namespaces-contentmodel": "Koji sadržajni model da ima ovaj imenski prostor?",
 	"namespaces-delete": "Izbriši",
 	"namespaces-delete-checkbox": "Označujući ovu kutijicu izbrisat ćete imenski prostor",
-	"namespaces-handling": "Unesi",
 	"namespaces-migrate-to": "Ako izbrišete ovaj imenski prostor, na koji imenski prostor se premještati stranice?",
 	"namespaces-namespace": "Glavni imenski prostor",
 	"namespaces-namespacetalk": "Razgovorni imenski prostor",
@@ -120,10 +116,8 @@
 	"permissions-autopromote": "Autounapređivanje",
 	"permissions-unassigned": "Nedodjeljene dozvole",
 	"permissions-group": "Grupni zadaci",
-	"permissions-handling": "Unesi",
 	"right-managewiki": "Postavke za upravljanje wikijem",
 	"right-managewiki-restricted": "Upravljanje ograničenim wikipostavkama",
 	"right-managewiki-editdefault": "Upravljanje osnovnim dozvolama grupa",
-	"settings-other": "Ostali",
-	"settings-handling": "Unesi"
+	"settings-other": "Ostali"
 }

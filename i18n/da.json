@@ -6,9 +6,7 @@
 	},
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Tjek om wikien er markeret som lukket",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wikien '$1' findes ikke.",
-	"core-handling": "Indsend",
 	"extensions-other": "Andre",
-	"extensions-handling": "Indsned",
 	"logentry-managewiki-delete": "$1 slettede wikien \"$4\"",
 	"logentry-managewiki-delete-group": "$1 slettede gruppe $3",
 	"logentry-managewiki-rename": "$1 omdøbte gruppe $3 fra $4",
@@ -20,7 +18,6 @@
 	"managewiki-label-language": "Sprog",
 	"managewiki-label-private": "Privat",
 	"managewiki-label-inactive": "Inaktiv",
-	"managewiki-label-reason": "Årsag",
 	"managewiki-label-server": "Servernavn",
 	"managewiki-label-sitename": "Sidenavn",
 	"managewiki-missing": "Denne wiki findes ikke.",
@@ -32,11 +29,8 @@
 	"managewiki-permissions-removeall": "Kan fjerne fra andre",
 	"managewiki-link-namespaces": "Administrer denne wikis navnerum",
 	"namespaces-delete": "Slet",
-	"namespaces-handling": "Indsend",
 	"namespaces-namespace": "Hovednavnerum",
 	"namespaces-search": "Skal dette navnerum være søgbart som standard?",
 	"permissions-delete-checkbox": "Slet denne brugergruppe",
-	"permissions-handling": "Indsend",
-	"settings-other": "Andet",
-	"settings-handling": "Indsend"
+	"settings-other": "Andet"
 }
