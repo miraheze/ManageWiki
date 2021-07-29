@@ -175,7 +175,6 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
-
 		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) ) {
 			$mwSettings = new ManageWikiSettings( $dbName );
 			$setList = $mwSettings->list();
