@@ -846,16 +846,16 @@ class ManageWikiFormFactoryBuilder {
 			$wiki->setDBCluster( $formData['dbcluster'] );
 		}
 
-		if (
-			ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) &&
-			$config->get( 'WikiDiscoverDescription' ) &&
-			$formData['description'] ?? false &&
-			$formData['description'] != $config->get( 'WikiDiscoverDescription' )
-		) {
+		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) ) {
 			$mwSettings = new ManageWikiSettings( $dbName );
-			$mwSettings->modify( [ 'wgWikiDiscoverDescription' => $formData['description'] ] );
 
-			$mwSettings->commit();
+			$description = $mwSettings->list()['wgWikiDiscoverDescription'] ?? false;
+
+			if ( $formData['description'] != $description ) {
+				$mwSettings->modify( [ 'wgWikiDiscoverDescription' => $formData['description'] ] );
+
+				$mwSettings->commit();
+			}
 		}
 
 		return $wiki;
