@@ -179,7 +179,7 @@ class ManageWikiFormFactoryBuilder {
 			$mwSettings = new ManageWikiSettings( $dbName );
 			$setList = $mwSettings->list();
 
-			$formDescriptor['description'] =
+			$formDescriptor['description'] = [
 				'label-message' => 'managewiki-label-description',
 				'type' => 'textarea',
 				'maxlength' => 512,
