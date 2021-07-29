@@ -175,7 +175,7 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) ) {
+		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) ) {
 			$mwSettings = new ManageWikiSettings( $dbName );
 			$setList = $mwSettings->list();
 
@@ -847,7 +847,7 @@ class ManageWikiFormFactoryBuilder {
 			$wiki->setDBCluster( $formData['dbcluster'] );
 		}
 
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) ) {
+		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) ) {
 			$mwSettings = new ManageWikiSettings( $dbName );
 
 			$description = $mwSettings->list()['wgWikiDiscoverDescription'] ?? '';
