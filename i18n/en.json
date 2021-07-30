@@ -66,7 +66,7 @@
 	"managewiki-label-dbname": "Database name",
 	"managewiki-label-deletewiki": "Delete this wiki?",
 	"managewiki-label-deletiondate": "Deletion Date",
-	"managewiki-label-description": "Wiki description",
+	"managewiki-label-description": "Short description",
 	"managewiki-label-goto": "Go to Special:ManageWiki",
 	"managewiki-label-language": "Language",
 	"managewiki-label-private": "Private",
