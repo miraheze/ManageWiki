@@ -6,6 +6,10 @@
 	$( function () {
 		var allowCloseWindow, saveButton;
 
+		if ( !( $( '#managewiki-submit' ).length > 0 ) ) {
+			return;
+		}
+
 		// Check if all of the form values are unchanged.
 		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
 		// slower and more complicated. It works fine to treat them as HTML elements.)
