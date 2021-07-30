@@ -57,6 +57,7 @@
 	"managewiki-label-category": "{{Identical|Category}}",
 	"managewiki-label-closed": "Used as a label for 'closed'.\n{{Identical|Closed}}",
 	"managewiki-label-dbname": "Used as a label for 'dbname'.\n{{Identical|Database name}}",
+	"managewiki-label-description": "Used as a label for 'description'.",
 	"managewiki-label-language": "Used as a label for 'language'.\n{{Identical|Language}}",
 	"managewiki-label-private": "Used as a label for 'private'.\n{{Identical|Private}}",
 	"managewiki-label-inactive": "Used as a label for 'inactive'.\n{{Identical|Inactive}}",
