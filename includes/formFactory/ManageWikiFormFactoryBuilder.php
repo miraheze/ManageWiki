@@ -168,7 +168,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$formDescriptor['description'] = [
 				'label-message' => 'managewiki-label-description',
-				'help-message' => 'managewiki-help-message',
+				'help-message' => 'managewiki-help-description',
 				'type' => 'text',
 				'default' => $setList['wgWikiDiscoverDescription'] ?? '',
 				'maxlength' => 512,
