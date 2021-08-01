@@ -59,6 +59,7 @@
 	"managewiki-header-permissions": "Select a group below that already exists to modify or create a new user group in the box below.",
 	"managewiki-header-namespaces": "Select a namespace to edit below (talk namespaces are associated to their main namespace) or press the button to create a new main namespace.",
 	"managewiki-header-settings": "This page is used to manage the wiki settings of wiki <b>'$1'</b>. If a feature you would like is not available here yet, please use <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> to request it. <br> Once you are done, press the \"save\" button to save your changes.",
+	"managewiki-help-description": "Please enter a short description of your wiki. It will appear on Special:WikiDiscover. Limited to 512 characters.",
 	"managewiki-label-category": "Category",
 	"managewiki-label-closed": "Closed",
 	"managewiki-label-creationdate": "Creation Date",
