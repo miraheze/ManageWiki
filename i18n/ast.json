@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Tokvo",
 			"Xuacu"
 		]
 	},
@@ -38,5 +39,6 @@
 	"managewiki-label-sitename": "Nome del sitiu",
 	"managewiki-missing": "Esa wiki nun esiste.",
 	"managewiki-success": "La configuración cambióse correutamente.",
-	"managewiki-extension-name": "[$1 $2]"
+	"managewiki-extension-name": "[$1 $2]",
+	"permissions-delete": "Desaniciar"
 }

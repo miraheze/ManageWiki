@@ -3,6 +3,7 @@
 		"authors": [
 			"Anpfraum",
 			"Leduyquang753",
+			"Nguyễn Mạnh An",
 			"Wolf"
 		]
 	},
@@ -53,9 +54,10 @@
 	"managewiki-label-category": "Phân loại",
 	"managewiki-label-closed": "Đã đóng",
 	"managewiki-label-creationdate": "Ngày tạo",
+	"managewiki-label-dbname": "Tên cơ sở dữ liệu (Chú ý: Không thể thay đổi giá trị này.)",
 	"managewiki-label-deletewiki": "Xóa wiki này?",
 	"managewiki-label-deletiondate": "Ngày xóa",
-	"managewiki-label-dbname": "Tên cơ sở dữ liệu (Chú ý: Không thể thay đổi giá trị này.)",
+	"managewiki-label-description": "Mô tả ngắn",
 	"managewiki-label-goto": "Đi đến Đặc_biệt:ManageWiki",
 	"managewiki-label-language": "Ngôn ngữ",
 	"managewiki-label-private": "Riêng tư",
@@ -99,6 +101,8 @@
 	"managewiki-permissions-select": "Chọn nhóm đang tồn tại để chỉnh sửa",
 	"managewiki-permissions-unassigned": "Các quyền hạn bên dưới chưa được gán cho nhóm này.",
 	"managewiki-requires": "Yêu cầu quyền",
+	"managewiki-review": "Duyệt",
+	"managewiki-review-title": "Duyệt thay đổi",
 	"managewiki-success": "Đã lưu cài đặt.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-link-core": "Quản lý các cài đặt chính của wiki này",
