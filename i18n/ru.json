@@ -76,6 +76,7 @@
 	"managewiki-label-dbname": "Имя базы данных",
 	"managewiki-label-deletewiki": "Удалить эту вики?",
 	"managewiki-label-deletiondate": "Дата удаления",
+	"managewiki-label-description": "Краткое описание",
 	"managewiki-label-goto": "Перейти к Special:ManageWiki",
 	"managewiki-label-language": "Язык",
 	"managewiki-label-private": "Скрытый",
