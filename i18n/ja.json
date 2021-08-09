@@ -70,7 +70,7 @@
 	"managewiki-label-dbname": "データベース名",
 	"managewiki-label-deletewiki": "このWikiを削除しますか？",
 	"managewiki-label-deletiondate": "削除日",
-	"managewiki-label-description": "説明を編集",
+	"managewiki-label-description": "説明を編集する",
 	"managewiki-label-goto": "Special:ManageWiki へ移動",
 	"managewiki-label-language": "言語",
 	"managewiki-label-private": "非公開",
