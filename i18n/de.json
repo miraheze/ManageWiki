@@ -6,7 +6,8 @@
 			"DraconicDark",
 			"HajFunk",
 			"Leon95",
-			"Metalhead64"
+			"Metalhead64",
+			"Zabe"
 		]
 	},
 	"action-managewiki": "die Wikieinstellungen zu verwalten",
@@ -94,6 +95,7 @@
 	"managewiki-permissions-select": "Zu bearbeitende Gruppe auswählen",
 	"managewiki-permissions-unassigned": "Die Benutzerrechte unten sind derzeit nicht dieser Benutzergruppe zugewiesen.",
 	"managewiki-requires": "Erfordert",
+	"managewiki-save": "Speichern",
 	"managewiki-sidebar-header": "Verwaltung",
 	"managewiki-success": "Die Einstellungen wurden erfolgreich geändert.",
 	"managewiki-extension-name": "[$1 $2]",

@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Abijeet Patro",
+			"Ajeje Brazorf",
 			"Liuxinyu970226",
 			"McDutchie",
 			"Nike",
@@ -13,7 +14,7 @@
 			"Vlad5250"
 		]
 	},
-	"action-managewiki": "Button to manage the settings of a wiki.",
+	"action-managewiki": "{{doc-action|managewiki}}",
 	"apihelp-query+wikiconfig-summary": "{{doc-apihelp-summary|wikiconfig}}",
 	"apihelp-query+wikiconfig-example-1": "{{doc-apihelp-example|wikiconfig}}",
 	"apihelp-query+wikiconfig-param-prop": "{{doc-apihelp-param|wikiconfig|prop}}",
@@ -75,5 +76,6 @@
 	"managewiki-warning-changes": "Warning shown (except in Firefox) when attempting to leave ManageWiki with unsaved changes.",
 	"namespaces-delete": "{{Identical|Delete}}",
 	"permissions-delete": "{{Identical|Delete}}",
-	"right-managewiki": "{{doc-right|managewiki}}"
+	"right-managewiki": "{{doc-right|managewiki}}",
+	"settings-other": "{{Identical|Other}}"
 }
