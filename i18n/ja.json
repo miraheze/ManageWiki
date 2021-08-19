@@ -149,7 +149,7 @@
 	"permissions-autopromote": "自動昇格",
 	"permissions-delete": "削除",
 	"permissions-delete-checkbox": "この利用者グループを削除",
-	"permissions-unassigned": "割り当てを解除する権限",
+	"permissions-unassigned": "未割り当ての権限",
 	"permissions-group": "グループの割り当て",
 	"right-managewiki": "ウィキの設定を管理",
 	"right-managewiki-restricted": "制限付きWiki設定の管理",
