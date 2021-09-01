@@ -8,5 +8,6 @@
 	<exclude-pattern>*/out/*</exclude-pattern>
 	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
 		<exclude name="MediaWiki.Files.ClassMatchesFilename" />
+		<exclude name="Generic.Files.LineLength.TooLong" />
 	</rule>
 </ruleset>
