@@ -1,0 +1,22 @@
+{
+	"private": true,
+	"scripts": {
+		"lint": "npm -s run lint:js && npm -s run lint:styles && npm -s run lint:i18n",
+		"lint:fix:js": "npm -s run lint:js -- --fix",
+		"lint:fix:styles": "npm -s run lint:styles -- --fix",
+		"lint:js": "eslint --cache --max-warnings 0 .",
+		"lint:styles": "stylelint \"**/*.{less,css}\"",
+		"lint:i18n": "banana-checker --requireLowerCase=0 i18n/",
+		"doc": "jsdoc -c jsdoc.json",
+		"minify-svg": "svgo --config=.svgo.config.js -q -r -f resources/"
+	},
+	"devDependencies": {
+		"eslint-config-wikimedia": "0.20.0",
+		"grunt-banana-checker": "0.9.0",
+		"jsdoc": "3.6.7",
+		"jsdoc-wmf-theme": "0.0.3",
+		"stylelint-config-idiomatic-order": "8.1.0",
+		"stylelint-config-wikimedia": "0.11.1",
+		"svgo": "2.3.1"
+	}
+}
