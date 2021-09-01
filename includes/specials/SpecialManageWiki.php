@@ -3,6 +3,7 @@
 use MediaWiki\MediaWikiServices;
 
 class SpecialManageWiki extends SpecialPage {
+	/** @var Config */
 	private $config;
 
 	public function __construct() {
@@ -20,7 +21,7 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addHelpLink( $this->config->get( 'ManageWikiHelpUrl' ), true );
 		}
 
-		if ( in_array( $par[0], array_keys( $this->config->get( 'ManageWiki' ) ) ) ) {
+		if ( array_key_exists( $par[0], $this->config->get( 'ManageWiki' ) ) ) {
 			$module = $par[0];
 		} else {
 			$module = 'core';
@@ -125,7 +126,7 @@ class SpecialManageWiki extends SpecialPage {
 		} else {
 			$remoteWiki = new RemoteWiki( $wiki );
 			if ( $remoteWiki == null ) {
-				$out->addHTML( Html::errorBox( wfMessage( 'managewiki-missing' )->escaped() ) );
+				$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
 				return false;
 			}
 
