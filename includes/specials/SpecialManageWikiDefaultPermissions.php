@@ -3,6 +3,7 @@
 use MediaWiki\MediaWikiServices;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
+	/** @var Config */
 	private $config;
 
 	public function __construct() {
@@ -107,7 +108,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
 		if ( $remoteWiki == null ) {
-			$out->addHTML( Html::errorBox( wfMessage( 'managewiki-missing' )->escaped() ) );
+			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
 			return false;
 		}
 
