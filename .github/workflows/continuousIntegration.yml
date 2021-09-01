@@ -21,7 +21,7 @@ jobs:
           php-version: ${{ matrix.php }} 
       - name: Run tests
         run: |
-          bash phplint.sh
+          bash ./bin/phplint.sh
   notify-irc:
     needs: build
     runs-on: ubuntu-latest
