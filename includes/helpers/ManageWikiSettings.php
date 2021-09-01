@@ -114,7 +114,7 @@ class ManageWikiSettings {
 		$overwrittenSettings = $this->list();
 
 		foreach ( $this->settingsConfig as $var => $setConfig ) {
-			if ( !in_array( $var, array_keys( $settings ) ) && in_array( $var, array_keys( $overwrittenSettings ) ) ) {
+			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) ) {
 				$this->remove( $var );
 			} elseif ( !is_null( $settings[$var] ?? null ) ) {
 				$this->modify( [ $var => $settings[$var] ] );
