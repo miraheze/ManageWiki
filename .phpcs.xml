@@ -9,5 +9,6 @@
 	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
 		<exclude name="MediaWiki.Files.ClassMatchesFilename" />
 		<exclude name="Generic.Files.LineLength.TooLong" />
+		<exclude name="MediaWiki.Commenting.FunctionComment" />
 	</rule>
 </ruleset>
