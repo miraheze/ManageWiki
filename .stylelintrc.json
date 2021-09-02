@@ -3,6 +3,9 @@
 		"stylelint-config-idiomatic-order",
 		"stylelint-config-wikimedia"
 	],
+	"ignoreFiles": [
+		"vendor/**"
+	],
 	"rules": {
 		"font-weight-notation": null,
 		"selector-max-id": null,
