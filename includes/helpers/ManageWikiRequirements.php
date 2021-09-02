@@ -12,7 +12,7 @@ class ManageWikiRequirements {
 	 * @param array $actions Requirements that need to be met
 	 * @param array $extensionList Enabled extensions on the wiki
 	 * @param bool $ignorePerms Whether a permissions check should be carried out
-	 * @param RemoteWiki $wiki
+	 * @param ?RemoteWiki $wiki
 	 * @return bool Whether the extension can be enabled
 	 */
 	public static function process( array $actions, array $extensionList = [], bool $ignorePerms = false, RemoteWiki $wiki = null ) {
