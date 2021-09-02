@@ -2,6 +2,8 @@
 
 $cfg = require __DIR__ . '/../vendor/mediawiki/mediawiki-phan-config/src/config.php';
 
+$cfg['target_php_version'] = '7.3';
+
 $cfg['directory_list'] = array_merge(
 	$cfg['directory_list'], [
 		'CreateWiki',
