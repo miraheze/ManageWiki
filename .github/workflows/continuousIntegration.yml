@@ -48,10 +48,10 @@ jobs:
     - name: Clone MediaWiki
       run: |
         git clone https://github.com/miraheze/mediawiki.git --depth=1
+        git clone https://github.com/miraheze/CreateWiki.git --depth=1
 
     - name: Run phan
       run: |
-        ls
         composer phan
 
     # Only patch code when it is a push event
