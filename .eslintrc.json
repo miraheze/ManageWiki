@@ -17,10 +17,6 @@
 	"ignorePatterns": [ "vendor/**" ],
 	"rules": {
 		"one-var": "off",
-		"//": [
-			"off",
-			"ResourceLoader's `packageFiles` do not require wrapping but the `module` option is only available in ES6+."
-		],
 		"no-implicit-globals": "off",
 		"es/no-object-fromentries": "off",
 		"es/no-object-entries": "off",
