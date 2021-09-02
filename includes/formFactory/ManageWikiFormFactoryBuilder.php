@@ -684,7 +684,6 @@ class ManageWikiFormFactoryBuilder {
 				'section' => 'autopromote'
 			],
 			'groups' => [
-				// @phan-suppress-next-line SecurityCheck-XSS
 				'type' => 'multiselect',
 				'label-message' => 'managewiki-permissions-autopromote-groups',
 				'options' => $rowsBuilt,
