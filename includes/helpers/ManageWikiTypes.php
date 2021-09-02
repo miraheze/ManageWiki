@@ -287,7 +287,7 @@ class ManageWikiTypes {
 				break;
 			case 'usergroups':
 				$groups = [];
-				foreach ( $groupList as $group ) {
+				foreach ( (array)$groupList as $group ) {
 					$groups[UserGroupMembership::getGroupName( $group )] = $group;
 				}
 
