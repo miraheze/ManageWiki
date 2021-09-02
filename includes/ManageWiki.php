@@ -2,7 +2,7 @@
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWiki 
+class ManageWiki {
 	public static function checkSetup( string $module, bool $verbose = false, $out = false ) {
 		// Checks ManageWiki module is enabled before doing anything
 		// $verbose means output an error. Otherwise return true/false.
