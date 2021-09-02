@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '4ca442943358a5478d6a471f8b1838f3ea1e210f',
+        'reference' => 'c588e95f5b611cf93dd57ff8c4a9b6b6325472e9',
         'name' => 'miraheze/managewiki',
         'dev' => true,
     ),
@@ -121,7 +121,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '4ca442943358a5478d6a471f8b1838f3ea1e210f',
+            'reference' => 'c588e95f5b611cf93dd57ff8c4a9b6b6325472e9',
             'dev_requirement' => false,
         ),
         'netresearch/jsonmapper' => array(
