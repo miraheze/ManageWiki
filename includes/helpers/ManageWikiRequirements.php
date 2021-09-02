@@ -99,7 +99,7 @@ class ManageWikiRequirements {
 	 * @return bool Whether limit is exceeded or not
 	 */
 	private static function activeUsers( int $lim ) {
-		return (bool)( SiteStats::activeUsers() <= $lim );
+		return ( SiteStats::activeUsers() <= $lim );
 	}
 
 	/**
@@ -144,7 +144,7 @@ class ManageWikiRequirements {
 		}
 
 		if ( isset( $settings ) ) {
-			if ( $settings[0] === $value || ( is_array( $settings ) && in_array( $value, $settings ) ) ) {
+			if ( $settings[0] === $value || in_array( $value, $settings ) ) {
 				return true;
 			}
 		}
