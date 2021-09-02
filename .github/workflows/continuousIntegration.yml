@@ -21,6 +21,8 @@ jobs:
         composer validate
         npm install --save-dev
         composer install --prefer-dist --no-progress
+        sudo pecl install ast
+        echo "extension=ast" | sudo tee -a /etc/php/8.0/cli/php.ini
 
     # Bypass the phpcbf non-standard exit code  
     - name: Check PHP
@@ -28,12 +30,6 @@ jobs:
         sh phpcbf.sh
         composer fix
         composer test
-
-    - name: Phan
-      run: |
-        sudo pecl install ast
-        echo "extension=ast" | sudo tee -a /etc/php/8.0/cli/php.ini
-        composer phan
 
     - name: Check JavaScript
       run: |
@@ -48,6 +44,15 @@ jobs:
 #    - name: Check i18n
 #      run: |
 #        npm run lint:i18n
+
+    - name: Clone MediaWiki
+      run: |
+        git clone https://github.com/miraheze/mediawiki.git --depth=1
+
+    - name: Run phan
+      run: |
+        composer phan
+        ls
 
     # Only patch code when it is a push event
     - name: Push the changes
