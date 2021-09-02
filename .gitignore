@@ -1,0 +1,6 @@
+# Building & testing
+/composer.lock
+/docs
+/vendor
+/node_modules
+.eslintcache
