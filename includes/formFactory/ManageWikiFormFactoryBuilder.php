@@ -42,6 +42,8 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWiki $wiki,
 		Config $config
 	) {
+		$formDescriptor = [];
+
 		$formDescriptor['dbname'] = [
 			'label-message' => 'managewiki-label-dbname',
 			'type' => 'text',
