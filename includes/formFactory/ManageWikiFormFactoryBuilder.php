@@ -276,7 +276,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 				'default' => in_array( $name, $extList ),
 				'disabled' => ( $ceMW ) ? !$mwRequirements : true,
-				'help' => (string)implode( ' ', $help ),
+				'help' => implode( ' ', $help ),
 				'section' => $ext['section'],
 			];
 		}
