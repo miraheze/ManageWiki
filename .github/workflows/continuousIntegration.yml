@@ -51,8 +51,8 @@ jobs:
 
     - name: Run phan
       run: |
-        composer phan
         ls
+        composer phan
 
     # Only patch code when it is a push event
     - name: Push the changes
