@@ -49,6 +49,9 @@ jobs:
       run: |
         git clone https://github.com/miraheze/mediawiki.git --depth=1
         git clone https://github.com/miraheze/CreateWiki.git --depth=1
+        cd mediawiki
+        composer install --no-dev
+        cd ..
 
     - name: Run phan
       run: |
