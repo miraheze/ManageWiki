@@ -2,11 +2,17 @@
 	"root": true,
 	"extends": [
 		"wikimedia/client-es6",
+		"wikimedia/jquery",
 		"wikimedia/mediawiki"
 	],
 	"globals": {
 		"require": "readonly",
 		"module": "readonly"
+	},
+	"env": {
+		"browser": true,
+		"jquery": true,
+		"es6": true
 	},
 	"ignorePatterns": ["vendor/**"],
 	"rules": {
@@ -20,6 +26,6 @@
 		"es/no-object-entries": "off"
 	},
 	"parserOptions": {
-		"ecmaVersion": 11
+		"ecmaVersion": 2021
 	}
 }
