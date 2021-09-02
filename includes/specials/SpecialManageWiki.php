@@ -99,11 +99,12 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
 		}
 
+		$options = [];
+
 		if ( $module == 'permissions' && !$special ) {
 			$mwPermissions = new ManageWikiPermissions( $wiki );
 			$groups = array_keys( $mwPermissions->list() );
 
-			$options = [];
 			foreach ( $groups as $group ) {
 				$lowerCaseGroupName = strtolower( $group );
 				$options[UserGroupMembership::getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
@@ -125,7 +126,7 @@ class SpecialManageWiki extends SpecialPage {
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
 			$remoteWiki = new RemoteWiki( $wiki );
-			if ( $remoteWiki == null ) {
+			if ( !$remoteWiki ) {
 				$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
 				return false;
 			}
@@ -138,6 +139,10 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	private function reusableFormDescriptor( string $module, array $options ) {
+		$hidden = [];
+		$selector = [];
+		$create = [];
+
 		$hidden['module'] = [
 			'type' => 'hidden',
 			'default' => $module
