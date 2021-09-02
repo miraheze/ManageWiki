@@ -30,8 +30,8 @@
 					if ( this.type === 'checkbox' && this.defaultChecked !== undefined && this.defaultChecked !== this.checked ) {
 						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> was <i>' + ( this.checked === true ? 'enabled' : 'disabled' ) + '</i></li>' );
 					} else if ( this.defaultValue !== undefined && this.defaultValue !== this.value ) {
-						/* eslint-disable-next-line max-len */
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
+						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) );
+						dialog.content.$element.append( '</i></li>' );
 					}
 				} );
 
