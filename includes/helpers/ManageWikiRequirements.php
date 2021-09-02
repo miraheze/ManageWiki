@@ -158,6 +158,8 @@ class ManageWikiRequirements {
 	 * @return bool
 	 */
 	private static function visibility( array $data, RemoteWiki $wiki ) {
+		$ret = [];
+
 		foreach ( $data as $key => $val ) {
 			if ( $key == 'state' ) {
 				$ret['state'] = ( ( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() ) );
