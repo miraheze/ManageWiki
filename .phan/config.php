@@ -22,6 +22,8 @@ $cfg['suppress_issue_types'] = array_merge(
 		'PhanTypeComparisonFromArray',
 		'PhanTypeArraySuspiciousNullable',
 		'PhanTypePossiblyInvalidDimOffset',
+		'PhanTypeMismatchArgumentNullable',
+		'PhanUnextractableAnnotationElementName',
 	]
 );
 
