@@ -4,8 +4,6 @@
  */
 ( function () {
 	$( function () {
-		const allowCloseWindow, saveButton;
-
 		if ( !( $( '#managewiki-submit' ).length > 0 ) ) {
 			return;
 		}
@@ -32,7 +30,7 @@
 			return result;
 		}
 
-		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
+		const saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
 		// Disable the save button unless settings have changed
 		// Check if settings have been changed before JS has finished loading
@@ -54,7 +52,7 @@
 
 		// Set up a message to notify users if they try to leave the page without
 		// saving.
-		allowCloseWindow = mw.confirmCloseWindow( {
+		const allowCloseWindow = mw.confirmCloseWindow( {
 			test: isManageWikiChanged,
 			message: mw.msg( 'managewiki-warning-changes', mw.msg( 'managewiki-save' ) )
 		} );
