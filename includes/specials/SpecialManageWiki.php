@@ -126,7 +126,7 @@ class SpecialManageWiki extends SpecialPage {
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
 			$remoteWiki = new RemoteWiki( $wiki );
-			if ( !$remoteWiki ) {
+			if ( !(bool)$remoteWiki ) {
 				$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
 				return false;
 			}
