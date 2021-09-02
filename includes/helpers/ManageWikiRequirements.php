@@ -107,7 +107,7 @@ class ManageWikiRequirements {
 	 * @return bool Whether limit is exceeded or not
 	 */
 	private static function articles( int $lim ) {
-		return (bool)( SiteStats::articles() <= $lim );
+		return ( SiteStats::articles() <= $lim );
 	}
 
 	/**
@@ -115,7 +115,7 @@ class ManageWikiRequirements {
 	 * @return bool Whether limit is exceeded or not
 	 */
 	private static function pages( int $lim ) {
-		return (bool)( SiteStats::pages() <= $lim );
+		return ( SiteStats::pages() <= $lim );
 	}
 
 	/**
@@ -123,7 +123,7 @@ class ManageWikiRequirements {
 	 * @return bool Whether limit is exceeded or not
 	 */
 	private static function images( int $lim ) {
-		return (bool)( SiteStats::images() <= $lim );
+		return ( SiteStats::images() <= $lim );
 	}
 
 	/**
@@ -160,7 +160,7 @@ class ManageWikiRequirements {
 	private static function visibility( array $data, RemoteWiki $wiki ) {
 		foreach ( $data as $key => $val ) {
 			if ( $key == 'state' ) {
-				$ret['state'] = (bool)( ( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() ) );
+				$ret['state'] = ( ( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() ) );
 			} elseif ( $key == 'permissions' ) {
 				$ret['permissions'] = (bool)( self::permissions( $val ) );
 			}
