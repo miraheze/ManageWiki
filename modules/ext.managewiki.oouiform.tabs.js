@@ -1,6 +1,6 @@
 ( function () {
 	$( function () {
-		var previousTab, switchingNoHash;
+		var switchingNoHash;
 		
 		const tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 
