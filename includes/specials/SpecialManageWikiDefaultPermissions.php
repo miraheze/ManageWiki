@@ -38,6 +38,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$out->addWikiMsg( 'managewiki-header-permissions' );
 
+		$groupSelector = [];
+
 		$groupSelector['groups'] = [
 			'label-message' => 'managewiki-permissions-select',
 			'type' => 'select',
@@ -49,6 +51,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+			$createDescriptor = [];
+
 			$createDescriptor['groups'] = [
 				'type' => 'text',
 				'label-message' => 'managewiki-permissions-create',
@@ -107,7 +111,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$out->addModuleStyles( 'oojs-ui-widgets.styles' );
 
 		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
-		if ( $remoteWiki == null ) {
+		if ( !$remoteWiki ) {
 			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
 			return false;
 		}
