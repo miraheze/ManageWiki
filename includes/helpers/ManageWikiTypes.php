@@ -288,7 +288,6 @@ class ManageWikiTypes {
 			case 'usergroups':
 				$groups = [];
 				foreach ( (array)$groupList as $group ) {
-					// @phan-suppress-next-line SecurityCheck-XSS
 					$groups[UserGroupMembership::getGroupName( $group )] = htmlspecialchars( $group );
 				}
 
