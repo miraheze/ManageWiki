@@ -37,7 +37,7 @@ class MWScriptJob extends Job {
 		if ( $result ) {
 			wfDebugLog( 'ManageWiki', "MWScriptJob failure. Status {$result} running {$this->params['script']}" );
 		}
-	}
 
-	return true;
+		return true;
+	}
 }
