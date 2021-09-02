@@ -60,7 +60,7 @@ jobs:
         git push
 
   notify-irc:
-    needs: build
+    needs: test
     runs-on: ubuntu-latest
     if: ${{ always() && github.repository_owner == 'miraheze' && ( github.ref	== 'refs/heads/master' || github.event_name == 'pull_request' ) }}
     steps:
