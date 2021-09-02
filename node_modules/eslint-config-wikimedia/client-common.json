@@ -1,0 +1,13 @@
+{
+	"extends": [
+		"./common"
+	],
+	"env": {
+		"browser": true
+	},
+	"rules": {
+		"no-alert": "error",
+		"no-console": "error",
+		"no-implied-eval": "error"
+	}
+}

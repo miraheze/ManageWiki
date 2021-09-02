@@ -64,7 +64,7 @@ class ManageWikiPermissions {
 	 * @return array Group configuration
 	 */
 	public function list( string $group = null ) {
-		if ( is_null( $group ) ) {
+		if ( $group === null ) {
 			return $this->livePermissions;
 		} else {
 			return $this->livePermissions[$group] ?? [
@@ -141,7 +141,7 @@ class ManageWikiPermissions {
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( in_array( $group, $this->deleteGroups ) ) {
 				$this->log = 'delete-group';
-				
+
 				$this->dbw->delete(
 					'mw_permissions',
 					[
@@ -163,7 +163,7 @@ class ManageWikiPermissions {
 						'perm_removegroups' => json_encode( $this->livePermissions[$group]['removegroups'] ),
 						'perm_addgroupstoself' => json_encode( $this->livePermissions[$group]['addself'] ),
 						'perm_removegroupsfromself' => json_encode( $this->livePermissions[$group]['removeself'] ),
-						'perm_autopromote' => is_null( $this->livePermissions[$group]['autopromote'] ) ? null : json_encode( $this->livePermissions[$group]['autopromote'] )
+						'perm_autopromote' => $this->livePermissions[$group]['autopromote'] === null ? null : json_encode( $this->livePermissions[$group]['autopromote'] )
 					];
 
 					$this->dbw->upsert(
@@ -230,4 +230,3 @@ class ManageWikiPermissions {
 		}
 	}
 }
-

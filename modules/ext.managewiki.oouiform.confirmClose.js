@@ -13,7 +13,7 @@
 		// but that would only make it slower and more complicated.
 		// It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
-			var result = false;
+			let result = false;
 
 			$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
 				if ( this.defaultChecked !== undefined && this.type === 'checkbox' && this.defaultChecked !== this.checked ) {

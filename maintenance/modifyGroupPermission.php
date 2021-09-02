@@ -40,13 +40,13 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 		];
 
 		if ( $this->getOption( 'all' ) ) {
-			$groups = array_keys ( $mwPermissions->list() );
+			$groups = array_keys( $mwPermissions->list() );
 
 			foreach ( $groups as $group ) {
 				$this->changeGroup( $group, $permData, $mwPermissions );
 			}
 		} elseif ( $this->getArg( 0 ) ) {
-			$this->changeGroup( $this->getArg(0), $permData, $mwPermissions );
+			$this->changeGroup( $this->getArg( 0 ), $permData, $mwPermissions );
 		} else {
 			$this->output( 'You must supply either the group as a arg or use --all' );
 		}

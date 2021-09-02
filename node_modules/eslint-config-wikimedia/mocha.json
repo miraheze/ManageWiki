@@ -1,0 +1,14 @@
+{
+	"extends": [
+		"plugin:mocha/recommended"
+	],
+	"plugins": [ "mocha" ],
+	"env": {
+		"mocha": true
+	},
+	"rules": {
+		"mocha/no-hooks-for-single-case": "off",
+		"mocha/no-mocha-arrows": "off",
+		"mocha/no-skipped-tests": "off"
+	}
+}

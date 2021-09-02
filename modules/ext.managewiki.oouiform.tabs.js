@@ -1,13 +1,13 @@
 ( function () {
 	$( function () {
-		var switchingNoHash;
-		
+		let switchingNoHash;
+
 		const tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 
 		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
-			var $infuse = $( panel.$element ).find( '.managewiki-infuse' );
+			const $infuse = $( panel.$element ).find( '.managewiki-infuse' );
 			$infuse.each( function () {
 				OO.ui.infuse( this );
 			} );
@@ -58,7 +58,7 @@
 		// Jump to correct section as indicated by the hash.
 		// This function is called onload and onhashchange.
 		function detectHash() {
-			var matchedElement, $parentSection;
+			let matchedElement, $parentSection;
 
 			const hash = location.hash;
 
@@ -78,7 +78,7 @@
 		}
 
 		$( window ).on( 'hashchange', function () {
-			var hash = location.hash;
+			const hash = location.hash;
 			if ( hash.match( /^#mw-[\w-]+/ ) ) {
 				detectHash();
 			} else if ( hash === '' ) {
@@ -96,8 +96,8 @@
 			mw.storage.session.remove( 'managewiki-prevTab' );
 		}
 
-		$( "#managewiki-form" ).on( 'submit', function () {
-			var value = tabs.getCurrentTabPanelName();
+		$( '#managewiki-form' ).on( 'submit', function () {
+			const value = tabs.getCurrentTabPanelName();
 			mw.storage.session.set( 'managewiki-prevTab', value );
 		} );
 	} );

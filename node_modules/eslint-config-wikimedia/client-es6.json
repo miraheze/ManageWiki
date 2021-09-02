@@ -1,0 +1,7 @@
+{
+	"extends": [
+		"./client-common",
+		"./language/es6",
+		"./vue-es6"
+	]
+}

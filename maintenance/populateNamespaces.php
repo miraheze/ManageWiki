@@ -51,13 +51,12 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 				__METHOD__
 			);
 
-
 			if ( !$res || !is_object( $res ) ) {
-				$this->insertNamespace( $dbw, $config, $id, $name, $nsAliases);
+				$this->insertNamespace( $dbw, $config, $id, $name, $nsAliases );
 			} else {
 				foreach ( $res as $row ) {
 					if ( $row->ns_namespace_id !== (int)$id ) {
-						$this->insertNamespace( $dbw, $config, $id, $name, $nsAliases);
+						$this->insertNamespace( $dbw, $config, $id, $name, $nsAliases );
 					}
 				}
 			}
@@ -65,7 +64,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 
 		AtEase::restoreWarnings();
 	}
-	
+
 	public function insertNamespace( $dbw, $config, $id, $name, $nsAliases ) {
 		$dbw->insert(
 			'mw_namespaces',

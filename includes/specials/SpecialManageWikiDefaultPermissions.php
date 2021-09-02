@@ -32,7 +32,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$groups = array_keys( $mwPermissions->list() );
 		$craftedGroups = [];
 
-		foreach( $groups as $group ) {
+		foreach ( $groups as $group ) {
 			$craftedGroups[UserGroupMembership::getGroupName( $group )] = $group;
 		}
 
@@ -45,10 +45,10 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		];
 
 		$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
-		$selectForm->setMethod('post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
+		$selectForm->setMethod( 'post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
- 		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
 			$createDescriptor['groups'] = [
 				'type' => 'text',
 				'label-message' => 'managewiki-permissions-create',
@@ -56,7 +56,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			];
 
 			$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
-			$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] ) ->prepareForm()->show();
+			$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
 			$out->addWikiMsg( 'managewiki-permissions-resetgroups-header' );
 

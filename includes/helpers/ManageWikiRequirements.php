@@ -93,7 +93,7 @@ class ManageWikiRequirements {
 
 		return true;
 	}
-	
+
 	/**
 	 * @param int $lim Cut off number
 	 * @return bool Whether limit is exceeded or not
@@ -125,7 +125,7 @@ class ManageWikiRequirements {
 	private static function images( int $lim ) {
 		return (bool)( SiteStats::images() <= $lim );
 	}
-	
+
 	/**
 	 * @param array $data
 	 * @return bool
@@ -139,7 +139,7 @@ class ManageWikiRequirements {
 		$value = $data['value'];
 
 		$selectSettings = $dbr->selectFieldValues( 'mw_settings', 's_settings', [ 's_dbname' => $database ] );
-		if ( isset( $selectSettings[0] ) && array_key_exists( $setting, (array)json_decode( $selectSettings[0], true ) ) ) { 
+		if ( isset( $selectSettings[0] ) && array_key_exists( $setting, (array)json_decode( $selectSettings[0], true ) ) ) {
 			$settings = (array)json_decode( $selectSettings[0], true )[$setting];
 		}
 

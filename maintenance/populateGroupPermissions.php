@@ -16,7 +16,6 @@ class ManageWikiPopulatePermissions extends Maintenance {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
-
 		$blacklist = $config->get( 'ManageWikiPermissionsBlacklistGroups' );
 
 		$grouparray = [];
@@ -24,7 +23,7 @@ class ManageWikiPopulatePermissions extends Maintenance {
 		foreach ( $config->get( 'GroupPermissions' ) as $group => $perm ) {
 			$permsarray = [];
 
-			if ( !in_array( $group, $blacklist) ) {
+			if ( !in_array( $group, $blacklist ) ) {
 				foreach ( $perm as $name => $value ) {
 					if ( $value ) {
 						$permsarray[] = $name;

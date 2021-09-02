@@ -68,7 +68,7 @@ class ManageWikiNamespaces {
 	 * @return array Namespace configuration
 	 */
 	public function list( int $id = null ) {
-		if ( is_null( $id ) ) {
+		if ( $id === null ) {
 			return $this->liveNamespaces;
 		} else {
 			return $this->liveNamespaces[$id] ?? [
@@ -92,7 +92,7 @@ class ManageWikiNamespaces {
 	 * @param bool $maintainPrefix|false
 	 */
 	public function modify( int $id, array $data, bool $maintainPrefix = false ) {
-		if ( in_array( $data['name'], $this->config->get( 'ManageWikiNamespacesBlacklistedNames') ) ) {
+		if ( in_array( $data['name'], $this->config->get( 'ManageWikiNamespacesBlacklistedNames' ) ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
 					$data['name']
@@ -167,7 +167,7 @@ class ManageWikiNamespaces {
 						'5::namespace' => $this->changes[$id]['old']['name']
 					];
 				}
-				
+
 				$this->dbw->delete(
 					'mw_namespaces',
 					[

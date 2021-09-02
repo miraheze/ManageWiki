@@ -14,7 +14,7 @@
 		"jquery": true,
 		"es6": true
 	},
-	"ignorePatterns": ["vendor/**"],
+	"ignorePatterns": [ "vendor/**" ],
 	"rules": {
 		"one-var": "off",
 		"//": [

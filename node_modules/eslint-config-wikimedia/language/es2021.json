@@ -1,0 +1,12 @@
+{
+	"extends": [
+		"./rules-es2021",
+		"./not-es2021"
+	],
+	"parserOptions": {
+		"ecmaVersion": 2021
+	},
+	"env": {
+		"es6": true
+	}
+}

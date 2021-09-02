@@ -40,7 +40,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( $this->config->get( 'CreateWikiGlobalWiki' ) !== $this->config->get( 'DBname' ) ) {
-			$this->showWikiForm( $this->config->get( 'DBname'), $module, $additional );
+			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional );
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
