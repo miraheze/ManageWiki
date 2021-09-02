@@ -111,10 +111,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$out->addModuleStyles( 'oojs-ui-widgets.styles' );
 
 		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
-		if ( !(bool)$remoteWiki ) {
-			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
-			return false;
-		}
 
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), $this->config, 'permissions', $group );
