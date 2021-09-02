@@ -8,6 +8,7 @@
 		"require": "readonly",
 		"module": "readonly"
 	},
+	"ignorePatterns": ["**/vendor/*.js"],
 	"rules": {
 		"one-var": "off",
 		"//": [
