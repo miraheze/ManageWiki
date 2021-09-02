@@ -31,6 +31,8 @@ jobs:
 
     - name: Phan
       run: |
+        sudo pecl install ast
+        echo "extension=ast" | sudo tee -a /etc/php/8.0/cli/php.ini
         composer phan
 
     - name: Check JavaScript
