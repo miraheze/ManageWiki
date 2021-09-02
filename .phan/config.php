@@ -21,6 +21,7 @@ $cfg['suppress_issue_types'] = array_merge(
 		'PhanPluginDuplicateAdjacentStatement',
 		'PhanTypeComparisonFromArray',
 		'PhanTypeArraySuspiciousNullable',
+		'PhanTypePossiblyInvalidDimOffset',
 	]
 );
 
