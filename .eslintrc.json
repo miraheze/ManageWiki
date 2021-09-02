@@ -25,7 +25,8 @@
 		"es/no-object-fromentries": "off",
 		"es/no-object-entries": "off",
 		"no-jquery/no-global-selector": "off",
-		"no-jquery/no-sizzle": "off"
+		"no-jquery/no-sizzle": "off",
+		"max-len": "off"
 	},
 	"parserOptions": {
 		"ecmaVersion": 2021
