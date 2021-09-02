@@ -1,12 +1,10 @@
-name: MediaWiki CI
+name: Continuous integration
 
 on:
+  create:
   push:
-    branches:
-      - '**'
   pull_request:
-    branches:
-      - '**'
+    types: [opened, synchronize]
 
 jobs:
   test:
