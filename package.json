@@ -6,14 +6,12 @@
 		"lint:fix:styles": "npm -s run lint:styles -- --fix",
 		"lint:js": "eslint --cache --max-warnings 0 .",
 		"lint:styles": "stylelint \"**/*.{less,css}\"",
-		"lint:i18n": "banana-checker --requireLowerCase=0 i18n/",
-		"minify-svg": "svgo --config=.svgo.config.js -q -r -f resources/"
+		"lint:i18n": "banana-checker --requireLowerCase=0 i18n/"
 	},
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.20.0",
 		"grunt-banana-checker": "0.9.0",
 		"stylelint-config-idiomatic-order": "8.1.0",
-		"stylelint-config-wikimedia": "0.11.1",
-		"svgo": "2.3.1"
+		"stylelint-config-wikimedia": "0.11.1"
 	}
 }
