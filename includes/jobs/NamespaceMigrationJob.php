@@ -8,6 +8,9 @@ class NamespaceMigrationJob extends Job {
 		parent::__construct( 'NamespaceMigrationJob', $params );
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function run() {
 		$dbw = wfGetDB( DB_PRIMARY );
 
@@ -81,6 +84,8 @@ class NamespaceMigrationJob extends Job {
 				__METHOD__
 			);
 		}
+
+		return true;
 	}
 
 	private function pageExists( $pageName, $nsID, $dbw ) {
