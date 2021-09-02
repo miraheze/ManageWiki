@@ -29,6 +29,10 @@ jobs:
         composer fix
         composer test
 
+    - name: Phan
+      run: |
+        composer phan
+
     - name: Check JavaScript
       run: |
         npm run lint:fix:js
