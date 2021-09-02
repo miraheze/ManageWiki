@@ -25,7 +25,7 @@ jobs:
     # Bypass the phpcbf non-standard exit code  
     - name: Check PHP
       run: |
-        sh ./bin/phpcbf.sh
+        sh phpcbf.sh
         composer fix
         composer test
 
