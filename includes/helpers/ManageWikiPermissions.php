@@ -60,7 +60,7 @@ class ManageWikiPermissions {
 
 	/**
 	 * Lists either all groups or a specific one
-	 * @param string|null Group wanted (null for all)
+	 * @param string|null $group Group wanted (null for all)
 	 * @return array Group configuration
 	 */
 	public function list( string $group = null ) {
@@ -114,7 +114,7 @@ class ManageWikiPermissions {
 
 	/**
 	 * Remove a group
-	 * @param string Group name
+	 * @param string $group Group name
 	 */
 	public function remove( string $group ) {
 		// Utilise changes differently in this case
