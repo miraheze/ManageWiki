@@ -74,7 +74,7 @@ class ManageWiki {
 			// $to is phparray therefore $conversion must be php as json will be already phparray'd
 			$phparrayout = [];
 
-			foreach ( $conversion as $phparray ) {
+			foreach ( (array)$conversion as $phparray ) {
 				$element = explode( '-', $phparray, 2 );
 				$phparrayout[$element[0]][] = $element[1];
 			}
