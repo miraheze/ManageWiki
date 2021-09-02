@@ -41,9 +41,9 @@ jobs:
         npm run lint:fix:styles
         npm run lint:styles
 
-    - name: Check i18n
-      run: |
-        npm run lint:i18n
+#    - name: Check i18n
+#      run: |
+#        npm run lint:i18n
 
     # Only patch code when it is a push event
     - name: Push the changes
