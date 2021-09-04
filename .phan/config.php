@@ -6,14 +6,12 @@ $cfg['target_php_version'] = '7.3';
 
 $cfg['directory_list'] = array_merge(
 	$cfg['directory_list'], [
-		'CreateWiki',
 		'mediawiki',
 	]
 );
 
 $cfg['exclude_analysis_directory_list'] = array_merge(
 	$cfg['exclude_analysis_directory_list'], [
-		'CreateWiki',
 		'mediawiki',
 	]
 );
