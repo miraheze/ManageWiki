@@ -48,8 +48,8 @@ jobs:
     - name: Clone MediaWiki
       run: |
         git clone https://github.com/miraheze/mediawiki.git --depth=1
-        git clone https://github.com/miraheze/CreateWiki.git --depth=1
         cd mediawiki
+        git submodule update --init extensions/CreateWiki
         composer install --no-dev
         cd ..
 
