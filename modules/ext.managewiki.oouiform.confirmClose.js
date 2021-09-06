@@ -4,16 +4,17 @@
  */
 ( function () {
 	$( function () {
+		var allowCloseWindow, saveButton;
+
 		if ( !( $( '#managewiki-submit' ).length > 0 ) ) {
 			return;
 		}
 
 		// Check if all of the form values are unchanged.
-		// (This function could be changed to infuse and check OOUI widgets,
-		// but that would only make it slower and more complicated.
-		// It works fine to treat them as HTML elements.)
+		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
+		// slower and more complicated. It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
-			let result = false;
+			 var result = false;
 
 			$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
 				if ( this.defaultChecked !== undefined && this.type === 'checkbox' && this.defaultChecked !== this.checked ) {
@@ -30,7 +31,7 @@
 			return result;
 		}
 
-		const saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
+		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
 		// Disable the save button unless settings have changed
 		// Check if settings have been changed before JS has finished loading
@@ -52,7 +53,7 @@
 
 		// Set up a message to notify users if they try to leave the page without
 		// saving.
-		const allowCloseWindow = mw.confirmCloseWindow( {
+		allowCloseWindow = mw.confirmCloseWindow( {
 			test: isManageWikiChanged,
 			message: mw.msg( 'managewiki-warning-changes', mw.msg( 'managewiki-save' ) )
 		} );
