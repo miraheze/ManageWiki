@@ -42,5 +42,5 @@ class AddNamespaces extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiAddNamespaces';
+$maintClass = AddNamespaces::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
