@@ -1,14 +1,14 @@
 ( function () {
 	$( function () {
-		let switchingNoHash;
+		var tabs, previousTab, switchingNoHash;
 
-		const tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
+		tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 
 		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
-			const $infuse = $( panel.$element ).find( '.managewiki-infuse' );
-			$infuse.each( function () {
+			var infuse = $( panel.$element ).find( '.managewiki-infuse' );
+			infuse.each( function () {
 				OO.ui.infuse( this );
 			} );
 
@@ -20,15 +20,17 @@
 		}
 
 		function onTabPanelSet( panel ) {
+			var scrollTop, active;
+
 			if ( switchingNoHash ) {
 				return;
 			}
 			// Handle hash manually to prevent jumping,
 			// therefore save and restore scrollTop to prevent jumping.
-			const scrollTop = $( window ).scrollTop();
+			scrollTop = $( window ).scrollTop();
 			// Changing the hash apparently causes keyboard focus to be lost?
 			// Save and restore it. This makes no sense though.
-			const active = document.activeElement;
+			active = document.activeElement;
 			location.hash = '#' + panel.getName();
 			if ( active ) {
 				active.focus();
@@ -58,10 +60,8 @@
 		// Jump to correct section as indicated by the hash.
 		// This function is called onload and onhashchange.
 		function detectHash() {
-			let matchedElement, $parentSection;
-
-			const hash = location.hash;
-
+			var hash = location.hash,
+				matchedElement, $parentSection;
 			if ( hash.match( /^#mw-section-[\w-]+$/ ) ) {
 				mw.storage.session.remove( 'managewiki-prevTab' );
 				switchManageWikiTab( hash.slice( 1 ) );
@@ -78,7 +78,7 @@
 		}
 
 		$( window ).on( 'hashchange', function () {
-			const hash = location.hash;
+			var hash = location.hash;
 			if ( hash.match( /^#mw-[\w-]+/ ) ) {
 				detectHash();
 			} else if ( hash === '' ) {
@@ -89,15 +89,15 @@
 			.trigger( 'hashchange' );
 
 		// Restore the active tab after saving the settings
-		const previousTab = mw.storage.session.get( 'managewiki-prevTab' );
+		previousTab = mw.storage.session.get( 'managewiki-prevTab' );
 		if ( previousTab ) {
 			switchManageWikiTab( previousTab, true );
 			// Deleting the key, the tab states should be reset until we press Save
 			mw.storage.session.remove( 'managewiki-prevTab' );
 		}
 
-		$( '#managewiki-form' ).on( 'submit', function () {
-			const value = tabs.getCurrentTabPanelName();
+		$( "#managewiki-form" ).on( 'submit', function () {
+			var value = tabs.getCurrentTabPanelName();
 			mw.storage.session.set( 'managewiki-prevTab', value );
 		} );
 	} );
