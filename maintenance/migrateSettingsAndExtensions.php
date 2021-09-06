@@ -48,5 +48,5 @@ class MigrateSettingsAndExtensions extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiMigrateSettingsAndExtensions';
+$maintClass = MigrateSettingsAndExtensions::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
