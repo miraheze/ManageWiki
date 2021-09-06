@@ -96,5 +96,5 @@ class PopulateGroupPermissions extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiPopulatePermissions';
+$maintClass = PopulateGroupPermissions::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
