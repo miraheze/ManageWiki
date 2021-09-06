@@ -96,7 +96,7 @@
 			mw.storage.session.remove( 'managewiki-prevTab' );
 		}
 
-		$( "#managewiki-form" ).on( 'submit', function () {
+		$( '#managewiki-form' ).on( 'submit', function () {
 			var value = tabs.getCurrentTabPanelName();
 			mw.storage.session.set( 'managewiki-prevTab', value );
 		} );
