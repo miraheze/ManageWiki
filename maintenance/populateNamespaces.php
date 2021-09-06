@@ -9,7 +9,7 @@ require_once "$IP/maintenance/Maintenance.php";
 use MediaWiki\MediaWikiServices;
 use Wikimedia\AtEase\AtEase;
 
-class ManageWikiPopulateNamespaces extends Maintenance {
+class PopulateNamespaces extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 	}
