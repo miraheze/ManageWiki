@@ -66,5 +66,5 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiPopulatePermissionsWithDefaults';
+$maintClass = PopulateGroupPermissionsWithDefaults::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
