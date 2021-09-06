@@ -14,7 +14,7 @@
 		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
 		// slower and more complicated. It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
-			 var result = false;
+			var result = false;
 
 			$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
 				if ( this.defaultChecked !== undefined && this.type === 'checkbox' && this.defaultChecked !== this.checked ) {
