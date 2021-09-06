@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiModifyGroupPermission extends Maintenance {
+class ModifyGroupPermission extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addArg( 'group', 'The group name you want to change.', false );
