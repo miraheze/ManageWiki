@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiAddNamespaces extends Maintenance {
+class AddNamespaces extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addOption( 'default', 'Wheather to add the namespace to the \'default\' db name (Defaults to wgDBname).' );
