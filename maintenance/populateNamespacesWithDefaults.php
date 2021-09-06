@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
+class PopulateNamespacesWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.', false, false );
@@ -54,5 +54,5 @@ class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiPopulateNamespacesWithDefaults';
+$maintClass = PopulateNamespacesWithDefaults::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
