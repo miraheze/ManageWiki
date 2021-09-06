@@ -23,14 +23,14 @@
 				expanded: false
 			} );
 
-			const dialog = this;
-			$( '#managewiki-review' ).on( 'click', function () {
+			var dialog = this;
+			$( '#managewiki-review' ).click( function () {
 				dialog.content.$element.html( '' );
 				$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
 					if ( this.type === 'checkbox' && this.defaultChecked !== undefined && this.defaultChecked !== this.checked ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[ 0 ] ).text() + ')</b> was <i>' + ( this.checked === true ? 'enabled' : 'disabled' ) + '</i></li>' );
+						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> was <i>' + ( this.checked === true ? 'enabled' : 'disabled' ) + '</i></li>' );
 					} else if ( this.defaultValue !== undefined && this.defaultValue !== this.value ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[ 0 ] ).text() + ')</b> was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
+						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[0] ).text() + ')</b> was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
 					}
 				} );
 
@@ -44,7 +44,7 @@
 		};
 
 		ProcessDialog.prototype.getActionProcess = function ( action ) {
-			const dialog = this;
+			var dialog = this;
 			if ( action ) {
 				return new OO.ui.Process( function () {
 					dialog.close( {
@@ -60,16 +60,16 @@
 			return this.content.$element.outerHeight( true );
 		};
 
-		const windowManager = new OO.ui.WindowManager();
+		var windowManager = new OO.ui.WindowManager();
 		$( document.body ).append( windowManager.$element );
 
-		const processDialog = new ProcessDialog( {
+		var processDialog = new ProcessDialog( {
 			size: 'large'
 		} );
 
 		windowManager.addWindows( [ processDialog ] );
 
-		$( '#managewiki-review' ).on( 'click', function () {
+		$( '#managewiki-review' ).click( function () {
 			windowManager.openWindow( processDialog );
 		} );
 	} );
