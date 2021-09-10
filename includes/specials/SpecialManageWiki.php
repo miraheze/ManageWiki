@@ -125,7 +125,7 @@ class SpecialManageWiki extends SpecialPage {
 		} else {
 			$wikiManager = new WikiManager( $wiki );
 			if ( !$wikiManager->exists ) {
-				$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
+				$out->addHTML( Html::errorBox( wfMessage( 'managewiki-missing' )->escaped() ) );
 				return false;
 			}
 
