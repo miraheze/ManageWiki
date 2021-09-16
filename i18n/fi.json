@@ -72,6 +72,7 @@
 	"managewiki-link-settings-view": "Katso tämän wikin lisäasetukska",
 	"namespaces-delete": "Poista",
 	"permissions-delete": "Poista",
+	"permissions-delete-checkbox": "Poista tämä käyttäjäryhmä",
 	"right-managewiki": "Hallinnoi wikin asetuksia",
 	"right-managewiki-restricted": "Hallinnoi wikin rajoitettuja asetuksia",
 	"settings-other": "Muut"
