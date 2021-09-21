@@ -1,0 +1,437 @@
+name: Quibble and Phan
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: "${{ matrix.mw }} | PHP ${{ matrix.php }} (${{ matrix.stage }})"
+
+    strategy:
+      matrix:
+        include:
+          # Latest stable MediaWiki - PHP 7.3 (phan)
+          - mw: 'REL1_36'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: phan
+
+          # Latest stable MediaWiki - PHP 7.4 (phan)
+          - mw: 'REL1_36'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: phan
+
+          # Latest MediaWiki release branch - PHP 7.3 (phan)
+          - mw: 'REL1_37'
+            php: 7.3
+            php-docker: 73
+            experimental: true
+            stage: phan
+
+          # Latest MediaWiki release branch - PHP 7.4 (phan)
+          - mw: 'REL1_37'
+            php: 7.4
+            php-docker: 74
+            experimental: true
+            stage: phan
+
+          # Latest MediaWiki master - PHP 7.3 (phan)
+          - mw: 'master'
+            php: 7.3
+            php-docker: 73
+            experimental: true
+            stage: phan
+
+          # Latest MediaWiki master - PHP 7.4 (phan)
+          - mw: 'master'
+            php: 7.4
+            php-docker: 74
+            experimental: true
+            stage: phan
+
+          # Latest stable MediaWiki - PHP 7.3 (phpunit-unit)
+          - mw: 'REL1_36'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: phpunit-unit
+
+          # Latest stable MediaWiki - PHP 7.4 (phpunit-unit)
+          - mw: 'REL1_36'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: phpunit-unit
+
+          # Latest MediaWiki release branch - PHP 7.3 (phpunit-unit)
+          - mw: 'REL1_37'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: phpunit-unit
+
+          # Latest MediaWiki release branch - PHP 7.4 (phpunit-unit)
+          - mw: 'REL1_37'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: phpunit-unit
+
+          # Latest MediaWiki master - PHP 7.3 (phpunit-unit)
+          - mw: 'master'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: phpunit-unit
+
+          # Latest MediaWiki master - PHP 7.4 (phpunit-unit)
+          - mw: 'master'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: phpunit-unit
+
+          # Latest stable MediaWiki - PHP 7.3 (phpunit)
+          - mw: 'REL1_36'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: phpunit
+
+          # Latest stable MediaWiki - PHP 7.4 (phpunit)
+          - mw: 'REL1_36'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: phpunit
+
+          # Latest MediaWiki release branch - PHP 7.3 (phpunit)
+          - mw: 'REL1_37'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: phpunit
+
+          # Latest MediaWiki release branch - PHP 7.4 (phpunit)
+          - mw: 'REL1_37'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: phpunit
+
+          # Latest MediaWiki master - PHP 7.3 (phpunit)
+          - mw: 'master'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: phpunit
+
+          # Latest MediaWiki master - PHP 7.4 (phpunit)
+          - mw: 'master'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: phpunit
+
+          # Latest stable MediaWiki - PHP 7.3 (selenium)
+          - mw: 'REL1_36'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: selenium
+
+          # Latest MediaWiki release branch - PHP 7.3 (selenium)
+          - mw: 'REL1_37'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: selenium
+
+          # Latest MediaWiki master - PHP 7.3 (selenium)
+          - mw: 'master'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: selenium
+
+          # Latest stable MediaWiki - PHP 7.3 (qunit)
+          - mw: 'REL1_36'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: qunit
+
+          # Latest MediaWiki release branch - PHP 7.3 (qunit)
+          - mw: 'REL1_37'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: qunit
+
+          # Latest MediaWiki master - PHP 7.3 (qunit)
+          - mw: 'master'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: qunit
+
+          # Latest stable MediaWiki - PHP 7.3 (npm-test)
+          - mw: 'REL1_36'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: npm-test
+
+          # Latest MediaWiki release branch - PHP 7.3 (npm-test)
+          - mw: 'REL1_37'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: npm-test
+
+          # Latest MediaWiki master - PHP 7.3 (npm-test)
+          - mw: 'master'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: npm-test
+            
+          # Latest stable MediaWiki - PHP 7.3 (composer-test)
+          - mw: 'REL1_36'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: composer-test
+
+          # Latest MediaWiki release branch - PHP 7.3 (composer-test)
+          - mw: 'REL1_37'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: composer-test
+
+          # Latest MediaWiki master - PHP 7.3 (composer-test)
+          - mw: 'master'
+            php: 7.3
+            php-docker: 73
+            experimental: false
+            stage: composer-test
+
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKER_REGISTRY: docker-registry.wikimedia.org
+      DOCKER_ORG: releng
+      QUIBBLE_DOCKER_IMAGE: quibble-buster-php${{ matrix.php-docker }}
+      COVERAGE_DOCKER_IMAGE: quibble-buster-php${{ matrix.php-docker }}-coverage
+      PHAN_DOCKER_IMAGE: mediawiki-phan-php${{ matrix.php-docker }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # /home/runner/cache/                               Cache
+      # /home/runner/src/                                 Mediawiki installation
+      # /home/runner/src/extensions/EXTENSION_NAME/       Clone of the extension repository
+      # /home/runner/docker-images/                       Docker images which exported with docker-save command
+      # $GITHUB_WORKSPACE/.github/workflows/dependencies  Used by actions/cache
+      - name: Set up
+        run: |
+          echo MEDIAWIKI_VERSION="${{ matrix.mw }}" >> $GITHUB_ENV
+
+          if [ "${{ matrix.stage }}" == 'phan' ]; then
+            export DOCKER_IMAGE="${PHAN_DOCKER_IMAGE}"
+          elif [ "${{ matrix.stage }}" == coverage ]; then
+            export DOCKER_IMAGE="${COVERAGE_DOCKER_IMAGE}"
+          else
+            export DOCKER_IMAGE="${QUIBBLE_DOCKER_IMAGE}"
+          fi
+          echo "DOCKER_IMAGE=${DOCKER_IMAGE}" >> $GITHUB_ENV
+
+          # Get the latest docker tag (Ref: https://github.com/thcipriani/dockerregistry)
+          DOCKER_LATEST_TAG="$(curl -sL "https://${DOCKER_REGISTRY}/v2/${DOCKER_ORG}/${DOCKER_IMAGE}/tags/list" |
+            python3 -c 'import json;print("\n".join(json.loads(input())["tags"]))' |
+            grep -v latest | sort -Vr | head -1)"
+          echo "DOCKER_LATEST_TAG=${DOCKER_LATEST_TAG}" >> $GITHUB_ENV
+          if [ "${{ matrix.stage }}" == 'phan' ] || [ "${{ matrix.stage }}" == 'coverage' ]; then
+            echo "QUIBBLE_DOCKER_LATEST_TAG=$(curl -sL "https://${DOCKER_REGISTRY}/v2/${DOCKER_ORG}/${QUIBBLE_DOCKER_IMAGE}/tags/list" |
+              python3 -c 'import json;print("\n".join(json.loads(input())["tags"]))' |
+              grep -v latest | sort -Vr | head -1)" >> $GITHUB_ENV
+          fi
+
+          # Resolve dependencies
+          if [ -e .github/workflows/dependencies ]; then
+            cd .github/workflows
+            curl -sL https://raw.githubusercontent.com/wikimedia/integration-config/master/zuul/parameter_functions.py -o pf.py
+            curl -sL https://raw.githubusercontent.com/Universal-Omega/scripts/master/mediawiki/resolve_dependencies.py -o rd.py
+            echo "DEPENDENCIES=$(python3 rd.py)" >> $GITHUB_ENV
+          fi
+
+      - name: Cache docker image
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/docker-images/${{ env.DOCKER_IMAGE }}
+          key: ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_LATEST_TAG }}
+
+      - name: Load or pull docker image
+        run: |
+          docker load -i /home/runner/docker-images/"${DOCKER_IMAGE}" || \
+            docker pull "${DOCKER_REGISTRY}/${DOCKER_ORG}/${DOCKER_IMAGE}:${DOCKER_LATEST_TAG}"
+
+      - name: Cache quibble docker image
+        if: ${{ matrix.stage == 'coverage' || matrix.stage == 'phan' }}
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/docker-images/${{ env.QUIBBLE_DOCKER_IMAGE }}
+          key: ${{ env.QUIBBLE_DOCKER_IMAGE }}:${{ env.QUIBBLE_DOCKER_LATEST_TAG }}
+      - name: Load or pull quibble docker image
+        if: ${{ matrix.stage == 'coverage' || matrix.stage == 'phan' }}
+        run: |
+          docker load -i /home/runner/docker-images/"${QUIBBLE_DOCKER_IMAGE}" || \
+            docker pull "${DOCKER_REGISTRY}/${DOCKER_ORG}/${QUIBBLE_DOCKER_IMAGE}:${QUIBBLE_DOCKER_LATEST_TAG}"
+
+      - name: Cache MediaWiki installation
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/src
+          key: ${{ runner.os }}-${{ env.MEDIAWIKI_VERSION }}-${{ hashFiles('.github/workflows/dependencies') }}
+
+      - name: Download MediaWiki and extensions
+        run: |
+          cd /home/runner
+          if [ ! -d src ]; then
+            git clone -b "${MEDIAWIKI_VERSION}" --depth 1 https://gerrit.wikimedia.org/r/mediawiki/core src
+            git clone --recurse-submodules -b "${MEDIAWIKI_VERSION}" --depth 1 https://gerrit.wikimedia.org/r/mediawiki/skins/Vector src/skins/Vector
+            for dep in $DEPENDENCIES; do
+              dependency=$(echo $dep | cut -d'|' -f1)
+              repository=$(echo $dep | cut -sd'|' -f2)
+              branch=$(echo $dep | cut -sd'|' -f3)
+              git clone --recurse-submodules -b "${branch:-${MEDIAWIKI_VERSION}}" --depth 1 "${repository:-https://gerrit.wikimedia.org/r/${dep}}" src/"$(echo $dependency | cut -d'/' -f2,3)"
+            done
+          fi
+          git -C src/ log -n 1 --format="%H"
+
+      - name: Cache dependencies (composer and npm)
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/cache
+          key: ${{ runner.os }}-${{ env.MEDIAWIKI_VERSION }}-${{ hashFiles('**/*.lock') }}
+
+      - name: Setup PHP Action
+        if: ${{ matrix.stage == 'phan' }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Composer install
+        if: ${{ matrix.stage == 'phan' }}
+        run: |
+          if [ -e composer.json ]; then
+            composer install --prefer-dist --no-progress --no-interaction
+          fi
+
+      - name: Main Test
+        continue-on-error: ${{ matrix.experimental }}
+        run: |
+          cd /home/runner
+          # Move our extension
+          sudo cp -r "${GITHUB_WORKSPACE}" src/extensions/
+          mkdir -p cache cover
+          chmod 777 src cache cover
+          sudo chown -R nobody:nogroup src cache
+          sudo chown $(id -u):$(id -g) src cache
+          # Composer install
+          if [ "${{ matrix.stage }}" == 'phan' ] || [ "${{ matrix.stage }}" == 'coverage' ]; then
+            docker run \
+              -e ZUUL_PROJECT=mediawiki/extensions/"${{ github.event.repository.name }}" \
+              -v "$(pwd)"/cache:/cache \
+              -v "$(pwd)"/src:/workspace/src \
+              "${DOCKER_REGISTRY}/${DOCKER_ORG}/${QUIBBLE_DOCKER_IMAGE}:${QUIBBLE_DOCKER_LATEST_TAG}" \
+              --skip-zuul \
+              --packages-source composer \
+              --skip-install \
+              --skip all \
+              $DEPENDENCIES
+          fi
+
+          if [ "${{ matrix.stage }}" == 'phan' ]; then
+            docker run \
+              -e THING_SUBNAME=extensions/"${{ github.event.repository.name }}" \
+              -v "$(pwd)"/src:/mediawiki \
+              "${DOCKER_REGISTRY}/${DOCKER_ORG}/${DOCKER_IMAGE}:${DOCKER_LATEST_TAG}" \
+              --color
+          elif [ "${{ matrix.stage }}" == 'coverage' ] && [ -d src/extensions/"${{ github.event.repository.name }}"/tests/phpunit ]; then
+            docker run \
+              -e ZUUL_PROJECT=mediawiki/extensions/"${{ github.event.repository.name }}" \
+              -v "$(pwd)"/cache:/cache \
+              -v "$(pwd)"/src:/workspace/src \
+              -v "$(pwd)"/cover:/workspace/cover \
+              "${DOCKER_REGISTRY}/${DOCKER_ORG}/${DOCKER_IMAGE}:${DOCKER_LATEST_TAG}" \
+              --skip-zuul \
+              --skip-deps \
+              -c mwext-phpunit-coverage
+          elif [ "${{ matrix.stage }}" != 'coverage' ]; then
+            docker run \
+              -e ZUUL_PROJECT=mediawiki/extensions/"${{ github.event.repository.name }}" \
+              -v "$(pwd)"/cache:/cache \
+              -v "$(pwd)"/src:/workspace/src \
+              "${DOCKER_REGISTRY}/${DOCKER_ORG}/${DOCKER_IMAGE}:${DOCKER_LATEST_TAG}" \
+              --skip-zuul \
+              --packages-source composer \
+              --run "${{ matrix.stage }}" \
+              $DEPENDENCIES
+            fi
+
+      - name: Tear down
+        run: |
+          cd /home/runner
+          sudo rm -rf src/extensions/"${{ github.event.repository.name }}"
+          # See https://doc.wikimedia.org/quibble/index.html#remove-localsettings-php-between-runs
+          rm "$(pwd)"/src/LocalSettings.php || true
+          mkdir -p docker-images
+          docker save -o "$(pwd)/docker-images/${DOCKER_IMAGE}" \
+            "${DOCKER_REGISTRY}/${DOCKER_ORG}/${DOCKER_IMAGE}:${DOCKER_LATEST_TAG}"
+
+  notify-irc:
+    needs: test
+    runs-on: ubuntu-latest
+    if: ${{ always() && github.repository_owner == 'miraheze' && ( github.ref == 'refs/heads/master' || github.event_name == 'pull_request' ) }}
+    steps:
+      - name: succeeded
+        uses: technote-space/workflow-conclusion-action@v2
+      - uses: rectalogic/notify-irc@v1
+        if: env.WORKFLOW_CONCLUSION == 'success'
+        with:
+          channel: "#miraheze-sre"
+          server: "irc.libera.chat"
+          nickname: miraheze-github
+          message: ${{ github.repository }} - ${{ github.actor }} the build passed.
+          sasl_password: ${{ secrets.IRC_MIRAHEZEBOTS }}
+
+      - name: failed
+        uses: technote-space/workflow-conclusion-action@v2
+      - uses: rectalogic/notify-irc@v1
+        if: env.WORKFLOW_CONCLUSION == 'failure'
+        with:
+          channel: "#miraheze-sre"
+          server: "irc.libera.chat"
+          nickname: miraheze-github
+          message: ${{ github.repository }} - ${{ github.actor }} the build has errored.
+          sasl_password: ${{ secrets.IRC_MIRAHEZEBOTS }}
+
+      - name: cancelled
+        uses: technote-space/workflow-conclusion-action@v2
+      - uses: rectalogic/notify-irc@v1
+        if: env.WORKFLOW_CONCLUSION == 'cancelled'
+        with:
+          channel: "#miraheze-sre"
+          server: "irc.libera.chat"
+          nickname: miraheze-github
+          message: ${{ github.repository }} - ${{ github.actor }} the build has been cancelled.
+          sasl_password: ${{ secrets.IRC_MIRAHEZEBOTS }}
