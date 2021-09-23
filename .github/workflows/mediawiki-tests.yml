@@ -310,10 +310,22 @@ jobs:
             for dep in $DEPENDENCIES; do
               dependency=$(echo $dep | cut -d'|' -f1)
               repository=$(echo $dep | cut -sd'|' -f2)
-              branch=$(echo $dep | cut -sd'|' -f3)
-              git clone --recurse-submodules -b "${branch:-${MEDIAWIKI_VERSION}}" --depth 1 "${repository:-https://gerrit.wikimedia.org/r/${dep}}" src/"$(echo $dependency | cut -d'/' -f2,3)"
+              branch=$(echo $dep | rev | cut -sd'|' -f1 | rev)
+
+              if [ $repository == $branch ]; then
+                repository=""
+              fi
+
+              git clone --recurse-submodules -b "${branch:-${MEDIAWIKI_VERSION}}" --depth 1 "${repository:-https://gerrit.wikimedia.org/r/${dependency}}" src/"$(echo $dependency | cut -d'/' -f2,3)"
             done
           fi
+
+          if [ -e "$GITHUB_WORKSPACE"/.github/workflows/globals.php ]; then
+            cd src/includes
+            echo 'require_once __DIR__ . "/../extensions/${{ github.event.repository.name }}/.github/workflows/globals.php";' >> DevelopmentSettings.php
+            cd ../..
+          fi
+
           git -C src/ log -n 1 --format="%H"
 
       - name: Cache dependencies (composer and npm)
