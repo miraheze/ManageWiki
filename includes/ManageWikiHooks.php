@@ -37,6 +37,115 @@ class ManageWikiHooks {
 			$wgLogTypes[] = 'farmer';
 		}
 	}
+
+	public static function onMediaWikiServices( MediaWikiServices $services ) {
+		$dbname = self::getConfig( 'DBname' );
+
+		$siteConfiguration = new SiteConfiguration;
+
+		$cacheDir = self::getConfig( 'ManageWikiCacheDirectory' ) ?: self::getConfig( 'CacheDirectory' );
+
+		// Handle settings
+		if ( !file_exists( $cacheDir . '/databases.json' ) ) {
+			// Let's fake a database list - default config should suffice
+			$databasesArray = [
+				'timestamp' => 0,
+				'combi' => []
+			];
+		} else {
+			$databasesArray = json_decode( file_get_contents( $cacheDir . '/databases.json' ), true );
+		}
+
+		foreach ( array_keys( $databasesArray['combi'] ) as $db ) {
+			if ( file_exists( $cacheDir . '/' . $db . '.json' ) {
+				$cacheArray = json_decode( file_get_contents( $cacheDir . '/' . $db . '.json' ), true );
+				if ( isset( $cacheArray['settings'] ) ) {
+					foreach ( (array)$cacheArray['settings'] as $var => $val ) {
+						if ( in_array( $var, self::getConfig( 'ManageWikiCoreVariables' ) ) ) {
+							$siteConfiguration->settings[$var][$db] = $val;
+						}
+					}
+				}
+			}
+		}
+
+		$cacheArray = json_decode( file_get_contents( $cacheDir . '/' . $dbname . '.json' ), true );
+		if ( isset( $cacheArray['settings'] ) ) {
+			foreach ( (array)$cacheArray['settings'] as $var => $val ) {
+				$siteConfiguration->settings[$var][$dbname] = $val;
+			}
+		}
+
+		// Assign extensions variables now
+		if ( isset( $cacheArray['extensions'] ) ) {
+			foreach ( (array)$cacheArray['extensions'] as $var ) {
+				$siteConfiguration->settings[$var][$dbname] = true;
+			}
+		}
+
+		// Handle namespaces - additional settings will be done in ManageWiki
+		if ( isset( $cacheArray['namespaces'] ) ) {
+			foreach ( (array)$cacheArray['namespaces'] as $name => $ns ) {
+				$siteConfiguration->settings['wgExtraNamespaces'][$dbname][(int)$ns['id']] = $name;
+				$siteConfiguration->settings['wgNamespacesToBeSearchedDefault'][$dbname][(int)$ns['id']] = $ns['searchable'];
+				$siteConfiguration->settings['wgNamespacesWithSubpages'][$dbname][(int)$ns['id']] = $ns['subpages'];
+				$siteConfiguration->settings['wgNamespaceContentModels'][$dbname][(int)$ns['id']] = $ns['contentmodel'];
+
+				if ( $ns['content'] ) {
+					$siteConfiguration->settings['wgContentNamespaces'][$dbname][] = (int)$ns['id'];
+				}
+
+				if ( $ns['protection'] ) {
+					$siteConfiguration->settings['wgNamespaceProtection'][$dbname][(int)$ns['id']] = [ $ns['protection'] ];
+				}
+
+				foreach ( (array)$ns['aliases'] as $alias ) {
+					$siteConfiguration->settings['wgNamespaceAliases'][$dbname][$alias] = (int)$ns['id'];
+				}
+			}
+		}
+
+		// Handle Permissions
+		if ( isset( $cacheArray['permissions'] ) ) {
+			foreach ( (array)$cacheArray['permissions'] as $group => $perm ) {
+				foreach ( (array)$perm['permissions'] as $id => $right ) {
+					$siteConfiguration->settings['wgGroupPermissions'][$dbname][$group][$right] = true;
+				}
+
+				foreach ( (array)$perm['addgroups'] as $name ) {
+					$siteConfiguration->settings['wgAddGroups'][$dbname][$group][] = $name;
+				}
+
+				foreach ( (array)$perm['removegroups'] as $name ) {
+					$siteConfiguration->settings['wgRemoveGroups'][$dbname][$group][] = $name;
+				}
+
+				foreach ( (array)$perm['addself'] as $name ) {
+					$siteConfiguration->settings['wgGroupsAddToSelf'][$dbname][$group][] = $name;
+				}
+
+				foreach ( (array)$perm['removeself'] as $name ) {
+					$siteConfiguration->settings['wgGroupsRemoveFromSelf'][$dbname][$group][] = $name;
+				}
+
+				if ( !is_null( $perm['autopromote'] ) ) {
+					$onceId = array_search( 'once', $perm['autopromote'] );
+
+					if ( !is_bool( $onceId ) ) {
+						unset( $perm['autopromote'][$onceId] );
+						$promoteVar = 'wgAutopromoteOnce';
+					} else {
+						$promoteVar = 'wgAutopromote';
+					}
+
+					$siteConfiguration->settings[$promoteVar][$dbname][$group] = $perm['autopromote'];
+				}
+			}
+		}
+
+		global $wgManageWikiConf;
+		$wgManageWikiConf = $siteConfiguration;
+	}
 	
 	public static function onContentHandlerForModelID( $modelId, &$handler ) {
 		$handler = new TextContentHandler( $modelId );
