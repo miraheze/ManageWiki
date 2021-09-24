@@ -57,7 +57,7 @@ class ManageWikiHooks {
 		}
 
 		foreach ( array_keys( $databasesArray['combi'] ) as $db ) {
-			if ( file_exists( $cacheDir . '/' . $db . '.json' ) {
+			if ( file_exists( $cacheDir . '/' . $db . '.json' ) ) {
 				$cacheArray = json_decode( file_get_contents( $cacheDir . '/' . $db . '.json' ), true );
 				if ( isset( $cacheArray['settings'] ) ) {
 					foreach ( (array)$cacheArray['settings'] as $var => $val ) {
