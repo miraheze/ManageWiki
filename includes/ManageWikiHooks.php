@@ -22,10 +22,10 @@ class ManageWikiHooks {
 				__DIR__ . '/../sql/patches/patch-groups-self.sql' );
 		$updater->addExtensionField( 'mw_permissions', 'perm_autopromote',
 				__DIR__ . '/../sql/patches/patch-autopromote.sql' );
-		$updater->addExtensionField( 'mw_namespaces', 'ns_additional ',
+		$updater->addExtensionField( 'mw_namespaces', 'ns_additional',
 				__DIR__ . '/../sql/patches/patch-namespaces-additional.sql' );
 
-		$updater->addExtensionIndex( 'mw_namespaces', 'ns_dbname'
+		$updater->addExtensionIndex( 'mw_namespaces', 'ns_dbname',
 				__DIR__ . '/../sql/patches/patch-namespaces-add-indexes.sql' );
 		$updater->addExtensionIndex( 'mw_permissions', 'perm_dbname',
 				__DIR__ . '/../sql/patches/patch-permissions-add-indexes.sql' );
