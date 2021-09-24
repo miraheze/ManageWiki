@@ -240,6 +240,7 @@ jobs:
       # /home/runner/src/extensions/EXTENSION_NAME/       Clone of the extension repository
       # /home/runner/docker-images/                       Docker images which exported with docker-save command
       # $GITHUB_WORKSPACE/.github/workflows/dependencies  Used by actions/cache
+      # $GITHUB_WORKSPACE/.github/workflows/globals.php   Add global configuration options for MediaWiki
       - name: Set up
         run: |
           echo MEDIAWIKI_VERSION="${{ matrix.mw }}" >> $GITHUB_ENV
@@ -320,10 +321,18 @@ jobs:
             done
           fi
 
+          # REPLACE SETUP.PHP FOR CREATEWIKI DEPENDANT EXTENSIONS ON REL1_36.
+          # FIXES A BUG PRESENT ON REL1_36, WHEN DOING DATABASE STUFF BEFORE THIS WAS DONE, REQUEST INFO WAS ALREADY SET FOR DBLoadBalancerFactory,
+          # RESULTING IN "LogicException: ChronologyProtector already initialized". THIS HACK REMOVES
+          # MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->setRequestInfo(). THIS IS ALREADY FIXED FOR REL1_37 AND LATER.
+          # WITH https://github.com/wikimedia/mediawiki/commit/29827d
+
+          if [ -d src/extensions/CreateWiki ] && [ "${MEDIAWIKI_VERSION}" == 'REL1_36' ]; then
+            curl -sL https://raw.githubusercontent.com/Universal-Omega/scripts/master/mediawiki/hacks/Setup-REL1_36.php > src/includes/Setup.php
+          fi
+
           if [ -e "$GITHUB_WORKSPACE"/.github/workflows/globals.php ]; then
-            cd src/includes
-            echo 'require_once __DIR__ . "/../extensions/${{ github.event.repository.name }}/.github/workflows/globals.php";' >> DevelopmentSettings.php
-            cd ../..
+            echo 'require_once __DIR__ . "/../extensions/${{ github.event.repository.name }}/.github/workflows/globals.php";' >> src/includes/DevelopmentSettings.php
           fi
 
           git -C src/ log -n 1 --format="%H"
