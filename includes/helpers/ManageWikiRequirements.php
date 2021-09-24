@@ -133,7 +133,7 @@ class ManageWikiRequirements {
 	private static function settings( array $data ) {
 		$config = MediaWikiServices::getInstance()->getMainConfig();
 
-		$siteConfiguration = new SiteConfiguration;
+		$siteConfiguration = $config->get( 'Conf' );
 
 		$database = $data['dbname'] ?? $config->get( 'DBname' );
 		$setting = $data['setting'];
