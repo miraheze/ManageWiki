@@ -55,13 +55,13 @@ class ManageWikiSettings {
 	/**
 	 * Lists either all settings or the value of a specific one
 	 * @param string|null $setting Setting to retrieve value of
-	 * @return array|string Value or all settings
+	 * @return array|string|null Value or all settings, null if no value
 	 */
 	public function list( string $setting = null ) {
 		if ( is_null( $setting ) ) {
 			return $this->liveSettings;
 		} else {
-			return $this->liveSettings[$setting];
+			return $this->liveSettings[$setting] ?? null;
 		}
 	}
 
