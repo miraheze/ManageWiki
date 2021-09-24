@@ -254,7 +254,12 @@
 		"ManageWikiCoreVariables": {
 			"description": "Array. List of variables that should be accessible from $wgManageWikiConf->get( config, wiki ) to retrive the value from any wiki.",
 			"public": true,
-			"value": []
+			"value": [
+				"wgLanguageCode",
+				"wgServer",
+				"wgSitename",
+				"wgWikiDiscoverDescription"
+			]
 		}
 	},
 	"ConfigRegistry": {
