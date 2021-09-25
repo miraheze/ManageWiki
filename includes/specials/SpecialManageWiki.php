@@ -125,11 +125,13 @@ class SpecialManageWiki extends SpecialPage {
 
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
-			$remoteWiki = new RemoteWiki( $wiki );
-			if ( !(bool)$remoteWiki ) {
+			$wikiManager = new WikiManager( $wiki );
+			if ( !$wikiManager->exists ) {
 				$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
 				return false;
 			}
+
+			$remoteWiki = new RemoteWiki( $wiki );
 
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ) );
