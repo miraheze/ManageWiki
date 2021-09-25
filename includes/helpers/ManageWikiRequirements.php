@@ -142,7 +142,7 @@ class ManageWikiRequirements {
 		$wikiValue = $siteConfiguration->get( $setting, $database );
 
 		if ( $wikiValue !== null ) {
-			if ( $wikiValue === $value || in_array( $value, $wikiValue ) ) ) {
+			if ( $wikiValue === $value || in_array( $value, $wikiValue ) ) {
 				return true;
 			}
 		}
