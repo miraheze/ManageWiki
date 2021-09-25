@@ -12,7 +12,7 @@ class ManageWikiRequirements {
 	 * @param array $actions Requirements that need to be met
 	 * @param array $extensionList Enabled extensions on the wiki
 	 * @param bool $ignorePerms Whether a permissions check should be carried out
-	 * @param RemoteWiki $wiki
+	 * @param ?RemoteWiki $wiki
 	 * @return bool Whether the extension can be enabled
 	 */
 	public static function process( array $actions, array $extensionList = [], bool $ignorePerms = false, RemoteWiki $wiki = null ) {
@@ -93,13 +93,13 @@ class ManageWikiRequirements {
 
 		return true;
 	}
-	
+
 	/**
 	 * @param int $lim Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
 	private static function activeUsers( int $lim ) {
-		return (bool)( SiteStats::activeUsers() <= $lim );
+		return ( SiteStats::activeUsers() <= $lim );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class ManageWikiRequirements {
 	 * @return bool Whether limit is exceeded or not
 	 */
 	private static function articles( int $lim ) {
-		return (bool)( SiteStats::articles() <= $lim );
+		return ( SiteStats::articles() <= $lim );
 	}
 
 	/**
@@ -115,7 +115,7 @@ class ManageWikiRequirements {
 	 * @return bool Whether limit is exceeded or not
 	 */
 	private static function pages( int $lim ) {
-		return (bool)( SiteStats::pages() <= $lim );
+		return ( SiteStats::pages() <= $lim );
 	}
 
 	/**
@@ -123,9 +123,9 @@ class ManageWikiRequirements {
 	 * @return bool Whether limit is exceeded or not
 	 */
 	private static function images( int $lim ) {
-		return (bool)( SiteStats::images() <= $lim );
+		return ( SiteStats::images() <= $lim );
 	}
-	
+
 	/**
 	 * @param array $data
 	 * @return bool
@@ -142,7 +142,7 @@ class ManageWikiRequirements {
 		$wikiValue = $siteConfiguration->get( $setting, $database );
 
 		if ( $wikiValue !== null ) {
-			if ( $wikiValue === $value || ( is_array( $wikiValue ) && in_array( $value, $wikiValue ) ) ) {
+			if ( $wikiValue === $value || in_array( $value, $wikiValue ) ) ) {
 				return true;
 			}
 		}
@@ -156,9 +156,11 @@ class ManageWikiRequirements {
 	 * @return bool
 	 */
 	private static function visibility( array $data, RemoteWiki $wiki ) {
+		$ret = [];
+
 		foreach ( $data as $key => $val ) {
 			if ( $key == 'state' ) {
-				$ret['state'] = (bool)( ( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() ) );
+				$ret['state'] = ( ( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() ) );
 			} elseif ( $key == 'permissions' ) {
 				$ret['permissions'] = (bool)( self::permissions( $val ) );
 			}

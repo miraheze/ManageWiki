@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiPopulateSettings extends Maintenance {
+class PopulateWikiSettings extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addOption( 'wgsetting', 'The $wg setting minus $.', true, true );
@@ -48,5 +48,5 @@ class ManageWikiPopulateSettings extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiPopulateSettings';
+$maintClass = PopulateWikiSettings::class;
 require_once RUN_MAINTENANCE_IF_MAIN;

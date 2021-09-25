@@ -6,7 +6,7 @@ class ManageWiki {
 	public static function checkSetup( string $module, bool $verbose = false, $out = false ) {
 		// Checks ManageWiki module is enabled before doing anything
 		// $verbose means output an error. Otherwise return true/false.
-		if ( !MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki')->get( 'ManageWiki')[$module] ) {
+		if ( !MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWiki' )[$module] ) {
 			if ( $verbose && $out ) {
 				$out->addWikiMsg( 'managewiki-disabled', $module );
 			}
@@ -18,7 +18,7 @@ class ManageWiki {
 	}
 
 	public static function listModules() {
-		return array_keys( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki')->get( 'ManageWiki'), true );
+		return array_keys( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWiki' ), true );
 	}
 
 	public static function checkPermission( RemoteWiki $rm, User $user, string $perm = "" ) {
@@ -37,7 +37,7 @@ class ManageWiki {
 	}
 
 	public static function getTimezoneList() {
-		$identifiers = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+		$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
 
 		$timeZoneList = [];
 
@@ -74,7 +74,7 @@ class ManageWiki {
 			// $to is phparray therefore $conversion must be php as json will be already phparray'd
 			$phparrayout = [];
 
-			foreach ( $conversion as $phparray ) {
+			foreach ( (array)$conversion as $phparray ) {
 				$element = explode( '-', $phparray, 2 );
 				$phparrayout[$element[0]][] = $element[1];
 			}
@@ -89,7 +89,7 @@ class ManageWiki {
 	}
 
 	public static function namespaceID( string $namespace ) {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki');
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 
 		$dbr = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
 

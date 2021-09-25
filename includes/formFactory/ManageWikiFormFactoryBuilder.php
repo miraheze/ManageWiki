@@ -42,6 +42,8 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWiki $wiki,
 		Config $config
 	) {
+		$formDescriptor = [];
+
 		$formDescriptor['dbname'] = [
 			'label-message' => 'managewiki-label-dbname',
 			'type' => 'text',
@@ -228,11 +230,10 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
 			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
-			
+
 			$help = [];
 			$conflictLabel = wfMessage( 'managewiki-conflicts' )->text();
 			$requiresLabel = wfMessage( 'managewiki-requires' )->text();
-
 
 			if ( $ext['conflicts'] ) {
 				$help[] = "{$conflictLabel} {$ext['conflicts']}<br/>";
@@ -261,8 +262,8 @@ class ManageWikiFormFactoryBuilder {
 			$namemsg = array_column( $credits, 'namemsg', 'name' )[ $ext['name'] ] ?? false;
 			$extname = array_column( $credits, 'name', 'name' )[ $ext['name'] ] ?? null;
 
-			$extDescription = ( $ext['description'] ?? false ) ? ( wfMessage( $ext['description']  )->exists() ? wfMessage( $ext['description']  )->parse() : $ext['description'] ) : null;
-			$extDisplayName = ( $ext['displayname'] ?? false ) ? ( wfMessage( $ext['displayname']  )->exists() ? wfMessage( $ext['displayname']  )->parse() : $ext['displayname'] ) : null;
+			$extDescription = ( $ext['description'] ?? false ) ? ( wfMessage( $ext['description'] )->exists() ? wfMessage( $ext['description'] )->parse() : $ext['description'] ) : null;
+			$extDisplayName = ( $ext['displayname'] ?? false ) ? ( wfMessage( $ext['displayname'] )->exists() ? wfMessage( $ext['displayname'] )->parse() : $ext['displayname'] ) : null;
 
 			$help[] = $extDescription ?? ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description;
 
@@ -275,7 +276,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 				'default' => in_array( $name, $extList ),
 				'disabled' => ( $ceMW ) ? !$mwRequirements : true,
-				'help' => (string)implode( ' ', $help ),
+				'help' => implode( ' ', $help ),
 				'section' => $ext['section'],
 			];
 		}
@@ -304,7 +305,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
-			
+
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
@@ -353,10 +354,10 @@ class ManageWikiFormFactoryBuilder {
 		Config $config
 	) {
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
-		
+
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
-		
+
 		$formDescriptor = [];
 
 		$nsID = [
@@ -423,7 +424,7 @@ class ManageWikiFormFactoryBuilder {
 				]
 			];
 
-			foreach( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
+			foreach ( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $wiki ) : true;
 
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
@@ -615,7 +616,7 @@ class ManageWikiFormFactoryBuilder {
 			'enable' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-enable',
-				'default' => !is_null( $aP ),
+				'default' => $aP !== null,
 				'disabled' => !$ceMW,
 				'section' => 'autopromote'
 			],
@@ -627,7 +628,7 @@ class ManageWikiFormFactoryBuilder {
 					wfMessage( 'managewiki-permissions-autopromote-conds-or' )->text() => '|',
 					wfMessage( 'managewiki-permissions-autopromote-conds-not' )->text() => '!'
 				],
-				'default' => ( is_null( $aP ) ) ? '&' : $aP[0],
+				'default' => ( $aP === null ) ? '&' : $aP[0],
 				'disabled' => !$ceMW,
 				'hide-if' => [ '!==', 'wpenable', '1' ],
 				'section' => 'autopromote'
@@ -810,7 +811,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-			if (  $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
+			if ( $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
 				if ( ( $newInactiveExempt != $wiki->isInactiveExempt() ) ) {
 					if ( $newInactiveExempt ) {
 						$wiki->markExempt();
@@ -916,9 +917,9 @@ class ManageWikiFormFactoryBuilder {
 				$settingsArray[$name] = ( $mwAllowed ) ? ManageWiki::handleMatrix( $value, 'phparray' ) : ManageWiki::handleMatrix( $current, 'php' );
 			} elseif ( $type == 'check' ) {
 				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif( $type == 'list-multi' ||  $type == 'usergroups' ||  $type == 'userrights' ) {
+			} elseif ( $type == 'list-multi' || $type == 'usergroups' || $type == 'userrights' ) {
 				$settingsArray[$name] = $value;
-			} elseif( $type == 'list-multi-bool' ) {
+			} elseif ( $type == 'list-multi-bool' ) {
 				foreach ( $set['allopts'] as $opt ) {
 					$settingsArray[$name][$opt] = in_array( $opt, $value );
 				}
@@ -1075,7 +1076,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		$permData['autopromote'] = ( count( $aPBuild ) <= 1 )  ? null : $aPBuild;
+		$permData['autopromote'] = ( count( $aPBuild ) <= 1 ) ? null : $aPBuild;
 
 		if ( !in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
 			$mwPermissions->remove( $group );

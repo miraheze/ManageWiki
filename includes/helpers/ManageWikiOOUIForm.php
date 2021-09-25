@@ -1,6 +1,7 @@
 <?php
 
 class ManageWikiOOUIForm extends OOUIHTMLForm {
+	/** @var bool */
 	protected $mSubSectionBeforeFields = false;
 
 	public function wrapForm( $html ) {
