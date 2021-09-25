@@ -1,5 +1,4 @@
 /composer.lock
 /vendor
 /node_modules
-/mediawiki
 .eslintcache
