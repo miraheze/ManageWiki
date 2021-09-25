@@ -1,14 +1,14 @@
 ( function () {
 	$( function () {
 		var tabs, previousTab, switchingNoHash;
-		
+
 		tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 
 		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
-			var infuse = $( panel.$element ).find( '.managewiki-infuse' );
-			infuse.each( function () {
+			var $infuse = $( panel.$element ).find( '.managewiki-infuse' );
+			$infuse.each( function () {
 				OO.ui.infuse( this );
 			} );
 
@@ -96,7 +96,7 @@
 			mw.storage.session.remove( 'managewiki-prevTab' );
 		}
 
-		$( "#managewiki-form" ).on( 'submit', function () {
+		$( '#managewiki-form' ).on( 'submit', function () {
 			var value = tabs.getCurrentTabPanelName();
 			mw.storage.session.set( 'managewiki-prevTab', value );
 		} );

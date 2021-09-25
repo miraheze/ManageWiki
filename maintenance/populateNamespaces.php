@@ -9,7 +9,7 @@ require_once "$IP/maintenance/Maintenance.php";
 use MediaWiki\MediaWikiServices;
 use Wikimedia\AtEase\AtEase;
 
-class ManageWikiPopulateNamespaces extends Maintenance {
+class PopulateNamespaces extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 	}
@@ -51,13 +51,12 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 				__METHOD__
 			);
 
-
 			if ( !$res || !is_object( $res ) ) {
-				$this->insertNamespace( $dbw, $config, $id, $name, $nsAliases);
+				$this->insertNamespace( $dbw, $config, $id, $name, $nsAliases );
 			} else {
 				foreach ( $res as $row ) {
 					if ( $row->ns_namespace_id !== (int)$id ) {
-						$this->insertNamespace( $dbw, $config, $id, $name, $nsAliases);
+						$this->insertNamespace( $dbw, $config, $id, $name, $nsAliases );
 					}
 				}
 			}
@@ -65,7 +64,7 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 
 		AtEase::restoreWarnings();
 	}
-	
+
 	public function insertNamespace( $dbw, $config, $id, $name, $nsAliases ) {
 		$dbw->insert(
 			'mw_namespaces',
@@ -87,5 +86,5 @@ class ManageWikiPopulateNamespaces extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiPopulateNamespaces';
+$maintClass = PopulateNamespaces::class;
 require_once RUN_MAINTENANCE_IF_MAIN;

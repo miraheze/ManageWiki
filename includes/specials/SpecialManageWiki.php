@@ -3,6 +3,7 @@
 use MediaWiki\MediaWikiServices;
 
 class SpecialManageWiki extends SpecialPage {
+	/** @var Config */
 	private $config;
 
 	public function __construct() {
@@ -20,7 +21,7 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addHelpLink( $this->config->get( 'ManageWikiHelpUrl' ), true );
 		}
 
-		if ( in_array( $par[0], array_keys( $this->config->get( 'ManageWiki' ) ) ) ) {
+		if ( array_key_exists( $par[0], $this->config->get( 'ManageWiki' ) ) ) {
 			$module = $par[0];
 		} else {
 			$module = 'core';
@@ -39,7 +40,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( $this->config->get( 'CreateWikiGlobalWiki' ) !== $this->config->get( 'DBname' ) ) {
-			$this->showWikiForm( $this->config->get( 'DBname'), $module, $additional );
+			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional );
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
@@ -98,11 +99,12 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
 		}
 
+		$options = [];
+
 		if ( $module == 'permissions' && !$special ) {
 			$mwPermissions = new ManageWikiPermissions( $wiki );
 			$groups = array_keys( $mwPermissions->list() );
 
-			$options = [];
 			foreach ( $groups as $group ) {
 				$lowerCaseGroupName = strtolower( $group );
 				$options[UserGroupMembership::getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
@@ -139,6 +141,10 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	private function reusableFormDescriptor( string $module, array $options ) {
+		$hidden = [];
+		$selector = [];
+		$create = [];
+
 		$hidden['module'] = [
 			'type' => 'hidden',
 			'default' => $module

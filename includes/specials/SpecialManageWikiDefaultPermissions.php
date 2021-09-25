@@ -3,6 +3,7 @@
 use MediaWiki\MediaWikiServices;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
+	/** @var Config */
 	private $config;
 
 	public function __construct() {
@@ -31,11 +32,13 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$groups = array_keys( $mwPermissions->list() );
 		$craftedGroups = [];
 
-		foreach( $groups as $group ) {
+		foreach ( $groups as $group ) {
 			$craftedGroups[UserGroupMembership::getGroupName( $group )] = $group;
 		}
 
 		$out->addWikiMsg( 'managewiki-header-permissions' );
+
+		$groupSelector = [];
 
 		$groupSelector['groups'] = [
 			'label-message' => 'managewiki-permissions-select',
@@ -44,10 +47,12 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		];
 
 		$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
-		$selectForm->setMethod('post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
+		$selectForm->setMethod( 'post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
- 		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+			$createDescriptor = [];
+
 			$createDescriptor['groups'] = [
 				'type' => 'text',
 				'label-message' => 'managewiki-permissions-create',
@@ -55,7 +60,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			];
 
 			$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
-			$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] ) ->prepareForm()->show();
+			$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
 			$out->addWikiMsg( 'managewiki-permissions-resetgroups-header' );
 
@@ -106,10 +111,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$out->addModuleStyles( 'oojs-ui-widgets.styles' );
 
 		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
-		if ( $remoteWiki == null ) {
-			$out->addHTML( Html::errorBox( wfMessage( 'managewiki-missing' )->escaped() ) );
-			return false;
-		}
 
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), $this->config, 'permissions', $group );

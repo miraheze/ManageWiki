@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
+class PopulateNamespacesWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.', false, false );
@@ -39,14 +39,14 @@ class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
 		);
 
 		if ( !$checkRow ) {
- 			$mwNamespaces = new ManageWikiNamespaces( $config->get( 'DBname' ) );
+			$mwNamespaces = new ManageWikiNamespaces( $config->get( 'DBname' ) );
 			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
- 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list() );
+			$defaultNamespaces = array_keys( $mwNamespacesDefault->list() );
 
- 			foreach ( $defaultNamespaces as $namespace ) {
- 				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
- 				$mwNamespaces->commit();
- 			}
+			foreach ( $defaultNamespaces as $namespace ) {
+				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
+				$mwNamespaces->commit();
+			}
 
 			$cWJ = new CreateWikiJson( $config->get( 'DBname' ) );
 			$cWJ->resetWiki();
@@ -54,5 +54,5 @@ class ManageWikiPopulateNamespacesWithDefaults extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiPopulateNamespacesWithDefaults';
+$maintClass = PopulateNamespacesWithDefaults::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
