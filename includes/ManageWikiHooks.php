@@ -128,7 +128,7 @@ class ManageWikiHooks {
 					$siteConfiguration->settings['wgGroupsRemoveFromSelf'][$dbname][$group][] = $name;
 				}
 
-				if ( !is_null( $perm['autopromote'] ) ) {
+				if ( $perm['autopromote'] !== null ) {
 					$onceId = array_search( 'once', $perm['autopromote'] );
 
 					if ( !is_bool( $onceId ) ) {
