@@ -8,14 +8,13 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiPopulatePermissions extends Maintenance {
+class PopulateGroupPermissions extends Maintenance {
 	public function execute() {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
-
 
 		$blacklist = $config->get( 'ManageWikiPermissionsBlacklistGroups' );
 
@@ -24,7 +23,7 @@ class ManageWikiPopulatePermissions extends Maintenance {
 		foreach ( $config->get( 'GroupPermissions' ) as $group => $perm ) {
 			$permsarray = [];
 
-			if ( !in_array( $group, $blacklist) ) {
+			if ( !in_array( $group, $blacklist ) ) {
 				foreach ( $perm as $name => $value ) {
 					if ( $value ) {
 						$permsarray[] = $name;
@@ -97,5 +96,5 @@ class ManageWikiPopulatePermissions extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiPopulatePermissions';
+$maintClass = PopulateGroupPermissions::class;
 require_once RUN_MAINTENANCE_IF_MAIN;

@@ -38,7 +38,7 @@ class ManageWikiHooks {
 			$wgLogTypes[] = 'farmer';
 		}
 	}
-	
+
 	public static function onContentHandlerForModelID( $modelId, &$handler ) {
 		$handler = new TextContentHandler( $modelId );
 	}
@@ -132,7 +132,7 @@ class ManageWikiHooks {
 			);
 
 			foreach ( $permObjects as $perm ) {
-				$addPerms =[];
+				$addPerms = [];
 
 				foreach ( ( self::getConfig( 'ManageWikiPermissionsAdditionalRights' )[$perm->perm_group] ?? [] ) as $right => $bool ) {
 					if ( $bool ) {
@@ -197,7 +197,7 @@ class ManageWikiHooks {
 			$mwPermissions->commit();
 
 			if ( $private ) {
-				ManageWikiHooks::onCreateWikiStatePrivate( $dbname );
+				self::onCreateWikiStatePrivate( $dbname );
 			}
 
 		}

@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
+class PopulateGroupPermissionsWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addOption( 'overwrite', 'This overwrites perms to reset them back to the default.', false, false );
@@ -66,5 +66,5 @@ class ManageWikiPopulatePermissionsWithDefaults extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiPopulatePermissionsWithDefaults';
+$maintClass = PopulateGroupPermissionsWithDefaults::class;
 require_once RUN_MAINTENANCE_IF_MAIN;

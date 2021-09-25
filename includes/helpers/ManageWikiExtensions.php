@@ -92,7 +92,7 @@ class ManageWikiExtensions {
 			}
 
 			$this->removedExts[$ext] = $this->liveExts[$ext];
-			unset ( $this->liveExts[$ext] );
+			unset( $this->liveExts[$ext] );
 
 			$this->changes[$ext] = [
 				'old' => 1,

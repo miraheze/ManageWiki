@@ -84,7 +84,7 @@
 	},
 	"Hooks": {
 		"ContentHandlerForModelID": [
-		    "ManageWikiHooks::onContentHandlerForModelID"
+			"ManageWikiHooks::onContentHandlerForModelID"
 		],
 		"CreateWikiCreation": [
 			"ManageWikiHooks::onCreateWikiCreation"
