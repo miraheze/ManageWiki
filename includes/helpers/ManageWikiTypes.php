@@ -8,7 +8,7 @@ class ManageWikiTypes {
 			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $options, $value, $groupList );
 		}
 
-		return self::common( $config, $disabled, $options, $value, $groupList );		
+		return self::common( $config, $disabled, $options, $value, $groupList );
 	}
 
 	private static function common( $config, $disabled, $options, $value, $groupList ) {
@@ -90,7 +90,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $options['options'],
-					'default' => ( isset( $value ) && !is_null( $value ) ) ? array_keys( $value, true ) : array_keys( $options['overridedefault'], true )
+					'default' => ( isset( $value ) && $value !== null ) ? array_keys( $value, true ) : array_keys( $options['overridedefault'], true )
 				];
 
 				if ( !$disabled ) {
@@ -102,7 +102,7 @@ class ManageWikiTypes {
 					'type' => 'checkmatrix',
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
-					'default' => ( isset( $value ) && !is_null( $value ) ) ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault']
+					'default' => ( isset( $value ) && $value !== null ) ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault']
 				];
 				break;
 			case 'namespace':
@@ -116,40 +116,40 @@ class ManageWikiTypes {
 					'type' => 'namespacesmultiselect',
 					'default' => $value ?? $options['overridedefault']
 				];
-				break;	
+				break;
 			case 'preferences':
 				$preferences = [];
 				$excludedPrefs = [];
 				$allPreferences = MediaWikiServices::getInstance()->getUserOptionsLookup()->getDefaultOptions();
 
 				// Don't show preferences hidden by configuratiom
-				if( !$config->get( 'AllowUserCssPrefs' ) ) {
+				if ( !$config->get( 'AllowUserCssPrefs' ) ) {
 					$excludedPrefs[] = 'underline';
 					$excludedPrefs[] = 'editfont';
 				}
 
-				if( $config->get( 'DisableLangConversion' ) ) {
+				if ( $config->get( 'DisableLangConversion' ) ) {
 					$excludedPrefs[] = 'variant';
 				} else {
-					foreach( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
+					foreach ( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
 						$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 					}
 				}
 
-				if( $config->get( 'ForceHTTPS' ) || !$config->get( 'SecureLogin' ) ) {
+				if ( $config->get( 'ForceHTTPS' ) || !$config->get( 'SecureLogin' ) ) {
 					$excludedPrefs[] = 'prefershttps';
 				}
 
-				if( !$config->get( 'RCShowWatchingUsers' ) ) {
+				if ( !$config->get( 'RCShowWatchingUsers' ) ) {
 					$excludedPrefs[] = 'shownumberswatching';
 				}
 
-				if( !$config->get( 'RCWatchCategoryMembership' ) ) {
+				if ( !$config->get( 'RCWatchCategoryMembership' ) ) {
 					$excludedPrefs[] = 'hidecategorization';
 					$excludedPrefs[] = 'watchlisthidecategorization';
 				}
 
-				if( !$config->get( 'SearchMatchRedirectPreference' ) ) {
+				if ( !$config->get( 'SearchMatchRedirectPreference' ) ) {
 					$excludedPrefs[] = 'search-match-redirect';
 				}
 
@@ -176,7 +176,7 @@ class ManageWikiTypes {
 						$excludedPrefs[] = 'enotifusertalkpages';
 					}
 
-					if (!$config->get( 'EnotifUserTalk' ) && !$config->get( 'EnotifWatchlist' ) ) {
+					if ( !$config->get( 'EnotifUserTalk' ) && !$config->get( 'EnotifWatchlist' ) ) {
 						if ( !$config->get( 'EnotifMinorEdits' ) ) {
 							$excludedPrefs[] = 'enotifminoredits';
 						}
@@ -188,19 +188,19 @@ class ManageWikiTypes {
 				}
 
 				// Blacklist searchNs* preferences
-				foreach( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
+				foreach ( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
 				// Blacklist echo-subscriptions-* preferences
-				foreach( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $val ) {
+				foreach ( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $val ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
 				// Blacklist downloaduserdata preference
 				$excludedPrefs[] = 'downloaduserdata';
 
-				foreach( $allPreferences as $pref => $val ) {
+				foreach ( $allPreferences as $pref => $val ) {
 					if ( !in_array( $pref, $excludedPrefs ) ) {
 						$preferences[$pref] = $pref;
 					}
@@ -287,7 +287,7 @@ class ManageWikiTypes {
 				break;
 			case 'usergroups':
 				$groups = [];
-				foreach( $groupList as $group ) {
+				foreach ( (array)$groupList as $group ) {
 					$groups[UserGroupMembership::getGroupName( $group )] = $group;
 				}
 
@@ -303,7 +303,7 @@ class ManageWikiTypes {
 				break;
 			case 'userrights':
 				$rights = [];
-				foreach( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions() as $right ) {
+				foreach ( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions() as $right ) {
 					$rights[$right] = $right;
 				}
 

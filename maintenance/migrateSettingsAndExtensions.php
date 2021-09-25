@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiMigrateSettingsAndExtensions extends Maintenance {
+class MigrateSettingsAndExtensions extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 	}
@@ -48,5 +48,5 @@ class ManageWikiMigrateSettingsAndExtensions extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiMigrateSettingsAndExtensions';
+$maintClass = MigrateSettingsAndExtensions::class;
 require_once RUN_MAINTENANCE_IF_MAIN;

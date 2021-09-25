@@ -18,7 +18,6 @@ class ManageWikiFormFactory {
 		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $config );
 	}
 
-
 	public function getForm(
 		string $wiki,
 		RemoteWiki $remoteWiki,

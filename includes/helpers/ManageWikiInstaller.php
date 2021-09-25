@@ -34,7 +34,6 @@ class ManageWikiInstaller {
 		}
 
 		return !(bool)array_search( false, $stepresponse );
-
 	}
 
 	private static function sql( string $dbname, array $data ) {
@@ -65,7 +64,7 @@ class ManageWikiInstaller {
 						return false;
 					}
 				} else {
-					$files = array_diff( scandir( $source ) , [ '.', '..' ] );
+					$files = array_diff( scandir( $source ), [ '.', '..' ] );
 
 					foreach ( $files as $file ) {
 						if ( !copy( $source . $file, $baseloc . $location . $file ) ) {
