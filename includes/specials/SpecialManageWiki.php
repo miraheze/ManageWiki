@@ -126,7 +126,7 @@ class SpecialManageWiki extends SpecialPage {
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
 			$wikiManager = new WikiManager( $wiki );
-			if ( !$wikiManager->exists || true ) {
+			if ( !$wikiManager->exists ) {
 				$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
 				return false;
 			}
