@@ -14,10 +14,10 @@ class ManageWikiHooks {
 				__DIR__ . '/../sql/mw_permissions.sql' );
 		$updater->addExtensionTable( 'mw_settings',
 				__DIR__ . '/../sql/mw_settings.sql' );
-		
+
 		$updater->modifyExtensionTable( 'mw_namespaces',
 				__DIR__ . '/../sql/patches/patch-namespace-core-alter.sql' );
-		
+
 		$updater->addExtensionField( 'mw_permissions', 'perm_addgroupstoself',
 				__DIR__ . '/../sql/patches/patch-groups-self.sql' );
 		$updater->addExtensionField( 'mw_permissions', 'perm_autopromote',
