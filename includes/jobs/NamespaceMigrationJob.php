@@ -4,10 +4,17 @@
  * Used on namespace creation and deletion to move pages into and out of namespaces
  */
 class NamespaceMigrationJob extends Job {
-	public function __construct( $title, $params ) {
+	/**
+	 * @param Title $title
+	 * @param string[] $params
+	 */
+	public function __construct( Title $title, $params ) {
 		parent::__construct( 'NamespaceMigrationJob', $params );
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function run() {
 		$dbw = wfGetDB( DB_PRIMARY );
 
@@ -81,6 +88,8 @@ class NamespaceMigrationJob extends Job {
 				__METHOD__
 			);
 		}
+
+		return true;
 	}
 
 	private function pageExists( $pageName, $nsID, $dbw ) {

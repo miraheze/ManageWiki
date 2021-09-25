@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiToggleExtension extends Maintenance {
+class ToggleExtension extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addArg( 'ext', 'The ManageWiki name of the extension.', true );
@@ -32,5 +32,5 @@ class ManageWikiToggleExtension extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiToggleExtension';
+$maintClass = ToggleExtension::class;
 require_once RUN_MAINTENANCE_IF_MAIN;

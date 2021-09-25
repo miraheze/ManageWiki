@@ -3,10 +3,17 @@
 use MediaWiki\Shell\Shell;
 
 class MWScriptJob extends Job {
+	/**
+	 * @param Title $title
+	 * @param string[] $params
+	 */
 	public function __construct( Title $title, $params ) {
 		parent::__construct( 'MWScriptJob', $params );
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function run() {
 		$scriptParams = [
 			'--wiki',
@@ -30,5 +37,7 @@ class MWScriptJob extends Job {
 		if ( $result ) {
 			wfDebugLog( 'ManageWiki', "MWScriptJob failure. Status {$result} running {$this->params['script']}" );
 		}
+
+		return true;
 	}
 }

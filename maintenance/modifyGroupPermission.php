@@ -8,7 +8,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use MediaWiki\MediaWikiServices;
 
-class ManageWikiModifyGroupPermission extends Maintenance {
+class ModifyGroupPermission extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 		$this->addArg( 'group', 'The group name you want to change.', false );
@@ -40,13 +40,13 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 		];
 
 		if ( $this->getOption( 'all' ) ) {
-			$groups = array_keys ( $mwPermissions->list() );
+			$groups = array_keys( $mwPermissions->list() );
 
 			foreach ( $groups as $group ) {
 				$this->changeGroup( $group, $permData, $mwPermissions );
 			}
 		} elseif ( $this->getArg( 0 ) ) {
-			$this->changeGroup( $this->getArg(0), $permData, $mwPermissions );
+			$this->changeGroup( $this->getArg( 0 ), $permData, $mwPermissions );
 		} else {
 			$this->output( 'You must supply either the group as a arg or use --all' );
 		}
@@ -72,5 +72,5 @@ class ManageWikiModifyGroupPermission extends Maintenance {
 	}
 }
 
-$maintClass = 'ManageWikiModifyGroupPermission';
+$maintClass = ModifyGroupPermission::class;
 require_once RUN_MAINTENANCE_IF_MAIN;
