@@ -3,11 +3,11 @@
 use MediaWiki\MediaWikiServices;
 
 class ManageWikiDeletedWikiPager extends TablePager {
-	public function __construct() {
+	public function __construct( $page ) {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->mDb = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
 
-		parent::__construct( $this->getContext() );
+		parent::__construct( $page->getContext(), $page->getLinkRenderer() );
 	}
 
 	public function getFieldNames() {
