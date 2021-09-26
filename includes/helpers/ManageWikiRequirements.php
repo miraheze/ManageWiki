@@ -132,19 +132,17 @@ class ManageWikiRequirements {
 	 */
 	private static function settings( array $data ) {
 		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$dbr = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
 
 		$database = $data['dbname'] ?? $config->get( 'DBname' );
 		$setting = $data['setting'];
 		$value = $data['value'];
 
-		$selectSettings = $dbr->selectFieldValues( 'mw_settings', 's_settings', [ 's_dbname' => $database ] );
-		if ( isset( $selectSettings[0] ) && array_key_exists( $setting, (array)json_decode( $selectSettings[0], true ) ) ) {
-			$settings = (array)json_decode( $selectSettings[0], true )[$setting];
-		}
+		$manageWikiSettings = new ManageWikiSettings( $database );
 
-		if ( isset( $settings ) ) {
-			if ( $settings[0] === $value || in_array( $value, $settings ) ) {
+		$wikiValue = $manageWikiSettings->list( $setting );
+
+		if ( $wikiValue !== null ) {
+			if ( $wikiValue === $value || in_array( $value, $wikiValue ) ) {
 				return true;
 			}
 		}
