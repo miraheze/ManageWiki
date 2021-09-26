@@ -133,13 +133,13 @@ class ManageWikiRequirements {
 	private static function settings( array $data ) {
 		$config = MediaWikiServices::getInstance()->getMainConfig();
 
-		$siteConfiguration = $config->get( 'Conf' );
-
 		$database = $data['dbname'] ?? $config->get( 'DBname' );
 		$setting = $data['setting'];
 		$value = $data['value'];
 
-		$wikiValue = $siteConfiguration->get( $setting, $database );
+		$manageWikiSettings = new ManageWikiSettings( $database );
+
+		$wikiValue = $manageWikiSettings->list( $setting );
 
 		if ( $wikiValue !== null ) {
 			if ( $wikiValue === $value || in_array( $value, $wikiValue ) ) {
