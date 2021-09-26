@@ -233,6 +233,11 @@ jobs:
       PHAN_DOCKER_IMAGE: mediawiki-phan-php${{ matrix.php-docker }}
 
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+
       - uses: actions/checkout@v2
 
       # /home/runner/cache/                               Cache
@@ -321,7 +326,7 @@ jobs:
           # MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->setRequestInfo(). THIS IS ALREADY FIXED FOR REL1_37 AND LATER.
           # WITH https://github.com/wikimedia/mediawiki/commit/29827d
 
-          if [ -d src/extensions/CreateWiki ] && [ "${MEDIAWIKI_VERSION}" == 'REL1_36' ]; then
+          if [ -d src/extensions/CreateWiki ] || [ "${{ github.event.repository.name }}" == 'CreateWiki' ] && [ "${MEDIAWIKI_VERSION}" == 'REL1_36' ]; then
             curl -sL https://raw.githubusercontent.com/Universal-Omega/scripts/master/mediawiki/hacks/Setup-REL1_36.php > src/includes/Setup.php
           fi
 
@@ -438,15 +443,4 @@ jobs:
           server: "irc.libera.chat"
           nickname: miraheze-github
           message: ${{ github.repository }} - ${{ github.actor }} the build has errored.
-          sasl_password: ${{ secrets.IRC_MIRAHEZEBOTS }}
-
-      - name: cancelled
-        uses: technote-space/workflow-conclusion-action@v2
-      - uses: rectalogic/notify-irc@v1
-        if: env.WORKFLOW_CONCLUSION == 'cancelled'
-        with:
-          channel: "#miraheze-sre"
-          server: "irc.libera.chat"
-          nickname: miraheze-github
-          message: ${{ github.repository }} - ${{ github.actor }} the build has been cancelled.
           sasl_password: ${{ secrets.IRC_MIRAHEZEBOTS }}
