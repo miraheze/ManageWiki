@@ -1,8 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
-			"Teashae"
+			"Teashae",
+			"ಮಲ್ನಾಡಾಚ್ ಕೊಂಕ್ಣೊ"
 		]
 	},
-	"action-managewiki": "وکی کی ترتیبات کا انتظام کریں"
+	"action-managewiki": "manage wiki settings"
 }
