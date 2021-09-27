@@ -187,37 +187,9 @@ jobs:
             php-docker: 73
             experimental: false
             stage: npm-test
-
-          # Latest MediaWiki release branch - PHP 7.3 (npm-test)
-          - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: npm-test
-
-          # Latest MediaWiki master - PHP 7.3 (npm-test)
-          - mw: 'master'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: npm-test
-            
+  
           # Latest stable MediaWiki - PHP 7.3 (composer-test)
           - mw: 'REL1_36'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: composer-test
-
-          # Latest MediaWiki release branch - PHP 7.3 (composer-test)
-          - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: composer-test
-
-          # Latest MediaWiki master - PHP 7.3 (composer-test)
-          - mw: 'master'
             php: 7.3
             php-docker: 73
             experimental: false
@@ -354,6 +326,28 @@ jobs:
         run: |
           if [ -e composer.json ]; then
             composer install --prefer-dist --no-progress --no-interaction
+          fi
+
+      - name: Fix PHPCS violations
+        continue-on-error: true
+        if: ${{ github.event_name == 'pull_request' && matrix.stage == 'composer-test' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -e composer.json ]; then
+            composer install --prefer-dist --no-progress --no-interaction
+            composer fix
+
+            rm composer.lock
+
+            git config --global user.name "github-actions"
+            git config --global user.email "github-actions@users.noreply.github.com"
+            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            git checkout -b ${GITHUB_HEAD_REF}
+            git add .
+            git commit -am "CI: lint code to MediaWiki standards" -m "Check commit and GitHub actions for more details" || echo "No changes to commit"
+            git pull origin ${GITHUB_HEAD_REF} --rebase
+            git push --set-upstream origin ${GITHUB_HEAD_REF}
           fi
 
       - name: Main Test
