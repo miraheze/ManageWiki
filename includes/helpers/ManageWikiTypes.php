@@ -164,7 +164,7 @@ class ManageWikiTypes {
 						$excludedPrefs[] = 'ccmeonemails';
 
 						if ( !$config->get( 'EnableUserEmailBlacklist' ) ) {
-							$excludedPrefs[] = 'EnableUserEmailBlacklist';
+							$excludedPrefs[] = 'email-blacklist';
 						}
 					}
 
