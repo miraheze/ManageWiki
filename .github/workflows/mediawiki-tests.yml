@@ -192,7 +192,7 @@ jobs:
           - mw: 'REL1_36'
             php: 7.3
             php-docker: 73
-            experimental: false
+            experimental: true
             stage: composer-test
 
     runs-on: ubuntu-latest
@@ -348,8 +348,6 @@ jobs:
             git commit -am "CI: lint code to MediaWiki standards" -m "Check commit and GitHub actions for more details" || echo "No changes to commit"
             git pull origin ${GITHUB_HEAD_REF} --rebase
             git push --set-upstream origin ${GITHUB_HEAD_REF}
-            git fetch
-            git reset --hard origin/${GITHUB_HEAD_REF}
           fi
 
       - name: Main Test
