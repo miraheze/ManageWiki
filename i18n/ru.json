@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"1233qwer1234qwer4",
+			"DDPAT",
 			"EdwardGeneralov",
 			"Facenapalm",
 			"Happy13241",
@@ -122,6 +123,8 @@
 	"managewiki-permissions-unassigned": "Указанные ниже права пользователя сейчас не назначены этой группе пользователей.",
 	"managewiki-placeholder-reason": "Причина изменения...",
 	"managewiki-requires": "Требует",
+	"managewiki-review": "Обзор",
+	"managewiki-review-title": "Проверить изменения",
 	"managewiki-save": "Сохранить",
 	"managewiki-sidebar-header": "Администрирование",
 	"managewiki-success": "Настройки были успешно изменены.",
