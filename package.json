@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"scripts": {
-		"lint": "npm -s run lint:js && npm -s run lint:styles && npm -s run lint:i18n",
+		"test": "npm -s run lint:js && npm -s run lint:styles",
 		"lint:fix:js": "npm -s run lint:js -- --fix",
 		"lint:fix:styles": "npm -s run lint:styles -- --fix",
 		"lint:js": "eslint --cache --max-warnings 0 .",

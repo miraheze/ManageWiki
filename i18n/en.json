@@ -10,6 +10,8 @@
 		]
 	},
 	"action-managewiki": "manage wiki settings",
+	"action-managewiki-restricted": "manage restricted wiki settings",
+	"action-managewiki-editdefault": "manage default group permissions",
 	"apihelp-query+wikiconfig-summary": "View sitename, inactive, inactive-exempt, closed, private, extensions, settings and permissions for the specified wiki.",
 	"apihelp-query+wikiconfig-example-1": "View wiki config for metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Select properties to return:",

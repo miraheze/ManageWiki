@@ -8,26 +8,27 @@ class ManageWikiHooks {
 	}
 
 	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
-		if ( self::getConfig( 'CreateWikiDatabase' ) === self::getConfig( 'DBname' ) ) {
-			$updater->addExtensionTable( 'mw_namespaces',
-					__DIR__ . '/../sql/mw_namespaces.sql' );
-			$updater->addExtensionTable( 'mw_permissions',
-					__DIR__ . '/../sql/mw_permissions.sql' );
-			$updater->addExtensionTable( 'mw_settings',
-					__DIR__ . '/../sql/mw_settings.sql' );
-			$updater->modifyExtensionTable( 'mw_permissions',
-					__DIR__ . '/../sql/patches/patch-groups-self.sql' );
-			$updater->modifyExtensionTable( 'mw_permissions',
-					__DIR__ . '/../sql/patches/patch-autopromote.sql' );
-			$updater->modifyExtensionTable( 'mw_namespaces',
-					__DIR__ . '/../sql/patches/patch-namespaces-additional.sql' );
-			$updater->modifyExtensionTable( 'mw_namespaces',
-					__DIR__ . '/../sql/patches/patch-namespace-core-alter.sql' );
-			$updater->modifyExtensionTable( 'mw_namespaces',
-					__DIR__ . '/../sql/patches/patch-namespaces-add-indexes.sql' );
-			$updater->modifyExtensionTable( 'mw_permissions',
-					__DIR__ . '/../sql/patches/patch-permissions-add-indexes.sql' );
-		}
+		$updater->addExtensionTable( 'mw_namespaces',
+				__DIR__ . '/../sql/mw_namespaces.sql' );
+		$updater->addExtensionTable( 'mw_permissions',
+				__DIR__ . '/../sql/mw_permissions.sql' );
+		$updater->addExtensionTable( 'mw_settings',
+				__DIR__ . '/../sql/mw_settings.sql' );
+
+		$updater->modifyExtensionTable( 'mw_namespaces',
+				__DIR__ . '/../sql/patches/patch-namespace-core-alter.sql' );
+
+		$updater->addExtensionField( 'mw_permissions', 'perm_addgroupstoself',
+				__DIR__ . '/../sql/patches/patch-groups-self.sql' );
+		$updater->addExtensionField( 'mw_permissions', 'perm_autopromote',
+				__DIR__ . '/../sql/patches/patch-autopromote.sql' );
+		$updater->addExtensionField( 'mw_namespaces', 'ns_additional',
+				__DIR__ . '/../sql/patches/patch-namespaces-additional.sql' );
+
+		$updater->addExtensionIndex( 'mw_namespaces', 'ns_dbname',
+				__DIR__ . '/../sql/patches/patch-namespaces-add-indexes.sql' );
+		$updater->addExtensionIndex( 'mw_permissions', 'perm_dbname',
+				__DIR__ . '/../sql/patches/patch-permissions-add-indexes.sql' );
 	}
 
 	public static function onRegistration() {
