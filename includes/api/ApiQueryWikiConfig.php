@@ -1,6 +1,7 @@
 <?php
 
 use MediaWiki\MediaWikiServices;
+use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiQueryWikiConfig extends ApiQueryBase {
 	public function __construct( $query, $moduleName ) {
@@ -66,8 +67,8 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 	protected function getAllowedParams() {
 		return [
 			'prop' => [
-				ApiBase::PARAM_ISMULTI => true,
-				ApiBase::PARAM_TYPE => [
+				ParamValidator::PARAM_ISMULTI => true,
+				ParamValidator::PARAM_TYPE => [
 					'sitename',
 					'inactive',
 					'inactive-exempt',
@@ -77,12 +78,12 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 					'settings',
 					'permissions'
 				],
-				ApiBase::PARAM_DFLT => 'sitename|extensions|settings',
+				ParamValidator::PARAM_DEFAULT => 'sitename|extensions|settings',
 				ApiBase::PARAM_HELP_MSG_PER_VALUE => [],
 			],
 			'wikis' => [
-				ApiBase::PARAM_ISMULTI => true,
-				ApiBase::PARAM_REQUIRED => true
+				ParamValidator::PARAM_ISMULTI => true,
+				ParamValidator::PARAM_REQUIRED => true
 			],
 		];
 	}
