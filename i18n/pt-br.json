@@ -9,6 +9,8 @@
 		]
 	},
 	"action-managewiki": "gerenciar as configurações do wiki",
+	"action-managewiki-restricted": "gerenciar configurações de wiki restritas",
+	"action-managewiki-editdefault": "gerenciar permissões de grupo padrão",
 	"apihelp-query+wikiconfig-summary": "Ver nome do site, inativo, inativo-isento, fechado, privado, extensões, configurações e permissões para o wiki especificado.",
 	"apihelp-query+wikiconfig-example-1": "Veja a configuração da wiki para o metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Selecione as propriedades para retornar:",

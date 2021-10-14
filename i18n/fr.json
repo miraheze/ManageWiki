@@ -22,6 +22,8 @@
 		]
 	},
 	"action-managewiki": "régler les paramètres du wiki",
+	"action-managewiki-restricted": "gérer les paramètres restreints du wiki",
+	"action-managewiki-editdefault": "gérer les droits par défaut du groupe",
 	"apihelp-query+wikiconfig-summary": "Voir le nom du site, son inactivité, si il est exempté d'inactivité, si il est fermé, si il est privé, ses extensions, paramètres et permissions pour un wiki spécifique.",
 	"apihelp-query+wikiconfig-example-1": "Afficher la configuration wiki pour metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Sélectionnez la propriété à renvoyer :",

@@ -10,6 +10,8 @@
 		]
 	},
 	"action-managewiki": "керування налаштуваннями вікі",
+	"action-managewiki-restricted": "керувати обмеженими налаштуваннями вікі",
+	"action-managewiki-editdefault": "керувати дозволами групи за умовчанням",
 	"apihelp-query+wikiconfig-summary": "Перегляд: назви сайту, неактивних, виключення з неактивних, закритих, приватних, розширень та дозволів для зазначеної вікі.",
 	"apihelp-query+wikiconfig-example-1": "Перегляд конфігурації вікі для метавікі.",
 	"apihelp-query+wikiconfig-param-prop": "Оберіть властивості для виведення:",
