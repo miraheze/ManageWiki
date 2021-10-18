@@ -8,6 +8,8 @@
 		]
 	},
 	"action-managewiki": "مدیریت تنظیمات ویکی",
+	"action-managewiki-restricted": "مدیریت تنظیمات محدودشدهٔ ویکی",
+	"action-managewiki-editdefault": "مدیریت دسترسی‌های پیش‌فرض گروه",
 	"apiwarn-wikiconfig-wikidoesnotexist": "ویکی «$1» وجود ندارد.",
 	"extensions-other": "دیگر",
 	"log-name-managewiki": "سیاههٔ مدیریت ویکی",
