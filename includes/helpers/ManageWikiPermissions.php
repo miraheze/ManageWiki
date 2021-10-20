@@ -173,8 +173,10 @@ class ManageWikiPermissions {
 							'perm_group' => $group
 						] + $builtTable,
 						[
-							'perm_dbname',
-							'perm_group'
+							[
+								'perm_dbname',
+								'perm_group'
+							]
 						],
 						$builtTable
 					);
