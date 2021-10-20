@@ -210,8 +210,10 @@ class ManageWikiNamespaces {
 						'ns_namespace_id' => $id
 					] + $builtTable,
 					[
-						'ns_dbname',
-						'ns_namespace_id'
+						[
+							'ns_dbname',
+							'ns_namespace_id'
+						]
 					],
 					$builtTable
 				);
