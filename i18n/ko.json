@@ -11,6 +11,8 @@
 		]
 	},
 	"action-managewiki": "위키 설정 관리",
+	"action-managewiki-restricted": "제한된 위키 설정 관리",
+	"action-managewiki-editdefault": "기본 그룹 권한 관리",
 	"apihelp-query+wikiconfig-example-1": "메타위키의 위키 구성을 봅니다.",
 	"apihelp-query+wikiconfig-param-prop": "반환할 속성을 선택합니다:",
 	"apihelp-query+wikiconfig-param-wikis": "확인할 위키입니다.",
