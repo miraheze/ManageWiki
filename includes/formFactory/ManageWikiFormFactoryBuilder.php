@@ -128,6 +128,12 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'text',
 				'default' => $wiki->getServerName(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
+			],
+			'experimental' => [
+				'if' => $config->get( 'CreateWikiUseExperimental' ),
+				'type' => 'check',
+				'default' => (bool)$wiki->isExperimental(),
+				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			]
 		];
 
