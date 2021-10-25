@@ -797,7 +797,7 @@ class ManageWikiFormFactoryBuilder {
 		}
 		
 		if ( $config->get( 'CreateWikiUseExperimental' ) && ( $wiki->isExperimental() != $formData['experimental'] ) ) {
-				( $formData['private'] ) ? $wiki->markExperimental() : $wiki->unmarkExperimental();
+				( $formData['experimental'] ) ? $wiki->markExperimental() : $wiki->unmarkExperimental();
 		}
 
 		if ( $config->get( 'CreateWikiUseClosedWikis' ) ) {
