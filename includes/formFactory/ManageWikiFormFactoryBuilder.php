@@ -128,6 +128,12 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'text',
 				'default' => $wiki->getServerName(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
+			],
+			'experimental' => [
+				'if' => $config->get( 'CreateWikiUseExperimental' ),
+				'type' => 'check',
+				'default' => (bool)$wiki->isExperimental(),
+				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			]
 		];
 
@@ -788,6 +794,10 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $config->get( 'CreateWikiUsePrivateWikis' ) && ( $wiki->isPrivate() != $formData['private'] ) ) {
 				( $formData['private'] ) ? $wiki->markPrivate() : $wiki->markPublic();
+		}
+		
+		if ( $config->get( 'CreateWikiUseExperimental' ) && ( $wiki->isExperimental() != $formData['experimental'] ) ) {
+				( $formData['experimental'] ) ? $wiki->markExperimental() : $wiki->unMarkExperimental();
 		}
 
 		if ( $config->get( 'CreateWikiUseClosedWikis' ) ) {
