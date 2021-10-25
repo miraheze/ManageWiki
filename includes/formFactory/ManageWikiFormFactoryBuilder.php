@@ -795,6 +795,10 @@ class ManageWikiFormFactoryBuilder {
 		if ( $config->get( 'CreateWikiUsePrivateWikis' ) && ( $wiki->isPrivate() != $formData['private'] ) ) {
 				( $formData['private'] ) ? $wiki->markPrivate() : $wiki->markPublic();
 		}
+		
+		if ( $config->get( 'CreateWikiUseExperimental' ) && ( $wiki->isExperimental() != $formData['experimental'] ) ) {
+				( $formData['private'] ) ? $wiki->markExperimental() : $wiki->unmarkExperimental();
+		}
 
 		if ( $config->get( 'CreateWikiUseClosedWikis' ) ) {
 			$closed = (bool)$wiki->isClosed();
