@@ -10,6 +10,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		RemoteWiki $wiki,
 		string $special,
+		string $filtered,
 		Config $config
 	) {
 		switch ( $module ) {
@@ -20,10 +21,10 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $wiki, $config );
 				break;
 			case 'settings':
-				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config );
+				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config, $filtered );
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $wiki, $config );
+				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $wiki, $config, $filtered );
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special, $config );
@@ -295,7 +296,8 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		RemoteWiki $wiki,
-		Config $config
+		Config $config,
+		string $filtered
 	) {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
@@ -304,18 +306,24 @@ class ManageWikiFormFactoryBuilder {
 		$mwPermissions = new ManageWikiPermissions( $dbName );
 		$groupList = array_keys( $mwPermissions->list() );
 
+		$filteredList = array_filter( $config->get( 'ManageWikiSettings' ), function( $value ) use ( $filtered ) {
+			return $value['from'] == $filtered;
+		} ) );
+
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
 			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
+			$hide = count( $filteredList ) > 0 && $filtered && $filtered !== $set['from'];
+
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
-			if ( $add ) {
+			if ( $add && !$hide ) {
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $setList[$name] ?? null );
 
 				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
@@ -357,12 +365,17 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		string $special,
 		RemoteWiki $wiki,
-		Config $config
+		Config $config,
+		string $filtered
 	) {
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
 
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
+
+		$filteredList = array_filter( $config->get( 'ManageWikiNamespacesAdditional' ), function( $value ) use ( $filtered ) {
+			return $value['from'] == $filtered;
+		} ) );
 
 		$formDescriptor = [];
 
@@ -434,12 +447,14 @@ class ManageWikiFormFactoryBuilder {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $wiki ) : true;
 
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
+				$hide = count( $filteredList ) > 0 && $filtered && $filtered !== $a['from'];
+
 				$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
 				$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
 				$msgHelp = wfMessage( "managewiki-namespaces-{$key}-help" );
 
-				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && !in_array( $id, (array)( $a['blacklisted'] ?? [] ) ) && in_array( $id, (array)( $a['whitelisted'] ?? [ $id ] ) ) ) {
+				if ( $add && !$hide && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && !in_array( $id, (array)( $a['blacklisted'] ?? [] ) ) && in_array( $id, (array)( $a['whitelisted'] ?? [ $id ] ) ) ) {
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
