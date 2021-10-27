@@ -30,7 +30,7 @@ class SpecialManageWiki extends SpecialPage {
 		$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
 
 		$additional = $par[1] ?? '';
-		$filtered = $par[2] ?? '';
+		$filtered = $par[2] ?? $par[1] ?? '';
 
 		if ( !ManageWiki::checkSetup( $module, true, $out ) ) {
 			return false;
@@ -46,7 +46,7 @@ class SpecialManageWiki extends SpecialPage {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
 			$dbName = $par[1] ?? $this->config->get( 'DBname' );
-			$this->showWikiForm( $dbName, 'core', '', '' );
+			$this->showWikiForm( $dbName, 'core' );
 		} else {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
 		}
@@ -59,7 +59,6 @@ class SpecialManageWiki extends SpecialPage {
 				'type' => 'text',
 				'size' => 20,
 				'required' => true,
-				'name' => 'mwDBname',
 			]
 		];
 
