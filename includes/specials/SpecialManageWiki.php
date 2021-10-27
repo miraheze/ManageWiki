@@ -51,6 +51,15 @@ class SpecialManageWiki extends SpecialPage {
 		}
 	}
 
+	public function getSubpagesForPrefixSearch() {
+		return [
+			'core',
+			'extensions',
+			'namespaces',
+			'settings',
+		];
+	}
+
 	public function showInputBox() {
 		$formDescriptor = [
 			'dbname' => [
