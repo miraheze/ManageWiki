@@ -10,6 +10,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		RemoteWiki $wiki,
 		string $special,
+		string $filtered,
 		Config $config
 	) {
 		switch ( $module ) {
@@ -20,10 +21,10 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $wiki, $config );
 				break;
 			case 'settings':
-				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config );
+				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config, $filtered );
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $wiki, $config );
+				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $wiki, $config, $filtered );
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special, $config );
@@ -295,7 +296,8 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		RemoteWiki $wiki,
-		Config $config
+		Config $config,
+		string $filtered
 	) {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
@@ -304,9 +306,16 @@ class ManageWikiFormFactoryBuilder {
 		$mwPermissions = new ManageWikiPermissions( $dbName );
 		$groupList = array_keys( $mwPermissions->list() );
 
-		$formDescriptor = [];
+		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
 
-		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
+		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered ) {
+			return $value['from'] == strtolower( $filtered );
+		} );
+
+		$formDescriptor = [];
+		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
+
+		foreach ( $filteredSettings as $name => $set ) {
 			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
@@ -357,12 +366,19 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		string $special,
 		RemoteWiki $wiki,
-		Config $config
+		Config $config,
+		string $filtered
 	) {
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
 
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
+
+		$additionalSettings = $config->get( 'ManageWikiNamespacesAdditional' );
+
+		$filteredList = array_filter( $additionalSettings, static function ( $value ) use ( $filtered ) {
+			return $value['from'] == strtolower( $filtered );
+		} );
 
 		$formDescriptor = [];
 
@@ -371,6 +387,7 @@ class ManageWikiFormFactoryBuilder {
 			'namespacetalk' => (int)$special + 1
 		];
 
+		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $additionalSettings ) ) ?: $additionalSettings;
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
@@ -430,7 +447,7 @@ class ManageWikiFormFactoryBuilder {
 				]
 			];
 
-			foreach ( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
+			foreach ( $filteredSettings as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $wiki ) : true;
 
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );

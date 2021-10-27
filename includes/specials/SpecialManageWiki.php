@@ -30,6 +30,7 @@ class SpecialManageWiki extends SpecialPage {
 		$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
 
 		$additional = $par[1] ?? '';
+		$filtered = $par[2] ?? $par[1] ?? '';
 
 		if ( !ManageWiki::checkSetup( $module, true, $out ) ) {
 			return false;
@@ -40,14 +41,14 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( $this->config->get( 'CreateWikiGlobalWiki' ) !== $this->config->get( 'DBname' ) ) {
-			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional );
+			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
 			$dbName = $par[1] ?? $this->config->get( 'DBname' );
-			$this->showWikiForm( $dbName, 'core', '' );
+			$this->showWikiForm( $dbName, 'core', '', '' );
 		} else {
-			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional );
+			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
 		}
 	}
 
@@ -67,7 +68,6 @@ class SpecialManageWiki extends SpecialPage {
 				'type' => 'text',
 				'size' => 20,
 				'required' => true,
-				'name' => 'mwDBname',
 			]
 		];
 
@@ -90,7 +90,7 @@ class SpecialManageWiki extends SpecialPage {
 		return true;
 	}
 
-	public function showWikiForm( $wiki, $module, $special ) {
+	public function showWikiForm( $wiki, $module, $special, $filtered ) {
 		$out = $this->getOutput();
 
 		if ( $special !== '' || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
@@ -143,7 +143,7 @@ class SpecialManageWiki extends SpecialPage {
 			$remoteWiki = new RemoteWiki( $wiki );
 
 			$formFactory = new ManageWikiFormFactory();
-			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ) );
+			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
 
 			$htmlForm->show();
 		}

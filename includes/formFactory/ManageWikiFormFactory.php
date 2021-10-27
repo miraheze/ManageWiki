@@ -8,14 +8,15 @@ class ManageWikiFormFactory {
 		IContextSource $context,
 		RemoteWiki $wiki,
 		Config $config,
-		string $special = ''
+		string $special = '',
+		string $filtered = ''
 	) {
 		OutputPage::setupOOUI(
 			strtolower( $context->getSkin()->getSkinName() ),
 			$context->getLanguage()->getDir()
 		);
 
-		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $config );
+		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $filtered, $config );
 	}
 
 	public function getForm(
@@ -25,13 +26,14 @@ class ManageWikiFormFactory {
 		Config $config,
 		string $module,
 		string $special = '',
+		string $filtered = '',
 		$formClass = ManageWikiOOUIForm::class
 	) {
 		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
 
-		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special );
+		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special, $filtered );
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
