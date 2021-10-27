@@ -309,7 +309,7 @@ class ManageWikiFormFactoryBuilder {
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
 
 		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered ) {
-			return $value['from'] == $filtered;
+			return $value['from'] == strtolower( $filtered );
 		} );
 
 		$formDescriptor = [];
@@ -377,7 +377,7 @@ class ManageWikiFormFactoryBuilder {
 		$additionalSettings = $config->get( 'ManageWikiNamespacesAdditional' );
 
 		$filteredList = array_filter( $additionalSettings, static function ( $value ) use ( $filtered ) {
-			return $value['from'] == $filtered;
+			return $value['from'] == strtolower( $filtered );
 		} );
 
 		$formDescriptor = [];
