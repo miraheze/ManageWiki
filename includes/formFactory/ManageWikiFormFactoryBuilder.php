@@ -306,7 +306,7 @@ class ManageWikiFormFactoryBuilder {
 		$mwPermissions = new ManageWikiPermissions( $dbName );
 		$groupList = array_keys( $mwPermissions->list() );
 
-		$filteredList = array_filter( $config->get( 'ManageWikiSettings' ), function( $value ) use ( $filtered ) {
+		$filteredList = array_filter( $config->get( 'ManageWikiSettings' ), static function ( $value ) use ( $filtered ) {
 			return $value['from'] == $filtered;
 		} ) );
 
@@ -373,7 +373,7 @@ class ManageWikiFormFactoryBuilder {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 
-		$filteredList = array_filter( $config->get( 'ManageWikiNamespacesAdditional' ), function( $value ) use ( $filtered ) {
+		$filteredList = array_filter( $config->get( 'ManageWikiNamespacesAdditional' ), static function ( $value ) use ( $filtered ) {
 			return $value['from'] == $filtered;
 		} ) );
 
@@ -810,7 +810,7 @@ class ManageWikiFormFactoryBuilder {
 		if ( $config->get( 'CreateWikiUsePrivateWikis' ) && ( $wiki->isPrivate() != $formData['private'] ) ) {
 				( $formData['private'] ) ? $wiki->markPrivate() : $wiki->markPublic();
 		}
-		
+
 		if ( $config->get( 'CreateWikiUseExperimental' ) && ( $wiki->isExperimental() != $formData['experimental'] ) ) {
 				( $formData['experimental'] ) ? $wiki->markExperimental() : $wiki->unMarkExperimental();
 		}
