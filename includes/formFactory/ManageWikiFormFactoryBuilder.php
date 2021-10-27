@@ -318,7 +318,7 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $filteredSettings as $name => $set ) {
 			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
 
-			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( $set['global'] ?? false || in_array( $set['from'], $extList ) ) );
+			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( $set['global'] ?? false || in_array( $set['from'], $extList ) );
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
@@ -450,7 +450,7 @@ class ManageWikiFormFactoryBuilder {
 			foreach ( $filteredSettings as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $wiki ) : true;
 
-				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( $a['global'] ?? false || in_array( $a['from'], $extList ) ) );
+				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( $a['global'] ?? false || in_array( $a['from'], $extList ) );
 				$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
 				$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
