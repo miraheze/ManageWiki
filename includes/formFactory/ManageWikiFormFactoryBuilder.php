@@ -395,111 +395,117 @@ class ManageWikiFormFactoryBuilder {
 
 			$create = ucfirst( $session->get( 'create' ) ) . ( $name == 'namespacetalk' && $session->get( 'create' ) ? '_talk' : null );
 
-			$formDescriptor += [
-				"namespace-$name" => [
-					'type' => 'text',
-					'label' => wfMessage( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
-					'default' => $namespaceData['name'] ?: $create,
-					'disabled' => ( $namespaceData['core'] || !$ceMW ),
-					'required' => true,
-					'section' => $name
-				],
-				"content-$name" => [
-					'type' => 'check',
-					'label' => wfMessage( 'namespaces-content' )->text() . ' ($wgContentNamespaces)',
-					'default' => $namespaceData['content'],
-					'disabled' => !$ceMW,
-					'section' => $name
-				],
-				"subpages-$name" => [
-					'type' => 'check',
-					'label' => wfMessage( 'namespaces-subpages' )->text() . ' ($wgNamespacesWithSubpages)',
-					'default' => $namespaceData['subpages'],
-					'disabled' => !$ceMW,
-					'section' => $name
-				],
-				"search-$name" => [
-					'type' => 'check',
-					'label' => wfMessage( 'namespaces-search' )->text() . ' ($wgNamespacesToBeSearchedDefault)',
-					'default' => $namespaceData['searchable'],
-					'disabled' => !$ceMW,
-					'section' => $name
-				],
-				"contentmodel-$name" => [
-					'label' => wfMessage( 'namespaces-contentmodel' )->text() . ' ($wgNamespaceContentModels)',
-					'cssclass' => 'managewiki-infuse',
-					'disabled' => !$ceMW,
-					'section' => $name
-				] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
-				"protection-$name" => [
-					'type' => 'combobox',
-					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
-					'cssclass' => 'managewiki-infuse',
-					'default' => $namespaceData['protection'],
-					'options' => [
-						'None' => '',
-						'editinterface' => 'editinterface',
-						'editsemiprotected' => 'editsemiprotected',
-						'editprotected' => 'editprotected'
+			if ( !$filtered || in_array( strtolower( $filtered ), [ 'core', 'mediawiki' ] ) ) {
+				$formDescriptor += [
+					"namespace-$name" => [
+						'type' => 'text',
+						'label' => wfMessage( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
+						'default' => $namespaceData['name'] ?: $create,
+						'disabled' => ( $namespaceData['core'] || !$ceMW ),
+						'required' => true,
+						'section' => $name
 					],
-					'disabled' => !$ceMW,
-					'section' => $name
-				]
-			];
+					"content-$name" => [
+						'type' => 'check',
+						'label' => wfMessage( 'namespaces-content' )->text() . ' ($wgContentNamespaces)',
+						'default' => $namespaceData['content'],
+						'disabled' => !$ceMW,
+						'section' => $name
+					],
+					"subpages-$name" => [
+						'type' => 'check',
+						'label' => wfMessage( 'namespaces-subpages' )->text() . ' ($wgNamespacesWithSubpages)',
+						'default' => $namespaceData['subpages'],
+						'disabled' => !$ceMW,
+						'section' => $name
+					],
+					"search-$name" => [
+						'type' => 'check',
+						'label' => wfMessage( 'namespaces-search' )->text() . ' ($wgNamespacesToBeSearchedDefault)',
+						'default' => $namespaceData['searchable'],
+						'disabled' => !$ceMW,
+						'section' => $name
+					],
+					"contentmodel-$name" => [
+						'label' => wfMessage( 'namespaces-contentmodel' )->text() . ' ($wgNamespaceContentModels)',
+						'cssclass' => 'managewiki-infuse',
+						'disabled' => !$ceMW,
+						'section' => $name
+					] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
+					"protection-$name" => [
+						'type' => 'combobox',
+						'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
+						'cssclass' => 'managewiki-infuse',
+						'default' => $namespaceData['protection'],
+						'options' => [
+							'None' => '',
+							'editinterface' => 'editinterface',
+							'editsemiprotected' => 'editsemiprotected',
+							'editprotected' => 'editprotected'
+						],
+						'disabled' => !$ceMW,
+						'section' => $name
+					]
+				];
+			}
 
-			foreach ( $filteredSettings as $key => $a ) {
-				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $wiki ) : true;
+			if ( !$filtered || !in_array( strtolower( $filtered ), [ 'core', 'mediawiki' ] ) ) {
+				foreach ( $filteredSettings as $key => $a ) {
+					$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $wiki ) : true;
 
-				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( $a['global'] ?? false || in_array( $a['from'], $extList ) );
-				$disabled = ( $ceMW ) ? !$mwRequirements : true;
+					$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( $a['global'] ?? false || in_array( $a['from'], $extList ) );
+					$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
-				$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
-				$msgHelp = wfMessage( "managewiki-namespaces-{$key}-help" );
+					$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
+					$msgHelp = wfMessage( "managewiki-namespaces-{$key}-help" );
 
-				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && !in_array( $id, (array)( $a['blacklisted'] ?? [] ) ) && in_array( $id, (array)( $a['whitelisted'] ?? [ $id ] ) ) ) {
-					if ( is_array( $a['overridedefault'] ) ) {
-						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
-					}
-
-					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
-
-					$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $a['help'];
-					if ( $a['requires'] ) {
-						$requires = [];
-						$requiresLabel = wfMessage( 'managewiki-requires' )->text();
-
-						foreach ( $a['requires'] as $require => $data ) {
-							if ( is_array( $data ) ) {
-								foreach ( $data as $index => $element ) {
-									if ( is_array( $element ) ) {
-										$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
-									}
-								}
-							}
-
-							$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
+					if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && !in_array( $id, (array)( $a['blacklisted'] ?? [] ) ) && in_array( $id, (array)( $a['whitelisted'] ?? [ $id ] ) ) ) {
+						if ( is_array( $a['overridedefault'] ) ) {
+							$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 						}
 
-						$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
-					}
+						$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
 
-					$formDescriptor["$key-$name"] = [
-						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
-						'help' => $help,
-						'cssclass' => 'managewiki-infuse',
-						'disabled' => $disabled,
-						'section' => $name
-					] + $configs;
+						$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $a['help'];
+						if ( $a['requires'] ) {
+							$requires = [];
+							$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+
+							foreach ( $a['requires'] as $require => $data ) {
+								if ( is_array( $data ) ) {
+									foreach ( $data as $index => $element ) {
+										if ( is_array( $element ) ) {
+											$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
+										}
+									}
+								}
+
+								$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
+							}
+
+							$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
+						}
+
+						$formDescriptor["$key-$name"] = [
+							'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
+							'help' => $help,
+							'cssclass' => 'managewiki-infuse',
+							'disabled' => $disabled,
+							'section' => $name
+						] + $configs;
+					}
 				}
 			}
 
-			$formDescriptor["aliases-$name"] = [
-				'type' => 'textarea',
-				'label' => wfMessage( 'namespaces-aliases' )->text() . ' ($wgNamespaceAliases)',
-				'default' => implode( "\n", $namespaceData['aliases'] ),
-				'disabled' => !$ceMW,
-				'section' => $name
-			];
+			if ( !$filtered || in_array( strtolower( $filtered ), [ 'core', 'mediawiki' ] ) ) {
+				$formDescriptor["aliases-$name"] = [
+					'type' => 'textarea',
+					'label' => wfMessage( 'namespaces-aliases' )->text() . ' ($wgNamespaceAliases)',
+					'default' => implode( "\n", $namespaceData['aliases'] ),
+					'disabled' => !$ceMW,
+					'section' => $name
+				];
+			}
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
