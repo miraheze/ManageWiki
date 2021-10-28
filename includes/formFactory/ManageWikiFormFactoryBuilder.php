@@ -283,7 +283,7 @@ class ManageWikiFormFactoryBuilder {
 			$help[] = $extDescription ?? ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description;
 
 			if ( $hasSettings ) {
-				$help[] = '<br />' . Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name, wfMessage( 'managewiki-extension-settings' )->text() );
+				$help[] = '<br/>' . Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name, wfMessage( 'managewiki-extension-settings' )->text() );
 			}
 
 			$formDescriptor["ext-$name"] = [
@@ -356,7 +356,7 @@ class ManageWikiFormFactoryBuilder {
 						$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 					}
 
-					$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
+					$help .= "<br/>{$requiresLabel}: " . implode( ' & ', $requires );
 				}
 
 				$formDescriptor["set-$name"] = [
@@ -492,7 +492,7 @@ class ManageWikiFormFactoryBuilder {
 							$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 						}
 
-						$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
+						$help .= "<br/>{$requiresLabel}: " . implode( ' & ', $requires );
 					}
 
 					$formDescriptor["$key-$name"] = [
