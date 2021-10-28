@@ -282,7 +282,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$help[] = $extDescription ?? ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description;
 
-			if ( $hasSettings ) {
+			if ( $hasSettings && in_array( $name, $extList ) ) {
 				$help[] = '<br/>' . Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name, wfMessage( 'managewiki-extension-settings' )->text() );
 			}
 
@@ -321,7 +321,7 @@ class ManageWikiFormFactoryBuilder {
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
 
 		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered ) {
-			return $value['from'] == strtolower( $filtered );
+			return $value['from'] == strtolower( $filtered ) && in_array( $value['from'], $extList );
 		} );
 
 		$formDescriptor = [];
