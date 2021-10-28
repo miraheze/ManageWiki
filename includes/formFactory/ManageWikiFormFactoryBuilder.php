@@ -24,7 +24,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config, $filtered );
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $wiki, $config, $filtered );
+				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $wiki, $config );
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special, $config );
@@ -318,7 +318,7 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $filteredSettings as $name => $set ) {
 			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
 
-			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $set['from'] == 'mediawiki' ) || ( in_array( $set['from'], $extList ) ) );
+			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( $set['global'] ?? false || in_array( $set['from'], $extList ) );
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
@@ -366,19 +366,12 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		string $special,
 		RemoteWiki $wiki,
-		Config $config,
-		string $filtered
+		Config $config
 	) {
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
 
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
-
-		$additionalSettings = $config->get( 'ManageWikiNamespacesAdditional' );
-
-		$filteredList = array_filter( $additionalSettings, static function ( $value ) use ( $filtered ) {
-			return $value['from'] == strtolower( $filtered );
-		} );
 
 		$formDescriptor = [];
 
@@ -387,7 +380,6 @@ class ManageWikiFormFactoryBuilder {
 			'namespacetalk' => (int)$special + 1
 		];
 
-		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $additionalSettings ) ) ?: $additionalSettings;
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
@@ -447,7 +439,7 @@ class ManageWikiFormFactoryBuilder {
 				]
 			];
 
-			foreach ( $filteredSettings as $key => $a ) {
+			foreach ( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $wiki ) : true;
 
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );

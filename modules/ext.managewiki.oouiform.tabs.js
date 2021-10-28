@@ -9,7 +9,9 @@
 		function enhancePanel( panel ) {
 			var $infuse = $( panel.$element ).find( '.managewiki-infuse' );
 			$infuse.each( function () {
-				OO.ui.infuse( this );
+				if ( this.$infuse ) {
+					OO.ui.infuse( this );
+				}
 			} );
 
 			if ( !panel.$element.data( 'mw-section-infused' ) ) {
