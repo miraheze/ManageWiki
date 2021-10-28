@@ -210,6 +210,8 @@ class ManageWikiFormFactoryBuilder {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 
+		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
+
 		$queue = array_fill_keys( array_merge(
 				glob( $config->get( 'ExtensionDirectory' ) . '/*/extension*.json' ),
 				glob( $config->get( 'StyleDirectory' ) . '/*/skin.json' )
@@ -236,6 +238,12 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
+			$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $name ) {
+				return $value['from'] == $name;
+			} );
+
+			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
+
 			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
 
 			$help = [];
@@ -273,6 +281,10 @@ class ManageWikiFormFactoryBuilder {
 			$extDisplayName = ( $ext['displayname'] ?? false ) ? ( wfMessage( $ext['displayname'] )->exists() ? wfMessage( $ext['displayname'] )->parse() : $ext['displayname'] ) : null;
 
 			$help[] = $extDescription ?? ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description;
+
+			if ( $hasSettings ) {
+				$help[] = '<br />' . Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name, wfMessage( 'managewiki-extension-settings' )->escaped() );
+			}
 
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
