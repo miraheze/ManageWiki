@@ -972,8 +972,8 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
-		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered ) {
-			return $value['from'] == strtolower( $filtered );
+		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered, $extList ) {
+			return $value['from'] == strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || ( array_key_exists( 'global', $value ) && $value['global'] ) );
 		} );
 
 		$remove = !( count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0 );
