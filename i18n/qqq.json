@@ -50,6 +50,7 @@
 	"managewiki-disabled": "Message that indicates that a feature is not yet enabled on a wiki.",
 	"managewiki-error-conflict": "A message that is shown when a setting conflicts with another",
 	"managewiki-error-disallowednamespace": "A message that is shown when someone tries to create a disallowed namespace",
+	"managewiki-extension-settings": "Text of a link to a filtered Special:ManageWiki/settings from Special:ManageWiki/extensions",
 	"managewiki-header-core": "Header shown in Special:ManageWiki",
 	"managewiki-header-extensions": "Header shown in Special:ManageWiki/extensions",
 	"managewiki-header-permissions": "Header shown in Special:ManageWiki/permissions",
