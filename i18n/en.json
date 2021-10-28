@@ -56,7 +56,7 @@
 	"managewiki-error-emptygroup": "You can not create a group without any permissions assigned.",
 	"managewiki-error-install": "The extension $1 failed to be installed.",
 	"managewiki-error-requirements": "The extension $1 can not be enabled as it fails to meet its requirements.",
-	"managewiki-extension-settings": "Manage available configuration options for this extension.",
+	"managewiki-extension-settings": "Manage available configuration options for this extension",
 	"managewiki-header-core": "Select what you would like to manage below, and click the save button to save your changes.",
 	"managewiki-header-extensions": "The extensions here are the ones that are currently installed, but you can always <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features request]</span> another one to be added. <br> Once you are done, press the \"save\" button to save your changes.",
 	"managewiki-header-permissions": "Select a group below that already exists to modify or create a new user group in the box below.",
