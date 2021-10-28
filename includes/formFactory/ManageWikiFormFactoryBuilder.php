@@ -964,7 +964,7 @@ class ManageWikiFormFactoryBuilder {
 			return $value['from'] == strtolower( $filtered );
 		} );
 
-		$remove = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
+		$remove = !( count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0 );
 
 		$mwSettings->overwriteAll( $settingsArray, $remove );
 
