@@ -959,7 +959,14 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		$mwSettings->overwriteAll( $settingsArray, (bool)$filtered );
+		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
+		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered ) {
+			return $value['from'] == strtolower( $filtered );
+		} );
+
+		$remove = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
+
+		$mwSettings->overwriteAll( $settingsArray, $remove );
 
 		return $mwSettings;
 	}
