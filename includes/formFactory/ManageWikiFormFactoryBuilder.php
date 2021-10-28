@@ -321,7 +321,7 @@ class ManageWikiFormFactoryBuilder {
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
 
 		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered, $extList ) {
-			return $value['from'] == strtolower( $filtered ) && in_array( $value['from'], $extList );
+			return $value['from'] == strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || $value['global'] ?? false );
 		} );
 
 		$formDescriptor = [];
