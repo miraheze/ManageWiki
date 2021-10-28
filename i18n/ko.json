@@ -64,6 +64,7 @@
 	"managewiki-label-language": "언어",
 	"managewiki-label-private": "비공개",
 	"managewiki-label-inactive": "비활성",
+	"managewiki-label-experimental": "실험 기능",
 	"managewiki-label-inactive-exempt": "비활성 상태에서 제외",
 	"managewiki-label-server": "서버 이름",
 	"managewiki-label-sitename": "사이트 이름",

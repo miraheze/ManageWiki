@@ -73,6 +73,7 @@
 	"managewiki-label-language": "Мова",
 	"managewiki-label-private": "Приватна",
 	"managewiki-label-inactive": "Неактивна",
+	"managewiki-label-experimental": "Експериментальні особливості",
 	"managewiki-label-inactive-exempt": "Виключення з політики щодо неактивності",
 	"managewiki-label-inactive-exempt-reason": "Виберіть причину цього звільнення від бездіяльності.",
 	"managewiki-label-server": "Ім'я серверу",

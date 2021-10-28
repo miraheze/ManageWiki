@@ -4,6 +4,7 @@
 			"Agent",
 			"AlvaroMolina",
 			"Anarhistička Maca",
+			"Avengium",
 			"Cgalindo",
 			"Dark Dragoon",
 			"Fitoschido",
@@ -22,6 +23,8 @@
 		]
 	},
 	"action-managewiki": "gestionar la configuración de la wiki",
+	"action-managewiki-restricted": "administrar configuraciones wiki restringidas",
+	"action-managewiki-editdefault": "administrar los permisos de grupo predeterminados",
 	"apihelp-query+wikiconfig-summary": "Ver nombre del sitio, inactivo, exento de inactividad, cerrado, privado, extensiones y permisos de la wiki específica.",
 	"apihelp-query+wikiconfig-example-1": "Ver la configuración wiki de metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Selecciona las propiedades que regresarán",

@@ -72,6 +72,7 @@
 	"managewiki-label-language": "Idioma",
 	"managewiki-label-private": "Privado",
 	"managewiki-label-inactive": "Inativo",
+	"managewiki-label-experimental": "Recursos experimentais",
 	"managewiki-label-inactive-exempt": "Isento de Inatividade",
 	"managewiki-label-inactive-exempt-reason": "Selecione o motivo desta isenção de inatividade.",
 	"managewiki-label-server": "Nome do servidor",
