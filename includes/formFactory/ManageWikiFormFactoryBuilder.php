@@ -210,6 +210,8 @@ class ManageWikiFormFactoryBuilder {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 
+		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
+
 		$queue = array_fill_keys( array_merge(
 				glob( $config->get( 'ExtensionDirectory' ) . '/*/extension*.json' ),
 				glob( $config->get( 'StyleDirectory' ) . '/*/skin.json' )
@@ -236,6 +238,12 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
+			$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $name ) {
+				return $value['from'] == $name;
+			} );
+
+			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
+
 			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
 
 			$help = [];
@@ -274,6 +282,10 @@ class ManageWikiFormFactoryBuilder {
 
 			$help[] = $extDescription ?? ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description;
 
+			if ( $hasSettings && in_array( $name, $extList ) ) {
+				$help[] = '<br/>' . Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name, wfMessage( 'managewiki-extension-settings' )->text() );
+			}
+
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
 				'label-message' => [
@@ -308,8 +320,8 @@ class ManageWikiFormFactoryBuilder {
 
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
 
-		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered ) {
-			return $value['from'] == strtolower( $filtered );
+		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered, $extList ) {
+			return $value['from'] == strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || ( array_key_exists( 'global', $value ) && $value['global'] ) );
 		} );
 
 		$formDescriptor = [];
@@ -952,8 +964,8 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
-		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered ) {
-			return $value['from'] == strtolower( $filtered );
+		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered, $extList ) {
+			return $value['from'] == strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || ( array_key_exists( 'global', $value ) && $value['global'] ) );
 		} );
 
 		$remove = !( count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0 );
