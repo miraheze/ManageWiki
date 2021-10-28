@@ -738,7 +738,8 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWiki $wiki,
 		DBConnRef $dbw,
 		Config $config,
-		string $special = ''
+		string $special = '',
+		string $filtered = ''
 	) {
 		switch ( $module ) {
 			case 'core':
@@ -748,7 +749,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn = self::submissionExtensions( $formData, $dbName, $config );
 				break;
 			case 'settings':
-				$mwReturn = self::submissionSettings( $formData, $dbName, $context, $wiki, $config );
+				$mwReturn = self::submissionSettings( $formData, $dbName, $filtered, $context, $wiki, $config );
 				break;
 			case 'namespaces':
 				$mwReturn = self::submissionNamespaces( $formData, $dbName, $special, $config );
@@ -916,6 +917,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function submissionSettings(
 		array $formData,
 		string $dbName,
+		string $filtered,
 		IContextSource $context,
 		RemoteWiki $wiki,
 		Config $config
@@ -957,7 +959,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		$mwSettings->overwriteAll( $settingsArray );
+		$mwSettings->overwriteAll( $settingsArray, (bool)$filtered );
 
 		return $mwSettings;
 	}
