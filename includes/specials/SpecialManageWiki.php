@@ -57,6 +57,7 @@ class SpecialManageWiki extends SpecialPage {
 			'core',
 			'extensions',
 			'namespaces',
+			'permissions',
 			'settings',
 		];
 	}
