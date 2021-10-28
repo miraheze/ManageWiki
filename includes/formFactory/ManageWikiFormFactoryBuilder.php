@@ -395,8 +395,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$create = ucfirst( $session->get( 'create' ) ) . ( $name == 'namespacetalk' && $session->get( 'create' ) ? '_talk' : null );
 
-			if ( !$filtered || in_array( strtolower( $filtered ), [ 'core', 'mediawiki' ] ) ) {
-				$formDescriptor += [
+			$formDescriptor += [
 					"namespace-$name" => [
 						'type' => 'text',
 						'label' => wfMessage( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
@@ -405,6 +404,10 @@ class ManageWikiFormFactoryBuilder {
 						'required' => true,
 						'section' => $name
 					],
+			];
+
+			if ( !$filtered || in_array( strtolower( $filtered ), [ 'core', 'mediawiki' ] ) ) {
+				$formDescriptor += [
 					"content-$name" => [
 						'type' => 'check',
 						'label' => wfMessage( 'namespaces-content' )->text() . ' ($wgContentNamespaces)',
