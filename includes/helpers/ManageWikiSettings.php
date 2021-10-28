@@ -109,12 +109,13 @@ class ManageWikiSettings {
 	/**
 	 * Allows multiples settings to be changed at once
 	 * @param array $settings Settings to change
+	 * @param bool $remove Whether to remove settings if they do not exist
 	 */
-	public function overwriteAll( array $settings ) {
+	public function overwriteAll( array $settings, bool $remove = true ) {
 		$overwrittenSettings = $this->list();
 
 		foreach ( $this->settingsConfig as $var => $setConfig ) {
-			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) ) {
+			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) && $remove ) {
 				$this->remove( $var );
 			} elseif ( ( $settings[$var] ?? null ) !== null ) {
 				$this->modify( [ $var => $settings[$var] ] );
