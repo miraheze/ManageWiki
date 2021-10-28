@@ -47,8 +47,8 @@ class ManageWikiFormFactory {
 		$htmlForm->setSubmitID( 'managewiki-submit' );
 
 		$htmlForm->setSubmitCallback(
-			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special, $dbw, $wiki, $config ) {
-				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $config, $special );
+			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special, $filtered, $dbw, $wiki, $config ) {
+				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $config, $special, $filtered );
 			}
 		);
 
@@ -64,7 +64,8 @@ class ManageWikiFormFactory {
 		RemoteWiki $wiki,
 		DBConnRef $dbw,
 		Config $config,
-		string $special = ''
+		string $special = '',
+		string $filtered = ''
 	) {
 		$context = $form->getContext();
 		$out = $context->getOutput();
@@ -76,7 +77,7 @@ class ManageWikiFormFactory {
 		$form->getButtons();
 		$formData['reason'] = $form->getField( 'reason' )->loadDataFromRequest( $form->getRequest() );
 
-		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $config, $special );
+		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $config, $special, $filtered );
 
 		if ( !empty( $mwReturn ) ) {
 			$errorOut = [];
