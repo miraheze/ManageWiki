@@ -356,7 +356,7 @@ class ManageWikiFormFactoryBuilder {
 						$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 					}
 
-					$help .= "<br/>{$requiresLabel}: " . implode( ' & ', $requires );
+					$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
 				}
 
 				$formDescriptor["set-$name"] = [
@@ -492,7 +492,7 @@ class ManageWikiFormFactoryBuilder {
 							$requires[] = ucfirst( $require ) . " - " . ( is_array( $data ) ? implode( ', ', $data ) : $data );
 						}
 
-						$help .= "<br/>{$requiresLabel}: " . implode( ' & ', $requires );
+						$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
 					}
 
 					$formDescriptor["$key-$name"] = [
