@@ -9,8 +9,10 @@
 		function enhancePanel( panel ) {
 			var $infuse = $( panel.$element ).find( '.managewiki-infuse' );
 			$infuse.each( function () {
-				if ( this.$infuse ) {
+				try {
 					OO.ui.infuse( this );
+				} catch ( error ) {
+					return;
 				}
 			} );
 
