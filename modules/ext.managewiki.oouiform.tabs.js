@@ -11,7 +11,8 @@
 			$infuse.each( function () {
 				try {
 					OO.ui.infuse( this );
-				} catch {
+				} catch( error ) {
+					return;
 				}
 			} );
 
