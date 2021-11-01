@@ -809,8 +809,6 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $mwActions as $mwAction ) {
 			if ( $formData[$mwAction] ?? false ) {
 				$wiki->$mwAction();
-
-				return $wiki;
 			}
 		}
 
