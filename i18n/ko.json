@@ -49,6 +49,7 @@
 	"managewiki-disabled": "이 기능 ($1)은 이 위키에서 아직 활성화되어 있지 않습니다.",
 	"managewiki-error-disallowednamespace": "$1 이름공간은 허용되지 않습니다.",
 	"managewiki-error-emptygroup": "권한을 부여받지 않은 채 그룹을 만들 수 없습니다.",
+	"managewiki-extension-settings": "이 확장의 사용 가능한 구성 옵션 관리",
 	"managewiki-header-core": "아래에서 관리하고자 하는 항목을 선택하고 제출을 클릭하세요!",
 	"managewiki-header-permissions": "아래에서 수정할 이미 존재하는 그룹을 선택하거나 아래에 있는 상자에서 새 사용자 그룹을 만드세요.",
 	"managewiki-header-namespaces": "아래에서 편집할 이름공간을 선택하거나 (토론 이름공간은 메인 이름공간에 연관되어 있습니다) 버튼을 눌러 새 이름공간을 만드세요.",

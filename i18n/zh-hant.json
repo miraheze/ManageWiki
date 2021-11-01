@@ -55,6 +55,7 @@
 	"managewiki-error-emptygroup": "您要被分配權限才能建立群組。",
 	"managewiki-error-install": "擴充功能$1安裝失敗。",
 	"managewiki-error-requirements": "擴充$1無法啓動，因為未符合需求。",
+	"managewiki-extension-settings": "管理此擴充功能可用的設置選項",
 	"managewiki-header-core": "在以下選擇您所想要管理的內容，然後點擊儲存按鈕來保存您的變更。",
 	"managewiki-header-extensions": "在此為目前已安裝的擴充，而您也可以隨時<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features 請求]</span>其它要添加的項目。<br>一旦您完成後，按下「儲存」按鈕來保存您的更改。",
 	"managewiki-header-permissions": "選擇下方已存在的群組來進行變動，或是在下方方框來建立新的使用者群組！",
