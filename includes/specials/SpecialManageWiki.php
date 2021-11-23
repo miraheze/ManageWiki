@@ -46,7 +46,7 @@ class SpecialManageWiki extends SpecialPage {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
 			$dbName = $par[1] ?? $this->config->get( 'DBname' );
-			$this->showWikiForm( $dbName, 'core', '', '' );
+			$this->showWikiForm( strtolower( $dbName ), 'core', '', '' );
 		} else {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
 		}
