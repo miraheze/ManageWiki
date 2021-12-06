@@ -14,31 +14,17 @@ jobs:
       matrix:
         include:
           # Latest stable MediaWiki - PHP 7.3 (phan)
-          - mw: 'REL1_36'
+          - mw: 'REL1_37'
             php: 7.3
             php-docker: 73
             experimental: false
             stage: phan
 
           # Latest stable MediaWiki - PHP 7.4 (phan)
-          - mw: 'REL1_36'
+          - mw: 'REL1_37'
             php: 7.4
             php-docker: 74
             experimental: false
-            stage: phan
-
-          # Latest MediaWiki release branch - PHP 7.3 (phan)
-          - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
-            experimental: true
-            stage: phan
-
-          # Latest MediaWiki release branch - PHP 7.4 (phan)
-          - mw: 'REL1_37'
-            php: 7.4
-            php-docker: 74
-            experimental: true
             stage: phan
 
           # Latest MediaWiki master - PHP 7.3 (phan)
@@ -56,27 +42,13 @@ jobs:
             stage: phan
 
           # Latest stable MediaWiki - PHP 7.3 (phpunit-unit)
-          - mw: 'REL1_36'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: phpunit-unit
-
-          # Latest stable MediaWiki - PHP 7.4 (phpunit-unit)
-          - mw: 'REL1_36'
-            php: 7.4
-            php-docker: 74
-            experimental: false
-            stage: phpunit-unit
-
-          # Latest MediaWiki release branch - PHP 7.3 (phpunit-unit)
           - mw: 'REL1_37'
             php: 7.3
             php-docker: 73
             experimental: false
             stage: phpunit-unit
 
-          # Latest MediaWiki release branch - PHP 7.4 (phpunit-unit)
+          # Latest stable MediaWiki - PHP 7.4 (phpunit-unit)
           - mw: 'REL1_37'
             php: 7.4
             php-docker: 74
@@ -98,27 +70,13 @@ jobs:
             stage: phpunit-unit
 
           # Latest stable MediaWiki - PHP 7.3 (phpunit)
-          - mw: 'REL1_36'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: phpunit
-
-          # Latest stable MediaWiki - PHP 7.4 (phpunit)
-          - mw: 'REL1_36'
-            php: 7.4
-            php-docker: 74
-            experimental: false
-            stage: phpunit
-
-          # Latest MediaWiki release branch - PHP 7.3 (phpunit)
           - mw: 'REL1_37'
             php: 7.3
             php-docker: 73
             experimental: false
             stage: phpunit
 
-          # Latest MediaWiki release branch - PHP 7.4 (phpunit)
+          # Latest stable MediaWiki - PHP 7.4 (phpunit)
           - mw: 'REL1_37'
             php: 7.4
             php-docker: 74
@@ -140,13 +98,6 @@ jobs:
             stage: phpunit
 
           # Latest stable MediaWiki - PHP 7.3 (selenium)
-          - mw: 'REL1_36'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: selenium
-
-          # Latest MediaWiki release branch - PHP 7.3 (selenium)
           - mw: 'REL1_37'
             php: 7.3
             php-docker: 73
@@ -161,13 +112,6 @@ jobs:
             stage: selenium
 
           # Latest stable MediaWiki - PHP 7.3 (qunit)
-          - mw: 'REL1_36'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: qunit
-
-          # Latest MediaWiki release branch - PHP 7.3 (qunit)
           - mw: 'REL1_37'
             php: 7.3
             php-docker: 73
@@ -182,14 +126,14 @@ jobs:
             stage: qunit
 
           # Latest stable MediaWiki - PHP 7.3 (npm-test)
-          - mw: 'REL1_36'
+          - mw: 'REL1_37'
             php: 7.3
             php-docker: 73
             experimental: false
             stage: npm-test
   
           # Latest stable MediaWiki - PHP 7.3 (composer-test)
-          - mw: 'REL1_36'
+          - mw: 'REL1_37'
             php: 7.3
             php-docker: 73
             experimental: false
@@ -290,16 +234,6 @@ jobs:
 
               git clone --recurse-submodules -b "${branch:-${MEDIAWIKI_VERSION}}" --depth 1 "${repository:-https://gerrit.wikimedia.org/r/${dependency}}" src/"$(echo $dependency | cut -d'/' -f2,3)"
             done
-          fi
-
-          # REPLACE SETUP.PHP FOR CREATEWIKI DEPENDANT EXTENSIONS ON REL1_36.
-          # FIXES A BUG PRESENT ON REL1_36, WHEN DOING DATABASE STUFF BEFORE THIS WAS DONE, REQUEST INFO WAS ALREADY SET FOR DBLoadBalancerFactory,
-          # RESULTING IN "LogicException: ChronologyProtector already initialized". THIS HACK REMOVES
-          # MediaWikiServices::getInstance()->getDBLoadBalancerFactory()->setRequestInfo(). THIS IS ALREADY FIXED FOR REL1_37 AND LATER.
-          # WITH https://github.com/wikimedia/mediawiki/commit/29827d
-
-          if [ -d src/extensions/CreateWiki ] || [ "${{ github.event.repository.name }}" == 'CreateWiki' ] && [ "${MEDIAWIKI_VERSION}" == 'REL1_36' ]; then
-            curl -sL https://raw.githubusercontent.com/Universal-Omega/scripts/master/mediawiki/hacks/Setup-REL1_36.php > src/includes/Setup.php
           fi
 
           if [ -e "$GITHUB_WORKSPACE"/.github/workflows/globals.php ]; then
