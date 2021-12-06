@@ -353,11 +353,6 @@ class ManageWikiTypes {
 			$models = $contentHandlerFactory->getContentModels();
 			$contentModels = [];
 			foreach ( $models as $model ) {
-				$handler = $contentHandlerFactory->getContentHandler( $model );
-				if ( !$handler->supportsDirectEditing() && $model !== 'flow-board' ) {
-					continue;
-				}
-
 				$contentModels[ucfirst( ContentHandler::getLocalizedName( $model ) )] = $model;
 			}
 
