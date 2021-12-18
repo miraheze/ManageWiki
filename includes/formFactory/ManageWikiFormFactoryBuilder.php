@@ -768,6 +768,18 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $mwReturn->changes ) {
 			$mwReturn->commit();
+
+			if ( $module != 'permissions' ) {
+				$mwReturn->logParams['4::wiki'] = $dbName;
+			}
+
+			$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->log );
+			$mwLogEntry->setPerformer( $context->getUser() );
+			$mwLogEntry->setTarget( $form->getTitle() );
+			$mwLogEntry->setComment( $formData['reason'] );
+			$mwLogEntry->setParameters( $mwReturn->logParams );
+			$mwLogID = $mwLogEntry->insert();
+			$mwLogEntry->publish( $mwLogID );
 		} else {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}
@@ -775,18 +787,6 @@ class ManageWikiFormFactoryBuilder {
 		if ( $mwReturn->errors ?? [] && $module == 'permissions' ) {
 			return $mwReturn->errors;
 		}
-
-		if ( $module != 'permissions' ) {
-			$mwReturn->logParams['4::wiki'] = $dbName;
-		}
-
-		$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->log );
-		$mwLogEntry->setPerformer( $context->getUser() );
-		$mwLogEntry->setTarget( $form->getTitle() );
-		$mwLogEntry->setComment( $formData['reason'] );
-		$mwLogEntry->setParameters( $mwReturn->logParams );
-		$mwLogID = $mwLogEntry->insert();
-		$mwLogEntry->publish( $mwLogID );
 
 		return $mwReturn->errors ?? [];
 	}
