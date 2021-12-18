@@ -87,14 +87,14 @@ jobs:
           - mw: 'master'
             php: 7.3
             php-docker: 73
-            experimental: true
+            experimental: false
             stage: phpunit
 
           # Latest MediaWiki master - PHP 7.4 (phpunit)
           - mw: 'master'
             php: 7.4
             php-docker: 74
-            experimental: true
+            experimental: false
             stage: phpunit
 
           # Latest stable MediaWiki - PHP 7.3 (selenium)
