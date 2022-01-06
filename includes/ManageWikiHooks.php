@@ -110,10 +110,12 @@ class ManageWikiHooks {
 								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = true;
 								break;
 							default:
-								if ( ( $additional[$var]['constant'] ) ?? false ) {
-									$jsonArray['settings'][$var] = str_replace( ' ', '_', $val );
-								} else {
-									$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
+								if ( $val ) {
+									if ( ( $additional[$var]['constant'] ) ?? false ) {
+										$jsonArray['settings'][$var] = str_replace( ' ', '_', $val );
+									} else {
+										$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
+									}
 								}
 						}
 					}
