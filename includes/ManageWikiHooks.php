@@ -118,7 +118,7 @@ class ManageWikiHooks {
 					}
 				}
 
-				$diffKeys = array_keys( array_diff_key( $additional, array_intersect_key( $nsAdditional, $jsonArray['settings'] ) ) );
+				$diffKeys = array_keys( array_diff_key( $additional, $nsAdditional ) );
 				foreach ( $diffKeys as $var ) {
 					if ( !isset( $additional[$var]['constant'] ) ) {
 						$jsonArray['settings'][$var] = [];
