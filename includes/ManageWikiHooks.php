@@ -116,7 +116,10 @@ class ManageWikiHooks {
 										$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
 									}
 							}
-						} elseif ( !isset( $additional[$var]['constant'] ) && !$jsonArray['settings'][$var] ) {
+						} elseif (
+							!isset( $additional[$var]['constant'] ) &&
+							( !isset( $jsonArray['settings'][$var] ) || !$jsonArray['settings'][$var] )
+						) {
 							$jsonArray['settings'][$var] = [];
 						}
 					}
