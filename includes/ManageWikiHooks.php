@@ -101,7 +101,7 @@ class ManageWikiHooks {
 				foreach ( (array)$nsAdditional as $var => $val ) {
 					$additional = self::getConfig( 'ManageWikiNamespacesAdditional' );
 
-					if ( $val && isset( $additional[$var] ) ) {
+					if ( isset( $additional[$var] ) ) {
 						switch ( $additional[$var]['type'] ) {
 							case 'check':
 								$jsonArray['settings'][$var][] = (int)$ns->ns_namespace_id;
