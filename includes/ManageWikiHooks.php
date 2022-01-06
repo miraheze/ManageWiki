@@ -80,6 +80,7 @@ class ManageWikiHooks {
 				$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
 			}
 
+			$additional = self::getConfig( 'ManageWikiNamespacesAdditional' );
 			foreach ( $nsObjects as $ns ) {
 				$nsName = $lcName[$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
 				$lcAlias = $lcEN[$ns->ns_namespace_id] ?? null;
@@ -98,23 +99,28 @@ class ManageWikiHooks {
 
 				$nsAdditional = json_decode( $ns->ns_additional, true );
 
-				foreach ( (array)$nsAdditional as $var => $val ) {
-					$additional = self::getConfig( 'ManageWikiNamespacesAdditional' );
-
-					if ( $val && isset( $additional[$var] ) ) {
-						switch ( $additional[$var]['type'] ) {
-							case 'check':
-								$jsonArray['settings'][$var][] = (int)$ns->ns_namespace_id;
-								break;
-							case 'vestyle':
-								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = true;
-								break;
-							default:
-								if ( ( $additional[$var]['constant'] ) ?? false ) {
-									$jsonArray['settings'][$var] = str_replace( ' ', '_', $val );
-								} else {
-									$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
-								}
+				foreach ( $nsAdditional as $var => $val ) {
+					if ( isset( $additional[$var] ) ) {
+						if ( $val ) {
+							switch ( $additional[$var]['type'] ) {
+								case 'check':
+									$jsonArray['settings'][$var][] = (int)$ns->ns_namespace_id;
+									break;
+								case 'vestyle':
+									$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = true;
+									break;
+								default:
+									if ( ( $additional[$var]['constant'] ) ?? false ) {
+										$jsonArray['settings'][$var] = str_replace( ' ', '_', $val );
+									} else {
+										$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
+									}
+							}
+						} elseif (
+							!isset( $additional[$var]['constant'] ) &&
+							( !isset( $jsonArray['settings'][$var] ) || !$jsonArray['settings'][$var] )
+						) {
+							$jsonArray['settings'][$var] = [];
 						}
 					}
 				}
