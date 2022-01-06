@@ -80,6 +80,7 @@ class ManageWikiHooks {
 				$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
 			}
 
+			$additional = self::getConfig( 'ManageWikiNamespacesAdditional' );
 			foreach ( $nsObjects as $ns ) {
 				$nsName = $lcName[$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
 				$lcAlias = $lcEN[$ns->ns_namespace_id] ?? null;
@@ -98,9 +99,7 @@ class ManageWikiHooks {
 
 				$nsAdditional = json_decode( $ns->ns_additional, true );
 
-				foreach ( (array)$nsAdditional as $var => $val ) {
-					$additional = self::getConfig( 'ManageWikiNamespacesAdditional' );
-
+				foreach ( $nsAdditional as $var => $val ) {
 					if ( $val && isset( $additional[$var] ) ) {
 						switch ( $additional[$var]['type'] ) {
 							case 'check':
@@ -116,6 +115,13 @@ class ManageWikiHooks {
 									$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
 								}
 						}
+					}
+				}
+
+				$diffKeys = array_keys( array_diff_key( $additional, array_intersect_key( $nsAdditional, $jsonArray['settings'] ) ) );
+				foreach ( $diffKeys as $var ) {
+					if ( !isset( $additional[$var]['constant'] ) ) {
+						$jsonArray['settings'][$var] = [];
 					}
 				}
 			}
