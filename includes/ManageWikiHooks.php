@@ -100,28 +100,25 @@ class ManageWikiHooks {
 				$nsAdditional = json_decode( $ns->ns_additional, true );
 
 				foreach ( $nsAdditional as $var => $val ) {
-					if ( $val && isset( $additional[$var] ) ) {
-						switch ( $additional[$var]['type'] ) {
-							case 'check':
-								$jsonArray['settings'][$var][] = (int)$ns->ns_namespace_id;
-								break;
-							case 'vestyle':
-								$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = true;
-								break;
-							default:
-								if ( ( $additional[$var]['constant'] ) ?? false ) {
-									$jsonArray['settings'][$var] = str_replace( ' ', '_', $val );
-								} else {
-									$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
-								}
+					if ( isset( $additional[$var] ) ) {
+						if ( $val ) {
+							switch ( $additional[$var]['type'] ) {
+								case 'check':
+									$jsonArray['settings'][$var][] = (int)$ns->ns_namespace_id;
+									break;
+								case 'vestyle':
+									$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = true;
+									break;
+								default:
+									if ( ( $additional[$var]['constant'] ) ?? false ) {
+										$jsonArray['settings'][$var] = str_replace( ' ', '_', $val );
+									} else {
+										$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
+									}
+							}
+						} elseif ( !isset( $additional[$var]['constant'] ) ) {
+							$jsonArray['settings'][$var] = [];
 						}
-					}
-				}
-
-				$diffKeys = array_keys( array_diff_key( $additional, $nsAdditional ) );
-				foreach ( $diffKeys as $var ) {
-					if ( !isset( $additional[$var]['constant'] ) ) {
-						$jsonArray['settings'][$var] = [];
 					}
 				}
 			}
