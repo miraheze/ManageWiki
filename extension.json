@@ -107,7 +107,7 @@
 		"LoadExtensionSchemaUpdates": [
 			"ManageWikiHooks::fnManageWikiSchemaUpdates"
 		],
-		"SkinBuildSidebar": [
+		"SidebarBeforeOutput": [
 			"ManageWikiHooks::fnNewSidebarItem"
 		]
 	},
