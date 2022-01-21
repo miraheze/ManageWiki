@@ -386,11 +386,16 @@ class ManageWikiFormFactoryBuilder {
 		$extList = $mwExt->list();
 
 		$formDescriptor = [];
+		$nsID = [];
 
-		$nsID = [
-			'namespace' => (int)$special,
-			'namespacetalk' => (int)$special + 1
-		];
+		$nsID['namespace'] = (int)$special;
+
+		if (
+			$mwNamespace->list( (int)$special + 1 )['name'] ||
+			!$mwNamespace->list( (int)$special )['name']
+		) {
+			$nsID['namespacetalk'] = (int)$special + 1;
+		}
 
 		$session = $context->getRequest()->getSession();
 
