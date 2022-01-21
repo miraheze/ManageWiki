@@ -391,8 +391,8 @@ class ManageWikiFormFactoryBuilder {
 		$nsID['namespace'] = (int)$special;
 
 		if (
-			!$mwNamespace->list( (int)$special )['name'] ||
-			$mwNamespace->list( (int)$special + 1 )['name']
+			$mwNamespace->list( (int)$special + 1 )['name'] ||
+			!$mwNamespace->list( (int)$special )['name']
 		) {
 			$nsID['namespacetalk'] = (int)$special + 1;
 		}
