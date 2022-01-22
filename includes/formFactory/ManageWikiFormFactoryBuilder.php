@@ -230,10 +230,14 @@ class ManageWikiFormFactoryBuilder {
 
 		$data = $processor->getExtractedInfo();
 
-		$credits = array_merge( $data['credits'], array_values(
-				array_merge( ...array_values( $config->get( 'ExtensionCredits' ) ) )
-			)
-		);
+		$credits = $data['credits'];
+		$legacyCredits = $config->get( 'ExtensionCredits' );
+		if ( is_array( $legacyCredits ) && $legacyCredits ) {
+			$credits = array_merge( $credits, array_values(
+					array_merge( ...array_values( $legacyCredits ) )
+				)
+			);
+		}
 
 		$formDescriptor = [];
 
