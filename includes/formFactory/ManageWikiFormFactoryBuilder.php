@@ -232,7 +232,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$credits = $data['credits'];
 		$legacyCredits = $config->get( 'ExtensionCredits' );
-		if ( is_array( $legacyCredits ) && $legacyCredits ) {
+		if ( $legacyCredits ) {
 			$credits = array_merge( $credits, array_values(
 					array_merge( ...array_values( $legacyCredits ) )
 				)
