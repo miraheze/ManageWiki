@@ -40,6 +40,20 @@ class ManageWikiTypes {
 					'default' => $value ?? $options['overridedefault']
 				];
 				break;
+			case 'integers':
+				$configs = [
+					'type' => 'cloner',
+					'fields' => [
+						'integer' => [
+							'type' => 'int',
+							'min' => $options['minint'] ?? null,
+							'max' => $options['maxint'] ?? null,
+						]
+					],
+					'default' => array_map( static function ( $num ) { return [ 'integer' => $num ]; },
+						( isset( $value ) && $value !== null ) ? $value : $options['overridedefault'] ),
+				];
+				break;
 			case 'interwiki':
 				$interwikiPrefixes = [];
 
