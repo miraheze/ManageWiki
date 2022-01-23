@@ -48,7 +48,12 @@ class ManageWikiTypes {
 							'type' => 'int',
 							'min' => $options['minint'] ?? null,
 							'max' => $options['maxint'] ?? null,
-						]
+						],
+						'delete' => [
+							'type' => 'submit',
+							'default' => wfMessage( 'htmlform-cloner-delete' )->escaped(),
+							'flags' => [ 'destructive' ],
+						],
 					],
 					'default' => array_map( static function ( $num ) { return [ 'integer' => $num ]; },
 						$value ?? $options['overridedefault'] ),
