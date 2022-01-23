@@ -51,7 +51,7 @@ class ManageWikiTypes {
 						]
 					],
 					'default' => array_map( static function ( $num ) { return [ 'integer' => $num ]; },
-						( isset( $value ) && $value !== null ) ? $value : $options['overridedefault'] ),
+						$value ?? $options['overridedefault'] ),
 				];
 				break;
 			case 'interwiki':
