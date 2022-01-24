@@ -187,17 +187,17 @@ class ManageWikiTypes {
 					}
 				}
 
-				// Blacklist searchNs* preferences
+				// Exclude searchNs* preferences
 				foreach ( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
-				// Blacklist echo-subscriptions-* preferences
+				// Exclude echo-subscriptions-* preferences
 				foreach ( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $val ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
-				// Blacklist downloaduserdata preference
+				// Exclude downloaduserdata preference
 				$excludedPrefs[] = 'downloaduserdata';
 
 				foreach ( $allPreferences as $pref => $val ) {
