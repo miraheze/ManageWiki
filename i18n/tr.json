@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"BaRaN6161 TURK",
+			"Can",
 			"Dual",
 			"Hedda",
 			"Joseph",
@@ -9,6 +10,8 @@
 		]
 	},
 	"action-managewiki": "viki ayarlarını yönet",
+	"action-managewiki-restricted": "kısıtlı viki ayarlarını yönetin",
+	"action-managewiki-editdefault": "varsayılan grup izinlerini yönet",
 	"apihelp-query+wikiconfig-summary": "Belirtilen viki için site adını, etkin olmayan, etkin olmayan-muaf, kapalı, özel, uzantıları, ayarları ve izinleri görüntüleyin.",
 	"apihelp-query+wikiconfig-example-1": "Metaviki için viki yapılandırmasını görüntüleyin.",
 	"apihelp-query+wikiconfig-param-prop": "Dönecek özellikleri seçin:",
@@ -70,6 +73,7 @@
 	"managewiki-label-language": "Dil",
 	"managewiki-label-private": "Özel",
 	"managewiki-label-inactive": "Etkin değil",
+	"managewiki-label-experimental": "Deneysel Özellikler",
 	"managewiki-label-inactive-exempt": "Hareketsizlikten Muaf",
 	"managewiki-label-inactive-exempt-reason": "İnaktiflikten muaf olmak nedenini seçin.",
 	"managewiki-label-server": "Sunucu Adı",
