@@ -163,7 +163,7 @@ class ManageWikiTypes {
 						$excludedPrefs[] = 'email-allow-new-users';
 						$excludedPrefs[] = 'ccmeonemails';
 
-						if ( !$config->get( 'EnableUserEmailBlacklist' ) ) {
+						if ( !$config->get( 'EnableUserEmailMuteList' ) ) {
 							$excludedPrefs[] = 'email-blacklist';
 						}
 					}
