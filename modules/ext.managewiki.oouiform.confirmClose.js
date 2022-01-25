@@ -43,7 +43,7 @@
 		}
 
 		// Store the initial number of children of cloners for later use, as an equivalent of
-		// defaultChecked.
+		// defaultValue.
 		$( '#managewiki-form .mw-htmlform-cloner-ul' ).each( function () {
 			if ( this.dataset.initialFieldSize === undefined ) {
 				this.dataset.initialFieldSize = this.children.length;
