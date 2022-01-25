@@ -224,7 +224,7 @@ class ManageWikiTypes {
 				unset( $enabledSkins['fallback'] );
 				unset( $enabledSkins['apioutput'] );
 
-				if ( $options['blacklistSkipSkins'] ?? false ) {
+				if ( $options['excludeSkipSkins'] ?? false ) {
 					foreach ( $config->get( 'SkipSkins' ) as $skip ) {
 						unset( $enabledSkins[$skip] );
 					}
@@ -245,7 +245,7 @@ class ManageWikiTypes {
 				unset( $enabledSkins['fallback'] );
 				unset( $enabledSkins['apioutput'] );
 
-				if ( $options['blacklistSkipSkins'] ?? false ) {
+				if ( $options['excludeSkipSkins'] ?? false ) {
 					foreach ( $config->get( 'SkipSkins' ) as $skip ) {
 						unset( $enabledSkins[$skip] );
 					}
