@@ -363,6 +363,16 @@ class ManageWikiFormFactoryBuilder {
 					$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
 				}
 
+				// Hack to prevent "implicit submission". See T275588 for more
+				if ( $set['type'] === 'integers' ) {
+					$formDescriptor["fake-submit-$name"] = [
+						'type' => 'submit',
+						'disabled' => true,
+						'section' => $set['section'],
+						'cssclass' => 'managewiki-fakesubmit',
+					];
+				}
+
 				$formDescriptor["set-$name"] = [
 					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
 					'disabled' => $disabled,
