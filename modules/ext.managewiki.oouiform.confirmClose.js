@@ -16,6 +16,17 @@
 		function isManageWikiChanged() {
 			var result = false;
 
+			$( '#managewiki-form  .mw-htmlform-cloner-ul' ).each( function () {
+				if ( Number( this.dataset.initialFieldSize ) !== this.children.length ) {
+					result = true;
+
+					return false;
+				}
+			} );
+			if ( result ) {
+				return true;
+			}
+
 			$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
 				if ( this.defaultChecked !== undefined && this.type === 'checkbox' && this.defaultChecked !== this.checked ) {
 					result = true;
@@ -30,6 +41,14 @@
 
 			return result;
 		}
+
+		// Store the initial number of children of cloners for later use, as an equivalent of
+		// defaultChecked.
+		$( '#managewiki-form .mw-htmlform-cloner-ul' ).each( function () {
+			if ( this.dataset.initialFieldSize === undefined ) {
+				this.dataset.initialFieldSize = this.children.length;
+			}
+		} );
 
 		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
