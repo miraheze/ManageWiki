@@ -15,6 +15,12 @@
 					return;
 				}
 			} );
+
+			if ( !panel.$element.data( 'mw-section-infused' ) ) {
+				panel.$element.removeClass( 'mw-htmlform-autoinfuse-lazy' );
+				mw.hook( 'htmlform.enhance' ).fire( panel.$element );
+				panel.$element.data( 'mw-section-infused', true );
+			}
 		}
 
 		function onTabPanelSet( panel ) {
