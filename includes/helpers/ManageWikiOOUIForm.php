@@ -40,7 +40,6 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 				$this->getFooterText( $key );
 
 			$tabPanels[] = new OOUI\TabPanelLayout( 'mw-section-' . $key, [
-				'classes' => [ 'mw-htmlform-autoinfuse-lazy' ],
 				'label' => $label,
 				'content' => new OOUI\FieldsetLayout( [
 					'classes' => [ 'managewiki-section-fieldset' ],
