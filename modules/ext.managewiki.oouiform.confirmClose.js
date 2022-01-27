@@ -14,32 +14,25 @@
 		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
 		// slower and more complicated. It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
-			var result = false;
+			var $fields, i;
 
-			$( '#managewiki-form  .mw-htmlform-cloner-ul' ).each( function () {
-				if ( Number( this.dataset.initialFieldSize ) !== this.children.length ) {
-					result = true;
-
-					return false;
+			$fields = $( '#managewiki-form  .mw-htmlform-cloner-ul' );
+			for ( i = 0; i < $fields.length; i++ ) {
+				if ( Number( $fields[ i ].dataset.initialFieldSize ) !== $fields[ i ].children.length ) {
+					return true;
 				}
-			} );
-			if ( result ) {
-				return true;
 			}
 
-			$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
-				if ( this.defaultChecked !== undefined && this.type === 'checkbox' && this.defaultChecked !== this.checked ) {
-					result = true;
-
-					return false;
-				} else if ( this.defaultValue !== undefined && this.defaultValue !== this.value ) {
-					result = true;
-
-					return false;
+			$fields = $( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' );
+			for ( i = 0; i < $fields.length; i++ ) {
+				if ( $fields[ i ].defaultChecked !== undefined && $fields[ i ].type === 'checkbox' && $fields[ i ].defaultChecked !== $fields[ i ].checked ) {
+					return true;
+				} else if ( $fields[ i ].defaultValue !== undefined && $fields[ i ].defaultValue !== $fields[ i ].value ) {
+					return true;
 				}
-			} );
+			}
 
-			return result;
+			return false;
 		}
 
 		// Store the initial number of children of cloners for later use, as an equivalent of
