@@ -168,7 +168,7 @@
 			"public": true,
 			"value": []
 		},
-		"ManageWikiNamespacesBlacklistedNames": {
+		"ManageWikiNamespacesDisallowedNames": {
 			"description": "Array. Namespaces that can not be used.",
 			"public": true,
 			"value": [
@@ -206,12 +206,12 @@
 			"public": true,
 			"value": []
 		},
-		"ManageWikiPermissionsBlacklistGroups": {
+		"ManageWikiPermissionsDisallowedGroups": {
 			"description": "Array. An array of usergroups which ManageWiki can't manage. Will prevent users creating same named groups as well.",
 			"public": true,
 			"value": []
 		},
-		"ManageWikiPermissionsBlacklistRights": {
+		"ManageWikiPermissionsDisallowedRights": {
 			"description": "Array. An array of user rights that ManageWiki can not manage and assign on wiki.",
 			"public": true,
 			"value": [
