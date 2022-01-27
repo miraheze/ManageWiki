@@ -92,7 +92,7 @@ class ManageWikiNamespaces {
 	 * @param bool $maintainPrefix|false
 	 */
 	public function modify( int $id, array $data, bool $maintainPrefix = false ) {
-		$excluded = array_map( 'strtolower', $this->config->get( 'ManageWikiNamespacesBlacklistedNames' ) );
+		$excluded = array_map( 'strtolower', $this->config->get( 'ManageWikiNamespacesDisallowedNames' ) );
 		if ( in_array( strtolower( $data['name'] ), $excluded ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
