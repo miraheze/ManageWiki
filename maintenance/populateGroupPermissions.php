@@ -16,14 +16,14 @@ class PopulateGroupPermissions extends Maintenance {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
-		$blacklist = $config->get( 'ManageWikiPermissionsBlacklistGroups' );
+		$excludes = $config->get( 'ManageWikiPermissionsBlacklistGroups' );
 
 		$grouparray = [];
 
 		foreach ( $config->get( 'GroupPermissions' ) as $group => $perm ) {
 			$permsarray = [];
 
-			if ( !in_array( $group, $blacklist ) ) {
+			if ( !in_array( $group, $excludes ) ) {
 				foreach ( $perm as $name => $value ) {
 					if ( $value ) {
 						$permsarray[] = $name;
@@ -35,31 +35,31 @@ class PopulateGroupPermissions extends Maintenance {
 		}
 
 		foreach ( $config->get( 'AddGroups' ) as $group => $add ) {
-			if ( !in_array( $group, $blacklist ) ) {
+			if ( !in_array( $group, $excludes ) ) {
 				$grouparray[$group]['add'] = json_encode( $add );
 			}
 		}
 
 		foreach ( $config->get( 'RemoveGroups' ) as $group => $remove ) {
-			if ( !in_array( $group, $blacklist ) ) {
+			if ( !in_array( $group, $excludes ) ) {
 				$grouparray[$group]['remove'] = json_encode( $remove );
 			}
 		}
 
 		foreach ( $config->get( 'GroupsAddToSelf' ) as $group => $adds ) {
-			if ( !in_array( $group, $blacklist ) ) {
+			if ( !in_array( $group, $excludes ) ) {
 				$grouparray[$group]['addself'] = json_encode( $adds );
 			}
 		}
 
 		foreach ( $config->get( 'GroupsRemoveFromSelf' ) as $group => $removes ) {
-			if ( !in_array( $group, $blacklist ) ) {
+			if ( !in_array( $group, $excludes ) ) {
 				$grouparray[$group]['removeself'] = json_encode( $removes );
 			}
 		}
 
 		foreach ( $config->get( 'Autopromote' ) as $group => $promo ) {
-			if ( !in_array( $group, $blacklist ) ) {
+			if ( !in_array( $group, $excludes ) ) {
 				$grouparray[$group]['autopromote'] = json_encode( $promo );
 			}
 		}
