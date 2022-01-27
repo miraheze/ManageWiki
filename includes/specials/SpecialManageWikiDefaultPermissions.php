@@ -86,7 +86,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			__METHOD__
 		);
 
-		$cwConfig = new GlobalVarConfig( 'wc' );
+		$cwConfig = new GlobalVarConfig( 'cw' );
 		ManageWikiHooks::onCreateWikiCreation( $this->config->get( 'DBname' ), $cwConfig->get( 'Private' ) );
 
 		return true;
