@@ -55,7 +55,9 @@ class ManageWikiTypes {
 							'flags' => [ 'destructive' ],
 						],
 					],
-					'default' => array_map( static function ( $num ) { return [ 'integer' => $num ]; },
+					'default' => array_map( static function ( $num ) {
+							return [ 'integer' => $num ];
+						},
 						$value ?? $options['overridedefault'] ),
 				];
 				break;
