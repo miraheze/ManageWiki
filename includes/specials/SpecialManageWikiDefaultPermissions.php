@@ -93,7 +93,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public static function validateNewGroupName( $newGroup, $nullForm ) {
-		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsBlacklistGroups' ) ) ) {
+		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
 			return 'Disallowed Group.';
 		}
 

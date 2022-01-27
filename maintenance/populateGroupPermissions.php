@@ -16,7 +16,7 @@ class PopulateGroupPermissions extends Maintenance {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
-		$excluded = $config->get( 'ManageWikiPermissionsBlacklistGroups' );
+		$excluded = $config->get( 'ManageWikiPermissionsDisallowedGroups' );
 
 		$grouparray = [];
 

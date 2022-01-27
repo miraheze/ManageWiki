@@ -571,7 +571,7 @@ class ManageWikiFormFactoryBuilder {
 		string $group,
 		Config $config
 	) {
-		if ( in_array( $group, $config->get( 'ManageWikiPermissionsBlacklistGroups' ) ) ) {
+		if ( in_array( $group, $config->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
 			$ceMW = false;
 		}
 
@@ -586,9 +586,9 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		$groupData = [
-			'allPermissions' => array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsBlacklistRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsBlacklistRights' )[$group], $config->get( 'ManageWikiPermissionsBlacklistRights' )['any'] ) : $config->get( 'ManageWikiPermissionsBlacklistRights' )['any'] ),
+			'allPermissions' => array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group], $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] ) : $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] ),
 			'assignedPermissions' => $permList['permissions'] ?? [],
-			'allGroups' => array_diff( array_keys( $mwPermissions->list() ), $config->get( 'ManageWikiPermissionsBlacklistGroups' ), User::getImplicitGroups() ),
+			'allGroups' => array_diff( array_keys( $mwPermissions->list() ), $config->get( 'ManageWikiPermissionsDisallowedGroups' ), User::getImplicitGroups() ),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $permList['autopromote'] ?? null
 		];
@@ -1054,7 +1054,7 @@ class ManageWikiFormFactoryBuilder {
 	) {
 		$mwPermissions = new ManageWikiPermissions( $wiki );
 		$permList = $mwPermissions->list( $group );
-		$assignablePerms = array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsBlacklistRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsBlacklistRights' )[$group], $config->get( 'ManageWikiPermissionsBlacklistRights' )['any'] ) : $config->get( 'ManageWikiPermissionsBlacklistRights' )['any'] );
+		$assignablePerms = array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group], $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] ) : $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] );
 
 		// Early escape for deletion
 		if ( $formData['delete-checkbox'] ?? false ) {
