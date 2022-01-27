@@ -57,7 +57,7 @@ class ManageWikiTypes {
 					],
 					'default' => array_map( static function ( $num ) {
 							return [ 'integer' => $num ];
-						},
+					},
 						$value ?? $options['overridedefault'] ),
 				];
 				break;
