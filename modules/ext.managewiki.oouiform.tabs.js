@@ -1,6 +1,8 @@
 ( function () {
 	$( function () {
-		var tabs, previousTab, switchingNoHash;
+		// The lazy loading is temporarily disabled to prevent conflict with the cloner widget.
+		var autoinfuseLazy = false,
+			tabs, previousTab, switchingNoHash;
 
 		tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 
@@ -16,7 +18,7 @@
 				}
 			} );
 
-			if ( !panel.$element.data( 'mw-section-infused' ) ) {
+			if ( autoinfuseLazy && !panel.$element.data( 'mw-section-infused' ) ) {
 				panel.$element.removeClass( 'mw-htmlform-autoinfuse-lazy' );
 				mw.hook( 'htmlform.enhance' ).fire( panel.$element );
 				panel.$element.data( 'mw-section-infused', true );

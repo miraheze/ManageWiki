@@ -363,6 +363,16 @@ class ManageWikiFormFactoryBuilder {
 					$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
 				}
 
+				// Hack to prevent "implicit submission". See T275588 for more
+				if ( $configs['type'] === 'cloner' ) {
+					$formDescriptor["fake-submit-$name"] = [
+						'type' => 'submit',
+						'disabled' => true,
+						'section' => $set['section'],
+						'cssclass' => 'managewiki-fakesubmit',
+					];
+				}
+
 				$formDescriptor["set-$name"] = [
 					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
 					'disabled' => $disabled,
@@ -958,6 +968,11 @@ class ManageWikiFormFactoryBuilder {
 			if ( $type == 'matrix' ) {
 				$settingsArray[$name] = ( $mwAllowed ) ? ManageWiki::handleMatrix( $value, 'phparray' ) : ManageWiki::handleMatrix( $current, 'php' );
 			} elseif ( $type == 'check' ) {
+				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
+			} elseif ( $type == 'integers' ) {
+				$value = array_column( $value, 'integer' );
+				$value = array_filter( $value );
+				$value = array_map( 'intval', $value );
 				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
 			} elseif ( $type == 'list-multi' || $type == 'usergroups' || $type == 'userrights' ) {
 				$settingsArray[$name] = $value;
