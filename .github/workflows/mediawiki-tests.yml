@@ -13,25 +13,11 @@ jobs:
     strategy:
       matrix:
         include:
-          # Latest stable MediaWiki - PHP 7.3 (phan)
-          - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: phan
-
           # Latest stable MediaWiki - PHP 7.4 (phan)
           - mw: 'REL1_37'
             php: 7.4
             php-docker: 74
             experimental: false
-            stage: phan
-
-          # Latest MediaWiki master - PHP 7.3 (phan)
-          - mw: 'master'
-            php: 7.3
-            php-docker: 73
-            experimental: true
             stage: phan
 
           # Latest MediaWiki master - PHP 7.4 (phan)
@@ -41,24 +27,10 @@ jobs:
             experimental: true
             stage: phan
 
-          # Latest stable MediaWiki - PHP 7.3 (phpunit-unit)
-          - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: phpunit-unit
-
           # Latest stable MediaWiki - PHP 7.4 (phpunit-unit)
           - mw: 'REL1_37'
             php: 7.4
             php-docker: 74
-            experimental: false
-            stage: phpunit-unit
-
-          # Latest MediaWiki master - PHP 7.3 (phpunit-unit)
-          - mw: 'master'
-            php: 7.3
-            php-docker: 73
             experimental: false
             stage: phpunit-unit
 
@@ -69,24 +41,10 @@ jobs:
             experimental: false
             stage: phpunit-unit
 
-          # Latest stable MediaWiki - PHP 7.3 (phpunit)
-          - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
-            experimental: false
-            stage: phpunit
-
           # Latest stable MediaWiki - PHP 7.4 (phpunit)
           - mw: 'REL1_37'
             php: 7.4
             php-docker: 74
-            experimental: false
-            stage: phpunit
-
-          # Latest MediaWiki master - PHP 7.3 (phpunit)
-          - mw: 'master'
-            php: 7.3
-            php-docker: 73
             experimental: false
             stage: phpunit
 
@@ -97,45 +55,45 @@ jobs:
             experimental: false
             stage: phpunit
 
-          # Latest stable MediaWiki - PHP 7.3 (selenium)
+          # Latest stable MediaWiki - PHP 7.4 (selenium)
           - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
+            php: 7.4
+            php-docker: 74
             experimental: false
             stage: selenium
 
-          # Latest MediaWiki master - PHP 7.3 (selenium)
+          # Latest MediaWiki master - PHP 7.4 (selenium)
           - mw: 'master'
-            php: 7.3
-            php-docker: 73
+            php: 7.4
+            php-docker: 74
             experimental: false
             stage: selenium
 
-          # Latest stable MediaWiki - PHP 7.3 (qunit)
+          # Latest stable MediaWiki - PHP 7.4 (qunit)
           - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
+            php: 7.4
+            php-docker: 74
             experimental: false
             stage: qunit
 
-          # Latest MediaWiki master - PHP 7.3 (qunit)
+          # Latest MediaWiki master - PHP 7.4 (qunit)
           - mw: 'master'
-            php: 7.3
-            php-docker: 73
+            php: 7.4
+            php-docker: 74
             experimental: false
             stage: qunit
 
-          # Latest stable MediaWiki - PHP 7.3 (npm-test)
+          # Latest stable MediaWiki - PHP 7.4 (npm-test)
           - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
+            php: 7.4
+            php-docker: 74
             experimental: false
             stage: npm-test
   
-          # Latest stable MediaWiki - PHP 7.3 (composer-test)
+          # Latest stable MediaWiki - PHP 7.4 (composer-test)
           - mw: 'REL1_37'
-            php: 7.3
-            php-docker: 73
+            php: 7.4
+            php-docker: 74
             experimental: false
             stage: composer-test
 
@@ -274,14 +232,18 @@ jobs:
 
             rm composer.lock
 
-            git config --global user.name "github-actions"
-            git config --global user.email "github-actions@users.noreply.github.com"
-            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-            git checkout -b ${GITHUB_HEAD_REF}
-            git add .
-            git commit -am "CI: lint code to MediaWiki standards" -m "Check commit and GitHub actions for more details" || echo "No changes to commit"
-            git pull origin ${GITHUB_HEAD_REF} --rebase
-            git push --set-upstream origin ${GITHUB_HEAD_REF}
+            if ! git diff --exit-code --quiet; then
+              git config --global user.name "github-actions"
+              git config --global user.email "github-actions@users.noreply.github.com"
+              git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+              git checkout -b ${GITHUB_HEAD_REF}
+              git add .
+              git commit -am "CI: lint code to MediaWiki standards" -m "Check commit and GitHub actions for more details"
+              git pull origin ${GITHUB_HEAD_REF} --rebase
+              git push --set-upstream origin ${GITHUB_HEAD_REF}
+            else
+              echo "No changes to commit"
+            fi
           fi
 
       - name: Main Test
