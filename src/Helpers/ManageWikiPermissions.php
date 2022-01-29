@@ -1,6 +1,12 @@
 <?php
 
+namespace Miraheze\ManageWiki\Helpers;
+
+use Config;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\CreateWikiJson;
+use User;
+use Wikimedia\Rdbms\MaintainableDBConnRef;
 
 /**
  * Handler for interacting with Permissions

@@ -1,8 +1,18 @@
 <?php
 
-use MediaWiki\MediaWikiServices;
+namespace Miraheze\ManageWiki;
 
-class ManageWikiHooks {
+use DatabaseUpdater;
+use MediaWiki\MediaWikiServices;
+use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
+use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
+use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use SpecialPage;
+use TextContentHandler;
+use User;
+use Wikimedia\Rdbms\MaintainableDBConnRef;
+
+class Hooks {
 	private static function getConfig( string $var ) {
 		return MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( $var );
 	}

@@ -1,6 +1,28 @@
 <?php
 
+namespace Miraheze\ManageWiki\FormFactory;
+
+use Config;
+use ExtensionProcessor;
+use ExtensionRegistry;
+use HTMLForm;
+use IContextSource;
+use Linker;
+use ManualLogEntry;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
+use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
+use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
+use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
+use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
+use Miraheze\ManageWiki\ManageWiki;
+use MWException;
+use SpecialPage;
+use User;
+use UserGroupMembership;
+use Wikimedia\Rdbms\DBConnRef;
 
 class ManageWikiFormFactoryBuilder {
 	public static function buildDescriptor(

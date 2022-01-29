@@ -1,6 +1,10 @@
 <?php
 
+namespace Miraheze\ManageWiki\Jobs;
+
+use Job;
 use MediaWiki\Shell\Shell;
+use Title;
 
 class MWScriptJob extends Job {
 	/**

@@ -1,6 +1,11 @@
 <?php
 
+namespace Miraheze\ManageWiki\Helpers;
+
+use Config;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\CreateWikiJson;
+use Wikimedia\Rdbms\MaintainableDBConnRef;
 
 /**
  * Handler class for managing settings
@@ -164,3 +169,8 @@ class ManageWikiSettings {
 		}
 	}
 }
+
+/**
+ * @deprecated since 1.37
+ */
+class_alias( ManageWikiSettings::class, 'ManageWikiSettings' );
