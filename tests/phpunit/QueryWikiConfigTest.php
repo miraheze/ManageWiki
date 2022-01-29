@@ -1,10 +1,14 @@
 <?php
 
+namespace Miraheze\ManageWiki\Tests;
+
+use ApiTestCase;
+
 /**
  * @group ManageWiki
  * @group Database
  * @group medium
- * @coversDefaultClass ApiQueryWikiConfig
+ * @coversDefaultClass \Miraheze\ManageWiki\Api\QueryWikiConfig
  */
 class QueryWikiConfigTest extends ApiTestCase {
 

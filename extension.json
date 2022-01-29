@@ -18,7 +18,7 @@
 		}
 	},
 	"APIListModules": {
-		"wikiconfig": "Miraheze\\ManageWiki\\Api\\ApiQueryWikiConfig"
+		"wikiconfig": "Miraheze\\ManageWiki\\Api\\QueryWikiConfig"
 	},
 	"AvailableRights": [
 		"managewiki",
@@ -63,6 +63,9 @@
 	"AutoloadNamespaces": {
 		"Miraheze\\ManageWiki\\": "src/",
 		"Miraheze\\ManageWiki\\Maintenance\\": "maintenance/"
+	},
+	"TestAutoloadNamespaces": {
+		"Miraheze\\ManageWiki\\Tests\\": "tests/phpunit/"
 	},
 	"Hooks": {
 		"ContentHandlerForModelID": [
