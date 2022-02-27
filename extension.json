@@ -61,7 +61,7 @@
 		"ManageWikiAliases": "ManageWikiAliases.php"
 	},
 	"AutoloadNamespaces": {
-		"Miraheze\\ManageWiki\\": "src/",
+		"Miraheze\\ManageWiki\\": "includes/",
 		"Miraheze\\ManageWiki\\Maintenance\\": "maintenance/"
 	},
 	"AutoloadClasses": {
