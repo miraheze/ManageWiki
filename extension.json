@@ -64,6 +64,10 @@
 		"Miraheze\\ManageWiki\\": "src/",
 		"Miraheze\\ManageWiki\\Maintenance\\": "maintenance/"
 	},
+	"AutoloadClasses": {
+		"ManageWikiSettings": "includes/helpers/ManageWikiSettings.php",
+		"Miraheze\\ManageWiki\\Helpers\\ManageWikiSettings": "includes/helpers/ManageWikiSettings.php"
+	},
 	"TestAutoloadNamespaces": {
 		"Miraheze\\ManageWiki\\Tests\\": "tests/phpunit/"
 	},
