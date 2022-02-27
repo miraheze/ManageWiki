@@ -1,6 +1,18 @@
 <?php
 
+namespace Miraheze\ManageWiki\Specials;
+
+use Config;
+use GlobalVarConfig;
+use HTMLForm;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Miraheze\ManageWiki\Hooks;
+use Miraheze\ManageWiki\ManageWiki;
+use SpecialPage;
+use UserGroupMembership;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	/** @var Config */
@@ -87,7 +99,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		);
 
 		$cwConfig = new GlobalVarConfig( 'cw' );
-		ManageWikiHooks::onCreateWikiCreation( $this->config->get( 'DBname' ), $cwConfig->get( 'Private' ) );
+		Hooks::onCreateWikiCreation( $this->config->get( 'DBname' ), $cwConfig->get( 'Private' ) );
 
 		return true;
 	}

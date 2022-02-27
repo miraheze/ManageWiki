@@ -18,7 +18,7 @@
 		}
 	},
 	"APIListModules": {
-		"wikiconfig": "ApiQueryWikiConfig"
+		"wikiconfig": "Miraheze\\ManageWiki\\Api\\QueryWikiConfig"
 	},
 	"AvailableRights": [
 		"managewiki",
@@ -29,13 +29,13 @@
 		"managewikisidebar": 0
 	},
 	"SpecialPages": {
-		"DeletedWikis": "SpecialDeletedWikis",
-		"ManageWiki": "SpecialManageWiki",
-		"ManageWikiDefaultPermissions": "SpecialManageWikiDefaultPermissions"
+		"DeletedWikis": "Miraheze\\ManageWiki\\Specials\\SpecialDeletedWikis",
+		"ManageWiki": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
+		"ManageWikiDefaultPermissions": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaultPermissions"
 	},
 	"JobClasses": {
-		"MWScriptJob": "MWScriptJob",
-		"NamespaceMigrationJob": "NamespaceMigrationJob"
+		"MWScriptJob": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
+		"NamespaceMigrationJob": "Miraheze\\ManageWiki\\Jobs\\NamespaceMigrationJob"
 	},
 	"LogActionsHandlers": {
 		"managewiki/delete": "LogFormatter",
@@ -58,57 +58,46 @@
 		]
 	},
 	"ExtensionMessagesFiles": {
-		"ManageWikiAliases": "includes/ManageWikiAliases.php"
+		"ManageWikiAliases": "ManageWikiAliases.php"
+	},
+	"AutoloadNamespaces": {
+		"Miraheze\\ManageWiki\\": "includes/",
+		"Miraheze\\ManageWiki\\Maintenance\\": "maintenance/"
 	},
 	"AutoloadClasses": {
-		"ApiQueryWikiConfig": "includes/api/ApiQueryWikiConfig.php",
-		"ManageWiki": "includes/ManageWiki.php",
-		"ManageWikiDeletedWikiPager": "includes/helpers/ManageWikiDeletedWikiPager.php",
-		"ManageWikiExtensions": "includes/helpers/ManageWikiExtensions.php",
-		"ManageWikiFormFactory": "includes/formFactory/ManageWikiFormFactory.php",
-		"ManageWikiFormFactoryBuilder": "includes/formFactory/ManageWikiFormFactoryBuilder.php",
-		"HTMLAutoCompleteSelectFieldWithOOUI": "includes/formFields/HTMLAutoCompleteSelectFieldWithOOUI.php",
-		"ManageWikiHooks": "includes/ManageWikiHooks.php",
-		"ManageWikiInstaller": "includes/helpers/ManageWikiInstaller.php",
-		"ManageWikiNamespaces": "includes/helpers/ManageWikiNamespaces.php",
-		"ManageWikiOOUIForm": "includes/helpers/ManageWikiOOUIForm.php",
-		"ManageWikiPermissions": "includes/helpers/ManageWikiPermissions.php",
-		"ManageWikiRequirements": "includes/helpers/ManageWikiRequirements.php",
-		"ManageWikiSettings": "includes/helpers/ManageWikiSettings.php",
-		"ManageWikiTypes": "includes/helpers/ManageWikiTypes.php",
-		"MWScriptJob": "includes/jobs/MWScriptJob.php",
-		"NamespaceMigrationJob": "includes/jobs/NamespaceMigrationJob.php",
-		"SpecialDeletedWikis": "includes/specials/SpecialDeletedWikis.php",
-		"SpecialManageWiki": "includes/specials/SpecialManageWiki.php",
-		"SpecialManageWikiDefaultPermissions": "includes/specials/SpecialManageWikiDefaultPermissions.php"
+		"ManageWikiSettings": "includes/Helpers/ManageWikiSettings.php",
+		"Miraheze\\ManageWiki\\Helpers\\ManageWikiSettings": "includes/Helpers/ManageWikiSettings.php"
+	},
+	"TestAutoloadNamespaces": {
+		"Miraheze\\ManageWiki\\Tests\\": "tests/phpunit/"
 	},
 	"Hooks": {
 		"ContentHandlerForModelID": [
-			"ManageWikiHooks::onContentHandlerForModelID"
+			"Miraheze\\ManageWiki\\Hooks::onContentHandlerForModelID"
 		],
 		"CreateWikiCreation": [
-			"ManageWikiHooks::onCreateWikiCreation"
+			"Miraheze\\ManageWiki\\Hooks::onCreateWikiCreation"
 		],
 		"CreateWikiJsonBuilder": [
-			"ManageWikiHooks::onCreateWikiJsonBuilder"
+			"Miraheze\\ManageWiki\\Hooks::onCreateWikiJsonBuilder"
 		],
 		"CreateWikiStatePrivate": [
-			"ManageWikiHooks::onCreateWikiStatePrivate"
+			"Miraheze\\ManageWiki\\Hooks::onCreateWikiStatePrivate"
 		],
 		"CreateWikiStatePublic": [
-			"ManageWikiHooks::onCreateWikiStatePublic"
+			"Miraheze\\ManageWiki\\Hooks::onCreateWikiStatePublic"
 		],
 		"CreateWikiTables": [
-			"ManageWikiHooks::onCreateWikiTables"
+			"Miraheze\\ManageWiki\\Hooks::onCreateWikiTables"
 		],
 		"GetPreferences": [
-			"ManageWikiHooks::onGetPreferences"
+			"Miraheze\\ManageWiki\\Hooks::onGetPreferences"
 		],
 		"LoadExtensionSchemaUpdates": [
-			"ManageWikiHooks::fnManageWikiSchemaUpdates"
+			"Miraheze\\ManageWiki\\Hooks::fnManageWikiSchemaUpdates"
 		],
 		"SidebarBeforeOutput": [
-			"ManageWikiHooks::fnNewSidebarItem"
+			"Miraheze\\ManageWiki\\Hooks::fnNewSidebarItem"
 		]
 	},
 	"ResourceModules": {
@@ -247,6 +236,6 @@
 	"ConfigRegistry": {
 		"managewiki": "GlobalVarConfig::newInstance"
 	},
-	"callback": "ManageWikiHooks::onRegistration",
+	"callback": "Miraheze\\ManageWiki\\Hooks::onRegistration",
 	"manifest_version": 2
 }

@@ -1,7 +1,14 @@
 <?php
 
+namespace Miraheze\ManageWiki\Helpers;
+
+use Exception;
+use JobQueueGroup;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
+use Miraheze\ManageWiki\Jobs\MWScriptJob;
+use MWException;
+use Title;
 
 class ManageWikiInstaller {
 	public static function process( string $dbname, array $actions, bool $install = true ) {

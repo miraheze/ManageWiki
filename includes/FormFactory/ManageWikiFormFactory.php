@@ -1,5 +1,18 @@
 <?php
 
+namespace Miraheze\ManageWiki\FormFactory;
+
+use Config;
+use Html;
+use HTMLForm;
+use IContextSource;
+use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
+use Miraheze\ManageWiki\ManageWiki;
+use MWException;
+use OutputPage;
+use Wikimedia\Rdbms\DBConnRef;
+
 class ManageWikiFormFactory {
 	public function getFormDescriptor(
 		string $module,
@@ -27,7 +40,7 @@ class ManageWikiFormFactory {
 		string $module,
 		string $special = '',
 		string $filtered = '',
-		$formClass = ManageWikiOOUIForm::class
+		string $formClass = ManageWikiOOUIForm::class
 	) {
 		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 

@@ -1,6 +1,12 @@
 <?php
 
+namespace Miraheze\ManageWiki\Helpers;
+
+use ContentHandler;
 use MediaWiki\MediaWikiServices;
+use Miraheze\ManageWiki\FormFields\HTMLAutoCompleteSelectFieldWithOOUI;
+use Miraheze\ManageWiki\ManageWiki;
+use UserGroupMembership;
 
 class ManageWikiTypes {
 	public static function process( $config, $disabled, $groupList, $module, $options, $value, $overrideDefault = false, $type = false ) {

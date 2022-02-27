@@ -1,6 +1,11 @@
 <?php
 
+namespace Miraheze\ManageWiki\Helpers;
+
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\RemoteWiki;
+use RequestContext;
+use SiteStats;
 
 /**
  * Helper class for de-centralising requirement checking

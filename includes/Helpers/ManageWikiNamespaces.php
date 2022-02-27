@@ -1,6 +1,14 @@
 <?php
 
+namespace Miraheze\ManageWiki\Helpers;
+
+use Config;
+use JobQueueGroup;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\CreateWikiJson;
+use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
+use SpecialPage;
+use Wikimedia\Rdbms\MaintainableDBConnRef;
 
 /**
  * Handler for interacting with Namespace configuration

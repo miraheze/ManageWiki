@@ -1,9 +1,14 @@
 <?php
 
+namespace Miraheze\ManageWiki;
+
+use DateTimeZone;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\RemoteWiki;
+use User;
 
 class ManageWiki {
-	public static function checkSetup( string $module, bool $verbose = false, $out = false ) {
+	public static function checkSetup( string $module, bool $verbose = false, $out = null ) {
 		// Checks ManageWiki module is enabled before doing anything
 		// $verbose means output an error. Otherwise return true/false.
 		if ( !MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWiki' )[$module] ) {

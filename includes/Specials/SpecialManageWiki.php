@@ -1,6 +1,19 @@
 <?php
 
+namespace Miraheze\ManageWiki\Specials;
+
+use Config;
+use Html;
+use HTMLForm;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\CreateWiki\WikiManager;
+use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
+use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Miraheze\ManageWiki\ManageWiki;
+use SpecialPage;
+use UserGroupMembership;
 
 class SpecialManageWiki extends SpecialPage {
 	/** @var Config */

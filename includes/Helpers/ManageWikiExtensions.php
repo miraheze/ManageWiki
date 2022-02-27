@@ -1,6 +1,12 @@
 <?php
 
+namespace Miraheze\ManageWiki\Helpers;
+
+use Config;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\CreateWikiJson;
+use Miraheze\CreateWiki\RemoteWiki;
+use Wikimedia\Rdbms\MaintainableDBConnRef;
 
 /**
  * Handler for all interactions with Extension changes within ManageWiki

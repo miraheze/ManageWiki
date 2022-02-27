@@ -1,5 +1,10 @@
 <?php
 
+namespace Miraheze\ManageWiki\Jobs;
+
+use Job;
+use Title;
+
 /**
  * Used on namespace creation and deletion to move pages into and out of namespaces
  */

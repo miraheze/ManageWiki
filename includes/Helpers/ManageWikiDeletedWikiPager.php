@@ -1,6 +1,11 @@
 <?php
 
+namespace Miraheze\ManageWiki\Helpers;
+
+use Linker;
 use MediaWiki\MediaWikiServices;
+use SpecialPage;
+use TablePager;
 
 class ManageWikiDeletedWikiPager extends TablePager {
 	public function __construct( $page ) {
