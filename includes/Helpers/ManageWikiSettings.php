@@ -169,8 +169,3 @@ class ManageWikiSettings {
 		}
 	}
 }
-
-/**
- * @deprecated since 1.37
- */
-class_alias( ManageWikiSettings::class, 'ManageWikiSettings' );
