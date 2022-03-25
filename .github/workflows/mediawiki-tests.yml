@@ -20,6 +20,13 @@ jobs:
             experimental: false
             stage: phan
 
+          # Latest MediaWiki release branch - PHP 7.4 (phan)
+          - mw: 'REL1_38'
+            php: 7.4
+            php-docker: 74
+            experimental: true
+            stage: phan
+
           # Latest MediaWiki master - PHP 7.4 (phan)
           - mw: 'master'
             php: 7.4
@@ -29,6 +36,13 @@ jobs:
 
           # Latest stable MediaWiki - PHP 7.4 (phpunit-unit)
           - mw: 'REL1_37'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: phpunit-unit
+
+          # Latest MediaWiki release branch - PHP 7.4 (phpunit-unit)
+          - mw: 'REL1_38'
             php: 7.4
             php-docker: 74
             experimental: false
@@ -48,6 +62,13 @@ jobs:
             experimental: false
             stage: phpunit
 
+          # Latest MediaWiki release branch - PHP 7.4 (phpunit)
+          - mw: 'REL1_38'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: phpunit
+
           # Latest MediaWiki master - PHP 7.4 (phpunit)
           - mw: 'master'
             php: 7.4
@@ -62,6 +83,13 @@ jobs:
             experimental: false
             stage: selenium
 
+          # Latest MediaWiki release branch - PHP 7.4 (selenium)
+          - mw: 'REL1_38'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: selenium
+
           # Latest MediaWiki master - PHP 7.4 (selenium)
           - mw: 'master'
             php: 7.4
@@ -71,6 +99,13 @@ jobs:
 
           # Latest stable MediaWiki - PHP 7.4 (qunit)
           - mw: 'REL1_37'
+            php: 7.4
+            php-docker: 74
+            experimental: false
+            stage: qunit
+
+          # Latest MediaWiki release branch - PHP 7.4 (qunit)
+          - mw: 'REL1_38'
             php: 7.4
             php-docker: 74
             experimental: false
@@ -112,7 +147,7 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # /home/runner/cache/                               Cache
       # /home/runner/src/                                 Mediawiki installation
@@ -153,7 +188,7 @@ jobs:
           fi
 
       - name: Cache docker image
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /home/runner/docker-images/${{ env.DOCKER_IMAGE }}
           key: ${{ env.DOCKER_IMAGE }}:${{ env.DOCKER_LATEST_TAG }}
@@ -165,7 +200,7 @@ jobs:
 
       - name: Cache quibble docker image
         if: ${{ matrix.stage == 'coverage' || matrix.stage == 'phan' }}
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /home/runner/docker-images/${{ env.QUIBBLE_DOCKER_IMAGE }}
           key: ${{ env.QUIBBLE_DOCKER_IMAGE }}:${{ env.QUIBBLE_DOCKER_LATEST_TAG }}
@@ -201,7 +236,7 @@ jobs:
           git -C src/ log -n 1 --format="%H"
 
       - name: Cache dependencies (composer and npm)
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /home/runner/cache
           key: ${{ runner.os }}-${{ env.MEDIAWIKI_VERSION }}-${{ hashFiles('**/*.lock') }}
@@ -278,6 +313,7 @@ jobs:
               --color
           elif [ "${{ matrix.stage }}" == 'coverage' ] && [ -d src/extensions/"${{ github.event.repository.name }}"/tests/phpunit ]; then
             docker run \
+              --entrypoint quibble-with-supervisord \
               -e ZUUL_PROJECT=mediawiki/extensions/"${{ github.event.repository.name }}" \
               -v "$(pwd)"/cache:/cache \
               -v "$(pwd)"/src:/workspace/src \
@@ -288,6 +324,7 @@ jobs:
               -c mwext-phpunit-coverage
           elif [ "${{ matrix.stage }}" != 'coverage' ]; then
             docker run \
+              --entrypoint quibble-with-supervisord \
               -e ZUUL_PROJECT=mediawiki/extensions/"${{ github.event.repository.name }}" \
               -v "$(pwd)"/cache:/cache \
               -v "$(pwd)"/src:/workspace/src \

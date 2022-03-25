@@ -97,7 +97,7 @@
 	"managewiki-permissions-autopromote-conds-or": "...bất cứ điều kiện nào dưới đây phải được hội đủ",
 	"managewiki-permissions-autopromote-editcount": "Phải thực hiện ít nhất số lần sửa đổi dưới đây",
 	"managewiki-permissions-autopromote-enable": "Bật tính năng nâng chức trên nhóm này",
-	"managewiki-permissions-autopromote-email": "Phải có email được xác nhận",
+	"managewiki-permissions-autopromote-email": "Phải xác nhận địa chỉ thư điện tử",
 	"managewiki-permissions-autopromote-groups": "Phải là thành viên của những nhóm dưới đây",
 	"managewiki-permissions-autopromote-once": "Chỉ nâng chức người đó một lần",
 	"managewiki-permissions-create": "Tạo quyền mới",

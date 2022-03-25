@@ -53,7 +53,9 @@ function wfOnMediaWikiServices( MediaWiki\MediaWikiServices $services ) {
 				'wiki_inactive' => (int)0,
 				'wiki_inactive_exempt' => (int)0,
 				'wiki_url' => 'http://127.0.0.1:9412'
-			]
+			],
+			__METHOD__,
+			[ 'IGNORE' ]
 		);
 	} catch ( Wikimedia\Rdbms\DBQueryError $e ) {
 		return;

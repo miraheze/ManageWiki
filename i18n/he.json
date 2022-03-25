@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Amire80",
+			"Dee",
 			"Guycn2",
 			"Steeve815",
 			"Strayblues",
@@ -10,6 +11,8 @@
 		]
 	},
 	"action-managewiki": "ניהול הגדרות הוויקי",
+	"action-managewiki-restricted": "ניהול הגדרות ויקי מוגבלות",
+	"action-managewiki-editdefault": "ניהול הרשאות ברירת מחדל לקבוצה",
 	"apihelp-query+wikiconfig-param-prop": "בחירת מאפיינים להחזרה:",
 	"apihelp-query+wikiconfig-param-wikis": "באילו אתרי ויקי לבדוק.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "בדיקה אם אתר הוויקי מסומן כסגור",
@@ -23,10 +26,14 @@
 	"apiwarn-wikiconfig-wikidoesnotexist": "ויקי '$1' לא קיימת.",
 	"core-main": "הגדרות ראשיות",
 	"deletedwikis": "אתרי ויקי מחוקים",
+	"log-description-managewiki": "היומן הזה עוקב אחרי כל שינויי ההגדרות דרך ManageWiki.",
 	"log-name-managewiki": "יומן ניהול ויקי",
 	"logentry-managewiki-delete": "$1 מחק/ה את הוויקי \"$4\"",
 	"logentry-managewiki-delete-group": "$1 מחק/ה את הקבוצה $3",
 	"logentry-managewiki-lock": "$1 נעל/ה את הוויקי \"$4\"",
+	"logentry-managewiki-namespaces": "$1 {{GENDER:$1|שינה|שינתה}} את מרחב השם \"$5\" בוויקי \"$4\"",
+	"logentry-managewiki-namespaces-delete": "$1 {{GENDER:$1|מחק|מחקה}} את מרחב השם \"$5\" בוויקי \"$4\"",
+	"logentry-managewiki-rename": "$1 {{GENDER:$1|שינה|שינתה}} את שם הקבוצה $3 מהשם $4",
 	"logentry-managewiki-settings": "$1 שינ(ת)ה את ההגדרות ($5) עבור \"$4\"",
 	"logentry-managewiki-undelete": "$1 שחזר/ה את הוויקי \"$4\"",
 	"logentry-managewiki-unlock": "$1 שחרר/ה את הוויקי \"$4\"",
