@@ -992,9 +992,13 @@ class ManageWikiFormFactoryBuilder {
 			} elseif ( $type == 'check' ) {
 				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
 			} elseif ( $type == 'integers' ) {
-				$value = array_column( $value, 'integer' );
+				$value = array_column( $value, 'value' );
 				$value = array_filter( $value );
 				$value = array_map( 'intval', $value );
+				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
+			} elseif ( $type == 'texts' ) {
+				$value = array_column( $value, 'value' );
+				$value = array_filter( $value );
 				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
 			} elseif ( $type == 'list-multi' || $type == 'usergroups' || $type == 'userrights' ) {
 				$settingsArray[$name] = $value;
