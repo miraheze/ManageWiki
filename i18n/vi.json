@@ -4,6 +4,7 @@
 			"Anpfraum",
 			"Leduyquang753",
 			"Minh Nguyen",
+			"NguoiDungKhongDinhDanh",
 			"Nguyễn Mạnh An",
 			"Wolf"
 		]
@@ -88,7 +89,7 @@
 	"managewiki-permissions-addself": "Có thể thêm vào chính mình",
 	"managewiki-permissions-assigned": "Các quyền hạn người dùng dưới đây hiện tại được gán cho nhóm người dùng này.",
 	"managewiki-permissions-autopromote": "Dưới đây bạn có thể quản lý việc tự nâng chức các người dùng lên nhóm (chức) này. Lưu ý rằng nếu một tài khoản hội đủ điều kiện bạn đặt bên dưới, họ sẽ được nâng lên nhóm này và bạn không thể xóa bỏ họ khỏi nhóm này dưới bất kỳ trường hợp nào trừ khi bạn chọn việc nâng họ trước khi họ hội đủ điều kiện.",
-	"managewiki-permissions-autopromote-age": "Phải là một người dùng trong vòng bao nhiêu ngày:",
+	"managewiki-permissions-autopromote-age": "Phải là một người dùng trong bao nhiêu ngày:",
 	"managewiki-permissions-autopromote-blocked": "Phải bị chặn",
 	"managewiki-permissions-autopromote-bot": "Phải là một tài khoản bot",
 	"managewiki-permissions-autopromote-conds": "Để một người dùng được nâng chức...",

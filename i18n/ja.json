@@ -149,7 +149,7 @@
 	"namespaces-namespacetalk": "トーク名前空間",
 	"namespaces-protection": "この名前空間を編集する利用者グループを選択してください",
 	"namespaces-search": "この名前空間を既定の検索対象にしますか？",
-	"namespaces-subpages": "この名前空間でサブページを作れるようにしますか？",
+	"namespaces-subpages": "この名前空間で下位ページを作成できるようにしますか?",
 	"permissions-assigned": "割り当てられた権限",
 	"permissions-autopromote": "自動昇格",
 	"permissions-delete": "削除",
