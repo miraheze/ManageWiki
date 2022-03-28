@@ -50,7 +50,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'cloner',
 					'fields' => [
-						'integer' => [
+						'value' => [
 							'type' => 'int',
 							'min' => $options['minint'] ?? null,
 							'max' => $options['maxint'] ?? null,
@@ -62,7 +62,7 @@ class ManageWikiTypes {
 						],
 					],
 					'default' => array_map( static function ( $num ) {
-						return [ 'integer' => $num ];
+						return [ 'value' => $num ];
 					}, $value ?? $options['overridedefault'] ),
 				];
 				break;
@@ -289,6 +289,24 @@ class ManageWikiTypes {
 				if ( !$disabled ) {
 					$configs['dropdown'] = true;
 				}
+				break;
+			case 'texts':
+				$configs = [
+					'type' => 'cloner',
+					'fields' => [
+						'value' => [
+							'type' => 'text',
+						],
+						'delete' => [
+							'type' => 'submit',
+							'default' => wfMessage( 'htmlform-cloner-delete' )->escaped(),
+							'flags' => [ 'destructive' ],
+						],
+					],
+					'default' => array_map( static function ( $text ) {
+						return [ 'value' => $text ];
+					}, $value ?? $options['overridedefault'] ),
+				];
 				break;
 			case 'timezone':
 				$configs = [
