@@ -543,7 +543,7 @@ class ManageWikiFormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name
-			] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['aliases'], false, 'texts' );
+			] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['aliases'], [], 'texts' );
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
