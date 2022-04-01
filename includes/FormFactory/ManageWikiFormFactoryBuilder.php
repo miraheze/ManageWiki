@@ -539,12 +539,11 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$formDescriptor["aliases-$name"] = [
-				'type' => 'textarea',
 				'label' => wfMessage( 'namespaces-aliases' )->text() . ' ($wgNamespaceAliases)',
-				'default' => implode( "\n", $namespaceData['aliases'] ),
+				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name
-			];
+			] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['aliases'], false, 'texts' );
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
@@ -1062,7 +1061,7 @@ class ManageWikiFormFactoryBuilder {
 				'protection' => $formData["protection-$name"],
 				'content' => (int)$formData["content-$name"],
 				'contentmodel' => $formData["contentmodel-$name"],
-				'aliases' => ( $formData["aliases-$name"] == '' ) ? [] : explode( "\n", $formData["aliases-$name"] ),
+				'aliases' => array_filter( array_column( $formData["aliases-$name"], 'value' ) ),
 				'additional' => $additionalBuilt
 			];
 
