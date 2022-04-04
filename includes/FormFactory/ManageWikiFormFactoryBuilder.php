@@ -1002,6 +1002,9 @@ class ManageWikiFormFactoryBuilder {
 				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
 			} elseif ( $type == 'list-multi' || $type == 'usergroups' || $type == 'userrights' ) {
 				$settingsArray[$name] = $value;
+			} elseif ( $type == 'users' || $type == 'wikipages' ) {
+				$value = explode( "\n", $value );
+				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
 			} elseif ( $type == 'list-multi-bool' ) {
 				foreach ( $set['allopts'] as $opt ) {
 					$settingsArray[$name][$opt] = in_array( $opt, $value );
