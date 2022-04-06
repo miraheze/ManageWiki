@@ -987,29 +987,45 @@ class ManageWikiFormFactoryBuilder {
 
 			$value = $formData["set-$name"];
 
-			if ( $type == 'matrix' ) {
-				$settingsArray[$name] = ( $mwAllowed ) ? ManageWiki::handleMatrix( $value, 'phparray' ) : ManageWiki::handleMatrix( $current, 'php' );
-			} elseif ( $type == 'check' ) {
-				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif ( $type == 'integers' ) {
-				$value = array_column( $value, 'value' );
-				$value = array_filter( $value );
-				$value = array_map( 'intval', $value );
-				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif ( $type == 'texts' ) {
-				$value = array_column( $value, 'value' );
-				$value = array_filter( $value );
-				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif ( $type == 'list-multi' || $type == 'usergroups' || $type == 'userrights' ) {
+			switch ( $type ) {
+				case 'integers':
+					$value = array_column( $value, 'value' );
+					$value = array_filter( $value );
+					$value = array_map( 'intval', $value );
+
+					break;
+				case 'list-multi-bool':
+					foreach ( $set['allopts'] as $opt ) {
+						$value[$opt] = in_array( $opt, $value );
+					}
+
+					break;
+				case 'matrix':
+					$current = ManageWiki::handleMatrix( $current, 'php' );
+					$value = ManageWiki::handleMatrix( $value, 'phparray' );
+
+					break;
+				case 'text':
+					if ( !$value ) {
+						$value = $current;
+					}
+
+					break;
+				case 'texts':
+					$value = array_column( $value, 'value' );
+					$value = array_filter( $value );
+
+					break;
+			}
+
+			if ( !$mwAllowed ) {
+				$value = $current;
+			}
+
+			if ( isset( $set['associativeKey'] ) ) {
+				$settingsArray[$name][ $set['associativeKey'] ] = $value;
+			} else {
 				$settingsArray[$name] = $value;
-			} elseif ( $type == 'list-multi-bool' ) {
-				foreach ( $set['allopts'] as $opt ) {
-					$settingsArray[$name][$opt] = in_array( $opt, $value );
-				}
-			} elseif ( $type != 'text' || $value ) {
-				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif ( !$mwAllowed ) {
-					$settingsArray[$name] = $current;
 			}
 		}
 
