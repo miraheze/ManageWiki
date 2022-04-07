@@ -11,6 +11,14 @@ use UserGroupMembership;
 class ManageWikiTypes {
 	public static function process( $config, $disabled, $groupList, $module, $options, $value, $overrideDefault = false, $type = false ) {
 		if ( $module === 'namespaces' ) {
+			if ( $overrideDefault ) {
+				$options['overridedefault'] = $overrideDefault;
+			}
+
+			if ( $type ) {
+				$options['type'] = $type;
+			}
+
 			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $options, $value, $groupList );
 		}
 
