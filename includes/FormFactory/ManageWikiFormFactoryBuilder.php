@@ -475,7 +475,7 @@ class ManageWikiFormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name
-				] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
+				] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['contentmodel'], false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
@@ -543,7 +543,7 @@ class ManageWikiFormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name
-			] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['aliases'], [], 'texts' );
+			] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['aliases'], [], 'texts' );
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
