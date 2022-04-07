@@ -134,7 +134,7 @@
 	"managewiki-link-settings-view": "View this wiki's additional settings",
 	"managewiki-toggle-forcesidebar": "Force the display of ManageWiki links in the sidebar.",
 	"managewiki-warning-changes": "You've made changes to ManageWiki that have not been saved yet.\nIf you leave this page without clicking \"$1\" your ManageWiki changes will not be updated.",
-	"namespaces-aliases": "Enter on a new line all undefined namespaces which should redirect to this one.",
+	"namespaces-aliases": "Add all undefined namespaces which should redirect to this one.",
 	"namespaces-content": "Does this namespace contain main wiki material (content)?",
 	"namespaces-contentmodel": "What should this namespace's content model be?",
 	"namespaces-delete": "Delete",
