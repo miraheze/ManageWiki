@@ -363,11 +363,13 @@ class ManageWikiFormFactoryBuilder {
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
 			if ( $add ) {
+				$value = $setList[$name] ?? null;
+
 				if ( isset( $set['associativeKey'] ) ) {
-					$set['overridedefault'] = $set['overridedefault'][ $set['associativeKey'] ];
+					$value = $setList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $setList[$name] ?? null );
+				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value );
 
 				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
 				if ( $set['requires'] ) {
