@@ -334,7 +334,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'usersmultiselect',
 					'exists' => true,
-					'default' => implode( "\n", $value ?? $options['overridedefault'] )
+					'default' => $value ?? $options['overridedefault']
 				];
 				break;
 			case 'usergroups':
@@ -381,7 +381,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'titlesmultiselect',
 					'exists' => $options['exists'] ?? true,
-					'default' => implode( "\n", $value ?? $options['overridedefault'] ),
+					'default' => $value ?? $options['overridedefault'],
 					'required' => false
 				];
 				break;
