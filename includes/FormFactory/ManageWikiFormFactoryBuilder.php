@@ -1012,9 +1012,12 @@ class ManageWikiFormFactoryBuilder {
 
 					break;
 				case 'list-multi-bool':
+					$setValue = [];
 					foreach ( $set['allopts'] as $opt ) {
-						$value[$opt] = in_array( $opt, $value );
+						$setValue[$opt] = in_array( $opt, $value );
 					}
+
+					$value = $setValue;
 
 					break;
 				case 'matrix':
