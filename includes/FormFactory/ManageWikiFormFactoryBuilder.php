@@ -364,7 +364,6 @@ class ManageWikiFormFactoryBuilder {
 
 			if ( $add ) {
 				$value = $setList[$name] ?? null;
-
 				if ( isset( $set['associativeKey'] ) ) {
 					$value = $setList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
 				}
