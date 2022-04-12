@@ -401,10 +401,9 @@ class ManageWikiFormFactoryBuilder {
 					];
 				}
 
+				$varName = " (\${$name})";
 				if ( isset( $set['associativeKey'] ) ) {
 					$varName = " (\${$name}['{$set['associativeKey']}'])";
-				} else {
-					$varName = " (\${$name})";
 				}
 
 				$formDescriptor["set-$name"] = [
@@ -993,10 +992,9 @@ class ManageWikiFormFactoryBuilder {
 				continue;
 			}
 
+			$current = $settingsList[$name] ?? $set['overridedefault'];
 			if ( isset( $set['associativeKey'] ) ) {
 				$current = $settingsList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
-			} else {
-				$current = $settingsList[$name] ?? $set['overridedefault'];
 			}
 
 			$mwAllowed = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
