@@ -1034,6 +1034,10 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			if ( isset( $set['associativeKey'] ) ) {
+				if ( isset( $GLOBALS[$name] ) ) {
+					$settingsArray[$name] = $GLOBALS[$name];
+				}
+
 				$settingsArray[$name][ $set['associativeKey'] ] = $value;
 			} else {
 				$settingsArray[$name] = $value;
