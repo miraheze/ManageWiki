@@ -135,7 +135,8 @@ class Hooks {
 
 						if (
 							is_array( $additional[$var]['overridedefault'] ) &&
-							in_array( NS_SPECIAL, $additional[$var]['overridedefault'] )
+							in_array( NS_SPECIAL, $additional[$var]['overridedefault'] ) &&
+							!in_array( NS_SPECIAL, $jsonArray['settings'][$var] ?? [] )
 						) {
 							$jsonArray['settings'][$var][] = NS_SPECIAL;
 						}
