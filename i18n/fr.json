@@ -147,7 +147,7 @@
 	"managewiki-link-settings-view": "Afficher les paramètres supplémentaires de ce wiki",
 	"managewiki-toggle-forcesidebar": "Forcer l’affichage des liens de ManageWiki dans la barre latérale.",
 	"managewiki-warning-changes": "Vous avez fait des modifications dans ManageWiki qui n’ont pas encore été enregistrées.\nSi vous quittez cette page sans cliquer sur « $1 », vos modifications dans ManageWiki ne seront pas mises à jour.",
-	"namespaces-aliases": "Veillez saisir sur une nouvelle ligne tous les espaces de noms indéfinis qui doivent être redirigés vers celui-ci.",
+	"namespaces-aliases": "Ajouter tous les espaces de noms indéfinis qui doivent être redirigés vers celui-ci.",
 	"namespaces-content": "Cet espace de noms contient-il le contenu principal du wiki ?",
 	"namespaces-contentmodel": "Quel devrait être le modèle de contenu de cet espace de noms ?",
 	"namespaces-delete": "Supprimer",

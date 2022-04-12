@@ -126,7 +126,7 @@
 	"managewiki-link-settings": "Gestisci le impostazioni aggiuntive di questo wiki",
 	"managewiki-link-settings-view": "Vedere impostazioni aggiuntive di questa Wiki",
 	"managewiki-toggle-forcesidebar": "Forza la visuale dei collegamenti GestisciWiki nella barra laterale.",
-	"namespaces-aliases": "Inserisci su una nuova riga tutti i namespace non definiti che dovrebbero reindirizzare a questo.",
+	"namespaces-aliases": "Aggiungi tutti i namespace non definiti che dovrebbero reindirizzare a questo.",
 	"namespaces-content": "Contiene questo namespace materiale Wiki principale (contenuti)?",
 	"namespaces-contentmodel": "Quale dovrebbe essere il modello di contenuti di questo namespace?",
 	"namespaces-delete": "Cancella",

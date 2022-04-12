@@ -363,7 +363,12 @@ class ManageWikiFormFactoryBuilder {
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
 			if ( $add ) {
-				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $setList[$name] ?? null );
+				$value = $setList[$name] ?? null;
+				if ( isset( $set['associativeKey'] ) ) {
+					$value = $setList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
+				}
+
+				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value );
 
 				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
 				if ( $set['requires'] ) {
@@ -395,8 +400,13 @@ class ManageWikiFormFactoryBuilder {
 					];
 				}
 
+				$varName = " (\${$name})";
+				if ( isset( $set['associativeKey'] ) ) {
+					$varName = " (\${$name}['{$set['associativeKey']}'])";
+				}
+
 				$formDescriptor["set-$name"] = [
-					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . " (\${$name})",
+					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . $varName,
 					'disabled' => $disabled,
 					'help' => $help,
 					'cssclass' => 'managewiki-infuse',
@@ -475,7 +485,7 @@ class ManageWikiFormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name
-				] + ManageWikiTypes::process( false, false, false, 'namespaces', false, $namespaceData['contentmodel'], false, 'contentmodel' ),
+				] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['contentmodel'], false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
@@ -539,12 +549,11 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$formDescriptor["aliases-$name"] = [
-				'type' => 'textarea',
 				'label' => wfMessage( 'namespaces-aliases' )->text() . ' ($wgNamespaceAliases)',
-				'default' => implode( "\n", $namespaceData['aliases'] ),
+				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name
-			];
+			] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['aliases'], [], 'texts' );
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
@@ -982,37 +991,63 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$current = $settingsList[$name] ?? $set['overridedefault'];
+			if ( isset( $set['associativeKey'] ) ) {
+				$current = $settingsList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
+			}
+
 			$mwAllowed = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $wiki ) : true;
 			$type = $set['type'];
 
 			$value = $formData["set-$name"];
 
-			if ( $type == 'matrix' ) {
-				$settingsArray[$name] = ( $mwAllowed ) ? ManageWiki::handleMatrix( $value, 'phparray' ) : ManageWiki::handleMatrix( $current, 'php' );
-			} elseif ( $type == 'check' ) {
-				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif ( $type == 'integers' ) {
-				$value = array_column( $value, 'value' );
-				$value = array_filter( $value );
-				$value = array_map( 'intval', $value );
-				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif ( $type == 'texts' ) {
-				$value = array_column( $value, 'value' );
-				$value = array_filter( $value );
-				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif ( $type == 'list-multi' || $type == 'usergroups' || $type == 'userrights' ) {
+			switch ( $type ) {
+				case 'integers':
+					$value = array_column( $value, 'value' );
+					$value = array_filter( $value );
+					$value = array_map( 'intval', $value );
+
+					break;
+				case 'list-multi-bool':
+					$setValue = [];
+					foreach ( $set['allopts'] as $opt ) {
+						$setValue[$opt] = in_array( $opt, $value );
+					}
+
+					$value = $setValue;
+
+					break;
+				case 'matrix':
+					$current = ManageWiki::handleMatrix( $current, 'php' );
+					$value = ManageWiki::handleMatrix( $value, 'phparray' );
+
+					break;
+				case 'text':
+					if ( !$value ) {
+						$value = $current;
+					}
+
+					break;
+				case 'texts':
+					$value = array_column( $value, 'value' );
+					$value = array_filter( $value );
+
+					break;
+				case 'users':
+				case 'wikipages':
+					$value = explode( "\n", $value );
+
+					break;
+			}
+
+			if ( !$mwAllowed ) {
+				$value = $current;
+			}
+
+			if ( isset( $set['associativeKey'] ) ) {
+				$settingsArray[$name] = $set['overridedefault'];
+				$settingsArray[$name][ $set['associativeKey'] ] = $value;
+			} else {
 				$settingsArray[$name] = $value;
-			} elseif ( $type == 'users' || $type == 'wikipages' ) {
-				$value = explode( "\n", $value );
-				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif ( $type == 'list-multi-bool' ) {
-				foreach ( $set['allopts'] as $opt ) {
-					$settingsArray[$name][$opt] = in_array( $opt, $value );
-				}
-			} elseif ( $type != 'text' || $value ) {
-				$settingsArray[$name] = ( $mwAllowed ) ? $value : $current;
-			} elseif ( !$mwAllowed ) {
-					$settingsArray[$name] = $current;
 			}
 		}
 
@@ -1065,7 +1100,7 @@ class ManageWikiFormFactoryBuilder {
 				'protection' => $formData["protection-$name"],
 				'content' => (int)$formData["content-$name"],
 				'contentmodel' => $formData["contentmodel-$name"],
-				'aliases' => ( $formData["aliases-$name"] == '' ) ? [] : explode( "\n", $formData["aliases-$name"] ),
+				'aliases' => array_filter( array_column( $formData["aliases-$name"], 'value' ) ),
 				'additional' => $additionalBuilt
 			];
 
