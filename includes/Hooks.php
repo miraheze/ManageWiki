@@ -133,6 +133,10 @@ class Hooks {
 							$jsonArray['settings'][$var] = [];
 						}
 					}
+
+					if ( in_array( NS_SPECIAL, $additional[$var]['overridedefault'] ) ) {
+						$jsonArray['settings'][$var][] = NS_SPECIAL;
+					}
 				}
 			}
 		}
