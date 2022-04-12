@@ -1032,6 +1032,11 @@ class ManageWikiFormFactoryBuilder {
 					$value = array_filter( $value );
 
 					break;
+				case 'users':
+				case 'wikipages':
+					$value = explode( "\n", $value );
+
+					break;
 			}
 
 			if ( !$mwAllowed ) {
