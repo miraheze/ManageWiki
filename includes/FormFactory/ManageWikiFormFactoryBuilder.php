@@ -363,6 +363,10 @@ class ManageWikiFormFactoryBuilder {
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
 			if ( $add ) {
+				if ( isset( $set['associativeKey'] ) ) {
+					$set['overridedefault'] = $set['overridedefault'][ $set['associativeKey'] ];
+				}
+
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $setList[$name] ?? null );
 
 				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
@@ -988,7 +992,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			if ( isset( $set['associativeKey'] ) ) {
-				$current = $settingsList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'];
+				$current = $settingsList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
 			} else {
 				$current = $settingsList[$name] ?? $set['overridedefault'];
 			}
@@ -1034,10 +1038,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			if ( isset( $set['associativeKey'] ) ) {
-				if ( isset( $GLOBALS[$name] ) ) {
-					$settingsArray[$name] = $GLOBALS[$name];
-				}
-
+				$settingsArray[$name] = $set['overridedefault'];
 				$settingsArray[$name][ $set['associativeKey'] ] = $value;
 			} else {
 				$settingsArray[$name] = $value;
