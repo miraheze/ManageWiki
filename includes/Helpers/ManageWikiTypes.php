@@ -360,7 +360,7 @@ class ManageWikiTypes {
 			case 'wikipage':
 				$configs = [
 					'type' => 'title',
-					'exists' => $options['exists'] ?? true,
+					'exists' => $options['mustexist'] ?? true,
 					'default' => $value ?? $options['overridedefault'],
 					'required' => false
 				];
@@ -368,7 +368,7 @@ class ManageWikiTypes {
 			case 'wikipages':
 				$configs = [
 					'type' => 'titlesmultiselect',
-					'exists' => $options['exists'] ?? true,
+					'exists' => $options['mustexist'] ?? true,
 					'default' => implode( "\n", $value ?? $options['overridedefault'] ),
 					'required' => false
 				];
