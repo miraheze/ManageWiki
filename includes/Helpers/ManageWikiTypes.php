@@ -139,18 +139,6 @@ class ManageWikiTypes {
 					'default' => ( isset( $value ) && $value !== null ) ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault']
 				];
 				break;
-			case 'namespace':
-				$configs = [
-					'type' => 'namespaceselect',
-					'default' => $value ?? $options['overridedefault']
-				];
-				break;
-			case 'namespaces':
-				$configs = [
-					'type' => 'namespacesmultiselect',
-					'default' => $value ?? $options['overridedefault']
-				];
-				break;
 			case 'preferences':
 				$preferences = [];
 				$excludedPrefs = [];
