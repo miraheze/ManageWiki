@@ -107,7 +107,7 @@ class Hooks {
 					'additional' => json_decode( $ns->ns_additional, true )
 				];
 
-				$nsAdditional = json_decode( $ns->ns_additional, true );
+				$nsAdditional = (array)json_decode( $ns->ns_additional, true );
 
 				foreach ( $nsAdditional as $var => $val ) {
 					if ( isset( $additional[$var] ) ) {
@@ -165,9 +165,9 @@ class Hooks {
 				}
 
 				$jsonArray['permissions'][$perm->perm_group] = [
-					'permissions' => array_merge( json_decode( $perm->perm_permissions, true ), $addPerms ),
-					'addgroups' => array_merge( json_decode( $perm->perm_addgroups, true ), self::getConfig( 'ManageWikiPermissionsAdditionalAddGroups' )[$perm->perm_group] ?? [] ),
-					'removegroups' => array_merge( json_decode( $perm->perm_removegroups, true ), self::getConfig( 'ManageWikiPermissionsAdditionalRemoveGroups' )[$perm->perm_group] ?? [] ),
+					'permissions' => array_merge( json_decode( $perm->perm_permissions, true ) ?? [], $addPerms ),
+					'addgroups' => array_merge( json_decode( $perm->perm_addgroups, true ) ?? [], self::getConfig( 'ManageWikiPermissionsAdditionalAddGroups' )[$perm->perm_group] ?? [] ),
+					'removegroups' => array_merge( json_decode( $perm->perm_removegroups, true ) ?? [], self::getConfig( 'ManageWikiPermissionsAdditionalRemoveGroups' )[$perm->perm_group] ?? [] ),
 					'addself' => json_decode( $perm->perm_addgroupstoself, true ),
 					'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
 					'autopromote' => json_decode( $perm->perm_autopromote, true )
