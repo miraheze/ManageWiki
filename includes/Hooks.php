@@ -10,7 +10,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use SpecialPage;
 use TextContentHandler;
 use User;
-use Wikimedia\Rdbms\MaintainableDBConnRef;
+use Wikimedia\Rdbms\DBConnRef;
 
 class Hooks {
 	private static function getConfig( string $var ) {
@@ -53,7 +53,7 @@ class Hooks {
 		$handler = new TextContentHandler( $modelId );
 	}
 
-	public static function onCreateWikiJsonBuilder( string $wiki, MaintainableDBConnRef $dbr, array &$jsonArray ) {
+	public static function onCreateWikiJsonBuilder( string $wiki, DBConnRef $dbr, array &$jsonArray ) {
 		$setObject = $dbr->selectRow(
 			'mw_settings',
 			'*',
