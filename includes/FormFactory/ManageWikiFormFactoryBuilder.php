@@ -308,6 +308,10 @@ class ManageWikiFormFactoryBuilder {
 
 			$help[] = $extDescription ?? ( $descriptionmsg ? ( wfMessage( $descriptionmsg )->exists() ? wfMessage( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description;
 
+			if ( $ext['help'] ?? false ) {
+				$help[] = '<br/>' . $ext['help'];
+			}
+
 			if ( $hasSettings && in_array( $name, $extList ) ) {
 				$help[] = '<br/>' . Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name, wfMessage( 'managewiki-extension-settings' )->text() );
 			}
