@@ -109,13 +109,11 @@ class SpecialManageWiki extends SpecialPage {
 
 		if ( $special !== '' || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
 			$out->addModules( [ 'ext.managewiki.oouiform' ] );
-
 			$out->addModuleStyles( [
 				'ext.managewiki.oouiform.styles',
 				'mediawiki.widgets.TagMultiselectWidget.styles',
+				'oojs-ui-widgets.styles',
 			] );
-
-			$out->addModuleStyles( 'oojs-ui-widgets.styles' );
 		}
 
 		if ( !$special ) {
