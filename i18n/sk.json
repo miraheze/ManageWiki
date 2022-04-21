@@ -129,7 +129,7 @@
 	"managewiki-link-settings-view": "Zobraziť dodatočné nastavenia tejto wiki",
 	"managewiki-toggle-forcesidebar": "Vynútiť zobrazenie odkazov Správy wiki na bočnom panely.",
 	"managewiki-warning-changes": "Urobili ste zmeny v ManageWiki, ktoré ešte neboli uložené. Ak opustíte túto stránku bez kliknutia na „ $1 “, Vaše zmeny v ManageWiki sa neaktualizujú.",
-	"namespaces-aliases": "Zadať na novom riadku všetky nezadefinované menné priestory, ktoré majú byť odkazované na tento.",
+	"namespaces-aliases": "Pridať všetky nezadefinované menné priestory, ktoré by mali presmerovať na tento menný priestor.",
 	"namespaces-content": "Obsahuje tento menný priestor obsah hlavnej wiki?",
 	"namespaces-contentmodel": "Ako má vyzerať model obsahu tohto menného priestoru?",
 	"namespaces-delete": "Vymazať",
