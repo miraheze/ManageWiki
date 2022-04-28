@@ -133,7 +133,7 @@
 	"managewiki-link-settings-view": "檢視此 wiki 的額外設定",
 	"managewiki-toggle-forcesidebar": "強制 ManageWiki 連結在側邊欄顯示",
 	"managewiki-warning-changes": "您對 ManageWiki 所做的變更尚未儲存。\n若您未點選「$1」就離開此頁面，將不會更新您的 ManageWiki 變更。",
-	"namespaces-aliases": "添加所有應重新導向至此的未定義命名空間。",
+	"namespaces-aliases": "加入所有尚未定義、要重新導向至此命名空間的命名空間別名。",
 	"namespaces-content": "此命名空間包含主 wiki 內容嗎？",
 	"namespaces-contentmodel": "此命名空間的內容模組應是？",
 	"namespaces-delete": "刪除",

@@ -132,7 +132,7 @@
 	"managewiki-link-settings-view": "De extra instellingen van deze wiki bekijken",
 	"managewiki-toggle-forcesidebar": "De weergave van ManageWiki-links in de zijbalk forceren.",
 	"managewiki-warning-changes": "U hebt wijzigingen aangebracht in ManageWiki die nog niet zijn opgeslagen.\nAls u deze pagina verlaat zonder op \"$1\" te klikken, worden uw ManageWiki-instellingen niet bijgewerkt.",
-	"namespaces-aliases": "Voer op een nieuwe regel alle niet-gedefinieerde naamruimten in die naar deze moeten worden omgeleid.",
+	"namespaces-aliases": "Voeg alle niet gedefinieerde naamruimten toe die naar deze moeten worden omgeleid.",
 	"namespaces-content": "Bevat deze naamruimte de hoofdtekst (inhoud) van deze wiki?",
 	"namespaces-contentmodel": "Wat moet het inhoudsmodel van deze naamruimte zijn?",
 	"namespaces-delete": "Verwijderen",
