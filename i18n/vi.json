@@ -5,11 +5,12 @@
 			"Leduyquang753",
 			"Minh Nguyen",
 			"NguoiDungKhongDinhDanh",
+			"NguyenHung",
 			"Nguyễn Mạnh An",
 			"Wolf"
 		]
 	},
-	"action-managewiki": "Quản lý cài đặt wiki",
+	"action-managewiki": "quản lý cài đặt wiki",
 	"apihelp-query+wikiconfig-summary": "Xem tên trang, không hoạt động, ngoại lệ không hoạt động, đã đóng, riêng tư, tiện ích, cài đặt và quyền hạn cho wiki được đề cập.",
 	"apihelp-query+wikiconfig-example-1": "Xem cài đặt wiki cho wiki trung ương.",
 	"apihelp-query+wikiconfig-param-prop": "Chọn thuộc tính để quay lại:",
