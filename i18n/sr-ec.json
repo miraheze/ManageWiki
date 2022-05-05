@@ -3,6 +3,7 @@
 		"authors": [
 			"BadDog",
 			"Kizule",
+			"Milicevic01",
 			"Zoranzoki21"
 		]
 	},
@@ -24,7 +25,7 @@
 	"logentry-managewiki-delete-group": "$1 је {{GENDER:$1|уклонио|уклонила}} групу $3",
 	"logentry-managewiki-namespaces": "$1 је {{GENDER:$1|изменио|изменила}} именски простор „$5” за вики „$4”",
 	"logentry-managewiki-namespaces-delete": "$1 је {{GENDER:$1|открио|открила}} именски простор „$5” за вики „$4”",
-	"logentry-managewiki-rename": "$1 је {{GENDER:$1|преименовао|преименовала|преименовао/-ла}} групу $3 из $4",
+	"logentry-managewiki-rename": "$1 је {{GENDER:$1|преименовао|преименовала}} групу $3 из $4",
 	"logentry-managewiki-settings": "$1 је променио/ла подешавања ($5) за „$4”",
 	"managewiki": "Управљање викијем",
 	"managewikisettings": "Управљање додатним подешавањима викија",
