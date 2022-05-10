@@ -689,7 +689,8 @@ class ManageWikiFormFactoryBuilder {
 		$aPArray = [];
 		foreach ( (array)$aP as $element ) {
 			if ( is_array( $element ) ) {
-				$aPArray[$element[0]] = array_slice( $element, 1 );
+				$aPArray[$element[0]] = $element[0] === APCOND_INGROUPS ?
+					array_slice( $element, 1 ) : $element[1];
 			}
 		}
 
