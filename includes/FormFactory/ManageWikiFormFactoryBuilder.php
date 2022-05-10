@@ -689,7 +689,7 @@ class ManageWikiFormFactoryBuilder {
 		$aPArray = [];
 		foreach ( (array)$aP as $element ) {
 			if ( is_array( $element ) ) {
-				$aPArray[$element[0]] = $element[1];
+				$aPArray[$element[0]] = array_slice( $element, 1 );
 			}
 		}
 
@@ -1187,7 +1187,7 @@ class ManageWikiFormFactoryBuilder {
 		$aE = $formData['enable'];
 
 		$aPBuild = $aE ? [
-				$formData['conds']
+			$formData['conds']
 		] : [];
 
 		if ( count( $aPBuild ) != 0 ) {
