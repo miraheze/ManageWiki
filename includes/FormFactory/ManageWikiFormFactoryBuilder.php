@@ -395,7 +395,7 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				// Hack to prevent "implicit submission". See T275588 for more
-				if ( $configs['type'] === 'cloner' ) {
+				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
 					$formDescriptor["fake-submit-$name"] = [
 						'type' => 'submit',
 						'disabled' => true,
