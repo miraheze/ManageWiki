@@ -15,6 +15,8 @@
 		]
 	},
 	"action-managewiki": "{{doc-action|managewiki}}",
+	"action-managewiki-restricted": "{{doc-action|managewiki-restricted}}",
+	"action-managewiki-editdefault": "{{doc-action|managewiki-editdefault}}",
 	"apihelp-query+wikiconfig-summary": "{{doc-apihelp-summary|wikiconfig}}",
 	"apihelp-query+wikiconfig-example-1": "{{doc-apihelp-example|wikiconfig}}",
 	"apihelp-query+wikiconfig-param-prop": "{{doc-apihelp-param|wikiconfig|prop}}",
@@ -79,5 +81,7 @@
 	"namespaces-delete": "{{Identical|Delete}}",
 	"permissions-delete": "{{Identical|Delete}}",
 	"right-managewiki": "{{doc-right|managewiki}}",
+	"right-managewiki-restricted": "{{doc-right|managewiki-restricted}}",
+	"right-managewiki-editdefault": "{{doc-right|managewiki-editdefault}}",
 	"settings-other": "{{Identical|Other}}"
 }

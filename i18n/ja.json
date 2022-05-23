@@ -15,8 +15,8 @@
 		]
 	},
 	"action-managewiki": "Wikiの設定の管理",
-	"action-managewiki-restricted": "制限付きWiki設定の管理",
-	"action-managewiki-editdefault": "デフォルトのグループ権限の管理",
+	"action-managewiki-restricted": "制限付きウィキ設定の管理",
+	"action-managewiki-editdefault": "既定のグループ権限の管理",
 	"apihelp-query+wikiconfig-summary": "指定されたWikiのサイト名、非アクティブ、非アクティブの免除、閉鎖、プライベート、拡張機能、設定、権限の状態を表示します。",
 	"apihelp-query+wikiconfig-example-1": "METAWikiでWikiの設定を表示する。",
 	"apihelp-query+wikiconfig-param-prop": "返すプロパティを選択：",
@@ -157,7 +157,7 @@
 	"permissions-unassigned": "未割り当ての権限",
 	"permissions-group": "グループの割り当て",
 	"right-managewiki": "ウィキの設定を管理",
-	"right-managewiki-restricted": "制限付きWiki設定の管理",
-	"right-managewiki-editdefault": "デフォルトのグループ権限の管理",
+	"right-managewiki-restricted": "制限付きウィキ設定を管理",
+	"right-managewiki-editdefault": "既定のグループ権限を管理",
 	"settings-other": "その他"
 }
