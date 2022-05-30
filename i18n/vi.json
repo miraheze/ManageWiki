@@ -131,7 +131,7 @@
 	"managewiki-link-settings-view": "Xem các cài đặt nâng cao của wiki",
 	"managewiki-toggle-forcesidebar": "Buộc hiển thị các liên kết ManageWiki trong thanh cạnh.",
 	"managewiki-warning-changes": "Bạn chưa lưu những thay đổi tùy chọn đã thực hiện.\nNếu bạn rời khỏi trang này mà không bấm “$1”, các tùy chọn của bạn sẽ không được cập nhật.",
-	"namespaces-aliases": "Nhập vào một dòng mới mọi vùng tên chưa được định nghĩa mà nên chuyển về vùng tên này.",
+	"namespaces-aliases": "Thêm tất cả các vùng tên chưa được định nghĩa mà nên đổi hướng về vùng tên này.",
 	"namespaces-content": "Không gian tên này có chứa nội dung wiki chính không?",
 	"namespaces-contentmodel": "Mô hình nội dung của không gian tên này là gì?",
 	"namespaces-delete": "Xóa",
