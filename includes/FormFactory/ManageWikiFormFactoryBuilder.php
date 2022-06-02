@@ -1039,7 +1039,7 @@ class ManageWikiFormFactoryBuilder {
 					break;
 				case 'users':
 				case 'wikipages':
-					$value = explode( "\n", $value );
+					$value = $value ? explode( "\n", $value ) : [];
 
 					break;
 			}
