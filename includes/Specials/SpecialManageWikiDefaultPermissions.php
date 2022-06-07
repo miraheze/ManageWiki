@@ -120,7 +120,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			'ext.managewiki.oouiform.styles',
 			'mediawiki.widgets.TagMultiselectWidget.styles',
 		] );
-		$out->addModuleStyles( 'oojs-ui-widgets.styles' );
+		$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
 
 		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
 
