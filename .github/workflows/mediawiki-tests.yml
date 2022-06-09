@@ -194,6 +194,14 @@ jobs:
             done
           fi
 
+          echo '?>' >> src/includes/DevelopmentSettings.php
+
+          if [ -d src/extensions/CreateWiki ] || [ "${{ github.event.repository.name }}" == 'CreateWiki' ]; then
+            curl -sL https://raw.githubusercontent.com/Universal-Omega/scripts/master/mediawiki/globals/setup-CreateWiki.php >> src/includes/DevelopmentSettings.php
+          fi
+
+          echo '<?php' >> src/includes/DevelopmentSettings.php
+
           if [ -e "$GITHUB_WORKSPACE"/.github/workflows/globals.php ]; then
             echo 'require_once __DIR__ . "/../extensions/${{ github.event.repository.name }}/.github/workflows/globals.php";' >> src/includes/DevelopmentSettings.php
           fi
