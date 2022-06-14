@@ -995,7 +995,7 @@ class ManageWikiFormFactoryBuilder {
 				continue;
 			}
 
-			$current = ( $settingsList[$name] ?? null ) ?: $set['overridedefault'];
+			$current = $settingsList[$name] ?? $set['overridedefault'];
 			if ( isset( $set['associativeKey'] ) ) {
 				$current = $settingsList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
 			}
@@ -1028,7 +1028,7 @@ class ManageWikiFormFactoryBuilder {
 					break;
 				case 'text':
 					if ( !$value ) {
-						$value = $current;
+						$value = $set['overridedefault'];
 					}
 
 					break;
