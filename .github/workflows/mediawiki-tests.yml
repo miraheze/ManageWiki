@@ -66,7 +66,7 @@ jobs:
           - mw: 'master'
             php: 7.4
             php-docker: 74
-            experimental: false
+            experimental: true
             stage: selenium
 
           # Latest stable MediaWiki - PHP 7.4 (qunit)
