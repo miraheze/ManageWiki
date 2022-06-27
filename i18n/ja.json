@@ -139,7 +139,7 @@
 	"managewiki-link-settings-view": "Wikiの追加設定を表示",
 	"managewiki-toggle-forcesidebar": "サイドバーにManageWikiリンクを強制的に表示します。",
 	"managewiki-warning-changes": "ManageWikiに変更を加えましたが、まだ保存されていません。\n\"$1\"をクリックせずにこのページを離れると、あなたのManageWikiの変更は更新されません。",
-	"namespaces-aliases": "この名前空間にリダイレクトされる必要がある全ての未定義の名前空間を新しい行に入力します。",
+	"namespaces-aliases": "この名前空間にリダイレクトするすべての未定義の名前空間を追加します。",
 	"namespaces-content": "この名前空間はウィキの主要コンテンツを含みますか？",
 	"namespaces-contentmodel": "この名前空間のコンテンツモデルを選択してください",
 	"namespaces-delete": "削除",
