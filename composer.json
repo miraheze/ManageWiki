@@ -1,7 +1,33 @@
 {
-	"name": "miraheze/managewiki",
-	"description": "",
+	"name": "miraheze/manage-wiki",
+	"type": "mediawiki-extension",
+	"description": "Allows people to manage wikis through a web interface.",
+	"homepage": "https://www.mediawiki.org/wiki/Extension:ManageWiki",
 	"license": "GPL-3.0-or-later",
+	"authors": [
+		{
+			"name": "Southparkfan"
+		},
+		{
+			"name": "John Lewis"
+		},
+		{
+			"name": "MacFan4000"
+		},
+		{
+			"name": "Reception123"
+		},
+		{
+			"name": "Universal Omega"
+		}
+	],
+	"support": {
+		"issues": "https://phabricator.miraheze.org/tag/managewiki/",
+		"wiki": "https://www.mediawiki.org/wiki/Extension:ManageWiki"
+	},
+	"require": {
+		"composer/installers": ">=1.0.1"
+	},
 	"require-dev": {
 		"mediawiki/mediawiki-codesniffer": "39.0.0",
 		"mediawiki/mediawiki-phan-config": "0.11.1",
@@ -21,5 +47,12 @@
 		],
 		"phan": "phan -d . --long-progress-bar",
 		"phpcs": "phpcs -sp --cache"
+	},
+	"config": {
+		"prepend-autoloader": false,
+		"optimize-autoloader": true,
+		"allow-plugins": {
+			"composer/installers": true
+		}
 	}
 }
