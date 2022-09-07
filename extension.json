@@ -52,6 +52,34 @@
 	"LogTypes": [
 		"managewiki"
 	],
+	"ActionFilteredLogs": {
+		"managewiki": {
+			"managewikilock": [
+				"lock"
+			],
+			"managewikiunlock": [
+				"unlock"
+			],
+			"namespaces": [
+				"namespaces",
+				"namespaces-delete"
+			],
+			"permissions": [
+				"rename",
+				"rights",
+				"delete-group"
+			],
+			"settings": [
+				"settings"
+			],
+			"wikidelete": [
+				"delete"
+			],
+			"wikiundelete": [
+				"undelete"
+			]
+		}
+	},
 	"MessagesDirs": {
 		"ManageWiki": [
 			"i18n"
