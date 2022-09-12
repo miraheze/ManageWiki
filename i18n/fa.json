@@ -5,6 +5,7 @@
 			"Beginneruser",
 			"FarsiNevis",
 			"Jeeputer",
+			"Mskf1383",
 			"Sjazz"
 		]
 	},
@@ -31,7 +32,7 @@
 	"managewiki-label-private": "خصوصی",
 	"managewiki-label-inactive": "غیرفعال",
 	"managewiki-label-inactive-exempt": "آزادسازی از غیرفعال",
-	"managewiki-label-sitename": "نام تارنما",
+	"managewiki-label-sitename": "نام وبگاه",
 	"managewiki-missing": "آن ویکی وجرد ندارد.",
 	"managewiki-namespaces-create": "ایجاد فضای نام تازه",
 	"managewiki-permissions-addall": "می‌توان به دیگران افزود",
