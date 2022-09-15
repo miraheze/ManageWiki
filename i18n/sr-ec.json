@@ -4,6 +4,7 @@
 			"BadDog",
 			"Kizule",
 			"Milicevic01",
+			"Vlad5250",
 			"Zoranzoki21"
 		]
 	},
@@ -22,6 +23,11 @@
 	"extensions-other": "Друго",
 	"log-description-managewiki": "Овај дневник прати све промене у подешавањима викија путем ManageWiki-ја.",
 	"log-name-managewiki": "Дневник ManageWiki-ја",
+	"log-action-filter-managewiki": "Врста радње:",
+	"log-action-filter-managewiki-managewikilock": "закључавање ManageWiki-ја",
+	"log-action-filter-managewiki-managewikiunlock": "откључавање ManageWiki-ја",
+	"log-action-filter-managewiki-namespaces": "измене именских простора",
+	"log-action-filter-managewiki-settings": "измене подешавања викија",
 	"logentry-managewiki-delete-group": "$1 је {{GENDER:$1|уклонио|уклонила}} групу $3",
 	"logentry-managewiki-namespaces": "$1 је {{GENDER:$1|изменио|изменила}} именски простор „$5” за вики „$4”",
 	"logentry-managewiki-namespaces-delete": "$1 је {{GENDER:$1|открио|открила}} именски простор „$5” за вики „$4”",

@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"EdoAug",
 			"Imre Eilertsen",
 			"Jon Harald Søby"
 		]
@@ -25,6 +26,9 @@
 	"extensions-other": "Andre",
 	"log-description-managewiki": "Denne loggen sporer alle endringer i wikiinnstillinger via ManageWiki.",
 	"log-name-managewiki": "ManageWiki-logg",
+	"log-action-filter-managewiki": "Handlingstype:",
+	"log-action-filter-managewiki-namespaces": "Navneromsendringer",
+	"log-action-filter-managewiki-permissions": "Gruppetillatelse-endringer",
 	"logentry-managewiki-delete": "$1 slettet wikien «$4»",
 	"logentry-managewiki-delete-group": "$1 slettet gruppa $3",
 	"logentry-managewiki-lock": "$1 låste wikien «$4»",
