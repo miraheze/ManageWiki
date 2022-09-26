@@ -45,7 +45,7 @@ jobs:
           - mw: 'REL1_39'
             php: 7.4
             php-docker: 74
-            experimental: true
+            experimental: false
             stage: phpunit
 
           # Latest MediaWiki master - PHP 7.4 (phpunit)
@@ -66,7 +66,7 @@ jobs:
           - mw: 'REL1_39'
             php: 7.4
             php-docker: 74
-            experimental: true
+            experimental: false
             stage: selenium
 
           # Latest MediaWiki master - PHP 7.4 (selenium)
