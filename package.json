@@ -14,7 +14,7 @@
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.23.0",
 		"grunt-banana-checker": "0.10.0",
-		"stylelint-config-idiomatic-order": "8.1.0",
+		"stylelint-config-idiomatic-order": "9.0.0",
 		"stylelint-config-wikimedia": "0.13.1"
 	}
 }
