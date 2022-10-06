@@ -21,7 +21,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 
 	public function execute() {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
 		if ( $this->getOption( 'overwrite' ) ) {
 			$dbw->delete(
