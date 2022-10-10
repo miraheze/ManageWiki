@@ -51,6 +51,7 @@
 	"extensions-other": "其他",
 	"log-description-managewiki": "此日志通过ManageWiki跟踪Wiki设置的所有更改。",
 	"log-name-managewiki": "ManageWiki日志",
+	"log-action-filter-managewiki": "操作类型：",
 	"logentry-managewiki-delete": "$1 删除了wiki“$4”",
 	"logentry-managewiki-delete-group": "$1删除了用户组$3",
 	"logentry-managewiki-lock": "$1锁定了wiki“$4”",

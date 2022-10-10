@@ -73,7 +73,7 @@
 	"managewiki-label-sitename": "Nettstedsnavn",
 	"managewiki-label-undeletewiki": "Gjenopprette denne wikien?",
 	"managewiki-label-lockwiki": "Lås denne wikien fra å ble endret",
-	"managewiki-label-unlockwiki": "Lås opp denne wikien",
+	"managewiki-label-unlockwiki": "Lås opp denne wikien?",
 	"managewiki-missing": "Den wikien finnes ikke.",
 	"managewiki-mwlocked": "Denne wikien har fått begrenset muligheten til å bruke ManageWiki.",
 	"managewiki-namespace-conflicts": "Kan ikke endre «$1», et navnerom med det navnet finnes allerede",
