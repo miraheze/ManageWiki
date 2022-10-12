@@ -115,6 +115,10 @@ class ManageWikiExtensions {
 		$overwrittenExts = $this->list();
 
 		foreach ( $this->extConfig as $ext => $extConfig ) {
+			if ( !is_string( $ext ) ) {
+				continue;
+			}
+
 			if ( in_array( $ext, $extensions ) && !in_array( $ext, $overwrittenExts ) ) {
 				$this->add( $ext );
 			} elseif ( !in_array( $ext, $extensions ) && in_array( $ext, $overwrittenExts ) ) {
