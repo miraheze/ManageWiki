@@ -70,7 +70,7 @@ class ManageWikiExtensions {
 
 	/**
 	 * Adds an extension to the 'enabled' list
-	 * @param string[] $extensions Either an array or string of extensions to enable
+	 * @param string|string[] $extensions Either an array or string of extensions to enable
 	 */
 	public function add( $extensions ) {
 		// We allow adding either one extension (string) or many (array)
@@ -87,7 +87,7 @@ class ManageWikiExtensions {
 
 	/**
 	 * Removes an extension from the 'enabled' list
-	 * @param string[] $extensions Either an array or string of extensions to disable
+	 * @param string|string[] $extensions Either an array or string of extensions to disable
 	 */
 	public function remove( $extensions ) {
 		// We allow remove either one extension (string) or many (array)
