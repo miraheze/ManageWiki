@@ -58,7 +58,7 @@
 	"logentry-managewiki-namespaces": "$1修改了wiki“$4”的命名空间“$5”",
 	"logentry-managewiki-namespaces-delete": "$1 删除了 wiki \"$4\" 的命名空间 \"$5\"",
 	"logentry-managewiki-rename": "$1从$4把$3组改名了",
-	"logentry-managewiki-rights": "$1改变了$3组元数据：添加权限$4，移除权限$5，添加了组添加权限$6，移除了组添加权限$7，添加了组移除权限$8，移除了组移除权限$9，添加了组自我添加权限$10，移除了组自我添加权限$11，添加了组自我移除权限$12，移除了组自我移除权限$13，修改了自动提升（$14）",
+	"logentry-managewiki-rights": "$1改变了$3组元数据：添加权限$4，移除权限$5，添加了组添加权限$6，移除了组添加权限$7，添加了组移除权限$8，移除了组移除权限$9，添加了组自我添加权限$10，移除了组自我添加权限$11，添加了组自我移除权限$12，移除了组自我移除权限$13，修改了自动授权（$14）",
 	"logentry-managewiki-settings": "$1更改了“$4”的设置（$5）",
 	"logentry-managewiki-undelete": "$1 恢复了了Wiki \"$4\"",
 	"logentry-managewiki-unlock": "$1 解锁了Wiki \"$4\"",
