@@ -28,6 +28,7 @@
 	"deletedwikis": "אתרי ויקי מחוקים",
 	"log-description-managewiki": "היומן הזה עוקב אחרי כל שינויי ההגדרות דרך ManageWiki.",
 	"log-name-managewiki": "יומן ניהול ויקי",
+	"log-action-filter-managewiki-wikidelete": "מחיקות ויקי",
 	"logentry-managewiki-delete": "$1 {{GENDER:|מחק|מחקה}} את הוויקי \"$4\"",
 	"logentry-managewiki-delete-group": "$1 {{GENDER:|מחק|מחקה}} את הקבוצה $3",
 	"logentry-managewiki-lock": "$1 {{GENDER:|נעל|נעלה}} את הוויקי \"$4\"",
