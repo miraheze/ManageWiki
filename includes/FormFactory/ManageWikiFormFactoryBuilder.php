@@ -86,6 +86,7 @@ class ManageWikiFormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => "managewiki-label-{$mwAction}wiki",
 					'default' => false,
+					'disabled' => $wiki->getDBname() == $config->get( 'CreateWikiGlobalWiki' ),
 					'section' => 'main'
 				];
 			}
