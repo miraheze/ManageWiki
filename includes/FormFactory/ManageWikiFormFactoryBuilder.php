@@ -141,7 +141,7 @@ class ManageWikiFormFactoryBuilder {
 			'inactive-exempt-reason' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( 'CreateWikiInactiveExemptReasonOptions' ),
 				'hide-if' => [ '!==', 'wpinactive-exempt', '1' ],
-				'type' => 'select',
+				'type' => 'selectorother',
 				'default' => $wiki->getInactiveExemptReason(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 				'options' => $config->get( 'CreateWikiInactiveExemptReasonOptions' )
