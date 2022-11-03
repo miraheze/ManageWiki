@@ -4,12 +4,12 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use ContentHandler;
 use MediaWiki\MediaWikiServices;
-use Miraheze\ManageWiki\FormFields\HTMLAutoCompleteSelectFieldWithOOUI;
 use Miraheze\ManageWiki\ManageWiki;
+use Status;
 use UserGroupMembership;
 
 class ManageWikiTypes {
-	public static function process( $config, $disabled, $groupList, $module, $options, $value, $overrideDefault = false, $type = false ) {
+	public static function process( $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {
 				$options['overridedefault'] = $overrideDefault;
@@ -19,24 +19,26 @@ class ManageWikiTypes {
 				$options['type'] = $type;
 			}
 
-			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $options, $value, $groupList );
+			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $groupList, $name, $options, $value );
 		}
 
-		return self::common( $config, $disabled, $options, $value, $groupList );
+		return self::common( $config, $disabled, $groupList, $name, $options, $value );
 	}
 
-	private static function common( $config, $disabled, $options, $value, $groupList ) {
+	private static function common( $config, $disabled, $groupList, $name, $options, $value ) {
 		switch ( $options['type'] ) {
 			case 'database':
 				$configs = [
-					'class' => HTMLAutoCompleteSelectFieldWithOOUI::class,
+					'type' => 'text',
 					'default' => $value ?? $options['overridedefault'],
-					'require-match' => true
-				];
+					'validation-callback' => static function ( $database ) use ( $config, $name ) {
+						if ( !in_array( $database, $config->get( 'LocalDatabases' ) ) ) {
+							return Status::newFatal( 'managewiki-invalid-database', $database, $name )->getMessage();
+						}
 
-				foreach ( $config->get( 'LocalDatabases' ) as $db ) {
-					$configs['autocomplete'][$db] = $db;
-				}
+						return true;
+					}
+				];
 				break;
 			case 'float':
 				$configs = [
