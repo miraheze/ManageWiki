@@ -372,7 +372,7 @@ class ManageWikiFormFactoryBuilder {
 					$value = $setList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value );
+				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $name, $set, $value );
 
 				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
 				if ( $set['requires'] ) {
