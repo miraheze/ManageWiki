@@ -6,6 +6,7 @@ use ContentHandler;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\FormFields\HTMLAutoCompleteSelectFieldWithOOUI;
 use Miraheze\ManageWiki\ManageWiki;
+use Status;
 use UserGroupMembership;
 
 class ManageWikiTypes {
