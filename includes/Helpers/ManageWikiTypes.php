@@ -9,7 +9,7 @@ use Status;
 use UserGroupMembership;
 
 class ManageWikiTypes {
-	public static function process( $config, $disabled, $groupList, $module, $name, $options, $value, $overrideDefault = false, $type = false ) {
+	public static function process( $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {
 				$options['overridedefault'] = $overrideDefault;
@@ -19,13 +19,13 @@ class ManageWikiTypes {
 				$options['type'] = $type;
 			}
 
-			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $name, $options, $value, $groupList );
+			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $groupList, $name, $options, $value );
 		}
 
-		return self::common( $config, $disabled, $name, $options, $value, $groupList );
+		return self::common( $config, $disabled, $groupList, $name, $options, $value );
 	}
 
-	private static function common( $config, $disabled, $name, $options, $value, $groupList ) {
+	private static function common( $config, $disabled, $groupList, $name, $options, $value ) {
 		switch ( $options['type'] ) {
 			case 'database':
 				$configs = [
