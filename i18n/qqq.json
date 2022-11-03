@@ -58,6 +58,7 @@
 	"managewiki-header-permissions": "Header shown in Special:ManageWiki/permissions",
 	"managewiki-header-namespaces": "Header shown in Special:ManageWiki/namespaces",
 	"managewiki-header-settings": "Header shown in Special:ManageWiki/settings",
+	"managewiki-invalid-database": "Status message given if an invalid database is given for the 'databases' type. $1 is the given database, $2 is the configuration variable name.",
 	"managewiki-label-category": "{{Identical|Category}}",
 	"managewiki-label-closed": "Used as a label for 'closed'.\n{{Identical|Closed}}",
 	"managewiki-label-dbname": "Used as a label for 'dbname'.\n{{Identical|Database name}}",
