@@ -65,6 +65,7 @@
 	"managewiki-header-permissions": "Ispod izaberite postojeću grupu da biste je izmjenili ili izradite novu korisničku grupu u polju ispod nje.",
 	"managewiki-header-namespaces": "Ispod izaberite imenski prostor za uređivanje (razgovorni prostori povezani su s njihovim glavnim prostorom) ili pak kliknite gumb ispod da biste izradili novi glavni imen. prostor!",
 	"managewiki-header-settings": "Ova se stranica skluži za upravljanje podešavanjima wikija <b>'$1'</b>. Ako nema značajke koju želite, zatražite je na <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Fabrikatoru]</span>. <br> Kada gotovi, pritisnite gumb \"Sačuvaj\" da biste sačuvali svoje promjene.",
+	"managewiki-invalid-database": "$1 je nevažeća baza podataka. Podano preko <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Kategorija / Категорија",
 	"managewiki-label-closed": "Zatvoren",
 	"managewiki-label-creationdate": "Datum stvaranja",

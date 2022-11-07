@@ -83,6 +83,7 @@
 	"managewiki-header-permissions": "Choisissez ci-dessous un groupe qui existe déjà pour le modifier, ou bien créez un nouveau groupe d’utilisateurs dans le champ de saisie en dessous.",
 	"managewiki-header-namespaces": "Sélectionnez un espace de noms à éditer en dessous (les espaces de noms de discussion sont associés à leur espace de noms principal) ou appuyez sur le bouton afin de créer un nouvel espace de noms principal.",
 	"managewiki-header-settings": "Cette page est utilisée pour gérer les paramètres du wiki « <b>$1</b> ». Si une fonctionnalité que vous souhaitez n’est pas encore disponible, veuillez utiliser <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> pour la demander.<br /> Dès que vous avez terminé, cliquez sur le bouton « enregistrer » pour enregistrer vos modifications.",
+	"managewiki-invalid-database": "« $1 » est une base de données non valide. Donné par <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Catégorie",
 	"managewiki-label-closed": "Fermé",
 	"managewiki-label-creationdate": "Date de création",
