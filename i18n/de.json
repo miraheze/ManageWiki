@@ -74,6 +74,7 @@
 	"managewiki-header-permissions": "Wähle unten eine bereits vorhandene Gruppe zum Bearbeiten aus oder erstelle im Kasten unten eine neue Benutzergruppe.",
 	"managewiki-header-namespaces": "Wähle unten einen zu bearbeitenden Namensraum aus (Diskussionsnamensräume sind mit ihren Hauptnamensräumen verknüpft) oder klicke auf die Schaltfläche, um einen neuen Haupt-Namensraum zu erstellen.",
 	"managewiki-header-settings": "Diese Seite wird verwendet, um die Einstellungen des Wikis <b>„$1“</b> zu verwalten. Falls du eine Funktion haben möchtest, die hier noch nicht verfügbar ist, verwende bitte  <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>, um sie anzufordern. <br> Sobald du fertig bist, drücke auf die Schaltfläche „Speichern“, um deine Änderungen zu speichern.",
+	"managewiki-invalid-database": "$1 ist eine ungültige Datenbank. Gegeben durch <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Kategorie",
 	"managewiki-label-closed": "Geschlossen",
 	"managewiki-label-creationdate": "Erstelldatum",
