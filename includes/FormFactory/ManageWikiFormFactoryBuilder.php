@@ -489,7 +489,7 @@ class ManageWikiFormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name
-				] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['contentmodel'], false, 'contentmodel' ),
+				] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['contentmodel'], false, false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
@@ -520,7 +520,7 @@ class ManageWikiFormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, $a['overridedefault'], $a['type'] );
+					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, false, $a['overridedefault'], $a['type'] );
 
 					$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $a['help'];
 					if ( $a['requires'] ) {
@@ -557,7 +557,7 @@ class ManageWikiFormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name
-			] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['aliases'], [], 'texts' );
+			] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['aliases'], false, [], 'texts' );
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
