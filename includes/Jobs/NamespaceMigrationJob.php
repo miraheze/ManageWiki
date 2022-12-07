@@ -71,7 +71,7 @@ class NamespaceMigrationJob extends Job {
 				'page',
 				[
 					'page_namespace' => $nsTo,
-					'page_title' => $newTitle,
+					'page_title' => trim( $newTitle, '_' ),
 				],
 				[
 					'page_id' => $pageID
@@ -84,7 +84,7 @@ class NamespaceMigrationJob extends Job {
 				'recentchanges',
 				[
 					'rc_namespace' => $nsTo,
-					'rc_title' => $newTitle
+					'rc_title' => trim( $newTitle, '_' )
 				],
 				[
 					'rc_namespace' => $nsSearch,
