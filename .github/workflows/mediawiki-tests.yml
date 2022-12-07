@@ -14,17 +14,10 @@ jobs:
       matrix:
         include:
           # Latest stable MediaWiki - PHP 7.4 (phan)
-          - mw: 'REL1_38'
-            php: 7.4
-            php-docker: 74
-            experimental: false
-            stage: phan
-
-          # Latest MediaWiki release branch - PHP 7.4 (phan)
           - mw: 'REL1_39'
             php: 7.4
             php-docker: 74
-            experimental: true
+            experimental: false
             stage: phan
 
           # Latest MediaWiki master - PHP 7.4 (phan)
@@ -35,13 +28,6 @@ jobs:
             stage: phan
 
           # Latest stable MediaWiki - PHP 7.4 (phpunit)
-          - mw: 'REL1_38'
-            php: 7.4
-            php-docker: 74
-            experimental: false
-            stage: phpunit
-
-          # Latest MediaWiki release branch - PHP 7.4 (phpunit)
           - mw: 'REL1_39'
             php: 7.4
             php-docker: 74
@@ -56,13 +42,6 @@ jobs:
             stage: phpunit
 
           # Latest stable MediaWiki - PHP 7.4 (selenium)
-          - mw: 'REL1_38'
-            php: 7.4
-            php-docker: 74
-            experimental: false
-            stage: selenium
-
-          # Latest MediaWiki release branch - PHP 7.4 (selenium)
           - mw: 'REL1_39'
             php: 7.4
             php-docker: 74
@@ -77,13 +56,6 @@ jobs:
             stage: selenium
 
           # Latest stable MediaWiki - PHP 7.4 (qunit)
-          - mw: 'REL1_38'
-            php: 7.4
-            php-docker: 74
-            experimental: false
-            stage: qunit
-
-          # Latest MediaWiki release branch - PHP 7.4 (qunit)
           - mw: 'REL1_39'
             php: 7.4
             php-docker: 74
@@ -98,14 +70,14 @@ jobs:
             stage: qunit
 
           # Latest stable MediaWiki - PHP 7.4 (npm-test)
-          - mw: 'REL1_38'
+          - mw: 'REL1_39'
             php: 7.4
             php-docker: 74
             experimental: false
             stage: npm-test
   
           # Latest stable MediaWiki - PHP 7.4 (composer-test)
-          - mw: 'REL1_38'
+          - mw: 'REL1_39'
             php: 7.4
             php-docker: 74
             experimental: false
