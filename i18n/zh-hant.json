@@ -69,6 +69,7 @@
 	"managewiki-header-permissions": "選擇下方已存在的群組來進行變動，或是在下方方框來建立新的使用者群組！",
 	"managewiki-header-namespaces": "在下方選擇要編輯的命名空間（對話命名空間會關聯到它們的主命名空間）或壓下按鈕來建立新的主命名空間。",
 	"managewiki-header-settings": "此頁面用來管理<b>「$1」</b>的 wiki 設定。若尚未有您想使用的功能，請使用 <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> 來做出申請。<br>一旦您完成後，按下「儲存」按鈕來保存您的變更。",
+	"managewiki-invalid-database": "由 <code>&dollar;$2</code> 指定的 $1 是無效資料庫。",
 	"managewiki-label-category": "分類",
 	"managewiki-label-closed": "已關閉",
 	"managewiki-label-creationdate": "建立日期",
