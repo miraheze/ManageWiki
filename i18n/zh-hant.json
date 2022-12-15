@@ -5,7 +5,8 @@
 			"LNDDYL",
 			"Liuxinyu970226",
 			"Tiger",
-			"Winston Sung"
+			"Winston Sung",
+			"捍粵者"
 		]
 	},
 	"action-managewiki": "管理 wiki 設定",
@@ -56,7 +57,7 @@
 	"managewikidefaultpermissions": "管理 wiki 農場的預設權限",
 	"managewiki-changes-none": "沒有做出變更。",
 	"managewiki-conflicts": "相衝與",
-	"managewiki-desc": "允許人們透過 web 介面來管理 wiki。",
+	"managewiki-desc": "允許人們用網上介面管理wiki。",
 	"managewiki-disabled": "此功能（$1）尚未在此 wiki 啟用。",
 	"managewiki-error-conflict": "擴充$1未啟動，因為與$2衝突。",
 	"managewiki-error-disallowednamespace": "不允許命名空間$1。",
@@ -66,7 +67,7 @@
 	"managewiki-extension-settings": "管理此擴充功能可用的設置選項",
 	"managewiki-header-core": "在以下選擇您所想要管理的內容，然後點擊儲存按鈕來保存您的變更。",
 	"managewiki-header-extensions": "在此為目前已安裝的擴充，而您也可以隨時<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features 請求]</span>其它要添加的項目。<br>一旦您完成後，按下「儲存」按鈕來保存您的更改。",
-	"managewiki-header-permissions": "選擇下方已存在的群組來進行變動，或是在下方方框來建立新的使用者群組！",
+	"managewiki-header-permissions": "選擇下面已存在群組來變更，或在下面方框建立新使用者群組",
 	"managewiki-header-namespaces": "在下方選擇要編輯的命名空間（對話命名空間會關聯到它們的主命名空間）或壓下按鈕來建立新的主命名空間。",
 	"managewiki-header-settings": "此頁面用來管理<b>「$1」</b>的 wiki 設定。若尚未有您想使用的功能，請使用 <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> 來做出申請。<br>一旦您完成後，按下「儲存」按鈕來保存您的變更。",
 	"managewiki-invalid-database": "由 <code>&dollar;$2</code> 指定的 $1 是無效資料庫。",
