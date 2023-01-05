@@ -32,7 +32,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Vérifier si le wiki est marqué comme étant fermé",
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Afficher les extensions actives sur le wiki",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Vérifier si le wiki est marqué comme étant inactif",
-	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Vérifier si le wiki est bien actif",
+	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Vérifier si le wiki est exempt d’inactivité",
 	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Afficher les droits de ces groupes d’utilisateurs",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Vérifier si le wiki est marqué comme étant privé",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Afficher les paramètres du wiki",

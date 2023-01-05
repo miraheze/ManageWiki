@@ -71,6 +71,7 @@
 	"managewiki-label-sitename": "Used as a label for 'sitename'.\n{{Identical|Sitename}}",
 	"managewiki-missing": "Message if the wiki entered does not exist in the database.",
 	"managewiki-permissions-autopromote": "{{Doc-singularthey}}",
+	"managewiki-permissions-autopromote-email": "{{doc-singularthey}}",
 	"managewiki-placeholder-reason": "Used as a placeholder for 'reason'",
 	"managewiki-requires": "Text that indicates a particular setting needs something else to be enabled first",
 	"managewiki-review": "Text for the ManageWiki 'Review' button.\n{{Identical|Review}}",
