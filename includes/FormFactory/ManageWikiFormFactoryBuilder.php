@@ -75,7 +75,7 @@ class ManageWikiFormFactoryBuilder {
 			'section' => 'main'
 		];
 
-		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) ) {
+		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) && ( $wiki->getDBname() !== $config->get( 'CreateWikiGlobalWiki' ) ) ) {
 			$mwActions = [
 				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
 				( $wiki->isLocked() ) ? 'unlock' : 'lock'
