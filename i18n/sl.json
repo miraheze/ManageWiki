@@ -136,7 +136,7 @@
 	"managewiki-link-permissions-view": "Ogled dovoljenj tega vikija",
 	"managewiki-link-settings": "Upravljanje dodatnih nastavitev tega vikija",
 	"managewiki-link-settings-view": "Ogled dodatnih nastavitev tega vikija",
-	"managewiki-toggle-forcesidebar": "Vsili prikaz povezav ManageWiki v stranski vrstici.",
+	"managewiki-toggle-forcesidebar": "Vsili prikaz povezav ManageWiki v stranski letvici.",
 	"managewiki-warning-changes": "V razširitvi ManageWiki ste naredili spremembe, ki še niso shranjene.\nČe zapustite to stran, ne da bi kliknili »$1«, se vaše spremembe razširitve ManageWiki ne bodo posodobile.",
 	"namespaces-aliases": "Dodajte vse neopredeljene imenske prostore, ki bi se morali preusmerjati na tega.",
 	"namespaces-content": "Ali ta imenski prostor vsebuje glavno viki gradivo (vsebino)?",
