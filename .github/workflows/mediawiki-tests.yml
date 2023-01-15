@@ -41,6 +41,13 @@ jobs:
             experimental: false
             stage: phpunit
 
+          # Latest MediaWiki master - PHP 8.1 (phpunit)
+          - mw: 'master'
+            php: 8.1
+            php-docker: 81
+            experimental: false
+            stage: phpunit
+
           # Latest stable MediaWiki - PHP 7.4 (selenium)
           - mw: 'REL1_39'
             php: 7.4
