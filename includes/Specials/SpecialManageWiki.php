@@ -118,6 +118,10 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
 		}
 
+		if ( MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly() ) {
+			$out->addHTML( Html::errorBox( $this->msg( 'readonlytext', MediaWikiServices::getInstance()->getReadOnlyMode()->getReason() )->plain() ) );
+		}
+
 		if ( !$special ) {
 			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
 		}
