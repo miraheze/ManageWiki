@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Specials;
 use Config;
 use GlobalVarConfig;
 use HTMLForm;
+use Html;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
@@ -29,6 +30,10 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		if ( !ManageWiki::checkSetup( 'permissions', true, $out ) || !( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) ) {
 			return false;
+		}
+
+		if ( MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly() ) {
+			$out->addHTML( Html::errorBox( $this->msg( 'readonlytext', MediaWikiServices::getInstance()->getReadOnlyMode()->getReason() )->plain() ) );
 		}
 
 		if ( $par != '' ) {
