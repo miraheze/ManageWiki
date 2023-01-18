@@ -6,6 +6,7 @@ use Config;
 use Html;
 use HTMLForm;
 use IContextSource;
+use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
 use Miraheze\ManageWiki\ManageWiki;
@@ -50,7 +51,7 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
-		if ( !$ceMW ) {
+		if ( !$ceMW || MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly() ) {
 			$htmlForm->suppressDefaultSubmit();
 		}
 
