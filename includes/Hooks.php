@@ -8,7 +8,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use SpecialPage;
-use TextContentHandler;
 use User;
 use Wikimedia\Rdbms\DBConnRef;
 
@@ -47,10 +46,6 @@ class Hooks {
 		if ( !in_array( 'farmer', $wgLogTypes ) ) {
 			$wgLogTypes[] = 'farmer';
 		}
-	}
-
-	public static function onContentHandlerForModelID( $modelId, &$handler ) {
-		$handler = new TextContentHandler( $modelId );
 	}
 
 	public static function onCreateWikiJsonBuilder( string $wiki, DBConnRef $dbr, array &$jsonArray ) {
