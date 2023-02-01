@@ -96,9 +96,6 @@
 		"Miraheze\\ManageWiki\\Tests\\": "tests/phpunit/"
 	},
 	"Hooks": {
-		"ContentHandlerForModelID": [
-			"Miraheze\\ManageWiki\\Hooks::onContentHandlerForModelID"
-		],
 		"CreateWikiCreation": [
 			"Miraheze\\ManageWiki\\Hooks::onCreateWikiCreation"
 		],
