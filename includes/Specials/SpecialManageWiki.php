@@ -118,6 +118,12 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
 		}
 
+		$remoteWiki = new RemoteWiki( $wiki );
+
+		if ( $remoteWiki->isLocked() == true ) {
+			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-mwlocked' ) );
+		}
+
 		if ( !$special ) {
 			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
 		}
@@ -153,8 +159,6 @@ class SpecialManageWiki extends SpecialPage {
 				$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
 				return false;
 			}
-
-			$remoteWiki = new RemoteWiki( $wiki );
 
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
