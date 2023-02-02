@@ -16,5 +16,5 @@ VALUES
 ('default', 13, 'Help_talk', 0, 1, 0, 'wikitext', '', '[]', 1, '[]'),
 ('default', 14, 'Category', 0, 0, 0, 'wikitext', '', '[]', 1, '[]'),
 ('default', 15, 'Category_talk', 0, 1, 0, 'wikitext', '', '[]', 1, '[]'),
-('default', 828, 'Module', 0, 1, 0, 'wikitext', '', '[]', 0, '[]'),
+('default', 828, 'Module', 0, 1, 0, 'Scribunto', '', '[]', 0, '[]'),
 ('default', 829, 'Module_talk', 0, 1, 0, 'wikitext', '', '[]', 1, '[]');
