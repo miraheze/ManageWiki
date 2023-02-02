@@ -120,7 +120,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$remoteWiki = new RemoteWiki( $wiki );
 
-		if ( $remoteWiki->isLocked() == true ) {
+		if ( $remoteWiki->isLocked() ) {
 			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-mwlocked' ) );
 		}
 
