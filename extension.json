@@ -25,6 +25,13 @@
 		"managewiki-editdefault",
 		"managewiki-restricted"
 	],
+	"GroupPermissions": {
+		"steward": {
+			"managewiki": true,
+			"managewiki-editdefault": true,
+			"managewiki-restricted": true
+		}
+	},
 	"DefaultUserOptions": {
 		"managewikisidebar": 0
 	},
