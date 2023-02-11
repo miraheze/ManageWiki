@@ -96,7 +96,7 @@ class ManageWikiFormFactory {
 			$errorOut = [];
 			foreach ( $mwReturn as $errors ) {
 				foreach ( $errors as $msg => $params ) {
-					$errorOut[] = wfMessage( $msg, $params )->inContentLanguage()->escaped();
+					$errorOut[] = wfMessage( $msg, $params )->escaped();
 				}
 			}
 
