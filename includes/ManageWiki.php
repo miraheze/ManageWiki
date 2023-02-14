@@ -96,7 +96,9 @@ class ManageWiki {
 	public static function namespaceID( string $namespace ) {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 
-		$dbr = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
 
 		$nsID = ( $namespace == '' ) ? false : $dbr->selectRow(
 			'mw_namespaces',
