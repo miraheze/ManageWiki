@@ -43,7 +43,7 @@ class ManageWikiPermissions {
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
 			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_REPLICA, [], $this->config->get( 'CreateWikiDatabase' ) );
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		$perms = $this->dbw->select(
 			'mw_permissions',
@@ -216,7 +216,9 @@ class ManageWikiPermissions {
 
 	private function deleteUsersFromGroup( string $group ) {
 		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-		$dbr = wfGetDB( DB_REPLICA, [], $this->wiki );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $this->wiki )
+			->getMaintenanceConnectionRef( DB_REPLICA, [], $this->wiki );
 
 		$res = $dbr->select(
 			'user_groups',
