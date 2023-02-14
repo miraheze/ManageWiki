@@ -88,7 +88,9 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitResetForm( $formData ) {
-		$dbw = wfGetDB( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		$dbw->delete(
 			'mw_permissions',
