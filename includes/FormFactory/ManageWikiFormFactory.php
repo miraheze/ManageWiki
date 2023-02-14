@@ -6,6 +6,7 @@ use Config;
 use Html;
 use HTMLForm;
 use IContextSource;
+use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
 use Miraheze\ManageWiki\ManageWiki;
@@ -42,7 +43,9 @@ class ManageWikiFormFactory {
 		string $filtered = '',
 		string $formClass = ManageWikiOOUIForm::class
 	) {
-		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
 

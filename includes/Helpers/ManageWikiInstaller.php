@@ -44,7 +44,9 @@ class ManageWikiInstaller {
 	}
 
 	private static function sql( string $dbname, array $data ) {
-		$dbw = wfGetDB( DB_PRIMARY, [], $dbname );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $dbname )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $dbname );
 
 		foreach ( $data as $table => $sql ) {
 			if ( !$dbw->tableExists( $table ) ) {
