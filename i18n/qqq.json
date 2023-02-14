@@ -33,6 +33,7 @@
 	"apiwarn-wikiconfig-wikidoesnotexist": "{{doc-apierror}}",
 	"core-main": "Used as a section header in Special:ManageWiki which is a page that allows administrators to manage their wiki's settings",
 	"deletedwikis": "Used as a heading in Special:DeletedWikis which is a page that lists deleted wikis",
+	"deletedwikis-header": "Used as a section header in Special:DeletedWikis which lists wikis marked for deletion",
 	"extensions-other": "{{Identical|Other}}",
 	"log-description-managewiki": "Description for the 'ManageWiki' log",
 	"log-name-managewiki": "Log name for ManageWiki",

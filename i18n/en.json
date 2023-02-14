@@ -28,6 +28,7 @@
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki '$1' does not exist.",
 	"core-main": "Main Settings",
 	"deletedwikis": "Deleted Wikis",
+	"deletedwikis-header": "This page contains a list of all wikis that have been marked as deleted by a Steward. After 14 days, wikis are eligible for permanent deletion. Once a wiki is permanently deleted, it will no longer show up in this list",
 	"extensions-other": "Other",
 	"log-description-managewiki": "This log tracks all changes to a wikis settings through ManageWiki.",
 	"log-name-managewiki": "ManageWiki log",
