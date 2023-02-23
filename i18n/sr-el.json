@@ -35,7 +35,7 @@
 	"managewikidefaultpermissions": "Upravljanje podrazumevanim dozvolama farmi vikija",
 	"managewiki-desc": "Dozvoljava osobama da upravljaju vikijima putem veb-interfejsa.",
 	"managewiki-disabled": "Ova funkcija ($1) još nije omogućena na ovom vikiju.",
-	"managewiki-header-core": "Izaberite ono što biste želeli da upravljate ispod, pa kliknite na pošalji.",
+	"managewiki-header-core": "Izaberite ono čime biste želeli da upravljate ispod, pa kliknite na dugme za čuvanje da bi ste sačuvali vaše izmene.",
 	"managewiki-header-permissions": "Izaberite grupu ispod koja već postoji da biste izmenili ili napravili novu korisničku grupu u okviru ispod nje.",
 	"managewiki-header-namespaces": "Izaberite imenski prostor za uređivanje ispod (ako želite da uređujete imenski prostor razgovor, izaberite njegov povezani, glavni imenski prostor) ili pritisnite dugme ispod da biste napravili novi.",
 	"managewiki-label-category": "Kategorija",

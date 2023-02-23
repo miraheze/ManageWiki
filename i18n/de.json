@@ -49,7 +49,7 @@
 	"logentry-managewiki-namespaces": "$1 veränderte den Namensraum „$5“ für das Wiki „$4“",
 	"logentry-managewiki-namespaces-delete": "$1 löschte den Namensraum „$5“ für das Wiki „$4“",
 	"logentry-managewiki-rename": "$1 benannte die Gruppe $3 von $4 um",
-	"logentry-managewiki-rights": "$1 änderte die Gruppen-Metadaten für $3: Rechte $4 hinzugefügt; Rechte $5 entfernt; Addgruppen $6 hinzugefügt; Addgruppen $7 entfernt; Removegruppen $8 hinzugefügt; Removegruppen $9 entfernt; Addgroupstoself $10 hinzugefügt; Addgroupstoself $11 entfernt; Removegroupsfromself $12 hinzugefügt; Removegroupsfromself $13 entfernt; Autopromotion ($14) verändert",
+	"logentry-managewiki-rights": "$1 geänderte Gruppenmetadaten für $3: Rechte hinzugefügt $4; Rechte entfernt $5; addgroups hinzugefügt $6; addgroups entfernt $7; removegroups hinzugefügt\n $8; removed removegroups $9; added addgroupstoself $10; removed addgroupstoself $11; added removegroupsfromself $12; removed removegroupsfromself $13; modified autopromotion ($14)",
 	"logentry-managewiki-settings": "$1 änderte die Einstellungen ($5) für „$4“",
 	"logentry-managewiki-undelete": "$1 stellte das Wiki „$4“ wieder her",
 	"logentry-managewiki-unlock": "$1 hat das Wiki „$4“ freigeschaltet",
