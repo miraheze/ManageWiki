@@ -197,7 +197,7 @@ class Hooks {
 		}
 	}
 
-	public static function onCreateWikiCreation( $dbname, $private ) {
+	public static function onCreateWikiCreation( $cwdb, $dbname, $private ) {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
