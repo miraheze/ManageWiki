@@ -30,17 +30,28 @@ class ApiModifyServer extends ApiBase {
 			return;
 		}
 
+		if ( !self::validDatabase( $params['wiki'] ) ) {
+			$this->dieWithError( [ 'managewiki-invalid-wiki' ] );
+		}
+
+		if ( !filter_var( $params['server'], FILTER_VALIDATE_URL ) ) {
+			$this->dieWithError( [ 'managewiki-invalid-server' ] );
+		}
+
 		$this->setServer( $params['wiki'], $params['server'] );
 
 		$this->getResult()->addValue( null, $this->getModuleName(), $params );
 	}
 
 	private function setServer( string $wiki, string $server ) {
-		$wiki = new RemoteWiki( $wiki );
+		$remoteWiki = new RemoteWiki( $wiki );
+		$remoteWiki->setServerName( $server );
+		$remoteWiki->commit();
+	}
 
-		$wiki->setServerName( $server );
-
-		return true;
+	private static function validDatabase( string $wiki ) {
+		$localDatabases = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'LocalDatabases' );
+		return in_array( $wiki, $localDatabases );
 	}
 
 	public function mustBePosted() {
@@ -70,7 +81,7 @@ class ApiModifyServer extends ApiBase {
 
 	protected function getExamplesMessages() {
 		return [
-			'action=modifyserver&wiki=wiki&server=example.domain.tld&token=123ABC'
+			'action=modifyserver&wiki=database_name&server=https://example.com&token=123ABC'
 				=> 'apihelp-modifyserver-example',
 		];
 	}
