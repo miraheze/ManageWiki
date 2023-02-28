@@ -24,9 +24,8 @@ class ApiModifyServer extends ApiBase {
 		}
 
 		$params = $this->extractRequestParams();
-		$user = $this->getUser();
 
-		if ( $user->getBlock() || $user->getGlobalBlock() || !$permissionManager->userHasRight( $user, 'managewiki-restricted' ) ) {
+		if ( !$permissionManager->userHasRight( $this->getUser(), 'managewiki-restricted' ) ) {
 			return;
 		}
 
