@@ -20,6 +20,9 @@
 	"APIListModules": {
 		"wikiconfig": "Miraheze\\ManageWiki\\Api\\QueryWikiConfig"
 	},
+	"APIModules": {
+		"modifyserver": "Miraheze\\ManageWiki\\Api\\ApiModifyServer"
+	},
 	"AvailableRights": [
 		"managewiki",
 		"managewiki-editdefault",
