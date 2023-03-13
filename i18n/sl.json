@@ -7,6 +7,8 @@
 	"action-managewiki": "upravljanje nastavitev vikija",
 	"action-managewiki-restricted": "upravljanje omejenih nastavitev vikija",
 	"action-managewiki-editdefault": "upravljanje privzetih dovoljenj skupin",
+	"apihelp-modifyserver-example": "Sprememba imena vikistrežnika.",
+	"apihelp-modifyserver-summary": "Sprememba imena vikistrežnika.",
 	"apihelp-query+wikiconfig-summary": "Prikaz imena mesta, stanj neaktivno, neaktivno-izvzeto, zaprto, zasebno, razširitve, nastavitve in dovoljenj za navedeni viki.",
 	"apihelp-query+wikiconfig-example-1": "Ogled konfiguracije vikija za metaviki.",
 	"apihelp-query+wikiconfig-param-prop": "Izberite lastnosti za vrnitev:",

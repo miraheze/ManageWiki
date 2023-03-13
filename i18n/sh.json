@@ -7,6 +7,8 @@
 	"action-managewiki": "uprav. vikipostavkama",
 	"action-managewiki-restricted": "upravljanje ograničenim vikipostavkama",
 	"action-managewiki-editdefault": "upravljanje podrazumjevanim dozvolama grupa",
+	"apihelp-modifyserver-example": "Promijeni naziv servera vikija.",
+	"apihelp-modifyserver-summary": "Promijeni naziv servera vikija.",
 	"apihelp-query+wikiconfig-summary": "Pogl. ime, neaktivnost, izuzetost od neaktivnosti, zatvorenost, privatnost, proširenja, podešavanja i dozvole za navedeni viki.",
 	"apihelp-query+wikiconfig-example-1": "Pogl. konfiguracija vikija za метавики.",
 	"apihelp-query+wikiconfig-param-prop": "Koja svojstva za davanje:",

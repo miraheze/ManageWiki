@@ -8,6 +8,8 @@
 	"action-managewiki": "раков. со википоставки",
 	"action-managewiki-restricted": "раководење со ограничени википоставки",
 	"action-managewiki-editdefault": "раководење со основни дозволи за групи",
+	"apihelp-modifyserver-example": "Измени име на опслужувач на вики.",
+	"apihelp-modifyserver-summary": "Измени име на опслужувач на вики.",
 	"apihelp-query+wikiconfig-summary": "Погл. име, неактивност, изземеност од неактивност, затвореност, приватност, додатоци, нагодувања и дозволи за укажаното вики.",
 	"apihelp-query+wikiconfig-example-1": "Погл. поставеност на викито за метавики.",
 	"apihelp-query+wikiconfig-param-prop": "Кои својства да се дадат:",

@@ -12,12 +12,15 @@
 			"しぃ",
 			"そらたこ",
 			"ぺばる",
+			"もなー(偽物)",
 			"雪津風明石"
 		]
 	},
 	"action-managewiki": "Wikiの設定の管理",
 	"action-managewiki-restricted": "制限付きウィキ設定の管理",
 	"action-managewiki-editdefault": "既定のグループ権限の管理",
+	"apihelp-modifyserver-example": "Wiki のサーバー名を変更します。",
+	"apihelp-modifyserver-summary": "Wiki のサーバー名を変更します。",
 	"apihelp-query+wikiconfig-summary": "指定されたWikiのサイト名、非アクティブ、非アクティブの免除、閉鎖、プライベート、拡張機能、設定、権限の状態を表示します。",
 	"apihelp-query+wikiconfig-example-1": "METAWikiでWikiの設定を表示する。",
 	"apihelp-query+wikiconfig-param-prop": "返すプロパティを選択：",

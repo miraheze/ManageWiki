@@ -25,6 +25,8 @@
 	"action-managewiki": "régler les paramètres du wiki",
 	"action-managewiki-restricted": "gérer les paramètres restreints du wiki",
 	"action-managewiki-editdefault": "gérer les droits par défaut du groupe",
+	"apihelp-modifyserver-example": "Modifier le nom du serveur d’un wiki.",
+	"apihelp-modifyserver-summary": "Modifier le nom du serveur d'un wiki.",
 	"apihelp-query+wikiconfig-summary": "Voir le nom de site, les états d’inactivité, d’exemption d’inactivité, de fermeture, de privatisation, ainsi que les extensions, les paramètres et les droits pour un wiki spécifié.",
 	"apihelp-query+wikiconfig-example-1": "Afficher la configuration du wiki pour metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Sélectionnez la propriété à renvoyer :",

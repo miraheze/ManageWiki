@@ -7,6 +7,8 @@
 	"action-managewiki": "gerer le parametros del wiki",
 	"action-managewiki-restricted": "gerer le parametros restringite del wiki",
 	"action-managewiki-editdefault": "gerer le permissiones predefinite de gruppos",
+	"apihelp-modifyserver-example": "Modificar le nomine del servitor de un wiki.",
+	"apihelp-modifyserver-summary": "Modificar le nomine del servitor de un wiki.",
 	"apihelp-query+wikiconfig-summary": "Vider le nomine del sito, le statos de inactivitate, de exemption de inactivitate, de clausura, de privatisation, assi que le extensiones, le parametros e le derectos pro un wiki specificate.",
 	"apihelp-query+wikiconfig-example-1": "Vider le configuration del wiki pro metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Selige le proprietates a retornar:",

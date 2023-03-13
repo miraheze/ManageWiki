@@ -12,6 +12,8 @@
 	"action-managewiki": "管理 wiki 設定",
 	"action-managewiki-restricted": "管理限制的 wiki 設定",
 	"action-managewiki-editdefault": "管理預設群組權限",
+	"apihelp-modifyserver-example": "修改 wiki 伺服器名稱。",
+	"apihelp-modifyserver-summary": "修改 wiki 伺服器名稱。",
 	"apihelp-query+wikiconfig-summary": "檢視站台名稱、失效、免除失效、關閉、私有、擴充、設定、與用於特定 wiki 的權限。",
 	"apihelp-query+wikiconfig-example-1": "檢視用於 metawiki 的 wiki 設定。",
 	"apihelp-query+wikiconfig-param-prop": "選擇要回傳的屬性：",

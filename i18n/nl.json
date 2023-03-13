@@ -14,6 +14,8 @@
 	"action-managewiki": "de wiki-instellingen te beheren",
 	"action-managewiki-restricted": "beperkte wiki-instellingen te beheren",
 	"action-managewiki-editdefault": "standaardgroepsrechten te beheren",
+	"apihelp-modifyserver-example": "De servernaam van een wiki wijzigen.",
+	"apihelp-modifyserver-summary": "De servernaam van een wiki wijzigen.",
 	"apihelp-query+wikiconfig-summary": "Bekijk sitenaam, inactief, inactief-vrijgesteld, gesloten, privé, uitbreidingen, instellingen en machtigingen voor de opgegeven wiki.",
 	"apihelp-query+wikiconfig-example-1": "Bekijk wiki-configuratie voor metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Selecteer eigenschappen om terug te geven:",
