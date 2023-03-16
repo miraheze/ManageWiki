@@ -13,6 +13,8 @@
 	"action-managewiki": "ניהול הגדרות הוויקי",
 	"action-managewiki-restricted": "ניהול הגדרות ויקי מוגבלות",
 	"action-managewiki-editdefault": "ניהול הרשאות ברירת מחדל לקבוצה",
+	"apihelp-modifyserver-example": "שינוי שם השרת של ויקי.",
+	"apihelp-modifyserver-summary": "שינוי שם השרת של ויקי.",
 	"apihelp-query+wikiconfig-summary": "להציג את הגדרות שם האתר, לא פעיל, לא פעיל פטור, סגור, פרטי, הרחבות, הגדרות והרשאות עבור הוויקי שצוין.",
 	"apihelp-query+wikiconfig-example-1": "להציג את תצורת הוויקי עבור metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "בחירת מאפיינים להחזרה:",
