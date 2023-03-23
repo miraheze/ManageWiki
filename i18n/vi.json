@@ -36,7 +36,7 @@
 	"logentry-managewiki-namespaces": "$1 đã sửa vùng tên “$5” cho wiki “$4”",
 	"logentry-managewiki-namespaces-delete": "$1 đã xóa không gian tên \"$5\" cho wiki \"$4\"",
 	"logentry-managewiki-rename": "$1 đã đổi tên nhóm $3 từ $4",
-	"logentry-managewiki-rights": "$1 đã thay đổi dữ liệu nhóm trung ương cho $3: thêm quyền $4; đã xóa các quyền $5; đã thêm addgroups $6; đã xóa addgroups $7; đã thêm removegroups $8; đã xóa removegroups $9; đã thêm addgroupstoself $10; đã xóa addgroupstoself $11; đã thêm removegroupsfromself $12; đã xóa removegroupsfromself $13; đã chỉnh autopromotion ($14)",
+	"logentry-managewiki-rights": "$1 đã thay đổi dữ liệu nhóm trung ương cho $3: đã thêm quyền $4; đã xóa các quyền $5; đã thêm addgroups $6; đã xóa addgroups $7; đã thêm removegroups $8; đã xóa removegroups $9; đã thêm addgroupstoself $10; đã xóa addgroupstoself $11; đã thêm removegroupsfromself $12; đã xóa removegroupsfromself $13; đã chỉnh autopromotion ($14)",
 	"logentry-managewiki-settings": "$1 đã thay đổi cài đặt ($5) cho “$4”",
 	"logentry-managewiki-undelete": "$1 đã hủy xóa wiki “$4”",
 	"logentry-managewiki-unlock": "$1 đã mở khóa wiki “$4”",
