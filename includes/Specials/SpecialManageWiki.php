@@ -110,12 +110,19 @@ class SpecialManageWiki extends SpecialPage {
 		if ( $special !== '' || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
 			$out->addModules( [ 'ext.managewiki.oouiform' ] );
 
+			if ( $module === 'core' ) {
+				$out->addModules( [ 'ext.managewiki.oouiform.wikiTags' ] );
+				
+				$out->addJsConfigVars( [
+					'wgCreateWikiAvailableTags' => $this->config->get( 'CreateWikiAvailableTags' ) 
+				] );
+			}
+
 			$out->addModuleStyles( [
 				'ext.managewiki.oouiform.styles',
 				'mediawiki.widgets.TagMultiselectWidget.styles',
+				'oojs-ui-widgets.styles',
 			] );
-
-			$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
 		}
 
 		if ( !$special ) {

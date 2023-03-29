@@ -193,6 +193,17 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+		if ( $config->get( 'CreateWikiUseWikiTags' ) ) {
+			$formDescriptor['wikitags'] = [
+				'type' => 'text',
+				'label-message' => 'managewiki-label-wiki-tags',
+				'default' => 'gaming,history',
+				'disabled' => true,
+				'cssclass' => 'managewiki-wikitags',
+				'section' => 'main'
+			];
+		}
+
 		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) ) {
 			$mwSettings = new ManageWikiSettings( $dbName );
 			$setList = $mwSettings->list();
@@ -916,6 +927,10 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $config->get( 'CreateWikiUseCategories' ) && ( $formData['category'] != $wiki->getCategory() ) ) {
 			$wiki->setCategory( $formData['category'] );
+		}
+
+		if ( $config->get( 'CreateWikiUseWikiTags' ) && ( $formData['wikitags'] != $wiki->getWikiTags() ) ) {
+			$wiki->setWikiTags( $formData['wikitags'] );
 		}
 
 		if ( $config->get( 'CreateWikiUseCustomDomains' ) && ( $formData['server'] != $wiki->getServerName() ) ) {
