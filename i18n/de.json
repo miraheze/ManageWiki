@@ -16,6 +16,8 @@
 	"action-managewiki": "die Wikieinstellungen zu verwalten",
 	"action-managewiki-restricted": "eingeschränkte Wiki-Einstellungen verwalten",
 	"action-managewiki-editdefault": "Standard-Gruppenberechtigungen verwalten",
+	"apihelp-modifyserver-example": "Ändere den Servernamen eines Wikis.",
+	"apihelp-modifyserver-summary": "Ändere den Servernamen eines Wikis.",
 	"apihelp-query+wikiconfig-summary": "Anzeigen von Seitenname, inaktiv, inaktiv-befreit, geschlossen, privat, Erweiterungen, Einstellungen und Berechtigungen für das angegebene Wiki.",
 	"apihelp-query+wikiconfig-example-1": "Wiki-Konfiguration für metawiki anzeigen.",
 	"apihelp-query+wikiconfig-param-prop": "Wähle die zurückzugebenden Eigenschaften aus:",
