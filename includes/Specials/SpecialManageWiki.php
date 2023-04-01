@@ -121,6 +121,9 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addModuleStyles( [
 				'ext.managewiki.oouiform.styles',
 				'mediawiki.widgets.TagMultiselectWidget.styles',
+			] );
+
+			$out->addModuleStyles( [
 				'oojs-ui-widgets.styles',
 			] );
 		}

@@ -197,9 +197,9 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor['wikitags'] = [
 				'type' => 'text',
 				'label-message' => 'managewiki-label-wiki-tags',
-				'default' => 'gaming,history',
+				'default' => $wiki->getWikiTags(),
 				'disabled' => true,
-				'cssclass' => 'managewiki-wikitags',
+				'cssclass' => 'managewiki-wikitags' . ( $ceMW ? ' managewiki-editable' : '' ),
 				'section' => 'main'
 			];
 		}

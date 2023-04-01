@@ -3,11 +3,15 @@
         var $fallbackLayout = $( '.managewiki-wikitags.oo-ui-layout' );
         var $fallbackInput = $( '#mw-input-wpwikitags' );
 
+        var editable = $fallbackLayout.hasClass('managewiki-editable')
+
         var infusedFallbackLayout = OO.ui.infuse( $fallbackLayout );
         var infusedFallbackInput = OO.ui.infuse( $fallbackInput );
 
         infusedFallbackLayout.$element.css( 'display', 'none' );
-        infusedFallbackInput.setDisabled( false );
+        if ( editable ) {
+            infusedFallbackInput.setDisabled( false );
+        }
 
         var initialSelection = infusedFallbackInput.getValue().split( ',' );
 
@@ -21,7 +25,8 @@
         var multiTagSelect = new OO.ui.MenuTagMultiselectWidget( {
             selected: initialSelection,
             options: tags,
-            tagLimit: 5
+            tagLimit: 5,
+            disabled: !editable
         } );
         var multiTagSelectLayout = new OO.ui.FieldLayout( multiTagSelect, {
             label: mw.msg( 'managewiki-label-wiki-tags' ),
