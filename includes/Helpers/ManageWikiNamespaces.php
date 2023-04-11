@@ -3,7 +3,6 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Config;
-use JobQueueGroup;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
@@ -238,7 +237,7 @@ class ManageWikiNamespaces {
 			}
 
 			$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
-			JobQueueGroup::singleton()->push( $job );
+			MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $job );
 		}
 
 		if ( $this->wiki != 'default' ) {
