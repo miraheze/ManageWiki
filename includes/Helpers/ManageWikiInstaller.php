@@ -3,7 +3,6 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
-use JobQueueGroup;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
@@ -150,7 +149,7 @@ class ManageWikiInstaller {
 
 			$mwJob = new MWScriptJob( Title::newMainPage(), $params );
 
-			JobQueueGroup::singleton()->push( $mwJob );
+			MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
 		}
 
 		return true;
