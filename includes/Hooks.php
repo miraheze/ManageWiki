@@ -69,8 +69,10 @@ class Hooks {
 
 		// Let's create an array of variables so we can easily loop these to enable
 		if ( ManageWiki::checkSetup( 'extensions' ) ) {
+			$manageWikiExtensions = self::getConfig( 'ManageWikiExtensions' );
 			foreach ( json_decode( $setObject->s_extensions, true ) as $ext ) {
-				$jsonArray['extensions'][] = self::getConfig( 'ManageWikiExtensions' )[$ext]['var'];
+				$jsonArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
+					$manageWikiExtensions[$ext]['name'];
 			}
 		}
 
