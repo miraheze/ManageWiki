@@ -131,7 +131,7 @@
 	"managewiki-permissions-autopromote-once": "Promouvoir seulement une fois l’utilisateur.",
 	"managewiki-permissions-create": "Créer un nouveau groupe d’utilisateurs.",
 	"managewiki-permissions-create-submit": "Créer un groupe",
-	"managewiki-permissions-group": "Ci-dessous vous pouvez autoriser la manière dont ce groupe d’utilisateurs peut assigner/désassigner d’autres groupes d’utilisateurs.",
+	"managewiki-permissions-group": "Ci-dessous vous pouvez autoriser la manière dont ce groupe d’utilisateurs peut affecter/désaffecter d’autres groupes d’utilisateurs.",
 	"managewiki-permissions-removeall": "Peut se retirer des autres",
 	"managewiki-permissions-removeself": "Peut se supprimer lui-même",
 	"managewiki-permissions-resetgroups": "Réinitialiser tous les groupes avec les valeurs par défaut",
