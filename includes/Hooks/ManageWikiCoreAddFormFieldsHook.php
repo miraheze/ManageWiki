@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Hooks;
 
 interface ManageWikiCoreAddFormFieldsHook {
 	/**
-	 * @param array &$formData
+	 * @param array &$formDescriptor
 	 * @return void
 	 */
 	public function onManageWikiCoreAddFormFields( &$formDescriptor ): void;
