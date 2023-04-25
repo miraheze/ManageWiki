@@ -21,7 +21,7 @@ class ManageWikiHookRunner implements
 	}
 
 	/** @inheritDoc */
-	public function onManageWikiCoreAddFormFields( &$formDescriptor ): void {
+	public function onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, &$formDescriptor ): void {
 		$this->container->run(
 			'ManageWikiCoreAddFormFields',
 			[ &$formDescriptor ]
