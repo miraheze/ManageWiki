@@ -29,7 +29,7 @@ class ManageWikiHookRunner implements
 	}
 
 	/** @inheritDoc */
-	public function onManageWikiCoreFormSubmission( $dbName, $dbw, $formData ): void {
+	public function onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData ): void {
 		$this->container->run(
 			'ManageWikiCoreFormSubmission',
 			[ $dbName, $dbw, $formData ]
