@@ -955,7 +955,7 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-		$hookRunner->onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData );
+		$hookRunner->onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $wiki, $formData );
 
 		return $wiki;
 	}
