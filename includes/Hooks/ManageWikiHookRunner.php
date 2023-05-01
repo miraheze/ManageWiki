@@ -24,15 +24,15 @@ class ManageWikiHookRunner implements
 	public function onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, &$formDescriptor ): void {
 		$this->container->run(
 			'ManageWikiCoreAddFormFields',
-			[ &$formDescriptor ]
+			[ $ceMW, $context, $dbName, &$formDescriptor ]
 		);
 	}
 
 	/** @inheritDoc */
-	public function onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData ): void {
+	public function onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData, &$wiki ): void {
 		$this->container->run(
 			'ManageWikiCoreFormSubmission',
-			[ $dbName, $dbw, $formData ]
+			[ $context, $dbName, $dbw, $formData, &$wiki ]
 		);
 	}
 }
