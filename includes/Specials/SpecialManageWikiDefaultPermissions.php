@@ -6,6 +6,7 @@ use Config;
 use ErrorPageError;
 use GlobalVarConfig;
 use HTMLForm;
+use ManualLogEntry;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
@@ -115,7 +116,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$cwConfig = new GlobalVarConfig( 'cw' );
 		Hooks::onCreateWikiCreation( $this->config->get( 'DBname' ), $cwConfig->get( 'Private' ) );
 
-		$logEntry = new ManualLogEntry( 'managewiki', 'resetgroups' );
+		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getContext()->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
 		$logID = $logEntry->insert();
