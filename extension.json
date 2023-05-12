@@ -148,6 +148,18 @@
 				"oojs-ui-windows"
 			]
 		},
+		"ext.managewiki.oouiform.wikiTags": {
+			"targets": [ "desktop", "mobile" ],
+			"scripts": [
+				"ext.managewiki.oouiform.wikiTags.js"
+			],
+			"messages": [
+				"managewiki-label-wiki-tags"
+			],
+			"dependencies": [
+				"oojs-ui-widgets"
+			]
+		},
 		"ext.managewiki.oouiform.styles": {
 			"targets": [ "desktop", "mobile" ],
 			"styles": "ext.managewiki.oouiform.styles.less"
