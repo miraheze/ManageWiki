@@ -119,6 +119,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getContext()->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
+		$logEntry->setParameters( '4::wiki' => $this->config->get( 'DBname' ) )
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
