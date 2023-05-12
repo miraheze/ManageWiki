@@ -44,11 +44,12 @@
 		"managewiki/delete": "LogFormatter",
 		"managewiki/delete-group": "LogFormatter",
 		"managewiki/lock": "LogFormatter",
-		"managewiki/settings": "LogFormatter",
-		"managewiki/rename": "LogFormatter",
-		"managewiki/rights": "LogFormatter",
 		"managewiki/namespaces": "LogFormatter",
 		"managewiki/namespaces-delete": "LogFormatter",
+		"managewiki/rename": "LogFormatter",
+		"managewiki/rights": "LogFormatter",
+		"managewiki/rights-reset": "LogFormatter",
+		"managewiki/settings": "LogFormatter",
 		"managewiki/undelete": "LogFormatter",
 		"managewiki/unlock": "LogFormatter"
 	},
@@ -70,6 +71,7 @@
 			"permissions": [
 				"rename",
 				"rights",
+				"rights-reset",
 				"delete-group"
 			],
 			"settings": [
