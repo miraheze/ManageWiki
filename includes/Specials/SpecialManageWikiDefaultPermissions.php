@@ -3,8 +3,8 @@
 namespace Miraheze\ManageWiki\Specials;
 
 use Config;
-use GlobalVarConfig;
 use ErrorPageError;
+use GlobalVarConfig;
 use HTMLForm;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
@@ -82,7 +82,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		}
 
 		if ( !( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) && $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
-                        $out->setPageTitle( $this->msg( 'managewiki-permissions-resetgroups-title' )->plain() );
+						$out->setPageTitle( $this->msg( 'managewiki-permissions-resetgroups-title' )->plain() );
 			$out->addWikiMsg( 'managewiki-permissions-resetgroups-header' );
 
 			$resetForm = HTMLForm::factory( 'ooui', [], $this->getContext() );
