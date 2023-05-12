@@ -35,15 +35,18 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		if ( $par != '' ) {
 			$this->buildGroupView( $par );
 		} else {
+			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 			$this->buildMainView();
 		}
 	}
 
 	public function buildMainView() {
-		$out = $this->getOutput();
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+		$ccDP = MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' );
+		$centralwiki = $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' );
 
-		if ( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) {
+		$out = $this->getOutput();
+
+		if ( $centralwiki ) {
 			$mwPermissions = new ManageWikiPermissions( 'default' );
 			$groups = array_keys( $mwPermissions->list() );
 			$craftedGroups = [];
@@ -65,7 +68,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
 			$selectForm->setMethod( 'post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
-			if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+			if ( $ccDP ) {
 				$createDescriptor = [];
 
 				$createDescriptor['groups'] = [
@@ -77,12 +80,12 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
 				$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 			}
-		} elseif ( !( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) && !$permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+		} elseif ( !$centralwiki && !$ccDP ) {
 				throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-text' );
 		}
 
-		if ( !( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) && $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
-						$out->setPageTitle( $this->msg( 'managewiki-permissions-resetgroups-title' )->plain() );
+		if ( !$centralwiki && $ccDP ) {
+			$out->setPageTitle( $this->msg( 'managewiki-permissions-resetgroups-title' )->plain() );
 			$out->addWikiMsg( 'managewiki-permissions-resetgroups-header' );
 
 			$resetForm = HTMLForm::factory( 'ooui', [], $this->getContext() );
@@ -112,6 +115,12 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$cwConfig = new GlobalVarConfig( 'cw' );
 		Hooks::onCreateWikiCreation( $this->config->get( 'DBname' ), $cwConfig->get( 'Private' ) );
 
+		$logEntry = new ManualLogEntry( 'managewiki', 'resetgroups' );
+		$logEntry->setPerformer( $this->getContext()->getUser() );
+		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
+		$logID = $logEntry->insert();
+		$logEntry->publish( $logID );
+		
 		return true;
 	}
 
