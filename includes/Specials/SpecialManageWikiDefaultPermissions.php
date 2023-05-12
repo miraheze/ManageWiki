@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Specials;
 
 use Config;
 use GlobalVarConfig;
+use ErrorPageError;
 use HTMLForm;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
@@ -27,8 +28,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$this->setHeaders();
 		$out = $this->getOutput();
 
-		if ( !ManageWiki::checkSetup( 'permissions', true, $out ) || !( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) ) {
-			return false;
+		if ( !ManageWiki::checkSetup( 'permissions', true, $out ) ) {
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-text' );
 		}
 
 		if ( $par != '' ) {
@@ -40,40 +41,48 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public function buildMainView() {
 		$out = $this->getOutput();
-		$mwPermissions = new ManageWikiPermissions( 'default' );
-		$groups = array_keys( $mwPermissions->list() );
-		$craftedGroups = [];
-
-		foreach ( $groups as $group ) {
-			$craftedGroups[UserGroupMembership::getGroupName( $group )] = $group;
-		}
-
-		$out->addWikiMsg( 'managewiki-header-permissions' );
-
-		$groupSelector = [];
-
-		$groupSelector['groups'] = [
-			'label-message' => 'managewiki-permissions-select',
-			'type' => 'select',
-			'options' => $craftedGroups,
-		];
-
-		$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
-		$selectForm->setMethod( 'post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
-
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
-			$createDescriptor = [];
 
-			$createDescriptor['groups'] = [
-				'type' => 'text',
-				'label-message' => 'managewiki-permissions-create',
-				'validation-callback' => [ $this, 'validateNewGroupName' ],
+		if ( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) {
+			$mwPermissions = new ManageWikiPermissions( 'default' );
+			$groups = array_keys( $mwPermissions->list() );
+			$craftedGroups = [];
+
+			foreach ( $groups as $group ) {
+				$craftedGroups[UserGroupMembership::getGroupName( $group )] = $group;
+			}
+
+			$out->addWikiMsg( 'managewiki-header-permissions' );
+
+			$groupSelector = [];
+
+			$groupSelector['groups'] = [
+				'label-message' => 'managewiki-permissions-select',
+				'type' => 'select',
+				'options' => $craftedGroups,
 			];
 
-			$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
-			$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
+			$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
+			$selectForm->setMethod( 'post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 
+			if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+				$createDescriptor = [];
+
+				$createDescriptor['groups'] = [
+					'type' => 'text',
+					'label-message' => 'managewiki-permissions-create',
+					'validation-callback' => [ $this, 'validateNewGroupName' ],
+				];
+
+				$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
+				$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
+			}
+		} elseif ( !( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) && !$permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+				throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-text' );
+		}
+
+		if ( !( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) ) && $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+                        $out->setPageTitle( $this->msg( 'managewiki-permissions-resetgroups-title' )->plain() );
 			$out->addWikiMsg( 'managewiki-permissions-resetgroups-header' );
 
 			$resetForm = HTMLForm::factory( 'ooui', [], $this->getContext() );
