@@ -120,7 +120,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
-		
+
 		return true;
 	}
 
