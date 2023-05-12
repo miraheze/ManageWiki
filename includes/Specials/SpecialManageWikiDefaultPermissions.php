@@ -43,7 +43,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public function buildMainView() {
 		$ccDP = MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' );
-		$centralwiki = $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' );
+		$centralwiki = ( $this->config->get( 'CreateWikiGlobalWiki' ) == $this->config->get( 'DBname' ) );
 
 		$out = $this->getOutput();
 
