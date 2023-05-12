@@ -53,7 +53,7 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new $formClass( $formDescriptor, $context, $module );
 
-		if ( !$ceMW ) {
+		if ( !$ceMW || MediaWikiServices::getInstance()->getReadOnlyMode()->isReadOnly() ) {
 			$htmlForm->suppressDefaultSubmit();
 		}
 
