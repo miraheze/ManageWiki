@@ -31,7 +31,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$globalwiki = $this->config->get( 'CreateWikiGlobalWiki' );
 
 		if ( !ManageWiki::checkSetup( 'permissions', true, $out ) ) {
-			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', 'permissions' );
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ '1' => 'permissions' ] );
 		}
 
 		if ( $par != '' && ( $globalwiki == $this->config->get( 'DBname' ) ) ) {
@@ -83,7 +83,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 			}
 		} elseif ( !( $globalwiki == $this->config->get( 'DBname' ) ) && !$canChangeDefaultPerms ) {
-				throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-text' );
+				throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-notglobalwiki' );
 		}
 
 		if ( !( $globalwiki == $this->config->get( 'DBname' ) ) && $canChangeDefaultPerms ) {
