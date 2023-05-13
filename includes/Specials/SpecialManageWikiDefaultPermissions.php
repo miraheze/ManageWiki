@@ -81,11 +81,11 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
 				$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 			}
-		} elseif ( !($centralwiki == $this->config->get( 'DBname' ) ) && !$ccDP ) {
+		} elseif ( !( $centralwiki == $this->config->get( 'DBname' ) ) && !$ccDP ) {
 				throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-text' );
 		}
 
-		if ( !($centralwiki == $this->config->get( 'DBname' ) ) && $ccDP ) {
+		if ( !( $centralwiki == $this->config->get( 'DBname' ) ) && $ccDP ) {
 			$out->setPageTitle( $this->msg( 'managewiki-permissions-resetgroups-title' )->plain() );
 			$out->addWikiMsg( 'managewiki-permissions-resetgroups-header' );
 
