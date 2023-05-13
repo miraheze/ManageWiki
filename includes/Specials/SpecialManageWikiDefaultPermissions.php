@@ -23,6 +23,9 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function __construct() {
 		parent::__construct( 'ManageWikiDefaultPermissions' );
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+
+		$ccDP = MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' );
+		$centralwiki = $this->config->get( 'CreateWikiGlobalWiki' );
 	}
 
 	public function execute( $par ) {
@@ -33,18 +36,15 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-text' );
 		}
 
-		if ( $par != '' ) {
+		if ( $par != '' && ( $centralwiki == $this->config->get( 'DBname' ) ) ) {
+			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 			$this->buildGroupView( $par );
 		} else {
-			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 			$this->buildMainView();
 		}
 	}
 
 	public function buildMainView() {
-		$ccDP = MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' );
-		$centralwiki = $this->config->get( 'CreateWikiGlobalWiki' );
-
 		$out = $this->getOutput();
 
 		if ( $centralwiki == $this->config->get( 'DBname' ) ) {
@@ -128,7 +128,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public static function validateNewGroupName( $newGroup, $nullForm ) {
 		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
-			return 'Disallowed Group.';
+			return 'Disallowed group';
 		}
 
 		return true;
