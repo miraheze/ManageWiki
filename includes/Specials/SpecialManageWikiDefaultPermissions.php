@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Specials;
 use Config;
 use ErrorPageError;
 use GlobalVarConfig;
+use Html;
 use HTMLForm;
 use ManualLogEntry;
 use MediaWiki\MediaWikiServices;
@@ -124,7 +125,9 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
-		return true;
+		$out->addHTML( Html::successBox( wfMessage( 'managewiki-success' )->escaped() ) );
+
+		return false;
 	}
 
 	public static function validateNewGroupName( $newGroup, $nullForm ) {
