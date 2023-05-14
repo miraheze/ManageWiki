@@ -103,6 +103,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitResetForm( $formData ) {
+		$out = $this->getOutput();
 		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
 			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
 			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
