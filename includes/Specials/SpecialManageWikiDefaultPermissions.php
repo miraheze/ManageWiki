@@ -14,6 +14,7 @@ use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks;
 use Miraheze\ManageWiki\ManageWiki;
+use MWException;
 use SpecialPage;
 use UserGroupMembership;
 
@@ -104,6 +105,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public function onSubmitResetForm( $formData ) {
 		$out = $this->getOutput();
+
 		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
 			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
 			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
@@ -126,9 +128,9 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
-		$out->addHTML( Html::successBox( wfMessage( 'managewiki-success' )->escaped() ) );
+		$out->addHTML( Html::successBox( $this->msg( 'managewiki-success' )->escaped() ) );
 
-		return false;
+		return true;
 	}
 
 	public static function validateNewGroupName( $newGroup, $nullForm ) {
