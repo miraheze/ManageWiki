@@ -163,7 +163,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$globalwiki = $this->config->get( 'CreateWikiGlobalWiki' );
 
 		return $globalwiki == $this->config->get( 'DBname' ) || $canChangeDefaultPerms;
-        }
+	}
 
 	protected function getGroupName() {
 		return 'wikimanage';
