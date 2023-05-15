@@ -134,7 +134,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public static function validateNewGroupName( $newGroup, $nullForm ) {
 		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
-			return 'Disallowed group';
+			return 'The group you attempted to create is not allowed. Please select a different name and try again.';
 		}
 
 		return true;
@@ -157,6 +157,13 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$htmlForm->show();
 	}
+
+	public function isListed() {
+		$canChangeDefaultPerms = MediaWikiServices::getInstance()->getPermissionManager()->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' );
+		$globalwiki = $this->config->get( 'CreateWikiGlobalWiki' );
+
+		return $globalwiki == $this->config->get( 'DBname' ) || $canChangeDefaultPerms;
+        }
 
 	protected function getGroupName() {
 		return 'wikimanage';
