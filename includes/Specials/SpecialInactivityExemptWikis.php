@@ -2,20 +2,20 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use Miraheze\ManageWiki\Helpers\ManageWikiInactiveExemptWikiPager;
 use IncludableSpecialPage;
+use Miraheze\ManageWiki\Helpers\ManageWikiInactiveExemptWikiPager;
 
 class SpecialInactivityExemptWikis extends IncludableSpecialPage {
-        public function __construct() {
-                parent::__construct( 'InactivityExemptWikis' );
-        }
+		public function __construct() {
+				parent::__construct( 'InactivityExemptWikis' );
+		}
 
-        public function execute( $par ) {
-                $this->setHeaders();
-                $this->outputHeader();
+		public function execute( $par ) {
+				$this->setHeaders();
+				$this->outputHeader();
 
-                $pager = new ManageWikiInactiveExemptWikiPager( $this );
+				$pager = new ManageWikiInactiveExemptWikiPager( $this );
 
-                $this->getOutput()->addParserOutputContent( $pager->getFullOutput() );
-        }
+				$this->getOutput()->addParserOutputContent( $pager->getFullOutput() );
+		}
 }
