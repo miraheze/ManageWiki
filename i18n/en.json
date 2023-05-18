@@ -138,6 +138,8 @@
 	"managewiki-review-title": "Review changes",
 	"managewiki-review": "Review",
 	"managewiki-save": "Save",
+	"managewiki-search": "Search ManageWiki",
+	"managewiki-search-noresults": "No results",
 	"managewiki-sidebar-header": "Administration",
 	"managewiki-success": "The settings have been successfully changed.",
 	"managewiki-toggle-forcesidebar": "Force the display of ManageWiki links in the sidebar.",
