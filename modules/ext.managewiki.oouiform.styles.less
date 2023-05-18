@@ -42,7 +42,7 @@
 		/* Fields */
 		[ class^='mw-htmlform-field-' ]:not( .managewiki-search-matched ),
 		/* Wrappers */
-		.mw-prefs-fieldset-wrapper:not( .managewiki-search-matched ) {
+		.managewiki-fieldset-wrapper:not( .managewiki-search-matched ) {
 			display: none;
 		}
 
@@ -168,7 +168,7 @@
 			border: 0;
 
 			// Hide section legend, only used in nojs mode
-			&:not( .mw-prefs-search-matched ) > fieldset > legend {
+			&:not( .managewiki-search-matched ) > fieldset > legend {
 				display: none;
 			}
 		}
