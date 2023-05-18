@@ -76,6 +76,8 @@
 	"managewiki-requires": "Text that indicates a particular setting needs something else to be enabled first",
 	"managewiki-review": "Text for the ManageWiki 'Review' button.\n{{Identical|Review}}",
 	"managewiki-review-title": "Title for the ManageWiki review changes dialog.",
+	"managewiki-search": "Placeholder for input to search ManageWiki.",
+	"managewiki-search-noresults": "Message showing no results found for searching ManageWiki.",
 	"managewiki-save": "Text for the ManageWiki 'Save' button.\n{{Identical|Save}}",
 	"managewiki-sidebar-header": "Used as a label for the sidebar.\n{{Identical|Administration}}",
 	"managewiki-success": "Message when the wiki request was succesfully sent.",
