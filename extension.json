@@ -140,6 +140,7 @@
 			"messages": [
 				"managewiki-review-title",
 				"managewiki-save",
+				"managewiki-search-noresults",
 				"managewiki-warning-changes"
 			],
 			"dependencies": [
