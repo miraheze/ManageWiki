@@ -18,7 +18,7 @@ class ManageWikiSettings {
 	/** @var MaintainableDBConnRef Database object */
 	private $dbw;
 	/** @var array Current settings with their respective values */
-	public $liveSettings;
+	private $liveSettings;
 	/** @var array Settings configuration ($wgManageWikiSettings) */
 	private $settingsConfig;
 	/** @var array Maintenance scripts that need to be ran on enabling/disabling a setting */
