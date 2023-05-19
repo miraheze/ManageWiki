@@ -17,10 +17,10 @@ class ManageWikiSettings {
 	private $config;
 	/** @var MaintainableDBConnRef Database object */
 	private $dbw;
-	/** @var array Settings configuration ($wgManageWikiSettings) */
-	private $settingsConfig;
 	/** @var array Current settings with their respective values */
 	private $liveSettings;
+	/** @var array Settings configuration ($wgManageWikiSettings) */
+	private $settingsConfig;
 	/** @var array Maintenance scripts that need to be ran on enabling/disabling a setting */
 	private $scripts = [];
 	/** @var string WikiID */
@@ -76,13 +76,14 @@ class ManageWikiSettings {
 	/**
 	 * Adds or changes a setting
 	 * @param array $settings Setting to change with value
+	 * @param mixed $default Default to use if none can be found
 	 */
-	public function modify( array $settings ) {
+	public function modify( array $settings, $default = null ) {
 		// We will handle all processing in final stages
 		foreach ( $settings as $var => $value ) {
-			if ( $value != ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ) ) {
+			if ( $value != ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default ) ) {
 				$this->changes[$var] = [
-					'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'],
+					'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default,
 					'new' => $value
 				];
 
@@ -100,14 +101,15 @@ class ManageWikiSettings {
 	/**
 	 * Removes a setting
 	 * @param string|string[] $settings Settings to remove
+	 * @param mixed $default Default to use if none can be found
 	 */
-	public function remove( $settings ) {
+	public function remove( $settings, $default = null ) {
 		// We allow removing of a single variable or many variables
 		// We will handle all processing in final stages
 		foreach ( (array)$settings as $var ) {
 			$this->changes[$var] = [
 				'old' => $this->liveSettings[$var],
-				'new' => $this->settingsConfig[$var]['overridedefault']
+				'new' => $this->settingsConfig[$var]['overridedefault'] ?? $default
 			];
 
 			unset( $this->liveSettings[$var] );
