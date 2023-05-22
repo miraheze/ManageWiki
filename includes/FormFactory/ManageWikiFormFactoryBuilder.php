@@ -917,7 +917,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		if ( $config->get( 'CreateWikiUseCategories' ) && ( $formData['category'] != $wiki->getCategory() ) ) {
+		if ( $config->get( 'CreateWikiUseCategories' ) && isset( $formData['category'] ) && ( $formData['category'] != $wiki->getCategory() ) ) {
 			$wiki->setCategory( $formData['category'] );
 		}
 
@@ -937,7 +937,7 @@ class ManageWikiFormFactoryBuilder {
 			$wiki->setDBCluster( $formData['dbcluster'] );
 		}
 
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) ) {
+		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) && isset( $formData['description'] ) ) {
 			$mwSettings = new ManageWikiSettings( $dbName );
 
 			$description = $mwSettings->list()['wgWikiDiscoverDescription'] ?? '';
