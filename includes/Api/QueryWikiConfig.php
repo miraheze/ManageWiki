@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Api;
 
 use ApiBase;
 use ApiQueryBase;
+use ExtensionRegistry;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
@@ -17,6 +18,10 @@ class QueryWikiConfig extends ApiQueryBase {
 	}
 
 	public function execute() {
+		if ( !ExtensionRegistry::getInstance()->isLoaded( 'CreateWiki' ) ) {
+			$this->dieWithError( 'managewiki-apierror-requires-createwiki' );
+		}
+
 		$params = $this->extractRequestParams();
 		$result = $this->getResult();
 		$prop = array_flip( $params['prop'] );
