@@ -30,13 +30,17 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWiki $wiki,
+		?RemoteWiki $wiki,
 		string $special,
 		string $filtered,
 		Config $config
 	) {
 		switch ( $module ) {
 			case 'core':
+				if ( !ExtensionRegistry::getInstance()->isLoaded( 'CreateWiki' ) ) {
+					throw new MWException( 'ManageWiki core requires the CreateWiki extension to be installed and enabled.' );
+				}
+
 				$formDescriptor = self::buildDescriptorCore( $dbName, $ceMW, $context, $wiki, $config );
 				break;
 			case 'extensions':
@@ -229,7 +233,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function buildDescriptorExtensions(
 		string $dbName,
 		bool $ceMW,
-		RemoteWiki $wiki,
+		?RemoteWiki $wiki,
 		Config $config
 	) {
 		$mwExt = new ManageWikiExtensions( $dbName );
@@ -340,7 +344,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWiki $wiki,
+		?RemoteWiki $wiki,
 		Config $config,
 		string $filtered
 	) {
@@ -430,7 +434,7 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		string $special,
-		RemoteWiki $wiki,
+		?RemoteWiki $wiki,
 		Config $config
 	) {
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
@@ -797,7 +801,7 @@ class ManageWikiFormFactoryBuilder {
 		string $module,
 		string $dbName,
 		IContextSource $context,
-		RemoteWiki $wiki,
+		?RemoteWiki $wiki,
 		DBConnRef $dbw,
 		Config $config,
 		string $special = '',
@@ -805,6 +809,10 @@ class ManageWikiFormFactoryBuilder {
 	) {
 		switch ( $module ) {
 			case 'core':
+				if ( !ExtensionRegistry::getInstance()->isLoaded( 'CreateWiki' ) ) {
+					throw new MWException( 'ManageWiki core requires the CreateWiki extension to be installed and enabled.' );
+				}
+
 				$mwReturn = self::submissionCore( $formData, $dbName, $context, $wiki, $dbw, $config );
 				break;
 			case 'extensions':
@@ -984,7 +992,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		string $filtered,
 		IContextSource $context,
-		RemoteWiki $wiki,
+		?RemoteWiki $wiki,
 		Config $config
 	) {
 		$mwExt = new ManageWikiExtensions( $dbName );
