@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Specials;
 
 use Config;
+use ExtensionRegistry;
 use Html;
 use HTMLForm;
 use MediaWiki\MediaWikiServices;
@@ -55,7 +56,7 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addSubtitle( $out->msg( 'editing' )->params( $additional ) );
 		}
 
-		if ( $this->config->get( 'CreateWikiGlobalWiki' ) !== $this->config->get( 'DBname' ) ) {
+		if ( !ExtensionRegistry::getInstance()->isLoaded( 'CreateWiki' ) || ( $this->config->get( 'CreateWikiGlobalWiki' ) !== $this->config->get( 'DBname' ) ) ) {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
@@ -150,13 +151,16 @@ class SpecialManageWiki extends SpecialPage {
 
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
-			$wikiManager = new WikiManager( $wiki );
-			if ( !$wikiManager->exists ) {
-				$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
-				return false;
-			}
+			$remoteWiki = null;
+			if ( ExtensionRegistry::getInstance()->isLoaded( 'CreateWiki' ) ) {
+				$wikiManager = new WikiManager( $wiki );
+				if ( !$wikiManager->exists ) {
+					$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
+					return false;
+				}
 
-			$remoteWiki = new RemoteWiki( $wiki );
+				$remoteWiki = new RemoteWiki( $wiki );
+			}
 
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
