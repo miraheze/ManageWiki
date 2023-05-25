@@ -68,7 +68,7 @@ class PopulateGroupPermissions extends Maintenance {
 			}
 		}
 
-		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'ManageWikiDatabase' ) );
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
 			$check = $dbw->selectRow(
