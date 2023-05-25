@@ -14,11 +14,14 @@ use MediaWiki\MediaWikiServices;
 class MigrateSettingsAndExtensions extends Maintenance {
 	public function __construct() {
 		parent::__construct();
+
+		$this->requireExtension( 'CreateWiki' );
+		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute() {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'ManageWikiDatabase' ) );
 
 		$res = $dbw->select(
 			'cw_wikis',
