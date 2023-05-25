@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Api;
 
 use ApiBase;
+use ExtensionRegistry;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\ManageWiki;
@@ -10,6 +11,10 @@ use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiModifyServer extends ApiBase {
 	public function execute() {
+		if ( !ExtensionRegistry::getInstance()->isLoaded( 'CreateWiki' ) ) {
+			$this->dieWithError( [ 'managewiki-apierror-requires-createwiki' ] );
+		}
+
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 
