@@ -106,8 +106,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$out = $this->getOutput();
 
 		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+			->getMainLB( $this->config->get( 'ManageWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'ManageWikiDatabase' ) );
 
 		$dbw->delete(
 			'mw_permissions',
