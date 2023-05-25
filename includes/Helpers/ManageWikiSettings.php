@@ -45,8 +45,8 @@ class ManageWikiSettings {
 		$this->settingsConfig = $this->config->get( 'ManageWikiSettings' );
 
 		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+			->getMainLB( $this->config->get( 'ManageWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'ManageWikiDatabase' ) );
 
 		$settings = $this->dbw->selectRow(
 			'mw_settings',
