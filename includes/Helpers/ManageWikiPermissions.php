@@ -42,8 +42,8 @@ class ManageWikiPermissions {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+			->getMainLB( $this->config->get( 'ManageWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'ManageWikiDatabase' ) );
 
 		$perms = $this->dbw->select(
 			'mw_permissions',
