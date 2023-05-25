@@ -20,7 +20,7 @@ class ManageWikiRequirements {
 	 * @param ?RemoteWiki $wiki
 	 * @return bool Whether the extension can be enabled
 	 */
-	public static function process( array $actions, array $extensionList = [], bool $ignorePerms = false, RemoteWiki $wiki = null ) {
+	public static function process( array $actions, array $extensionList = [], bool $ignorePerms = false, ?RemoteWiki $wiki = null ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
@@ -157,14 +157,14 @@ class ManageWikiRequirements {
 
 	/**
 	 * @param array $data
-	 * @param RemoteWiki $wiki
+	 * @param ?RemoteWiki $wiki
 	 * @return bool
 	 */
-	private static function visibility( array $data, RemoteWiki $wiki ) {
+	private static function visibility( array $data, ?RemoteWiki $wiki ) {
 		$ret = [];
 
 		foreach ( $data as $key => $val ) {
-			if ( $key == 'state' ) {
+			if ( $wiki && $key == 'state' ) {
 				$ret['state'] = ( ( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() ) );
 			} elseif ( $key == 'permissions' ) {
 				$ret['permissions'] = (bool)( self::permissions( $val ) );
