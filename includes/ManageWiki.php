@@ -26,11 +26,11 @@ class ManageWiki {
 		return array_keys( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWiki' ), true );
 	}
 
-	public static function checkPermission( RemoteWiki $rm, User $user, string $perm = "" ) {
+	public static function checkPermission( ?RemoteWiki $rm, User $user, string $perm = "" ) {
 		$maxPerm = ( (bool)$perm ) ? $perm : 'managewiki';
 
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-		if ( $rm->isLocked() && !$permissionManager->userHasRight( $user, 'managewiki-restricted' ) ) {
+		if ( $rm && $rm->isLocked() && !$permissionManager->userHasRight( $user, 'managewiki-restricted' ) ) {
 			return false;
 		}
 
@@ -97,8 +97,8 @@ class ManageWiki {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 
 		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
+			->getMainLB( $config->get( 'ManageWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_REPLICA, [], $config->get( 'ManageWikiDatabase' ) );
 
 		$nsID = ( $namespace == '' ) ? false : $dbr->selectRow(
 			'mw_namespaces',
