@@ -24,7 +24,7 @@ class PopulateNamespaces extends Maintenance {
 		}
 
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'ManageWikiDatabase' ) );
 
 		$namespaces = $config->get( 'CanonicalNamespaceNames' ) + [ 0 => '<Main>' ];
 
