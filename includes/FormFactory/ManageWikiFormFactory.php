@@ -20,7 +20,7 @@ class ManageWikiFormFactory {
 		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWiki $wiki,
+		?RemoteWiki $wiki,
 		Config $config,
 		string $special = '',
 		string $filtered = ''
@@ -35,7 +35,7 @@ class ManageWikiFormFactory {
 
 	public function getForm(
 		string $wiki,
-		RemoteWiki $remoteWiki,
+		?RemoteWiki $remoteWiki,
 		IContextSource $context,
 		Config $config,
 		string $module,
@@ -44,8 +44,8 @@ class ManageWikiFormFactory {
 		string $formClass = ManageWikiOOUIForm::class
 	) {
 		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+			->getMainLB( $config->get( 'ManageWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $config->get( 'ManageWikiDatabase' ) );
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
 
@@ -77,7 +77,7 @@ class ManageWikiFormFactory {
 		string $module,
 		bool $ceMW,
 		string $dbName,
-		RemoteWiki $wiki,
+		?RemoteWiki $wiki,
 		DBConnRef $dbw,
 		Config $config,
 		string $special = '',
