@@ -45,8 +45,8 @@ class ManageWikiNamespaces {
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 
 		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+			->getMainLB( $this->config->get( 'ManageWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'ManageWikiDatabase' ) );
 
 		$namespaces = $this->dbw->select(
 			'mw_namespaces',
