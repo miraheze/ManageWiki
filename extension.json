@@ -172,6 +172,11 @@
 				"settings": false
 			}
 		},
+		"ManageWikiDatabase": {
+			"description": "String. Database name of where mw_namespaces, mw_permissions, and mw_settings are stored.",
+			"public": true,
+			"value": ""
+		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"public": true,
