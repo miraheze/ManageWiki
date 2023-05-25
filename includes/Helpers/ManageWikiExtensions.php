@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Config;
+use ExtensionRegistry;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\RemoteWiki;
@@ -45,8 +46,8 @@ class ManageWikiExtensions {
 		$this->extConfig = $this->config->get( 'ManageWikiExtensions' );
 
 		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+			->getMainLB( $this->config->get( 'ManageWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'ManageWikiDatabase' ) );
 
 		$exts = $this->dbw->selectRow(
 			'mw_settings',
@@ -134,7 +135,7 @@ class ManageWikiExtensions {
 	 * Commits all changes made to extension lists to the database
 	 */
 	public function commit() {
-		$remoteWiki = new RemoteWiki( $this->wiki );
+		$remoteWiki = ExtensionRegistry::getInstance()->isLoaded( 'CreateWiki' ) ? new RemoteWiki( $this->wiki ) : null;
 
 		foreach ( $this->liveExts as $name => $extConfig ) {
 			// Check if we have a conflict first
