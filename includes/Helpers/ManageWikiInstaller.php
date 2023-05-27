@@ -35,7 +35,11 @@ class ManageWikiInstaller {
 					$stepresponse['settings'] = self::settings( $dbname, $data );
 					break;
 				default:
-					return false;
+					$hookRunner = MediaWikiServices::getInstance()->get('ManageWikiHookRunner');
+					$hookRunner->onManageWikiProcessInstaller( $action, $data, $dbname, $install, $stepResponse );
+					if ( !$stepResponse ) {
+						return false;
+					}
 			}
 		}
 
