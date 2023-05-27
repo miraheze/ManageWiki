@@ -52,7 +52,7 @@ class ManageWikiRequirements {
 					break;
 				default:
 					$hookRunner = MediaWikiServices::getInstance()->get('ManageWikiHookRunner');
-					$hookRunner->onManageWikiProcessRequirements( [ $action => $data ], $stepResponse );
+					$hookRunner->onManageWikiProcessRequirements( $action, $data, $stepResponse );
 					if ( !$stepResponse ) {
 						return false;
 					}
