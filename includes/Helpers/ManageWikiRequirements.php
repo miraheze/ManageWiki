@@ -51,7 +51,11 @@ class ManageWikiRequirements {
 					$stepResponse['visibility'] = self::visibility( $data, $wiki );
 					break;
 				default:
-					return false;
+					$hookRunner = MediaWikiServices::getInstance()->get('ManageWikiHookRunner');
+					$hookRunner->onManageWikiProcessRequirements( [ $action => $data ], $stepResponse );
+					if ( !$stepResponse ) {
+						return false;
+					}
 			}
 		}
 
