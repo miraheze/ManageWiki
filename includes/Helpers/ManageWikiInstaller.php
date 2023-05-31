@@ -141,15 +141,33 @@ class ManageWikiInstaller {
 		}
 
 		foreach ( $data as $script => $options ) {
+			$repeatWith = [];
+			if ( isset( $options['repeat-with'] ) ) {
+				$repeatWith = $options['repeat-with'];
+				unset( $options['repeat-with'] );
+			}
+
 			$params = [
 				'dbname' => $dbname,
 				'script' => $script,
-				'options' => $options
+				'options' => $options,
 			];
 
 			$mwJob = new MWScriptJob( Title::newMainPage(), $params );
 
 			MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
+
+			if ( $repeatWith ) {
+				$params = [
+					'dbname' => $dbname,
+					'script' => $script,
+					'options' => $repeatWith,
+				];
+
+				$mwJob = new MWScriptJob( Title::newMainPage(), $params );
+
+				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
+			}
 		}
 
 		return true;
