@@ -5,6 +5,7 @@
 			"Beta16",
 			"Eindt",
 			"Executive",
+			"Gianfranco",
 			"S4b1nuz E.656"
 		]
 	},
@@ -29,7 +30,7 @@
 	"log-action-filter-managewiki": "Tipo di azione:",
 	"log-description-managewiki": "Questo registro traccia tutti i cambiamenti alle impostazioni della Wiki attraverso GestisciWiki.",
 	"log-name-managewiki": "GestisciWiki registro",
-	"logentry-managewiki-delete-group": "$1 ha cancellato gruppo \"$3\"",
+	"logentry-managewiki-delete-group": "$1 ha cancellato il gruppo \"$3\"",
 	"logentry-managewiki-delete": "$1 ha cancellato il wiki \"$4\"",
 	"logentry-managewiki-lock": "$1 ha bloccato la Wiki “$4”",
 	"logentry-managewiki-namespaces-delete": "$1 ha cancellato il namespace \"$5\" per \"$4\"",
