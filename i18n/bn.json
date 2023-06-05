@@ -18,7 +18,7 @@
 	"log-name-managewiki": "উইকি ব্যবস্থাপনা লগ",
 	"logentry-managewiki-delete": "$1 উইকি \"$4\" মুছে ফেলেছেন",
 	"logentry-managewiki-namespaces": "$1 \"$4\" উইকির জন্য \"$5\" নামস্থান পরিবর্তন করেছেন",
-	"logentry-managewiki-settings": "$1 \"$4\"-এর জন্য সেটিংগুলি ($5) পরিবর্তন করেছেন",
+	"logentry-managewiki-settings": "$1 \"$4\"-এর জন্য \"$5\" সেটিংগুলি পরিবর্তন করেছেন",
 	"managewiki-changes-none": "কোনো পরিবর্তন করা হয়নি।",
 	"managewiki-conflicts": "এর সাথে দ্বন্দ্ব হচ্ছে",
 	"managewiki-extension-name": "[$1 $2]",

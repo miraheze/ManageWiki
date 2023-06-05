@@ -52,7 +52,7 @@
 	"logentry-managewiki-settings": "$1 更改了「$4」的設定「$5」",
 	"logentry-managewiki-undelete": "$1取消刪除 wiki「$4」",
 	"logentry-managewiki-unlock": "$1解鎖了 wiki「$4」",
-	"managewiki-changes-none": "沒有做出變更。",
+	"managewiki-changes-none": "沒有變更。",
 	"managewiki-conflicts": "相衝與",
 	"managewiki-desc": "允許使用者透過網路介面管理來輕鬆管理他們的 wiki 組態。",
 	"managewiki-disabled": "模組「$1」未在此 wiki 上啟用，因此無法使用。",
