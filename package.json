@@ -15,6 +15,6 @@
 		"eslint-config-wikimedia": "0.25.0",
 		"grunt-banana-checker": "0.10.0",
 		"stylelint-config-idiomatic-order": "9.0.0",
-		"stylelint-config-wikimedia": "0.14.0"
+		"stylelint-config-wikimedia": "0.15.0"
 	}
 }
