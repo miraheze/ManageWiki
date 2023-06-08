@@ -2,14 +2,15 @@
 	"@metadata": {
 		"authors": [
 			"Les Meloures",
-			"Robby"
+			"Robby",
+			"Volvox"
 		]
 	},
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Nokucken ob d'Wiki als inaktiv markéiert ass",
 	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "D'Rechter vun dëse Benotzergruppe weisen",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "D'Astellunge vun der Wiki weisen",
 	"apiwarn-wikiconfig-wikidoesnotexist": "D'Wiki '$1' gëtt et net.",
-	"core-main": "Haapt-Astellungen",
+	"core-main": "Haaptastellungen",
 	"deletedwikis": "Geläscht Wikien",
 	"logentry-managewiki-delete-group": "$1 huet d'Grupp $3 geläscht",
 	"logentry-managewiki-delete": "$1 huet d'Wiki \"$4\" geläscht",
@@ -29,8 +30,10 @@
 	"managewiki-missing": "Déi Wiki gëtt et net.",
 	"managewiki-permissions-autopromote-blocked": "Muss gespaart ginn",
 	"managewiki-permissions-autopromote-bot": "Muss e Bot-Benotzerkont sinn",
+	"managewiki-search-noresults": "Keng Resultater",
 	"managewiki-sidebar-header": "Administratioun",
 	"managewiki-success": "D'Astellunge goufe geännert.",
+	"managewiki-unavailable": "Net disponibel",
 	"managewiki": "Eng Wiki geréieren",
 	"namespaces-delete": "Läschen",
 	"namespaces-namespace": "Haapt-Nummraum",
