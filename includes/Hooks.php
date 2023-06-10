@@ -173,7 +173,7 @@ class Hooks {
 					'addself' => json_decode($perm->perm_addgroupstoself ?? '[]', true),
 					'removeself' => json_decode($perm->perm_removegroupsfromself ?? '[]', true),
 					'autopromote' => json_decode($perm->perm_autopromote ?? '[]', true)
-				];		
+				];
 			}
 
 			$diffKeys = array_keys( array_diff_key( self::getConfig( 'ManageWikiPermissionsAdditionalRights' ), $jsonArray['permissions'] ?? [] ) );
