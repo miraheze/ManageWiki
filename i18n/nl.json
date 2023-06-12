@@ -67,7 +67,7 @@
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-extension-settings": "De beschikbare configuratie-opties voor deze extensie beheren",
 	"managewiki-header-core": "Selecteer hieronder wat u wilt beheren en klik op de knop Opslaan om uw wijzigingen op te slaan.",
-	"managewiki-header-extensions": "De extensies hier zijn momenteel geïnstalleerd, maar u kunt er altijd nog een <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features aanvragen]</span>. <br> Als u klaar bent, drukt u op de knop \"opslaan\" om uw wijzigingen op te slaan.",
+	"managewiki-header-extensions": "De hier aangegeven extensies zijn momenteel geïnstalleerd, maar u kunt er altijd nog een <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features aanvragen]</span>. <br> Als u klaar bent, drukt u op de knop \"opslaan\" om uw wijzigingen op te slaan.",
 	"managewiki-header-namespaces": "Selecteer hieronder een naamruimte om te bewerken (overlegnaamruimten zijn gekoppeld aan hun hoofdnaamruimte) of druk op de knop om een nieuwe hoofdnaamruimte te maken.",
 	"managewiki-header-permissions": "Selecteer hieronder een bestaande groep om te wijzigen, of maak in het vak hieronder een nieuwe gebruikersgroep aan.",
 	"managewiki-header-settings": "Met deze pagina worden de wiki-instellingen van de wiki <b>'$1'</b> beheerd. Als een functie die u wenst hier nog niet beschikbaar is, kunt u deze via <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> aanvragen. <br> Als u klaar bent, drukt u op de knop \"opslaan\" om uw wijzigingen op te slaan.",
