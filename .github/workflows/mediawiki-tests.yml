@@ -8,7 +8,7 @@ on:
 
 jobs:
   call-mediawiki-tests-workflow:
-    uses: The-Voidwalker/ci-tests/.github/worflows/mediawiki-tests.yml@main
+    uses: The-Voidwalker/ci-tests/.github/workflows/mediawiki-tests.yml@main
     strategy:
       matrix:
         include:
