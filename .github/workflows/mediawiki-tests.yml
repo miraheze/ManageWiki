@@ -32,12 +32,14 @@ jobs:
             php-docker: 81
             experimental: true
             composer-test: false
+
     with:
       mw: ${{ matrix.mw }}
       php: ${{ matrix.php }}
       php-docker: ${{ matrix.php-docker }}
       experimental: ${{ matrix.experimental }}
       composer-test: ${{ matrix.composer-test }}
+
     secrets: inherit
 
   notify-irc:
