@@ -30,9 +30,11 @@
 			"魔琴"
 		]
 	},
-	"action-managewiki-editdefault": "管理默认组权限",
+	"action-managewiki-editdefault": "管理默认群组权限",
 	"action-managewiki-restricted": "管理受限的wiki设置",
 	"action-managewiki": "管理wiki设置",
+	"apihelp-modifyserver-example": "修改wiki的服务器名称。",
+	"apihelp-modifyserver-summary": "修改wiki的服务器名称。",
 	"apihelp-query+wikiconfig-example-1": "查看metawiki的wiki配置。",
 	"apihelp-query+wikiconfig-param-prop": "选择要返回的属性：",
 	"apihelp-query+wikiconfig-param-wikis": "检查哪种wiki",
@@ -146,6 +148,8 @@
 	"managewiki-review-title": "复核更改",
 	"managewiki-review": "复核",
 	"managewiki-save": "保存",
+	"managewiki-search": "搜索ManageWiki",
+	"managewiki-search-noresults": "无结果",
 	"managewiki-sidebar-header": "管理",
 	"managewiki-success": "设置已成功更改。",
 	"managewiki-toggle-forcesidebar": "强制在侧栏中显示ManageWiki链接。",

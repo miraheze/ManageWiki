@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Asma",
 			"Kassem7899",
 			"Meno25",
 			"Omda4wady",
@@ -49,7 +50,7 @@
 	"managewiki-error-requirements": "لا يمكن تمكين الامتداد $1 لأنه يفشل في تلبية متطلباته.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-header-core": "حدد ما تريد إدارته أدناه، وانقر فوق إرسال!",
-	"managewiki-header-extensions": "الامتدادات هنا هي تلك المثبتة حاليا، ولكن يمكنك دائما <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features طلب]</span> إضافة أخرى.<br> متى ما انتهيت، اضغط على لسان \"submit\" لحفظ تغييراتك.",
+	"managewiki-header-extensions": "الامتدادات الموجودة هنا هي تلك التي تم تثبيتها حاليًا ، ولكن يمكنك ذلك دائمًا <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features request]</span> واحد آخر ليتم إضافته. <br> بمجرد الانتهاء ، اضغط على زر \"حفظ\" لحفظ التغييرات الخاصة بك.",
 	"managewiki-header-namespaces": "حدد نطاقا لتحريره أدناه (ترتبط نطاقات النقاش بالنطاقات الرئيسية) أو اضغط على الزر لإنشاء نطاقا جديدا.",
 	"managewiki-header-permissions": "حدد مجموعة أدناه موجودة بالفعل لتعديل أو إنشاء مجموعة مستخدمين جديدة في الصندوق الموجود أسفله.",
 	"managewiki-header-settings": "تُستخدَم هذه الصفحة لإدارة إعدادات الويكي <b>'$1'</b>، إذا لم تكن الميزة التي تريدها متوفرة هنا بعد، فيُرجَى استخدام <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features فبريكاتور]</span> لطلبها. <br> بمجرد الانتهاء من ذلك، اضغط على علامة التبويب \"إرسال\" لحفظ التغييرات.",
