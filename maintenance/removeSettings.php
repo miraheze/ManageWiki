@@ -15,7 +15,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 class RemoveSettings extends Maintenance {
 	public function __construct() {
 		parent::__construct();
-		$this->addArg( 'ext', 'The ManageWiki name of the setting.', true );
+		$this->addArg( 'setting', 'The ManageWiki name of the setting.', true );
 	}
 
 	public function execute() {
