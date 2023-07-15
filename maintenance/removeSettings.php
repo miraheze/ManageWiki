@@ -10,7 +10,7 @@ require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
 use MediaWiki\MediaWikiServices;
-use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
+use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 
 class RemoveSettings extends Maintenance {
 	public function __construct() {
