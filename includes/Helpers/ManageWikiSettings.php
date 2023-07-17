@@ -107,6 +107,10 @@ class ManageWikiSettings {
 		// We allow removing of a single variable or many variables
 		// We will handle all processing in final stages
 		foreach ( (array)$settings as $var ) {
+			if ( !isset( $this->liveSettings[$var] ) ) {
+				continue;
+			}
+
 			$this->changes[$var] = [
 				'old' => $this->liveSettings[$var],
 				'new' => $this->settingsConfig[$var]['overridedefault'] ?? $default
