@@ -35,7 +35,7 @@ class ManageWikiPermissions {
 	public $logParams = [];
 
 	/**
-	 * ManageWikiNamespaces constructor.
+	 * ManageWikiPermissions constructor.
 	 * @param string $wiki WikiID
 	 */
 	public function __construct( string $wiki ) {
