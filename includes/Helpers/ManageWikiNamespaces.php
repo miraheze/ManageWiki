@@ -238,7 +238,7 @@ class ManageWikiNamespaces {
 
 			$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
 			$nsWiki = $this->wiki == 'default' ? false : $this->wiki;
-			MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup( $nsWiki  )->push( $job );
+			MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup( $nsWiki )->push( $job );
 		}
 
 		if ( $this->wiki != 'default' ) {
