@@ -5,8 +5,8 @@
 			"Winston Sung"
 		]
 	},
-	"action-managewiki-editdefault": "upravljanje podrazumjevanim dozvolama grupa",
-	"action-managewiki-restricted": "upravljanje ograničenim vikipostavkama",
+	"action-managewiki-editdefault": "upravljate podrazumjevanim dozvolama grupa",
+	"action-managewiki-restricted": "upravljate ograničenim vikipostavkama",
 	"action-managewiki": "uprav. vikipostavkama",
 	"apihelp-modifyserver-example": "Promijeni naziv servera vikija.",
 	"apihelp-modifyserver-summary": "Promijeni naziv servera vikija.",
@@ -102,7 +102,7 @@
 	"managewiki-namespaces-create": "Napravi novi imenski prostor",
 	"managewiki-namespaces-select": "Izaberite imenski prostor s donjeg spiska i pritisnite \"Pošalji\".",
 	"managewiki-ns-invalidid": "Naznaka imenskoga prostora mora biti parni cijeli broj da bi mogao se uređivati preko Раководење со вики-ja.",
-	"managewiki-permissions-addall": "Može dodati u druge",
+	"managewiki-permissions-addall": "Može dodati drugima",
 	"managewiki-permissions-addself": "Može dodati sebi",
 	"managewiki-permissions-assigned": "Ovoj korisničkoj grupi trenutačno se primjenjuju korisnička prava ispod.",
 	"managewiki-permissions-autopromote-age": "Mora biti korisnik ovaj broj dana",
