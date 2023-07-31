@@ -3,7 +3,6 @@
 namespace Miraheze\ManageWiki;
 
 use MediaWiki\MediaWikiServices;
-use Title;
 
 /**
  * Common logic for migrating namespaces.

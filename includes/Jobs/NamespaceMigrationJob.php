@@ -3,7 +3,6 @@
 namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
-use MediaWiki\MediaWikiServices;
 use Title;
 
 /**
