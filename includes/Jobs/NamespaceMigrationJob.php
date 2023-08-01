@@ -22,9 +22,9 @@ class NamespaceMigrationJob extends Job {
 	 * @return bool
 	 */
 	public function run() {
-		$dbw = MediaWikiServices::getInstance()
-			->getDBLoadBalancer()
-			->getMaintenanceConnectionRef( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $this->params['wiki'] )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->params['wiki'] );
 
 		$maintainPrefix = $this->params['maintainPrefix'];
 
