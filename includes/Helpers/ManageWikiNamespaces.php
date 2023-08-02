@@ -167,9 +167,9 @@ class ManageWikiNamespaces {
 
 	/**
 	 * Commits all changes to database. Also files a job to move pages into or out of namespace
-  	 * @param bool $disableNamespaceMigrationJob|false
+  	 * @param bool $runNamespaceMigrationJob|true
 	 */
-	public function commit( bool $disableNamespaceMigrationJob = false ) {
+	public function commit( bool $runNamespaceMigrationJob = true ) {
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( in_array( $id, $this->deleteNamespaces ) ) {
 				$this->log = 'namespaces-delete';
@@ -237,7 +237,7 @@ class ManageWikiNamespaces {
 				}
 			}
 
-			if ( $this->wiki != 'default' && !$disableNamespaceMigrationJob ) {
+			if ( $this->wiki != 'default' && $runNamespaceMigrationJob ) {
 				$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
 				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $job );
 			}
