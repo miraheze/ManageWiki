@@ -236,15 +236,17 @@ class ManageWikiNamespaces {
 				}
 			}
 
-			$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
-			$nsWiki = $this->wiki == 'default' ? false : $this->wiki;
-			MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup( $nsWiki )->push( $job );
+			if ( $this->wiki != 'default' ) {
+				$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams + [ 'wiki' => $this->wiki ] );
+				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $job );
+			}
 		}
 
 		if ( $this->wiki != 'default' ) {
 			$cWJ = new CreateWikiJson( $this->wiki );
 			$cWJ->resetWiki();
 		}
+
 		$this->committed = true;
 	}
 
