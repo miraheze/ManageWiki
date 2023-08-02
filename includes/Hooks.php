@@ -241,7 +241,7 @@ class Hooks {
 
 			foreach ( $defaultNamespaces as $namespace ) {
 				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
-				$mwNamespaces->commit();
+				$mwNamespaces->commit( true );
 			}
 		}
 	}
