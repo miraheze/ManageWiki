@@ -167,7 +167,7 @@ class ManageWikiNamespaces {
 
 	/**
 	 * Commits all changes to database. Also files a job to move pages into or out of namespace
-  	 * @param bool $runNamespaceMigrationJob|true
+	 * @param bool $runNamespaceMigrationJob|true
 	 */
 	public function commit( bool $runNamespaceMigrationJob = true ) {
 		foreach ( array_keys( $this->changes ) as $id ) {
