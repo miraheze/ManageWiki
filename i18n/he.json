@@ -71,7 +71,7 @@
 	"managewiki-header-settings": "ניתן להשתמש בדף הזה כדי לנהל את ההגדרות של אתר הוויקי <b>\"$1\"</b>. אם חסרה כאן תכונה שחשובה לך, ניתן לבקש אותה ב<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features פבריקטור]. בסיום, יש ללחוץ על \"שמירה\" לשמירת השינויים.",
 	"managewiki-invalid-database": "$1 הוא מסד נתונים בלתי־תקין. ניתן על־ידי <code>&dollar;$2</code>.",
 	"managewiki-label-category": "קטגוריה",
-	"managewiki-label-closed": "נסגר",
+	"managewiki-label-closed": "סגור",
 	"managewiki-label-creationdate": "תאריך היצירה",
 	"managewiki-label-dbcluster": "אשכול מסד נתונים",
 	"managewiki-label-dbname": "שם מסד הנתונים",
