@@ -6,7 +6,7 @@ use Exception;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
-use MWException;
+use RuntimeException;
 use Title;
 
 class ManageWikiInstaller {
@@ -137,7 +137,7 @@ class ManageWikiInstaller {
 
 	private static function mwscript( string $dbname, array $data ) {
 		if ( Shell::isDisabled() ) {
-			throw new MWException( 'Shell is disabled.' );
+			throw new RuntimeException( 'Shell is disabled.' );
 		}
 
 		foreach ( $data as $script => $options ) {

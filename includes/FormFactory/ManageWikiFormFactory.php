@@ -10,8 +10,8 @@ use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
 use Miraheze\ManageWiki\ManageWiki;
-use MWException;
 use OutputPage;
+use UnexpectedValueException;
 use Wikimedia\Rdbms\DBConnRef;
 
 class ManageWikiFormFactory {
@@ -87,7 +87,7 @@ class ManageWikiFormFactory {
 		$out = $context->getOutput();
 
 		if ( !$ceMW ) {
-			throw new MWException( "User '{$context->getUser()->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
+			throw new UnexpectedValueException( "User '{$context->getUser()->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
 		}
 
 		$form->getButtons();
