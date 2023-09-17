@@ -7,6 +7,7 @@ use ExtensionProcessor;
 use ExtensionRegistry;
 use HTMLForm;
 use IContextSource;
+use InvalidArgumentException;
 use Linker;
 use ManualLogEntry;
 use MediaWiki\MediaWikiServices;
@@ -18,7 +19,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
-use MWException;
 use SpecialPage;
 use User;
 use UserGroupMembership;
@@ -52,7 +52,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special, $config );
 				break;
 			default:
-				throw new MWException( "{$module} not recognised" );
+				throw new InvalidArgumentException( "{$module} not recognised" );
 		}
 
 		return $formDescriptor;
@@ -821,7 +821,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn = self::submissionPermissions( $formData, $dbName, $special, $config );
 				break;
 			default:
-				throw new MWException( "{$module} not recognised" );
+				throw new InvalidArgumentException( "{$module} not recognised" );
 		}
 
 		if ( $mwReturn->changes ) {
