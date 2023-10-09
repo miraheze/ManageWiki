@@ -3,7 +3,8 @@
 		"authors": [
 			"Banjo",
 			"Elisardojm",
-			"Iváns"
+			"Iváns",
+			"Toliño"
 		]
 	},
 	"action-managewiki": "xestionar configuración da wiki",
@@ -36,7 +37,7 @@
 	"managewiki-label-inactive": "Inactivo",
 	"managewiki-label-language": "Lingua",
 	"managewiki-label-private": "Privado",
-	"managewiki-label-sitename": "Nome do sitio",
+	"managewiki-label-sitename": "Nome do wiki",
 	"managewiki-link-core": "Xestiona os parámetros deste wiki",
 	"managewiki-link-extensions": "Xestiona as extensións deste wiki",
 	"managewiki-link-permissions": "Xestiona os permisos deste wiki",
