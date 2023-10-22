@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki;
 
 use DatabaseUpdater;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
@@ -86,10 +87,20 @@ class Hooks {
 				]
 			);
 
-			$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $jsonArray['core']['wgLanguageCode'], 'namespaceNames' );
+			$lcName = [];
+			$lcEN = [];
 
-			if ( $jsonArray['core']['wgLanguageCode'] != 'en' ) {
-				$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
+			try {
+				$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $jsonArray['core']['wgLanguageCode'], 'namespaceNames' );
+
+				if ( $jsonArray['core']['wgLanguageCode'] != 'en' ) {
+					$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
+				}
+			} catch ( \Exception $e ) {
+				$logger = LoggerFactory::getInstance( 'ManageWiki' );
+				$logger->warning( 'Caught exception trying to load Localisation Cache: {exception}', [
+					'exception' => $e,
+				] );
 			}
 
 			$additional = self::getConfig( 'ManageWikiNamespacesAdditional' );
