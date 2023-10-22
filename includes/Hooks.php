@@ -92,11 +92,11 @@ class Hooks {
 
 			try {
 				$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $jsonArray['core']['wgLanguageCode'], 'namespaceNames' );
-	
+
 				if ( $jsonArray['core']['wgLanguageCode'] != 'en' ) {
 					$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
 				}
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 				$logger = LoggerFactory::getInstance( 'ManageWiki' );
 				$logger->warning( 'Caught exception trying to load Localisation Cache: {exception}', [
 					'exception' => $e,
