@@ -407,9 +407,9 @@ class ManageWikiFormFactoryBuilder {
 					];
 				}
 
-				$varName = " (\${$name})";
+				$varName = " (\{$$name})";
 				if ( isset( $set['associativeKey'] ) ) {
-					$varName = " (\${$name}['{$set['associativeKey']}'])";
+					$varName = " (\{$$name}['{$set['associativeKey']}'])";
 				}
 
 				$formDescriptor["set-$name"] = [
@@ -546,7 +546,7 @@ class ManageWikiFormFactoryBuilder {
 					}
 
 					$formDescriptor["$key-$name"] = [
-						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
+						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\{$$key})",
 						'help' => $help,
 						'cssclass' => 'managewiki-infuse',
 						'disabled' => $disabled,
