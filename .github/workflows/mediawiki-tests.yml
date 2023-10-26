@@ -26,6 +26,13 @@ jobs:
             composer-test: true
             experimental: false
 
+          # Latest MediaWiki stable - PHP 8.2
+          - mw: 'REL1_40'
+            php: 8.2
+            php-docker: 82
+            composer-test: true
+            experimental: true
+
           # Latest MediaWiki stable - PHP 7.4
           - mw: 'REL1_41'
             php: 7.4
