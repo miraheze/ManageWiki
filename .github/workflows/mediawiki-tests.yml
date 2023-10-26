@@ -17,14 +17,14 @@ jobs:
             php: 7.4
             php-docker: 74
             composer-test: true
-            experimental: false
+            experimental: true
 
           # Latest MediaWiki stable - PHP 7.4 
           - mw: 'REL1_40'
             php: 7.4
             php-docker: 74
             composer-test: true
-            experimental: false
+            experimental: true
 
           # Latest MediaWiki stable - PHP 7.4 
           - mw: 'REL1_41'
