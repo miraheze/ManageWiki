@@ -64,5 +64,17 @@
 	"managewiki-header-settings": "Ова страница се користи за управљање подешавањима викија <b>„$1“</b>. Ако не гледате значајку коју бисте желели, затражите је на <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Фабрикатору]</span>. <br> Када готови, притисните дугме „Сачувај“ да бисте сачували ваше промјене.",
 	"managewiki-invalid-database": "$1 је неважећа база података. Дано преко <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Категорија",
-	"managewiki-label-closed": "Затворен"
+	"managewiki-label-closed": "Затворен",
+	"managewiki-label-creationdate": "Датум прављења",
+	"managewiki-label-dbcluster": "Кластер базе података",
+	"managewiki-label-dbname": "Име базе података",
+	"managewiki-label-deletewiki": "Избрисати овај вики?",
+	"managewiki-label-deletiondate": "Датум брисања",
+	"managewiki-label-description": "Кратак опис",
+	"managewiki-label-experimental": "Пробне функције",
+	"managewiki-label-goto": "Иди на Special:ManageWiki",
+	"managewiki-label-inactive-exempt-reason": "Изаберит разлог за изузеће од неактивности.",
+	"managewiki-label-inactive-exempt": "Изузеће од неактивности",
+	"managewiki-label-inactive": "Неактиван",
+	"managewiki-label-language": "Језик"
 }
