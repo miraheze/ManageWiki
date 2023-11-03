@@ -33,7 +33,7 @@ class PopulateWikiSettings extends Maintenance {
 
 		foreach ( $settingsource as $input ) {
 			$wikiDB = explode( '|', $input, 2 );
-			list( $DBname, $settingvalue ) = array_pad( $wikiDB, 2, '' );
+			[ $DBname, $settingvalue ] = array_pad( $wikiDB, 2, '' );
 
 			$this->output( "Setting $settingvalue for $DBname\n" );
 

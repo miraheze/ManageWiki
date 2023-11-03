@@ -97,7 +97,9 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			'required' => true
 		];
 
-		$field = $this->addFields( $descriptor )->getField( 'reason' );
+		$field = $this->hasField( 'reason' ) ?
+			$this->getField( 'reason' ) :
+			$this->addFields( $descriptor )->getField( 'reason' );
 
 		$html = $field->getInputOOUI( '' );
 
