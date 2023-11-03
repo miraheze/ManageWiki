@@ -88,16 +88,20 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			return;
 		}
 
-		$descriptor = [];
-
-		$descriptor['reason'] = [
-			'type' => 'text',
-			'placeholder-message' => 'managewiki-placeholder-reason',
-			'id' => 'managewiki-submit-reason',
-			'required' => true
-		];
-
-		$field = $this->addFields( $descriptor )->getField( 'reason' );
+		if ( $this->hasField( 'reason' ) ) {
+			$field = $this->getField( 'reason' );
+		} else {
+			$descriptor = [];
+	
+			$descriptor['reason'] = [
+				'type' => 'text',
+				'placeholder-message' => 'managewiki-placeholder-reason',
+				'id' => 'managewiki-submit-reason',
+				'required' => true
+			];
+	
+			$field = $this->addFields( $descriptor )->getField( 'reason' );
+		}
 
 		$html = $field->getInputOOUI( '' );
 
