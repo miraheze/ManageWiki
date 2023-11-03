@@ -98,7 +98,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		];
 
 		$field = $this->hasField( 'reason' ) ?
-			$this-->getField( 'reason' ) :
+			$this->getField( 'reason' ) :
 			$this->addFields( $descriptor )->getField( 'reason' );
 
 		$html = $field->getInputOOUI( '' );
