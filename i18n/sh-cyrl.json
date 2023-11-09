@@ -76,5 +76,15 @@
 	"managewiki-label-inactive-exempt-reason": "Изаберит разлог за изузеће од неактивности.",
 	"managewiki-label-inactive-exempt": "Изузеће од неактивности",
 	"managewiki-label-inactive": "Неактиван",
-	"managewiki-label-language": "Језик"
+	"managewiki-label-language": "Језик",
+	"managewiki-label-lockwiki": "Закључати овај вики од промјена?",
+	"managewiki-label-private": "Приватан",
+	"managewiki-label-server": "Доменско име",
+	"managewiki-label-sitename": "Име викија",
+	"managewiki-label-undeletewiki": "Повратити овај вики?",
+	"managewiki-label-unlockwiki": "Откључати овај вики?",
+	"managewiki-link-core-view": "Прикажи подразумијеване поставке овог викија",
+	"managewiki-link-core": "Управљање подразумијеваним поставкама овог викија",
+	"managewiki-link-extensions-view": "Прикажи додатке овог викија",
+	"managewiki-link-extensions": "Управљање додацима овог викија"
 }
