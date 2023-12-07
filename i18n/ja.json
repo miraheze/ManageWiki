@@ -3,6 +3,7 @@
 		"authors": [
 			"Aefgh39622",
 			"Ajeje Brazorf",
+			"Ant176",
 			"Funa-enpitu",
 			"Kkairri",
 			"LaMagiaaa",
@@ -52,7 +53,7 @@
 	"log-action-filter-managewiki": "操作の種類:",
 	"log-description-managewiki": "この記録は、ManageWikiを使ったすべてのウィキ設定変更を追跡します。",
 	"log-name-managewiki": "ManageWiki記録",
-	"logentry-managewiki-delete-group": "$1 がグループ $3 を削除しました",
+	"logentry-managewiki-delete-group": "$1 がグループ \"$3\" を削除しました",
 	"logentry-managewiki-delete": "$1 がウィキ \"$4\" を削除しました",
 	"logentry-managewiki-lock": "$1 がウィキ \"$4\" をロックしました",
 	"logentry-managewiki-namespaces-delete": "$1 がウィキ \"$4\" の名前空間 \"$5\" を削除しました",
