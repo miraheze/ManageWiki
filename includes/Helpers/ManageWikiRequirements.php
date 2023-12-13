@@ -147,7 +147,8 @@ class ManageWikiRequirements {
 		$wikiValue = $manageWikiSettings->list( $setting );
 
 		if ( $wikiValue !== null ) {
-			if ( $wikiValue === $value || in_array( $value, $wikiValue ) ) {
+			$wikiValueArray = is_array( $wikiValue ) ? $wikiValue : [ $wikiValue ];
+			if ( $wikiValue === $value || in_array( $value, $wikiValueArray ) ) {
 				return true;
 			}
 		}
