@@ -147,8 +147,10 @@ class ManageWikiRequirements {
 		$wikiValue = $manageWikiSettings->list( $setting );
 
 		if ( $wikiValue !== null ) {
-			$wikiValueArray = is_array( $wikiValue ) ? $wikiValue : [ $wikiValue ];
-			if ( $wikiValue === $value || in_array( $value, $wikiValueArray ) ) {
+			// We need to cast $wikiValue to an array
+			// to convert any values (boolean) to an array.
+			// Otherwise TypeError is thrown.
+			if ( $wikiValue === $value || in_array( $value, (array)$wikiValue ) ) {
 				return true;
 			}
 		}
