@@ -53,7 +53,11 @@ class ManageWikiTypes {
 					'type' => 'int',
 					'min' => $options['minint'],
 					'max' => $options['maxint'],
-					'default' => $value ?? $options['overridedefault']
+					// Value can return an empty string,
+					// thus need to have a better check.
+					'default' => is_integer( $value ) ?
+						$value :
+						$options['overridedefault']
 				];
 				break;
 			case 'integers':
