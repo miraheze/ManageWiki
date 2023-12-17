@@ -55,7 +55,7 @@ class ManageWikiTypes {
 					'max' => $options['maxint'],
 					// Value can return an empty string,
 					// thus need to have a better check.
-					'default' => is_integer( $value ) ?
+					'default' => !is_string( $value ) ?
 						$value :
 						$options['overridedefault']
 				];
