@@ -99,5 +99,14 @@
 	"managewiki-namespaces-create-submit": "Направи имен. простор",
 	"managewiki-namespaces-create": "Направи нови именски простор",
 	"managewiki-namespaces-select": "Изаберите именски простор с доњег списка, па притисните „Пошаљи”.",
-	"managewiki-ns-invalidid": "Назнака именског простора мора бити парни цијели број за могућност уређивања преко Раководење со вики-ја."
+	"managewiki-ns-invalidid": "Назнака именског простора мора бити парни цијели број за могућност уређивања преко Раководење со вики-ја.",
+	"managewiki-permissions-addall": "Може додати другима",
+	"managewiki-permissions-addself": "Може додати себи",
+	"managewiki-permissions-assigned": "Доље наведена корисничка права су тренутно додијељена овој корисничкој групи.",
+	"managewiki-permissions-create-submit": "Направи групу",
+	"managewiki-permissions-create": "Направи нову корисничку групу",
+	"managewiki-permissions-group": "Испод можете одредити како ова корисничка група може додијелити или уклонити додјелу другим корисничким групама.",
+	"managewiki-permissions-removeall": "Може уклонити од других",
+	"managewiki-permissions-removeself": "Може уклонити из себе",
+	"managewiki-permissions-unassigned": "Доље наведена корисничка права нису тренутно додијељена овој корисничкој групи:"
 }
