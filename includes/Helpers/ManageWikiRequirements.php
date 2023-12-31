@@ -27,7 +27,8 @@ class ManageWikiRequirements {
 		foreach ( $actions as $action => $data ) {
 			switch ( $action ) {
 				case 'permissions':
-					$stepResponse['permissions'] = ( $ignorePerms ) ? true : self::permissions( $data );
+					// We don't check permissions if we are in CLI mode, so that we can toggle restricted extensions in CLI
+					$stepResponse['permissions'] = ( $ignorePerms || PHP_SAPI === 'cli' ) ? true : self::permissions( $data );
 					break;
 				case 'extensions':
 					$stepResponse['extensions'] = self::extensions( $data, $extensionList );
