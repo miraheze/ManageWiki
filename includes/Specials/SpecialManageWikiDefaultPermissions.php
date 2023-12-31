@@ -9,14 +9,14 @@ use Html;
 use HTMLForm;
 use ManualLogEntry;
 use MediaWiki\MediaWikiServices;
-use SpecialPage;
-use UserGroupMembership;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks;
 use Miraheze\ManageWiki\ManageWiki;
+use SpecialPage;
+use UserGroupMembership;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	/** @var Config */
@@ -270,7 +270,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		return false;
 	}
-
 
 	public static function validateNewGroupName( $newGroup, $nullForm ) {
 		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
