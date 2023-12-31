@@ -118,34 +118,34 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 			$resetPermissionsDescriptor['info'] = [
 				'type' => 'info',
-				'default' => $this->msg( 'managewiki-permissions-resetgroups-header' )->parse(),
+				'default' => $this->msg( 'managewikidefaultpermissions-resetgroups-header' ),
 			];
 
 			$resetPermissionsForm = HTMLForm::factory( 'ooui', $resetPermissionsDescriptor, $this->getContext() );
-			$resetPermissionsForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetgroups-header' );
-			$resetPermissionsForm->setMethod( 'post' )->setFormIdentifier( 'resetpermissionsform' )->setSubmitTextMsg( 'managewiki-permissions-resetgroups' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitPermissionsResetForm' ] )->prepareForm()->show();
+			$resetPermissionsForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetgroups-title' );
+			$resetPermissionsForm->setMethod( 'post' )->setFormIdentifier( 'resetpermissionsform' )->setSubmitTextMsg( 'managewikidefaultpermissions-resetgroups' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitPermissionsResetForm' ] )->prepareForm()->show();
 
 			$resetSettingsDescriptor = [];
 
 			$resetSettingsDescriptor['info'] = [
 				'type' => 'info',
-				'default' => $this->msg( 'managewiki-permissions-resetsettings-header' )->parse(),
+				'default' => $this->msg( 'managewikidefaultpermissions-resetsettings-header' ),
 			];
 
 			$resetSettingsForm = HTMLForm::factory( 'ooui', $resetSettingsDescriptor, $this->getContext() );
-			$resetSettingsForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetsettings-header' );
-			$resetSettingsForm->setMethod( 'post' )->setFormIdentifier( 'resetsettingsform' )->setSubmitTextMsg( 'managewiki-permissions-resetsettings' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitSettingsResetForm' ] )->prepareForm()->show();
+			$resetSettingsForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetsettings-title' );
+			$resetSettingsForm->setMethod( 'post' )->setFormIdentifier( 'resetsettingsform' )->setSubmitTextMsg( 'managewikidefaultpermissions-resetsettings' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitSettingsResetForm' ] )->prepareForm()->show();
 
 			$resetCacheDescriptor = [];
 
 			$resetCacheDescriptor['info'] = [
 				'type' => 'info',
-				'default' => $this->msg( 'managewiki-permissions-resetcache-header' )->parse(),
+				'default' => $this->msg( 'managewikidefaultpermissions-resetcache-header' ),
 			];
 
 			$resetCacheForm = HTMLForm::factory( 'ooui', $resetCacheDescriptor, $this->getContext() );
-			$resetCacheForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetcache-header' );
-			$resetCacheForm->setMethod( 'post' )->setFormIdentifier( 'resetcacheform' )->setSubmitTextMsg( 'managewiki-permissions-resetcache' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitCacheResetForm' ] )->prepareForm()->show();
+			$resetCacheForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetcache-title' );
+			$resetCacheForm->setMethod( 'post' )->setFormIdentifier( 'resetcacheform' )->setSubmitTextMsg( 'managewikidefaultpermissions-resetcache' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitCacheResetForm' ] )->prepareForm()->show();
 
 		}
 	}
