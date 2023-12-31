@@ -47,7 +47,7 @@ class ManageWikiFormFactory {
 			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
 			->getMaintenanceConnectionRef( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
-		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
+		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser(), $module );
 
 		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special, $filtered );
 
@@ -99,14 +99,32 @@ class ManageWikiFormFactory {
 			$errorOut = [];
 			foreach ( $mwReturn as $errors ) {
 				foreach ( $errors as $msg => $params ) {
-					$errorOut[] = wfMessage( $msg, $params )->escaped();
+					$errorOut[] = wfMessage( $msg, $params )->plain();
 				}
 			}
 
-			$out->addHTML( Html::errorBox( 'The following errors occurred:<br>' . implode( '<br>', $errorOut ) ) );
+			$out->addHTML(
+				Html::warningBox(
+					Html::element(
+						'p',
+						[],
+						'The following errors occurred:<br>' . implode( '<br>', $errorOut )
+					),
+					'mw-notify-error'
+				)
+			);
 			return null;
 		}
 
-		$out->addHTML( Html::successBox( wfMessage( 'managewiki-success' )->escaped() ) );
+		$out->addHTML(
+			Html::successBox(
+				Html::element(
+					'p',
+					[],
+					wfMessage( 'managewiki-success' )->plain()
+				),
+				'mw-notify-success'
+			)
+		);
 	}
 }
