@@ -316,19 +316,24 @@ class Hooks {
 	}
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {
-		$append = '';
 		$user = $skin->getUser();
 		$services = MediaWikiServices::getInstance();
 		$permissionManager = $services->getPermissionManager();
 		$userOptionsLookup = $services->getUserOptionsLookup();
-		if ( !$permissionManager->userHasRight( $user, 'managewiki' ) ) {
-			if ( !self::getConfig( 'ManageWikiForceSidebarLinks' ) && !$userOptionsLookup->getOption( $user, 'managewikisidebar', 0 ) ) {
-				return;
-			}
-			$append = '-view';
-		}
+
+		$hideSidebar = !self::getConfig( 'ManageWikiForceSidebarLinks' ) &&
+			!$userOptionsLookup->getOption( $user, 'managewikisidebar', 0 );
 
 		foreach ( (array)ManageWiki::listModules() as $module ) {
+			$append = '';
+			if ( !$permissionManager->userHasRight( $user, 'managewiki-' . $module ) ) {
+				if ( $hideSidebar ) {
+					continue;
+				}
+
+				$append = '-view';
+			}
+
 			$bar['managewiki-sidebar-header'][] = [
 				'text' => wfMessage( "managewiki-link-{$module}{$append}" )->plain(),
 				'id' => "managewiki{$module}link",
