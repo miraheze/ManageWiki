@@ -12,7 +12,6 @@
 	},
 	"action-managewiki-editdefault": "manage default group permissions",
 	"action-managewiki-restricted": "manage restricted wiki settings",
-	"action-managewiki": "manage wiki settings",
 	"action-managewiki-core": "manage core settings for this wiki",
 	"action-managewiki-extensions": "enable and disable extensions for this wiki",
 	"action-managewiki-namespaces": "create, delete, and manage namespaces for this wiki",
@@ -201,6 +200,5 @@
 	"right-managewiki-namespaces": "Create, delete, and manage namespaces for this wiki",
 	"right-managewiki-permissions": "Create, delete, and manage user groups on this wiki",
 	"right-managewiki-settings": "Manage advanced settings for this wiki",
-	"right-managewiki": "Manage wiki settings",
 	"settings-other": "Other"
 }
