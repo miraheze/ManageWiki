@@ -12,54 +12,26 @@ jobs:
     strategy:
       matrix:
         include:
-          # Latest Old MediaWiki stable - PHP 7.4
-          - mw: 'REL1_39'
-            php: 7.4
-            php-docker: 74
+          # Latest MediaWiki stable - PHP 8.1
+          - mw: 'REL1_40'
+            php: 8.1
+            php-docker: 81
             composer-test: true
             experimental: false
 
-          # Latest MediaWiki stable - PHP 7.4
-          - mw: 'REL1_40'
-            php: 7.4
-            php-docker: 74
-            composer-test: true
-            experimental: false
-
-          # Latest MediaWiki stable - PHP 8.2
-          - mw: 'REL1_40'
-            php: 8.2
-            php-docker: 82
-            composer-test: true
-            experimental: true
-
-          # Latest MediaWiki stable - PHP 7.4
-          - mw: 'REL1_41'
-            php: 7.4
-            php-docker: 74
-            composer-test: true
-            experimental: true
-
-          # Latest MediaWiki stable - PHP 8.2
+          # Latest MediaWiki release branch - PHP 8.2
           - mw: 'REL1_41'
             php: 8.2
             php-docker: 82
-            composer-test: true
-            experimental: true
-
-          # Latest MediaWiki master - PHP 7.4
-          - mw: 'master'
-            php: 7.4
-            php-docker: 74
-            experimental: true
             composer-test: false
+            experimental: true
 
           # Latest MediaWiki master - PHP 8.2
           - mw: 'master'
             php: 8.2
             php-docker: 82
-            experimental: true
             composer-test: false
+            experimental: true
 
     with:
       mw: ${{ matrix.mw }}
