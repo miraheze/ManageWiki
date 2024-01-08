@@ -170,15 +170,24 @@ class Hooks {
 
 			foreach ( $permObjects as $perm ) {
 				$addPerms = [];
+				$removePerms = [];
 
 				foreach ( ( self::getConfig( 'ManageWikiPermissionsAdditionalRights' )[$perm->perm_group] ?? [] ) as $right => $bool ) {
 					if ( $bool ) {
 						$addPerms[] = $right;
+						continue;
+					}
+
+					if ( $bool === false ) {
+						$removePerms[] = $right;
 					}
 				}
 
+				$permissions = array_merge( json_decode( $perm->perm_permissions, true ) ?? [], $addPerms );
+				$filteredPermissions = array_diff( $permissions, $removePerms );
+
 				$jsonArray['permissions'][$perm->perm_group] = [
-					'permissions' => array_merge( json_decode( $perm->perm_permissions ?? '', true ) ?? [], $addPerms ),
+					'permissions' => $filteredPermissions,
 					'addgroups' => array_merge(
 						json_decode( $perm->perm_addgroups ?? '', true ) ?? [],
 						self::getConfig( 'ManageWikiPermissionsAdditionalAddGroups' )[$perm->perm_group] ?? []
