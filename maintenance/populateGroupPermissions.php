@@ -86,7 +86,7 @@ class PopulateGroupPermissions extends Maintenance {
 					[
 						'perm_dbname' => $config->get( 'DBname' ),
 						'perm_group' => $groupname,
-						'perm_permissions' => $groupatr['perms'],
+						'perm_permissions' => empty( $groupatr['perms'] ) ? json_encode( [] ) : $groupatr['perms'],
 						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
 						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
 						'perm_addgroupstoself' => empty( $groupatr['adds'] ) ? json_encode( [] ) : $groupatr['adds'],
