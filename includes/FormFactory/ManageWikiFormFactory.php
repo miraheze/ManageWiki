@@ -87,7 +87,7 @@ class ManageWikiFormFactory {
 		$out = $context->getOutput();
 
 		if ( !$ceMW ) {
-			throw new UnexpectedValueException( "User '{$context->getUser()->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
+			throw new UnexpectedValueException( "User '{$context->getUser()->getName()}' without 'managewiki-{$module}' right tried to change wiki {$module}!" );
 		}
 
 		$form->getButtons();
