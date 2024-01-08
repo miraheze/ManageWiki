@@ -183,7 +183,7 @@ class Hooks {
 					}
 				}
 
-				$permissions = array_merge( json_decode( $perm->perm_permissions, true ) ?? [], $addPerms );
+				$permissions = array_merge( json_decode( $perm->perm_permissions ?? '', true ) ?? [], $addPerms );
 				$filteredPermissions = array_diff( $permissions, $removePerms );
 
 				$jsonArray['permissions'][$perm->perm_group] = [
