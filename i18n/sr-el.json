@@ -2,7 +2,6 @@
 	"@metadata": {
 		"authors": []
 	},
-	"action-managewiki": "upravljaj podešavanjima vikija",
 	"apihelp-query+wikiconfig-param-prop": "Izbor svojstava za vraćanje:",
 	"apihelp-query+wikiconfig-param-wikis": "Vikiji za proveru.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Provera da li je viki označen kao zatvoren",
@@ -52,10 +51,10 @@
 	"managewiki-namespaces-select": "Izaberite imenski prostor s donjeg spiska, pa pritisnite „Pošalji”.",
 	"managewiki-ns-invalidid": "ID-ovi imenskog prostora moraju da budu celi brojevi za mogućnost uređivanja preko ManageWiki-ja.",
 	"managewiki-permissions-create": "napravite novu korisničku grupu",
-	"managewiki-permissions-resetgroups": "Resetuj sve grupe na podrazumevano",
 	"managewiki-success": "Podešavanja su uspešno promenjena.",
 	"managewiki": "Upravljanje vikijem",
 	"managewikidefaultpermissions": "Upravljanje podrazumevanim dozvolama farmi vikija",
+	"managewikidefaultpermissions-resetgroups": "Resetuj sve grupe na podrazumevano",
 	"managewikiextensions": "Upravljanje dodacima vikija",
 	"managewikinamespaces": "Upravljanje imenskom prostorima vikija",
 	"managewikipermissions": "Upravljanje dozvolama vikija",
@@ -73,6 +72,5 @@
 	"permissions-assigned": "Dodeljene dozvole:",
 	"right-managewiki-editdefault": "upravljanje podrazumevanim dozvolama grupa",
 	"right-managewiki-restricted": "upravljanje ograničenim podešavanjima vikija",
-	"right-managewiki": "upravljanje podešavanjima vikija",
 	"settings-other": "Drugo"
 }

@@ -10,7 +10,6 @@
 	},
 	"action-managewiki-editdefault": "hallita käyttäjäryhmien oikeuksia",
 	"action-managewiki-restricted": "hallinnoida wikin rajoitettuja asetuksia",
-	"action-managewiki": "hallinnoi wikin asetuksia",
 	"apihelp-modifyserver-example": "Muokkaa wikin palvelimen nimeä.",
 	"apihelp-modifyserver-summary": "Muokkaa wikin palvelimen nimeä.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Tarkista, onko wiki merkitty suljetuksi.",
@@ -89,8 +88,8 @@
 	"managewiki-permissions-addself": "Voi lisätä itsensä",
 	"managewiki-permissions-assigned": "Tälle käyttäjäryhmällä on tällä hetkellä alla olevat oikeudet.",
 	"managewiki-permissions-autopromote-once": "Mainosta vain kerran käyttäjää",
-	"managewiki-permissions-create-submit": "Luo ryhmä",
 	"managewiki-permissions-create": "Luo uusi käyttäjäryhmä",
+	"managewiki-permissions-create-submit": "Luo ryhmä",
 	"managewiki-permissions-removeall": "Voi poistaa muita",
 	"managewiki-permissions-removeself": "Voi poistaa itsensä",
 	"managewiki-placeholder-reason": "Syy tälle muutokselle...",
@@ -115,6 +114,5 @@
 	"permissions-delete-checkbox": "Poista tämä käyttäjäryhmä",
 	"permissions-delete": "Poista",
 	"right-managewiki-restricted": "Hallinnoi wikin rajoitettuja asetuksia",
-	"right-managewiki": "Hallinnoi wikin asetuksia",
 	"settings-other": "Muut"
 }

@@ -7,7 +7,6 @@
 			"Railfail536"
 		]
 	},
-	"action-managewiki": "zarządzania ustawieniami wiki",
 	"apihelp-query+wikiconfig-example-1": "Zobacz konfigurację Meta Wiki.",
 	"apihelp-query+wikiconfig-param-prop": "Wybierz właściwości do zwrócenia:",
 	"apihelp-query+wikiconfig-param-wikis": "Wiki do sprawdzenia.",
@@ -98,8 +97,8 @@
 	"managewiki-permissions-autopromote-enable": "Włącz automatyczny awans do tej grupy",
 	"managewiki-permissions-autopromote-groups": "Musi być członkiem następujących grup",
 	"managewiki-permissions-autopromote-once": "Awansuj użytkownika tylko raz",
-	"managewiki-permissions-create-submit": "Utwórz grupę",
 	"managewiki-permissions-create": "Utwórz nową grupę użytkowników",
+	"managewiki-permissions-create-submit": "Utwórz grupę",
 	"managewiki-permissions-select": "Wybierz istniejącą grupę, by edytować",
 	"managewiki-permissions-unassigned": "Poniższe uprawnienia nie są przypisane do tej grupy użytkowników.",
 	"managewiki-requires": "Wymaga",
@@ -127,6 +126,5 @@
 	"permissions-unassigned": "Nieprzypisane uprawnienia",
 	"right-managewiki-editdefault": "Zarządzaj domyślnymi grupami uprawnień",
 	"right-managewiki-restricted": "Zarządzaj zastrzeżonymi ustawieniami wiki",
-	"right-managewiki": "Zarządzanie ustawieniami wiki",
 	"settings-other": "Pozostałe"
 }

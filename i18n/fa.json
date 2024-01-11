@@ -11,7 +11,6 @@
 	},
 	"action-managewiki-editdefault": "مدیریت دسترسی‌های پیش‌فرض گروه",
 	"action-managewiki-restricted": "مدیریت تنظیمات محدودشدهٔ ویکی",
-	"action-managewiki": "مدیریت تنظیمات ویکی",
 	"apiwarn-wikiconfig-wikidoesnotexist": "ویکی «$1» وجود ندارد.",
 	"extensions-other": "دیگر",
 	"log-name-managewiki": "سیاههٔ مدیریت ویکی",
@@ -38,7 +37,6 @@
 	"managewiki-permissions-addall": "می‌توان به دیگران افزود",
 	"managewiki-permissions-create": "ایجاد گروه کاربری تازه",
 	"managewiki-permissions-removeall": "می‌توان از دیگران حذف کرد",
-	"managewiki-permissions-resetgroups": "بازتنظیم همهٔ گروه‌ها به پیش‌فرض",
 	"managewiki-permissions-select": "انتخاب گروه موجود برای ویرایش",
 	"managewiki-placeholder-reason": "دلیل این تغییر...",
 	"managewiki-review-title": "بازبینی تغییرات",
@@ -47,6 +45,7 @@
 	"managewiki-success": "تنظیمات با موفقیت تغییر داده شدند.",
 	"managewiki": "مدیریت یک ویکی",
 	"managewikidefaultpermissions": "مدیریت دسترسی‌های پیش‌فرض یک مزرعهٔ ویکی",
+	"managewikidefaultpermissions-resetgroups": "بازتنظیم همهٔ گروه‌ها به پیش‌فرض",
 	"managewikiextensions": "مدیریت افزونه‌های یک ویکی",
 	"managewikinamespaces": "مدیریت فضاهای نام یک ویکی",
 	"managewikipermissions": "مدیریت دسترسی‌های یک ویکی",
@@ -60,6 +59,5 @@
 	"permissions-group": "تخصیص گروه",
 	"permissions-unassigned": "دسترسی‌های داده‌نشده",
 	"right-managewiki-editdefault": "مدیریت دسترسی‌های گروه پیش‌فرض",
-	"right-managewiki": "مدیریت تنظیمات ویکی",
 	"settings-other": "دیگر"
 }

@@ -7,7 +7,6 @@
 			"Norhorn"
 		]
 	},
-	"action-managewiki": "Διαχείριση ρυθμίσεων βίκι",
 	"apihelp-query+wikiconfig-param-wikis": "Ποια βίκι θα ελεγχθούν.",
 	"core-main": "Βασικές ρυθμίσεις",
 	"deletedwikis": "Διαγραμμένα wiki",
@@ -40,8 +39,6 @@
 	"managewiki-missing": "Αυτό το βίκι δεν υπάρχει.",
 	"managewiki-namespaces-create-submit": "Δημιουργία ονοματοχώρου",
 	"managewiki-permissions-create-submit": "Δημιουργία ομάδας",
-	"managewiki-permissions-resetgroups-header": "<strong>ΠΡΟΕΙΔΟΠΟΙΗΣΗ</strong> : Πρόκειται να επαναφέρετε τη διαμόρφωση της ομάδας χρηστών αυτού του wiki στις προεπιλογές! Συνεχίστε μόνο εάν είστε βέβαιοι ότι θέλετε να το κάνετε αυτό. Αυτή η ενέργεια δε θα επηρεάσει τίποτα άλλο εκτός από ομάδες χρηστών.",
-	"managewiki-permissions-resetgroups-title": "Επαναφέρετε τις ομάδες ενός wiki στις προεπιλογές",
 	"managewiki-permissions-unassigned": "Τα παρακάτω δικαιώματα χρήστη δεν έχουν καθοριστεί προς το παρόν σε αυτήν την ομάδα χρηστών:",
 	"managewiki-search": "Αναζήτηση στο ManageWiki",
 	"managewiki-search-noresults": "Κανένα αποτέλεσμα",

@@ -5,7 +5,6 @@
 			"Xuacu"
 		]
 	},
-	"action-managewiki": "alministrar la configuración de la wiki",
 	"apihelp-query+wikiconfig-example-1": "Ver la configuración wiki de metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Seleiciona les propiedaes a devolver:",
 	"apihelp-query+wikiconfig-param-wikis": "Qué wikis comprobar.",

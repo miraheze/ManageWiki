@@ -6,7 +6,6 @@
 	},
 	"action-managewiki-editdefault": "управљате подразумијеваним дозволама група",
 	"action-managewiki-restricted": "управљате ограниченим википоставкама",
-	"action-managewiki": "управ. википоставкама",
 	"apihelp-modifyserver-example": "Промијени име сервера викија.",
 	"apihelp-modifyserver-summary": "Промијени име сервера викија.",
 	"apihelp-query+wikiconfig-example-1": "Погл. конфигурације викија за метавики.",
@@ -109,14 +108,11 @@
 	"managewiki-permissions-autopromote-conds-and": "...сви услови морају бити испуњени",
 	"managewiki-permissions-autopromote-conds-not": "...ниједан од услова не мора бити испуњен",
 	"managewiki-permissions-autopromote-conds-or": "...било који услов мора бити испуњен",
-	"managewiki-permissions-create-submit": "Направи групу",
 	"managewiki-permissions-create": "Направи нову корисничку групу",
+	"managewiki-permissions-create-submit": "Направи групу",
 	"managewiki-permissions-group": "Испод можете одредити како ова корисничка група може додијелити или уклонити додјелу другим корисничким групама.",
 	"managewiki-permissions-removeall": "Може уклонити од других",
 	"managewiki-permissions-removeself": "Може уклонити из себе",
-	"managewiki-permissions-resetgroups-header": "<strong>УПОЗОРЕЊЕ</strong>: Спремате се да ресетујете корисничку конфигурацију овог викија на подразумијеване вриједности! Наставите само ако сте сигурни да то желите. Ова радња неће утјецати ни на шта друго осим на корисничке групе.",
-	"managewiki-permissions-resetgroups-title": "Ресетуј групе викија на подразумијевано",
-	"managewiki-permissions-resetgroups": "Ресетуј све групе на подразумијевано",
 	"managewiki-permissions-select": "Изаберите постојећу групу за уређивање",
 	"managewiki-permissions-unassigned": "Доље наведена корисничка права нису тренутно додијељена овој корисничкој групи:",
 	"managewiki-placeholder-reason": "Разлог за ову промјену...",
@@ -126,5 +122,6 @@
 	"managewiki-save": "Сачувај",
 	"managewiki-search": "Претрага Викираководство-ја",
 	"managewiki-search-noresults": "Нема резултата",
-	"managewiki-sidebar-header": "Администрација"
+	"managewiki-sidebar-header": "Администрација",
+	"managewikidefaultpermissions-resetgroups": "Ресетуј све групе на подразумијевано"
 }

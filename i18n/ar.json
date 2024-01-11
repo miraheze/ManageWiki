@@ -9,7 +9,6 @@
 			"محمد أحمد عبد الفتاح"
 		]
 	},
-	"action-managewiki": "إدارة إعدادات الويكي",
 	"apihelp-query+wikiconfig-example-1": ".ألقي نظرة على إعداد ويكي الخاص بميتاويكي",
 	"apihelp-query+wikiconfig-param-prop": "حدد خصائص للرجوع:",
 	"apihelp-query+wikiconfig-param-wikis": "أي ويكي للتحقق.",
@@ -104,13 +103,11 @@
 	"managewiki-permissions-autopromote-groups": "يجب أن يكون عضوا في المجموعات التالية",
 	"managewiki-permissions-autopromote-once": "ترقية المستخدم مرة واحدة فقط",
 	"managewiki-permissions-autopromote": "أدناه يمكنك إدارة الترقية التلقائية للمستخدمين لهذه المجموعة، لاحظ أنه إذا تطابق المستخدم مع المعيار الذي حددته أدناه، فسيرث جميع صلاحيات هذه المجموعة ولا يمكنك إزالتها من هذه المجموعة تحت أي ظرف من الظروف إلا إذا اخترت ترقيتهم مرة واحدة قبل استيفائهم للمعايير.",
-	"managewiki-permissions-create-submit": "إنشاء مجموعة",
 	"managewiki-permissions-create": "إنشاء مجموعة مستخدمين جديدة",
+	"managewiki-permissions-create-submit": "إنشاء مجموعة",
 	"managewiki-permissions-group": "يمكنك أدناه السماح لكيفية تعيين/إلغاء تعيين  مجموعة المستخدمين هذه لمجموعات المستخدمين الأخرى.",
 	"managewiki-permissions-removeall": "يمكن الإزالة من الآخرين",
 	"managewiki-permissions-removeself": "يمكن الإزالة من النفس",
-	"managewiki-permissions-resetgroups-header": "من خلال النقر على الزر أدناه، سيتم مسح كل تكوينات المجموعة وستتم استعادة تكوين الصلاحيات الافتراضي للويكي، سيؤدي ذلك إلى إزالة جميع التغييرات المخصصة باستثناء إمكانية قراءة الويكي، تابع فقط إذا كنت متأكدا من رغبتك في القيام بذلك.",
-	"managewiki-permissions-resetgroups": "إعادة تعيين جميع المجموعات إلى الافتراضي",
 	"managewiki-permissions-select": "حدد مجموعة موجودة لتحريرها",
 	"managewiki-permissions-unassigned": "صلاحيات المستخدم أدناه غير محددة حاليا لمجموعة المستخدمين هذه.",
 	"managewiki-requires": "يتطلب",
@@ -119,6 +116,7 @@
 	"managewiki-toggle-forcesidebar": "فرض عرض روابط إدارة الويكي في الشريط الجانبي.",
 	"managewiki": "إدارة ويكي",
 	"managewikidefaultpermissions": "إدارة صلاحيات مزرعة ويكي الافتراضية",
+	"managewikidefaultpermissions-resetgroups": "إعادة تعيين جميع المجموعات إلى الافتراضي",
 	"managewikiextensions": "إدارة امتدادات ويكي",
 	"managewikinamespaces": "إدارة نطاقات ويكي",
 	"managewikipermissions": "إدارة صلاحيات ويكي",
@@ -141,6 +139,5 @@
 	"permissions-unassigned": "الصلاحيات غير المعينة",
 	"right-managewiki-editdefault": "إدارة سماحات المجموعة الافتراضية",
 	"right-managewiki-restricted": "إدارة إعدادات الويكي المحظورة",
-	"right-managewiki": "إدارة إعدادات الويكي",
 	"settings-other": "أخرى"
 }

@@ -7,7 +7,6 @@
 			"Toliño"
 		]
 	},
-	"action-managewiki": "xestionar configuración da wiki",
 	"apihelp-query+wikiconfig-param-prop": "Seleccione as propiedades a devolverː",
 	"apihelp-query+wikiconfig-param-wikis": "Que wikis verificar.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Verificar se a wiki está marcada como pechada",
@@ -44,14 +43,13 @@
 	"managewiki-link-settings": "Xestiona a configuración adicioanl deste wiki",
 	"managewiki-missing": "Esa wiki non existe.",
 	"managewiki-permissions-create": "Crear un novo grupo de usuarios",
-	"managewiki-permissions-resetgroups": "Reinicializar ós permisos de grupo por defecto",
 	"managewiki-success": "A configuración modificouse correctamente.",
 	"managewiki": "Xestionar un wiki",
 	"managewikidefaultpermissions": "Xestionar un wiki (permisos por defecto)",
+	"managewikidefaultpermissions-resetgroups": "Reinicializar ós permisos de grupo por defecto",
 	"managewikiextensions": "Xestionar unha wiki (extensións)",
 	"managewikipermissions": "Xestionar un wiki (permisos)",
 	"managewikisettings": "Xestionar un wiki (configuración)",
 	"permissions-assigned": "Permisos asignados:",
-	"right-managewiki": "Xestionar os parámetros da wiki",
 	"settings-other": "Outro"
 }

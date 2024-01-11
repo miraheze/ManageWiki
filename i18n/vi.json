@@ -10,7 +10,6 @@
 			"Wolf"
 		]
 	},
-	"action-managewiki": "quản lý cài đặt wiki",
 	"apihelp-query+wikiconfig-example-1": "Xem cài đặt wiki cho wiki trung ương.",
 	"apihelp-query+wikiconfig-param-prop": "Chọn thuộc tính để quay lại:",
 	"apihelp-query+wikiconfig-param-wikis": "Wiki nào để kiểm tra.",
@@ -107,13 +106,11 @@
 	"managewiki-permissions-autopromote-groups": "Phải là thành viên của những nhóm dưới đây",
 	"managewiki-permissions-autopromote-once": "Chỉ nâng chức người đó một lần",
 	"managewiki-permissions-autopromote": "Dưới đây bạn có thể quản lý việc tự nâng chức các người dùng lên nhóm (chức) này. Lưu ý rằng nếu một tài khoản hội đủ điều kiện bạn đặt bên dưới, họ sẽ được nâng lên nhóm này và bạn không thể xóa bỏ họ khỏi nhóm này dưới bất kỳ trường hợp nào trừ khi bạn chọn việc nâng họ trước khi họ hội đủ điều kiện.",
-	"managewiki-permissions-create-submit": "Tạo nhóm",
 	"managewiki-permissions-create": "Tạo quyền mới",
+	"managewiki-permissions-create-submit": "Tạo nhóm",
 	"managewiki-permissions-group": "Dưới đây bạn có thể cho phép làm thế nào nhóm người dùng này có thể gán/bỏ gán các nhóm người dùng khác",
 	"managewiki-permissions-removeall": "Có thể xóa khỏi những người khác",
 	"managewiki-permissions-removeself": "Có thể xóa bỏ khỏi chính mình",
-	"managewiki-permissions-resetgroups-header": "CẢNH BÁO: Bằng việc nhấn vào nút dưới, tất cả cài đặt quyền hạn sẽ bị xóa và cài đặt quyền hạn mặc định sẽ được đặt. Điều này sẽ bỏ tất cả các thay đổi bạn đã làm trước đây. Hãy suy nghĩ rất kỹ trước khi bấm.",
-	"managewiki-permissions-resetgroups": "Đặt lại tất cả các nhóm về mặc định",
 	"managewiki-permissions-select": "Chọn nhóm đang tồn tại để chỉnh sửa",
 	"managewiki-permissions-unassigned": "Các quyền hạn bên dưới chưa được gán cho nhóm này:",
 	"managewiki-placeholder-reason": "Lý do thay đổi",
@@ -127,6 +124,7 @@
 	"managewiki-warning-changes": "Bạn chưa lưu những thay đổi tùy chọn đã thực hiện.\nNếu bạn rời khỏi trang này mà không bấm “$1”, các tùy chọn của bạn sẽ không được cập nhật.",
 	"managewiki": "Cài đặt wiki",
 	"managewikidefaultpermissions": "Quản lý các quyền hạn mặc định của một wikifarm",
+	"managewikidefaultpermissions-resetgroups": "Đặt lại tất cả các nhóm về mặc định",
 	"managewikiextensions": "Cài đặt tiện ích wiki",
 	"managewikinamespaces": "Cài đặt không gian tên wiki",
 	"managewikipermissions": "Cài đặt quyền hạn wiki",
@@ -150,6 +148,5 @@
 	"permissions-unassigned": "Quyền chưa gán",
 	"right-managewiki-editdefault": "Quản lý các quyền hạn mặc định",
 	"right-managewiki-restricted": "Quản lý các cài đặt wiki bị khóa",
-	"right-managewiki": "Quản lý cài đặt wiki",
 	"settings-other": "Cài đặt nâng cao"
 }

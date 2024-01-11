@@ -5,7 +5,6 @@
 			"WikiPhoenix"
 		]
 	},
-	"action-managewiki": "hantera wiki-inställningar",
 	"apihelp-query+wikiconfig-example-1": "Visa wikikonfiguration för metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Välj egenskaper att returnera:",
 	"apihelp-query+wikiconfig-param-wikis": "Vilka wikier att kontrollera",
@@ -99,12 +98,11 @@
 	"managewiki-permissions-autopromote-enable": "Aktivera automatisk befordran för gruppen",
 	"managewiki-permissions-autopromote-groups": "Måste vara medlem i följande grupper",
 	"managewiki-permissions-autopromote-once": "Befordra endast användaren en gång",
-	"managewiki-permissions-create-submit": "Skapa grupp",
 	"managewiki-permissions-create": "Skapa en ny användargrupp",
+	"managewiki-permissions-create-submit": "Skapa grupp",
 	"managewiki-permissions-group": "Nedan kan du välja hur användargruppen kan tilldela/frånta andra användargrupper.",
 	"managewiki-permissions-removeall": "Kan ta bort från andra",
 	"managewiki-permissions-removeself": "Kan ta bort från sig själv",
-	"managewiki-permissions-resetgroups": "Återställ alla grupper till standardvärden",
 	"managewiki-placeholder-reason": "Orsak till ändringen...",
 	"managewiki-requires": "Kräver",
 	"managewiki-review-title": "Granska ändringar",
@@ -115,6 +113,7 @@
 	"managewiki-toggle-forcesidebar": "Tvinga ManageWiki att visas i sidofältet.",
 	"managewiki": "Hantera en wiki",
 	"managewikidefaultpermissions": "Hantera standardbehörigheter för en wikifarm",
+	"managewikidefaultpermissions-resetgroups": "Återställ alla grupper till standardvärden",
 	"managewikiextensions": "Hantera en wikis tillägg",
 	"managewikinamespaces": "Hantera en wikis namnrymder",
 	"managewikipermissions": "Hantera en wikis behörigheter",
@@ -135,6 +134,5 @@
 	"permissions-unassigned": "Ej tilldelade rättigheter",
 	"right-managewiki-editdefault": "Hantera standardbehörigheter för grupper",
 	"right-managewiki-restricted": "Hantera begränsade wikiinställningar",
-	"right-managewiki": "Hantera wikiinställningar",
 	"settings-other": "Andra"
 }
