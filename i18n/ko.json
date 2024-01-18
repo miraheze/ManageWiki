@@ -35,6 +35,7 @@
 	"deletedwikis": "삭제된 위키",
 	"extensions-other": "기타",
 	"log-action-filter-managewiki-settings": "위키 설정 변경",
+	"log-action-filter-managewiki": "조치 유형:",
 	"log-description-managewiki": "이 기록은 ManageWiki를 통한 위키 설정의 모든 변경 사항을 추적합니다.",
 	"log-name-managewiki": "ManageWiki 기록",
 	"logentry-managewiki-delete-group": "$1님이 \"$3\" 그룹을 삭제했습니다",
