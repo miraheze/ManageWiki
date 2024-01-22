@@ -141,6 +141,7 @@
 	"managewiki-permissions-group": "Below you can allow how this user group can assign/unassign other user groups.",
 	"managewiki-permissions-removeall": "Can remove from others",
 	"managewiki-permissions-removeself": "Can remove from self",
+	"managewiki-permissions-resetgroups-title": "Reset ManageWiki",
 	"managewiki-permissions-select": "Select a group",
 	"managewiki-permissions-select-header": "Manage existing groups",
 	"managewiki-permissions-select-info": "Below is a list of all the groups that exist on this wiki. Use the dropdown below to select a group you wish to manage or view the configuration for.",
