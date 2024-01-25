@@ -122,6 +122,7 @@
 	"managewiki-permissions-group": "Подолу можете да одредите како оваа корисничка група ќе може да доделува или отстранува од други кориснички групи.",
 	"managewiki-permissions-removeall": "Може да отстранува од други",
 	"managewiki-permissions-removeself": "Може да отстранува од себеси",
+	"managewiki-permissions-resetgroups-title": "Врати ги групите на викито по основно",
 	"managewiki-permissions-select": "Изберете постоечка група за измена",
 	"managewiki-permissions-unassigned": "За оваа корисничка група тековно не важат долунаведените кориснички права:",
 	"managewiki-placeholder-reason": "Причина за оваа промена...",

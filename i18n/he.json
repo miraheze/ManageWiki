@@ -141,6 +141,7 @@
 	"managewiki-permissions-group": "להלן אפשר להתיר כיצד קבוצת המשתמשים הזאת יכולה להוסיף משתמשים אחרים לקבוצות או להסיר אותם.",
 	"managewiki-permissions-removeall": "יכולת להסיר מאחרים",
 	"managewiki-permissions-removeself": "יכולת הסרה עצמית",
+	"managewiki-permissions-resetgroups-title": "איפוס קבוצות ויקי לברירות המחדל",
 	"managewiki-permissions-select": "נא לבחור קבוצה",
 	"managewiki-permissions-select-header": "ניהול קבוצות קיימות",
 	"managewiki-permissions-select-info": "להלן רשימת כל הקבוצות הקיימות בוויקי הזה. יש להשתמש בתפריט הנפתח למטה כדי לבחור קבוצת המשתמשים שברצונך לנהל או להציג את התצורה עבורו.",

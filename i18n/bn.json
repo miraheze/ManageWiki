@@ -7,13 +7,20 @@
 			"Tahmid",
 			"Tahmid02016",
 			"Yahya",
-			"আফতাবুজ্জামান"
+			"আফতাবুজ্জামান",
+			"খাত্তাব হাসান"
 		]
 	},
+	"action-managewiki-editdefault": "পূর্বনির্ধারিত দলের অধিকার পরিচালনা করার",
 	"action-managewiki-restricted": "সীমাবদ্ধ উইকি সেটিংস পরিচালনা করা",
+	"action-managewiki-core": "এই উইকির মূল সেটিংস পরিচালনা করার",
 	"action-managewiki-extensions": "এই উইকির জন্য এক্সটেনশন সক্রিয় এবং নিষ্ক্রিয় করুন",
 	"action-managewiki-namespaces": "এই উইকির জন্য নামস্থান তৈরি করুন, মুছে ফেলুন এবং পরিচালনা করুন",
+	"action-managewiki-permissions": "এই উইকিতে ব্যবহারকারী দল তৈরি, অপসারণ বা পরিচালনা করার",
 	"action-managewiki-settings": "এই উইকির জন্য উন্নত সেটিংস পরিচালনা করার",
+	"apihelp-modifyserver-example": "উইকির সার্ভারের নাম পরিবর্তন করুন।",
+	"apihelp-modifyserver-summary": "উইকির সার্ভারের নাম পরিবর্তন করুন।",
+	"apihelp-query+wikiconfig-example-1": "মেটাউইকির জন্য উইকি কনফিগারেশন দেখুন।",
 	"core-main": "মূল সেটিংস",
 	"deletedwikis": "অপসারিত উইকিসমূহ",
 	"extensions-other": "অন্যান্য",

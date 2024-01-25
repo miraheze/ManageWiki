@@ -3,6 +3,7 @@
 		"authors": [
 			"Aira",
 			"Ameisenigel",
+			"Celineharding",
 			"DraconicDark",
 			"HajFunk",
 			"Justman10000",
@@ -129,6 +130,7 @@
 	"managewiki-permissions-group": "Unten kannst du erlauben, wie diese Benutzergruppe andere Benutzergruppen zuweisen/entziehen kann.",
 	"managewiki-permissions-removeall": "Kann von anderen entfernen",
 	"managewiki-permissions-removeself": "Kann sich selbst entfernen",
+	"managewiki-permissions-resetgroups-title": "ManageWiki zurücksetzen",
 	"managewiki-permissions-select": "Zu bearbeitende Gruppe auswählen",
 	"managewiki-permissions-unassigned": "Die Benutzerrechte unten sind derzeit nicht dieser Benutzergruppe zugewiesen.",
 	"managewiki-placeholder-reason": "Grund für diese Änderung …",

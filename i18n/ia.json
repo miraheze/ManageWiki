@@ -135,6 +135,7 @@
 	"managewiki-permissions-group": "Hic infra tu pote determinar como iste gruppo de usatores pote assignar/retirar altere gruppos de usatores.",
 	"managewiki-permissions-removeall": "Pote remover de alteres",
 	"managewiki-permissions-removeself": "Pote remover de se mesme",
+	"managewiki-permissions-resetgroups-title": "Reinitialisar le gruppos de un wiki al parametros predefinite",
 	"managewiki-permissions-select": "Selige un gruppo",
 	"managewiki-permissions-select-header": "Gerer gruppos existente",
 	"managewiki-permissions-select-info": "Ecce un lista de tote le gruppos existente sur iste wiki. Usa le menu disrolante hic infra pro seliger un gruppo que tu vole gerer o del qual tu vole examinar le configuration.",

@@ -113,6 +113,7 @@
 	"managewiki-permissions-group": "Испод можете одредити како ова корисничка група може додијелити или уклонити додјелу другим корисничким групама.",
 	"managewiki-permissions-removeall": "Може уклонити од других",
 	"managewiki-permissions-removeself": "Може уклонити из себе",
+	"managewiki-permissions-resetgroups-title": "Ресетуј групе викија на подразумијевано",
 	"managewiki-permissions-select": "Изаберите постојећу групу за уређивање",
 	"managewiki-permissions-unassigned": "Доље наведена корисничка права нису тренутно додијељена овој корисничкој групи:",
 	"managewiki-placeholder-reason": "Разлог за ову промјену...",

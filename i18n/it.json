@@ -117,6 +117,7 @@
 	"managewiki-permissions-group": "Sotto puoi permettere come questo gruppo utenti può assegnare/non assegnare altri gruppi utente.",
 	"managewiki-permissions-removeall": "Posso rimuovere da altri",
 	"managewiki-permissions-removeself": "Posso rimuovere da sé",
+	"managewiki-permissions-resetgroups-title": "Reimposta i gruppi di un wiki ai valori predefiniti",
 	"managewiki-permissions-select": "Seleziona un gruppo",
 	"managewiki-permissions-select-header": "Gestisce i gruppi esistenti",
 	"managewiki-permissions-unassigned": "I diritti utente riportati di seguito non sono attualmente assegnati a questo gruppo utente:",

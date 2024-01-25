@@ -141,6 +141,7 @@
 	"managewiki-permissions-group": "以下您可允許此使用者群組能如何來指派/取消指派其他使用者群組。",
 	"managewiki-permissions-removeall": "可從其它移除",
 	"managewiki-permissions-removeself": "可自己移除",
+	"managewiki-permissions-resetgroups-title": "重新設定 wiki 的群組成預設值",
 	"managewiki-permissions-select": "選擇群組",
 	"managewiki-permissions-select-header": "管理現有群組",
 	"managewiki-permissions-select-info": "以下是存於此 wiki 的所有群組清單。請使用下方的下拉式選單，選擇您想要管理或查看其組態的群組。",

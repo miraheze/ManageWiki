@@ -139,6 +139,7 @@
 	"managewiki-permissions-group": "以下では、特定の利用者グループから、他の利用者グループをどのように割当/脱退できるかを設定することができます。",
 	"managewiki-permissions-removeall": "他のｸﾞﾙｰﾌﾟから削除できる",
 	"managewiki-permissions-removeself": "自身で脱退できる",
+	"managewiki-permissions-resetgroups-title": "ウィキのグループをデフォルトにリセットする",
 	"managewiki-permissions-select": "グループを選択",
 	"managewiki-permissions-unassigned": "現在、この利用者グループには以下の利用者権限が割り当てられています。",
 	"managewiki-placeholder-reason": "今回の変更理由…",

@@ -154,6 +154,7 @@
 	"managewiki-permissions-group": "Ниже вы можете решить, как эта группа может присваивать/убирать другие группы пользователей.",
 	"managewiki-permissions-removeall": "Может убирать у других",
 	"managewiki-permissions-removeself": "Может убирать у себя",
+	"managewiki-permissions-resetgroups-title": "Сбросить настройки групп вики по умолчанию",
 	"managewiki-permissions-select": "Выберите группу",
 	"managewiki-permissions-select-header": "Управление существующими группами",
 	"managewiki-permissions-select-info": "Ниже приведен список всех групп, существующих на этой вики. Используйте раскрывающийся список ниже, чтобы выбрать группу, которой вы хотите управлять, или просмотреть конфигурацию.",

@@ -122,6 +122,7 @@
 	"managewiki-permissions-group": "Ispod možete odrediti kako ova korisnička grupa može dodijeliti ili ukloniti iz drugih korisničkih grupa.",
 	"managewiki-permissions-removeall": "Može uklanjati sa drugih",
 	"managewiki-permissions-removeself": "Može uklanjati iz sebe",
+	"managewiki-permissions-resetgroups-title": "Resetuj grupe od vikija na podrazumijevano",
 	"managewiki-permissions-select": "Izaberite postojeću grupu za izmjenu",
 	"managewiki-permissions-unassigned": "Ovoj korisničkoj grupi trenutačno ne se primjenjuju korisnička prava:",
 	"managewiki-placeholder-reason": "Razlog za ovu promjenu...",
