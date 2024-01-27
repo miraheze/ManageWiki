@@ -4,7 +4,7 @@ VALUES
 ('default', 'autoconfirmed', '["autoconfirmed","editsemiprotected","mwoauthproposeconsumer","mwoauthupdateownconsumer","skipcaptcha","createaccount"]', '[]', '[]', '[]', '[]', '["&",[1,10],[2,345600]]'),
 ('default', 'autopatrolled', '["autopatrol","patrol","skipcaptcha","patrolmarks"]', '[]', '[]', '[]', '[]', NULL),
 ('default', 'bot', '["bot","autoconfirmed","editsemiprotected","nominornewtalk","autopatrol","suppressredirect","apihighlimits","writeapi","skipcaptcha"]', '[]', '[]', '[]', '[]', NULL),
-('default', 'bureaucrat', '["noratelimit","managewiki","override-antispoof"]', '["bot","bureaucrat","sysop","interface-admin"]', '["bot","sysop","interface-admin"]', '[]', '[]', NULL),
+('default', 'bureaucrat', '["noratelimit","managewiki-core", "managewiki-settings", "managewiki-permissions", "managewiki-namespaces", "override-antispoof"]', '["bot","bureaucrat","sysop","interface-admin"]', '["bot","sysop","interface-admin"]', '[]', '[]', NULL),
 ('default', 'confirmed', '["editsemiprotected","autoconfirmed","skipcaptcha"]', '[]', '[]', '[]', '[]', NULL),
 ('default', 'interface-admin', '["editsitecss","editsitejson","editsitejs","editinterface","editusercss","edituserjson","edituserjs"]', '[]', '[]', '[]', '[]', NULL),
 ('default', 'member', '["read"]', '[]', '[]', '[]', '[]', NULL),
