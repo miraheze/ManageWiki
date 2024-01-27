@@ -23,7 +23,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	private $config;
 
 	public function __construct() {
-		parent::__construct( 'ManageWikiDefaultPermissions' );
+		parent::__construct( 'ManageWikiDefaultPermissions',  );
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 	}
 
@@ -36,7 +36,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function getDescription() {
-		return $this->msg( $this->canModify() ? 'managewikidefaultpermissions' : 'managewikidefaultpermissions-norights' )->text();
+		return $this->msg( $this->canModify() ? 'managewikidefaultpermissions' : 'managewikidefaultpermissions' )->text();
 	}
 
 	public function execute( $par ) {
