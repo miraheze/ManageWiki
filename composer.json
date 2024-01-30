@@ -52,7 +52,8 @@
 		"prepend-autoloader": false,
 		"optimize-autoloader": true,
 		"allow-plugins": {
-			"composer/installers": true
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	}
 }
