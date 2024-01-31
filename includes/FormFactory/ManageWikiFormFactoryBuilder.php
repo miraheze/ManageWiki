@@ -779,7 +779,7 @@ class ManageWikiFormFactoryBuilder {
 			]
 		];
 
-		if ( $ceMW && ( count( $permList['permissions'] ) > 0 ) ) {
+		if ( $ceMW && ( count( $permList['permissions'] ?? [] ) > 0 ) ) {
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
 				'label-message' => 'permissions-delete-checkbox',
