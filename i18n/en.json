@@ -172,6 +172,7 @@
 	"managewikidefaultpermissions-resetsettings-title": "Reset this wiki's settings to the defaults",
 	"managewikidefaultpermissions-resetsettings": "Reset settings to the defaults",
 	"managewikidefaultpermissions-select-info": "Below is a list of groups that are automatically created on new wikis. Use the dropdown below to select a group you wish to manage or view the configuration for.",
+	"managewikidefaultpermissions-view": "View default permissions for new wikis",
 	"managewikiextensions": "Manage a wiki's extensions",
 	"managewikinamespaces": "Manage a wiki's namespaces",
 	"managewikipermissions": "Manage a wiki's permissions",
