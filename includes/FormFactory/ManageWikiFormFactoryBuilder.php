@@ -366,8 +366,8 @@ class ManageWikiFormFactoryBuilder {
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( $set['global'] ?? false || in_array( $set['from'], $extList ) );
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
-			$msgName = wfMessage( "managewiki-setting-{$name}-name" )->text();
-			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" )->text();
+			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
+			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
 
 			if ( $add ) {
 				$value = $setList[$name] ?? null;
@@ -377,7 +377,7 @@ class ManageWikiFormFactoryBuilder {
 
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
 
-				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
+				$help = ( $msgHelp->exists() ) ? $msgHelp->escaped() : $set['help'];
 				if ( $set['requires'] ) {
 					$requires = [];
 					$requiresLabel = wfMessage( 'managewiki-requires' )->text();
