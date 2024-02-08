@@ -201,7 +201,7 @@
 	"permissions-delete": "削除",
 	"permissions-group": "グループの割り当て",
 	"permissions-unassigned": "未割り当ての権限",
-	"right-managewiki-editdefault": "既定のグループ権限を管理",
+	"right-managewiki-editdefault": "ファーム全体の既定グループ権限を管理",
 	"right-managewiki-restricted": "制限付きウィキ設定を管理",
 	"settings-other": "その他"
 }
