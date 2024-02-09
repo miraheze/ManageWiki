@@ -187,6 +187,7 @@
 			var isSearching = !!val;
 			tabs.$element.toggleClass( 'managewiki-tabs-searching', isSearching );
 			tabs.tabSelectWidget.toggle( !isSearching );
+			tabs.contentPanel.setContinuous( isSearching );
 			$( '.managewiki-search-matched' ).removeClass( 'managewiki-search-matched' );
 			$( '.managewiki-search-highlight' ).removeClass( 'managewiki-search-highlight' );
 			var hasResults = false;
