@@ -670,16 +670,16 @@ class ManageWikiFormFactoryBuilder {
 		$rowsBuilt = [];
 
 		foreach ( $groupData['allGroups'] as $group ) {
-			$rowsBuilt[UserGroupMembership::getGroupName( $group )] = $group;
+			$rowsBuilt[htmlspecialchars( UserGroupMembership::getGroupName( $group ) )] = $group;
 		}
 
 		$formDescriptor['group-matrix'] = [
 			'type' => 'checkmatrix',
 			'columns' => [
-				wfMessage( 'managewiki-permissions-addall' )->text() => 'wgAddGroups',
-				wfMessage( 'managewiki-permissions-removeall' )->text() => 'wgRemoveGroups',
-				wfMessage( 'managewiki-permissions-addself' )->text() => 'wgGroupsAddToSelf',
-				wfMessage( 'managewiki-permissions-removeself' )->text() => 'wgGroupsRemoveFromSelf'
+				wfMessage( 'managewiki-permissions-addall' )->escaped() => 'wgAddGroups',
+				wfMessage( 'managewiki-permissions-removeall' )->escaped() => 'wgRemoveGroups',
+				wfMessage( 'managewiki-permissions-addself' )->escaped() => 'wgGroupsAddToSelf',
+				wfMessage( 'managewiki-permissions-removeself' )->escaped() => 'wgGroupsRemoveFromSelf'
 			],
 			'rows' => $rowsBuilt,
 			'section' => 'group',
