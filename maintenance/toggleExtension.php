@@ -34,7 +34,7 @@ class ToggleExtension extends Maintenance {
 		$disable = $this->getOption( 'disable', false );
 
 		if ( $allWikis && !$this->getOption( 'confirm', false ) ) {
-			$this->fatalError( 'Aborted.', 2 );
+			$this->fatalError( 'You must run with --confirm when running with --all-wikis.', 2 );
 		}
 
 		foreach ( $wikis as $wiki ) {
