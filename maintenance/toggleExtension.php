@@ -69,7 +69,6 @@ class ToggleExtension extends Maintenance {
 				$this->output( 'Enabled ' . $ext . ' on all wikis in $wgLocalDatabases.' );
 			}
 		}
-
 	}
 }
 
