@@ -18,7 +18,8 @@ class ToggleExtension extends Maintenance {
 		$this->addArg( 'ext', 'The ManageWiki name of the extension.', true );
 		$this->addOption( 'disable', 'Disable the extension. If not given, enabling is assumed.' );
 		$this->addOption( 'all-wikis', 'Run on all wikis present in $wgLocalDatabases.' );
-		$this->addOption( 'no-list', 'Only list wikis after it has ran on them. This may speed up execution.' );
+		$this->addOption( 'confirm', 'Confirm execution. Required if using --all-wikis' );
+		$this->addOption( 'no-list', 'Don\'t list on which wikis this script has ran. This may speed up execution.' );
 		$this->requireExtension( 'ManageWiki' );
 	}
 
@@ -32,16 +33,8 @@ class ToggleExtension extends Maintenance {
 		$ext = $this->getArg( 0 );
 		$disable = $this->getOption( 'disable', false );
 
-		if ( $allWikis ) {
-			if ( $disable ) {
-				$confirm = readline( "Are you sure you want to remove $ext from all wikis that it is enabled on? This can not be undone! (y/n) " );
-			} else {
-				$confirm = readline( 'Are you sure you want to enable ' . $ext . ' on all wikis in $wgLocalDatabases? This can not be undone! (y/n) ' );
-			}
-
-			if ( strtolower( $confirm ) !== 'y' ) {
-				$this->fatalError( 'Aborted.', 2 );
-			}
+		if ( $allWikis && !$this->getOption( 'confirm', false ) ) {
+			$this->fatalError( 'Aborted.', 2 );
 		}
 
 		foreach ( $wikis as $wiki ) {
