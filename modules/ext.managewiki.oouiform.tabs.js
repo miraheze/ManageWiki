@@ -87,11 +87,6 @@
 			var hash = location.hash;
 			if ( hash.match( /^#mw-[\w-]+/ ) ) {
 				detectHash();
-			/*
-			 * The next comment makes eslint ignore possible timing attacks when checking if the hash is an empty string
-			 * as this is not something you need a constant-time comparison for
-			*/
-			// eslint-disable-next-line security/detect-possible-timing-attacks
 			} else if ( hash === '' ) {
 				switchManageWikiTab( $( '[id*=mw-section-]' ).attr( 'id' ), true );
 			}
@@ -116,16 +111,23 @@
 		var index, texts;
 		function buildIndex() {
 			index = {};
-			var $fields = tabs.contentPanel.$element.find(
-				'[class^=mw-htmlform-field-]:not( .managewiki-search-noindex )'
+			var $fields = tabs.contentPanel.$element.find( '[class^=mw-htmlform-field-]:not( .managewiki-search-noindex )' );
+			var $descFields = $fields.filter(
+				'.oo-ui-fieldsetLayout-group > .oo-ui-widget > .mw-htmlform-field-HTMLInfoField'
 			);
-			$fields.each( function () {
+			$fields.not( $descFields ).each( function () {
 				var $field = $( this );
 				var $wrapper = $field.parents( '.managewiki-fieldset-wrapper' );
 				var $tabPanel = $field.closest( '.oo-ui-tabPanelLayout' );
+				var $labels = $field.find(
+					'.oo-ui-labelElement-label, .oo-ui-textInputWidget .oo-ui-inputWidget-input, p'
+				).add(
+					$wrapper.find( '> .oo-ui-fieldsetLayout > .oo-ui-fieldsetLayout-header .oo-ui-labelElement-label' )
+				);
+				$field = $field.add( $tabPanel.find( $descFields ) );
 
 				function addToIndex( $label, $highlight ) {
-					var text = $label.val() || $label[ 0 ].innerText.toLowerCase().trim().replace( /\s+/, ' ' );
+					var text = $label.val() || $label[ 0 ].textContent.toLowerCase().trim().replace( /\s+/, ' ' );
 					if ( text ) {
 						index[ text ] = index[ text ] || [];
 						index[ text ].push( {
@@ -137,9 +139,7 @@
 					}
 				}
 
-				$field.find( '.oo-ui-labelElement-label, .oo-ui-textInputWidget .oo-ui-inputWidget-input, p' ).add(
-					$wrapper.find( '> .oo-ui-fieldsetLayout > .oo-ui-fieldsetLayout-header .oo-ui-labelElement-label' )
-				).each( function () {
+				$labels.each( function () {
 					addToIndex( $( this ) );
 
 					// Check if there we are in an infusable dropdown and collect other options
@@ -160,6 +160,7 @@
 			mw.hook( 'managewiki.search.buildIndex' ).fire( index );
 			texts = Object.keys( index );
 		}
+
 		function infuseAllPanels() {
 			tabs.stackLayout.items.forEach( function ( tabPanel ) {
 				var wasVisible = tabPanel.isVisible();
@@ -192,6 +193,8 @@
 			var isSearching = !!val;
 			tabs.$element.toggleClass( 'managewiki-tabs-searching', isSearching );
 			tabs.tabSelectWidget.toggle( !isSearching );
+			tabs.contentPanel.setContinuous( isSearching );
+
 			$( '.managewiki-search-matched' ).removeClass( 'managewiki-search-matched' );
 			$( '.managewiki-search-highlight' ).removeClass( 'managewiki-search-highlight' );
 			var hasResults = false;
@@ -223,5 +226,6 @@
 		if ( search.getValue() ) {
 			search.emit( 'change', search.getValue() );
 		}
+
 	} );
 }() );

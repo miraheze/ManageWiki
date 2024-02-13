@@ -116,11 +116,11 @@ class Hooks {
 					'content' => (bool)$ns->ns_content,
 					'contentmodel' => $ns->ns_content_model,
 					'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
-					'aliases' => array_merge( json_decode( $ns->ns_aliases, true ), (array)$lcAlias ),
-					'additional' => json_decode( $ns->ns_additional, true )
+					'aliases' => array_merge( json_decode( $ns->ns_aliases ?? '', true ), (array)$lcAlias ),
+					'additional' => json_decode( $ns->ns_additional ?? '', true )
 				];
 
-				$nsAdditional = (array)json_decode( $ns->ns_additional, true );
+				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
 
 				foreach ( $nsAdditional as $var => $val ) {
 					if ( isset( $additional[$var] ) ) {

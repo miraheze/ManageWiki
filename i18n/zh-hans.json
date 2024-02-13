@@ -164,6 +164,7 @@
 	"managewiki-permissions-group": "此处可以设定该用户组将用户加入或移除用户组的权限",
 	"managewiki-permissions-removeall": "允许移除其他用户",
 	"managewiki-permissions-removeself": "允许移除自身",
+	"managewiki-permissions-resetgroups-title": "重置ManageWiki",
 	"managewiki-permissions-select": "选择组",
 	"managewiki-permissions-select-header": "管理现有群组",
 	"managewiki-permissions-select-info": "以下是此wiki上存在的所有群组的列表。使用下面的下拉菜单选择您想要管理或查看其配置的群组。",

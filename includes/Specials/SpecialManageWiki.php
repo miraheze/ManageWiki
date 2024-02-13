@@ -27,7 +27,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	public function execute( $par ) {
-		$par = explode( '/', $par, 3 );
+		$par = explode( '/', $par ?? '', 3 );
 
 		$out = $this->getOutput();
 		$this->setHeaders();

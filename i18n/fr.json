@@ -155,6 +155,7 @@
 	"managewiki-permissions-group": "Ci-dessous vous pouvez autoriser la manière dont ce groupe d’utilisateurs peut affecter/désaffecter d’autres groupes d’utilisateurs.",
 	"managewiki-permissions-removeall": "Peut se retirer des autres",
 	"managewiki-permissions-removeself": "Peut se supprimer lui-même",
+	"managewiki-permissions-resetgroups-title": "Réinitialiser les groupes d’un wiki aux paramètres par défaut",
 	"managewiki-permissions-select": "Sélectionner un groupe",
 	"managewiki-permissions-select-header": "Gérer les groupes existants",
 	"managewiki-permissions-select-info": "Vous trouverez ci-dessous une liste de tous les espaces de noms qui existent sur ce wiki. Utilisez la liste déroulante ci-dessous pour sélectionner un espace de noms que vous souhaitez gérer ou afficher la configuration.",

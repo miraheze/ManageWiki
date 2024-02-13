@@ -39,6 +39,7 @@
 	"managewiki-missing": "Αυτό το βίκι δεν υπάρχει.",
 	"managewiki-namespaces-create-submit": "Δημιουργία ονοματοχώρου",
 	"managewiki-permissions-create-submit": "Δημιουργία ομάδας",
+	"managewiki-permissions-resetgroups-title": "Επαναφέρετε τις ομάδες ενός wiki στις προεπιλογές",
 	"managewiki-permissions-unassigned": "Τα παρακάτω δικαιώματα χρήστη δεν έχουν καθοριστεί προς το παρόν σε αυτήν την ομάδα χρηστών:",
 	"managewiki-search": "Αναζήτηση στο ManageWiki",
 	"managewiki-search-noresults": "Κανένα αποτέλεσμα",

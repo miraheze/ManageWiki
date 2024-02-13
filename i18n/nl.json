@@ -143,6 +143,7 @@
 	"managewiki-permissions-group": "Hieronder stelt u in hoe deze gebruikersgroep andere gebruikersgroepen mag toewijzen/intrekken.",
 	"managewiki-permissions-removeall": "Kan van anderen verwijderen",
 	"managewiki-permissions-removeself": "Kan van zichzelf verwijderen",
+	"managewiki-permissions-resetgroups-title": "Zet de groepen van een wiki terug naar de standaardwaarden",
 	"managewiki-permissions-select": "Selecteer een groep",
 	"managewiki-permissions-select-header": "Bestaande groepen beheren",
 	"managewiki-permissions-select-info": "Hieronder vindt u een lijst met alle groepen die er op deze wiki zijn. Gebruik de vervolgkeuzelijst hieronder om een groep te selecteren die u wilt beheren of waarvan u de configuratie wilt bekijken.",

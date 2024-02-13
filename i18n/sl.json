@@ -136,6 +136,7 @@
 	"managewiki-permissions-group": "Spodaj lahko dovolite dodeljevanje/oddodeljevanje te uporabniške skupine drugim uporabniškim skupinam.",
 	"managewiki-permissions-removeall": "Lahko odstrani pri drugih",
 	"managewiki-permissions-removeself": "Lahko odstrani pri sebi",
+	"managewiki-permissions-resetgroups-title": "Ponastavi skupine vikija na privzete",
 	"managewiki-permissions-select": "Izberite skupino",
 	"managewiki-permissions-select-header": "Upravljanje obstoječih skupin",
 	"managewiki-permissions-select-info": "Prikazan je seznam vseh skupin, ki obstajajo v tem vikiju. S spodnjim spustnim menijem izberite skupino, ki jo želite upravljati, ali si oglejte konfiguracijo.",

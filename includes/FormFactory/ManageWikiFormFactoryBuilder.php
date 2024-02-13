@@ -276,8 +276,8 @@ class ManageWikiFormFactoryBuilder {
 			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
 
 			$help = [];
-			$conflictLabel = wfMessage( 'managewiki-conflicts' )->text();
-			$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+			$conflictLabel = wfMessage( 'managewiki-conflicts' )->escaped();
+			$requiresLabel = wfMessage( 'managewiki-requires' )->escaped();
 
 			if ( $ext['conflicts'] ) {
 				$help[] = "{$conflictLabel} {$ext['conflicts']}<br/>";
@@ -377,10 +377,10 @@ class ManageWikiFormFactoryBuilder {
 
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
 
-				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
+				$help = ( $msgHelp->exists() ) ? $msgHelp->escaped() : $set['help'];
 				if ( $set['requires'] ) {
 					$requires = [];
-					$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+					$requiresLabel = wfMessage( 'managewiki-requires' )->escaped();
 
 					foreach ( $set['requires'] as $require => $data ) {
 						if ( is_array( $data ) ) {
@@ -525,10 +525,10 @@ class ManageWikiFormFactoryBuilder {
 
 					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, false, $a['overridedefault'], $a['type'] );
 
-					$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $a['help'];
+					$help = ( $msgHelp->exists() ) ? $msgHelp->escaped() : $a['help'];
 					if ( $a['requires'] ) {
 						$requires = [];
-						$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+						$requiresLabel = wfMessage( 'managewiki-requires' )->escaped();
 
 						foreach ( $a['requires'] as $require => $data ) {
 							if ( is_array( $data ) ) {
@@ -660,7 +660,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor["right-{$perm}"] = [
 				'type' => 'check',
 				'label' => $perm,
-				'help' => User::getRightDescription( $perm ),
+				'help' => htmlspecialchars( User::getRightDescription( $perm ) ),
 				'section' => ( $assigned ) ? 'assigned' : 'unassigned',
 				'default' => $assigned,
 				'disabled' => !$ceMW
@@ -670,16 +670,16 @@ class ManageWikiFormFactoryBuilder {
 		$rowsBuilt = [];
 
 		foreach ( $groupData['allGroups'] as $group ) {
-			$rowsBuilt[UserGroupMembership::getGroupName( $group )] = $group;
+			$rowsBuilt[htmlspecialchars( UserGroupMembership::getGroupName( $group ) )] = $group;
 		}
 
 		$formDescriptor['group-matrix'] = [
 			'type' => 'checkmatrix',
 			'columns' => [
-				wfMessage( 'managewiki-permissions-addall' )->text() => 'wgAddGroups',
-				wfMessage( 'managewiki-permissions-removeall' )->text() => 'wgRemoveGroups',
-				wfMessage( 'managewiki-permissions-addself' )->text() => 'wgGroupsAddToSelf',
-				wfMessage( 'managewiki-permissions-removeself' )->text() => 'wgGroupsRemoveFromSelf'
+				wfMessage( 'managewiki-permissions-addall' )->escaped() => 'wgAddGroups',
+				wfMessage( 'managewiki-permissions-removeall' )->escaped() => 'wgRemoveGroups',
+				wfMessage( 'managewiki-permissions-addself' )->escaped() => 'wgGroupsAddToSelf',
+				wfMessage( 'managewiki-permissions-removeself' )->escaped() => 'wgGroupsRemoveFromSelf'
 			],
 			'rows' => $rowsBuilt,
 			'section' => 'group',
@@ -779,7 +779,7 @@ class ManageWikiFormFactoryBuilder {
 			]
 		];
 
-		if ( $ceMW && ( count( $permList['permissions'] ) > 0 ) ) {
+		if ( $ceMW && ( count( $permList['permissions'] ?? [] ) > 0 ) ) {
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
 				'label-message' => 'permissions-delete-checkbox',

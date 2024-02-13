@@ -112,6 +112,7 @@
 	"managewiki-permissions-create-submit": "Sukurti grupę",
 	"managewiki-permissions-removeall": "Gali pašalinti iš kitų",
 	"managewiki-permissions-removeself": "Gali pašalinti iš savo",
+	"managewiki-permissions-resetgroups-title": "Atstatyti viki grupes į numatytuosius nustatymus",
 	"managewiki-permissions-select": "Pasirinkite egzistuojančią grupę redagavimui",
 	"managewiki-permissions-unassigned": "Žemiau nurodytos naudotojo teisės šiuo metu nepriskirtos šiai naudotojų grupei.",
 	"managewiki-placeholder-reason": "Keitimo priežastis...",
