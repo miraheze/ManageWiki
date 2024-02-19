@@ -195,6 +195,7 @@
 	"managewikidefaultpermissions-resetsettings-title": "将此wiki的设置重置为默认值",
 	"managewikidefaultpermissions-resetsettings": "将设置重置为默认值",
 	"managewikidefaultpermissions-select-info": "以下是在新wiki上自动创建的群组列表。使用下面的下拉菜单选择您想要管理或查看其配置的群组。",
+	"managewikidefaultpermissions-view": "查看新wiki的默认权限",
 	"managewikiextensions": "管理wiki的扩展",
 	"managewikinamespaces": "管理wiki的命名空间",
 	"managewikipermissions": "管理wiki的权限",
