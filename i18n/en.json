@@ -19,6 +19,7 @@
 	"action-managewiki-settings": "manage advanced settings for this wiki",
 	"apihelp-modifyserver-example": "Modify a wiki's server name.",
 	"apihelp-modifyserver-param-server": "The server name to modify.",
+	"apihelp-modifyserver-param-wiki": "The ID of the wiki to modify the server name for.",
 	"apihelp-modifyserver-summary": "Modify a wiki's server name.",
 	"apihelp-query+wikiconfig-example-1": "View wiki config for metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Select properties to return:",
