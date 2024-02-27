@@ -22,7 +22,7 @@
 		}
 	],
 	"support": {
-		"issues": "https://phabricator.miraheze.org/tag/managewiki/",
+		"issues": "https://issue-tracker.miraheze.org/tag/managewiki/",
 		"wiki": "https://www.mediawiki.org/wiki/Extension:ManageWiki"
 	},
 	"require": {
