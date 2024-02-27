@@ -47,7 +47,7 @@
 	"managewiki-header-extensions": "Dostępne tutaj rozszerzenia są obecnie zainstalowane na platformie, ale zawsze możesz <span class=\"plainlinks\">[//meta.miraheze.org/wiki/Request_features zasugerować]</span>, aby dodać nowe. <br> Kiedy skończysz, przejdź do zakładki „Wyślij”, by zapisać zmiany.",
 	"managewiki-header-namespaces": "Wybierz przestrzeń nazw do modyfikacji (przestrzenie nazw dyskusji są przypisane do swoich głównych przestrzeni) lub naciśnij przycisk, by utworzyć nową przestrzeń.",
 	"managewiki-header-permissions": "Wybierz istniejącą grupę uprawnień, aby ją zmodyfikować, lub stwórz nową, używając poniższego formularza!",
-	"managewiki-header-settings": "Ta strona jest używana do zarządzania ustawieniami <b>'$1'</b>. Jeżeli jest funkcja, którą chciałbyś tu zobaczyć, a jeszcze nie jest dostępna, użyj <span class=\"plainlinks\">[//meta.miraheze.org/wiki/Request_features Phabricatora]</span>, aby ją zasugerować. <br> Kiedy skończysz, przejdź do zakładki „zapisz”, by zapisać zmiany.",
+	"managewiki-header-settings": "Ta strona jest używana do zarządzania ustawieniami <b>'$1'</b>. Jeżeli jest funkcja, którą chciałbyś tu zobaczyć, a jeszcze nie jest dostępna, użyj <span class=\"plainlinks\">[//meta.miraheze.org/wiki/Request_features Phorgea]</span>, aby ją zasugerować. <br> Kiedy skończysz, przejdź do zakładki „zapisz”, by zapisać zmiany.",
 	"managewiki-label-category": "Kategoria",
 	"managewiki-label-closed": "Zamknięta",
 	"managewiki-label-creationdate": "Data utworzenia",

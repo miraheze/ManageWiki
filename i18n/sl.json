@@ -70,7 +70,7 @@
 	"managewiki-header-extensions": "Razširitve tukaj so tiste, ki so trenutno nameščene, vendar lahko kadar koli <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features zaprosite]</span> še za katero.<br /> Ko končate, pritisnite gumb »Shrani«, da spremembe shranite.",
 	"managewiki-header-namespaces": "Spodaj izberite imenski prostor za urejanje (pogovorni imenski prostori so povezani s svojimi glavnimi imenskimi prostori) ali pritisnite gumb, da ustvarite nov glavni imenski prostor.",
 	"managewiki-header-permissions": "Spodaj izberite skupino, ki že obstaja, da jo spremenite ali v spodnjem polju izberite novo uporabniško skupino.",
-	"managewiki-header-settings": "Ta stran se uporablja za upravljanje nastavitev vikija <b>»$1«</b>. Če možnost, ki jo želite, tu še ni na voljo, uporabite <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>, da jo predlagate.<br> Ko končate, pritisnite gumb »Shrani«, da shranite spremembe.",
+	"managewiki-header-settings": "Ta stran se uporablja za upravljanje nastavitev vikija <b>»$1«</b>. Če možnost, ki jo želite, tu še ni na voljo, uporabite <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span>, da jo predlagate.<br> Ko končate, pritisnite gumb »Shrani«, da shranite spremembe.",
 	"managewiki-invalid-database": "$1 je neveljavna podatkovna zbirka. Podana z <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Kategorija",
 	"managewiki-label-closed": "Zaprt",

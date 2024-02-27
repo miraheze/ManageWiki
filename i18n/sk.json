@@ -50,7 +50,7 @@
 	"managewiki-header-extensions": "Tu sú rozšírenia, ktoré sú momentálne nainštalované, ale vždy môžete <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features request]</span> pridať ďalšie.<br> Po dokončení uložte zmeny kliknutím na tlačidlo „uložiť“.",
 	"managewiki-header-namespaces": "Vyberte nižšie menný priestor, ktorý chcete upraviť (diskusné menné priestory sú spojené so svojimi hlavnými mennými priestormi), alebo stlačte tlačítko pre vytvorenie nového menného priestoru.",
 	"managewiki-header-permissions": "Vyberte nižšie skupinu, ktorá už existuje pre úpravu alebo vytvorenie novej používateľskej skupiny.",
-	"managewiki-header-settings": "Táto stránka sa používa na správu nastavení wiki <b>' $1 '</b> . Ak tu požadovaná funkcia ešte nie je k dispozícii, požiadajte o ňu <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator].</span><br> Po dokončení uložte zmeny kliknutím na tlačidlo „uložiť“.",
+	"managewiki-header-settings": "Táto stránka sa používa na správu nastavení wiki <b>' $1 '</b> . Ak tu požadovaná funkcia ešte nie je k dispozícii, požiadajte o ňu <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge].</span><br> Po dokončení uložte zmeny kliknutím na tlačidlo „uložiť“.",
 	"managewiki-label-category": "Kategória",
 	"managewiki-label-closed": "Zatvorená",
 	"managewiki-label-creationdate": "Dátum vytvorenia",

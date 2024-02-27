@@ -82,7 +82,7 @@
 	"managewiki-header-extensions": "Aquí están las extensiones actualmente instaladas, pero siempre puedes [https://meta.miraheze.org/wiki/request_features pedir] que se añadan otras.<br> Una vez que termines, presiona el botón \"Guardar\" para guardar tus cambios.",
 	"managewiki-header-namespaces": "Selecciona un espacio de nombres para editar abajo (espacios de nombres de discusión son asociados a su espacio de nombres principal) o presiona el botón para crear un nuevo espacio de nombres principal.",
 	"managewiki-header-permissions": "Seleccionar un grupo que ya existe para modificar o crear un grupo en el cuadro debajo.",
-	"managewiki-header-settings": "Esta página permite gestionar la configuración de la wiki «<b>$1</b>». Si falta alguna función que te gustaría usar, utiliza <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> para solicitarla. <br> Cuando termines, pulsa en «Guardar» para guardar los cambios.",
+	"managewiki-header-settings": "Esta página permite gestionar la configuración de la wiki «<b>$1</b>». Si falta alguna función que te gustaría usar, utiliza <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> para solicitarla. <br> Cuando termines, pulsa en «Guardar» para guardar los cambios.",
 	"managewiki-invalid-database": "$1 no es una base de datos válida. Dado por <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Categoría",
 	"managewiki-label-closed": "Cerrada",

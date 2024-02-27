@@ -46,7 +46,7 @@
 	"managewiki-header-extensions": "Tilläggen här är de som för nuvarande är installerade, men du kan alltid <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features begära]</span> att lägga till flera. <br> När du är klar trycker du på fliken \"Skicka\" för att spara dina ändringar.",
 	"managewiki-header-namespaces": "Välj en namnrymd att redigera nedan (diskussionsnamnrymder associeras med sina huvudnamnrymder) eller klicka på knappen för att skapa en ny huvudnamnrymd.",
 	"managewiki-header-permissions": "Välj en grupp nedan som redan finns för att modifiera den eller skapa en ny användargrupp i fältet nedanför.",
-	"managewiki-header-settings": "Denna sida används för att hantera wikiinställningarna för wikin <b>\"$1\"</b>. Om en funktion som du gillar inte är tillgänglig här ännu, använd <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> för att begära den. <br> När du är klar trycker du på fliken \"Skicka\" för att spara dina ändringar.",
+	"managewiki-header-settings": "Denna sida används för att hantera wikiinställningarna för wikin <b>\"$1\"</b>. Om en funktion som du gillar inte är tillgänglig här ännu, använd <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> för att begära den. <br> När du är klar trycker du på fliken \"Skicka\" för att spara dina ändringar.",
 	"managewiki-label-category": "Kategori",
 	"managewiki-label-closed": "Stängd",
 	"managewiki-label-creationdate": "Datum skapad",

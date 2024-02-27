@@ -69,7 +69,7 @@
 	"managewiki-header-extensions": "Le extensiones hic es illos actualmente installate, ma tu pote sempre <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features requestar]</span> le addition de un altere. <br> Quando tu ha finite, preme sur le button “Salveguardar” pro salveguardar tu cambiamentos.",
 	"managewiki-header-namespaces": "Selige un spatio de nomines a modificar hic infra (le spatios de nomines de discussion es associate a lor spatio de nomines principal) o preme sur le button pro crear un nove spatio de nomines principal.",
 	"managewiki-header-permissions": "Selige un gruppo hic infra que ja existe pro modificar lo, o crea un nove gruppo de usatores in le quadro hic infra.",
-	"managewiki-header-settings": "Iste pagina es usate pro gerer le parametros del wiki <b>'$1'</b>. Si un function que tu vole usar non es ancora disponibile hic, per favor usa <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> pro requestar lo. <br> Quando tu ha finite, preme le button \"Salveguardar\" pro salveguardar tu cambiamentos.",
+	"managewiki-header-settings": "Iste pagina es usate pro gerer le parametros del wiki <b>'$1'</b>. Si un function que tu vole usar non es ancora disponibile hic, per favor usa <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> pro requestar lo. <br> Quando tu ha finite, preme le button \"Salveguardar\" pro salveguardar tu cambiamentos.",
 	"managewiki-invalid-database": "$1 es un base de datos non valide. Date per <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Claudite",

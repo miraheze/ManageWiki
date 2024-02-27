@@ -50,7 +50,7 @@
 	"managewiki-header-extensions": "Utvidelsene her er de som er installert for tiden, men du kan alltids <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features bo om]</span> at enda en legges til. <br /> Trykk «send» når du er ferdig for a lagre endringene.",
 	"managewiki-header-namespaces": "Velg et navnerom å endre nedenfor (diskusjonsnavnerom er tilknyttet sine subjektnavnerom) eller trykk på knappen for å opprette et nytt subjektnavnerom.",
 	"managewiki-header-permissions": "Velg en gruppe å endre nedenfor eller opprett en ny brukergruppe i boksten under det igjen.",
-	"managewiki-header-settings": "Denne siden brukes for å behandle innstillingene for wikien <b>$1</b>. Hvis en funksjon du ønsker ikke er tilgjengelig her, bruk <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> for å be om den.<br />Trykk på «send» for å lagre endringene dine når du er ferdig.",
+	"managewiki-header-settings": "Denne siden brukes for å behandle innstillingene for wikien <b>$1</b>. Hvis en funksjon du ønsker ikke er tilgjengelig her, bruk <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> for å be om den.<br />Trykk på «send» for å lagre endringene dine når du er ferdig.",
 	"managewiki-label-category": "Kategori",
 	"managewiki-label-closed": "Stengt",
 	"managewiki-label-creationdate": "Opprettelsesdato",

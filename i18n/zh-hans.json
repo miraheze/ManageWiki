@@ -98,7 +98,7 @@
 	"managewiki-header-extensions": "这里的扩展是当前安装的扩展，但您可以随时<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features 请求]</span>添加更多扩展。<br>完成后，点击“保存”按钮来保存你的更改。",
 	"managewiki-header-namespaces": "选择一个要在下面编辑的命名空间（讨论命名空间与其主命名空间相关联）或点击按钮以创建新的主命名空间。",
 	"managewiki-header-permissions": "选择下面已经存在的组来修改或创建它下面的框中的新用户组！",
-	"managewiki-header-settings": "此页面用于管理wiki<b>“$1”</b>的wiki设置。如果此处尚未提供您想要的功能，请使用<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>进行申请。<br>当你完成设置后，点击“保存”按钮来保存你的更改。",
+	"managewiki-header-settings": "此页面用于管理wiki<b>“$1”</b>的wiki设置。如果此处尚未提供您想要的功能，请使用<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span>进行申请。<br>当你完成设置后，点击“保存”按钮来保存你的更改。",
 	"managewiki-invalid-database": "由<code>&dollar;$2</code>指定的$1是无效数据库。",
 	"managewiki-label-category": "分类",
 	"managewiki-label-closed": "已关闭",

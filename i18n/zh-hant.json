@@ -75,7 +75,7 @@
 	"managewiki-header-extensions": "在此為目前已安裝的擴充，而您也可以隨時<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features 請求]</span>其它要添加的項目。<br>一旦您完成後，按下「儲存」按鈕來保存您的更改。",
 	"managewiki-header-namespaces": "在下方選擇要編輯的命名空間（對話命名空間會關聯到它們的主命名空間）或壓下按鈕來建立新的主命名空間。",
 	"managewiki-header-permissions": "選擇下面已存在群組來變更，或在下面方框建立新使用者群組",
-	"managewiki-header-settings": "此頁面用來管理<b>「$1」</b>的 wiki 設定。若尚未有您想使用的功能，請使用 <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> 來做出申請。<br>一旦您完成後，按下「儲存」按鈕來保存您的變更。",
+	"managewiki-header-settings": "此頁面用來管理<b>「$1」</b>的 wiki 設定。若尚未有您想使用的功能，請使用 <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> 來做出申請。<br>一旦您完成後，按下「儲存」按鈕來保存您的變更。",
 	"managewiki-invalid-database": "由 <code>&dollar;$2</code> 指定的 $1 是無效資料庫。",
 	"managewiki-label-category": "分類",
 	"managewiki-label-closed": "已關閉",

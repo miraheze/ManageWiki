@@ -56,7 +56,7 @@
 	"managewiki-header-extensions": "Le estensioni qui sono quelle attualmente installate, ma puoi sempre <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features richiederne]</span> un'altra da aggiungere. <br> Quando hai finito, schiaccia il pulsante \"salva\" per salvare le tue modifiche.",
 	"managewiki-header-namespaces": "Seleziona un namespace per editare sotto (pagine di discussione sono associate al loro relativo namespace) o premi il bottone per creare un nuovo namespace.",
 	"managewiki-header-permissions": "Seleziona un gruppo sottostante che esiste ora per modificare o creare un nuovo gruppo utente nella casella sotto.",
-	"managewiki-header-settings": "Questa pagina è usata per gestire le impostazioni del wiki <b>'$1'</b>. Se una funzionalità che ti piacerebbe usare non è ancora disponibile qui, per favore usa <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> per richiederla. <br> Una volta terminato, premi il pulsante \"salva\" per salvare le modifiche.",
+	"managewiki-header-settings": "Questa pagina è usata per gestire le impostazioni del wiki <b>'$1'</b>. Se una funzionalità che ti piacerebbe usare non è ancora disponibile qui, per favore usa <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> per richiederla. <br> Una volta terminato, premi il pulsante \"salva\" per salvare le modifiche.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Chiuso",
 	"managewiki-label-creationdate": "Data di creazione",

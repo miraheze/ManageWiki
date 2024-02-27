@@ -76,7 +76,7 @@
 	"managewiki-header-extensions": "Các tiện ích mở rộng ở đây là những tiện ích mở rộng hiện đã được cài đặt, nhưng bạn luôn có thể <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features yêu cầu]</span> thêm một tiện ích mở rộng khác. <br> Khi bạn đã hoàn tất, hãy nhấn nút “lưu” để lưu các thay đổi của bạn.",
 	"managewiki-header-namespaces": "Chọn các không gian tên để sửa đổi bên dưới (các không gian tên thảo luận được liên kết với các không gian tên chính của chúng) hoặc nhấn nút bên dưới để tạo một không gian tên chính mới.",
 	"managewiki-header-permissions": "Chọn một nhóm ở dưới mà đang tồn tại để chỉnh sửa hoặc tạo một nhóm mới ở biểu mẫu bên dưới.",
-	"managewiki-header-settings": "Trang này được dùng để quản lý các cài đặt của wiki <b>“$1”</b>. Nếu một tính năng bạn cần không có ở đây, hãy vào trang <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> để yêu cầu nó. <br> Khi bạn đã quản lý xong, bấm nút “lưu” để lưu các thay đổi của bạn.",
+	"managewiki-header-settings": "Trang này được dùng để quản lý các cài đặt của wiki <b>“$1”</b>. Nếu một tính năng bạn cần không có ở đây, hãy vào trang <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> để yêu cầu nó. <br> Khi bạn đã quản lý xong, bấm nút “lưu” để lưu các thay đổi của bạn.",
 	"managewiki-invalid-database": "$1 là cơ sở dữ liệu không hợp lệ. Cho bởi <code>&dollar;$2</code> .",
 	"managewiki-label-category": "Phân loại",
 	"managewiki-label-closed": "Đã đóng",

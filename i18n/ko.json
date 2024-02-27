@@ -63,7 +63,7 @@
 	"managewiki-header-core": "아래에서 관리하고자 하는 항목을 선택하고 저장 버튼을 클릭하여 변경 사항을 저장합니다.",
 	"managewiki-header-namespaces": "아래에서 편집할 이름공간을 선택하거나 (토론 이름공간은 메인 이름공간에 연관되어 있습니다) 버튼을 눌러 새 이름공간을 만드세요.",
 	"managewiki-header-permissions": "아래에서 수정할 이미 존재하는 그룹을 선택하거나 아래에 있는 상자에서 새 사용자 그룹을 만드세요.",
-	"managewiki-header-settings": "이 문서는 <b>'$1'</b> 위키의 설정을 관리하기 위해 사용됩니다. 당신이 원하는 기능이 아직 여기에 없다면, <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span>를 사용하여 요청하세요. <br> 완료되면 \"저장\" 버튼을 눌러 변경 내용을 저장합니다.",
+	"managewiki-header-settings": "이 문서는 <b>'$1'</b> 위키의 설정을 관리하기 위해 사용됩니다. 당신이 원하는 기능이 아직 여기에 없다면, <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span>를 사용하여 요청하세요. <br> 완료되면 \"저장\" 버튼을 눌러 변경 내용을 저장합니다.",
 	"managewiki-label-category": "분류",
 	"managewiki-label-closed": "닫힘",
 	"managewiki-label-creationdate": "생성일",

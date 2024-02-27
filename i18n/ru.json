@@ -89,7 +89,7 @@
 	"managewiki-header-extensions": "Это те расширения, которые установлены в настоящее время, но вы всегда можете <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features request]</span> добавить ещё одно.<br>Когда вы закончите, нажмите кнопку «Сохранить», чтобы сохранить изменения.",
 	"managewiki-header-namespaces": "Ниже выберите пространство имён для правки или нажмите на кнопку ниже для создания нового основного пространства имён.",
 	"managewiki-header-permissions": "Ниже выберите существующую группу, чтобы изменить её, или создайте новую группу в поле под ней!",
-	"managewiki-header-settings": "Эта страница используется для управления настройками вики для вики <b>«$1»</b>. Если желаемая функция ещё не доступна, используйте <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator],</span> чтобы запросить её.<br>Когда вы закончите, нажмите кнопку «Сохранить», чтобы сохранить изменения.",
+	"managewiki-header-settings": "Эта страница используется для управления настройками вики для вики <b>«$1»</b>. Если желаемая функция ещё не доступна, используйте <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge],</span> чтобы запросить её.<br>Когда вы закончите, нажмите кнопку «Сохранить», чтобы сохранить изменения.",
 	"managewiki-invalid-database": "$1 является недопустимой базой данных. Задано <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Категория",
 	"managewiki-label-closed": "Закрыто",

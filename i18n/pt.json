@@ -60,7 +60,7 @@
 	"managewiki-header-extensions": "Estas extensões são as que estão instaladas, mas pode sempre <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features pedir]</span> a adição de outras. <br> Quando terminar, clique o botão \"Gravar\" para gravar as suas alterações.",
 	"managewiki-header-namespaces": "Selecione abaixo um espaço nominal para editá-lo (os espaços nominais de discussão estão associados ao respetivo espaço nominal principal) ou pressione o botão para criar um espaço nominal principal novo.",
 	"managewiki-header-permissions": "Selecionar um dos grupos de utilizadores para modificá-lo ou criar um grupo novo na caixa de baixo.",
-	"managewiki-header-settings": "Esta página é utilizada para gerir as configurações da wiki <b>'$1'</b>. Se deseja usar uma funcionalidade que não está disponível aqui, use o <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> para pedi-la. <br> Quando terminar, clique o botão \"Gravar\" para gravar as suas alterações.",
+	"managewiki-header-settings": "Esta página é utilizada para gerir as configurações da wiki <b>'$1'</b>. Se deseja usar uma funcionalidade que não está disponível aqui, use o <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> para pedi-la. <br> Quando terminar, clique o botão \"Gravar\" para gravar as suas alterações.",
 	"managewiki-invalid-database": "$1 é uma base de dados inválida. Obtida de <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Categoria",
 	"managewiki-label-closed": "Fechada",

@@ -83,7 +83,7 @@
 	"managewiki-header-extensions": "ここにある拡張機能は現在インストールされているものですが、いつでも別の拡張機能の追加を<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features リクエスト]</span>できます。<br>完了したら、「保存」ボタンを押して変更を保存します。",
 	"managewiki-header-namespaces": "以下で編集する名前空間を選択するか（トーク名前空間はメインの名前空間に関連付けられています）、ボタンを押して新しい名前空間を作成します。",
 	"managewiki-header-permissions": "既に存在する下記のグループを選択して変更するか、下のボックスに新しい利用者グループ名を入力して作成します。",
-	"managewiki-header-settings": "このページは、 <b>'$1'</b> ウィキの設定を管理するためのものです。 ご希望の機能がまだここで提供されていない場合は、<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phabricator]</span> を使ってリクエストしてください。設定が完了したら、「保存」ボタンを押して変更内容を保存してください。",
+	"managewiki-header-settings": "このページは、 <b>'$1'</b> ウィキの設定を管理するためのものです。 ご希望の機能がまだここで提供されていない場合は、<span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> を使ってリクエストしてください。設定が完了したら、「保存」ボタンを押して変更内容を保存してください。",
 	"managewiki-invalid-database": "$1は無効なデータベースです。 <code>&dollar;$2</code>によって与えられます。",
 	"managewiki-label-category": "カテゴリ",
 	"managewiki-label-closed": "閉鎖",
