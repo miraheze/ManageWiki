@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki;
 
 use DatabaseUpdater;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
@@ -69,8 +70,10 @@ class Hooks {
 
 		// Let's create an array of variables so we can easily loop these to enable
 		if ( ManageWiki::checkSetup( 'extensions' ) ) {
+			$manageWikiExtensions = self::getConfig( 'ManageWikiExtensions' );
 			foreach ( json_decode( $setObject->s_extensions, true ) as $ext ) {
-				$jsonArray['extensions'][] = self::getConfig( 'ManageWikiExtensions' )[$ext]['var'];
+				$jsonArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
+					$manageWikiExtensions[$ext]['name'];
 			}
 		}
 
@@ -84,10 +87,20 @@ class Hooks {
 				]
 			);
 
-			$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $jsonArray['core']['wgLanguageCode'], 'namespaceNames' );
+			$lcName = [];
+			$lcEN = [];
 
-			if ( $jsonArray['core']['wgLanguageCode'] != 'en' ) {
-				$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
+			try {
+				$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $jsonArray['core']['wgLanguageCode'], 'namespaceNames' );
+
+				if ( $jsonArray['core']['wgLanguageCode'] != 'en' ) {
+					$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
+				}
+			} catch ( \Exception $e ) {
+				$logger = LoggerFactory::getInstance( 'ManageWiki' );
+				$logger->warning( 'Caught exception trying to load Localisation Cache: {exception}', [
+					'exception' => $e,
+				] );
 			}
 
 			$additional = self::getConfig( 'ManageWikiNamespacesAdditional' );
@@ -103,11 +116,11 @@ class Hooks {
 					'content' => (bool)$ns->ns_content,
 					'contentmodel' => $ns->ns_content_model,
 					'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
-					'aliases' => array_merge( json_decode( $ns->ns_aliases, true ), (array)$lcAlias ),
-					'additional' => json_decode( $ns->ns_additional, true )
+					'aliases' => array_merge( json_decode( $ns->ns_aliases ?? '', true ), (array)$lcAlias ),
+					'additional' => json_decode( $ns->ns_additional ?? '', true )
 				];
 
-				$nsAdditional = (array)json_decode( $ns->ns_additional, true );
+				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
 
 				foreach ( $nsAdditional as $var => $val ) {
 					if ( isset( $additional[$var] ) ) {
@@ -157,24 +170,41 @@ class Hooks {
 
 			foreach ( $permObjects as $perm ) {
 				$addPerms = [];
+				$removePerms = [];
 
 				foreach ( ( self::getConfig( 'ManageWikiPermissionsAdditionalRights' )[$perm->perm_group] ?? [] ) as $right => $bool ) {
 					if ( $bool ) {
 						$addPerms[] = $right;
+						continue;
+					}
+
+					if ( $bool === false ) {
+						$removePerms[] = $right;
 					}
 				}
 
+				$permissions = array_merge( json_decode( $perm->perm_permissions ?? '', true ) ?? [], $addPerms );
+				$filteredPermissions = array_diff( $permissions, $removePerms );
+
 				$jsonArray['permissions'][$perm->perm_group] = [
-					'permissions' => array_merge( json_decode( $perm->perm_permissions, true ) ?? [], $addPerms ),
-					'addgroups' => array_merge( json_decode( $perm->perm_addgroups, true ) ?? [], self::getConfig( 'ManageWikiPermissionsAdditionalAddGroups' )[$perm->perm_group] ?? [] ),
-					'removegroups' => array_merge( json_decode( $perm->perm_removegroups, true ) ?? [], self::getConfig( 'ManageWikiPermissionsAdditionalRemoveGroups' )[$perm->perm_group] ?? [] ),
-					'addself' => json_decode( $perm->perm_addgroupstoself, true ),
-					'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
-					'autopromote' => json_decode( $perm->perm_autopromote, true )
+					'permissions' => $filteredPermissions,
+					'addgroups' => array_merge(
+						json_decode( $perm->perm_addgroups ?? '', true ) ?? [],
+						self::getConfig( 'ManageWikiPermissionsAdditionalAddGroups' )[$perm->perm_group] ?? []
+					),
+					'removegroups' => array_merge(
+						json_decode( $perm->perm_removegroups ?? '', true ) ?? [],
+						self::getConfig( 'ManageWikiPermissionsAdditionalRemoveGroups' )[$perm->perm_group] ?? []
+					),
+					'addself' => json_decode( $perm->perm_addgroupstoself ?? '', true ),
+					'removeself' => json_decode( $perm->perm_removegroupsfromself ?? '', true ),
+					'autopromote' => json_decode( $perm->perm_autopromote ?? '', true )
 				];
 			}
 
-			$diffKeys = array_keys( array_diff_key( self::getConfig( 'ManageWikiPermissionsAdditionalRights' ), $jsonArray['permissions'] ) );
+			$diffKeys = array_keys(
+				array_diff_key( self::getConfig( 'ManageWikiPermissionsAdditionalRights' ), $jsonArray['permissions'] ?? [] )
+			);
 
 			foreach ( $diffKeys as $missingKey ) {
 				$missingPermissions = [];
@@ -239,7 +269,7 @@ class Hooks {
 
 			foreach ( $defaultNamespaces as $namespace ) {
 				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
-				$mwNamespaces->commit();
+				$mwNamespaces->commit( false );
 			}
 		}
 	}
@@ -295,19 +325,24 @@ class Hooks {
 	}
 
 	public static function fnNewSidebarItem( $skin, &$bar ) {
-		$append = '';
 		$user = $skin->getUser();
 		$services = MediaWikiServices::getInstance();
 		$permissionManager = $services->getPermissionManager();
 		$userOptionsLookup = $services->getUserOptionsLookup();
-		if ( !$permissionManager->userHasRight( $user, 'managewiki' ) ) {
-			if ( !self::getConfig( 'ManageWikiForceSidebarLinks' ) && !$userOptionsLookup->getOption( $user, 'managewikisidebar', 0 ) ) {
-				return;
-			}
-			$append = '-view';
-		}
+
+		$hideSidebar = !self::getConfig( 'ManageWikiForceSidebarLinks' ) &&
+			!$userOptionsLookup->getOption( $user, 'managewikisidebar', 0 );
 
 		foreach ( (array)ManageWiki::listModules() as $module ) {
+			$append = '';
+			if ( !$permissionManager->userHasRight( $user, 'managewiki-' . $module ) ) {
+				if ( $hideSidebar ) {
+					continue;
+				}
+
+				$append = '-view';
+			}
+
 			$bar['managewiki-sidebar-header'][] = [
 				'text' => wfMessage( "managewiki-link-{$module}{$append}" )->plain(),
 				'id' => "managewiki{$module}link",

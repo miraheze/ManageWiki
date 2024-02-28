@@ -5,14 +5,15 @@
 		"John Lewis",
 		"MacFan4000",
 		"Reception123",
-		"Universal Omega"
+		"Universal Omega",
+		"Agent Isai"
 	],
 	"url": "https://github.com/miraheze/ManageWiki",
 	"descriptionmsg": "managewiki-desc",
 	"license-name": "GPL-3.0-or-later",
 	"type": "specialpage",
 	"requires": {
-		"MediaWiki": ">= 1.36.0",
+		"MediaWiki": ">= 1.39.0",
 		"extensions": {
 			"CreateWiki": "*"
 		}
@@ -20,8 +21,15 @@
 	"APIListModules": {
 		"wikiconfig": "Miraheze\\ManageWiki\\Api\\QueryWikiConfig"
 	},
+	"APIModules": {
+		"modifyserver": "Miraheze\\ManageWiki\\Api\\ApiModifyServer"
+	},
 	"AvailableRights": [
-		"managewiki",
+		"managewiki-core",
+		"managewiki-extensions",
+		"managewiki-namespaces",
+		"managewiki-permissions",
+		"managewiki-settings",
 		"managewiki-editdefault",
 		"managewiki-restricted"
 	],
@@ -38,14 +46,17 @@
 		"NamespaceMigrationJob": "Miraheze\\ManageWiki\\Jobs\\NamespaceMigrationJob"
 	},
 	"LogActionsHandlers": {
+		"managewiki/cache-reset": "LogFormatter",
 		"managewiki/delete": "LogFormatter",
 		"managewiki/delete-group": "LogFormatter",
 		"managewiki/lock": "LogFormatter",
-		"managewiki/settings": "LogFormatter",
-		"managewiki/rename": "LogFormatter",
-		"managewiki/rights": "LogFormatter",
 		"managewiki/namespaces": "LogFormatter",
 		"managewiki/namespaces-delete": "LogFormatter",
+		"managewiki/rename": "LogFormatter",
+		"managewiki/rights": "LogFormatter",
+		"managewiki/rights-reset": "LogFormatter",
+		"managewiki/settings": "LogFormatter",
+		"managewiki/settings-reset": "LogFormatter",
 		"managewiki/undelete": "LogFormatter",
 		"managewiki/unlock": "LogFormatter"
 	},
@@ -67,10 +78,12 @@
 			"permissions": [
 				"rename",
 				"rights",
+				"rights-reset",
 				"delete-group"
 			],
 			"settings": [
-				"settings"
+				"settings",
+				"settings-reset"
 			],
 			"wikidelete": [
 				"delete"
@@ -135,6 +148,7 @@
 			"messages": [
 				"managewiki-review-title",
 				"managewiki-save",
+				"managewiki-search-noresults",
 				"managewiki-warning-changes"
 			],
 			"dependencies": [
@@ -260,6 +274,9 @@
 	"ConfigRegistry": {
 		"managewiki": "GlobalVarConfig::newInstance"
 	},
+	"ServiceWiringFiles": [
+		"includes/ServiceWiring.php"
+	],
 	"callback": "Miraheze\\ManageWiki\\Hooks::onRegistration",
 	"manifest_version": 2
 }

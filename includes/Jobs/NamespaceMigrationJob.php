@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
+use MediaWiki\MediaWikiServices;
 use Title;
 
 /**
@@ -21,7 +22,9 @@ class NamespaceMigrationJob extends Job {
 	 * @return bool
 	 */
 	public function run() {
-		$dbw = wfGetDB( DB_PRIMARY );
+		$dbw = MediaWikiServices::getInstance()
+			->getDBLoadBalancer()
+			->getMaintenanceConnectionRef( DB_PRIMARY );
 
 		$maintainPrefix = $this->params['maintainPrefix'];
 

@@ -10,7 +10,9 @@ use TablePager;
 class ManageWikiDeletedWikiPager extends TablePager {
 	public function __construct( $page ) {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->mDb = wfGetDB( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
+		$this->mDb = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
 
 		parent::__construct( $page->getContext(), $page->getLinkRenderer() );
 	}

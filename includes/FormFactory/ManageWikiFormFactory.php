@@ -6,11 +6,12 @@ use Config;
 use Html;
 use HTMLForm;
 use IContextSource;
+use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
 use Miraheze\ManageWiki\ManageWiki;
-use MWException;
 use OutputPage;
+use UnexpectedValueException;
 use Wikimedia\Rdbms\DBConnRef;
 
 class ManageWikiFormFactory {
@@ -42,9 +43,11 @@ class ManageWikiFormFactory {
 		string $filtered = '',
 		string $formClass = ManageWikiOOUIForm::class
 	) {
-		$dbw = wfGetDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
 
-		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser() );
+		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser(), $module );
 
 		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special, $filtered );
 
@@ -84,7 +87,7 @@ class ManageWikiFormFactory {
 		$out = $context->getOutput();
 
 		if ( !$ceMW ) {
-			throw new MWException( "User '{$context->getUser()->getName()}' without 'managewiki' right tried to change wiki {$module}!" );
+			throw new UnexpectedValueException( "User '{$context->getUser()->getName()}' without 'managewiki-{$module}' right tried to change wiki {$module}!" );
 		}
 
 		$form->getButtons();
@@ -96,14 +99,32 @@ class ManageWikiFormFactory {
 			$errorOut = [];
 			foreach ( $mwReturn as $errors ) {
 				foreach ( $errors as $msg => $params ) {
-					$errorOut[] = wfMessage( $msg, $params )->inContentLanguage()->escaped();
+					$errorOut[] = wfMessage( $msg, $params )->plain();
 				}
 			}
 
-			$out->addHTML( Html::errorBox( 'The following errors occurred:<br>' . implode( '<br>', $errorOut ) ) );
+			$out->addHTML(
+				Html::warningBox(
+					Html::element(
+						'p',
+						[],
+						'The following errors occurred:<br>' . implode( '<br>', $errorOut )
+					),
+					'mw-notify-error'
+				)
+			);
 			return null;
 		}
 
-		$out->addHTML( Html::successBox( wfMessage( 'managewiki-success' )->escaped() ) );
+		$out->addHTML(
+			Html::successBox(
+				Html::element(
+					'p',
+					[],
+					wfMessage( 'managewiki-success' )->plain()
+				),
+				'mw-notify-success'
+			)
+		);
 	}
 }

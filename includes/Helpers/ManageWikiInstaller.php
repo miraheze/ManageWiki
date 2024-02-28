@@ -3,11 +3,10 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
-use JobQueueGroup;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
-use MWException;
+use RuntimeException;
 use Title;
 
 class ManageWikiInstaller {
@@ -44,7 +43,9 @@ class ManageWikiInstaller {
 	}
 
 	private static function sql( string $dbname, array $data ) {
-		$dbw = wfGetDB( DB_PRIMARY, [], $dbname );
+		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $dbname )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $dbname );
 
 		foreach ( $data as $table => $sql ) {
 			if ( !$dbw->tableExists( $table ) ) {
@@ -136,19 +137,37 @@ class ManageWikiInstaller {
 
 	private static function mwscript( string $dbname, array $data ) {
 		if ( Shell::isDisabled() ) {
-			throw new MWException( 'Shell is disabled.' );
+			throw new RuntimeException( 'Shell is disabled.' );
 		}
 
 		foreach ( $data as $script => $options ) {
+			$repeatWith = [];
+			if ( isset( $options['repeat-with'] ) ) {
+				$repeatWith = $options['repeat-with'];
+				unset( $options['repeat-with'] );
+			}
+
 			$params = [
 				'dbname' => $dbname,
 				'script' => $script,
-				'options' => $options
+				'options' => $options,
 			];
 
 			$mwJob = new MWScriptJob( Title::newMainPage(), $params );
 
-			JobQueueGroup::singleton()->push( $mwJob );
+			MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
+
+			if ( $repeatWith ) {
+				$params = [
+					'dbname' => $dbname,
+					'script' => $script,
+					'options' => $repeatWith,
+				];
+
+				$mwJob = new MWScriptJob( Title::newMainPage(), $params );
+
+				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
+			}
 		}
 
 		return true;

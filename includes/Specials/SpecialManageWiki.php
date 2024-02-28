@@ -12,6 +12,8 @@ use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\ManageWiki;
+use OOUI\FieldLayout;
+use OOUI\SearchInputWidget;
 use SpecialPage;
 use UserGroupMembership;
 
@@ -25,7 +27,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	public function execute( $par ) {
-		$par = explode( '/', $par, 3 );
+		$par = explode( '/', $par ?? '', 3 );
 
 		$out = $this->getOutput();
 		$this->setHeaders();
@@ -40,7 +42,11 @@ class SpecialManageWiki extends SpecialPage {
 			$module = 'core';
 		}
 
-		$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
+		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
+			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module . '-view' )->text() );
+		} else {
+			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
+		}
 
 		$additional = $par[1] ?? '';
 		$filtered = $par[2] ?? $par[1] ?? '';
@@ -77,6 +83,10 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function showInputBox() {
 		$formDescriptor = [
+			'info' => [
+				'default' => $this->msg( 'managewiki-core-info' )->text(),
+				'type' => 'info',
+			],
 			'dbname' => [
 				'label-message' => 'managewiki-label-dbname',
 				'type' => 'text',
@@ -86,6 +96,7 @@ class SpecialManageWiki extends SpecialPage {
 		];
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'searchForm' );
+		$htmlForm->setWrapperLegendMsg( 'managewiki-core-header' );
 		$htmlForm->setMethod( 'post' )
 			->setSubmitCallback( [ $this, 'onSubmitRedirectToWikiForm' ] )
 			->prepareForm()
@@ -116,6 +127,7 @@ class SpecialManageWiki extends SpecialPage {
 			] );
 
 			$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
+
 		}
 
 		$remoteWiki = new RemoteWiki( $wiki );
@@ -126,6 +138,9 @@ class SpecialManageWiki extends SpecialPage {
 
 		if ( !$special ) {
 			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
+
+			$out->addModules( [ 'mediawiki.special.userrights' ] );
+
 		}
 
 		$options = [];
@@ -154,14 +169,28 @@ class SpecialManageWiki extends SpecialPage {
 
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
-			$wikiManager = new WikiManager( $wiki );
-			if ( !$wikiManager->exists ) {
-				$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
-				return false;
+			if ( $module === 'core' ) {
+				$wikiManager = new WikiManager( $wiki );
+				if ( !$wikiManager->exists ) {
+					$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
+					return false;
+				}
 			}
 
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
+
+			$out->addHTML( new FieldLayout(
+				new SearchInputWidget( [
+					'placeholder' => $this->msg( 'managewiki-search' )->text(),
+				] ),
+				[
+					'classes' => [ 'managewiki-search' ],
+					'label' => $this->msg( 'managewiki-search' )->text(),
+					'invisibleLabel' => true,
+					'infusable' => true,
+				]
+			) );
 
 			$htmlForm->show();
 		}
@@ -177,6 +206,11 @@ class SpecialManageWiki extends SpecialPage {
 			'default' => $module
 		];
 
+		$selector['info'] = [
+			'type' => 'info',
+			'default' => $this->msg( "managewiki-{$module}-select-info" )->text(),
+		];
+
 		$selector['out'] = [
 			'type' => 'select',
 			'label-message' => "managewiki-{$module}-select",
@@ -184,16 +218,23 @@ class SpecialManageWiki extends SpecialPage {
 		];
 
 		$selectForm = HTMLForm::factory( 'ooui', $hidden + $selector, $this->getContext(), 'selector' );
+		$selectForm->setWrapperLegendMsg( "managewiki-{$module}-select-header" );
 		$selectForm->setMethod( 'post' )->setFormIdentifier( 'selector' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->prepareForm()->show();
 
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki' ) ) {
+		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-' . $module ) ) {
+			$create['info'] = [
+				'type' => 'info',
+				'default' => $this->msg( "managewiki-{$module}-create-info" )->text(),
+			];
+
 			$create['out'] = [
 				'type' => 'text',
 				'label-message' => "managewiki-{$module}-create",
 			];
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
+			$createForm->setWrapperLegendMsg( "managewiki-{$module}-create-header" );
 			$createForm->setMethod( 'post' )->setFormIdentifier( 'create' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->setSubmitText( $this->msg( "managewiki-{$module}-create-submit" )->plain() )->prepareForm()->show();
 		}
 	}

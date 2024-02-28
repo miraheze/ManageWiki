@@ -43,7 +43,10 @@ class ManageWikiExtensions {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->extConfig = $this->config->get( 'ManageWikiExtensions' );
-		$this->dbw = wfGetDB( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+
+		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		$exts = $this->dbw->selectRow(
 			'mw_settings',
@@ -135,7 +138,7 @@ class ManageWikiExtensions {
 
 		foreach ( $this->liveExts as $name => $extConfig ) {
 			// Check if we have a conflict first
-			if ( in_array( $extConfig['conflicts'], $this->list() ) ) {
+			if ( in_array( $extConfig['conflicts'] ?? [], $this->list() ) ) {
 				unset( $this->liveExts[$name] );
 				unset( $this->changes[$name] );
 				$this->errors[] = [
@@ -152,7 +155,7 @@ class ManageWikiExtensions {
 			// Define a 'current' extension as one with no changes entry
 			$enabledExt = !isset( $this->changes[$name] );
 			// Now we need to check if we fulfil the requirements to enable this extension
-			$requirementsCheck = ManageWikiRequirements::process( $extConfig['requires'], $this->list(), $enabledExt, $remoteWiki );
+			$requirementsCheck = ManageWikiRequirements::process( $extConfig['requires'] ?? [], $this->list(), $enabledExt, $remoteWiki );
 
 			if ( $requirementsCheck ) {
 				$installResult = ( !isset( $extConfig['install'] ) || $enabledExt ) ? true : ManageWikiInstaller::process( $this->wiki, $extConfig['install'] );

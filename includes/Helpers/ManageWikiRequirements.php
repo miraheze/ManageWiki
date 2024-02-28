@@ -27,7 +27,8 @@ class ManageWikiRequirements {
 		foreach ( $actions as $action => $data ) {
 			switch ( $action ) {
 				case 'permissions':
-					$stepResponse['permissions'] = ( $ignorePerms ) ? true : self::permissions( $data );
+					// We don't check permissions if we are in CLI mode, so that we can toggle restricted extensions in CLI
+					$stepResponse['permissions'] = ( $ignorePerms || PHP_SAPI === 'cli' ) ? true : self::permissions( $data );
 					break;
 				case 'extensions':
 					$stepResponse['extensions'] = self::extensions( $data, $extensionList );
@@ -147,7 +148,10 @@ class ManageWikiRequirements {
 		$wikiValue = $manageWikiSettings->list( $setting );
 
 		if ( $wikiValue !== null ) {
-			if ( $wikiValue === $value || in_array( $value, $wikiValue ) ) {
+			// We need to cast $wikiValue to an array
+			// to convert any values (boolean) to an array.
+			// Otherwise TypeError is thrown.
+			if ( $wikiValue === $value || in_array( $value, (array)$wikiValue ) ) {
 				return true;
 			}
 		}

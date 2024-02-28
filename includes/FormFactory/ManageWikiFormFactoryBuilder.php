@@ -7,6 +7,7 @@ use ExtensionProcessor;
 use ExtensionRegistry;
 use HTMLForm;
 use IContextSource;
+use InvalidArgumentException;
 use Linker;
 use ManualLogEntry;
 use MediaWiki\MediaWikiServices;
@@ -18,7 +19,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
-use MWException;
 use SpecialPage;
 use User;
 use UserGroupMembership;
@@ -52,7 +52,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special, $config );
 				break;
 			default:
-				throw new MWException( "{$module} not recognised" );
+				throw new InvalidArgumentException( "{$module} not recognised" );
 		}
 
 		return $formDescriptor;
@@ -207,6 +207,9 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
+		$hookRunner->onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, $formDescriptor );
+
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) ) {
 			$clusterList = array_merge( (array)$config->get( 'CreateWikiDatabaseClusters' ), (array)$config->get( 'CreateWikiDatabaseClustersInactive' ) );
 			$formDescriptor['dbcluster'] = [
@@ -273,8 +276,8 @@ class ManageWikiFormFactoryBuilder {
 			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process( $ext['requires'], $extList, false, $wiki ) : true;
 
 			$help = [];
-			$conflictLabel = wfMessage( 'managewiki-conflicts' )->text();
-			$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+			$conflictLabel = wfMessage( 'managewiki-conflicts' )->escaped();
+			$requiresLabel = wfMessage( 'managewiki-requires' )->escaped();
 
 			if ( $ext['conflicts'] ) {
 				$help[] = "{$conflictLabel} {$ext['conflicts']}<br/>";
@@ -374,10 +377,10 @@ class ManageWikiFormFactoryBuilder {
 
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
 
-				$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $set['help'];
+				$help = ( $msgHelp->exists() ) ? $msgHelp->escaped() : $set['help'];
 				if ( $set['requires'] ) {
 					$requires = [];
-					$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+					$requiresLabel = wfMessage( 'managewiki-requires' )->escaped();
 
 					foreach ( $set['requires'] as $require => $data ) {
 						if ( is_array( $data ) ) {
@@ -522,10 +525,10 @@ class ManageWikiFormFactoryBuilder {
 
 					$configs = ManageWikiTypes::process( $config, $disabled, false, 'namespaces', $a, $namespaceData['additional'][$key] ?? null, false, $a['overridedefault'], $a['type'] );
 
-					$help = ( $msgHelp->exists() ) ? $msgHelp->text() : $a['help'];
+					$help = ( $msgHelp->exists() ) ? $msgHelp->escaped() : $a['help'];
 					if ( $a['requires'] ) {
 						$requires = [];
-						$requiresLabel = wfMessage( 'managewiki-requires' )->text();
+						$requiresLabel = wfMessage( 'managewiki-requires' )->escaped();
 
 						foreach ( $a['requires'] as $require => $data ) {
 							if ( is_array( $data ) ) {
@@ -657,7 +660,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor["right-{$perm}"] = [
 				'type' => 'check',
 				'label' => $perm,
-				'help' => User::getRightDescription( $perm ),
+				'help' => htmlspecialchars( User::getRightDescription( $perm ) ),
 				'section' => ( $assigned ) ? 'assigned' : 'unassigned',
 				'default' => $assigned,
 				'disabled' => !$ceMW
@@ -667,16 +670,16 @@ class ManageWikiFormFactoryBuilder {
 		$rowsBuilt = [];
 
 		foreach ( $groupData['allGroups'] as $group ) {
-			$rowsBuilt[UserGroupMembership::getGroupName( $group )] = $group;
+			$rowsBuilt[htmlspecialchars( UserGroupMembership::getGroupName( $group ) )] = $group;
 		}
 
 		$formDescriptor['group-matrix'] = [
 			'type' => 'checkmatrix',
 			'columns' => [
-				wfMessage( 'managewiki-permissions-addall' )->text() => 'wgAddGroups',
-				wfMessage( 'managewiki-permissions-removeall' )->text() => 'wgRemoveGroups',
-				wfMessage( 'managewiki-permissions-addself' )->text() => 'wgGroupsAddToSelf',
-				wfMessage( 'managewiki-permissions-removeself' )->text() => 'wgGroupsRemoveFromSelf'
+				wfMessage( 'managewiki-permissions-addall' )->escaped() => 'wgAddGroups',
+				wfMessage( 'managewiki-permissions-removeall' )->escaped() => 'wgRemoveGroups',
+				wfMessage( 'managewiki-permissions-addself' )->escaped() => 'wgGroupsAddToSelf',
+				wfMessage( 'managewiki-permissions-removeself' )->escaped() => 'wgGroupsRemoveFromSelf'
 			],
 			'rows' => $rowsBuilt,
 			'section' => 'group',
@@ -776,7 +779,7 @@ class ManageWikiFormFactoryBuilder {
 			]
 		];
 
-		if ( $ceMW && ( count( $permList['permissions'] ) > 0 ) ) {
+		if ( $ceMW && ( count( $permList['permissions'] ?? [] ) > 0 ) && ( !in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ) ) ) ) {
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
 				'label-message' => 'permissions-delete-checkbox',
@@ -818,7 +821,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn = self::submissionPermissions( $formData, $dbName, $special, $config );
 				break;
 			default:
-				throw new MWException( "{$module} not recognised" );
+				throw new InvalidArgumentException( "{$module} not recognised" );
 		}
 
 		if ( $mwReturn->changes ) {
@@ -914,7 +917,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		if ( $config->get( 'CreateWikiUseCategories' ) && ( $formData['category'] != $wiki->getCategory() ) ) {
+		if ( $config->get( 'CreateWikiUseCategories' ) && isset( $formData['category'] ) && ( $formData['category'] != $wiki->getCategory() ) ) {
 			$wiki->setCategory( $formData['category'] );
 		}
 
@@ -934,7 +937,7 @@ class ManageWikiFormFactoryBuilder {
 			$wiki->setDBCluster( $formData['dbcluster'] );
 		}
 
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) ) {
+		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) && isset( $formData['description'] ) ) {
 			$mwSettings = new ManageWikiSettings( $dbName );
 
 			$description = $mwSettings->list()['wgWikiDiscoverDescription'] ?? '';
@@ -950,6 +953,9 @@ class ManageWikiFormFactoryBuilder {
 				];
 			}
 		}
+
+		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
+		$hookRunner->onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData, $wiki );
 
 		return $wiki;
 	}

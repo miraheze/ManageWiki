@@ -35,13 +35,15 @@ class ManageWikiPermissions {
 	public $logParams = [];
 
 	/**
-	 * ManageWikiNamespaces constructor.
+	 * ManageWikiPermissions constructor.
 	 * @param string $wiki WikiID
 	 */
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->dbw = wfGetDB( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		$perms = $this->dbw->select(
 			'mw_permissions',
@@ -59,7 +61,7 @@ class ManageWikiPermissions {
 				'removegroups' => json_decode( $perm->perm_removegroups, true ),
 				'addself' => json_decode( $perm->perm_addgroupstoself, true ),
 				'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
-				'autopromote' => json_decode( $perm->perm_autopromote, true )
+				'autopromote' => json_decode( $perm->perm_autopromote ?? '', true )
 			];
 		}
 	}
@@ -169,7 +171,7 @@ class ManageWikiPermissions {
 						'perm_removegroups' => json_encode( $this->livePermissions[$group]['removegroups'] ),
 						'perm_addgroupstoself' => json_encode( $this->livePermissions[$group]['addself'] ),
 						'perm_removegroupsfromself' => json_encode( $this->livePermissions[$group]['removeself'] ),
-						'perm_autopromote' => $this->livePermissions[$group]['autopromote'] === null ? null : json_encode( $this->livePermissions[$group]['autopromote'] )
+						'perm_autopromote' => $this->livePermissions[$group]['autopromote'] === null ? null : json_encode( $this->livePermissions[$group]['autopromote'] ?? '' )
 					];
 
 					$this->dbw->upsert(
@@ -214,7 +216,9 @@ class ManageWikiPermissions {
 
 	private function deleteUsersFromGroup( string $group ) {
 		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-		$dbr = wfGetDB( DB_REPLICA, [], $this->wiki );
+		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $this->wiki )
+			->getMaintenanceConnectionRef( DB_REPLICA, [], $this->wiki );
 
 		$res = $dbr->select(
 			'user_groups',

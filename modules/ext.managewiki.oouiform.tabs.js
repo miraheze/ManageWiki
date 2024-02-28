@@ -106,5 +106,126 @@
 			var value = tabs.getCurrentTabPanelName();
 			mw.storage.session.set( 'managewiki-prevTab', value );
 		} );
+
+		// Search index
+		var index, texts;
+		function buildIndex() {
+			index = {};
+			var $fields = tabs.contentPanel.$element.find( '[class^=mw-htmlform-field-]:not( .managewiki-search-noindex )' );
+			var $descFields = $fields.filter(
+				'.oo-ui-fieldsetLayout-group > .oo-ui-widget > .mw-htmlform-field-HTMLInfoField'
+			);
+			$fields.not( $descFields ).each( function () {
+				var $field = $( this );
+				var $wrapper = $field.parents( '.managewiki-fieldset-wrapper' );
+				var $tabPanel = $field.closest( '.oo-ui-tabPanelLayout' );
+				var $labels = $field.find(
+					'.oo-ui-labelElement-label, .oo-ui-textInputWidget .oo-ui-inputWidget-input, p'
+				).add(
+					$wrapper.find( '> .oo-ui-fieldsetLayout > .oo-ui-fieldsetLayout-header .oo-ui-labelElement-label' )
+				);
+				$field = $field.add( $tabPanel.find( $descFields ) );
+
+				function addToIndex( $label, $highlight ) {
+					var text = $label.val() || $label[ 0 ].textContent.toLowerCase().trim().replace( /\s+/, ' ' );
+					if ( text ) {
+						index[ text ] = index[ text ] || [];
+						index[ text ].push( {
+							$highlight: $highlight || $label,
+							$field: $field,
+							$wrapper: $wrapper,
+							$tabPanel: $tabPanel
+						} );
+					}
+				}
+
+				$labels.each( function () {
+					addToIndex( $( this ) );
+
+					// Check if there we are in an infusable dropdown and collect other options
+					var $dropdown = $( this ).closest( '.oo-ui-dropdownInputWidget[data-ooui],.mw-widget-selectWithInputWidget[data-ooui]' );
+					if ( $dropdown.length ) {
+						var dropdown = OO.ui.infuse( $dropdown[ 0 ] );
+						var dropdownWidget = ( dropdown.dropdowninput || dropdown ).dropdownWidget;
+						if ( dropdownWidget ) {
+							dropdownWidget.getMenu().getItems().forEach( function ( option ) {
+								// Highlight the dropdown handle and the matched label, for when the dropdown is opened
+								addToIndex( option.$label, dropdownWidget.$handle );
+								addToIndex( option.$label, option.$label );
+							} );
+						}
+					}
+				} );
+			} );
+			mw.hook( 'managewiki.search.buildIndex' ).fire( index );
+			texts = Object.keys( index );
+		}
+
+		function infuseAllPanels() {
+			tabs.stackLayout.items.forEach( function ( tabPanel ) {
+				var wasVisible = tabPanel.isVisible();
+				// Force panel to be visible while infusing
+				tabPanel.toggle( true );
+
+				enhancePanel( tabPanel );
+
+				// Restore visibility
+				tabPanel.toggle( wasVisible );
+			} );
+		}
+
+		var search = OO.ui.infuse( $( '.managewiki-search' ) ).fieldWidget;
+		search.$input.on( 'focus', function () {
+			if ( !index ) {
+				// Lazy-build index on first focus
+				// Infuse all widgets as we may end up showing a large subset of them
+				infuseAllPanels();
+				buildIndex();
+			}
+		} );
+		var $noResults = $( '<div>' ).addClass( 'managewiki-search-noresults' ).text( mw.msg( 'managewiki-search-noresults' ) );
+		search.on( 'change', function ( val ) {
+			if ( !index ) {
+				// In case 'focus' hasn't fired yet
+				infuseAllPanels();
+				buildIndex();
+			}
+			var isSearching = !!val;
+			tabs.$element.toggleClass( 'managewiki-tabs-searching', isSearching );
+			tabs.tabSelectWidget.toggle( !isSearching );
+			tabs.contentPanel.setContinuous( isSearching );
+
+			$( '.managewiki-search-matched' ).removeClass( 'managewiki-search-matched' );
+			$( '.managewiki-search-highlight' ).removeClass( 'managewiki-search-highlight' );
+			var hasResults = false;
+			if ( isSearching ) {
+				val = val.toLowerCase();
+				texts.forEach( function ( text ) {
+					// TODO: Could use Intl.Collator.prototype.compare like OO.ui.mixin.LabelElement.static.highlightQuery
+					// but might be too slow.
+					if ( text.indexOf( val ) !== -1 ) {
+						index[ text ].forEach( function ( item ) {
+							item.$highlight.addClass( 'managewiki-search-highlight' );
+							item.$field.addClass( 'managewiki-search-matched' );
+							item.$wrapper.addClass( 'managewiki-search-matched' );
+							item.$tabPanel.addClass( 'managewiki-search-matched' );
+						} );
+						hasResults = true;
+					}
+				} );
+			}
+			if ( isSearching && !hasResults ) {
+				tabs.$element.append( $noResults );
+			} else {
+				$noResults.detach();
+			}
+		} );
+
+		// Handle the initial value in case the user started typing before this JS code loaded,
+		// or the browser restored the value for a closed tab
+		if ( search.getValue() ) {
+			search.emit( 'change', search.getValue() );
+		}
+
 	} );
 }() );

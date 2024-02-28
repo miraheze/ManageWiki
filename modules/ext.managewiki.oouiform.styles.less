@@ -32,6 +32,89 @@
 			padding-bottom: 0;
 		}
 	}
+
+	&.managewiki-tabs-searching {
+		// Prevent "Save" bar getting too close to results
+		min-height: 30em;
+
+		/* Tab panels */
+		.oo-ui-tabPanelLayout:not( .managewiki-search-matched ),
+		/* Fields */
+		[ class^='mw-htmlform-field-' ]:not( .managewiki-search-matched ),
+		/* Wrappers */
+		.managewiki-fieldset-wrapper:not( .managewiki-search-matched ) {
+			display: none;
+		}
+
+		.oo-ui-tabPanelLayout.managewiki-search-matched {
+			> fieldset > legend {
+				max-width: none;
+				padding: 5px 10px;
+				margin: 0 0 10px 0;
+				background: #eaecf0;
+
+				> .oo-ui-labelElement-label {
+					display: inline;
+					margin: 0;
+				}
+			}
+		}
+
+		.oo-ui-indexLayout-stackLayout > .oo-ui-panelLayout {
+			padding: 0;
+			margin: 0;
+		}
+
+		.managewiki-search-matched {
+			padding: 0;
+			margin: 0 20px 10px 20px;
+		}
+	}
+}
+
+// Highlight could be in an overlay
+.managewiki-search-highlight {
+	border-radius: 0 !important;
+	background: #eaf3ff !important;
+	outline: 3px solid #eaf3ff !important;
+}
+
+.managewiki-search-noresults {
+	margin: 20px;
+	font-style: italic;
+}
+
+/* TODO: Support mobile */
+.skin-minerva .managewiki-search {
+	display: none;
+}
+
+.managewiki-search.oo-ui-fieldLayout {
+	margin: 8px 0;
+}
+
+@media all and ( min-width: 720px ) {
+	.managewiki-search.oo-ui-fieldLayout {
+		width: 20em;
+	}
+
+	.mw-special-ManageWiki .mw-specialpage-summary {
+		margin-right: 21em;
+
+		& + .managewiki-search.oo-ui-fieldLayout {
+			margin: -36px 0 8px 0;
+			float: right;
+		}
+	}
+}
+
+@media all and ( max-width: ( 719px ) ) {
+	.managewiki-search.oo-ui-fieldLayout {
+		// Fallback is graceful enough.
+		position: sticky;
+		z-index: 1;
+		top: 0;
+	}
 }
 
 .managewiki-tabs-wrapper.oo-ui-panelLayout-framed,
@@ -76,21 +159,23 @@
 }
 
 /* JavaScript enabled */
-.client-js .managewiki-tabs {
-	.oo-ui-tabPanelLayout {
-		// Panels don't need borders as the IndexLayout is inside a framed wrapper.
-		border: 0;
+.client-js {
+	.managewiki-tabs {
+		.oo-ui-tabPanelLayout {
+			// Panels don't need borders as the IndexLayout is inside a framed wrapper.
+			border: 0;
 
-		// Hide section legend, only used in nojs mode
-		> fieldset > legend {
-			display: none;
+			// Hide section legend, only used in nojs mode
+			&:not( .managewiki-search-matched ) > fieldset > legend {
+				display: none;
+			}
 		}
-	}
 
-	// Hide all but the first panel before infusion
-	&:not( .managewiki-tabs-infused ) {
-		.oo-ui-tabPanelLayout:not( :first-child ) {
-			display: none;
+		// Hide all but the first panel before infusion
+		&:not( .managewiki-tabs-infused ) {
+			.oo-ui-tabPanelLayout:not( :first-child ) {
+				display: none;
+			}
 		}
 	}
 }

@@ -3,7 +3,6 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Config;
-use JobQueueGroup;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
@@ -44,7 +43,10 @@ class ManageWikiNamespaces {
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->dbw = wfGetDB( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+
+		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
+			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
+			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		$namespaces = $this->dbw->select(
 			'mw_namespaces',
@@ -165,8 +167,9 @@ class ManageWikiNamespaces {
 
 	/**
 	 * Commits all changes to database. Also files a job to move pages into or out of namespace
+	 * @param bool $runNamespaceMigrationJob|true
 	 */
-	public function commit() {
+	public function commit( bool $runNamespaceMigrationJob = true ) {
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( in_array( $id, $this->deleteNamespaces ) ) {
 				$this->log = 'namespaces-delete';
@@ -234,14 +237,17 @@ class ManageWikiNamespaces {
 				}
 			}
 
-			$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
-			JobQueueGroup::singleton()->push( $job );
+			if ( $this->wiki != 'default' && $runNamespaceMigrationJob ) {
+				$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
+				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $job );
+			}
 		}
 
 		if ( $this->wiki != 'default' ) {
 			$cWJ = new CreateWikiJson( $this->wiki );
 			$cWJ->resetWiki();
 		}
+
 		$this->committed = true;
 	}
 
