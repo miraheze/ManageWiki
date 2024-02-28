@@ -130,6 +130,12 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addModules( [ 'mediawiki.special.userrights' ] );
 		}
 
+		$remoteWiki = new RemoteWiki( $wiki );
+
+		if ( $remoteWiki->isLocked() ) {
+			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-mwlocked' )->escaped() ) );
+		}
+
 		$options = [];
 
 		if ( $module == 'permissions' && !$special ) {
@@ -163,8 +169,6 @@ class SpecialManageWiki extends SpecialPage {
 					return false;
 				}
 			}
-
-			$remoteWiki = new RemoteWiki( $wiki );
 
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
