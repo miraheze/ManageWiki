@@ -118,12 +118,6 @@ class SpecialManageWiki extends SpecialPage {
 	public function showWikiForm( $wiki, $module, $special, $filtered ) {
 		$out = $this->getOutput();
 
-		$remoteWiki = new RemoteWiki( $wiki );
-
-		if ( $remoteWiki->isLocked() ) {
-			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-mwlocked' )->escaped() ) );
-		}
-
 		if ( $special !== '' || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
 			$out->addModules( [ 'ext.managewiki.oouiform' ] );
 
@@ -134,6 +128,12 @@ class SpecialManageWiki extends SpecialPage {
 
 			$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
 			$out->addModules( [ 'mediawiki.special.userrights' ] );
+		}
+
+		$remoteWiki = new RemoteWiki( $wiki );
+
+		if ( $remoteWiki->isLocked() ) {
+			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-mwlocked' )->escaped() ) );
 		}
 
 		$options = [];
