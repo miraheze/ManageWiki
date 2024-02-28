@@ -139,12 +139,11 @@ class ManageWikiFormFactoryBuilder {
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			],
 			'inactive-exempt-reason' => [
-				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( 'CreateWikiInactiveExemptReasonOptions' ),
+				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
 				'hide-if' => [ '!==', 'wpinactive-exempt', '1' ],
 				'type' => 'selectorother',
-				'default' => $wiki->getInactiveExemptReason(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
-				'options' => $config->get( 'CreateWikiInactiveExemptReasonOptions' )
+				'options-message' => 'managewiki-inactiveexemptreasons',
 			],
 			'server' => [
 				'if' => $config->get( 'CreateWikiUseCustomDomains' ),
@@ -177,6 +176,11 @@ class ManageWikiFormFactoryBuilder {
 
 				if ( $data['options'] ?? false ) {
 					$formDescriptor[$name]['options'] = $data['options'];
+				}
+
+				if ( $data['options-message'] ?? false ) {
+					unset( $data['options'] );
+					$formDescriptor[$name]['options-message'] = $data['options-message'];
 				}
 			}
 		}
