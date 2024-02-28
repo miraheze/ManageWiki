@@ -9,6 +9,7 @@ if ( $IP === false ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
+use MediaWiki\MainConfigNames;
 use MediaWiki\WikiMap\WikiMap;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 
@@ -27,7 +28,7 @@ class ToggleExtension extends Maintenance {
 		$noList = $this->getOption( 'no-list', false );
 		$allWikis = $this->getOption( 'all-wikis', false );
 		$wikis = $allWikis ?
-			$this->getConfig()->get( 'LocalDatabases' ) :
+			$this->getConfig()->get( MainConfigNames::LocalDatabases ) :
 			[ WikiMap::getCurrentWikiId() ];
 
 		$ext = $this->getArg( 0 );
