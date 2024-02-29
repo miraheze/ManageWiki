@@ -10,6 +10,7 @@ use HTMLForm;
 use ManualLogEntry;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\CreateWikiJson;
+use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -19,12 +20,18 @@ use SpecialPage;
 use UserGroupMembership;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
+
 	/** @var Config */
 	private $config;
 
+	/** @var CreateWikiHookRunner */
+	private $createWikiHookRunner;
+
 	public function __construct() {
 		parent::__construct( 'ManageWikiDefaultPermissions' );
+
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$this->createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
 	}
 
 	public function canModify() {
@@ -215,7 +222,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		);
 
 		// Reset the cache or else the changes won't work
-		$cWJ = new CreateWikiJson( $this->config->get( 'DBname' ) );
+		$cWJ = new CreateWikiJson( $this->config->get( 'DBname' ), $this->createWikiHookRunner );
 		$cWJ->resetWiki();
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
@@ -290,7 +297,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
 		$out->addModules( [ 'mediawiki.special.userrights' ] );
 
-		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ) );
+		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ), $this->createWikiHookRunner );
 
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), $this->config, 'permissions', $group );
