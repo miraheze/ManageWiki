@@ -30,7 +30,7 @@ class SpecialManageWiki extends SpecialPage {
 		parent::__construct( 'ManageWiki' );
 
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$thus->createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+		$this->createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
 	}
 
 	public function execute( $par ) {
