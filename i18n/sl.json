@@ -13,6 +13,8 @@
 	"action-managewiki-permissions": "ustvarjanje, brisanje in upravljanje uporabniških skupin v tem vikiju",
 	"action-managewiki-settings": "upravljanje naprednih nastavitev tega vikija",
 	"apihelp-modifyserver-example": "Sprememba imena vikistrežnika.",
+	"apihelp-modifyserver-param-server": "Ime strežnika, ki ga želite spremeniti.",
+	"apihelp-modifyserver-param-wiki": "ID vikija, za katerega želite spremeniti ime strežnika.",
 	"apihelp-modifyserver-summary": "Sprememba imena vikistrežnika.",
 	"apihelp-query+wikiconfig-example-1": "Ogled konfiguracije vikija za metaviki.",
 	"apihelp-query+wikiconfig-param-prop": "Izberite lastnosti za vrnitev:",

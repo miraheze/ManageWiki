@@ -7,6 +7,7 @@
 		]
 	},
 	"action-managewiki-extensions": "Erweiderunge fir dës Wiki aktivéieren an desaktivéieren",
+	"apihelp-modifyserver-param-server": "De Servernumm fir ze änneren.",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Nokucken ob d'Wiki als inaktiv markéiert ass",
 	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "D'Rechter vun dëse Benotzergruppe weisen",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "D'Astellunge vun der Wiki weisen",
