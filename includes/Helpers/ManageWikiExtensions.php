@@ -190,7 +190,7 @@ class ManageWikiExtensions {
 		}
 
 		$this->write();
-		$cWJ = new CreateWikiJson( $this->wiki,  $createWikiHookRunner );
+		$cWJ = new CreateWikiJson( $this->wiki, $createWikiHookRunner );
 		$cWJ->resetWiki();
 		$this->committed = true;
 
