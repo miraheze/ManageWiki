@@ -6,6 +6,7 @@ $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
 }
+
 require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
@@ -16,7 +17,9 @@ use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 class PopulateNamespacesWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
+
 		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.', false, false );
+		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute() {
