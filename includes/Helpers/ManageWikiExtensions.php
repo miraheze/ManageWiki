@@ -134,7 +134,9 @@ class ManageWikiExtensions {
 	 * Commits all changes made to extension lists to the database
 	 */
 	public function commit() {
-		$remoteWiki = new RemoteWiki( $this->wiki );
+		$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+
+		$remoteWiki = new RemoteWiki( $this->wiki, $createWikiHookRunner );
 
 		foreach ( $this->liveExts as $name => $extConfig ) {
 			// Check if we have a conflict first
@@ -188,7 +190,7 @@ class ManageWikiExtensions {
 		}
 
 		$this->write();
-		$cWJ = new CreateWikiJson( $this->wiki );
+		$cWJ = new CreateWikiJson( $this->wiki,  $createWikiHookRunner );
 		$cWJ->resetWiki();
 		$this->committed = true;
 
