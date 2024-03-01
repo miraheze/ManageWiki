@@ -18,6 +18,7 @@ class RemoveSettings extends Maintenance {
 		parent::__construct();
 
 		$this->addArg( 'setting', 'The ManageWiki name of the setting.', true );
+		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute() {
