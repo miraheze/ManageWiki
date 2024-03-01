@@ -9,22 +9,20 @@ if ( $IP === false ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\ManageWiki;
 
 class PopulateGroupPermissions extends Maintenance {
 	public function execute() {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
-		$excluded = $config->get( 'ManageWikiPermissionsDisallowedGroups' );
+		$excluded = $this->getConfig()->get( 'ManageWikiPermissionsDisallowedGroups' );
 
 		$grouparray = [];
 
-		foreach ( $config->get( 'GroupPermissions' ) as $group => $perm ) {
+		foreach ( $this->getConfig()->get( MainConfigNames::GroupPermissions ) as $group => $perm ) {
 			$permsarray = [];
 
 			if ( !in_array( $group, $excluded ) ) {
@@ -38,44 +36,44 @@ class PopulateGroupPermissions extends Maintenance {
 			}
 		}
 
-		foreach ( $config->get( 'AddGroups' ) as $group => $add ) {
+		foreach ( $this->getConfig()->get( MainConfigNames::AddGroups ) as $group => $add ) {
 			if ( !in_array( $group, $excluded ) ) {
 				$grouparray[$group]['add'] = json_encode( $add );
 			}
 		}
 
-		foreach ( $config->get( 'RemoveGroups' ) as $group => $remove ) {
+		foreach ( $this->getConfig()->get( MainConfigNames::RemoveGroups ) as $group => $remove ) {
 			if ( !in_array( $group, $excluded ) ) {
 				$grouparray[$group]['remove'] = json_encode( $remove );
 			}
 		}
 
-		foreach ( $config->get( 'GroupsAddToSelf' ) as $group => $adds ) {
+		foreach ( $this->getConfig()->get( MainConfigNames::GroupsAddToSelf ) as $group => $adds ) {
 			if ( !in_array( $group, $excluded ) ) {
 				$grouparray[$group]['addself'] = json_encode( $adds );
 			}
 		}
 
-		foreach ( $config->get( 'GroupsRemoveFromSelf' ) as $group => $removes ) {
+		foreach ( $this->getConfig()->get( MainConfigNames::GroupsRemoveFromSelf ) as $group => $removes ) {
 			if ( !in_array( $group, $excluded ) ) {
 				$grouparray[$group]['removeself'] = json_encode( $removes );
 			}
 		}
 
-		foreach ( $config->get( 'Autopromote' ) as $group => $promo ) {
+		foreach ( $this->getConfig()->get( MainConfigNames::Autopromote ) as $group => $promo ) {
 			if ( !in_array( $group, $excluded ) ) {
 				$grouparray[$group]['autopromote'] = json_encode( $promo );
 			}
 		}
 
-		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = $this->getDB( DB_PRIMARY, [], $this->getConfig()->get( 'CreateWikiDatabase' ) );
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
 			$check = $dbw->selectRow(
 				'mw_permissions',
 				[ 'perm_group' ],
 				[
-					'perm_dbname' => $config->get( 'DBname' ),
+					'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 					'perm_group' => $groupname
 				],
 				__METHOD__
@@ -84,7 +82,7 @@ class PopulateGroupPermissions extends Maintenance {
 			if ( !$check ) {
 				$dbw->insert( 'mw_permissions',
 					[
-						'perm_dbname' => $config->get( 'DBname' ),
+						'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 						'perm_group' => $groupname,
 						'perm_permissions' => empty( $groupatr['perms'] ) ? json_encode( [] ) : $groupatr['perms'],
 						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
