@@ -9,7 +9,7 @@ if ( $IP === false ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 
 class AddNamespaces extends Maintenance {
@@ -27,9 +27,7 @@ class AddNamespaces extends Maintenance {
 	}
 
 	public function execute() {
-		$dbname = $this->getOption( 'default' ) ? 'default' : MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'DBname' );
-
-		$mwNamespaces = new ManageWikiNamespaces( $dbname );
+		$mwNamespaces = new ManageWikiNamespaces( $this->getConfig()->get( MainConfigNames::DBname ) );
 
 		$nsData = [
 			'name' => (string)$this->getOption( 'name' ),
