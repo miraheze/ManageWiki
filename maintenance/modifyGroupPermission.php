@@ -9,7 +9,7 @@ if ( $IP === false ) {
 require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 
 class ModifyGroupPermission extends Maintenance {
@@ -26,7 +26,7 @@ class ModifyGroupPermission extends Maintenance {
 	}
 
 	public function execute() {
-		$mwPermissions = new ManageWikiPermissions( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'DBname' ) );
+		$mwPermissions = new ManageWikiPermissions( $this->getConfig()->get( MainConfigNames::DBname ) );
 
 		$permData = [
 			'permissions' => [
@@ -57,11 +57,9 @@ class ModifyGroupPermission extends Maintenance {
 	}
 
 	private function changeGroup( string $name, array $permData, object $mwPermissions ) {
-		global $wgManageWikiPermissionsPermanentGroups;
-
 		$permList = $mwPermissions->list( $name );
 
-		if ( !in_array( $name, $wgManageWikiPermissionsPermanentGroups ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
+		if ( !in_array( $name, $this->getConfig()->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
 			$mwPermissions->remove( $name );
 		} else {
 			$mwPermissions->modify( $name, $permData );
