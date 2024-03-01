@@ -6,6 +6,7 @@ $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
 }
+
 require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
@@ -16,11 +17,13 @@ use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 class ToggleExtension extends Maintenance {
 	public function __construct() {
 		parent::__construct();
+
 		$this->addArg( 'ext', 'The ManageWiki name of the extension.', true );
 		$this->addOption( 'disable', 'Disable the extension. If not given, enabling is assumed.' );
 		$this->addOption( 'all-wikis', 'Run on all wikis present in $wgLocalDatabases.' );
 		$this->addOption( 'confirm', 'Confirm execution. Required if using --all-wikis' );
 		$this->addOption( 'no-list', 'Don\'t list on which wikis this script has ran. This may speed up execution.' );
+
 		$this->requireExtension( 'ManageWiki' );
 	}
 
