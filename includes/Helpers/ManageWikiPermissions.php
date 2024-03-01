@@ -207,8 +207,9 @@ class ManageWikiPermissions {
 			}
 		}
 
-		if ( $this->wiki != 'default' ) {
-			$cWJ = new CreateWikiJson( $this->wiki );
+		if ( $this->wiki !== 'default' ) {
+			$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+			$cWJ = new CreateWikiJson( $this->wiki, $createWikiHookRunner );
 			$cWJ->resetWiki();
 		}
 		$this->committed = true;
