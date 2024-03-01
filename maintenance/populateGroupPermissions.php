@@ -6,6 +6,7 @@ $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
 }
+
 require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
@@ -13,6 +14,12 @@ use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\ManageWiki;
 
 class PopulateGroupPermissions extends Maintenance {
+	public function __construct() {
+		parent::__construct();
+
+		$this->requireExtension( 'ManageWiki' );
+	}
+
 	public function execute() {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
