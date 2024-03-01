@@ -43,7 +43,8 @@ class ApiModifyServer extends ApiBase {
 	}
 
 	private function setServer( string $wiki, string $server ) {
-		$remoteWiki = new RemoteWiki( $wiki );
+		$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+		$remoteWiki = new RemoteWiki( $wiki, $createWikiHookRunner );
 		$remoteWiki->setServerName( $server );
 		$remoteWiki->commit();
 	}
