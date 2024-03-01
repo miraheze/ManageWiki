@@ -160,7 +160,9 @@ class ManageWikiSettings {
 			ManageWikiInstaller::process( $this->wiki, [ 'mwscript' => $this->scripts ] );
 		}
 
-		$cWJ = new CreateWikiJson( $this->wiki );
+		$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+
+		$cWJ = new CreateWikiJson( $this->wiki, $createWikiHookRunner );
 		$cWJ->resetWiki();
 		$this->committed = true;
 
