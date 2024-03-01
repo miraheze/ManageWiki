@@ -20,6 +20,8 @@ class PopulateWikiSettings extends Maintenance {
 		$this->addOption( 'wgsetting', 'The $wg setting minus $.', true, true );
 		$this->addOption( 'sourcelist', 'File in format of "wiki|value" for the $wg setting above.', true, true );
 		$this->addOption( 'remove', 'Removes setting listed with --wgsetting.' );
+
+		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute() {
