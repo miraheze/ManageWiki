@@ -19,7 +19,6 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 		parent::__construct();
 
 		$this->addOption( 'overwrite', 'This overwrites perms to reset them back to the default.', false, false );
-
 		$this->requireExtension( 'ManageWiki' );
 	}
 
