@@ -6,28 +6,30 @@ $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
 }
+
 require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 
 class PopulateNamespacesWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
+
 		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.', false, false );
+		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute() {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = $this->getDB( DB_PRIMARY, [], $this->getConfig()->get( 'CreateWikiDatabase' ) );
 
 		if ( $this->getOption( 'overwrite' ) ) {
 			$dbw->delete(
 				'mw_namespaces',
 				[
-					'ns_dbname' => $config->get( 'DBname' )
+					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
 				],
 				__METHOD__
 			);
@@ -39,12 +41,12 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 				'*'
 			],
 			[
-				'ns_dbname' => $config->get( 'DBname' )
+				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
 			]
 		);
 
 		if ( !$checkRow ) {
-			$mwNamespaces = new ManageWikiNamespaces( $config->get( 'DBname' ) );
+			$mwNamespaces = new ManageWikiNamespaces( $this->getConfig()->get( MainConfigNames::DBname ) );
 			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list() );
 
@@ -53,7 +55,11 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 				$mwNamespaces->commit();
 			}
 
-			$cWJ = new CreateWikiJson( $config->get( 'DBname' ) );
+			$cWJ = new CreateWikiJson(
+				$this->getConfig()->get( MainConfigNames::DBname ),
+				$this->getServiceContainer()->get( 'CreateWikiHookRunner' )
+			);
+
 			$cWJ->resetWiki();
 		}
 	}

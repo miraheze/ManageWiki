@@ -6,19 +6,19 @@ $IP = getenv( 'MW_INSTALL_PATH' );
 if ( $IP === false ) {
 	$IP = __DIR__ . '/../../..';
 }
+
 require_once "$IP/maintenance/Maintenance.php";
 
 use Maintenance;
-use MediaWiki\MediaWikiServices;
 
 class MigrateSettingsAndExtensions extends Maintenance {
 	public function __construct() {
 		parent::__construct();
+		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute() {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$dbw = $this->getDB( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = $this->getDB( DB_PRIMARY, [], $this->getConfig()->get( 'CreateWikiDatabase' ) );
 
 		$res = $dbw->select(
 			'cw_wikis',
@@ -34,7 +34,7 @@ class MigrateSettingsAndExtensions extends Maintenance {
 			$extensions = [];
 
 			foreach ( $extensionsArray as $ext ) {
-				if ( isset( $config->get( 'ManageWikiExtensions' )[$ext] ) ) {
+				if ( isset( $this->getConfig()->get( 'ManageWikiExtensions' )[$ext] ) ) {
 					$extensions[] = $ext;
 				}
 			}
