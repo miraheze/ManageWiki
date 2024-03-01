@@ -344,7 +344,7 @@ class Hooks {
 			}
 
 			$bar['managewiki-sidebar-header'][] = [
-				'text' => wfMessage( "managewiki-link-{$module}{$append}" )->plain(),
+				'text' => $skin->msg( "managewiki-link-{$module}{$append}" )->text(),
 				'id' => "managewiki{$module}link",
 				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() )
 			];
