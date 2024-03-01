@@ -23,8 +23,10 @@ class QueryWikiConfig extends ApiQueryBase {
 
 		$data = [];
 
+		$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+
 		foreach ( $params['wikis'] as $wiki ) {
-			$wikiObj = new RemoteWiki( $wiki );
+			$wikiObj = new RemoteWiki( $wiki, $createWikiHookRunner );
 
 			if ( $wikiObj === null ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
