@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"1108-Kiju",
 			"Aefgh39622",
 			"Ajeje Brazorf",
 			"Ant176",
@@ -64,7 +65,7 @@
 	"logentry-managewiki-rights-reset": "$1が \"$4\" グループの権限をデフォルトに{{GENDER:$2|リセットしました}}",
 	"logentry-managewiki-rights": "$1 が利用者グループ $3 のメタデータを{{GENDER:$2|変更しました}}。追加した権限 $4; 除去した権限 $5; 付与できるようにした利用者グループ $6; 付与できないようにした利用者グループ $7; 除去できるようにした利用者グループ $8; 除去できないようにした利用者グループ $9; 自身に付与できるようにした利用者グループ $10; 自身に付与できないようにした利用者グループ $11; 自身で除去できるようにした利用者グループ $12; 自身で除去できないようにした利用者グループ $13; 自動昇格の変更 ($14)",
 	"logentry-managewiki-settings": "$1 がウィキ \"$4\" の設定 \"$5\" を{{GENDER:$2|変更しました}}",
-	"logentry-managewiki-undelete": "$1 が、削除されたウィキ \"$4\" を{{GENDER:$2|復帰しました}}",
+	"logentry-managewiki-undelete": "$1 が、削除されたウィキ \"$4\" を{{GENDER:$2|復元しました}}",
 	"logentry-managewiki-unlock": "$1 がウィキ \"$4\" のロックを{{GENDER:$2|解除しました}}",
 	"managewiki-changes-none": "変更はありませんでした。",
 	"managewiki-conflicts": "互換性なし:",
@@ -103,7 +104,7 @@
 	"managewiki-label-private": "非公開",
 	"managewiki-label-server": "ドメイン名",
 	"managewiki-label-sitename": "ウィキの名前",
-	"managewiki-label-undeletewiki": "この削除されたウィキを復帰しますか?",
+	"managewiki-label-undeletewiki": "この削除されたウィキを復元しますか?",
 	"managewiki-label-unlockwiki": "このウィキの設定のロックを解除しますか?",
 	"managewiki-link-core-view": "ウィキの基本設定を表示",
 	"managewiki-link-core": "ウィキの基本設定の管理",

@@ -18,6 +18,8 @@
 	"action-managewiki-permissions": "建立、刪除，與管理此 wiki 的使用者群組",
 	"action-managewiki-settings": "管理此 wiki 的進階設定",
 	"apihelp-modifyserver-example": "修改 wiki 伺服器名稱。",
+	"apihelp-modifyserver-param-server": "要修改的伺服器名稱。",
+	"apihelp-modifyserver-param-wiki": "要修改其伺服器名稱的 wiki ID。",
 	"apihelp-modifyserver-summary": "修改 wiki 伺服器名稱。",
 	"apihelp-query+wikiconfig-example-1": "檢視用於 metawiki 的 wiki 設定。",
 	"apihelp-query+wikiconfig-param-prop": "選擇要回傳的屬性：",
