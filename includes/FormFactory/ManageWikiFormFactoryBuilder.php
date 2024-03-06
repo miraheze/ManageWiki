@@ -140,7 +140,7 @@ class ManageWikiFormFactoryBuilder {
 			],
 			'inactive-exempt-reason' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( 'CreateWikiInactiveExemptReasonOptions' ),
-				'hide-if' => [ '!==', 'wpinactive-exempt', '1' ],
+				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
 				'type' => 'selectorother',
 				'default' => $wiki->getInactiveExemptReason(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
@@ -715,7 +715,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 				'default' => ( $aP === null ) ? '&' : $aP[0],
 				'disabled' => !$ceMW,
-				'hide-if' => [ '!==', 'wpenable', '1' ],
+				'hide-if' => [ '!==', 'enable', '1' ],
 				'section' => 'autopromote'
 			],
 			'once' => [
@@ -723,13 +723,13 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-autopromote-once',
 				'default' => is_int( array_search( 'once', (array)$aP ) ),
 				'disabled' => !$ceMW,
-				'hide-if' => [ '!==', 'wpenable', '1' ],
+				'hide-if' => [ '!==', 'enable', '1' ],
 				'section' => 'autopromote'
 			],
 			'editcount' => [
 				'type' => 'int',
 				'label-message' => 'managewiki-permissions-autopromote-editcount',
-				'hide-if' => [ '!==', 'wpenable', '1' ],
+				'hide-if' => [ '!==', 'enable', '1' ],
 				'min' => 0,
 				'default' => $aPArray[APCOND_EDITCOUNT] ?? 0,
 				'disabled' => !$ceMW,
@@ -738,7 +738,7 @@ class ManageWikiFormFactoryBuilder {
 			'age' => [
 				'type' => 'int',
 				'label-message' => 'managewiki-permissions-autopromote-age',
-				'hide-if' => [ '!==', 'wpenable', '1' ],
+				'hide-if' => [ '!==', 'enable', '1' ],
 				'min' => 0,
 				'default' => isset( $aPArray[APCOND_AGE] ) ? $aPArray[APCOND_AGE] / 86400 : 0,
 				'disabled' => !$ceMW,
@@ -747,7 +747,7 @@ class ManageWikiFormFactoryBuilder {
 			'emailconfirmed' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-email',
-				'hide-if' => [ '!==', 'wpenable', '1' ],
+				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => is_int( array_search( APCOND_EMAILCONFIRMED, (array)$aP ) ),
 				'disabled' => !$ceMW,
 				'section' => 'autopromote'
@@ -755,7 +755,7 @@ class ManageWikiFormFactoryBuilder {
 			'blocked' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-blocked',
-				'hide-if' => [ '!==', 'wpenable', '1' ],
+				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => is_int( array_search( APCOND_BLOCKED, (array)$aP ) ),
 				'disabled' => !$ceMW,
 				'section' => 'autopromote'
@@ -763,7 +763,7 @@ class ManageWikiFormFactoryBuilder {
 			'bot' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-bot',
-				'hide-if' => [ '!==', 'wpenable', '1' ],
+				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => is_int( array_search( APCOND_ISBOT, (array)$aP ) ),
 				'disabled' => !$ceMW,
 				'section' => 'autopromote'
@@ -772,7 +772,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'multiselect',
 				'label-message' => 'managewiki-permissions-autopromote-groups',
 				'options' => $rowsBuilt,
-				'hide-if' => [ 'OR', [ '!==', 'wpenable', '1' ], [ '===', 'wpconds', '|' ] ],
+				'hide-if' => [ 'OR', [ '!==', 'enable', '1' ], [ '===', 'conds', '|' ] ],
 				'default' => $aPArray[APCOND_INGROUPS] ?? [],
 				'disabled' => !$ceMW,
 				'section' => 'autopromote'
