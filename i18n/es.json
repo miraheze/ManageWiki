@@ -149,6 +149,7 @@
 	"managewiki-review-title": "Revisar cambios",
 	"managewiki-review": "Revisar",
 	"managewiki-save": "Guardar",
+	"managewiki-search-noresults": "No hay resultados",
 	"managewiki-sidebar-header": "Administración",
 	"managewiki-success": "La configuración se modificó correctamente.",
 	"managewiki-toggle-forcesidebar": "Forzar el despliegue de enlaces de ManageWiki en la barra lateral.",
