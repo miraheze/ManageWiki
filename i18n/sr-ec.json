@@ -102,7 +102,7 @@
 	"permissions-assigned": "Додељене дозволе",
 	"permissions-delete-checkbox": "Обриши ову корисничку групу",
 	"permissions-delete": "Обриши",
-	"right-managewiki-editdefault": "управљање подразумеваним дозволама група",
+	"right-managewiki-editdefault": "управљање 'farm-wide' подразумеваним дозволама група",
 	"right-managewiki-restricted": "управљање ограниченим подешавањима викија",
 	"settings-other": "Друго"
 }
