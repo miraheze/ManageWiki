@@ -2,19 +2,38 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use OOUI\ButtonInputWidget;
+use OOUI\FieldsetLayout;
+use OOUI\HtmlSnippet;
+use OOUI\IndexLayout;
+use OOUI\PanelLayout;
+use OOUI\TabPanelLayout;
+use OOUI\Widget;
 use OOUIHTMLForm;
 use Xml;
 
 class ManageWikiOOUIForm extends OOUIHTMLForm {
+
 	/** @var bool */
 	protected $mSubSectionBeforeFields = false;
 
+	/**
+	 * @param string $html
+	 * @return string
+	 */
 	public function wrapForm( $html ) {
 		$html = Xml::tags( 'div', [ 'id' => 'managewiki' ], $html );
 
 		return parent::wrapForm( $html );
 	}
 
+	/**
+	 * @param string $legend
+	 * @param string $section
+	 * @param array $attributes
+	 * @param bool $isRoot
+	 * @return PanelLayout
+	 */
 	protected function wrapFieldSetSection( $legend, $section, $attributes, $isRoot ) {
 		$layout = parent::wrapFieldSetSection( $legend, $section, $attributes, $isRoot );
 
@@ -24,6 +43,9 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		return $layout;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getBody() {
 		$tabPanels = [];
 		foreach ( $this->mFieldTree as $key => $val ) {
@@ -36,24 +58,24 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			$label = $this->getLegend( $key );
 
 			$content =
-				$this->getHeaderText( $key ) .
+				$this->getHeaderHtml( $key ) .
 				$this->displaySection(
 					$val,
 					'',
 					"mw-section-{$key}-"
 				) .
-				$this->getFooterText( $key );
+				$this->getFooterHtml( $key );
 
-			$tabPanels[] = new \OOUI\TabPanelLayout( 'mw-section-' . $key, [
+			$tabPanels[] = new TabPanelLayout( 'mw-section-' . $key, [
 				'classes' => [ 'mw-htmlform-autoinfuse-lazy' ],
 				'label' => $label,
-				'content' => new \OOUI\FieldsetLayout( [
+				'content' => new FieldsetLayout( [
 					'classes' => [ 'managewiki-section-fieldset' ],
 					'id' => "mw-section-{$key}",
 					'label' => $label,
 					'items' => [
-						new \OOUI\Widget( [
-							'content' => new \OOUI\HtmlSnippet( $content )
+						new Widget( [
+							'content' => new HtmlSnippet( $content )
 						] ),
 					],
 				] ),
@@ -62,7 +84,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			] );
 		}
 
-		$indexLayout = new \OOUI\IndexLayout( [
+		$indexLayout = new IndexLayout( [
 			'infusable' => true,
 			'expanded' => false,
 			'autoFocus' => false,
@@ -73,7 +95,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 
 		$header = $this->formatFormHeader();
 
-		$form = new \OOUI\PanelLayout( [
+		$form = new PanelLayout( [
 			'framed' => true,
 			'expanded' => false,
 			'classes' => [ 'managewiki-tabs-wrapper' ],
@@ -83,9 +105,12 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		return $header . $form;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getButtons() {
 		if ( !$this->mShowSubmit ) {
-			return;
+			return '';
 		}
 
 		$descriptor = [];
@@ -105,7 +130,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 
 		$html .= parent::getButtons();
 
-		$html .= new \OOUI\ButtonInputWidget( [
+		$html .= new ButtonInputWidget( [
 			'label' => $this->msg( 'managewiki-review' )->text(),
 			'id' => 'managewiki-review'
 		] );
