@@ -1,8 +1,6 @@
 ( function () {
 	$( function () {
-		// The lazy loading is temporarily disabled to prevent conflict with the cloner widget.
-		var autoinfuseLazy = false,
-			tabs, previousTab, switchingNoHash;
+		var tabs, previousTab, switchingNoHash;
 
 		tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 
@@ -18,7 +16,8 @@
 				}
 			} );
 
-			if ( autoinfuseLazy && !panel.$element.data( 'mw-section-infused' ) ) {
+			// We disable lazy infuse if there is a cloner as lazy infuse causes cloner to add two fields each time rather than one.
+			if ( !panel.$element.find( '.mw-htmlform-field-HTMLFormFieldCloner' ).length && !panel.$element.data( 'mw-section-infused' ) ) {
 				panel.$element.removeClass( 'mw-htmlform-autoinfuse-lazy' );
 				mw.hook( 'htmlform.enhance' ).fire( panel.$element );
 				panel.$element.data( 'mw-section-infused', true );
