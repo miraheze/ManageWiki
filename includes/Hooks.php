@@ -139,7 +139,7 @@ class Hooks {
 					}
 
 					if ( $val ) {
-						setNamespaceSettingJson( $jsonArray, (int)$ns->ns_namespace_id, $var, $val, $conf );
+						self::setNamespaceSettingJson( $jsonArray, (int)$ns->ns_namespace_id, $var, $val, $conf );
 					} elseif (
 						!isset( $conf['constant'] ) &&
 						( !isset( $jsonArray['settings'][$var] ) || !$jsonArray['settings'][$var] )
@@ -157,7 +157,7 @@ class Hooks {
 					array_key_exists( NS_SPECIAL, $conf['overridedefault'] ) &&
 					$conf['overridedefault'][NS_SPECIAL]
 				) {
-					setNamespaceSettingJson( $jsonArray, NS_SPECIAL, $var, $val, $conf );
+					self::setNamespaceSettingJson( $jsonArray, NS_SPECIAL, $var, $val, $conf );
 				}
 			}
 		}
