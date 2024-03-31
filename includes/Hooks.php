@@ -151,8 +151,8 @@ class Hooks {
 			// Search for and apply overridedefaults to NS_SPECIAL
 			// Notably, we do not apply 'default' overridedefault to NS_SPECIAL
 			// It must exist as it's own key in overridedefault
-			foreach( $additional as $var => $conf ) {
-				if ( 
+			foreach ( $additional as $var => $conf ) {
+				if (
 					is_array( $conf['overridedefault'] ) &&
 					array_key_exists( NS_SPECIAL, $conf['overridedefault'] ) &&
 					$conf['overridedefault'][NS_SPECIAL]
@@ -232,14 +232,14 @@ class Hooks {
 	}
 
 	/**
- 	 * Adds the namespace setting for the supplied variable
-   	 * 
-     	 * @param array &$jsonArray array representation of the JSON output
+	 * Adds the namespace setting for the supplied variable
+	 *
+	 * @param array &$jsonArray array representation of the JSON output
 	 * @param int $nsID namespace ID number as an integer
-  	 * @param string $var variable name
-    	 * @param mixed $val variable value
+	 * @param string $var variable name
+	 * @param mixed $val variable value
 	 * @param array $varConf variable config from wgManageWikiNamespacesAdditional[$var]
-   	 */
+	 */
 	private static function setNamespaceSettingJson(
 		array &$jsonArray, int $nsID, string $var, string $val, array $varConf
 	) {
