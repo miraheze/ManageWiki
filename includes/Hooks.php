@@ -157,7 +157,7 @@ class Hooks {
 					array_key_exists( NS_SPECIAL, $conf['overridedefault'] ) &&
 					$conf['overridedefault'][NS_SPECIAL]
 				) {
-					self::setNamespaceSettingJson( $jsonArray, NS_SPECIAL, $var, $val, $conf );
+					self::setNamespaceSettingJson( $jsonArray, NS_SPECIAL, $var, $conf['overridedefault'][NS_SPECIAL], $conf );
 				}
 			}
 		}
