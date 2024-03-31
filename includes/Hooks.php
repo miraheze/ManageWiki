@@ -132,7 +132,8 @@ class Hooks {
 						} elseif ( array_key_exists( 'default', $conf['overridedefault'] ) ) {
 							$val = $conf['overridedefault']['default'];
 						} else {
-							$val = null; // TODO: throw error? this should probably not be allowed
+							// TODO: throw error? this should probably not be allowed
+							$val = null;
 						}
 					} else {
 						$val = $conf['overridedefault'];
