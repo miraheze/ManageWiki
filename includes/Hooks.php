@@ -241,7 +241,7 @@ class Hooks {
 	 * @param array $varConf variable config from wgManageWikiNamespacesAdditional[$var]
 	 */
 	private static function setNamespaceSettingJson(
-		array &$jsonArray, int $nsID, string $var, string $val, array $varConf
+		array &$jsonArray, int $nsID, string $var, $val, array $varConf
 	) {
 		switch ( $varConf['type'] ) {
 			case 'check':
