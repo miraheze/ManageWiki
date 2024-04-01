@@ -51,19 +51,14 @@ class PopulateNamespaces extends Maintenance {
 					'ns_namespace_id'
 				],
 				[
-					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
+					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
+					'ns_namespace_id' => (int)$id
 				],
 				__METHOD__
 			);
 
-			if ( !$res || !is_object( $res ) ) {
+			if ( !$res || $res->count() === 0 ) {
 				$this->insertNamespace( $dbw, $id, $name, $nsAliases );
-			} else {
-				foreach ( $res as $row ) {
-					if ( $row->ns_namespace_id !== (int)$id ) {
-						$this->insertNamespace( $dbw, $id, $name, $nsAliases );
-					}
-				}
 			}
 		}
 
