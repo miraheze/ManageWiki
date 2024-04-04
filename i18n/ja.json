@@ -12,6 +12,7 @@
 			"M1660661",
 			"MathXplore",
 			"Omotecho",
+			"Salvare",
 			"Shirayuki",
 			"Siglite3",
 			"Suyama",
@@ -190,7 +191,7 @@
 	"namespaces-contentmodel": "この名前空間のコンテンツモデルを選択してください",
 	"namespaces-delete-checkbox": "このボックスをチェックすると、この名前空間が削除されます。",
 	"namespaces-delete": "削除",
-	"namespaces-migrate-to": "この名空が削除された場合、この名前空間ページはどの名前空間ページに移動しますか？",
+	"namespaces-migrate-to": "この名前空間が削除された場合、この名前空間のページはどの名前空間に移動されるべきですか？",
 	"namespaces-namespace": "標準名前空間",
 	"namespaces-namespacetalk": "トーク名前空間",
 	"namespaces-protection": "この名前空間を編集する利用者グループを選択してください",
@@ -204,5 +205,10 @@
 	"permissions-unassigned": "未割り当ての権限",
 	"right-managewiki-editdefault": "ファーム全体の既定グループ権限を管理",
 	"right-managewiki-restricted": "制限付きウィキ設定を管理",
+	"right-managewiki-core": "このウィキのcore設定を管理する",
+	"right-managewiki-extensions": "このウィキの拡張機能を有効または無効にする",
+	"right-managewiki-namespaces": "このウィキの名前空間を作成、削除、管理する",
+	"right-managewiki-permissions": "このウィキで利用者グループを作成、削除、管理する",
+	"right-managewiki-settings": "このウィキの詳細設定を管理する",
 	"settings-other": "その他"
 }
