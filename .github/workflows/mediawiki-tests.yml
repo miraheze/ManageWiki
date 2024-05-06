@@ -45,7 +45,7 @@ jobs:
       - uses: rectalogic/notify-irc@v2
         if: env.WORKFLOW_CONCLUSION == 'success'
         with:
-          channel: "#miraheze-sre"
+          channel: "#miraheze-tech-ops"
           server: "irc.libera.chat"
           nickname: miraheze-github
           message: ${{ github.repository }} - ${{ github.actor }} the build passed.
@@ -56,7 +56,7 @@ jobs:
       - uses: rectalogic/notify-irc@v2
         if: env.WORKFLOW_CONCLUSION == 'failure'
         with:
-          channel: "#miraheze-sre"
+          channel: "#miraheze-tech-ops"
           server: "irc.libera.chat"
           nickname: miraheze-github
           message: ${{ github.repository }} - ${{ github.actor }} the build has errored.
