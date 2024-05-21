@@ -122,38 +122,43 @@ class Hooks {
 
 				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
 
-				foreach ( $nsAdditional as $var => $val ) {
-					if ( isset( $additional[$var] ) ) {
-						if ( $val ) {
-							switch ( $additional[$var]['type'] ) {
-								case 'check':
-									$jsonArray['settings'][$var][] = (int)$ns->ns_namespace_id;
-									break;
-								case 'vestyle':
-									$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = true;
-									break;
-								default:
-									if ( ( $additional[$var]['constant'] ) ?? false ) {
-										$jsonArray['settings'][$var] = str_replace( ' ', '_', $val );
-									} else {
-										$jsonArray['settings'][$var][(int)$ns->ns_namespace_id] = $val;
-									}
-							}
-						} elseif (
-							!isset( $additional[$var]['constant'] ) &&
-							( !isset( $jsonArray['settings'][$var] ) || !$jsonArray['settings'][$var] )
-						) {
-							$jsonArray['settings'][$var] = [];
+				foreach ( $additional as $var => $conf ) {
+					// Select value if configured, otherwise fall back to overridedefault
+					if ( isset( $nsAdditional[$var] ) ) {
+						$val = $nsAdditional[$var];
+					} elseif ( is_array( $conf['overridedefault'] ) ) {
+						if ( array_key_exists( (int)$ns->ns_namespace_id, $conf['overridedefault'] ) ) {
+							$val = $conf['overridedefault'][(int)$ns->ns_namespace_id];
+						} elseif ( array_key_exists( 'default', $conf['overridedefault'] ) ) {
+							$val = $conf['overridedefault']['default'];
+						} else {
+							// TODO: throw error? this should probably not be allowed
+							$val = null;
 						}
-
-						if (
-							is_array( $additional[$var]['overridedefault'] ) &&
-							in_array( NS_SPECIAL, $additional[$var]['overridedefault'] ) &&
-							!in_array( NS_SPECIAL, $jsonArray['settings'][$var] ?? [] )
-						) {
-							$jsonArray['settings'][$var][] = NS_SPECIAL;
-						}
+					} else {
+						$val = $conf['overridedefault'];
 					}
+
+					if ( $val ) {
+						self::setNamespaceSettingJson( $jsonArray, (int)$ns->ns_namespace_id, $var, $val, $conf );
+					} elseif (
+						!isset( $conf['constant'] ) &&
+						( !isset( $jsonArray['settings'][$var] ) || !$jsonArray['settings'][$var] )
+					) {
+						$jsonArray['settings'][$var] = [];
+					}
+				}
+			}
+			// Search for and apply overridedefaults to NS_SPECIAL
+			// Notably, we do not apply 'default' overridedefault to NS_SPECIAL
+			// It must exist as it's own key in overridedefault
+			foreach ( $additional as $var => $conf ) {
+				if (
+					is_array( $conf['overridedefault'] ) &&
+					array_key_exists( NS_SPECIAL, $conf['overridedefault'] ) &&
+					$conf['overridedefault'][NS_SPECIAL]
+				) {
+					self::setNamespaceSettingJson( $jsonArray, NS_SPECIAL, $var, $conf['overridedefault'][NS_SPECIAL], $conf );
 				}
 			}
 		}
@@ -224,6 +229,34 @@ class Hooks {
 					'autopromote' => []
 				];
 			}
+		}
+	}
+
+	/**
+	 * Adds the namespace setting for the supplied variable
+	 *
+	 * @param array &$jsonArray array representation of the JSON output
+	 * @param int $nsID namespace ID number as an integer
+	 * @param string $var variable name
+	 * @param mixed $val variable value
+	 * @param array $varConf variable config from wgManageWikiNamespacesAdditional[$var]
+	 */
+	private static function setNamespaceSettingJson(
+		array &$jsonArray, int $nsID, string $var, $val, array $varConf
+	) {
+		switch ( $varConf['type'] ) {
+			case 'check':
+				$jsonArray['settings'][$var][] = $nsID;
+				break;
+			case 'vestyle':
+				$jsonArray['settings'][$var][$nsID] = true;
+				break;
+			default:
+				if ( ( $varConf['constant'] ) ?? false ) {
+					$jsonArray['settings'][$var] = str_replace( ' ', '_', $val );
+				} else {
+					$jsonArray['settings'][$var][$nsID] = $val;
+				}
 		}
 	}
 
