@@ -76,9 +76,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$groups = array_keys( $mwPermissions->list() );
 			$craftedGroups = [];
 
-			// ideally this should be a call to Language::getGroupName( $group ), but that method is not static so this will do
 			foreach ( $groups as $group ) {
-				$craftedGroups[RequestContext::getMain()->getLanguage()->getGroupName( $group )] = $group;
+				$craftedGroups[UserGroupMembership::getGroupName( $group )] = $group;
 			}
 
 			$groupSelector = [];
