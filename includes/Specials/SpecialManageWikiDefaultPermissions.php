@@ -16,6 +16,7 @@ use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks;
 use Miraheze\ManageWiki\ManageWiki;
+use RequestContext;
 use SpecialPage;
 use UserGroupMembership;
 
@@ -75,8 +76,9 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$groups = array_keys( $mwPermissions->list() );
 			$craftedGroups = [];
 
+			// ideally this should be a call to Language::getGroupName( $group ), but that method is not static so this will do
 			foreach ( $groups as $group ) {
-				$craftedGroups[UserGroupMembership::getGroupName( $group )] = $group;
+				$craftedGroups[RequestContext::getMain()->getLanguage()->getGroupName( $group )] = $group;
 			}
 
 			$groupSelector = [];
