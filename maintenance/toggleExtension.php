@@ -50,7 +50,7 @@ class ToggleExtension extends Maintenance {
 				if ( !$noList ) {
 					$this->output( "Removed $ext from $wiki" );
 				}
-			} elseif ( !in_array( $ext, $extensionList ) ) {
+			} elseif ( !(in_array( $ext, $extensionList ) ) && $disable ){
 				$mwExt->add( $ext );
 				$mwExt->commit();
 				if ( !$noList ) {
