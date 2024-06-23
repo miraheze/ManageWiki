@@ -123,6 +123,10 @@ class Hooks {
 				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
 
 				foreach ( $additional as $var => $conf ) {
+					if ( !self::isAdditionalSettingForNamespace( $conf, $ns->ns_namespace_id ) ) {
+						continue;
+					}
+
 					// Select value if configured, otherwise fall back to overridedefault
 					if ( isset( $nsAdditional[$var] ) ) {
 						$val = $nsAdditional[$var];
@@ -156,7 +160,8 @@ class Hooks {
 				if (
 					is_array( $conf['overridedefault'] ) &&
 					array_key_exists( NS_SPECIAL, $conf['overridedefault'] ) &&
-					$conf['overridedefault'][NS_SPECIAL]
+					$conf['overridedefault'][NS_SPECIAL] &&
+					self::isAdditionalSettingForNamespace( $conf, NS_SPECIAL )
 				) {
 					self::setNamespaceSettingJson( $jsonArray, NS_SPECIAL, $var, $conf['overridedefault'][NS_SPECIAL], $conf );
 				}
@@ -258,6 +263,31 @@ class Hooks {
 					$jsonArray['settings'][$var][$nsID] = $val;
 				}
 		}
+	}
+
+	/**
+	 * Checks if the namespace is for the additional setting given
+	 *
+	 * @param array $conf additional setting to check
+	 * @param int $nsID namespace ID to check if the setting is allowed for
+	 * @return bool Whether or not the setting is enabled for the namespace
+	 */
+	private static function isAdditionalSettingForNamespace(
+		array $conf, int $nsID
+	) {
+		// T12237: Do not apply additional settings if the setting is not for the
+		// namespace that we are on, otherwise it is very likely for the namespace to
+		// not have setting set, and cause settings set before to be ignored
+
+		$only = null;
+		if ( isset( $conf['only'] ) ) {
+			$only = $conf['only'];
+		}
+		if ( is_int( $only ) ) {
+			$only = [$only];
+		}
+
+		return $only === null || in_array( $nsID, $only );
 	}
 
 	public static function onCreateWikiCreation( $dbname, $private ) {
