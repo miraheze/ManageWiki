@@ -116,7 +116,7 @@ class Hooks {
 					'content' => (bool)$ns->ns_content,
 					'contentmodel' => $ns->ns_content_model,
 					'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
-					'aliases' => array_merge( json_decode( $ns->ns_aliases ?? '', true ), (array)$lcAlias ),
+					'aliases' => array_merge( json_decode( str_replace( ' ', '_', $ns->ns_aliases ?? '' ), true ), (array)$lcAlias ),
 					'additional' => json_decode( $ns->ns_additional ?? '', true )
 				];
 
@@ -285,7 +285,7 @@ class Hooks {
 			$only = $conf['only'];
 		}
 		if ( is_int( $only ) ) {
-			$only = [$only];
+			$only = [ $only ];
 		}
 
 		return $only === null || in_array( $nsID, $only );
