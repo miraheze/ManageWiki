@@ -285,7 +285,7 @@ class Hooks {
 			$only = $conf['only'];
 		}
 		if ( is_int( $only ) ) {
-			$only = [$only];
+			$only = [ $only ];
 		}
 
 		return $only === null || in_array( $nsID, $only );
