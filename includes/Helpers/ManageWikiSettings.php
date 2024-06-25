@@ -139,8 +139,9 @@ class ManageWikiSettings {
 
 	/**
 	 * Commits all changes to the database
+     * @return void
 	 */
-	public function commit() {
+	public function commit(): void {
 		$this->dbw->upsert(
 			'mw_settings',
 			[
@@ -173,6 +174,7 @@ class ManageWikiSettings {
 
 	/**
 	 * Checks whether changes have been committed
+     *
 	 */
 	public function __destruct() {
 		if ( !$this->committed && !empty( $this->changes ) ) {

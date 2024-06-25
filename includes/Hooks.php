@@ -14,11 +14,22 @@ use User;
 use Wikimedia\Rdbms\DBConnRef;
 
 class Hooks {
+
+    /**
+     * Get a specific $wg variable from LocalSettings et al.
+     * @param string $var
+     * @return mixed
+     */
 	private static function getConfig( string $var ) {
 		return MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( $var );
 	}
 
-	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
+    /**
+     * Add the schema changes needed for this extension to work to $wgHooks
+     * @param DatabaseUpdater $updater
+     * @return void
+     */
+	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ): void {
 		$updater->addExtensionTable( 'mw_namespaces',
 				__DIR__ . '/../sql/mw_namespaces.sql' );
 		$updater->addExtensionTable( 'mw_permissions',
@@ -42,7 +53,11 @@ class Hooks {
 				__DIR__ . '/../sql/patches/patch-permissions-add-indexes.sql' );
 	}
 
-	public static function onRegistration() {
+    /**
+     * Add a new log type when MediaWiki registers this extension
+     * @return void
+     */
+	public static function onRegistration(): void {
 		global $wgLogTypes;
 
 		if ( !in_array( 'farmer', $wgLogTypes ) ) {
@@ -50,10 +65,22 @@ class Hooks {
 		}
 	}
 
-	public static function onContentHandlerForModelID( $modelId, &$handler ) {
+    /**
+     * @param $modelId
+     * @param $handler
+     * @return void
+     */
+	public static function onContentHandlerForModelID( $modelId, &$handler ): void {
 		$handler = new TextContentHandler( $modelId );
 	}
 
+    /**
+     * Hook that is called when CreateWiki regenerates the JSON file for a specific wiki
+     * @param string $wiki
+     * @param DBConnRef $dbr
+     * @param array $jsonArray
+     * @return void
+     */
 	public static function onCreateWikiJsonBuilder( string $wiki, DBConnRef $dbr, array &$jsonArray ) {
 		$setObject = $dbr->selectRow(
 			'mw_settings',
@@ -352,7 +379,13 @@ class Hooks {
 		}
 	}
 
-	public static function onCreateWikiStatePrivate( $dbname ) {
+    /**
+     * Sets up the member group when a wiki is set to private
+     * and assigns sysops the ability to add and remove it
+     * @param $dbname
+     * @return void
+     */
+	public static function onCreateWikiStatePrivate( $dbname ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) && self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
@@ -374,7 +407,12 @@ class Hooks {
 		}
 	}
 
-	public static function onCreateWikiStatePublic( $dbname ) {
+    /**
+     * See above
+     * @param $dbname
+     * @return void
+     */
+	public static function onCreateWikiStatePublic( $dbname ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) && self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ) {
 			$mwPermissions = new ManageWikiPermissions( $dbname );
 
@@ -388,12 +426,19 @@ class Hooks {
 		}
 	}
 
-	public static function fnNewSidebarItem( $skin, &$bar ) {
+    /**
+     * Adds the ManageWiki items to the sidebar
+     * @param $skin
+     * @param $bar
+     * @return void
+     */
+	public static function fnNewSidebarItem( $skin, &$bar ): void {
 		$user = $skin->getUser();
 		$services = MediaWikiServices::getInstance();
 		$permissionManager = $services->getPermissionManager();
 		$userOptionsLookup = $services->getUserOptionsLookup();
 
+        // check if the user is intentionally hiding the sidebar items
 		$hideSidebar = !self::getConfig( 'ManageWikiForceSidebarLinks' ) &&
 			!$userOptionsLookup->getOption( $user, 'managewikisidebar', 0 );
 
@@ -415,7 +460,14 @@ class Hooks {
 		}
 	}
 
-	public static function onGetPreferences( User $user, array &$preferences ) {
+    /**
+     * Add a preference that toggles whether the sidebar items are hidden or shown
+     * (See above hook)
+     * @param User $user
+     * @param array $preferences
+     * @return void
+     */
+	public static function onGetPreferences( User $user, array &$preferences ): void {
 		$preferences['managewikisidebar'] = [
 			'type' => 'toggle',
 			'label-message' => 'managewiki-toggle-forcesidebar',
