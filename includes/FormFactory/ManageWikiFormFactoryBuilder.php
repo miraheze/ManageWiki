@@ -1094,7 +1094,7 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		foreach ( $nsID as $name => $id ) {
-			$namespaceName = str_replace( ' ', '_', $formData["namespace-$name"] );
+			$namespaceName = str_replace( [' ', ':'], '_', $formData["namespace-$name"] );
 
 			$additionalBuilt = [];
 
