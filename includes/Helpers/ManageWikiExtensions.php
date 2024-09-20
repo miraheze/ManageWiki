@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use Config;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\CreateWikiJson;
+use Miraheze\CreateWiki\CreateWikiPhp;
 use Miraheze\CreateWiki\RemoteWiki;
 use Wikimedia\Rdbms\MaintainableDBConnRef;
 
@@ -190,8 +191,13 @@ class ManageWikiExtensions {
 		}
 
 		$this->write();
-		$cWJ = new CreateWikiJson( $this->wiki, $createWikiHookRunner );
-		$cWJ->resetWiki();
+		if ( $this->config->get( 'CreateWikiUsePhpCache' ) ) {
+			$cWP = new CreateWikiPhp( $this->wiki, $createWikiHookRunner );
+			$cWP->resetWiki();
+		} else {
+			$cWJ = new CreateWikiJson( $this->wiki, $createWikiHookRunner );
+			$cWJ->resetWiki();
+		}
 		$this->committed = true;
 
 		$this->logParams = [
