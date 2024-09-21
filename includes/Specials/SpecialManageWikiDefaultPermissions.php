@@ -10,6 +10,7 @@ use HTMLForm;
 use ManualLogEntry;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\CreateWikiJson;
+use Miraheze\CreateWiki\CreateWikiPhp;
 use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
@@ -115,7 +116,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 			}
 		} elseif ( !( $globalwiki == $this->config->get( 'DBname' ) ) && !$canModify ) {
-				throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-notglobalwiki' );
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-notglobalwiki' );
 		}
 
 		if ( !( $globalwiki == $this->config->get( 'DBname' ) ) && $canModify ) {
@@ -222,8 +223,19 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		);
 
 		// Reset the cache or else the changes won't work
-		$cWJ = new CreateWikiJson( $this->config->get( 'DBname' ), $this->createWikiHookRunner );
-		$cWJ->resetWiki();
+		if ( $this->config->get( 'CreateWikiUsePhpCache' ) ) {
+			$cWP = new CreateWikiPhp(
+				$this->config->get( 'DBname' ),
+				$this->createWikiHookRunner
+			);
+			$cWP->resetWiki();
+		} else {
+			$cWJ = new CreateWikiJson(
+				$this->config->get( 'DBname' ),
+				$this->createWikiHookRunner
+			);
+			$cWJ->resetWiki();
+		}
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
 		$logEntry->setPerformer( $this->getContext()->getUser() );

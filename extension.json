@@ -118,6 +118,9 @@
 		"CreateWikiJsonBuilder": [
 			"Miraheze\\ManageWiki\\Hooks::onCreateWikiJsonBuilder"
 		],
+		"CreateWikiPhpBuilder": [
+			"Miraheze\\ManageWiki\\Hooks::onCreateWikiJsonBuilder"
+		],
 		"CreateWikiStatePrivate": [
 			"Miraheze\\ManageWiki\\Hooks::onCreateWikiStatePrivate"
 		],
