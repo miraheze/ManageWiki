@@ -19,7 +19,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks;
 use Miraheze\ManageWiki\ManageWiki;
 use SpecialPage;
-use UserGroupMembership;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
