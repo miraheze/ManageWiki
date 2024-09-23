@@ -667,12 +667,11 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+		$language = RequestContext::getMain()->getLanguage();
 		$rowsBuilt = [];
 
 		foreach ( $groupData['allGroups'] as $group ) {
-			$rowsBuilt[htmlspecialchars(
-				RequestContext::getMain()->getLanguage()->getGroupName( $group )
-			)] = $group;
+			$rowsBuilt[htmlspecialchars( $language->getGroupName( $group ) )] = $group;
 		}
 
 		$formDescriptor['group-matrix'] = [
