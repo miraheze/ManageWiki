@@ -3,10 +3,10 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use ContentHandler;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\ManageWiki;
 use Status;
-use UserGroupMembership;
 
 class ManageWikiTypes {
 	public static function process( $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
@@ -330,7 +330,9 @@ class ManageWikiTypes {
 			case 'usergroups':
 				$groups = [];
 				foreach ( (array)$groupList as $group ) {
-					$groups[htmlspecialchars( UserGroupMembership::getGroupName( $group ) )] = $group;
+					$groups[htmlspecialchars(
+						RequestContext::getMain()->getLanguage()->getGroupName( $group )
+					)] = $group;
 				}
 
 				$configs = [
