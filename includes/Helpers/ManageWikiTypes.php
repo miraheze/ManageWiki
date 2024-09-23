@@ -328,11 +328,10 @@ class ManageWikiTypes {
 				];
 				break;
 			case 'usergroups':
+				$language = RequestContext::getMain()->getLanguage();
 				$groups = [];
 				foreach ( (array)$groupList as $group ) {
-					$groups[htmlspecialchars(
-						RequestContext::getMain()->getLanguage()->getGroupName( $group )
-					)] = $group;
+					$groups[htmlspecialchars( $language->getGroupName( $group ) )] = $group;
 				}
 
 				$configs = [
