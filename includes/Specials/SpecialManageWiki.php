@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Specials;
 use Config;
 use Html;
 use HTMLForm;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
 use Miraheze\CreateWiki\RemoteWiki;
@@ -16,7 +17,6 @@ use Miraheze\ManageWiki\ManageWiki;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
 use SpecialPage;
-use UserGroupMembership;
 
 class SpecialManageWiki extends SpecialPage {
 
@@ -146,12 +146,13 @@ class SpecialManageWiki extends SpecialPage {
 		$options = [];
 
 		if ( $module == 'permissions' && !$special ) {
+			$language = RequestContext::getMain()->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( $wiki );
 			$groups = array_keys( $mwPermissions->list() );
 
 			foreach ( $groups as $group ) {
 				$lowerCaseGroupName = strtolower( $group );
-				$options[UserGroupMembership::getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
+				$options[$language->getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
 			$this->reusableFormDescriptor( $module, $options );
