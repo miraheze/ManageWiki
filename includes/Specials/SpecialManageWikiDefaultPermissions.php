@@ -8,6 +8,7 @@ use GlobalVarConfig;
 use Html;
 use HTMLForm;
 use ManualLogEntry;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\CreateWikiPhp;
@@ -18,7 +19,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks;
 use Miraheze\ManageWiki\ManageWiki;
 use SpecialPage;
-use UserGroupMembership;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
@@ -72,12 +72,13 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$out->addModules( [ 'mediawiki.special.userrights' ] );
 
 		if ( $globalwiki == $this->config->get( 'DBname' ) ) {
+			$language = RequestContext::getMain()->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( 'default' );
 			$groups = array_keys( $mwPermissions->list() );
 			$craftedGroups = [];
 
 			foreach ( $groups as $group ) {
-				$craftedGroups[UserGroupMembership::getGroupName( $group )] = $group;
+				$craftedGroups[$language->getGroupName( $group )] = $group;
 			}
 
 			$groupSelector = [];

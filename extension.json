@@ -13,7 +13,7 @@
 	"license-name": "GPL-3.0-or-later",
 	"type": "specialpage",
 	"requires": {
-		"MediaWiki": ">= 1.41.0",
+		"MediaWiki": ">= 1.42.0",
 		"extensions": {
 			"CreateWiki": "*"
 		}
