@@ -10,6 +10,7 @@ use IContextSource;
 use InvalidArgumentException;
 use Linker;
 use ManualLogEntry;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
@@ -21,7 +22,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
 use SpecialPage;
 use User;
-use UserGroupMembership;
 use Wikimedia\Rdbms\DBConnRef;
 
 class ManageWikiFormFactoryBuilder {
@@ -670,7 +670,9 @@ class ManageWikiFormFactoryBuilder {
 		$rowsBuilt = [];
 
 		foreach ( $groupData['allGroups'] as $group ) {
-			$rowsBuilt[htmlspecialchars( UserGroupMembership::getGroupName( $group ) )] = $group;
+			$rowsBuilt[htmlspecialchars(
+				RequestContext::getMain()->getLanguage()->getGroupName( $group )
+			)] = $group;
 		}
 
 		$formDescriptor['group-matrix'] = [
