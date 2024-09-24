@@ -10,6 +10,7 @@ use Title;
  * Used on namespace creation and deletion to move pages into and out of namespaces
  */
 class NamespaceMigrationJob extends Job {
+
 	/**
 	 * @param Title $title
 	 * @param string[] $params

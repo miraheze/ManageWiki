@@ -9,6 +9,7 @@ use Miraheze\ManageWiki\ManageWiki;
 use Status;
 
 class ManageWikiTypes {
+
 	public static function process( $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {

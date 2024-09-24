@@ -14,6 +14,7 @@ use User;
 use Wikimedia\Rdbms\DBConnRef;
 
 class Hooks {
+
 	private static function getConfig( string $var ) {
 		return MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( $var );
 	}

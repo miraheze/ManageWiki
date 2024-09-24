@@ -12,6 +12,7 @@ use Wikimedia\Rdbms\MaintainableDBConnRef;
  * Handler class for managing settings
  */
 class ManageWikiSettings {
+
 	/** @var bool Whether changes have been committed */
 	private $committed = false;
 	/** @var Config Configuration object */

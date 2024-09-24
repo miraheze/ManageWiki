@@ -25,6 +25,7 @@ use User;
 use Wikimedia\Rdbms\DBConnRef;
 
 class ManageWikiFormFactoryBuilder {
+
 	public static function buildDescriptor(
 		string $module,
 		string $dbName,

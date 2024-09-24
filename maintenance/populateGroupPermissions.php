@@ -14,6 +14,7 @@ use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\ManageWiki;
 
 class PopulateGroupPermissions extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
 		$this->requireExtension( 'ManageWiki' );

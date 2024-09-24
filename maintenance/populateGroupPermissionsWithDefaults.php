@@ -16,6 +16,7 @@ use Miraheze\CreateWiki\CreateWikiPhp;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 
 class PopulateGroupPermissionsWithDefaults extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
 

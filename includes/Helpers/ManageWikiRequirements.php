@@ -11,6 +11,7 @@ use SiteStats;
  * Helper class for de-centralising requirement checking
  */
 class ManageWikiRequirements {
+
 	/**
 	 * Master class for evaluating whether requirements are met, and at what level
 	 *

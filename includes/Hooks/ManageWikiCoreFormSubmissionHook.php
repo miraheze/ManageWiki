@@ -7,6 +7,7 @@ use Miraheze\CreateWiki\RemoteWiki;
 use Wikimedia\Rdbms\DBConnRef;
 
 interface ManageWikiCoreFormSubmissionHook {
+
 	/**
 	 * @param IContextSource $context
 	 * @param string $dbName

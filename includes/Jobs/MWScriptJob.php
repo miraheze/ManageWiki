@@ -7,6 +7,7 @@ use MediaWiki\Shell\Shell;
 use Title;
 
 class MWScriptJob extends Job {
+
 	/**
 	 * @param Title $title
 	 * @param string[] $params

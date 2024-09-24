@@ -15,6 +15,7 @@ use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\AtEase\AtEase;
 
 class PopulateNamespaces extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
 		$this->requireExtension( 'ManageWiki' );

@@ -8,6 +8,7 @@ class ManageWikiHookRunner implements
 	ManageWikiCoreAddFormFieldsHook,
 	ManageWikiCoreFormSubmissionHook
 {
+
 	/**
 	 * @var HookContainer
 	 */
