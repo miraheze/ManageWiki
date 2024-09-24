@@ -519,14 +519,14 @@ class ManageWikiFormFactoryBuilder {
 				$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
 				$msgHelp = wfMessage( "managewiki-namespaces-{$key}-help" );
 
-				if ( 
-					$add && 
+				if (
+					$add &&
 					(
-						( $a['main'] && $name == 'namespace' ) || 
+						( $a['main'] && $name == 'namespace' ) ||
 						( $a['talk'] && $name == 'namespacetalk' )
-					) && 
-					!in_array( $id, (array)( $a['excluded'] ?? [] ) ) && 
-					in_array( $id, (array)( $a['only'] ?? [ $id ] ) ) 
+					) &&
+					!in_array( $id, (array)( $a['excluded'] ?? [] ) ) &&
+					in_array( $id, (array)( $a['only'] ?? [ $id ] ) )
 				) {
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
