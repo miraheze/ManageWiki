@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki;
 
 use DatabaseUpdater;
+use Exception;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
@@ -97,7 +98,7 @@ class Hooks {
 				if ( $jsonArray['core']['wgLanguageCode'] != 'en' ) {
 					$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
 				}
-			} catch ( \Exception $e ) {
+			} catch ( Exception $e ) {
 				$logger = LoggerFactory::getInstance( 'ManageWiki' );
 				$logger->warning( 'Caught exception trying to load Localisation Cache: {exception}', [
 					'exception' => $e,
