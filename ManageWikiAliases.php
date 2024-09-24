@@ -19,4 +19,3 @@ $specialPageAliases['ja'] = [
 	'ManageWiki' => [ 'ウィキ管理' ],
 	'ManageWikiDefaultPermissions' => [ 'ウィキ管理既定権限' ],
 ];
-
