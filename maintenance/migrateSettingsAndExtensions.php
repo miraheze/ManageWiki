@@ -12,6 +12,7 @@ require_once "$IP/maintenance/Maintenance.php";
 use Maintenance;
 
 class MigrateSettingsAndExtensions extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
 		$this->requireExtension( 'ManageWiki' );

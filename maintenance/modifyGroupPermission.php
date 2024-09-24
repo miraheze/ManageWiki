@@ -14,6 +14,7 @@ use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 
 class ModifyGroupPermission extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
 

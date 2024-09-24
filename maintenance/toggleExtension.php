@@ -15,6 +15,7 @@ use MediaWiki\WikiMap\WikiMap;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 
 class ToggleExtension extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
 

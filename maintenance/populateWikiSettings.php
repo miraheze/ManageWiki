@@ -14,6 +14,7 @@ use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 
 class PopulateWikiSettings extends Maintenance {
+
 	public function __construct() {
 		parent::__construct();
 

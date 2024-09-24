@@ -25,6 +25,7 @@ use User;
 use Wikimedia\Rdbms\DBConnRef;
 
 class ManageWikiFormFactoryBuilder {
+
 	public static function buildDescriptor(
 		string $module,
 		string $dbName,
@@ -518,7 +519,15 @@ class ManageWikiFormFactoryBuilder {
 				$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
 				$msgHelp = wfMessage( "managewiki-namespaces-{$key}-help" );
 
-				if ( $add && ( $a['main'] && $name == 'namespace' || $a['talk'] && $name == 'namespacetalk' ) && !in_array( $id, (array)( $a['excluded'] ?? [] ) ) && in_array( $id, (array)( $a['only'] ?? [ $id ] ) ) ) {
+				if (
+					$add &&
+					(
+						( $a['main'] && $name == 'namespace' ) ||
+						( $a['talk'] && $name == 'namespacetalk' )
+					) &&
+					!in_array( $id, (array)( $a['excluded'] ?? [] ) ) &&
+					in_array( $id, (array)( $a['only'] ?? [ $id ] ) )
+				) {
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}

@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Hooks;
 use IContextSource;
 
 interface ManageWikiCoreAddFormFieldsHook {
+
 	/**
 	 * @param bool $ceMW
 	 * @param IContextSource $context

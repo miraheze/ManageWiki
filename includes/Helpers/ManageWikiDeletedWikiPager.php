@@ -8,6 +8,7 @@ use SpecialPage;
 use TablePager;
 
 class ManageWikiDeletedWikiPager extends TablePager {
+
 	public function __construct( $page ) {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->mDb = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()

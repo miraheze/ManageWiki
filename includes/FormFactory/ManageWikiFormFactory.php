@@ -15,6 +15,7 @@ use UnexpectedValueException;
 use Wikimedia\Rdbms\DBConnRef;
 
 class ManageWikiFormFactory {
+
 	public function getFormDescriptor(
 		string $module,
 		string $dbName,

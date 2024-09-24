@@ -9,6 +9,7 @@ use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiModifyServer extends ApiBase {
+
 	public function execute() {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();

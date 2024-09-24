@@ -14,6 +14,7 @@ use Wikimedia\Rdbms\MaintainableDBConnRef;
  * Handler for interacting with Namespace configuration
  */
 class ManageWikiNamespaces {
+
 	/** @var bool Whether changes are committed to the database */
 	private $committed = false;
 	/** @var Config Configuration object */

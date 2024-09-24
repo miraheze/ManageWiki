@@ -13,6 +13,7 @@ use Wikimedia\Rdbms\MaintainableDBConnRef;
  * Handler for all interactions with Extension changes within ManageWiki
  */
 class ManageWikiExtensions {
+
 	/** @var bool Whether changes are committed or not */
 	private $committed = false;
 	/** @var Config Configuration Object */

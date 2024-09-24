@@ -13,6 +13,7 @@ use Wikimedia\Rdbms\MaintainableDBConnRef;
  * Handler for interacting with Permissions
  */
 class ManageWikiPermissions {
+
 	/** @var bool Whether changes are committed to the database */
 	private $committed = false;
 	/** @var Config Configuration object */

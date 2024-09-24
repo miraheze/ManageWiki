@@ -10,6 +10,7 @@ use RuntimeException;
 use Title;
 
 class ManageWikiInstaller {
+
 	public static function process( string $dbname, array $actions, bool $install = true ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepresponse = [];
