@@ -632,10 +632,12 @@ class ManageWikiFormFactoryBuilder {
 			'wgGroupsRemoveFromSelf' => $permList['removeself']
 		];
 
+		$userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
+
 		$groupData = [
 			'allPermissions' => array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group], $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] ) : $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] ),
 			'assignedPermissions' => $permList['permissions'] ?? [],
-			'allGroups' => array_diff( array_keys( $mwPermissions->list() ), $config->get( 'ManageWikiPermissionsDisallowedGroups' ), User::getImplicitGroups() ),
+			'allGroups' => array_diff( array_keys( $mwPermissions->list() ), $config->get( 'ManageWikiPermissionsDisallowedGroups' ), $userGroupManager->listAllImplicitGroups() ),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $permList['autopromote'] ?? null
 		];
