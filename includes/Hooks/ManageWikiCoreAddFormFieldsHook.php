@@ -2,7 +2,7 @@
 
 namespace Miraheze\ManageWiki\Hooks;
 
-use IContextSource;
+use MediaWiki\Context\IContextSource;
 
 interface ManageWikiCoreAddFormFieldsHook {
 

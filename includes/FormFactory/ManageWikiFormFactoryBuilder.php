@@ -2,16 +2,18 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
-use Config;
 use ExtensionProcessor;
 use ExtensionRegistry;
-use HTMLForm;
-use IContextSource;
 use InvalidArgumentException;
-use Linker;
 use ManualLogEntry;
+use MediaWiki\Config\Config;
+use MediaWiki\Context\IContextSource;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Linker\Linker;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\User;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
@@ -20,8 +22,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
-use SpecialPage;
-use User;
 use Wikimedia\Rdbms\DBConnRef;
 
 class ManageWikiFormFactoryBuilder {

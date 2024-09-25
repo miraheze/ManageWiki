@@ -5,9 +5,9 @@ namespace Miraheze\ManageWiki\Helpers;
 use Exception;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
+use MediaWiki\Title\Title;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
 use RuntimeException;
-use Title;
 
 class ManageWikiInstaller {
 

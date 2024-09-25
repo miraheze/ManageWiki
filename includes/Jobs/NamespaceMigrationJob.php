@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
 use MediaWiki\MediaWikiServices;
-use Title;
+use MediaWiki\Title\Title;
 
 /**
  * Used on namespace creation and deletion to move pages into and out of namespaces
