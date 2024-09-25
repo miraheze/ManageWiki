@@ -2,8 +2,8 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
-use MediaWiki\Context\IContextSource;
 use MediaWiki\Config\Config;
+use MediaWiki\Context\IContextSource;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
