@@ -2,15 +2,15 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
-use Config;
-use Html;
-use HTMLForm;
-use IContextSource;
+use MediaWiki\Config\Config;
+use MediaWiki\Context\IContextSource;
+use MediaWiki\Html\Html;
+use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Output\OutputPage;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
 use Miraheze\ManageWiki\ManageWiki;
-use OutputPage;
 use UnexpectedValueException;
 use Wikimedia\Rdbms\DBConnRef;
 

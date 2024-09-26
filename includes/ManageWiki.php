@@ -4,8 +4,8 @@ namespace Miraheze\ManageWiki;
 
 use DateTimeZone;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\User;
 use Miraheze\CreateWiki\RemoteWiki;
-use User;
 
 class ManageWiki {
 

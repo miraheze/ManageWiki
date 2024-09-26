@@ -2,12 +2,12 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use Config;
+use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\CreateWikiPhp;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
-use SpecialPage;
 use Wikimedia\Rdbms\MaintainableDBConnRef;
 
 /**

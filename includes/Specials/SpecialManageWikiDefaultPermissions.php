@@ -2,14 +2,15 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use Config;
 use ErrorPageError;
-use GlobalVarConfig;
-use Html;
-use HTMLForm;
 use ManualLogEntry;
+use MediaWiki\Config\Config;
+use MediaWiki\Config\GlobalVarConfig;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\Html\Html;
+use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\CreateWikiPhp;
 use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
@@ -18,7 +19,6 @@ use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks;
 use Miraheze\ManageWiki\ManageWiki;
-use SpecialPage;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
 

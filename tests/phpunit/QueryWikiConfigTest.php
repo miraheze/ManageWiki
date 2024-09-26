@@ -2,7 +2,7 @@
 
 namespace Miraheze\ManageWiki\Tests;
 
-use ApiTestCase;
+use MediaWiki\Tests\Api\ApiTestCase;
 
 /**
  * @group ManageWiki
