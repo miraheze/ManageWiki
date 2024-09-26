@@ -16,6 +16,9 @@
 		"MediaWiki": ">= 1.42.0",
 		"extensions": {
 			"CreateWiki": "*"
+		},
+		"platform": {
+			"php": ">= 8.0"
 		}
 	},
 	"APIListModules": {
@@ -115,11 +118,14 @@
 		"CreateWikiCreation": [
 			"Miraheze\\ManageWiki\\Hooks::onCreateWikiCreation"
 		],
+		"CreateWikiDataFactoryBuilder": [
+			"Miraheze\\ManageWiki\\Hooks::onCreateWikiDataFactoryBuilder"
+		],
 		"CreateWikiJsonBuilder": [
-			"Miraheze\\ManageWiki\\Hooks::onCreateWikiJsonBuilder"
+			"Miraheze\\ManageWiki\\Hooks::onCreateWikiDataFactoryBuilder"
 		],
 		"CreateWikiPhpBuilder": [
-			"Miraheze\\ManageWiki\\Hooks::onCreateWikiJsonBuilder"
+			"Miraheze\\ManageWiki\\Hooks::onCreateWikiDataFactoryBuilder"
 		],
 		"CreateWikiStatePrivate": [
 			"Miraheze\\ManageWiki\\Hooks::onCreateWikiStatePrivate"
