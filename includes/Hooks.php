@@ -56,6 +56,94 @@ class Hooks {
 		$handler = new TextContentHandler( $modelId );
 	}
 
+	
+	/**
+	 * @return array
+	 */
+	public static function getManageWikiConfigCache( array $cacheArray ): array {
+		$settings = [];
+
+		// Assign language code
+		$settings['wgLanguageCode'] = $cacheArray['core']['wgLanguageCode'];
+
+		// Assign states
+		$settings['cwPrivate'] = (bool)$cacheArray['states']['private'];
+		$settings['cwClosed'] = (bool)$cacheArray['states']['closed'];
+		$settings['cwLocked'] = (bool)$cacheArray['states']['locked'] ?? false;
+		$settings['cwDeleted'] = (bool)$cacheArray['states']['deleted'] ?? false;
+		$settings['cwInactive'] = ( $cacheArray['states']['inactive'] === 'exempt' ) ? 'exempt' : (bool)$cacheArray['states']['inactive'];
+		$settings['cwExperimental'] = (bool)( $cacheArray['states']['experimental'] ?? false );
+
+		// Assign settings
+		if ( isset( $cacheArray['settings'] ) ) {
+			foreach ( $cacheArray['settings'] as $var => $val ) {
+				$settings[$var] = $val;
+			}
+		}
+
+		// Handle namespaces
+		if ( isset( $cacheArray['namespaces'] ) ) {
+			foreach ( $cacheArray['namespaces'] as $name => $ns ) {
+				$settings['wgExtraNamespaces'][(int)$ns['id']] = $name;
+				$settings['wgNamespacesToBeSearchedDefault'][(int)$ns['id']] = $ns['searchable'];
+				$settings['wgNamespacesWithSubpages'][(int)$ns['id']] = $ns['subpages'];
+				$settings['wgNamespaceContentModels'][(int)$ns['id']] = $ns['contentmodel'];
+
+				if ( $ns['content'] ) {
+					$settings['wgContentNamespaces'][] = (int)$ns['id'];
+				}
+
+				if ( $ns['protection'] ) {
+					$settings['wgNamespaceProtection'][(int)$ns['id']] = [ $ns['protection'] ];
+				}
+
+				foreach ( (array)$ns['aliases'] as $alias ) {
+					$settings['wgNamespaceAliases'][$alias] = (int)$ns['id'];
+				}
+			}
+		}
+
+		// Handle Permissions
+		if ( isset( $cacheArray['permissions'] ) ) {
+			foreach ( $cacheArray['permissions'] as $group => $perm ) {
+				foreach ( (array)$perm['permissions'] as $id => $right ) {
+					$settings['wgGroupPermissions'][$group][$right] = true;
+				}
+
+				foreach ( (array)$perm['addgroups'] as $name ) {
+					$settings['wgAddGroups'][$group][] = $name;
+				}
+
+				foreach ( (array)$perm['removegroups'] as $name ) {
+					$settings['wgRemoveGroups'][$group][] = $name;
+				}
+
+				foreach ( (array)$perm['addself'] as $name ) {
+					$settings['wgGroupsAddToSelf'][$group][] = $name;
+				}
+
+				foreach ( (array)$perm['removeself'] as $name ) {
+					$settings['wgGroupsRemoveFromSelf'][$group][] = $name;
+				}
+
+				if ( $perm['autopromote'] !== null ) {
+					$onceId = array_search( 'once', $perm['autopromote'] );
+
+					if ( !is_bool( $onceId ) ) {
+						unset( $perm['autopromote'][$onceId] );
+						$promoteVar = 'wgAutopromoteOnce';
+					} else {
+						$promoteVar = 'wgAutopromote';
+					}
+
+					$settings[$promoteVar][$group] = $perm['autopromote'];
+				}
+			}
+		}
+
+		return $settings;
+	}
+
 	public static function onCreateWikiJsonBuilder( string $wiki, DBConnRef $dbr, array &$jsonArray ) {
 		$setObject = $dbr->selectRow(
 			'mw_settings',
@@ -240,6 +328,14 @@ class Hooks {
 				];
 			}
 		}
+
+		$jsonArray['config-overrides'] = self::getManageWikiConfigCache( $jsonArray );
+
+		unset(
+			$jsonArray['namespaces'],
+			$jsonArray['permissions'],
+			$jsonArray['settings'],
+		);
 	}
 
 	/**
