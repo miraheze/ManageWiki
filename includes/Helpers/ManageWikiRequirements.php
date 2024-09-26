@@ -2,10 +2,10 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\SiteStats\SiteStats;
 use Miraheze\CreateWiki\RemoteWiki;
-use RequestContext;
-use SiteStats;
 
 /**
  * Helper class for de-centralising requirement checking

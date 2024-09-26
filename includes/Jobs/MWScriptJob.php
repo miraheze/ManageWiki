@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
 use MediaWiki\Shell\Shell;
-use Title;
+use MediaWiki\Title\Title;
 
 class MWScriptJob extends Job {
 

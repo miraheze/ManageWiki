@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use MediaWiki\HTMLForm\OOUIHTMLForm;
 use OOUI\ButtonInputWidget;
 use OOUI\FieldsetLayout;
 use OOUI\HtmlSnippet;
@@ -9,7 +10,6 @@ use OOUI\IndexLayout;
 use OOUI\PanelLayout;
 use OOUI\TabPanelLayout;
 use OOUI\Widget;
-use OOUIHTMLForm;
 use Xml;
 
 class ManageWikiOOUIForm extends OOUIHTMLForm {

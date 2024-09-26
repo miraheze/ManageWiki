@@ -5,8 +5,8 @@ namespace Miraheze\ManageWiki\Helpers;
 use ContentHandler;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Status\Status;
 use Miraheze\ManageWiki\ManageWiki;
-use Status;
 
 class ManageWikiTypes {
 

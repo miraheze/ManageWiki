@@ -2,11 +2,12 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use Config;
-use Html;
-use HTMLForm;
+use MediaWiki\Config\Config;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\Html\Html;
+use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
 use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\CreateWiki\WikiManager;
@@ -16,7 +17,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\ManageWiki;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
-use SpecialPage;
 
 class SpecialManageWiki extends SpecialPage {
 

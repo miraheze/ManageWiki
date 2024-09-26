@@ -2,11 +2,11 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use Config;
+use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\User\User;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\CreateWikiPhp;
-use User;
 use Wikimedia\Rdbms\MaintainableDBConnRef;
 
 /**

@@ -275,7 +275,7 @@
 		}
 	},
 	"ConfigRegistry": {
-		"managewiki": "GlobalVarConfig::newInstance"
+		"managewiki": "MediaWiki\\Config\\GlobalVarConfig::newInstance"
 	},
 	"ServiceWiringFiles": [
 		"includes/ServiceWiring.php"

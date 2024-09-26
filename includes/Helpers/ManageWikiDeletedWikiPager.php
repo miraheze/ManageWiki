@@ -2,10 +2,10 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use Linker;
+use MediaWiki\Linker\Linker;
 use MediaWiki\MediaWikiServices;
-use SpecialPage;
-use TablePager;
+use MediaWiki\Pager\TablePager;
+use MediaWiki\SpecialPage\SpecialPage;
 
 class ManageWikiDeletedWikiPager extends TablePager {
 

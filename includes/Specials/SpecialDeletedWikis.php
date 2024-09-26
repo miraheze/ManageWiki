@@ -2,8 +2,8 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
+use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\ManageWiki\Helpers\ManageWikiDeletedWikiPager;
-use SpecialPage;
 
 class SpecialDeletedWikis extends SpecialPage {
 
