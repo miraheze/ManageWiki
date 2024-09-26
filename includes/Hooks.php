@@ -74,7 +74,7 @@ class Hooks {
 		if ( ManageWiki::checkSetup( 'extensions' ) ) {
 			$manageWikiExtensions = self::getConfig( 'ManageWikiExtensions' );
 			foreach ( json_decode( $setObject->s_extensions, true ) as $ext ) {
-				if (  $manageWikiExtensions[$ext]['section'] === 'skins' ) {
+				if ( $manageWikiExtensions[$ext]['section'] === 'skins' ) {
 					$jsonArray['skins'][] = $manageWikiExtensions[$ext]['name'];
 				} else {
 					$jsonArray['extensions'][] = $manageWikiExtensions[$ext]['name'];
