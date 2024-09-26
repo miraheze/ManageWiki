@@ -12,7 +12,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use TextContentHandler;
-use Wikimedia\Rdbms\IReadableDatabase
+use Wikimedia\Rdbms\IReadableDatabase;
 
 class Hooks {
 
