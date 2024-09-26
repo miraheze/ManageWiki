@@ -215,7 +215,7 @@ class Hooks {
 			}
 
 			$diffKeys = array_keys(
-				array_diff_key( self::getConfig( 'ManageWikiPermissionsAdditionalRights' ), $jsonArray['permissions'] ?? [] )
+				array_diff_key( self::getConfig( 'ManageWikiPermissionsAdditionalRights' ), $cacheArray['permissions'] ?? [] )
 			);
 
 			foreach ( $diffKeys as $missingKey ) {
