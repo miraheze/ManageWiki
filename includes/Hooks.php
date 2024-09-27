@@ -12,7 +12,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use TextContentHandler;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IReadableDatabase;
 
 class Hooks {
 
@@ -56,7 +56,7 @@ class Hooks {
 		$handler = new TextContentHandler( $modelId );
 	}
 
-	public static function onCreateWikiJsonBuilder( string $wiki, DBConnRef $dbr, array &$jsonArray ) {
+	public static function onCreateWikiDataFactoryBuilder( string $wiki, IReadableDatabase $dbr, array &$cacheArray ) {
 		$setObject = $dbr->selectRow(
 			'mw_settings',
 			'*',
@@ -67,14 +67,14 @@ class Hooks {
 
 		// Don't need to manipulate this much
 		if ( ManageWiki::checkSetup( 'settings' ) ) {
-			$jsonArray['settings'] = json_decode( $setObject->s_settings, true );
+			$cacheArray['settings'] = json_decode( $setObject->s_settings, true );
 		}
 
 		// Let's create an array of variables so we can easily loop these to enable
 		if ( ManageWiki::checkSetup( 'extensions' ) ) {
 			$manageWikiExtensions = self::getConfig( 'ManageWikiExtensions' );
 			foreach ( json_decode( $setObject->s_extensions, true ) as $ext ) {
-				$jsonArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
+				$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
 					$manageWikiExtensions[$ext]['name'];
 			}
 		}
@@ -93,9 +93,9 @@ class Hooks {
 			$lcEN = [];
 
 			try {
-				$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $jsonArray['core']['wgLanguageCode'], 'namespaceNames' );
+				$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $cacheArray['core']['wgLanguageCode'], 'namespaceNames' );
 
-				if ( $jsonArray['core']['wgLanguageCode'] != 'en' ) {
+				if ( $cacheArray['core']['wgLanguageCode'] != 'en' ) {
 					$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
 				}
 			} catch ( Exception $e ) {
@@ -110,7 +110,7 @@ class Hooks {
 				$nsName = $lcName[$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
 				$lcAlias = $lcEN[$ns->ns_namespace_id] ?? null;
 
-				$jsonArray['namespaces'][$nsName] = [
+				$cacheArray['namespaces'][$nsName] = [
 					'id' => $ns->ns_namespace_id,
 					'core' => (bool)$ns->ns_core,
 					'searchable' => (bool)$ns->ns_searchable,
@@ -146,12 +146,12 @@ class Hooks {
 					}
 
 					if ( $val ) {
-						self::setNamespaceSettingJson( $jsonArray, (int)$ns->ns_namespace_id, $var, $val, $conf );
+						self::setNamespaceSettingJson( $cacheArray, (int)$ns->ns_namespace_id, $var, $val, $conf );
 					} elseif (
 						!isset( $conf['constant'] ) &&
-						( !isset( $jsonArray['settings'][$var] ) || !$jsonArray['settings'][$var] )
+						( !isset( $cacheArray['settings'][$var] ) || !$cacheArray['settings'][$var] )
 					) {
-						$jsonArray['settings'][$var] = [];
+						$cacheArray['settings'][$var] = [];
 					}
 				}
 			}
@@ -165,7 +165,7 @@ class Hooks {
 					$conf['overridedefault'][NS_SPECIAL] &&
 					self::isAdditionalSettingForNamespace( $conf, NS_SPECIAL )
 				) {
-					self::setNamespaceSettingJson( $jsonArray, NS_SPECIAL, $var, $conf['overridedefault'][NS_SPECIAL], $conf );
+					self::setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $conf['overridedefault'][NS_SPECIAL], $conf );
 				}
 			}
 		}
@@ -198,7 +198,7 @@ class Hooks {
 				$permissions = array_merge( json_decode( $perm->perm_permissions ?? '', true ) ?? [], $addPerms );
 				$filteredPermissions = array_diff( $permissions, $removePerms );
 
-				$jsonArray['permissions'][$perm->perm_group] = [
+				$cacheArray['permissions'][$perm->perm_group] = [
 					'permissions' => $filteredPermissions,
 					'addgroups' => array_merge(
 						json_decode( $perm->perm_addgroups ?? '', true ) ?? [],
@@ -215,7 +215,7 @@ class Hooks {
 			}
 
 			$diffKeys = array_keys(
-				array_diff_key( self::getConfig( 'ManageWikiPermissionsAdditionalRights' ), $jsonArray['permissions'] ?? [] )
+				array_diff_key( self::getConfig( 'ManageWikiPermissionsAdditionalRights' ), $cacheArray['permissions'] ?? [] )
 			);
 
 			foreach ( $diffKeys as $missingKey ) {
@@ -227,7 +227,7 @@ class Hooks {
 					}
 				}
 
-				$jsonArray['permissions'][$missingKey] = [
+				$cacheArray['permissions'][$missingKey] = [
 					'permissions' => $missingPermissions,
 					'addgroups' => self::getConfig( 'ManageWikiPermissionsAdditionalAddGroups' )[$missingKey] ?? [],
 					'removegroups' => self::getConfig( 'ManageWikiPermissionsAdditionalRemoveGroups' )[$missingKey] ?? [],
@@ -242,27 +242,27 @@ class Hooks {
 	/**
 	 * Adds the namespace setting for the supplied variable
 	 *
-	 * @param array &$jsonArray array representation of the JSON output
+	 * @param array &$cacheArray array for cache
 	 * @param int $nsID namespace ID number as an integer
 	 * @param string $var variable name
 	 * @param mixed $val variable value
 	 * @param array $varConf variable config from wgManageWikiNamespacesAdditional[$var]
 	 */
 	private static function setNamespaceSettingJson(
-		array &$jsonArray, int $nsID, string $var, $val, array $varConf
+		array &$cacheArray, int $nsID, string $var, $val, array $varConf
 	) {
 		switch ( $varConf['type'] ) {
 			case 'check':
-				$jsonArray['settings'][$var][] = $nsID;
+				$cacheArray['settings'][$var][] = $nsID;
 				break;
 			case 'vestyle':
-				$jsonArray['settings'][$var][$nsID] = true;
+				$cacheArray['settings'][$var][$nsID] = true;
 				break;
 			default:
 				if ( ( $varConf['constant'] ) ?? false ) {
-					$jsonArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
+					$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
 				} else {
-					$jsonArray['settings'][$var][$nsID] = $val;
+					$cacheArray['settings'][$var][$nsID] = $val;
 				}
 		}
 	}
