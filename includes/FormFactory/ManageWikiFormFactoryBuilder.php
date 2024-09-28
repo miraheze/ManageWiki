@@ -182,7 +182,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		if ( $config->get( 'CreateWikiUseCategories' ) ) {
+		if ( $config->get( 'CreateWikiCategories' ) ) {
 			$formDescriptor['category'] = [
 				'type' => 'select',
 				'label-message' => 'managewiki-label-category',
@@ -929,7 +929,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		if ( $config->get( 'CreateWikiUseCategories' ) && isset( $formData['category'] ) && ( $formData['category'] != $wiki->getCategory() ) ) {
+		if ( $config->get( 'CreateWikiCategories' ) && isset( $formData['category'] ) && ( $formData['category'] != $wiki->getCategory() ) ) {
 			$wiki->setCategory( $formData['category'] );
 		}
 
