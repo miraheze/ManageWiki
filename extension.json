@@ -189,6 +189,11 @@
 				"settings": false
 			}
 		},
+		"ManageWikiDatabaseClustersInactive": {
+			"description": "Array. LBFactory clusters which are not considered active, which we hide in ManageWiki.",
+			"public": true,
+			"value": []
+		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"public": true,
