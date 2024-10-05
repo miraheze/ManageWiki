@@ -140,15 +140,15 @@ class ManageWikiFormFactoryBuilder {
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			],
 			'inactive-exempt-reason' => [
-				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( 'CreateWikiInactiveExemptReasonOptions' ),
+				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( 'ManageWikiInactiveExemptReasonOptions' ),
 				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
 				'type' => 'selectorother',
 				'default' => $wiki->getInactiveExemptReason(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
-				'options' => $config->get( 'CreateWikiInactiveExemptReasonOptions' )
+				'options' => $config->get( 'ManageWikiInactiveExemptReasonOptions' )
 			],
 			'server' => [
-				'if' => $config->get( 'CreateWikiUseCustomDomains' ),
+				'if' => $config->get( 'ManageWikiUseCustomDomains' ),
 				'type' => 'text',
 				'default' => $wiki->getServerName(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
@@ -933,7 +933,7 @@ class ManageWikiFormFactoryBuilder {
 			$wiki->setCategory( $formData['category'] );
 		}
 
-		if ( $config->get( 'CreateWikiUseCustomDomains' ) && ( $formData['server'] != $wiki->getServerName() ) ) {
+		if ( $config->get( 'ManageWikiUseCustomDomains' ) && ( $formData['server'] != $wiki->getServerName() ) ) {
 			$wiki->setServerName( $formData['server'] );
 		}
 

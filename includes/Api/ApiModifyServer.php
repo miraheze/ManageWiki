@@ -16,7 +16,7 @@ class ApiModifyServer extends ApiBase {
 
 		$this->useTransactionalTimeLimit();
 
-		if ( !$config->get( 'CreateWikiUseCustomDomains' ) ) {
+		if ( !$config->get( 'ManageWikiUseCustomDomains' ) ) {
 			$this->dieWithError( [ 'managewiki-custom-domains-disabled' ] );
 		}
 
