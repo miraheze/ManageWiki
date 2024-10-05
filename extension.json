@@ -204,6 +204,10 @@
 			"public": true,
 			"value": []
 		},
+		"ManageWikiInactiveExemptReasonOptions": {
+			"description": "Array. Possible options for marking a wiki as exempt from inactivity.",
+			"value": []
+		},
 		"ManageWikiNamespacesAdditional": {
 			"description": "Array. Additional settings available for namespaces.",
 			"public": true,
@@ -273,6 +277,10 @@
 				"sysop",
 				"bureaucrat"
 			]
+		},
+		"ManageWikiUseCustomDomains": {
+			"description": "Boolean. Whether to implement the ability to change the server name from ManageWiki.",
+			"value": false
 		},
 		"ManageWikiHelpUrl": {
 			"description": "String. URL of a help page for ManageWiki on the local wiki farm.",
