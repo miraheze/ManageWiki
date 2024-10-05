@@ -35,24 +35,34 @@ class ManageWikiDeletedWikiPager extends TablePager {
 		return $headers;
 	}
 
+	/**
+	 * Safely HTML-escape $value
+	 *
+	 * @param string $value
+	 * @return string
+	 */
+	private static function escape( $value ) {
+		return htmlspecialchars( $value, ENT_QUOTES );
+	}
+
 	public function formatValue( $name, $value ) {
 		$row = $this->mCurrentRow;
 
 		switch ( $name ) {
 			case 'wiki_dbname':
-				$formatted = $row->wiki_dbname;
+				$formatted = $this->escape( $row->wiki_dbname );
 				break;
 			case 'wiki_creation':
-				$formatted = wfTimestamp( TS_RFC2822, (int)$row->wiki_creation );
+				$formatted = $this->escape( wfTimestamp( TS_RFC2822, (int)$row->wiki_creation ) );
 				break;
 			case 'wiki_deleted_timestamp':
-				$formatted = wfTimestamp( TS_RFC2822, (int)$row->wiki_deleted_timestamp );
+				$formatted = $this->escape( wfTimestamp( TS_RFC2822, (int)$row->wiki_deleted_timestamp ) );
 				break;
 			case 'wiki_deleted':
 				$formatted = Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki' )->getFullURL() . '/core/' . $row->wiki_dbname, $this->msg( 'managewiki-label-goto' )->text() );
 				break;
 			default:
-				$formatted = "Unable to format $name";
+				$formatted = $this->escape( "Unable to format $name" );
 				break;
 		}
 		return $formatted;
