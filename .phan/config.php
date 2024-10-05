@@ -29,8 +29,6 @@ $cfg['suppress_issue_types'] = array_merge(
 		'PhanNonClassMethodCall',
 		'PhanImpossibleTypeComparison',
 		'PhanRedundantConditionInLoop',
-		// Must work on fixing this and unsuppress it 1 error that was unable to fix and single line suppressing didn't work
-		'SecurityCheck-XSS',
 	]
 );
 
