@@ -212,7 +212,7 @@ class ManageWikiFormFactoryBuilder {
 		$hookRunner->onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, $formDescriptor );
 
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) ) {
-			$clusterList = array_merge( (array)$config->get( 'CreateWikiDatabaseClusters' ), (array)$config->get( 'CreateWikiDatabaseClustersInactive' ) );
+			$clusterList = array_merge( (array)$config->get( 'CreateWikiDatabaseClusters' ), (array)$config->get( 'ManageWikiDatabaseClustersInactive' ) );
 			$formDescriptor['dbcluster'] = [
 				'type' => 'select',
 				'label-message' => 'managewiki-label-dbcluster',
