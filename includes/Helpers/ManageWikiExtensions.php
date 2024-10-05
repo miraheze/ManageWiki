@@ -7,7 +7,7 @@ use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\CreateWikiPhp;
 use Miraheze\CreateWiki\RemoteWiki;
-use Wikimedia\Rdbms\MaintainableDBConnRef;
+use Wikimedia\Rdbms\DBConnRef;
 
 /**
  * Handler for all interactions with Extension changes within ManageWiki
@@ -18,7 +18,7 @@ class ManageWikiExtensions {
 	private $committed = false;
 	/** @var Config Configuration Object */
 	private $config;
-	/** @var MaintainableDBConnRef Database Connection */
+	/** @var DBConnRef Database Connection */
 	private $dbw;
 	/** @var array Extension configuration ($wgManageWikiExtensions) */
 	private $extConfig;

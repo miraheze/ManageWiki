@@ -8,7 +8,7 @@ use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\CreateWikiPhp;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
-use Wikimedia\Rdbms\MaintainableDBConnRef;
+use Wikimedia\Rdbms\DBConnRef;
 
 /**
  * Handler for interacting with Namespace configuration
@@ -19,7 +19,7 @@ class ManageWikiNamespaces {
 	private $committed = false;
 	/** @var Config Configuration object */
 	private $config;
-	/** @var MaintainableDBConnRef Database connection */
+	/** @var DBConnRef Database connection */
 	private $dbw;
 	/** @var array Namespace IDs to be deleted */
 	private $deleteNamespaces = [];

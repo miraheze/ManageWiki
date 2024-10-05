@@ -6,7 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\CreateWikiPhp;
-use Wikimedia\Rdbms\MaintainableDBConnRef;
+use Wikimedia\Rdbms\DBConnRef;
 
 /**
  * Handler class for managing settings
@@ -17,7 +17,7 @@ class ManageWikiSettings {
 	private $committed = false;
 	/** @var Config Configuration object */
 	private $config;
-	/** @var MaintainableDBConnRef Database object */
+	/** @var DBConnRef Database object */
 	private $dbw;
 	/** @var array Current settings with their respective values */
 	private $liveSettings;

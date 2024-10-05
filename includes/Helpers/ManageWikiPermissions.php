@@ -7,7 +7,7 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\CreateWikiJson;
 use Miraheze\CreateWiki\CreateWikiPhp;
-use Wikimedia\Rdbms\MaintainableDBConnRef;
+use Wikimedia\Rdbms\DBConnRef;
 
 /**
  * Handler for interacting with Permissions
@@ -18,7 +18,7 @@ class ManageWikiPermissions {
 	private $committed = false;
 	/** @var Config Configuration object */
 	private $config;
-	/** @var MaintainableDBConnRef Database connection */
+	/** @var DBConnRef Database connection */
 	private $dbw;
 	/** @var array Deletion queue */
 	private $deleteGroups = [];
