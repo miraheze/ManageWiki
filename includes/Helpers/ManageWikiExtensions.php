@@ -132,6 +132,10 @@ class ManageWikiExtensions {
 		}
 	}
 
+	public function hasChanges(): bool {
+		return (bool)$this->changes;
+	}
+
 	/**
 	 * Commits all changes made to extension lists to the database
 	 */

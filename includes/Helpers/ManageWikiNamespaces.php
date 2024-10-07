@@ -167,6 +167,10 @@ class ManageWikiNamespaces {
 		$this->deleteNamespaces[] = $id;
 	}
 
+	public function hasChanges(): bool {
+		return (bool)$this->changes;
+	}
+
 	/**
 	 * Commits all changes to database. Also files a job to move pages into or out of namespace
 	 * @param bool $runNamespaceMigrationJob|true
