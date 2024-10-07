@@ -14,7 +14,7 @@ use MediaWiki\Linker\Linker;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
-use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -31,23 +31,23 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWiki $wiki,
+		RemoteWikiFactory $remoteWiki,
 		string $special,
 		string $filtered,
 		Config $config
 	) {
 		switch ( $module ) {
 			case 'core':
-				$formDescriptor = self::buildDescriptorCore( $dbName, $ceMW, $context, $wiki, $config );
+				$formDescriptor = self::buildDescriptorCore( $dbName, $ceMW, $context, $remoteWiki, $config );
 				break;
 			case 'extensions':
-				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $wiki, $config );
+				$formDescriptor = self::buildDescriptorExtensions( $dbName, $ceMW, $remoteWiki, $config );
 				break;
 			case 'settings':
-				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $wiki, $config, $filtered );
+				$formDescriptor = self::buildDescriptorSettings( $dbName, $ceMW, $context, $remoteWiki, $config, $filtered );
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $wiki, $config );
+				$formDescriptor = self::buildDescriptorNamespaces( $dbName, $ceMW, $context, $special, $remoteWiki, $config );
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions( $dbName, $ceMW, $special, $config );
@@ -63,7 +63,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWiki $wiki,
+		RemoteWikiFactory $wiki,
 		Config $config
 	) {
 		$formDescriptor = [];
@@ -78,8 +78,8 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) && ( $wiki->getDBname() !== $config->get( 'CreateWikiGlobalWiki' ) ) ) {
 			$mwActions = [
-				( $wiki->isDeleted() ) ? 'undelete' : 'delete',
-				( $wiki->isLocked() ) ? 'unlock' : 'lock'
+				( $remoteWiki->isDeleted() ) ? 'undelete' : 'delete',
+				( $remoteWiki->isLocked() ) ? 'unlock' : 'lock'
 			];
 
 			foreach ( $mwActions as $mwAction ) {
