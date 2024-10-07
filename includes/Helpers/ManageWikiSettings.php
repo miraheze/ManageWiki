@@ -139,6 +139,10 @@ class ManageWikiSettings {
 		}
 	}
 
+	public function hasChanges(): bool {
+		return (bool)$this->changes;
+	}
+
 	/**
 	 * Commits all changes to the database
 	 */
