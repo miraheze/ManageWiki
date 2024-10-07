@@ -836,10 +836,10 @@ class ManageWikiFormFactoryBuilder {
 				throw new InvalidArgumentException( "{$module} not recognised" );
 		}
 
-		if ( $mwReturn->changes ) {
+		if ( $mwReturn->hasChanges() ) {
 			$mwReturn->commit();
 
-			if ( $module != 'permissions' ) {
+			if ( $module !== 'permissions' ) {
 				$mwReturn->logParams['4::wiki'] = $dbName;
 			}
 
@@ -854,7 +854,7 @@ class ManageWikiFormFactoryBuilder {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}
 
-		if ( $mwReturn->errors ?? [] && $module == 'permissions' ) {
+		if ( $mwReturn->errors ?? [] && $module === 'permissions' ) {
 			return $mwReturn->errors;
 		}
 
