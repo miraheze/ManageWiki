@@ -8,7 +8,7 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Output\OutputPage;
-use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
 use Miraheze\ManageWiki\ManageWiki;
 use UnexpectedValueException;
@@ -21,7 +21,7 @@ class ManageWikiFormFactory {
 		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWiki $wiki,
+		RemoteWikiFactory $remoteWiki,
 		Config $config,
 		string $special = '',
 		string $filtered = ''
@@ -31,12 +31,12 @@ class ManageWikiFormFactory {
 			$context->getLanguage()->getDir()
 		);
 
-		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $wiki, $special, $filtered, $config );
+		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $remoteWiki, $special, $filtered, $config );
 	}
 
 	public function getForm(
 		string $wiki,
-		RemoteWiki $remoteWiki,
+		RemoteWikiFactory $remoteWiki,
 		IContextSource $context,
 		Config $config,
 		string $module,
@@ -78,7 +78,7 @@ class ManageWikiFormFactory {
 		string $module,
 		bool $ceMW,
 		string $dbName,
-		RemoteWiki $wiki,
+		RemoteWikiFactory $remoteWiki,
 		DBConnRef $dbw,
 		Config $config,
 		string $special = '',
@@ -94,7 +94,7 @@ class ManageWikiFormFactory {
 		$form->getButtons();
 		$formData['reason'] = $form->getField( 'reason' )->loadDataFromRequest( $form->getRequest() );
 
-		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $wiki, $dbw, $config, $special, $filtered );
+		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $remoteWiki, $dbw, $config, $special, $filtered );
 
 		if ( !empty( $mwReturn ) ) {
 			$errorOut = [];
