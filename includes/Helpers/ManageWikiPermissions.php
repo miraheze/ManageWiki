@@ -142,6 +142,10 @@ class ManageWikiPermissions {
 		$this->deleteGroups[] = $group;
 	}
 
+	public function hasChanges(): bool {
+		return (bool)$this->changes;
+	}
+
 	/**
 	 * Commits all changes to database
 	 */
