@@ -193,7 +193,7 @@ class ManageWikiExtensions {
 		}
 
 		$this->write();
-		
+
 		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
 		$data = $dataFactory->newInstance( $this->wiki );
 		$data->resetWikiData( isNewChanges: true );
