@@ -11,10 +11,9 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\CreateWiki\CreateWikiJson;
-use Miraheze\CreateWiki\CreateWikiPhp;
 use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
 use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks;
@@ -22,17 +21,16 @@ use Miraheze\ManageWiki\ManageWiki;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
-	/** @var Config */
-	private $config;
+	private Config $config;
+	private CreateWikiDataFactory $dataFactory;
+	private CreateWikiHookRunner $createWikiHookRunner;
 
-	/** @var CreateWikiHookRunner */
-	private $createWikiHookRunner;
-
-	public function __construct() {
+	public function __construct( CreateWikiDataFactory $dataFactory ) {
 		parent::__construct( 'ManageWikiDefaultPermissions' );
 
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+		$this->dataFactory = $dataFactory;
 	}
 
 	public function canModify() {
@@ -224,19 +222,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		);
 
 		// Reset the cache or else the changes won't work
-		if ( $this->config->get( 'CreateWikiUsePhpCache' ) ) {
-			$cWP = new CreateWikiPhp(
-				$this->config->get( 'DBname' ),
-				$this->createWikiHookRunner
-			);
-			$cWP->resetWiki();
-		} else {
-			$cWJ = new CreateWikiJson(
-				$this->config->get( 'DBname' ),
-				$this->createWikiHookRunner
-			);
-			$cWJ->resetWiki();
-		}
+		$data = $this->dataFactory->newInstance( $this->config->get( 'DBname' ) );
+		$data->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
 		$logEntry->setPerformer( $this->getContext()->getUser() );
@@ -267,8 +254,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		// Reset the cache or else the changes won't work
-		$cWJ = new CreateWikiJson( $this->config->get( 'DBname' ), $this->createWikiHookRunner );
-		$cWJ->resetWiki();
+		$data = $this->dataFactory->newInstance( $this->config->get( 'DBname' ) );
+		$data->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'cache-reset' );
 		$logEntry->setPerformer( $this->getContext()->getUser() );
