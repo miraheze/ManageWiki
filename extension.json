@@ -42,7 +42,12 @@
 	"SpecialPages": {
 		"DeletedWikis": "Miraheze\\ManageWiki\\Specials\\SpecialDeletedWikis",
 		"ManageWiki": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
-		"ManageWikiDefaultPermissions": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaultPermissions"
+		"ManageWikiDefaultPermissions": {
+			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaultPermissions",
+			"services": [
+				"CreateWikiDataFactory"
+			]
+		}
 	},
 	"JobClasses": {
 		"MWScriptJob": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
@@ -119,12 +124,6 @@
 			"Miraheze\\ManageWiki\\Hooks::onCreateWikiCreation"
 		],
 		"CreateWikiDataFactoryBuilder": [
-			"Miraheze\\ManageWiki\\Hooks::onCreateWikiDataFactoryBuilder"
-		],
-		"CreateWikiJsonBuilder": [
-			"Miraheze\\ManageWiki\\Hooks::onCreateWikiDataFactoryBuilder"
-		],
-		"CreateWikiPhpBuilder": [
 			"Miraheze\\ManageWiki\\Hooks::onCreateWikiDataFactoryBuilder"
 		],
 		"CreateWikiStatePrivate": [

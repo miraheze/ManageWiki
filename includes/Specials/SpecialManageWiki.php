@@ -10,7 +10,6 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\WikiMap\WikiMap;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
-use Miraheze\CreateWiki\Services\WikiManagerFactory;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -22,13 +21,11 @@ class SpecialManageWiki extends SpecialPage {
 
 	private Config $config;
 	private RemoteWikiFactory $remoteWikiFactory;
-	private WikiManagerFactory $wikiManagerFactory;
 
 	public function __construct() {
 		parent::__construct( 'ManageWiki' );
 
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->wikiManagerFactory = MediaWikiServices::getInstance()->get( 'WikiManagerFactory' );
 		$this->remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 	}
 
@@ -169,14 +166,6 @@ class SpecialManageWiki extends SpecialPage {
 
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
-			if ( $module === 'core' ) {
-				$wikiManager = $this->wikiManagerFactory->newInstance( $wiki );
-				if ( !$wikiManager->exists() ) {
-					$out->addHTML( Html::errorBox( $this->msg( 'managewiki-missing' )->escaped() ) );
-					return false;
-				}
-			}
-
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
 

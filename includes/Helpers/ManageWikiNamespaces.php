@@ -5,8 +5,6 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\CreateWiki\CreateWikiJson;
-use Miraheze\CreateWiki\CreateWikiPhp;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
 use Wikimedia\Rdbms\DBConnRef;
 
@@ -243,21 +241,16 @@ class ManageWikiNamespaces {
 				}
 			}
 
-			if ( $this->wiki != 'default' && $runNamespaceMigrationJob ) {
+			if ( $this->wiki !== 'default' && $runNamespaceMigrationJob ) {
 				$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
 				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $job );
 			}
 		}
 
 		if ( $this->wiki !== 'default' ) {
-			$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
-			if ( $this->config->get( 'CreateWikiUsePhpCache' ) ) {
-				$cWP = new CreateWikiPhp( $this->wiki, $createWikiHookRunner );
-				$cWP->resetWiki();
-			} else {
-				$cWJ = new CreateWikiJson( $this->wiki, $createWikiHookRunner );
-				$cWJ->resetWiki();
-			}
+			$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
+			$data = $dataFactory->newInstance( $this->wiki );
+			$data->resetWikiData( isNewChanges: true );
 		}
 
 		$this->committed = true;
