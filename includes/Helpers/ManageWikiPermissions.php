@@ -5,8 +5,6 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
-use Miraheze\CreateWiki\CreateWikiJson;
-use Miraheze\CreateWiki\CreateWikiPhp;
 use Wikimedia\Rdbms\DBConnRef;
 
 /**
@@ -214,15 +212,11 @@ class ManageWikiPermissions {
 		}
 
 		if ( $this->wiki !== 'default' ) {
-			$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
-			if ( $this->config->get( 'CreateWikiUsePhpCache' ) ) {
-				$cWP = new CreateWikiPhp( $this->wiki, $createWikiHookRunner );
-				$cWP->resetWiki();
-			} else {
-				$cWJ = new CreateWikiJson( $this->wiki, $createWikiHookRunner );
-				$cWJ->resetWiki();
-			}
+			$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
+			$data = $dataFactory->newInstance( $this->wiki );
+			$data->resetWikiData( isNewChanges: true );
 		}
+
 		$this->committed = true;
 	}
 
