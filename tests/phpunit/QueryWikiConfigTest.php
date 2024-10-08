@@ -11,7 +11,7 @@ use MediaWiki\Tests\Api\ApiTestCase;
  * @coversDefaultClass \Miraheze\ManageWiki\Api\QueryWikiConfig
  */
 class QueryWikiConfigTest extends ApiTestCase {
-	
+
 	public function addDBDataOnce(): void {
 		$dbw = $this->getServiceContainer()->getConnectionProvider()->getPrimaryDatabase();
 		$dbw->newInsertQueryBuilder()
