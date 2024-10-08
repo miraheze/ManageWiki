@@ -254,8 +254,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
 
 		// Reset the cache or else the changes won't work
-		$cWJ = new CreateWikiJson( $this->config->get( 'DBname' ), $this->createWikiHookRunner );
-		$cWJ->resetWiki();
+		$data = $this->dataFactory->newInstance( $this->config->get( 'DBname' ) );
+		$data->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'cache-reset' );
 		$logEntry->setPerformer( $this->getContext()->getUser() );
