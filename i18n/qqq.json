@@ -75,7 +75,6 @@
 	"managewiki-label-language": "Used as a label for 'language'.\n{{Identical|Language}}",
 	"managewiki-label-private": "Used as a label for 'private'.\n{{Identical|Private}}",
 	"managewiki-label-sitename": "Used as a label for 'sitename'.\n{{Identical|Sitename}}",
-	"managewiki-missing": "Message if the wiki entered does not exist in the database.",
 	"managewiki-permissions-autopromote-email": "{{doc-singularthey}}",
 	"managewiki-permissions-autopromote": "{{Doc-singularthey}}",
 	"managewiki-placeholder-reason": "Used as a placeholder for 'reason'",

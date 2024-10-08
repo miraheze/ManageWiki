@@ -109,7 +109,6 @@
 	"managewiki-link-permissions": "Manage this wiki's permissions",
 	"managewiki-link-settings-view": "View this wiki's additional settings",
 	"managewiki-link-settings": "Manage this wiki's additional settings",
-	"managewiki-missing": "That wiki does not exist.",
 	"managewiki-mwlocked": "This wiki has had its ability to use ManageWiki restricted.",
 	"managewiki-namespace-conflicts": "The namespace \"$1\" already exists and cannot be modified.",
 	"managewiki-namespaces-create-submit": "Create namespace",
