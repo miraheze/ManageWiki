@@ -57,7 +57,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 
 			$dataFactory = $this->getServiceContainer()->get( 'CreateWikiDataFactory' );
 			$data = $dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
-			$data->resetWikiData();
+			$data->resetWikiData( isNewChanges: true );
 		}
 	}
 }
