@@ -45,7 +45,8 @@
 		"ManageWikiDefaultPermissions": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaultPermissions",
 			"services": [
-				"CreateWikiDataFactory"
+				"CreateWikiDataFactory",
+				"RemoteWikiFactory"
 			]
 		}
 	},
