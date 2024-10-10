@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
-use Miraheze\CreateWiki\RemoteWiki;
 use Wikimedia\Rdbms\DBConnRef;
 
 /**
@@ -138,8 +137,8 @@ class ManageWikiExtensions {
 	 * Commits all changes made to extension lists to the database
 	 */
 	public function commit() {
-		$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
-		$remoteWiki = new RemoteWiki( $this->wiki, $createWikiHookRunner );
+		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
+		$remoteWiki = $remoteWikiFactory->newInstance( $this->wiki );
 
 		foreach ( $this->liveExts as $name => $extConfig ) {
 			// Check if we have a conflict first
