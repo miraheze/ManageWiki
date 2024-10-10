@@ -839,16 +839,15 @@ class ManageWikiFormFactoryBuilder {
 		if ( $mwReturn->hasChanges() ) {
 			$mwReturn->commit();
 
-			// TODO still needs fixed
 			if ( $module !== 'permissions' ) {
-				$mwReturn->logParams['4::wiki'] = $dbName;
+				$mwReturn->addLogParam( '4::wiki', $dbName );
 			}
 
-			$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->log );
+			$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->getLogAction() );
 			$mwLogEntry->setPerformer( $context->getUser() );
 			$mwLogEntry->setTarget( $form->getTitle() );
 			$mwLogEntry->setComment( $formData['reason'] );
-			$mwLogEntry->setParameters( $mwReturn->logParams );
+			$mwLogEntry->setParameters( $mwReturn->getLogParams() );
 			$mwLogID = $mwLogEntry->insert();
 			$mwLogEntry->publish( $mwLogID );
 		} else {
