@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Api;
 
 use ApiBase;
 use MediaWiki\MediaWikiServices;
-use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ParamValidator\ParamValidator;
 
@@ -44,8 +43,8 @@ class ApiModifyServer extends ApiBase {
 	}
 
 	private function setServer( string $wiki, string $server ) {
-		$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
-		$remoteWiki = new RemoteWiki( $wiki, $createWikiHookRunner );
+		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
+		$remoteWiki = $remoteWikiFactory->newInstance( $wiki );
 		$remoteWiki->setServerName( $server );
 		$remoteWiki->commit();
 	}
