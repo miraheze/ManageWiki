@@ -21,7 +21,7 @@ class ManageWikiRequirements {
 	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool Whether the extension can be enabled
 	 */
-	public static function process( array $actions, array $extensionList = [], bool $ignorePerms = false, RemoteWikiFactory $remoteWiki ) {
+	public static function process( array $actions, array $extensionList, bool $ignorePerms, RemoteWikiFactory $remoteWiki ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
