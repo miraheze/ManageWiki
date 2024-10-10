@@ -63,7 +63,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWikiFactory $wiki,
+		RemoteWikiFactory $remoteWiki,
 		Config $config
 	) {
 		$formDescriptor = [];
@@ -76,7 +76,7 @@ class ManageWikiFormFactoryBuilder {
 			'section' => 'main'
 		];
 
-		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) && ( $wiki->getDBname() !== $config->get( 'CreateWikiGlobalWiki' ) ) ) {
+		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) && ( $remoteWiki->getDBname() !== $config->get( 'CreateWikiGlobalWiki' ) ) ) {
 			$mwActions = [
 				( $remoteWiki->isDeleted() ) ? 'undelete' : 'delete',
 				( $remoteWiki->isLocked() ) ? 'unlock' : 'lock'
@@ -965,7 +965,7 @@ class ManageWikiFormFactoryBuilder {
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
 		$hookRunner->onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData, $remoteWiki );
 
-		return $wiki;
+		return $remoteWiki;
 	}
 
 	private static function submissionExtensions(
