@@ -8,8 +8,8 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
-use Miraheze\CreateWiki\RemoteWiki;
+use MediaWiki\WikiMap\WikiMap;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -19,17 +19,14 @@ use OOUI\SearchInputWidget;
 
 class SpecialManageWiki extends SpecialPage {
 
-	/** @var Config */
-	private $config;
-
-	/** @var CreateWikiHookRunner */
-	private $createWikiHookRunner;
+	private Config $config;
+	private RemoteWikiFactory $remoteWikiFactory;
 
 	public function __construct() {
 		parent::__construct( 'ManageWiki' );
 
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+		$this->remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 	}
 
 	public function execute( $par ) {
@@ -61,11 +58,11 @@ class SpecialManageWiki extends SpecialPage {
 			return false;
 		}
 
-		if ( ( $module === 'permissions' ) && $additional ) {
+		if ( $module === 'permissions' && $additional ) {
 			$out->addSubtitle( $out->msg( 'editing' )->params( $additional ) );
 		}
 
-		if ( $this->config->get( 'CreateWikiGlobalWiki' ) !== $this->config->get( 'DBname' ) ) {
+		if ( !WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
@@ -136,7 +133,7 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addModules( [ 'mediawiki.special.userrights' ] );
 		}
 
-		$remoteWiki = new RemoteWiki( $wiki, $this->createWikiHookRunner );
+		$remoteWiki = $this->remoteWikiFactory->newInstance( $wiki );
 
 		if ( $remoteWiki->isLocked() ) {
 			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-mwlocked' )->escaped() ) );

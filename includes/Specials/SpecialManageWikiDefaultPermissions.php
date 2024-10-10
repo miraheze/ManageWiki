@@ -11,9 +11,8 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
-use Miraheze\CreateWiki\RemoteWiki;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks;
@@ -23,13 +22,16 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	private Config $config;
 	private CreateWikiDataFactory $dataFactory;
-	private CreateWikiHookRunner $createWikiHookRunner;
+	private RemoteWikiFactory $remoteWikiFactory;
 
-	public function __construct( CreateWikiDataFactory $dataFactory ) {
+	public function __construct(
+		CreateWikiDataFactory $dataFactory,
+		RemoteWikiFactory $remoteWikiFactory
+	) {
 		parent::__construct( 'ManageWikiDefaultPermissions' );
 
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+		$this->remoteWikiFactory = $remoteWikiFactory;
 		$this->dataFactory = $dataFactory;
 	}
 
@@ -297,7 +299,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
 		$out->addModules( [ 'mediawiki.special.userrights' ] );
 
-		$remoteWiki = new RemoteWiki( $this->config->get( 'CreateWikiGlobalWiki' ), $this->createWikiHookRunner );
+		$remoteWiki = $this->remoteWikiFactory->newInstance( $this->config->get( 'CreateWikiGlobalWiki' ) );
 
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), $this->config, 'permissions', $group );

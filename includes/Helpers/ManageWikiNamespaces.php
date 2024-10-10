@@ -169,6 +169,22 @@ class ManageWikiNamespaces {
 		return (bool)$this->changes;
 	}
 
+	public function setLogAction( string $action ): void {
+		$this->log = $action;
+	}
+
+	public function addLogParam( string $param, mixed $value ): void {
+		$this->logParams[$param] = $value;
+	}
+
+	public function getLogAction(): ?string {
+		return $this->log;
+	}
+
+	public function getLogParams(): array {
+		return $this->logParams;
+	}
+
 	/**
 	 * Commits all changes to database. Also files a job to move pages into or out of namespace
 	 * @param bool $runNamespaceMigrationJob|true

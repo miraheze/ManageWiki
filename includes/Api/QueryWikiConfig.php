@@ -5,10 +5,11 @@ namespace Miraheze\ManageWiki\Api;
 use ApiBase;
 use ApiQueryBase;
 use MediaWiki\MediaWikiServices;
-use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\CreateWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
+use RuntimeException;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class QueryWikiConfig extends ApiQueryBase {
@@ -24,23 +25,23 @@ class QueryWikiConfig extends ApiQueryBase {
 
 		$data = [];
 
-		$createWikiHookRunner = MediaWikiServices::getInstance()->get( 'CreateWikiHookRunner' );
+		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 
 		foreach ( $params['wikis'] as $wiki ) {
-			$wikiObj = new RemoteWiki( $wiki, $createWikiHookRunner );
-
-			if ( $wikiObj === null ) {
+			try {
+				$remoteWiki = $remoteWikiFactory->newInstance( $wiki );
+			} catch ( MissingWikiError | RuntimeException $e ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
 				continue;
 			}
 
 			$wikiData = [
 				'name' => $wiki,
-				'sitename' => $wikiObj->getSitename(),
-				'closed' => (bool)$wikiObj->isClosed(),
-				'inactive' => (bool)$wikiObj->isInactive(),
-				'inactive-exempt' => (bool)$wikiObj->isInactiveExempt(),
-				'private' => (bool)$wikiObj->isPrivate()
+				'sitename' => $remoteWiki->getSitename(),
+				'closed' => $remoteWiki->isClosed(),
+				'inactive' => $remoteWiki->isInactive(),
+				'inactive-exempt' => $remoteWiki->isInactiveExempt(),
+				'private' => $remoteWiki->isPrivate(),
 			];
 
 			$mwSet = new ManageWikiSettings( $wiki );

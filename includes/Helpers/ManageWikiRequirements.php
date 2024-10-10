@@ -5,7 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SiteStats\SiteStats;
-use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
 /**
  * Helper class for de-centralising requirement checking
@@ -18,10 +18,10 @@ class ManageWikiRequirements {
 	 * @param array $actions Requirements that need to be met
 	 * @param array $extensionList Enabled extensions on the wiki
 	 * @param bool $ignorePerms Whether a permissions check should be carried out
-	 * @param ?RemoteWiki $wiki
+	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool Whether the extension can be enabled
 	 */
-	public static function process( array $actions, array $extensionList = [], bool $ignorePerms = false, RemoteWiki $wiki = null ) {
+	public static function process( array $actions, array $extensionList, bool $ignorePerms, RemoteWikiFactory $remoteWiki ) {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
@@ -50,7 +50,7 @@ class ManageWikiRequirements {
 					$stepResponse['settings'] = self::settings( $data );
 					break;
 				case 'visibility':
-					$stepResponse['visibility'] = self::visibility( $data, $wiki );
+					$stepResponse['visibility'] = self::visibility( $data, $remoteWiki );
 					break;
 				default:
 					return false;
@@ -162,16 +162,16 @@ class ManageWikiRequirements {
 
 	/**
 	 * @param array $data
-	 * @param RemoteWiki $wiki
+	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool
 	 */
-	private static function visibility( array $data, RemoteWiki $wiki ) {
+	private static function visibility( array $data, RemoteWikiFactory $remoteWiki ) {
 		$ret = [];
 
 		foreach ( $data as $key => $val ) {
-			if ( $key == 'state' ) {
-				$ret['state'] = ( ( $val == 'private' && $wiki->isPrivate() ) || ( $val == 'public' && !$wiki->isPrivate() ) );
-			} elseif ( $key == 'permissions' ) {
+			if ( $key === 'state' ) {
+				$ret['state'] = ( ( $val === 'private' && $remoteWiki->isPrivate() ) || ( $val === 'public' && !$remoteWiki->isPrivate() ) );
+			} elseif ( $key === 'permissions' ) {
 				$ret['permissions'] = (bool)( self::permissions( $val ) );
 			}
 		}

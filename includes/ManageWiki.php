@@ -5,7 +5,7 @@ namespace Miraheze\ManageWiki;
 use DateTimeZone;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
-use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
 class ManageWiki {
 
@@ -27,9 +27,9 @@ class ManageWiki {
 		return array_keys( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWiki' ), true );
 	}
 
-	public static function checkPermission( RemoteWiki $rm, User $user, string $perm ) {
+	public static function checkPermission( RemoteWikiFactory $remoteWiki, User $user, string $perm ) {
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-		if ( $rm->isLocked() && !$permissionManager->userHasRight( $user, 'managewiki-restricted' ) ) {
+		if ( $remoteWiki->isLocked() && !$permissionManager->userHasRight( $user, 'managewiki-restricted' ) ) {
 			return false;
 		}
 
@@ -60,7 +60,7 @@ class ManageWiki {
 	}
 
 	public static function handleMatrix( $conversion, $to ) {
-		if ( $to == 'php' ) {
+		if ( $to === 'php' ) {
 			// $to is php, therefore $conversion must be json
 			$phpin = json_decode( $conversion, true );
 

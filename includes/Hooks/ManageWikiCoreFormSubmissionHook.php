@@ -3,7 +3,7 @@
 namespace Miraheze\ManageWiki\Hooks;
 
 use MediaWiki\Context\IContextSource;
-use Miraheze\CreateWiki\RemoteWiki;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Wikimedia\Rdbms\DBConnRef;
 
 interface ManageWikiCoreFormSubmissionHook {
@@ -13,8 +13,8 @@ interface ManageWikiCoreFormSubmissionHook {
 	 * @param string $dbName
 	 * @param DBConnRef $dbw
 	 * @param array $formData
-	 * @param RemoteWiki &$wiki
+	 * @param RemoteWikiFactory &$remoteWiki
 	 * @return void
 	 */
-	public function onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData, &$wiki ): void;
+	public function onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData, &$remoteWiki ): void;
 }
