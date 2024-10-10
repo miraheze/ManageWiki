@@ -9,7 +9,6 @@ use Miraheze\CreateWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
-use RuntimeException;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class QueryWikiConfig extends ApiQueryBase {
@@ -30,7 +29,7 @@ class QueryWikiConfig extends ApiQueryBase {
 		foreach ( $params['wikis'] as $wiki ) {
 			try {
 				$remoteWiki = $remoteWikiFactory->newInstance( $wiki );
-			} catch ( MissingWikiError | RuntimeException $e ) {
+			} catch ( MissingWikiError $e ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
 				continue;
 			}
