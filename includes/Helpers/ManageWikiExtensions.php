@@ -231,9 +231,7 @@ class ManageWikiExtensions {
 				's_settings' => json_encode( [] ),
 				's_extensions' => json_encode( $this->list() )
 			],
-			[
-				's_dbname'
-			],
+			[ [ 's_dbname' ] ],
 			[
 				's_extensions' => json_encode( $this->list() )
 			]

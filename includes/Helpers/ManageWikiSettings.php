@@ -168,9 +168,7 @@ class ManageWikiSettings {
 				's_extensions' => json_encode( [] ),
 				's_settings' => json_encode( $this->liveSettings )
 			],
-			[
-				's_dbname'
-			],
+			[ [ 's_dbname' ] ],
 			[
 				's_settings' => json_encode( $this->liveSettings )
 			]
