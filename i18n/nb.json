@@ -78,7 +78,6 @@
 	"managewiki-link-permissions": "Behandle denne wikiens tillatelser",
 	"managewiki-link-settings-view": "Vis denne wikiens ekstra innstillinger",
 	"managewiki-link-settings": "Behandle denne wiki-ens innstillinger",
-	"managewiki-missing": "Den wikien finnes ikke.",
 	"managewiki-mwlocked": "Denne wikien har fått begrenset muligheten til å bruke ManageWiki.",
 	"managewiki-namespace-conflicts": "Kan ikke endre «$1», et navnerom med det navnet finnes allerede",
 	"managewiki-namespaces-create-submit": "Opprett navnerom",

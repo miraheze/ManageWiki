@@ -109,7 +109,6 @@
 	"managewiki-link-permissions": "管理此 wiki 的權限",
 	"managewiki-link-settings-view": "檢視此 wiki 的額外設定",
 	"managewiki-link-settings": "管理此 wiki 的額外設定",
-	"managewiki-missing": "該 wiki 不存在",
 	"managewiki-mwlocked": "此 wiki 可使用 ManageWiki 限制。",
 	"managewiki-namespace-conflicts": "已存在命名空間「$1」，所以無法變動。",
 	"managewiki-namespaces-create-submit": "建立命名空間",

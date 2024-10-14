@@ -14,6 +14,7 @@
 	"apiwarn-wikiconfig-wikidoesnotexist": "D'Wiki '$1' gëtt et net.",
 	"core-main": "Haaptastellungen",
 	"deletedwikis": "Geläscht Wikien",
+	"log-action-filter-managewiki-namespaces": "Nummraumännerungen",
 	"logentry-managewiki-delete-group": "$1 huet d'Grupp $3 geläscht",
 	"logentry-managewiki-delete": "$1 huet d'Wiki \"$4\" geläscht",
 	"managewiki-changes-none": "Et goufe keng Ännerunge gemaach.",
@@ -31,7 +32,7 @@
 	"managewiki-label-private": "Privat",
 	"managewiki-label-server": "Numm vum Server",
 	"managewiki-label-undeletewiki": "Dës Wiki restauréieren?",
-	"managewiki-missing": "Déi Wiki gëtt et net.",
+	"managewiki-namespaces-create-submit": "Nummraum uleeën",
 	"managewiki-namespaces-create": "Numm vum neien Nummraum",
 	"managewiki-namespaces-create-header": "En neien Nummraum uleeën",
 	"managewiki-namespaces-select": "Wielt en Nummraum",
@@ -46,6 +47,6 @@
 	"managewiki-unavailable": "Net disponibel",
 	"managewiki": "Eng Wiki geréieren",
 	"namespaces-delete": "Läschen",
-	"namespaces-namespace": "Haapt-Nummraum",
+	"namespaces-namespace": "Haaptnummraum",
 	"permissions-delete-checkbox": "Dës Benotzergrupp läschen"
 }

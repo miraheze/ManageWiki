@@ -88,7 +88,6 @@
 	"managewiki-link-permissions": "Tvarkyti šios viki leidimus",
 	"managewiki-link-settings-view": "Žiūrėti šios viki papildomus nustatymus",
 	"managewiki-link-settings": "Tvarkyti šios viki papildomus nustatymus",
-	"managewiki-missing": "Ši viki neegzistuoja.",
 	"managewiki-namespace-conflicts": "Vardų sritis „$1“ jau egzistuoja ir negali būti pakeista.",
 	"managewiki-namespaces-create-submit": "Sukurti vardų sritį",
 	"managewiki-namespaces-create": "Sukurti naują vardų sritį",

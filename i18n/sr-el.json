@@ -44,7 +44,6 @@
 	"managewiki-link-namespaces": "Upravljanje imenskim prostorima vikija",
 	"managewiki-link-permissions": "Upravljaj dozvolama ovog vikija",
 	"managewiki-link-settings": "Upravljaj dodatnim podešavanjima ovog vikija",
-	"managewiki-missing": "Ovaj viki ne postoji.",
 	"managewiki-mwlocked": "Ovaj viki ima ograničenu sposobnost da koristi ManageWiki.",
 	"managewiki-namespace-conflicts": "Nije moguće izmeniti „$1”. Imenski prostor s takvim imenom već postoji.",
 	"managewiki-namespaces-create": "Pravljenje novog imenskog prostora",

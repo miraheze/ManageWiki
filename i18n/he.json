@@ -109,7 +109,6 @@
 	"managewiki-link-permissions": "ניהול ההרשאות",
 	"managewiki-link-settings-view": "הצגת ההגדרות הנוספות",
 	"managewiki-link-settings": "ניהול ההגדרות הנוספות",
-	"managewiki-missing": "אתר ויקי זה אינו קיים.",
 	"managewiki-mwlocked": "בוויקי הזה הוגבלה היכולת להשתמש ב־ManageWiki.",
 	"managewiki-namespace-conflicts": "מרחב השם \"$1\" כבר קיים ולא ניתן לשנות אותו.",
 	"managewiki-namespaces-create-submit": "יצירת מרחב שם",

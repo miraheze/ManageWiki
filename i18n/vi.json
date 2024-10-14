@@ -8,6 +8,7 @@
 			"NguyenHung",
 			"Nguyễn Mạnh An",
 			"Pisceskaze",
+			"SongNgu.xyz",
 			"Wolf"
 		]
 	},
@@ -19,6 +20,8 @@
 	"action-managewiki-permissions": "tạo, xóa và quản lý nhóm người dùng trên wiki này",
 	"action-managewiki-settings": "quản lý cài đặt nâng cao cho wiki này",
 	"apihelp-modifyserver-example": "Sửa đổi tên máy chủ của wiki.",
+	"apihelp-modifyserver-param-server": "Tên máy chủ để sửa đổi.",
+	"apihelp-modifyserver-param-wiki": "ID của wiki để sửa đổi tên máy chủ.",
 	"apihelp-modifyserver-summary": "Sửa đổi tên máy chủ của wiki.",
 	"apihelp-query+wikiconfig-example-1": "Xem cài đặt wiki cho wiki trung ương.",
 	"apihelp-query+wikiconfig-param-prop": "Chọn thuộc tính để quay lại:",
@@ -108,7 +111,6 @@
 	"managewiki-link-permissions": "Quản lý các quyền hạn của wiki này",
 	"managewiki-link-settings-view": "Xem các cài đặt nâng cao của wiki",
 	"managewiki-link-settings": "Quản lý các cài đặt nâng cao của wiki",
-	"managewiki-missing": "Wiki này không tồn tại.",
 	"managewiki-mwlocked": "Wiki này đã có được quyền để thay đổi các cài đặt bị khóa trong ManageWiki.",
 	"managewiki-namespace-conflicts": "Không gian tên \"$1\" đã tồn tại và không thể thay đổi",
 	"managewiki-namespaces-create-submit": "Tạo không gian tên",

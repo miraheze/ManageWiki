@@ -104,7 +104,6 @@
 	"managewiki-link-permissions": "Upravljanje dovoljenj tega vikija",
 	"managewiki-link-settings-view": "Ogled dodatnih nastavitev tega vikija",
 	"managewiki-link-settings": "Upravljanje dodatnih nastavitev tega vikija",
-	"managewiki-missing": "Ta viki ne obstaja.",
 	"managewiki-mwlocked": "V tem vikiju je možnost uporabe razširitve ManageWiki omejena.",
 	"managewiki-namespace-conflicts": "Imenski prostor »$1« že obstaja in ga ni mogoče spremeniti.",
 	"managewiki-namespaces-create-submit": "Ustvari imenski prostor",

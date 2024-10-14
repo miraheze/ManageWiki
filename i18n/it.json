@@ -87,7 +87,6 @@
 	"managewiki-link-permissions": "Gestisci permessi di questa Wiki",
 	"managewiki-link-settings-view": "Vedere impostazioni aggiuntive di questa Wiki",
 	"managewiki-link-settings": "Gestisci le impostazioni aggiuntive di questo wiki",
-	"managewiki-missing": "Questo wiki non esiste.",
 	"managewiki-mwlocked": "Questa Wiki ha avuto la sua abilità di usare GestisciWiki limitata.",
 	"managewiki-namespace-conflicts": "Il namespace \"$1\" esiste già e non può essere modificato.",
 	"managewiki-namespaces-create-submit": "Crea namespace",

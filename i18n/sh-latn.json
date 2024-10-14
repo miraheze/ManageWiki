@@ -94,7 +94,6 @@
 	"managewiki-link-permissions": "Upravljanje dozvolama ovog vikija",
 	"managewiki-link-settings-view": "Prikaži dodatne postavke ovog vikija",
 	"managewiki-link-settings": "Upravljanje dodatnim postavkama ovog vikija",
-	"managewiki-missing": "Nema takvog vikija.",
 	"managewiki-mwlocked": "Ovaj viki ima ograničenu sposobnost koristiti Раководење со вики.",
 	"managewiki-namespace-conflicts": "Imenski prostor \"$1\". već postoji i ne može se mijenjati.",
 	"managewiki-namespaces-create-submit": "Napravi imen. prostor",

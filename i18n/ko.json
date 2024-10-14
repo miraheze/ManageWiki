@@ -93,7 +93,6 @@
 	"managewiki-link-permissions": "이 위키의 권한 관리",
 	"managewiki-link-settings-view": "이 위키의 추가 설정 보기",
 	"managewiki-link-settings": "이 위키의 추가 설정을 관리하기",
-	"managewiki-missing": "해당 위키는 존재하지 않습니다.",
 	"managewiki-namespace-conflicts": "\"$1\"을(를) 수정할 수 없습니다. 해당 이름의 이름공간이 이미 존재합니다.",
 	"managewiki-namespaces-create-submit": "이름공간 만들기",
 	"managewiki-namespaces-create": "새 이름공간 이름",

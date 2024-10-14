@@ -77,7 +77,6 @@
 	"managewiki-link-permissions": "Hantera wikins behörigheter",
 	"managewiki-link-settings-view": "Visa ytterligare inställningar för denna wiki",
 	"managewiki-link-settings": "Hantera ytterligare inställningar för denna wiki",
-	"managewiki-missing": "Denna wiki finns inte.",
 	"managewiki-mwlocked": "Denna wiki har begränsat sin förmåga att använda ManageWiki.",
 	"managewiki-namespace-conflicts": "Kan inte ändra \"$1\", en namnrymd med detta namn finns redan",
 	"managewiki-namespaces-create-submit": "Skapa namnrymd",

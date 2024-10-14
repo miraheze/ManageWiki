@@ -3,7 +3,8 @@
 		"authors": [
 			"Athena in Wonderland",
 			"Hamilton Abreu",
-			"Vitorvicentevalente"
+			"Vitorvicentevalente",
+			"Waldyrious"
 		]
 	},
 	"action-managewiki-editdefault": "gerir os privilégios padrão dos grupos",
@@ -92,7 +93,6 @@
 	"managewiki-link-permissions": "Gerir os privilégios desta wiki",
 	"managewiki-link-settings-view": "Ver as configurações adicionais desta wiki",
 	"managewiki-link-settings": "Gerir as configurações adicionais desta wiki",
-	"managewiki-missing": "Essa wiki não existe",
 	"managewiki-mwlocked": "A capacidade de usar o GerirWiki foi restringida nesta wiki.",
 	"managewiki-namespace-conflicts": "Não é possível modificar \"$1\" porque já existe um espaço nominal com esse nome.",
 	"managewiki-namespaces-create-submit": "Criar espaço nominal",
@@ -102,17 +102,17 @@
 	"managewiki-permissions-addall": "Pode adicionar a outros",
 	"managewiki-permissions-addself": "Pode adicionar a si próprio",
 	"managewiki-permissions-assigned": "Os direitos de utilizador abaixo estão atualmente atribuídos a este grupo de utilizadores.",
-	"managewiki-permissions-autopromote-age": "Tem de ser um utilizador há o número de dias a seguir",
+	"managewiki-permissions-autopromote-age": "Deve ter sido ser um utilizador pelo seguinte número de dias:",
 	"managewiki-permissions-autopromote-blocked": "Tem de estar bloqueado",
 	"managewiki-permissions-autopromote-bot": "Tem de ser uma conta de robô",
 	"managewiki-permissions-autopromote-conds-and": "...todas as condições têm de estar preenchidas",
 	"managewiki-permissions-autopromote-conds-not": "...nenhuma das condições pode estar preenchida",
 	"managewiki-permissions-autopromote-conds-or": "...qualquer uma das condições abaixo pode estar preenchida",
 	"managewiki-permissions-autopromote-conds": "Para um utilizador ser promovido...",
-	"managewiki-permissions-autopromote-editcount": "Tem de ter feito o seguinte número de edições",
+	"managewiki-permissions-autopromote-editcount": "Tem de ter feito o seguinte número de edições:",
 	"managewiki-permissions-autopromote-email": "Tem de ter o correio eletrónico confirmado",
 	"managewiki-permissions-autopromote-enable": "Ativar promoção automática deste grupo",
-	"managewiki-permissions-autopromote-groups": "Tem de ser membro dos seguintes grupos",
+	"managewiki-permissions-autopromote-groups": "Tem de ser membro dos seguintes grupos:",
 	"managewiki-permissions-autopromote-once": "Só promover o utilizador uma vez",
 	"managewiki-permissions-autopromote": "Abaixo, pode gerir a promoção automática de utilizadores a este grupo. Note que, se um utilizador preencher os critérios que definir abaixo, ele herdará todas as permissões deste grupo e você não poderá removê-lo do grupo, a menos que escolha promovê-lo uma única vez antes de ele preencher os critérios.",
 	"managewiki-permissions-create": "Criar um novo grupo de utilizadores",

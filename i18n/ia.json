@@ -103,7 +103,6 @@
 	"managewiki-link-permissions": "Gerer le permissiones de iste wiki",
 	"managewiki-link-settings-view": "Vider le parametros additional de iste wiki",
 	"managewiki-link-settings": "Gerer le parametros additional de iste wiki",
-	"managewiki-missing": "Iste wiki non existe.",
 	"managewiki-mwlocked": "Sur iste wiki, le possibilitate de usar ManageWiki es restringite.",
 	"managewiki-namespace-conflicts": "Le spatio de nomines “$1” ja existe e non pote esser modificate.",
 	"managewiki-namespaces-create-submit": "Crear spatio de nomines",

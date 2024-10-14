@@ -88,7 +88,6 @@
 	"managewiki-link-permissions": "Bu vikinin izinlerini yönet",
 	"managewiki-link-settings-view": "Bu vikinin ek ayarlarını görüntüle",
 	"managewiki-link-settings": "Bu vikinin ek ayarlarını yönetin",
-	"managewiki-missing": "Bu viki mevcut değil.",
 	"managewiki-mwlocked": "Bu viki, ManageWiki'yi kısıtlı kullanma yeteneğine sahipti.",
 	"managewiki-namespace-conflicts": "\"$1\" değiştirilemiyor, bu ada sahip bir ad alanı zaten var.",
 	"managewiki-namespaces-create-submit": "Ad Alanı Oluştur",

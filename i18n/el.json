@@ -36,7 +36,6 @@
 	"managewiki-label-sitename": "Όνομα Wiki",
 	"managewiki-link-extensions": "Διαχείριση των επεκτάσεων του βίκι",
 	"managewiki-link-settings": "Διαχείριση των ρυθμίσεων του βίκι",
-	"managewiki-missing": "Αυτό το βίκι δεν υπάρχει.",
 	"managewiki-namespaces-create-submit": "Δημιουργία ονοματοχώρου",
 	"managewiki-permissions-create-submit": "Δημιουργία ομάδας",
 	"managewiki-permissions-resetgroups-title": "Επαναφέρετε τις ομάδες ενός wiki στις προεπιλογές",

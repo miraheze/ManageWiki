@@ -121,7 +121,6 @@
 	"managewiki-link-permissions": "Управление правами на этой вики",
 	"managewiki-link-settings-view": "Посмотреть дополнительные настройки на этой вики",
 	"managewiki-link-settings": "Управление дополнительными настройками вики",
-	"managewiki-missing": "Этой вики не существует.",
 	"managewiki-mwlocked": "Для этой вики запрещено использовать ManageWiki.",
 	"managewiki-namespace-conflicts": "Пространство имён «$1» уже существует и не может быть изменено.",
 	"managewiki-namespaces-create-submit": "Создать новое пространство имён",

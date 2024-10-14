@@ -87,7 +87,6 @@
 	"managewiki-link-permissions": "Керування правами цієї вікі",
 	"managewiki-link-settings-view": "Перегляд додаткових налаштувань цієї вікі",
 	"managewiki-link-settings": "Керування додатковими налаштуваннями цієї вікі",
-	"managewiki-missing": "Ця вікі не існує.",
 	"managewiki-mwlocked": "Цій вікі обмежили можливість використання ManageWiki.",
 	"managewiki-namespace-conflicts": "Не вдалося змінити «$1», простір назв із такою назвою вже існує.",
 	"managewiki-namespaces-create-submit": "Створити простір назв",

@@ -81,7 +81,6 @@
 	"managewiki-link-permissions": "Spravovať povolenia tejto wiki",
 	"managewiki-link-settings-view": "Zobraziť dodatočné nastavenia tejto wiki",
 	"managewiki-link-settings": "Spravovať dodatočné nastavenia tejto wiki",
-	"managewiki-missing": "Táto wiki neexistuje.",
 	"managewiki-mwlocked": "Pre túto wiki je použitie Správy Wiki obmedzené.",
 	"managewiki-namespace-conflicts": "Nie je možné upraviť „ $1 “, menný priestor s týmto názvom už existuje.",
 	"managewiki-namespaces-create-submit": "Vytvoriť menný priestor",

@@ -92,7 +92,6 @@
 	"managewiki-link-permissions": "Управљање дозволама овог викија",
 	"managewiki-link-settings-view": "Прикажи додатне поставке овог викија",
 	"managewiki-link-settings": "Управљање додатним поставкама овог викија",
-	"managewiki-missing": "Нема овог викија.",
 	"managewiki-mwlocked": "Овај вики има ограничену способност да користи Раководење со вики.",
 	"managewiki-namespace-conflicts": "Именски простор „$1” већ постоји и није га могуће мијењати.",
 	"managewiki-namespaces-create-submit": "Направи имен. простор",
