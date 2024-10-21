@@ -47,13 +47,17 @@ class SpecialManageWiki extends SpecialPage {
 
 		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
 			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module . '-view' )->text() );
-			$out->addHTML(
-				Html::errorBox( $this->context->msg( 'managewiki-error-nopermission' )->escaped() )
-			);
-			$out->addWikiMsg( "managewiki-header-{$module}-view", $wiki );
+			if ( $module !== 'permissions' || $module !== 'namespaces' ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
+				);
+				$out->addWikiMsg( "managewiki-header-{$module}-view" );
+			}
 		} else {
 			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
-			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
+			if ( $module !== 'permissions' || $module !== 'namespaces' ) ) {
+				$out->addWikiMsg( "managewiki-header-{$module}" );
+			}
 		}
 
 		$additional = $par[1] ?? '';
@@ -75,11 +79,11 @@ class SpecialManageWiki extends SpecialPage {
 			$dbName = $par[1] ?? $this->config->get( 'DBname' );
 			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
 				$out->addHTML(
-					Html::errorBox( $this->context->msg( 'managewiki-error-nopermission-remote' )->escaped() )
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
 				);
 			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
 				$out->addHTML(
-					Html::errorBox( $this->context->msg( 'managewiki-error-nopermission' )->escaped() )
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
 				);
 			}
 			$this->showWikiForm( strtolower( $dbName ), 'core', '', '' );
@@ -182,6 +186,16 @@ class SpecialManageWiki extends SpecialPage {
 		} else {
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
+
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
+				);
+			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
+				);
+			}
 
 			$out->addHTML( new FieldLayout(
 				new SearchInputWidget( [
