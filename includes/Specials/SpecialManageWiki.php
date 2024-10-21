@@ -47,7 +47,8 @@ class SpecialManageWiki extends SpecialPage {
 
 		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
 			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module . '-view' )->text() );
-			if ( $module !== 'permissions' || $module !== 'namespaces' ) ) {
+			if ( $module !== 'permissions' || $module !== 'namespaces' ) {
+				)
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
 				);
@@ -55,7 +56,8 @@ class SpecialManageWiki extends SpecialPage {
 			}
 		} else {
 			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
-			if ( $module !== 'permissions' || $module !== 'namespaces' ) ) {
+			if ( $module !== 'permissions' || $module !== 'namespaces' ) {
+				)
 				$out->addWikiMsg( "managewiki-header-{$module}" );
 			}
 		}
