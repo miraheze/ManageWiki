@@ -56,7 +56,6 @@ class SpecialManageWiki extends SpecialPage {
 		} else {
 			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
 			if ( $module !== 'permissions' || $module !== 'namespaces' ) {
-				)
 				$out->addWikiMsg( "managewiki-header-{$module}" );
 			}
 		}
