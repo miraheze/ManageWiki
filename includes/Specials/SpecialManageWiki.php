@@ -47,8 +47,13 @@ class SpecialManageWiki extends SpecialPage {
 
 		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
 			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module . '-view' )->text() );
+			$out->addHTML(
+				Html::errorBox( $this->context->msg( 'managewiki-error-nopermission' )->escaped() )
+			);
+			$out->addWikiMsg( "managewiki-header-{$module}-view", $wiki );
 		} else {
 			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
+			$out->addWikiMsg( "managewiki-header-{$module}", $wiki );
 		}
 
 		$additional = $par[1] ?? '';
@@ -68,6 +73,15 @@ class SpecialManageWiki extends SpecialPage {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
 			$dbName = $par[1] ?? $this->config->get( 'DBname' );
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->context->msg( 'managewiki-error-nopermission-remote' )->escaped() )
+				);
+			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->context->msg( 'managewiki-error-nopermission' )->escaped() )
+				);
+			}
 			$this->showWikiForm( strtolower( $dbName ), 'core', '', '' );
 		} else {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
