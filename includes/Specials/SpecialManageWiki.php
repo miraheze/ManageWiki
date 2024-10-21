@@ -187,11 +187,7 @@ class SpecialManageWiki extends SpecialPage {
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
 
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
-				$out->addHTML(
-					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
-				);
-			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
 				);
