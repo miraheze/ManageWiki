@@ -71,7 +71,7 @@ class ManageWikiPermissions {
 	 * @param string|null $group Group wanted (null for all)
 	 * @return array Group configuration
 	 */
-	public function list( string $group = null ) {
+	public function list( ?string $group = null ) {
 		if ( $group === null ) {
 			return $this->livePermissions;
 		} else {

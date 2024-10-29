@@ -77,7 +77,7 @@ class ManageWikiNamespaces {
 	 * @param int|null $id Namespace ID wanted (null for all)
 	 * @return array Namespace configuration
 	 */
-	public function list( int $id = null ) {
+	public function list( ?int $id = null ) {
 		if ( $id === null ) {
 			return $this->liveNamespaces;
 		} else {
