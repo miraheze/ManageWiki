@@ -65,7 +65,7 @@ class ManageWikiSettings {
 	 * @param string|null $setting Setting to retrieve value of
 	 * @return array|string|null Value or all settings, null if no value
 	 */
-	public function list( string $setting = null ) {
+	public function list( ?string $setting = null ) {
 		if ( $setting === null ) {
 			return $this->liveSettings;
 		} else {
