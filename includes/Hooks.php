@@ -57,6 +57,8 @@ class Hooks {
 	}
 
 	public static function onCreateWikiDataFactoryBuilder( string $wiki, IReadableDatabase $dbr, array &$cacheArray ) {
+		$logger = LoggerFactory::getInstance( 'ManageWiki' );
+
 		$setObject = $dbr->selectRow(
 			'mw_settings',
 			'*',
@@ -74,8 +76,14 @@ class Hooks {
 		if ( ManageWiki::checkSetup( 'extensions' ) ) {
 			$manageWikiExtensions = self::getConfig( 'ManageWikiExtensions' );
 			foreach ( json_decode( $setObject->s_extensions ?? '[]', true ) as $ext ) {
-				$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
-					$manageWikiExtensions[$ext]['name'];
+				if ( isset( $manageWikiExtensions[$ext] ) ) {
+					$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
+						$manageWikiExtensions[$ext]['name'];
+				} else {
+					$logger->error( 'Extension {ext} not set in wgManageWikiExtensions', [
+						'ext' => $ext,
+					] );
+				}
 			}
 		}
 
@@ -99,7 +107,6 @@ class Hooks {
 					$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
 				}
 			} catch ( Exception $e ) {
-				$logger = LoggerFactory::getInstance( 'ManageWiki' );
 				$logger->warning( 'Caught exception trying to load Localisation Cache: {exception}', [
 					'exception' => $e,
 				] );
