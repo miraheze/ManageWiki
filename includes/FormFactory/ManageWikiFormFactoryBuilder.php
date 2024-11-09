@@ -362,7 +362,7 @@ class ManageWikiFormFactoryBuilder {
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
 
 		foreach ( $filteredSettings as $name => $set ) {
-			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $remoteWiki ) : true;
+			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'] ?? [], $extList, false, $remoteWiki ) : true;
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( $set['global'] ?? false || in_array( $set['from'], $extList ) );
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
