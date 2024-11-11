@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Wikimedia\Rdbms\DBConnRef;
 
@@ -55,9 +56,17 @@ class ManageWikiExtensions {
 			]
 		)->s_extensions ?? '[]';
 
+		$logger = LoggerFactory::getInstance( 'ManageWiki' );
+
 		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
 		// populate extension lists with config associated with them.
 		foreach ( json_decode( $exts, true ) as $ext ) {
+			if ( !isset( $this->extConfig[$ext] ) ) {
+				$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
+					'ext' => $ext,
+				] );
+				continue;
+			}
 			$this->liveExts[$ext] = $this->extConfig[$ext];
 		}
 	}
@@ -90,16 +99,17 @@ class ManageWikiExtensions {
 	/**
 	 * Removes an extension from the 'enabled' list
 	 * @param string|string[] $extensions Either an array or string of extensions to disable
+	 * @param bool $forceRemove Force removing extension incase it is removed from config
 	 */
-	public function remove( $extensions ) {
+	public function remove( $extensions, $forceRemove = false ) {
 		// We allow remove either one extension (string) or many (array)
 		// We will handle all processing in final stages
 		foreach ( (array)$extensions as $ext ) {
-			if ( !isset( $this->liveExts[$ext] ) ) {
+			if ( !isset( $this->liveExts[$ext] ) && !$forceRemove ) {
 				continue;
 			}
 
-			$this->removedExts[$ext] = $this->liveExts[$ext];
+			$this->removedExts[$ext] = $this->liveExts[$ext] ?? [];
 			unset( $this->liveExts[$ext] );
 
 			$this->changes[$ext] = [
