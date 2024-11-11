@@ -64,9 +64,6 @@ class ManageWikiExtensions {
 				$logger->error( 'Extension {ext} not set in wgManageWikiExtensions', [
 					'ext' => $ext,
 				] );
-				// We need to set an empty array and to set
-				// the ext in liveExts. This is so it can be removed.
-				$this->liveExts[$ext] = [];
 				continue;
 			}
 			$this->liveExts[$ext] = $this->extConfig[$ext];
@@ -101,12 +98,13 @@ class ManageWikiExtensions {
 	/**
 	 * Removes an extension from the 'enabled' list
 	 * @param string|string[] $extensions Either an array or string of extensions to disable
+  	 * @param bool $forceRemove Force removing extension incase it is removed from config
 	 */
-	public function remove( $extensions ) {
+	public function remove( $extensions, $forceRemove ) {
 		// We allow remove either one extension (string) or many (array)
 		// We will handle all processing in final stages
 		foreach ( (array)$extensions as $ext ) {
-			if ( !isset( $this->liveExts[$ext] ) ) {
+			if ( !isset( $this->liveExts[$ext] ) && !$forceRemove ) {
 				continue;
 			}
 
