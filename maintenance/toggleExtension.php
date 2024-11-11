@@ -66,7 +66,7 @@ class ToggleExtension extends Maintenance {
 			if ( $disable ) {
 				$this->output( "Removed $ext from all wikis in that it was enabled on.\n" );
 			} else {
-				$this->output( "Enabled $ext on all wikis in $wgLocalDatabases.\n" );
+				$this->output( "Enabled $ext on all wikis in \$wgLocalDatabases.\n" );
 			}
 		}
 	}
