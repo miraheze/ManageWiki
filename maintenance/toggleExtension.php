@@ -47,7 +47,7 @@ class ToggleExtension extends Maintenance {
 		foreach ( $wikis as $wiki ) {
 			$mwExt = new ManageWikiExtensions( $wiki );
 			$extensionList = $mwExt->list();
-			if ( $disable && in_array( $ext, $extensionList ) ) {
+			if ( $disable && ( in_array( $ext, $extensionList ) || $forceRemove ) ) {
 				$mwExt->remove( $ext, $forceRemove );
 				$mwExt->commit();
 				if ( !$noList ) {
