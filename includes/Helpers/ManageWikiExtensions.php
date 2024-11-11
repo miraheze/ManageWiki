@@ -61,7 +61,7 @@ class ManageWikiExtensions {
 		// populate extension lists with config associated with them.
 		foreach ( json_decode( $exts, true ) as $ext ) {
 			if ( !isset( $this->extConfig[$ext] ) ) {
-				$logger->error( 'Extension {ext} not set in wgManageWikiExtensions', [
+				$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
 					'ext' => $ext,
 				] );
 				continue;
