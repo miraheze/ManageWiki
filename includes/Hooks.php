@@ -80,7 +80,7 @@ class Hooks {
 					$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
 						$manageWikiExtensions[$ext]['name'];
 				} else {
-					$logger->error( 'Extension {ext} not set in wgManageWikiExtensions', [
+					$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
 						'ext' => $ext,
 					] );
 				}
