@@ -98,7 +98,7 @@ class ManageWikiExtensions {
 	/**
 	 * Removes an extension from the 'enabled' list
 	 * @param string|string[] $extensions Either an array or string of extensions to disable
-  	 * @param bool $forceRemove Force removing extension incase it is removed from config
+	 * @param bool $forceRemove Force removing extension incase it is removed from config
 	 */
 	public function remove( $extensions, $forceRemove ) {
 		// We allow remove either one extension (string) or many (array)
