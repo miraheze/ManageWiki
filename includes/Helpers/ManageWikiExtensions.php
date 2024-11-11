@@ -108,7 +108,8 @@ class ManageWikiExtensions {
 				continue;
 			}
 
-			$this->removedExts[$ext] = $this->liveExts[$ext];
+			$this->removedExts[$ext] = isset( $this->liveExts[$ext] ) ?
+				$this->liveExts[$ext] : [];
 			unset( $this->liveExts[$ext] );
 
 			$this->changes[$ext] = [
