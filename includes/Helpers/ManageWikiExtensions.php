@@ -55,9 +55,20 @@ class ManageWikiExtensions {
 			]
 		)->s_extensions ?? '[]';
 
+		$logger = LoggerFactory::getInstance( 'ManageWiki' );
+
 		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
 		// populate extension lists with config associated with them.
 		foreach ( json_decode( $exts, true ) as $ext ) {
+			if ( !isset( $this->extConfig[$ext] ) ) {
+				$logger->error( 'Extension {ext} not set in wgManageWikiExtensions', [
+					'ext' => $ext,
+				] );
+				// We need to set an empty array and to set
+				// the ext in liveExts. This is so it can be removed.
+				$this->liveExts[$ext] = [];
+				continue;
+			}
 			$this->liveExts[$ext] = $this->extConfig[$ext];
 		}
 	}
