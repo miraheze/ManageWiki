@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Wikimedia\Rdbms\DBConnRef;
 
@@ -100,7 +101,7 @@ class ManageWikiExtensions {
 	 * @param string|string[] $extensions Either an array or string of extensions to disable
 	 * @param bool $forceRemove Force removing extension incase it is removed from config
 	 */
-	public function remove( $extensions, $forceRemove ) {
+	public function remove( $extensions, $forceRemove = false ) {
 		// We allow remove either one extension (string) or many (array)
 		// We will handle all processing in final stages
 		foreach ( (array)$extensions as $ext ) {
@@ -108,8 +109,7 @@ class ManageWikiExtensions {
 				continue;
 			}
 
-			$this->removedExts[$ext] = isset( $this->liveExts[$ext] ) ?
-				$this->liveExts[$ext] : [];
+			$this->removedExts[$ext] = $this->liveExts[$ext] ?? [];
 			unset( $this->liveExts[$ext] );
 
 			$this->changes[$ext] = [
