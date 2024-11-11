@@ -24,11 +24,13 @@ class ToggleExtension extends Maintenance {
 		$this->addOption( 'all-wikis', 'Run on all wikis present in $wgLocalDatabases.' );
 		$this->addOption( 'confirm', 'Confirm execution. Required if using --all-wikis' );
 		$this->addOption( 'no-list', 'Don\'t list on which wikis this script has ran. This may speed up execution.' );
+		$this->addOption( 'force-remove', 'Force removal of extension when not in config.' );
 
 		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute() {
+		$forceRemove = $this->getOption( 'force-remove', false );
 		$noList = $this->getOption( 'no-list', false );
 		$allWikis = $this->getOption( 'all-wikis', false );
 		$wikis = $allWikis ?
@@ -46,7 +48,7 @@ class ToggleExtension extends Maintenance {
 			$mwExt = new ManageWikiExtensions( $wiki );
 			$extensionList = $mwExt->list();
 			if ( $disable && in_array( $ext, $extensionList ) ) {
-				$mwExt->remove( $ext );
+				$mwExt->remove( $ext, $forceRemove );
 				$mwExt->commit();
 				if ( !$noList ) {
 					$this->output( "Removed $ext from $wiki" );
