@@ -799,8 +799,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor['rename-checkbox'] = [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-rename-checkbox',
-				'default' => 0,
-				'disable-if' => [ '!==', 'wpdelete-checkbox', '0' ],
+				'disable-if' => [ '===', 'delete-checkbox', '1' ],
 				'section' => 'advanced'
 			];
 
@@ -808,8 +807,8 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'text',
 				'label-message' => 'managewiki-permissions-rename-text',
 				'help-message' => 'managewiki-permissions-rename-help',
-				'disable-if' => [ '!==', 'wpdelete-checkbox', '0' ],
-				'hide-if' => [ '!==', 'wprename-checkbox', '0' ],
+				'disable-if' => [ '===', 'wpdelete-checkbox', '1' ],
+				'hide-if' => [ '===', 'rename-checkbox', '1' ],
 				'validation-callback' => function ( $input ) {
 					return self::validateNewGroupName( $input );
 				},
@@ -821,7 +820,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-delete-checkbox',
 				'help-message' => 'managewiki-permissions-help-delete',
 				'default' => 0,
-				'disable-if' => [ '!==', 'wprename-checkbox', '0' ],
+				'disable-if' => [ '===', 'rename-checkbox', '1' ],
 				'section' => 'advanced'
 			];
 		}
