@@ -809,7 +809,9 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-rename-text',
 				'help-message' => 'managewiki-permissions-rename-help',
 				'disable-if' => [ '!==', 'delete-checkbox', '1' ],
-				'validation-callback' => [ self::class, 'validateNewGroupName' ],
+				'validation-callback' => function ( $input ) {
+					return self::validateNewGroupName( $input );
+				},
 				'section' => 'advanced'
 			];
 
