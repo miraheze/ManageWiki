@@ -179,6 +179,8 @@ class ManageWikiPermissions {
 
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( in_array( $group, $this->deleteGroups ) ) {
+				$this->log = 'delete-group';
+
 				$this->dbw->delete(
 					'mw_permissions',
 					[
@@ -188,9 +190,12 @@ class ManageWikiPermissions {
 				);
 
 				$this->deleteUsersFromGroup( $group );
-
-				$this->log = 'delete-group';
 			} elseif ( array_key_exists( $group, $this->renameGroups ) ) {
+				$this->log = 'rename';
+				$this->logParams = [
+					'5::newname' => $newName
+				];
+
 				$newName = $this->renameGroups[$group];
 
 				// The old and new names are the same! What a comedian...
@@ -231,11 +236,6 @@ class ManageWikiPermissions {
 					],
 					__METHOD__
 				);
-
-				$this->log = 'rename';
-				$this->logParams = [
-					'5::newname' => $newName
-				];
 			} else {
 				if ( empty( $this->livePermissions[$group]['permissions'] ) ) {
 					$this->errors[] = [
