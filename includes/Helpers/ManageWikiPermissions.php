@@ -22,6 +22,8 @@ class ManageWikiPermissions {
 	private $deleteGroups = [];
 	/** @var array Permissions configuration */
 	private $livePermissions = [];
+	/** @var array Rename queue */
+	private $renameGroups = [];
 	/** @var string WikiID */
 	private $wiki;
 
@@ -121,6 +123,20 @@ class ManageWikiPermissions {
 	}
 
 	/**
+	 * Rename a group
+	 * @param string $group Group name
+	 */
+	public function rename( string $group, string $newName ) {
+		$this->changes[$group] = [
+			'oldname' => $group,
+			'newname' => $newName
+		];
+
+		// Push to a rename queue
+		$this->renameGroups[$group] = $newName;
+	}
+
+	/**
 	 * Remove a group
 	 * @param string $group Group name
 	 */
@@ -179,6 +195,52 @@ class ManageWikiPermissions {
 				);
 
 				$this->deleteUsersFromGroup( $group );
+			} elseif ( array_key_exists( $group, $this->renameGroups ) ) {
+				$this->log = 'rename';
+				$this->logParams = [
+					'5::newname' => $newName
+				];
+
+				$newName = $this->renameGroups[$group];
+
+				// The old and new names are the same! What a comedian...
+				if ( $group === $newName ) {
+					return;
+				}
+
+				$this->dbw->update(
+					'mw_permissions',
+					[
+						'perm_group' => $newName
+					],
+					[
+						'perm_dbname' => $this->wiki,
+						'perm_group' => $group
+					],
+					__METHOD__
+				);
+
+				$this->dbw->update(
+					'user_groups',
+					[
+						'ug_groups' => $newName
+					],
+					[
+						'ug_groups' => $group
+					],
+					__METHOD__
+				);
+
+				$this->dbw->update(
+					'user_former_groups',
+					[
+						'ufg_groups' => $newName
+					],
+					[
+						'ufg_groups' => $group
+					],
+					__METHOD__
+				);
 			} else {
 				if ( empty( $this->livePermissions[$group]['permissions'] ) ) {
 					$this->errors[] = [
