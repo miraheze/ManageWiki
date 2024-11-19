@@ -50,13 +50,13 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function execute( $par ) {
 		$this->setHeaders();
 		$out = $this->getOutput();
-		$globalwiki = $this->config->get( 'CreateWikiGlobalWiki' );
+		$centralWiki = $this->config->get( 'CreateWikiGlobalWiki' );
 
 		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ '1' => 'permissions' ] );
 		}
 
-		if ( $par != '' && ( $globalwiki == $this->config->get( 'DBname' ) ) ) {
+		if ( $par != '' && ( $centralWiki == $this->config->get( 'DBname' ) ) ) {
 			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 			$this->buildGroupView( $par );
 		} else {
@@ -66,12 +66,12 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public function buildMainView() {
 		$canModify = $this->canModify();
-		$globalwiki = $this->config->get( 'CreateWikiGlobalWiki' );
+		$centralWiki = $this->config->get( 'CreateWikiGlobalWiki' );
 
 		$out = $this->getOutput();
 		$out->addModules( [ 'mediawiki.special.userrights' ] );
 
-		if ( $globalwiki == $this->config->get( 'DBname' ) ) {
+		if ( $centralWiki == $this->config->get( 'DBname' ) ) {
 			$language = RequestContext::getMain()->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( 'default' );
 			$groups = array_keys( $mwPermissions->list() );
@@ -116,11 +116,11 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				$createForm->setWrapperLegendMsg( 'managewiki-permissions-create-header' );
 				$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 			}
-		} elseif ( !( $globalwiki == $this->config->get( 'DBname' ) ) && !$canModify ) {
-			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-notglobalwiki' );
+		} elseif ( !( $centralWiki == $this->config->get( 'DBname' ) ) && !$canModify ) {
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-notcentralwiki' );
 		}
 
-		if ( !( $globalwiki == $this->config->get( 'DBname' ) ) && $canModify ) {
+		if ( !( $centralWiki == $this->config->get( 'DBname' ) ) && $canModify ) {
 			$out->setPageTitle( $this->msg( 'managewiki-permissions-resetgroups-title' )->plain() );
 
 			$resetPermissionsDescriptor = [];
@@ -308,10 +308,10 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function isListed() {
-		$globalwiki = $this->config->get( 'CreateWikiGlobalWiki' );
+		$centralWiki = $this->config->get( 'CreateWikiGlobalWiki' );
 
 		// Only appear on the central wiki or if the user can reset permissions on this wiki
-		return $globalwiki == $this->config->get( 'DBname' ) || $this->canModify();
+		return $centralWiki == $this->config->get( 'DBname' ) || $this->canModify();
 	}
 
 	protected function getGroupName() {

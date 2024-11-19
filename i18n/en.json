@@ -165,7 +165,7 @@
 	"managewiki-success": "Your changes have been saved.",
 	"managewiki-toggle-forcesidebar": "Force the display of ManageWiki links in the sidebar.",
 	"managewiki-unavailable": "Unavailable",
-	"managewiki-unavailable-notglobalwiki": "This page is unavailable on this wiki. Please visit your farm's central wiki to use this page.",
+	"managewiki-unavailable-notcentralwiki": "This page is unavailable on this wiki. Please visit your farm's central wiki to use this page.",
 	"managewiki-warning-changes": "You've made changes to ManageWiki that have not been saved yet.\nIf you leave this page without clicking \"$1\" your ManageWiki changes will not be updated.",
 	"managewiki": "Manage a wiki",
 	"managewikidefaultpermissions": "Manage default permissions for new wikis",
