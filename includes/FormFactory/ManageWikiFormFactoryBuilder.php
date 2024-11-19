@@ -818,7 +818,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-delete-checkbox',
 				'help-message'
 				'default' => 0,
-				'disable-if' => [ '!==', 'rename-checkbox', '1' ], 
+				'disable-if' => [ '!==', 'rename-checkbox', '1' ],
 				'section' => 'advanced'
 			];
 		}
@@ -834,7 +834,7 @@ class ManageWikiFormFactoryBuilder {
 		if ( !ctype_alnum( $newGroup ) ) {
 			return wfMessage( 'managewiki-permissions-name-alphanumeric' );
 		}
-	
+
 		return true;
 	}
 

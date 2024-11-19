@@ -261,7 +261,7 @@ class SpecialManageWiki extends SpecialPage {
 		if ( !ctype_alnum( $name ) ) {
 			return wfMessage( 'managewiki-permissions-name-alphanumeric' );
 		}
-	
+
 		return true;
 	}
 

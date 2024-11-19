@@ -288,7 +288,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		if ( !ctype_alnum( $newGroup ) ) {
 			return wfMessage( 'managewiki-permissions-name-alphanumeric' );
 		}
-	
+
 		return true;
 	}
 
