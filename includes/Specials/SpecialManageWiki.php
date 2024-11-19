@@ -20,14 +20,14 @@ use OOUI\SearchInputWidget;
 class SpecialManageWiki extends SpecialPage {
 
 	private Config $config;
-	private CreateWikiDatabaseUtils $createWikiDatabaseUtils;
+	private CreateWikiDatabaseUtils $databaseUtils;
 	private RemoteWikiFactory $remoteWikiFactory;
 
 	public function __construct() {
 		parent::__construct( 'ManageWiki' );
 
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->createWikiDatabaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$this->databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 	}
 
@@ -73,7 +73,7 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addSubtitle( $out->msg( 'editing' )->params( $additional ) );
 		}
 
-		$isCentralWiki = $this->createWikiDatabaseUtils->isCurrentWikiCentral();
+		$isCentralWiki = $this->databaseUtils->isCurrentWikiCentral();
 
 		if ( !$isCentralWiki ) {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
