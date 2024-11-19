@@ -127,6 +127,11 @@ class ManageWikiPermissions {
 	 * @param string $group Group name
 	 */
 	public function rename( string $group, string $newName ) {
+		$this->changes[$group] = [
+			'oldname' => $group,
+			'newname' => $newName
+		];
+
 		// Push to a rename queue
 		$this->renameGroups[$group] = $newName;
 	}
