@@ -8,7 +8,7 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
-use MediaWiki\WikiMap\WikiMap;
+use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
@@ -20,12 +20,14 @@ use OOUI\SearchInputWidget;
 class SpecialManageWiki extends SpecialPage {
 
 	private Config $config;
+	private CreateWikiDatabaseUtils $createWikiDatabaseUtils;
 	private RemoteWikiFactory $remoteWikiFactory;
 
 	public function __construct() {
 		parent::__construct( 'ManageWiki' );
 
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$this->createWikiDatabaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 	}
 
@@ -71,17 +73,19 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addSubtitle( $out->msg( 'editing' )->params( $additional ) );
 		}
 
-		if ( !WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
+		$isCentralWiki = $this->createWikiDatabaseUtils->isCurrentWikiCentral();
+
+		if ( !$isCentralWiki ) {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
 			$dbName = $par[1] ?? $this->config->get( 'DBname' );
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && $isCentralWiki ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
 				);
-			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
+			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !$isCentralWiki ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
 				);
