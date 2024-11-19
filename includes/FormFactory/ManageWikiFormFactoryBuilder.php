@@ -816,7 +816,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-delete-checkbox',
-				'help-message'
+				'help-message' => 'managewiki-permissions-help-delete',
 				'default' => 0,
 				'disable-if' => [ '!==', 'rename-checkbox', '1' ],
 				'section' => 'advanced'

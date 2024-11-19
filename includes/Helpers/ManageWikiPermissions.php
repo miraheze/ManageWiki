@@ -22,6 +22,8 @@ class ManageWikiPermissions {
 	private $deleteGroups = [];
 	/** @var array Permissions configuration */
 	private $livePermissions = [];
+	/** @var array Rename queue */
+	private $renameGroups = [];
 	/** @var string WikiID */
 	private $wiki;
 
