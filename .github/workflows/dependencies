@@ -1,3 +1,3 @@
 CreateWiki:
-  branch: master
+  branch: virtual
   repo: https://github.com/miraheze/CreateWiki
