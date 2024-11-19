@@ -809,7 +809,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-rename-text',
 				'help-message' => 'managewiki-permissions-rename-help',
 				'disable-if' => [ '!==', 'delete-checkbox', '1' ],
-				'validation-callback' => [ $this, 'validateNewGroupName' ],
+				'validation-callback' => [ self::class, 'validateNewGroupName' ],
 				'section' => 'advanced'
 			];
 
@@ -826,7 +826,7 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	public static function validateNewGroupName( $newGroup ) {
+	public static function validateNewGroupName( string $newGroup ) {
 		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
 			return wfMessage( 'managewiki-permissions-name-prohibited' );
 		}
