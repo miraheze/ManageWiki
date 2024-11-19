@@ -244,12 +244,25 @@ class SpecialManageWiki extends SpecialPage {
 			$create['out'] = [
 				'type' => 'text',
 				'label-message' => "managewiki-{$module}-create",
+				'validation-callback' => [ $this, 'validateName' ],
 			];
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
 			$createForm->setWrapperLegendMsg( "managewiki-{$module}-create-header" );
 			$createForm->setMethod( 'post' )->setFormIdentifier( 'create' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->setSubmitText( $this->msg( "managewiki-{$module}-create-submit" )->plain() )->prepareForm()->show();
 		}
+	}
+
+	public static function validateName( string $name ) {
+		if ( in_array( $name, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
+			return wfMessage( 'managewiki-permissions-name-prohibited' );
+		}
+
+		if ( !ctype_alnum( $name ) ) {
+			return wfMessage( 'managewiki-permissions-name-alphanumeric' );
+		}
+	
+		return true;
 	}
 
 	public function reusableFormSubmission( array $formData, HTMLForm $form ) {

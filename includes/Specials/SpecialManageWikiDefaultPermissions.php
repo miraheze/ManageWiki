@@ -282,9 +282,13 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public static function validateNewGroupName( $newGroup, $nullForm ) {
 		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
-			return 'The group you attempted to create is not allowed. Please select a different name and try again.';
+			return wfMessage( 'managewiki-permissions-name-prohibited' );
 		}
 
+		if ( !ctype_alnum( $newGroup ) ) {
+			return wfMessage( 'managewiki-permissions-name-alphanumeric' );
+		}
+	
 		return true;
 	}
 
