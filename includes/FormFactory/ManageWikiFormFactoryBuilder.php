@@ -808,7 +808,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-rename-text',
 				'help-message' => 'managewiki-permissions-rename-help',
 				'disable-if' => [ '===', 'wpdelete-checkbox', '1' ],
-				'hide-if' => [ '===', 'rename-checkbox', '1' ],
+				'hide-if' => [ '===', 'rename-checkbox', '0' ],
 				'validation-callback' => function ( $input ) {
 					return self::validateNewGroupName( $input );
 				},
