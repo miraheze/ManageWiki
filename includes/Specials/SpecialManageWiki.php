@@ -81,7 +81,7 @@ class SpecialManageWiki extends SpecialPage {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
 			$dbName = $par[1] ?? $this->config->get( 'DBname' );
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && $isCentralWiki ) {
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
 				);
