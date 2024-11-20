@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler class for managing settings
@@ -15,7 +15,7 @@ class ManageWikiSettings {
 	private $committed = false;
 	/** @var Config Configuration object */
 	private $config;
-	/** @var DBConnRef Database object */
+	/** @var IDatabase Database object */
 	private $dbw;
 	/** @var array Current settings with their respective values */
 	private $liveSettings;
@@ -44,9 +44,8 @@ class ManageWikiSettings {
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->settingsConfig = $this->config->get( 'ManageWikiSettings' );
 
-		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$settings = $this->dbw->selectRow(
 			'mw_settings',

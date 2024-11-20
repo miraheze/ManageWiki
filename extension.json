@@ -45,6 +45,7 @@
 		"ManageWikiDefaultPermissions": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaultPermissions",
 			"services": [
+				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
 				"RemoteWikiFactory"
 			]
@@ -148,7 +149,6 @@
 	},
 	"ResourceModules": {
 		"ext.managewiki.oouiform": {
-			"targets": [ "desktop", "mobile" ],
 			"scripts": [
 				"ext.managewiki.oouiform.confirmClose.js",
 				"ext.managewiki.oouiform.reviewChanges.js",
@@ -169,7 +169,6 @@
 			]
 		},
 		"ext.managewiki.oouiform.styles": {
-			"targets": [ "desktop", "mobile" ],
 			"styles": "ext.managewiki.oouiform.styles.less"
 		}
 	},

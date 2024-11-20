@@ -11,6 +11,7 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
+use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
@@ -21,18 +22,21 @@ use Miraheze\ManageWiki\ManageWiki;
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	private Config $config;
+	private CreateWikiDatabaseUtils $databaseUtils;
 	private CreateWikiDataFactory $dataFactory;
 	private RemoteWikiFactory $remoteWikiFactory;
 
 	public function __construct(
+		CreateWikiDatabaseUtils $databaseUtils,
 		CreateWikiDataFactory $dataFactory,
 		RemoteWikiFactory $remoteWikiFactory
 	) {
 		parent::__construct( 'ManageWikiDefaultPermissions' );
 
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->remoteWikiFactory = $remoteWikiFactory;
+		$this->databaseUtils = $databaseUtils;
 		$this->dataFactory = $dataFactory;
+		$this->remoteWikiFactory = $remoteWikiFactory;
 	}
 
 	public function canModify() {
@@ -50,13 +54,12 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function execute( $par ) {
 		$this->setHeaders();
 		$out = $this->getOutput();
-		$centralWiki = $this->config->get( 'CreateWikiGlobalWiki' );
 
 		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ '1' => 'permissions' ] );
 		}
 
-		if ( $par != '' && ( $centralWiki == $this->config->get( 'DBname' ) ) ) {
+		if ( $par && $this->databaseUtils->isCurrentWikiCentral() ) {
 			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 			$this->buildGroupView( $par );
 		} else {
@@ -66,12 +69,11 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public function buildMainView() {
 		$canModify = $this->canModify();
-		$centralWiki = $this->config->get( 'CreateWikiGlobalWiki' );
 
 		$out = $this->getOutput();
 		$out->addModules( [ 'mediawiki.special.userrights' ] );
 
-		if ( $centralWiki == $this->config->get( 'DBname' ) ) {
+		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
 			$language = RequestContext::getMain()->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( 'default' );
 			$groups = array_keys( $mwPermissions->list() );
@@ -116,11 +118,11 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				$createForm->setWrapperLegendMsg( 'managewiki-permissions-create-header' );
 				$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
 			}
-		} elseif ( !( $centralWiki == $this->config->get( 'DBname' ) ) && !$canModify ) {
+		} elseif ( !$this->databaseUtils->isCurrentWikiCentral() && !$canModify ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-notcentralwiki' );
 		}
 
-		if ( !( $centralWiki == $this->config->get( 'DBname' ) ) && $canModify ) {
+		if ( !$this->databaseUtils->isCurrentWikiCentral() && $canModify ) {
 			$out->setPageTitle( $this->msg( 'managewiki-permissions-resetgroups-title' )->plain() );
 
 			$resetPermissionsDescriptor = [];
@@ -168,9 +170,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function onSubmitPermissionsResetForm( $formData ) {
 		$out = $this->getOutput();
 
-		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$dbw->delete(
 			'mw_permissions',
@@ -207,9 +208,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function onSubmitSettingsResetForm( $formData ) {
 		$out = $this->getOutput();
 
-		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		// Set the values to the defaults
 		$dbw->update(
@@ -251,9 +251,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function onSubmitCacheResetForm( $formData ) {
 		$out = $this->getOutput();
 
-		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		// Reset the cache or else the changes won't work
 		$data = $this->dataFactory->newInstance( $this->config->get( 'DBname' ) );
@@ -299,7 +298,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
 		$out->addModules( [ 'mediawiki.special.userrights' ] );
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $this->config->get( 'CreateWikiGlobalWiki' ) );
+		$remoteWiki = $this->remoteWikiFactory->newInstance( $this->databaseUtils->getCentralWikiID() );
 
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), $this->config, 'permissions', $group );
@@ -308,10 +307,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function isListed() {
-		$centralWiki = $this->config->get( 'CreateWikiGlobalWiki' );
-
 		// Only appear on the central wiki or if the user can reset permissions on this wiki
-		return $centralWiki == $this->config->get( 'DBname' ) || $this->canModify();
+		return $this->databaseUtils->isCurrentWikiCentral() || $this->canModify();
 	}
 
 	protected function getGroupName() {

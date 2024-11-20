@@ -12,7 +12,7 @@ use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
 use Miraheze\ManageWiki\ManageWiki;
 use UnexpectedValueException;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiFormFactory {
 
@@ -44,9 +44,8 @@ class ManageWikiFormFactory {
 		string $filtered = '',
 		string $formClass = ManageWikiOOUIForm::class
 	) {
-		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser(), $module );
 
@@ -79,7 +78,7 @@ class ManageWikiFormFactory {
 		bool $ceMW,
 		string $dbName,
 		RemoteWikiFactory $remoteWiki,
-		DBConnRef $dbw,
+		IDatabase $dbw,
 		Config $config,
 		string $special = '',
 		string $filtered = ''

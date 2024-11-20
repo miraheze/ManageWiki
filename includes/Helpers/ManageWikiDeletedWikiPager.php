@@ -11,9 +11,8 @@ class ManageWikiDeletedWikiPager extends TablePager {
 
 	public function __construct( $page ) {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->mDb = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
+		$this->mDb = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getReplicaDatabase( 'virtual-createwiki' );
 
 		parent::__construct( $page->getContext(), $page->getLinkRenderer() );
 	}

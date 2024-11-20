@@ -22,7 +22,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiFormFactoryBuilder {
 
@@ -76,7 +76,9 @@ class ManageWikiFormFactoryBuilder {
 			'section' => 'main'
 		];
 
-		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) && ( $remoteWiki->getDBname() !== $config->get( 'CreateWikiGlobalWiki' ) ) ) {
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+
+		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && ( $remoteWiki->getDBname() !== $databaseUtils->getCentralWikiID() ) ) {
 			$mwActions = [
 				( $remoteWiki->isDeleted() ) ? 'undelete' : 'delete',
 				( $remoteWiki->isLocked() ) ? 'unlock' : 'lock'
@@ -792,9 +794,9 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		if (
-		    $ceMW &&
-		    count( $permList['permissions'] ?? [] ) > 0 &&
-		    !in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ) )
+			$ceMW &&
+			count( $permList['permissions'] ?? [] ) > 0 &&
+			!in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ) )
 		) {
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
@@ -814,7 +816,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		DBConnRef $dbw,
+		IDatabase $dbw,
 		Config $config,
 		string $special = '',
 		string $filtered = ''
@@ -870,7 +872,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		DBConnRef $dbw,
+		IDatabase $dbw,
 		Config $config
 	) {
 		$mwActions = [
