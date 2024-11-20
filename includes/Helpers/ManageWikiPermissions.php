@@ -237,9 +237,8 @@ class ManageWikiPermissions {
 
 	private function deleteUsersFromGroup( string $group ) {
 		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->wiki )
-			->getMaintenanceConnectionRef( DB_REPLICA, [], $this->wiki );
+		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getReplicaDatabase( $this->wiki );
 
 		$res = $dbr->select(
 			'user_groups',
