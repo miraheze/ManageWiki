@@ -76,7 +76,9 @@ class ManageWikiFormFactoryBuilder {
 			'section' => 'main'
 		];
 
-		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) && ( $remoteWiki->getDBname() !== $config->get( 'CreateWikiGlobalWiki' ) ) ) {
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+
+		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && ( $remoteWiki->getDBname() !== $databaseUtils->getCentralWikiID() ) ) {
 			$mwActions = [
 				( $remoteWiki->isDeleted() ) ? 'undelete' : 'delete',
 				( $remoteWiki->isLocked() ) ? 'unlock' : 'lock'
