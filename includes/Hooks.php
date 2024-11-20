@@ -21,27 +21,84 @@ class Hooks {
 	}
 
 	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
-		$updater->addExtensionTable( 'mw_namespaces',
-				__DIR__ . '/../sql/mw_namespaces.sql' );
-		$updater->addExtensionTable( 'mw_permissions',
-				__DIR__ . '/../sql/mw_permissions.sql' );
-		$updater->addExtensionTable( 'mw_settings',
-				__DIR__ . '/../sql/mw_settings.sql' );
+		$dir = __DIR__ . '/../sql';
 
-		$updater->modifyExtensionTable( 'mw_namespaces',
-				__DIR__ . '/../sql/patches/patch-namespace-core-alter.sql' );
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'addTable',
+			'mw_namespaces',
+			"$dir/mw_namespaces.sql",
+			true,
+		] );
 
-		$updater->addExtensionField( 'mw_permissions', 'perm_addgroupstoself',
-				__DIR__ . '/../sql/patches/patch-groups-self.sql' );
-		$updater->addExtensionField( 'mw_permissions', 'perm_autopromote',
-				__DIR__ . '/../sql/patches/patch-autopromote.sql' );
-		$updater->addExtensionField( 'mw_namespaces', 'ns_additional',
-				__DIR__ . '/../sql/patches/patch-namespaces-additional.sql' );
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'addTable',
+			'mw_permissions',
+			"$dir/mw_permissions.sql",
+			true,
+		] );
 
-		$updater->addExtensionIndex( 'mw_namespaces', 'ns_dbname',
-				__DIR__ . '/../sql/patches/patch-namespaces-add-indexes.sql' );
-		$updater->addExtensionIndex( 'mw_permissions', 'perm_dbname',
-				__DIR__ . '/../sql/patches/patch-permissions-add-indexes.sql' );
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'addTable',
+			'mw_settings',
+			"$dir/mw_settings.sql",
+			true,
+		] );
+
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'modifyTable',
+			'mw_namespaces',
+			"$dir/patches/patch-namespace-core-alter.sql",
+			true,
+		] );
+
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'addField',
+			'mw_permissions',
+			'perm_addgroupstoself',
+			"$dir/patches/patch-groups-self.sql",
+			true,
+		] );
+
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'addField',
+			'mw_permissions',
+			'perm_autopromote',
+			"$dir/patches/patch-autopromote.sql",
+			true,
+		] );
+
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'addField',
+			'mw_namespaces',
+			'ns_additional',
+			"$dir/patches/patch-namespaces-additional.sql",
+			true,
+		] );
+
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'addIndex',
+			'mw_namespaces',
+			'ns_dbname',
+			"$dir/patches/patch-namespaces-add-indexes.sql",
+			true,
+		] );
+
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'addIndex',
+			'mw_permissions',
+			'perm_dbname',
+			"$dir/patches/patch-permissions-add-indexes.sql",
+			true,
+		] );
 	}
 
 	public static function onRegistration() {
