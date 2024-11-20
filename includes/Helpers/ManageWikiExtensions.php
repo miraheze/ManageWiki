@@ -5,7 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler for all interactions with Extension changes within ManageWiki
@@ -16,7 +16,7 @@ class ManageWikiExtensions {
 	private $committed = false;
 	/** @var Config Configuration Object */
 	private $config;
-	/** @var DBConnRef Database Connection */
+	/** @var IDatabase Database Connection */
 	private $dbw;
 	/** @var array Extension configuration ($wgManageWikiExtensions) */
 	private $extConfig;
@@ -44,9 +44,8 @@ class ManageWikiExtensions {
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->extConfig = $this->config->get( 'ManageWikiExtensions' );
 
-		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$exts = $this->dbw->selectRow(
 			'mw_settings',

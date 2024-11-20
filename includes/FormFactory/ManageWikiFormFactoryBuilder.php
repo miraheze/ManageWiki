@@ -22,7 +22,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiFormFactoryBuilder {
 
@@ -816,7 +816,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		DBConnRef $dbw,
+		IDatabase $dbw,
 		Config $config,
 		string $special = '',
 		string $filtered = ''
@@ -872,7 +872,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		DBConnRef $dbw,
+		IDatabase $dbw,
 		Config $config
 	) {
 		$mwActions = [

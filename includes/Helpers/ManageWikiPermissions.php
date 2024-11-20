@@ -5,7 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler for interacting with Permissions
@@ -16,7 +16,7 @@ class ManageWikiPermissions {
 	private $committed = false;
 	/** @var Config Configuration object */
 	private $config;
-	/** @var DBConnRef Database connection */
+	/** @var IDatabase Database connection */
 	private $dbw;
 	/** @var array Deletion queue */
 	private $deleteGroups = [];
@@ -41,9 +41,8 @@ class ManageWikiPermissions {
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$perms = $this->dbw->select(
 			'mw_permissions',
