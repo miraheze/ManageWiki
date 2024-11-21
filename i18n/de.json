@@ -165,7 +165,7 @@
 	"managewiki-success": "Deine Änderungen wurden gespeichert.",
 	"managewiki-toggle-forcesidebar": "Erzwingt die Anzeige von ManageWiki-Links in der Seitenleiste.",
 	"managewiki-unavailable": "Nicht verfügbar",
-	"managewiki-unavailable-notglobalwiki": "Diese Seite ist in diesem Wiki nicht verfügbar. Bitte besuche das zentrale Wiki deiner Farm, um diese Seite zu verwenden.",
+	"managewiki-unavailable-notcentralwiki": "Diese Seite ist in diesem Wiki nicht verfügbar. Bitte besuche das zentrale Wiki deiner Farm, um diese Seite zu verwenden.",
 	"managewiki-warning-changes": "Du hast Änderungen an deinen Einstellungen durchgeführt, die noch nicht gespeichert wurden.\nWenn du diese Seite verlässt, ohne auf „$1“ zu klicken, werden deine Einstellungen nicht aktualisiert.",
 	"managewiki": "Ein Wiki verwalten",
 	"managewikidefaultpermissions": "Standardberechtigungen für neue Wikis verwalten",

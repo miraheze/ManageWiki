@@ -180,7 +180,7 @@
 	"managewiki-success": "変更内容を保存しました。",
 	"managewiki-toggle-forcesidebar": "サイドバーにManageWikiリンクを強制的に表示します。",
 	"managewiki-unavailable": "利用不可",
-	"managewiki-unavailable-notglobalwiki": "このページはこのウィキでは利用できません。このページを使用するには、ファームの中央ウィキをご覧ください。",
+	"managewiki-unavailable-notcentralwiki": "このページはこのウィキでは利用できません。このページを使用するには、ファームの中央ウィキをご覧ください。",
 	"managewiki-warning-changes": "ManageWikiに変更を加えましたが、まだ保存されていません。\n\"$1\"をクリックせずにこのページを離れると、あなたのManageWikiの変更は更新されません。",
 	"managewiki": "ウィキの管理",
 	"managewikidefaultpermissions": "新しいウィキの既定の権限の管理",

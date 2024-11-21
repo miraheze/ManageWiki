@@ -167,7 +167,7 @@
 	"managewiki-success": "Uw wijzigingen zijn opgeslagen.",
 	"managewiki-toggle-forcesidebar": "De weergave van ManageWiki-links in de zijbalk forceren.",
 	"managewiki-unavailable": "Niet beschikbaar",
-	"managewiki-unavailable-notglobalwiki": "Deze pagina is niet beschikbaar op deze wiki. Ga naar de centrale wiki van je 'farm' om deze pagina te gebruiken.",
+	"managewiki-unavailable-notcentralwiki": "Deze pagina is niet beschikbaar op deze wiki. Ga naar de centrale wiki van je 'farm' om deze pagina te gebruiken.",
 	"managewiki-warning-changes": "U hebt wijzigingen aangebracht in ManageWiki die nog niet zijn opgeslagen.\nAls u deze pagina verlaat zonder op \"$1\" te klikken, worden uw ManageWiki-instellingen niet bijgewerkt.",
 	"managewiki": "Een wiki beheren",
 	"managewikidefaultpermissions": "Standaardrechten voor nieuwe wiki’s beheren",

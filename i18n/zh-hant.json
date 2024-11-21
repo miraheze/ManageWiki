@@ -158,7 +158,7 @@
 	"managewiki-success": "成功儲存您的更改。",
 	"managewiki-toggle-forcesidebar": "強制 ManageWiki 連結在側邊欄顯示",
 	"managewiki-unavailable": "不可用",
-	"managewiki-unavailable-notglobalwiki": "此頁面在該 wiki 上不可用。請訪問您農場的中央 wiki 以使用此頁面。",
+	"managewiki-unavailable-notcentralwiki": "此頁面在該 wiki 上不可用。請訪問您農場的中央 wiki 以使用此頁面。",
 	"managewiki-warning-changes": "您對 ManageWiki 所做的變更尚未儲存。\n若您未點選「$1」就離開此頁面，將不會更新您的 ManageWiki 變更。",
 	"managewiki": "管理 wiki",
 	"managewikidefaultpermissions": "管理新 wiki 的預設權限",

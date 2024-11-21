@@ -123,7 +123,7 @@
 	"managewiki-sidebar-header": "Administracija",
 	"managewiki-success": "Nustatymai sėkmingai pakeisti.",
 	"managewiki-unavailable": "Nepasiekiama",
-	"managewiki-unavailable-notglobalwiki": "Šis puslapis šioje viki nepasiekiamas. Prašome apsilankyti savo fermos centrinę vikį, kad galėtumėte naudoti šį puslapį.",
+	"managewiki-unavailable-notcentralwiki": "Šis puslapis šioje viki nepasiekiamas. Prašome apsilankyti savo fermos centrinę vikį, kad galėtumėte naudoti šį puslapį.",
 	"managewiki": "Tvarkyti vikį",
 	"managewikidefaultpermissions": "Tvarkyti viki fermos numatytuosius leidimus",
 	"managewikidefaultpermissions-resetgroups": "Atstatyti visas grupes į numatytuosius nustatymus",

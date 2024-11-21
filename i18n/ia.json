@@ -152,7 +152,7 @@
 	"managewiki-success": "Le cambiamentos ha essite salveguardate.",
 	"managewiki-toggle-forcesidebar": "Fortiar le presentia del ligamines ManageWiki in le barra lateral.",
 	"managewiki-unavailable": "Indisponibile",
-	"managewiki-unavailable-notglobalwiki": "Iste pagina non es disponibile sur iste wiki. Per favor visita le wiki central de tu ferma pro usar iste pagina.",
+	"managewiki-unavailable-notcentralwiki": "Iste pagina non es disponibile sur iste wiki. Per favor visita le wiki central de tu ferma pro usar iste pagina.",
 	"managewiki-warning-changes": "Tu ha facite cambiamentos a ManageWiki que non ha ancora essite salveguardate. Si tu exi de iste pagina sin cliccar sur \"$1\", tu parametros de ManageWiki non essera actualisate.",
 	"managewiki": "Gerer un wiki",
 	"managewikidefaultpermissions": "Gerer le permissiones predefinite pro nove wikis",

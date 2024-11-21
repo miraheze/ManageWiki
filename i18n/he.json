@@ -165,7 +165,7 @@
 	"managewiki-success": "השינויים שלך נשמרו.",
 	"managewiki-toggle-forcesidebar": "כפיית הצגת קישורי ניהול ויקי בסרגל הצד.",
 	"managewiki-unavailable": "לא זמין",
-	"managewiki-unavailable-notglobalwiki": "הדף הזה אינו זמין בוויקי הזה. נא לבקר בוויקי המרכזי של החווה שלך כדי להשתמש בדף הזה.",
+	"managewiki-unavailable-notcentralwiki": "הדף הזה אינו זמין בוויקי הזה. נא לבקר בוויקי המרכזי של החווה שלך כדי להשתמש בדף הזה.",
 	"managewiki-warning-changes": "עשית שינויים ב־ManageWiki שעדיין לא נשמרו.\nעזיבת הדף הזה מבלי ללחוץ על \"$1\" תגרום לשינויים ב־ManageWiki שלך לא להתעדכן.",
 	"managewiki": "ניהול אתר ויקי",
 	"managewikidefaultpermissions": "ניהול הרשאות ברירת המחדל לאתרי ויקי חדשים",

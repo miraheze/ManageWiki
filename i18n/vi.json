@@ -160,7 +160,7 @@
 	"managewiki-success": "Đã lưu các thay đổi của bạn.",
 	"managewiki-toggle-forcesidebar": "Buộc hiển thị các liên kết ManageWiki trong thanh cạnh.",
 	"managewiki-unavailable": "Không có sẵn",
-	"managewiki-unavailable-notglobalwiki": "Trang này không có trên wiki này. Vui lòng truy cập wiki trung tâm của trang trại của bạn để sử dụng trang này.",
+	"managewiki-unavailable-notcentralwiki": "Trang này không có trên wiki này. Vui lòng truy cập wiki trung tâm của trang trại của bạn để sử dụng trang này.",
 	"managewiki-warning-changes": "Bạn chưa lưu những thay đổi tùy chọn đã thực hiện.\nNếu bạn rời khỏi trang này mà không bấm “$1”, các tùy chọn của bạn sẽ không được cập nhật.",
 	"managewiki": "Cài đặt wiki",
 	"managewikidefaultpermissions": "Quản lý quyền mặc định cho wiki mới",

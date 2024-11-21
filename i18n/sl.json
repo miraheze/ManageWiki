@@ -153,7 +153,7 @@
 	"managewiki-success": "Vaše spremembe so uspešno shranjene.",
 	"managewiki-toggle-forcesidebar": "Vsili prikaz povezav ManageWiki v stranski letvici.",
 	"managewiki-unavailable": "Ni na voljo",
-	"managewiki-unavailable-notglobalwiki": "Ta stran v tem vikiju ni na voljo. Za uporabo te strani obiščite osrednji viki vaše farme.",
+	"managewiki-unavailable-notcentralwiki": "Ta stran v tem vikiju ni na voljo. Za uporabo te strani obiščite osrednji viki vaše farme.",
 	"managewiki-warning-changes": "V razširitvi ManageWiki ste naredili spremembe, ki še niso shranjene.\nČe zapustite to stran, ne da bi kliknili »$1«, se vaše spremembe razširitve ManageWiki ne bodo posodobile.",
 	"managewiki": "Upravljanje vikija",
 	"managewikidefaultpermissions": "Upravljanje privzetih dovoljenj za nove vikije",
