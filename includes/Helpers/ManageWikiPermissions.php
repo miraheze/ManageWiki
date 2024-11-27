@@ -66,6 +66,15 @@ class ManageWikiPermissions {
 	}
 
 	/**
+	 * Checks whether or not the specified group exists
+	 * @param string $group Group to check
+	 * @return bool Whether or not the group exists
+	 */
+	public function exists( string $group ): bool {
+		return array_key_exists( $group, $this->livePermissions );
+	}
+
+	/**
 	 * Lists either all groups or a specific one
 	 * @param string|null $group Group wanted (null for all)
 	 * @return array Group configuration
