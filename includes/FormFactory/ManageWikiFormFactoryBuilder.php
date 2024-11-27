@@ -795,7 +795,7 @@ class ManageWikiFormFactoryBuilder {
 
 		if (
 			$ceMW &&
-			count( $permList['permissions'] ?? [] ) > 0 &&
+			$mwPermissions->exists( $group ) &&
 			!in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ) )
 		) {
 			$formDescriptor['delete-checkbox'] = [
