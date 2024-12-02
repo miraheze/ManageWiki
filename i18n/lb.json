@@ -42,11 +42,13 @@
 	"managewiki-permissions-create": "Numm vun der neier Grupp",
 	"managewiki-permissions-create-header": "Eng nei Benotzergrupp uleeën",
 	"managewiki-permissions-select": "Wielt eng Grupp",
+	"managewiki-save": "Späicheren",
 	"managewiki-search-noresults": "Keng Resultater",
 	"managewiki-sidebar-header": "Administratioun",
 	"managewiki-success": "Är Ännerunge goufe gespäichert.",
 	"managewiki-unavailable": "Net disponibel",
 	"namespaces-delete": "Läschen",
 	"namespaces-namespace": "Haaptnummraum",
+	"permissions-delete": "Läschen",
 	"permissions-delete-checkbox": "Dës Benotzergrupp läschen"
 }
