@@ -684,7 +684,8 @@ class ManageWikiFormFactoryBuilder {
 		$rowsBuilt = [];
 
 		foreach ( $groupData['allGroups'] as $group ) {
-			$rowsBuilt[htmlspecialchars( $language->getGroupName( $group ) )] = $group;
+			$lowerCaseGroupName = strtolower( $group );
+			$rowsBuilt[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 		}
 
 		$formDescriptor['group-matrix'] = [
