@@ -332,7 +332,8 @@ class ManageWikiTypes {
 				$language = RequestContext::getMain()->getLanguage();
 				$groups = [];
 				foreach ( (array)$groupList as $group ) {
-					$groups[htmlspecialchars( $language->getGroupName( $group ) )] = $group;
+					$lowerCaseGroupName = strtolower( $group );
+					$groups[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 				}
 
 				$configs = [
