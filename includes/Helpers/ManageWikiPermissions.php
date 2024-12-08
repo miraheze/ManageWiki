@@ -80,18 +80,14 @@ class ManageWikiPermissions {
 	 * @return array Group configuration
 	 */
 	public function list( ?string $group = null ) {
-		if ( $group === null ) {
-			return $this->livePermissions;
-		} else {
-			return $this->livePermissions[$group] ?? [
-					'permissions' => [],
-					'addgroups' => [],
-					'removegroups' => [],
-					'addself' => [],
-					'removeself' => [],
-					'autopromote' => null
-				];
-		}
+		return $this->livePermissions[$group] ?? [
+			'permissions' => [],
+			'addgroups' => [],
+			'removegroups' => [],
+			'addself' => [],
+			'removeself' => [],
+			'autopromote' => null
+		];
 	}
 
 	/**
