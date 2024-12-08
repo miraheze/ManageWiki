@@ -80,7 +80,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$craftedGroups = [];
 
 			foreach ( $groups as $group ) {
-				$craftedGroups[$language->getGroupName( $group )] = $group;
+				$lowerCaseGroupName = strtolower( $group );
+				$craftedGroups[$language->getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
 			$groupSelector = [];
