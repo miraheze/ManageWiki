@@ -3,8 +3,8 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 use MediaWiki\Title\Title;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
