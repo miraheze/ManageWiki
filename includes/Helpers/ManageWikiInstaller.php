@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\Shell\Shell;
 use MediaWiki\Title\Title;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
@@ -53,6 +54,12 @@ class ManageWikiInstaller {
 				try {
 					$dbw->sourceFile( $sql );
 				} catch ( Exception $e ) {
+					$logger = LoggerFactory::getInstance( 'ManageWiki' );
+					$logger->error( 'Failed to apply {table} sql for {db} from path {path}', [
+						'table' => $table,
+						'db' => $dbname,
+						'path' => $sql,
+					] );
 					return false;
 				}
 			}
