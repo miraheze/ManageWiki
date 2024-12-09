@@ -55,10 +55,11 @@ class ManageWikiInstaller {
 					$dbw->sourceFile( $sql );
 				} catch ( Exception $e ) {
 					$logger = LoggerFactory::getInstance( 'ManageWiki' );
-					$logger->error( 'Failed to apply {table} sql for {db} from path {path}', [
+					$logger->error( 'Caught exception trying to load {path} for {table} on {db}: {exception}', [
+						'path' => $sql,
 						'table' => $table,
 						'db' => $dbname,
-						'path' => $sql,
+						'exception' => $e,
 					] );
 					return false;
 				}
