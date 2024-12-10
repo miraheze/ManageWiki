@@ -127,7 +127,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $options['options'],
-					'default' => ( isset( $value ) && $value !== null ) ? array_keys( $value, true ) : array_keys( $options['overridedefault'], true )
+					'default' => $value !== null ? array_keys( $value, true ) : array_keys( $options['overridedefault'], true )
 				];
 
 				if ( !$disabled ) {
@@ -139,7 +139,7 @@ class ManageWikiTypes {
 					'type' => 'checkmatrix',
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
-					'default' => ( isset( $value ) && $value !== null ) ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault']
+					'default' => $value !== null ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault']
 				];
 				break;
 			case 'preferences':
