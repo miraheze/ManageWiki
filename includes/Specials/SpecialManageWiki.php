@@ -260,6 +260,5 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	private function renderErrorMessage() {
-
 	}
 }
