@@ -47,21 +47,6 @@ class SpecialManageWiki extends SpecialPage {
 			$module = 'core';
 		}
 
-		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
-			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module . '-view' )->text() );
-			if ( $module !== 'permissions' || $module !== 'namespaces' ) {
-				$out->addHTML(
-					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
-				);
-				$out->addWikiMsg( "managewiki-header-{$module}-view" );
-			}
-		} else {
-			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
-			if ( $module !== 'permissions' || $module !== 'namespaces' ) {
-				$out->addWikiMsg( "managewiki-header-{$module}" );
-			}
-		}
-
 		$additional = $par[1] ?? '';
 		$filtered = $par[2] ?? $par[1] ?? '';
 
@@ -272,5 +257,9 @@ class SpecialManageWiki extends SpecialPage {
 
 	protected function getGroupName() {
 		return 'wikimanage';
+	}
+
+	private function renderErrorMessage() {
+
 	}
 }
