@@ -1,6 +1,8 @@
 {
 	"@metadata": {
-		"authors": []
+		"authors": [
+			"Milicevic01"
+		]
 	},
 	"apihelp-query+wikiconfig-param-prop": "Izbor svojstava za vraćanje:",
 	"apihelp-query+wikiconfig-param-wikis": "Vikiji za proveru.",
@@ -30,9 +32,9 @@
 	"managewiki-desc": "Dozvoljava osobama da upravljaju vikijima putem veb-interfejsa.",
 	"managewiki-disabled": "Ova funkcija ($1) još nije omogućena na ovom vikiju.",
 	"managewiki-extension-name": "[$1 $2]",
-	"managewiki-header-core": "Izaberite ono čime biste želeli da upravljate ispod, pa kliknite na dugme za čuvanje da bi ste sačuvali vaše izmene.",
-	"managewiki-header-namespaces": "Izaberite imenski prostor za uređivanje ispod (ako želite da uređujete imenski prostor razgovor, izaberite njegov povezani, glavni imenski prostor) ili pritisnite dugme ispod da biste napravili novi.",
-	"managewiki-header-permissions": "Izaberite grupu ispod koja već postoji da biste izmenili ili napravili novu korisničku grupu u okviru ispod nje.",
+	"managewiki-header-core": "You can manage this wiki's core settings (such as the name and language) from this panel. Greyed out options may only be changed by farm operators. Once done, click 'Save' and your preferences will reflect in a few seconds.\n\nYou may manage additional settings such as logo and more at [[Special:ManageWiki/settings]].",
+	"managewiki-header-namespaces": "You may manage this wiki's namespace settings from this panel. Some settings will only reflect once you enable an extension. Consult MediaWiki documenation for further information. Once done, click 'Save' and your preferences will reflect in a few seconds.",
+	"managewiki-header-permissions": "You may manage this wiki's user group settings from this panel (such as permissions, group assignments and autopromotion). Please read the documentation very carefully and do not delete groups brazenly or your wiki may break. Once done, click 'Save' and your preferences will reflect in a few seconds.\n\nNot all permissions may be assignable. Certain user permissions may be reserved only for farm operators. Contact your farm if you do not find certain permissions.",
 	"managewiki-label-category": "Kategorija",
 	"managewiki-label-closed": "Zatvoreno",
 	"managewiki-label-dbname": "Ime baze podataka",
