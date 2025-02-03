@@ -98,7 +98,7 @@
 	"managewiki-permissions-addall": "Può aggiungere ad altri",
 	"managewiki-permissions-addself": "Può aggiungere a sé",
 	"managewiki-permissions-assigned": "I sottostanti diritti utente sono al momento assegnato a questo gruppo utente.",
-	"managewiki-permissions-autopromote": "Sotto tu puoi gestire autopromozione di utenti a questo gruppo. Nota che se un utente corrisponde al criterio che hai settato sotto, loro erediteranno tutti i permessi di questo gruppo e tu non puoi rimuoverli da questo gruppo in qualunque circostanza a meno che non li abbia selezionati prima di rientrare nel criterio.",
+	"managewiki-permissions-autopromote": "Di seguito puoi gestire la promozione automatica degli utenti a questo gruppo. Nota che se un utente corrisponde ai criteri che hai impostato di seguito, erediterà tutte le autorizzazioni di questo gruppo e non potrai rimuoverlo da questo gruppo in nessuna circostanza, a meno che tu non selezioni la promozione una volta prima che soddisfi i criteri.",
 	"managewiki-permissions-autopromote-age": "Devi essere stato un utente per il seguente periodo di giorni",
 	"managewiki-permissions-autopromote-blocked": "Deve essere bloccato",
 	"managewiki-permissions-autopromote-bot": "Deve essere un account automatico",
