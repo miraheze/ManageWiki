@@ -49,7 +49,8 @@ class ManageWikiPermissions {
 			'*',
 			[
 				'perm_dbname' => $wiki
-			]
+			],
+			__METHOD__
 		);
 
 		// Bring database values to class scope
@@ -183,7 +184,8 @@ class ManageWikiPermissions {
 					[
 						'perm_dbname' => $this->wiki,
 						'perm_group' => $group
-					]
+					],
+					__METHOD__
 				);
 
 				$this->deleteUsersFromGroup( $group );
@@ -254,7 +256,8 @@ class ManageWikiPermissions {
 			'ug_user',
 			[
 				'ug_group' => $group
-			]
+			],
+			__METHOD__
 		);
 
 		foreach ( $res as $row ) {

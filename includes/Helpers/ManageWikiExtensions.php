@@ -52,7 +52,8 @@ class ManageWikiExtensions {
 			's_extensions',
 			[
 				's_dbname' => $wiki
-			]
+			],
+			__METHOD__
 		)->s_extensions ?? '[]';
 
 		$logger = LoggerFactory::getInstance( 'ManageWiki' );
@@ -243,7 +244,8 @@ class ManageWikiExtensions {
 			[ [ 's_dbname' ] ],
 			[
 				's_extensions' => json_encode( $this->list() )
-			]
+			],
+			__METHOD__
 		);
 	}
 

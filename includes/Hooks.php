@@ -121,7 +121,8 @@ class Hooks {
 			'*',
 			[
 				's_dbname' => $wiki
-			]
+			],
+			__METHOD__
 		);
 
 		// Don't need to manipulate this much
@@ -151,7 +152,8 @@ class Hooks {
 				'*',
 				[
 					'ns_dbname' => $wiki
-				]
+				],
+				__METHOD__
 			);
 
 			$lcName = [];
@@ -241,7 +243,8 @@ class Hooks {
 				'*',
 				[
 					'perm_dbname' => $wiki
-				]
+				],
+				__METHOD__
 			);
 
 			foreach ( $permObjects as $perm ) {
