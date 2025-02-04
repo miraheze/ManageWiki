@@ -78,15 +78,6 @@ class SpecialManageWiki extends SpecialPage {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
 			$dbName = $par[1] ?? $this->config->get( 'DBname' );
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
-				$out->addHTML(
-					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
-				);
-			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !$isCentralWiki ) {
-				$out->addHTML(
-					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
-				);
-			}
 			$this->showWikiForm( strtolower( $dbName ), 'core', '', '' );
 		} else {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
@@ -166,7 +157,16 @@ class SpecialManageWiki extends SpecialPage {
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
 				);
 			}
-		}
+		} else {
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
+				);
+			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !$isCentralWiki ) {
+				$out->addHTML(
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
+				);
+			}
 
 		if ( $module == 'permissions' && !$special ) {
 			$language = RequestContext::getMain()->getLanguage();
