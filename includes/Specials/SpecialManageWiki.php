@@ -90,6 +90,9 @@ class SpecialManageWiki extends SpecialPage {
 			$this->showWikiForm( strtolower( $dbName ), 'core', '', '' );
 		} else {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
+		}
+
+		if ( $module != 'core' ) {
 			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
