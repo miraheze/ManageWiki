@@ -216,7 +216,8 @@ class ManageWikiPermissions {
 								'perm_group'
 							]
 						],
-						$builtTable
+						$builtTable,
+						__METHOD__
 					);
 
 					$logAP = ( $this->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';

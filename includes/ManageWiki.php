@@ -104,7 +104,8 @@ class ManageWiki {
 			[
 				'ns_dbname' => $config->get( 'DBname' ),
 				'ns_namespace_id' => $namespace
-			]
+			],
+			__METHOD__
 		)->ns_namespace_id;
 
 		if ( is_bool( $nsID ) ) {

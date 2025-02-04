@@ -248,7 +248,8 @@ class ManageWikiNamespaces {
 							'ns_namespace_id'
 						]
 					],
-					$builtTable
+					$builtTable,
+					__METHOD__
 				);
 
 				if ( empty( $this->logParams ) || !( $id % 2 ) ) {
