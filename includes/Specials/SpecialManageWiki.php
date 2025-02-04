@@ -162,11 +162,12 @@ class SpecialManageWiki extends SpecialPage {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
 				);
-			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !($this->databaseUtils->isCurrentWikiCentral(); ) {
+			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !( $this->databaseUtils->isCurrentWikiCentral(); ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
 				);
 			}
+		}
 
 		if ( $module == 'permissions' && !$special ) {
 			$language = RequestContext::getMain()->getLanguage();
