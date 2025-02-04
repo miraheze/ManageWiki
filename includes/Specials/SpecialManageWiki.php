@@ -91,14 +91,6 @@ class SpecialManageWiki extends SpecialPage {
 		} else {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
 		}
-
-		if ( $module != 'core' ) {
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
-				$out->addHTML(
-					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
-				);
-			}
-		}
 	}
 
 	public function getSubpagesForPrefixSearch() {
@@ -167,6 +159,14 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$options = [];
+
+		if ( $module != 'core' ) {
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
+				);
+			}
+		}
 
 		if ( $module == 'permissions' && !$special ) {
 			$language = RequestContext::getMain()->getLanguage();
