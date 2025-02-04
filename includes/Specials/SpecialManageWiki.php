@@ -158,7 +158,7 @@ class SpecialManageWiki extends SpecialPage {
 				);
 			}
 		} else {
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !( $this->databaseUtils->isCurrentWikiCentral(); ) ) {
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !( $this->databaseUtils->isCurrentWikiCentral() ) ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
 				);
