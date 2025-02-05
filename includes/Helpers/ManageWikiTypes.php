@@ -273,7 +273,7 @@ class ManageWikiTypes {
 				unset( $enabledSkins['apioutput'] );
 				unset( $enabledSkins['authentication-popup'] );
 				unset( $enabledSkins['json'] );
-			
+
 				if ( $options['excludeSkipSkins'] ?? false ) {
 					foreach ( $config->get( 'SkipSkins' ) as $skip ) {
 						unset( $enabledSkins[$skip] );

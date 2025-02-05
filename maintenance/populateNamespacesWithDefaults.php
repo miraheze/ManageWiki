@@ -43,7 +43,8 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 			],
 			[
 				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
-			]
+			],
+			__METHOD__
 		);
 
 		if ( !$checkRow ) {

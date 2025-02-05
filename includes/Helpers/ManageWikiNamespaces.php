@@ -52,7 +52,8 @@ class ManageWikiNamespaces {
 			'*',
 			[
 				'ns_dbname' => $wiki
-			]
+			],
+			__METHOD__
 		);
 
 		// Bring database values to class scope
@@ -204,7 +205,8 @@ class ManageWikiNamespaces {
 					[
 						'ns_dbname' => $this->wiki,
 						'ns_namespace_id' => $id
-					]
+					],
+					__METHOD__
 				);
 
 				$jobParams = [
@@ -246,7 +248,8 @@ class ManageWikiNamespaces {
 							'ns_namespace_id'
 						]
 					],
-					$builtTable
+					$builtTable,
+					__METHOD__
 				);
 
 				if ( empty( $this->logParams ) || !( $id % 2 ) ) {

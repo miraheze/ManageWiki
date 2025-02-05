@@ -52,7 +52,8 @@ class ManageWikiSettings {
 			's_settings',
 			[
 				's_dbname' => $wiki
-			]
+			],
+			__METHOD__
 		)->s_settings ?? '[]';
 
 		// Bring json_decoded values to class scope
@@ -170,7 +171,8 @@ class ManageWikiSettings {
 			[ [ 's_dbname' ] ],
 			[
 				's_settings' => json_encode( $this->liveSettings )
-			]
+			],
+			__METHOD__
 		);
 
 		if ( !empty( $this->scripts ) ) {

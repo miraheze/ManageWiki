@@ -43,7 +43,8 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 			],
 			[
 				'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
-			]
+			],
+			__METHOD__
 		);
 
 		if ( !$checkRow ) {
