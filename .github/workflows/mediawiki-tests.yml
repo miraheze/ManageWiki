@@ -16,7 +16,7 @@ jobs:
           - mw: 'REL1_43'
             php: 8.1
             php-docker: 81
-            composer-test: false
+            composer-test: true
             experimental: false
 
           # Latest MediaWiki master - PHP 8.1
