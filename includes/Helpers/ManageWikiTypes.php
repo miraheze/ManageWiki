@@ -6,7 +6,6 @@ use ContentHandler;
 use MediaWiki\Config\Config;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Status\Status;
 use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
@@ -35,7 +34,7 @@ class ManageWikiTypes {
 					'default' => $value ?? $options['overridedefault'],
 					'validation-callback' => static function ( $database ) use ( $config, $name ) {
 						if ( !in_array( $database, $config->get( 'LocalDatabases' ) ) ) {
-							return Status::newFatal( 'managewiki-invalid-database', $database, $name )->getMessage();
+							return wfMessage( 'managewiki-invalid-database', $database, $name );
 						}
 
 						return true;
@@ -245,7 +244,7 @@ class ManageWikiTypes {
 				}
 				break;
 			case 'skin':
-				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getSkinNames();
+				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getInstalledSkins();
 
 				unset( $enabledSkins['fallback'] );
 				unset( $enabledSkins['apioutput'] );
@@ -268,7 +267,7 @@ class ManageWikiTypes {
 				];
 				break;
 			case 'skins':
-				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getSkinNames();
+				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getInstalledSkins();
 
 				unset( $enabledSkins['fallback'] );
 				unset( $enabledSkins['apioutput'] );

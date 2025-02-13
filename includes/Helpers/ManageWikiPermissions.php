@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\User\User;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
@@ -249,6 +248,7 @@ class ManageWikiPermissions {
 
 	private function deleteUsersFromGroup( string $group ) {
 		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
+		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
 		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
 			->getReplicaDatabase( $this->wiki );
 
@@ -262,7 +262,7 @@ class ManageWikiPermissions {
 		);
 
 		foreach ( $res as $row ) {
-			$groupManager->removeUserFromGroup( User::newFromId( $row->ug_user ), $group );
+			$groupManager->removeUserFromGroup( $userFactory->newFromId( $row->ug_user ), $group );
 		}
 	}
 
