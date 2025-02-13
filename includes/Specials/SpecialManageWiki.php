@@ -8,7 +8,7 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
-use MediaWiki\WikiMap\WikiMap;
+use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
@@ -20,12 +20,14 @@ use OOUI\SearchInputWidget;
 class SpecialManageWiki extends SpecialPage {
 
 	private Config $config;
+	private CreateWikiDatabaseUtils $databaseUtils;
 	private RemoteWikiFactory $remoteWikiFactory;
 
 	public function __construct() {
 		parent::__construct( 'ManageWiki' );
 
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$this->databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 	}
 
@@ -48,9 +50,6 @@ class SpecialManageWiki extends SpecialPage {
 		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
 			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module . '-view' )->text() );
 			if ( $module !== 'permissions' || $module !== 'namespaces' ) {
-				$out->addHTML(
-					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
-				);
 				$out->addWikiMsg( "managewiki-header-{$module}-view" );
 			}
 		} else {
@@ -71,21 +70,14 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addSubtitle( $out->msg( 'editing' )->params( $additional ) );
 		}
 
-		if ( !WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
+		$isCentralWiki = $this->databaseUtils->isCurrentWikiCentral();
+
+		if ( !$isCentralWiki ) {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
 			$dbName = $par[1] ?? $this->config->get( 'DBname' );
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
-				$out->addHTML(
-					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
-				);
-			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !WikiMap::isCurrentWikiId( $this->config->get( 'CreateWikiGlobalWiki' ) ) ) {
-				$out->addHTML(
-					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
-				);
-			}
 			$this->showWikiForm( strtolower( $dbName ), 'core', '', '' );
 		} else {
 			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
@@ -159,6 +151,24 @@ class SpecialManageWiki extends SpecialPage {
 
 		$options = [];
 
+		if ( $module != 'core' ) {
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
+				);
+			}
+		} else {
+			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !( $this->databaseUtils->isCurrentWikiCentral() ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
+				);
+			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
+				$out->addHTML(
+					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
+				);
+			}
+		}
+
 		if ( $module == 'permissions' && !$special ) {
 			$language = RequestContext::getMain()->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( $wiki );
@@ -186,12 +196,6 @@ class SpecialManageWiki extends SpecialPage {
 		} else {
 			$formFactory = new ManageWikiFormFactory();
 			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
-
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
-				$out->addHTML(
-					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
-				);
-			}
 
 			$out->addHTML( new FieldLayout(
 				new SearchInputWidget( [

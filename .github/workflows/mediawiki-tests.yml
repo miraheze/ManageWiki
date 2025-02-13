@@ -13,18 +13,11 @@ jobs:
       matrix:
         include:
           # Latest MediaWiki stable - PHP 8.1
-          - mw: 'REL1_42'
+          - mw: 'REL1_43'
             php: 8.1
             php-docker: 81
             composer-test: true
             experimental: false
-
-          # Latest MediaWiki release branch - PHP 8.1
-          - mw: 'REL1_43'
-            php: 8.1
-            php-docker: 81
-            composer-test: false
-            experimental: true
 
           # Latest MediaWiki master - PHP 8.1
           - mw: 'master'

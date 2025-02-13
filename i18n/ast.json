@@ -10,8 +10,8 @@
 	"apihelp-query+wikiconfig-param-wikis": "Qué wikis comprobar.",
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Comprobar si la wiki ta marcada como zarrada",
 	"apihelp-query+wikiconfig-paramvalue-prop-extensions": "Ver qué estensiones tán activaes na wiki",
-	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Comprobar si la wiki ta marcada como llibre d'inactividá",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Comprobar si la wiki ta marcada como inactiva",
+	"apihelp-query+wikiconfig-paramvalue-prop-inactive-exempt": "Comprobar si la wiki ta marcada como llibre d'inactividá",
 	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "Ver los permisos de los grupos d'usuarios",
 	"apihelp-query+wikiconfig-paramvalue-prop-private": "Comprobar si la wiki ta marcada como privada",
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Ver la configuración de la wiki",
@@ -23,6 +23,7 @@
 	"deletedwikis": "Wikis desaniciaes",
 	"extensions-other": "Otres",
 	"logentry-managewiki-settings": "$1 cambió la configuración ($5) de «$4»",
+	"managewiki": "Alministrar una wiki",
 	"managewiki-desc": "Permite que les persones alministren wikis per una interfaz web.",
 	"managewiki-disabled": "Esta función ($1) inda nun s'activó nesta wiki.",
 	"managewiki-extension-name": "[$1 $2]",
@@ -36,7 +37,6 @@
 	"managewiki-label-private": "Priváu",
 	"managewiki-label-sitename": "Nome del sitiu",
 	"managewiki-success": "La configuración cambióse correutamente.",
-	"managewiki": "Alministrar una wiki",
 	"managewikiextensions": "Alministrar les estensiones d'una wiki",
 	"permissions-delete": "Desaniciar"
 }

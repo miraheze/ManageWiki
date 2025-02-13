@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use MediaWiki\Linker\Linker;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Pager\TablePager;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -11,9 +10,8 @@ class ManageWikiDeletedWikiPager extends TablePager {
 
 	public function __construct( $page ) {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->mDb = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
+		$this->mDb = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getReplicaDatabase( 'virtual-createwiki' );
 
 		parent::__construct( $page->getContext(), $page->getLinkRenderer() );
 	}
@@ -59,7 +57,11 @@ class ManageWikiDeletedWikiPager extends TablePager {
 				$formatted = $this->escape( wfTimestamp( TS_RFC2822, (int)$row->wiki_deleted_timestamp ) );
 				break;
 			case 'wiki_deleted':
-				$formatted = Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki' )->getFullURL() . '/core/' . $row->wiki_dbname, $this->msg( 'managewiki-label-goto' )->text() );
+				$formatted = $this->getLinkRenderer()->makeExternalLink(
+					SpecialPage::getTitleFor( 'ManageWiki', 'core' )->getFullURL() . '/' . $row->wiki_dbname,
+					$this->msg( 'managewiki-label-goto' )->text(),
+					SpecialPage::getTitleFor( 'ManageWiki', 'core' )
+				);
 				break;
 			default:
 				$formatted = $this->escape( "Unable to format $name" );

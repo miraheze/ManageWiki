@@ -11,3 +11,4 @@ CREATE TABLE /*_*/mw_permissions (
 ) /*$wgDBTableOptions*/;
 
 CREATE INDEX /*i*/perm_dbname ON /*_*/mw_permissions (perm_dbname);
+CREATE INDEX /*i*/perm_group ON /*_*/mw_permissions (perm_group);

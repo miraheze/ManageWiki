@@ -42,18 +42,15 @@ class ManageWiki {
 
 	public static function getTimezoneList() {
 		$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
-
 		$timeZoneList = [];
 
-		if ( $identifiers !== false ) {
-			foreach ( $identifiers as $identifier ) {
-				$parts = explode( '/', $identifier, 2 );
-				if ( count( $parts ) !== 2 && $parts[0] !== 'UTC' ) {
-					continue;
-				}
-
-				$timeZoneList[$identifier] = $identifier;
+		foreach ( $identifiers as $identifier ) {
+			$parts = explode( '/', $identifier, 2 );
+			if ( count( $parts ) !== 2 && $parts[0] !== 'UTC' ) {
+				continue;
 			}
+
+			$timeZoneList[$identifier] = $identifier;
 		}
 
 		return $timeZoneList;
@@ -95,9 +92,8 @@ class ManageWiki {
 	public static function namespaceID( string $namespace ) {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 
-		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_REPLICA, [], $config->get( 'CreateWikiDatabase' ) );
+		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getReplicaDatabase( 'virtual-createwiki' );
 
 		$nsID = ( $namespace == '' ) ? false : $dbr->selectRow(
 			'mw_namespaces',
@@ -105,7 +101,8 @@ class ManageWiki {
 			[
 				'ns_dbname' => $config->get( 'DBname' ),
 				'ns_namespace_id' => $namespace
-			]
+			],
+			__METHOD__
 		)->ns_namespace_id;
 
 		if ( is_bool( $nsID ) ) {
