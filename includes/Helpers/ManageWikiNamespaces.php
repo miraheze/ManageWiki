@@ -252,7 +252,7 @@ class ManageWikiNamespaces {
 					__METHOD__
 				);
 
-				if ( empty( $this->logParams ) || !( $id % 2 ) ) {
+				if ( !$this->logParams || !( $id % 2 ) ) {
 					$this->logParams = [
 						'5::namespace' => $this->liveNamespaces[$id]['name']
 					];
@@ -278,7 +278,7 @@ class ManageWikiNamespaces {
 	 * Checks if changes are committed to the database or not
 	 */
 	public function __destruct() {
-		if ( !$this->committed && !empty( $this->changes ) ) {
+		if ( !$this->committed && $this->changes ) {
 			print 'Changes have not been committed to the database!';
 		}
 	}

@@ -270,7 +270,7 @@ class ManageWikiPermissions {
 	 * Checks if changes are committed to the database or not
 	 */
 	public function __destruct() {
-		if ( !$this->committed && !empty( $this->changes ) ) {
+		if ( !$this->committed && $this->changes ) {
 			print 'Changes have not been committed to the database!';
 		}
 	}
