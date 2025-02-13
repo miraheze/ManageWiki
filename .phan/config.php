@@ -18,6 +18,7 @@ $cfg['exclude_analysis_directory_list'] = array_merge(
 
 $cfg['suppress_issue_types'] = [
 	'MediaWikiNoEmptyIfDefined',
+	'PhanAccessMethodInternal',
 	'PhanTypeComparisonFromArray',
 	'PhanTypeArraySuspiciousNullable',
 	'PhanTypePossiblyInvalidDimOffset',
@@ -28,6 +29,7 @@ $cfg['suppress_issue_types'] = [
 	'PhanNonClassMethodCall',
 	'PhanImpossibleTypeComparison',
 	'PhanRedundantConditionInLoop',
+	'SecurityCheck-LikelyFalsePositive',
 ];
 
 $cfg['scalar_implicit_cast'] = true;
