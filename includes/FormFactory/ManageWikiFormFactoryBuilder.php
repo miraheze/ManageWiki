@@ -175,11 +175,11 @@ class ManageWikiFormFactoryBuilder {
 				];
 
 				if ( $data['hide-if'] ?? false ) {
-					$formDescriptor[$name]['hide-if'] = $data['hide-if'];
+					$formDescriptor[$name]['hide-if'] = $data['hide-if'] ?? [];
 				}
 
 				if ( $data['options'] ?? false ) {
-					$formDescriptor[$name]['options'] = $data['options'];
+					$formDescriptor[$name]['options'] = $data['options'] ?? [];
 				}
 			}
 		}
@@ -251,7 +251,7 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $queue as $path => $mtime ) {
 			$json = file_get_contents( $path );
 			$info = json_decode( $json, true );
-			$version = $info['manifest_version'];
+			$version = $info['manifest_version'] ?? 2;
 
 			$processor->extractInfo( $path, $info, $version );
 		}
@@ -366,7 +366,7 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $filteredSettings as $name => $set ) {
 			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $remoteWiki ) : true;
 
-			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( $set['global'] ?? false || in_array( $set['from'], $extList ) );
+			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( (bool)( $set['global'] ?? false ) || in_array( $set['from'], $extList ) );
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
@@ -850,7 +850,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn->addLogParam( '4::wiki', $dbName );
 			}
 
-			$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->getLogAction() );
+			$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->getLogAction() ?? 'settings' );
 			$mwLogEntry->setPerformer( $context->getUser() );
 			$mwLogEntry->setTarget( $form->getTitle() );
 			$mwLogEntry->setComment( $formData['reason'] );
@@ -861,7 +861,7 @@ class ManageWikiFormFactoryBuilder {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}
 
-		if ( $mwReturn->errors ?? [] && $module === 'permissions' ) {
+		if ( $mwReturn->errors ?? false && $module === 'permissions' ) {
 			return $mwReturn->errors;
 		}
 
