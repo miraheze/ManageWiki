@@ -10,7 +10,6 @@ use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\Linker\Linker;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
@@ -22,7 +21,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiFormFactoryBuilder {
 
@@ -76,7 +75,9 @@ class ManageWikiFormFactoryBuilder {
 			'section' => 'main'
 		];
 
-		if ( $ceMW && ( $config->get( 'DBname' ) == $config->get( 'CreateWikiGlobalWiki' ) ) && ( $remoteWiki->getDBname() !== $config->get( 'CreateWikiGlobalWiki' ) ) ) {
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+
+		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && ( $remoteWiki->getDBname() !== $databaseUtils->getCentralWikiID() ) ) {
 			$mwActions = [
 				( $remoteWiki->isDeleted() ) ? 'undelete' : 'delete',
 				( $remoteWiki->isLocked() ) ? 'unlock' : 'lock'
@@ -173,11 +174,11 @@ class ManageWikiFormFactoryBuilder {
 				];
 
 				if ( $data['hide-if'] ?? false ) {
-					$formDescriptor[$name]['hide-if'] = $data['hide-if'];
+					$formDescriptor[$name]['hide-if'] = $data['hide-if'] ?? [];
 				}
 
 				if ( $data['options'] ?? false ) {
-					$formDescriptor[$name]['options'] = $data['options'];
+					$formDescriptor[$name]['options'] = $data['options'] ?? [];
 				}
 			}
 		}
@@ -249,7 +250,7 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $queue as $path => $mtime ) {
 			$json = file_get_contents( $path );
 			$info = json_decode( $json, true );
-			$version = $info['manifest_version'];
+			$version = $info['manifest_version'] ?? 2;
 
 			$processor->extractInfo( $path, $info, $version );
 		}
@@ -317,7 +318,12 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			if ( $hasSettings && in_array( $name, $extList ) ) {
-				$help[] = '<br/>' . Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name, wfMessage( 'managewiki-extension-settings' )->text() );
+				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
+				$help[] = '<br/>' . $linkRenderer->makeExternalLink(
+					SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name,
+					wfMessage( 'managewiki-extension-settings' )->text(),
+					SpecialPage::getTitleFor( 'ManageWiki', 'settings' )
+				);
 			}
 
 			$formDescriptor["ext-$name"] = [
@@ -364,7 +370,7 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $filteredSettings as $name => $set ) {
 			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $remoteWiki ) : true;
 
-			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( $set['global'] ?? false || in_array( $set['from'], $extList ) );
+			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( (bool)( $set['global'] ?? false ) || in_array( $set['from'], $extList ) );
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
@@ -493,7 +499,7 @@ class ManageWikiFormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name
-				] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['contentmodel'], false, false, 'contentmodel' ),
+				] + ManageWikiTypes::process( $config, false, false, 'namespaces', [], $namespaceData['contentmodel'], false, false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label' => wfMessage( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
@@ -569,7 +575,7 @@ class ManageWikiFormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name
-			] + ManageWikiTypes::process( false, false, false, 'namespaces', [], $namespaceData['aliases'], false, [], 'texts' );
+			] + ManageWikiTypes::process( $config, false, false, 'namespaces', [], $namespaceData['aliases'], false, [], 'texts' );
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
@@ -682,7 +688,8 @@ class ManageWikiFormFactoryBuilder {
 		$rowsBuilt = [];
 
 		foreach ( $groupData['allGroups'] as $group ) {
-			$rowsBuilt[htmlspecialchars( $language->getGroupName( $group ) )] = $group;
+			$lowerCaseGroupName = strtolower( $group );
+			$rowsBuilt[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 		}
 
 		$formDescriptor['group-matrix'] = [
@@ -791,7 +798,11 @@ class ManageWikiFormFactoryBuilder {
 			]
 		];
 
-		if ( $ceMW && ( count( $permList['permissions'] ?? [] ) > 0 ) && ( !in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ) ) ) ) {
+		if (
+			$ceMW &&
+			$mwPermissions->exists( $group ) &&
+			!in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ) )
+		) {
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
 				'label-message' => 'permissions-delete-checkbox',
@@ -810,7 +821,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		DBConnRef $dbw,
+		IDatabase $dbw,
 		Config $config,
 		string $special = '',
 		string $filtered = ''
@@ -843,7 +854,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn->addLogParam( '4::wiki', $dbName );
 			}
 
-			$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->getLogAction() );
+			$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->getLogAction() ?? 'settings' );
 			$mwLogEntry->setPerformer( $context->getUser() );
 			$mwLogEntry->setTarget( $form->getTitle() );
 			$mwLogEntry->setComment( $formData['reason'] );
@@ -854,7 +865,7 @@ class ManageWikiFormFactoryBuilder {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}
 
-		if ( $mwReturn->errors ?? [] && $module === 'permissions' ) {
+		if ( $module === 'permissions' && $mwReturn->errors ) {
 			return $mwReturn->errors;
 		}
 
@@ -866,7 +877,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		DBConnRef $dbw,
+		IDatabase $dbw,
 		Config $config
 	) {
 		$mwActions = [
@@ -1090,7 +1101,7 @@ class ManageWikiFormFactoryBuilder {
 		$mwNamespaces = new ManageWikiNamespaces( $dbName );
 
 		if ( $formData['delete-checkbox'] ) {
-			$mwNamespaces->remove( $special, $formData['delete-migrate-to'] );
+			$mwNamespaces->remove( (int)$special, $formData['delete-migrate-to'] );
 			$mwNamespaces->remove( (int)$special + 1, $formData['delete-migrate-to'] + 1 );
 			return $mwNamespaces;
 		}

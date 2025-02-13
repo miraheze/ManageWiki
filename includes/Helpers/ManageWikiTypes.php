@@ -3,14 +3,14 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use ContentHandler;
+use MediaWiki\Config\Config;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Status\Status;
 use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
 
-	public static function process( $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
+	public static function process( Config $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {
 				$options['overridedefault'] = $overrideDefault;
@@ -26,7 +26,7 @@ class ManageWikiTypes {
 		return self::common( $config, $disabled, $groupList, $name, $options, $value );
 	}
 
-	private static function common( $config, $disabled, $groupList, $name, $options, $value ) {
+	private static function common( Config $config, $disabled, $groupList, $name, $options, $value ) {
 		switch ( $options['type'] ) {
 			case 'database':
 				$configs = [
@@ -34,7 +34,7 @@ class ManageWikiTypes {
 					'default' => $value ?? $options['overridedefault'],
 					'validation-callback' => static function ( $database ) use ( $config, $name ) {
 						if ( !in_array( $database, $config->get( 'LocalDatabases' ) ) ) {
-							return Status::newFatal( 'managewiki-invalid-database', $database, $name )->getMessage();
+							return wfMessage( 'managewiki-invalid-database', $database, $name );
 						}
 
 						return true;
@@ -127,7 +127,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $options['options'],
-					'default' => ( isset( $value ) && $value !== null ) ? array_keys( $value, true ) : array_keys( $options['overridedefault'], true )
+					'default' => $value !== null ? array_keys( $value, true ) : array_keys( $options['overridedefault'], true )
 				];
 
 				if ( !$disabled ) {
@@ -139,7 +139,7 @@ class ManageWikiTypes {
 					'type' => 'checkmatrix',
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
-					'default' => ( isset( $value ) && $value !== null ) ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault']
+					'default' => $value !== null ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault']
 				];
 				break;
 			case 'preferences':
@@ -244,10 +244,12 @@ class ManageWikiTypes {
 				}
 				break;
 			case 'skin':
-				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getSkinNames();
+				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getInstalledSkins();
 
 				unset( $enabledSkins['fallback'] );
 				unset( $enabledSkins['apioutput'] );
+				unset( $enabledSkins['authentication-popup'] );
+				unset( $enabledSkins['json'] );
 
 				if ( $options['excludeSkipSkins'] ?? false ) {
 					foreach ( $config->get( 'SkipSkins' ) as $skip ) {
@@ -265,10 +267,12 @@ class ManageWikiTypes {
 				];
 				break;
 			case 'skins':
-				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getSkinNames();
+				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getInstalledSkins();
 
 				unset( $enabledSkins['fallback'] );
 				unset( $enabledSkins['apioutput'] );
+				unset( $enabledSkins['authentication-popup'] );
+				unset( $enabledSkins['json'] );
 
 				if ( $options['excludeSkipSkins'] ?? false ) {
 					foreach ( $config->get( 'SkipSkins' ) as $skip ) {
@@ -332,7 +336,8 @@ class ManageWikiTypes {
 				$language = RequestContext::getMain()->getLanguage();
 				$groups = [];
 				foreach ( (array)$groupList as $group ) {
-					$groups[htmlspecialchars( $language->getGroupName( $group ) )] = $group;
+					$lowerCaseGroupName = strtolower( $group );
+					$groups[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 				}
 
 				$configs = [

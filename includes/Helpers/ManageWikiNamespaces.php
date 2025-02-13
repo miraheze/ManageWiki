@@ -6,7 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler for interacting with Namespace configuration
@@ -17,7 +17,7 @@ class ManageWikiNamespaces {
 	private $committed = false;
 	/** @var Config Configuration object */
 	private $config;
-	/** @var DBConnRef Database connection */
+	/** @var IDatabase Database connection */
 	private $dbw;
 	/** @var array Namespace IDs to be deleted */
 	private $deleteNamespaces = [];
@@ -44,16 +44,16 @@ class ManageWikiNamespaces {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 
-		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$namespaces = $this->dbw->select(
 			'mw_namespaces',
 			'*',
 			[
 				'ns_dbname' => $wiki
-			]
+			],
+			__METHOD__
 		);
 
 		// Bring database values to class scope
@@ -205,7 +205,8 @@ class ManageWikiNamespaces {
 					[
 						'ns_dbname' => $this->wiki,
 						'ns_namespace_id' => $id
-					]
+					],
+					__METHOD__
 				);
 
 				$jobParams = [
@@ -247,10 +248,11 @@ class ManageWikiNamespaces {
 							'ns_namespace_id'
 						]
 					],
-					$builtTable
+					$builtTable,
+					__METHOD__
 				);
 
-				if ( empty( $this->logParams ) || !( $id % 2 ) ) {
+				if ( !$this->logParams || !( $id % 2 ) ) {
 					$this->logParams = [
 						'5::namespace' => $this->liveNamespaces[$id]['name']
 					];
@@ -276,7 +278,7 @@ class ManageWikiNamespaces {
 	 * Checks if changes are committed to the database or not
 	 */
 	public function __destruct() {
-		if ( !$this->committed && !empty( $this->changes ) ) {
+		if ( !$this->committed && $this->changes ) {
 			print 'Changes have not been committed to the database!';
 		}
 	}

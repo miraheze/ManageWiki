@@ -3,8 +3,9 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler for all interactions with Extension changes within ManageWiki
@@ -15,7 +16,7 @@ class ManageWikiExtensions {
 	private $committed = false;
 	/** @var Config Configuration Object */
 	private $config;
-	/** @var DBConnRef Database Connection */
+	/** @var IDatabase Database Connection */
 	private $dbw;
 	/** @var array Extension configuration ($wgManageWikiExtensions) */
 	private $extConfig;
@@ -43,21 +44,29 @@ class ManageWikiExtensions {
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->extConfig = $this->config->get( 'ManageWikiExtensions' );
 
-		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$exts = $this->dbw->selectRow(
 			'mw_settings',
 			's_extensions',
 			[
 				's_dbname' => $wiki
-			]
+			],
+			__METHOD__
 		)->s_extensions ?? '[]';
+
+		$logger = LoggerFactory::getInstance( 'ManageWiki' );
 
 		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
 		// populate extension lists with config associated with them.
 		foreach ( json_decode( $exts, true ) as $ext ) {
+			if ( !isset( $this->extConfig[$ext] ) ) {
+				$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
+					'ext' => $ext,
+				] );
+				continue;
+			}
 			$this->liveExts[$ext] = $this->extConfig[$ext];
 		}
 	}
@@ -90,16 +99,17 @@ class ManageWikiExtensions {
 	/**
 	 * Removes an extension from the 'enabled' list
 	 * @param string|string[] $extensions Either an array or string of extensions to disable
+	 * @param bool $forceRemove Force removing extension incase it is removed from config
 	 */
-	public function remove( $extensions ) {
+	public function remove( $extensions, $forceRemove = false ) {
 		// We allow remove either one extension (string) or many (array)
 		// We will handle all processing in final stages
 		foreach ( (array)$extensions as $ext ) {
-			if ( !isset( $this->liveExts[$ext] ) ) {
+			if ( !isset( $this->liveExts[$ext] ) && !$forceRemove ) {
 				continue;
 			}
 
-			$this->removedExts[$ext] = $this->liveExts[$ext];
+			$this->removedExts[$ext] = $this->liveExts[$ext] ?? [];
 			unset( $this->liveExts[$ext] );
 
 			$this->changes[$ext] = [
@@ -228,13 +238,13 @@ class ManageWikiExtensions {
 			'mw_settings',
 			[
 				's_dbname' => $this->wiki,
-				's_settings' => json_encode( [] ),
 				's_extensions' => json_encode( $this->list() )
 			],
 			[ [ 's_dbname' ] ],
 			[
 				's_extensions' => json_encode( $this->list() )
-			]
+			],
+			__METHOD__
 		);
 	}
 
@@ -242,7 +252,7 @@ class ManageWikiExtensions {
 	 * Safe check to inform of non-committed changed
 	 */
 	public function __destruct() {
-		if ( !$this->committed && !empty( $this->changes ) ) {
+		if ( !$this->committed && $this->changes ) {
 			print 'Changes have not been committed to the database!';
 		}
 	}

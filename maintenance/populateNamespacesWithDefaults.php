@@ -23,7 +23,8 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 	}
 
 	public function execute() {
-		$dbw = $this->getDB( DB_PRIMARY, [], $this->getConfig()->get( 'CreateWikiDatabase' ) );
+		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
+		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
 
 		if ( $this->getOption( 'overwrite' ) ) {
 			$dbw->delete(
@@ -42,7 +43,8 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 			],
 			[
 				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
-			]
+			],
+			__METHOD__
 		);
 
 		if ( !$checkRow ) {

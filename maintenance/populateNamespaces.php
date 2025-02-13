@@ -26,7 +26,8 @@ class PopulateNamespaces extends Maintenance {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
 
-		$dbw = $this->getDB( DB_PRIMARY, [], $this->getConfig()->get( 'CreateWikiDatabase' ) );
+		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
+		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ) + [ 0 => '<Main>' ];
 

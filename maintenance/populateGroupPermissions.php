@@ -73,7 +73,8 @@ class PopulateGroupPermissions extends Maintenance {
 			}
 		}
 
-		$dbw = $this->getDB( DB_PRIMARY, [], $this->getConfig()->get( 'CreateWikiDatabase' ) );
+		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
+		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
 			$check = $dbw->selectRow(
@@ -94,8 +95,8 @@ class PopulateGroupPermissions extends Maintenance {
 						'perm_permissions' => empty( $groupatr['perms'] ) ? json_encode( [] ) : $groupatr['perms'],
 						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
 						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
-						'perm_addgroupstoself' => empty( $groupatr['adds'] ) ? json_encode( [] ) : $groupatr['adds'],
-						'perm_removegroupsfromself' => empty( $groupatr['removes'] ) ? json_encode( [] ) : $groupatr['removes'],
+						'perm_addgroupstoself' => empty( $groupatr['addself'] ) ? json_encode( [] ) : $groupatr['addself'],
+						'perm_removegroupsfromself' => empty( $groupatr['removeself'] ) ? json_encode( [] ) : $groupatr['removeself'],
 						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote']
 					],
 					__METHOD__
