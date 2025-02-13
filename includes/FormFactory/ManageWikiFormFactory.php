@@ -95,7 +95,7 @@ class ManageWikiFormFactory {
 
 		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $remoteWiki, $dbw, $config, $special, $filtered );
 
-		if ( !empty( $mwReturn ) ) {
+		if ( $mwReturn ) {
 			$errorOut = [];
 			foreach ( $mwReturn as $errors ) {
 				foreach ( $errors as $msg => $params ) {
