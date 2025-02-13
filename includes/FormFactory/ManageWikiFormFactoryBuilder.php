@@ -10,7 +10,6 @@ use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\Linker\Linker;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
@@ -319,7 +318,12 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			if ( $hasSettings && in_array( $name, $extList ) ) {
-				$help[] = '<br/>' . Linker::makeExternalLink( SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name, wfMessage( 'managewiki-extension-settings' )->text() );
+				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
+				$help[] = '<br/>' . $linkRenderer->makeExternalLink(
+					SpecialPage::getTitleFor( 'ManageWiki', 'settings' )->getFullURL() . '/' . $name,
+					wfMessage( 'managewiki-extension-settings' )->text(),
+					SpecialPage::getTitleFor( 'ManageWiki', 'settings' )
+				);
 			}
 
 			$formDescriptor["ext-$name"] = [
