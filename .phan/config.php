@@ -16,21 +16,19 @@ $cfg['exclude_analysis_directory_list'] = array_merge(
 	]
 );
 
-$cfg['suppress_issue_types'] = array_merge(
-	$cfg['suppress_issue_types'], [
-		'MediaWikiNoEmptyIfDefined',
-		'PhanTypeComparisonFromArray',
-		'PhanTypeArraySuspiciousNullable',
-		'PhanTypePossiblyInvalidDimOffset',
-		'PhanTypeMismatchArgumentNullable',
-		'PhanTypeMismatchDimFetch',
-		'PhanImpossibleCondition',
-		'PhanTypeMismatchArgumentInternal',
-		'PhanNonClassMethodCall',
-		'PhanImpossibleTypeComparison',
-		'PhanRedundantConditionInLoop',
-	]
-);
+$cfg['suppress_issue_types'] = [
+	'MediaWikiNoEmptyIfDefined',
+	'PhanTypeComparisonFromArray',
+	'PhanTypeArraySuspiciousNullable',
+	'PhanTypePossiblyInvalidDimOffset',
+	'PhanTypeMismatchArgumentNullable',
+	'PhanTypeMismatchDimFetch',
+	'PhanImpossibleCondition',
+	'PhanTypeMismatchArgumentInternal',
+	'PhanNonClassMethodCall',
+	'PhanImpossibleTypeComparison',
+	'PhanRedundantConditionInLoop',
+];
 
 $cfg['scalar_implicit_cast'] = true;
 
