@@ -6,7 +6,6 @@ use ContentHandler;
 use MediaWiki\Config\Config;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Status\Status;
 use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
