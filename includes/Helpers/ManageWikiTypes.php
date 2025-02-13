@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use ContentHandler;
+use MediaWiki\Config\Config;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Status\Status;
@@ -10,7 +11,7 @@ use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
 
-	public static function process( $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
+	public static function process( Config $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {
 				$options['overridedefault'] = $overrideDefault;
@@ -26,7 +27,7 @@ class ManageWikiTypes {
 		return self::common( $config, $disabled, $groupList, $name, $options, $value );
 	}
 
-	private static function common( $config, $disabled, $groupList, $name, $options, $value ) {
+	private static function common( Config $config, $disabled, $groupList, $name, $options, $value ) {
 		switch ( $options['type'] ) {
 			case 'database':
 				$configs = [

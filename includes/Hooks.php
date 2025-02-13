@@ -160,9 +160,10 @@ class Hooks {
 			$lcEN = [];
 
 			try {
-				$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $cacheArray['core']['wgLanguageCode'], 'namespaceNames' );
+				$languageCode = $cacheArray['core']['wgLanguageCode'] ?? 'en';
+				$lcName = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( $languageCode, 'namespaceNames' );
 
-				if ( $cacheArray['core']['wgLanguageCode'] != 'en' ) {
+				if ( $languageCode !== 'en' ) {
 					$lcEN = MediaWikiServices::getInstance()->getLocalisationCache()->getItem( 'en', 'namespaceNames' );
 				}
 			} catch ( Exception $e ) {
