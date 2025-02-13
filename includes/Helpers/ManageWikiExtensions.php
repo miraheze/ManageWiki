@@ -252,7 +252,7 @@ class ManageWikiExtensions {
 	 * Safe check to inform of non-committed changed
 	 */
 	public function __destruct() {
-		if ( !$this->committed && !empty( $this->changes ) ) {
+		if ( !$this->committed && $this->changes ) {
 			print 'Changes have not been committed to the database!';
 		}
 	}
