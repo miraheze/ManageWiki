@@ -18,7 +18,6 @@ $cfg['exclude_analysis_directory_list'] = array_merge(
 
 $cfg['suppress_issue_types'] = [
 	'PhanAccessMethodInternal',
-	'PhanDeprecatedFunction',
 	'PhanPluginMixedKeyNoKey',
 	'SecurityCheck-LikelyFalsePositive',
 ];
