@@ -174,7 +174,7 @@ class ManageWikiSettings {
 			__METHOD__
 		);
 
-		if ( !empty( $this->scripts ) ) {
+		if ( $this->scripts ) {
 			ManageWikiInstaller::process( $this->wiki, [ 'mwscript' => $this->scripts ] );
 		}
 
@@ -193,7 +193,7 @@ class ManageWikiSettings {
 	 * Checks whether changes have been committed
 	 */
 	public function __destruct() {
-		if ( !$this->committed && !empty( $this->changes ) ) {
+		if ( !$this->committed && $this->changes ) {
 			print 'Changes have not been committed to the database!';
 		}
 	}
