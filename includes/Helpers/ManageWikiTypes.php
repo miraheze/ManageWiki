@@ -11,7 +11,7 @@ use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
 
-	public static function process( $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
+	public static function process( Config $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {
 				$options['overridedefault'] = $overrideDefault;
