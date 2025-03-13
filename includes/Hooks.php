@@ -101,14 +101,6 @@ class Hooks {
 		] );
 	}
 
-	public static function onRegistration() {
-		global $wgLogTypes;
-
-		if ( !in_array( 'farmer', $wgLogTypes ) ) {
-			$wgLogTypes[] = 'farmer';
-		}
-	}
-
 	public static function onContentHandlerForModelID( $modelId, &$handler ) {
 		$handler = new TextContentHandler( $modelId );
 	}
