@@ -298,6 +298,5 @@
 	"ServiceWiringFiles": [
 		"includes/ServiceWiring.php"
 	],
-	"callback": "Miraheze\\ManageWiki\\Hooks::onRegistration",
 	"manifest_version": 2
 }
