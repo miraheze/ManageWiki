@@ -33,15 +33,9 @@ class MWScriptJob extends Job {
 			}
 		}
 
-		$scriptOptions = [];
-		if ( version_compare( MW_VERSION, '1.40', '>=' ) ) {
-			$scriptOptions = [ 'wrapper' => MW_INSTALL_PATH . '/maintenance/run.php' ];
-		}
-
 		$result = Shell::makeScriptCommand(
 			$this->params['script'],
-			$scriptParams,
-			$scriptOptions
+			$scriptParams
 		)->limits( [ 'memory' => 0, 'filesize' => 0 ] )->execute()->getExitCode();
 
 		// An execute code higher then 0 indicates failure.

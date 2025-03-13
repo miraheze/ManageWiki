@@ -2,15 +2,8 @@
 
 namespace Miraheze\ManageWiki\Maintenance;
 
-$IP = getenv( 'MW_INSTALL_PATH' );
-if ( $IP === false ) {
-	$IP = __DIR__ . '/../../..';
-}
-
-require_once "$IP/maintenance/Maintenance.php";
-
-use Maintenance;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Maintenance\Maintenance;
 use MediaWiki\WikiMap\WikiMap;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 
@@ -72,5 +65,6 @@ class ToggleExtension extends Maintenance {
 	}
 }
 
-$maintClass = ToggleExtension::class;
-require_once RUN_MAINTENANCE_IF_MAIN;
+// @codeCoverageIgnoreStart
+return ToggleExtension::class;
+// @codeCoverageIgnoreEnd

@@ -6,7 +6,10 @@
 			"Volvox"
 		]
 	},
+	"action-managewiki-core": "Grondastellunge fir dës Wiki geréieren",
 	"action-managewiki-extensions": "Erweiderunge fir dës Wiki aktivéieren an desaktivéieren",
+	"action-managewiki-restricted": "ageschränkte Wiki-Astellunge geréieren",
+	"action-managewiki-settings": "erweidert Astellunge fir dës Wiki geréieren",
 	"apihelp-modifyserver-param-server": "De Servernumm fir ze änneren.",
 	"apihelp-query+wikiconfig-paramvalue-prop-inactive": "Nokucken ob d'Wiki als inaktiv markéiert ass",
 	"apihelp-query+wikiconfig-paramvalue-prop-permissions": "D'Rechter vun dëse Benotzergruppe weisen",
@@ -50,5 +53,6 @@
 	"namespaces-delete": "Läschen",
 	"namespaces-namespace": "Haaptnummraum",
 	"permissions-delete": "Läschen",
-	"permissions-delete-checkbox": "Dës Benotzergrupp läschen"
+	"permissions-delete-checkbox": "Dës Benotzergrupp läschen",
+	"right-managewiki-settings": "Erweidert Astellunge fir dës Wiki geréieren"
 }
