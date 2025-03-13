@@ -205,12 +205,12 @@ class ManageWikiPermissions {
 
 				$this->deleteUsersFromGroup( $group );
 			} elseif ( array_key_exists( $group, $this->renameGroups ) ) {
+				$newName = $this->renameGroups[$group];
+
 				$this->log = 'rename';
 				$this->logParams = [
 					'5::newname' => $newName
 				];
-
-				$newName = $this->renameGroups[$group];
 
 				// The old and new names are the same! What a comedian...
 				if ( $group === $newName ) {
