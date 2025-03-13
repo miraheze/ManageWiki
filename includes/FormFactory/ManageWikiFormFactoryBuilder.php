@@ -369,7 +369,7 @@ class ManageWikiFormFactoryBuilder {
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
 
 		foreach ( $filteredSettings as $name => $set ) {
-			if ( !isset( $set['requires'] ) {
+			if ( !isset( $set['requires'] ) ) {
 				$logger = LoggerFactory::getInstance( 'ManageWiki' );
 				$logger->error( '\'requires\' is not set in ManageWikiSettings for {setting}', [
 					'setting' => $name,
