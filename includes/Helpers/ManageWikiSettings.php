@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler class for managing settings
@@ -15,7 +15,7 @@ class ManageWikiSettings {
 	private $committed = false;
 	/** @var Config Configuration object */
 	private $config;
-	/** @var DBConnRef Database object */
+	/** @var IDatabase Database object */
 	private $dbw;
 	/** @var array Current settings with their respective values */
 	private $liveSettings;
@@ -44,16 +44,16 @@ class ManageWikiSettings {
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
 		$this->settingsConfig = $this->config->get( 'ManageWikiSettings' );
 
-		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$settings = $this->dbw->selectRow(
 			'mw_settings',
 			's_settings',
 			[
 				's_dbname' => $wiki
-			]
+			],
+			__METHOD__
 		)->s_settings ?? '[]';
 
 		// Bring json_decoded values to class scope
@@ -165,16 +165,16 @@ class ManageWikiSettings {
 			'mw_settings',
 			[
 				's_dbname' => $this->wiki,
-				's_extensions' => json_encode( [] ),
 				's_settings' => json_encode( $this->liveSettings )
 			],
 			[ [ 's_dbname' ] ],
 			[
 				's_settings' => json_encode( $this->liveSettings )
-			]
+			],
+			__METHOD__
 		);
 
-		if ( !empty( $this->scripts ) ) {
+		if ( $this->scripts ) {
 			ManageWikiInstaller::process( $this->wiki, [ 'mwscript' => $this->scripts ] );
 		}
 
@@ -193,7 +193,7 @@ class ManageWikiSettings {
 	 * Checks whether changes have been committed
 	 */
 	public function __destruct() {
-		if ( !$this->committed && !empty( $this->changes ) ) {
+		if ( !$this->committed && $this->changes ) {
 			print 'Changes have not been committed to the database!';
 		}
 	}

@@ -2,15 +2,8 @@
 
 namespace Miraheze\ManageWiki\Maintenance;
 
-$IP = getenv( 'MW_INSTALL_PATH' );
-if ( $IP === false ) {
-	$IP = __DIR__ . '/../../..';
-}
-
-require_once "$IP/maintenance/Maintenance.php";
-
-use Maintenance;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\AtEase\AtEase;
 
@@ -26,7 +19,8 @@ class PopulateNamespaces extends Maintenance {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
 
-		$dbw = $this->getDB( DB_PRIMARY, [], $this->getConfig()->get( 'CreateWikiDatabase' ) );
+		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
+		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ) + [ 0 => '<Main>' ];
 
@@ -89,5 +83,6 @@ class PopulateNamespaces extends Maintenance {
 	}
 }
 
-$maintClass = PopulateNamespaces::class;
-require_once RUN_MAINTENANCE_IF_MAIN;
+// @codeCoverageIgnoreStart
+return PopulateNamespaces::class;
+// @codeCoverageIgnoreEnd

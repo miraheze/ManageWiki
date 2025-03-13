@@ -4,8 +4,7 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\User\User;
-use Wikimedia\Rdbms\DBConnRef;
+use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler for interacting with Permissions
@@ -16,7 +15,7 @@ class ManageWikiPermissions {
 	private $committed = false;
 	/** @var Config Configuration object */
 	private $config;
-	/** @var DBConnRef Database connection */
+	/** @var IDatabase Database connection */
 	private $dbw;
 	/** @var array Deletion queue */
 	private $deleteGroups = [];
@@ -43,16 +42,16 @@ class ManageWikiPermissions {
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
-		$this->dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->config->get( 'CreateWikiDatabase' ) )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->config->get( 'CreateWikiDatabase' ) );
+		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getPrimaryDatabase( 'virtual-createwiki' );
 
 		$perms = $this->dbw->select(
 			'mw_permissions',
 			'*',
 			[
 				'perm_dbname' => $wiki
-			]
+			],
+			__METHOD__
 		);
 
 		// Bring database values to class scope
@@ -66,6 +65,15 @@ class ManageWikiPermissions {
 				'autopromote' => json_decode( $perm->perm_autopromote ?? '', true )
 			];
 		}
+	}
+
+	/**
+	 * Checks whether or not the specified group exists
+	 * @param string $group Group to check
+	 * @return bool Whether or not the group exists
+	 */
+	public function exists( string $group ): bool {
+		return array_key_exists( $group, $this->livePermissions );
 	}
 
 	/**
@@ -191,7 +199,8 @@ class ManageWikiPermissions {
 					[
 						'perm_dbname' => $this->wiki,
 						'perm_group' => $group
-					]
+					],
+					__METHOD__
 				);
 
 				$this->deleteUsersFromGroup( $group );
@@ -268,7 +277,8 @@ class ManageWikiPermissions {
 								'perm_group'
 							]
 						],
-						$builtTable
+						$builtTable,
+						__METHOD__
 					);
 
 					$logAP = ( $this->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
@@ -300,20 +310,21 @@ class ManageWikiPermissions {
 
 	private function deleteUsersFromGroup( string $group ) {
 		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-		$dbr = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $this->wiki )
-			->getMaintenanceConnectionRef( DB_REPLICA, [], $this->wiki );
+		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
+		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
+			->getReplicaDatabase( $this->wiki );
 
 		$res = $dbr->select(
 			'user_groups',
 			'ug_user',
 			[
 				'ug_group' => $group
-			]
+			],
+			__METHOD__
 		);
 
 		foreach ( $res as $row ) {
-			$groupManager->removeUserFromGroup( User::newFromId( $row->ug_user ), $group );
+			$groupManager->removeUserFromGroup( $userFactory->newFromId( $row->ug_user ), $group );
 		}
 	}
 
@@ -321,7 +332,7 @@ class ManageWikiPermissions {
 	 * Checks if changes are committed to the database or not
 	 */
 	public function __destruct() {
-		if ( !$this->committed && !empty( $this->changes ) ) {
+		if ( !$this->committed && $this->changes ) {
 			print 'Changes have not been committed to the database!';
 		}
 	}

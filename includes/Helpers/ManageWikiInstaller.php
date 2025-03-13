@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 use MediaWiki\Title\Title;
@@ -53,6 +54,13 @@ class ManageWikiInstaller {
 				try {
 					$dbw->sourceFile( $sql );
 				} catch ( Exception $e ) {
+					$logger = LoggerFactory::getInstance( 'ManageWiki' );
+					$logger->error( 'Caught exception trying to load {path} for {table} on {db}: {exception}', [
+						'path' => $sql,
+						'table' => $table,
+						'db' => $dbname,
+						'exception' => $e,
+					] );
 					return false;
 				}
 			}

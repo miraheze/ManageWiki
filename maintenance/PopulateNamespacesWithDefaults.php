@@ -2,15 +2,8 @@
 
 namespace Miraheze\ManageWiki\Maintenance;
 
-$IP = getenv( 'MW_INSTALL_PATH' );
-if ( $IP === false ) {
-	$IP = __DIR__ . '/../../..';
-}
-
-require_once "$IP/maintenance/Maintenance.php";
-
-use Maintenance;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 
 class PopulateNamespacesWithDefaults extends Maintenance {
@@ -23,7 +16,8 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 	}
 
 	public function execute() {
-		$dbw = $this->getDB( DB_PRIMARY, [], $this->getConfig()->get( 'CreateWikiDatabase' ) );
+		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
+		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
 
 		if ( $this->getOption( 'overwrite' ) ) {
 			$dbw->delete(
@@ -42,7 +36,8 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 			],
 			[
 				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
-			]
+			],
+			__METHOD__
 		);
 
 		if ( !$checkRow ) {
@@ -62,5 +57,6 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 	}
 }
 
-$maintClass = PopulateNamespacesWithDefaults::class;
-require_once RUN_MAINTENANCE_IF_MAIN;
+// @codeCoverageIgnoreStart
+return PopulateNamespacesWithDefaults::class;
+// @codeCoverageIgnoreEnd
