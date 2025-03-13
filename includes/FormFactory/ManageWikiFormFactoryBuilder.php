@@ -10,6 +10,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
@@ -368,7 +369,16 @@ class ManageWikiFormFactoryBuilder {
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
 
 		foreach ( $filteredSettings as $name => $set ) {
-			$mwRequirements = $set['requires'] ? ManageWikiRequirements::process( $set['requires'] ?? [], $extList, false, $remoteWiki ) : true;
+			if ( !isset( $set['requires'] ) {
+				$logger = LoggerFactory::getInstance( 'ManageWiki' );
+				$logger->error( '\'requires\' is not set in ManageWikiSettings for {setting}', [
+					'setting' => $name,
+				] );
+				$mwRequirements = true;
+			} else {
+				$mwRequirements = $set['requires'] ?
+					ManageWikiRequirements::process( $set['requires'], $extList, false, $remoteWiki ) : true;
+			}
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( (bool)( $set['global'] ?? false ) || in_array( $set['from'], $extList ) );
 			$disabled = ( $ceMW ) ? !$mwRequirements : true;
