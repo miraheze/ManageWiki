@@ -11,6 +11,7 @@ use MediaWiki\Context\IContextSource;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
@@ -816,9 +817,7 @@ class ManageWikiFormFactoryBuilder {
 				'help-message' => 'managewiki-permissions-rename-help',
 				'disable-if' => [ '===', 'wpdelete-checkbox', '1' ],
 				'hide-if' => [ '!==', 'rename-checkbox', '1' ],
-				'validation-callback' => function ( $input ) {
-					return self::validateNewGroupName( $input );
-				},
+				'validation-callback' => [ self::class, 'validateNewGroupName' ],
 				'section' => 'advanced'
 			];
 
@@ -835,7 +834,7 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	public static function validateNewGroupName( string $newGroup ) {
+	public static function validateNewGroupName( string $newGroup ): bool|Message {
 		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
 			return wfMessage( 'managewiki-permissions-name-prohibited' );
 		}
