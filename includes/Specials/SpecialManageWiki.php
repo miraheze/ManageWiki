@@ -26,7 +26,7 @@ class SpecialManageWiki extends SpecialPage {
 	public function __construct() {
 		parent::__construct( 'ManageWiki' );
 
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 		$this->databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 	}

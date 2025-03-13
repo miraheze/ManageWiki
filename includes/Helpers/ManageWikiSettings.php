@@ -41,7 +41,7 @@ class ManageWikiSettings {
 	 */
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 		$this->settingsConfig = $this->config->get( 'ManageWikiSettings' );
 
 		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()

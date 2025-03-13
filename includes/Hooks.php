@@ -17,7 +17,7 @@ use Wikimedia\Rdbms\IReadableDatabase;
 class Hooks {
 
 	private static function getConfig( string $var ) {
-		return MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( $var );
+		return MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( $var );
 	}
 
 	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {

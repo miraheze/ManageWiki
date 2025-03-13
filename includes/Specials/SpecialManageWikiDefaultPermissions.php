@@ -33,7 +33,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	) {
 		parent::__construct( 'ManageWikiDefaultPermissions' );
 
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 		$this->databaseUtils = $databaseUtils;
 		$this->dataFactory = $dataFactory;
 		$this->remoteWikiFactory = $remoteWikiFactory;
@@ -281,7 +281,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public static function validateNewGroupName( $newGroup, $nullForm ) {
-		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
+		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
 			return 'The group you attempted to create is not allowed. Please select a different name and try again.';
 		}
 

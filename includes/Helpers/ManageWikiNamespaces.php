@@ -42,7 +42,7 @@ class ManageWikiNamespaces {
 	 */
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
 		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
 			->getPrimaryDatabase( 'virtual-createwiki' );

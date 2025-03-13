@@ -47,7 +47,7 @@ class QueryWikiConfig extends ApiQueryBase {
 			if ( isset( $prop['settings'] ) ) {
 				$wikiData['settings'] = $mwSet->list();
 
-				$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+				$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
 				foreach ( $config->get( 'ManageWikiSettings' ) as $setting => $options ) {
 					if ( isset( $options['requires']['visibility']['permissions'] ) ) {

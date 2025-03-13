@@ -12,7 +12,7 @@ class ManageWiki {
 	public static function checkSetup( string $module, bool $verbose = false, $out = null ) {
 		// Checks ManageWiki module is enabled before doing anything
 		// $verbose means output an error. Otherwise return true/false.
-		if ( !MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWiki' )[$module] ) {
+		if ( !MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWiki' )[$module] ) {
 			if ( $verbose && $out ) {
 				$out->addWikiMsg( 'managewiki-disabled', $module );
 			}
@@ -24,7 +24,7 @@ class ManageWiki {
 	}
 
 	public static function listModules() {
-		return array_keys( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWiki' ), true );
+		return array_keys( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWiki' ), true );
 	}
 
 	public static function checkPermission( RemoteWikiFactory $remoteWiki, User $user, string $perm ) {
@@ -90,7 +90,7 @@ class ManageWiki {
 	}
 
 	public static function namespaceID( string $namespace ) {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
 		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
 			->getReplicaDatabase( 'virtual-createwiki' );

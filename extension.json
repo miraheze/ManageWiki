@@ -18,7 +18,7 @@
 			"CreateWiki": "*"
 		},
 		"platform": {
-			"php": ">= 8.0"
+			"php": ">= 8.1"
 		}
 	},
 	"APIListModules": {
@@ -293,7 +293,7 @@
 		}
 	},
 	"ConfigRegistry": {
-		"managewiki": "MediaWiki\\Config\\GlobalVarConfig::newInstance"
+		"ManageWiki": "MediaWiki\\Config\\GlobalVarConfig::newInstance"
 	},
 	"ServiceWiringFiles": [
 		"includes/ServiceWiring.php"
