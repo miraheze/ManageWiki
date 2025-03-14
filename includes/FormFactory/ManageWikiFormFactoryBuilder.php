@@ -845,7 +845,7 @@ class ManageWikiFormFactoryBuilder {
 	}
 
 	public static function validateNewGroupName( string $newGroup ): bool|Message {
-		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
+		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
 			return wfMessage( 'managewiki-permissions-name-prohibited' );
 		}
 

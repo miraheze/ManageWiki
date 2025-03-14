@@ -258,7 +258,7 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	public static function validateName( string $name ) {
-		if ( in_array( $name, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
+		if ( in_array( $name, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
 			return wfMessage( 'managewiki-permissions-name-prohibited' );
 		}
 
