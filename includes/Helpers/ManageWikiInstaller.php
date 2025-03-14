@@ -70,7 +70,7 @@ class ManageWikiInstaller {
 	}
 
 	private static function files( string $dbname, array $data ) {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
 		$baseloc = $config->get( 'UploadDirectory' ) . $dbname;
 

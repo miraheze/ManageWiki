@@ -2,7 +2,7 @@
 
 $cfg = require __DIR__ . '/../vendor/mediawiki/mediawiki-phan-config/src/config.php';
 
-$cfg['minimum_target_php_version'] = '8.0';
+$cfg['minimum_target_php_version'] = '8.1';
 
 $cfg['directory_list'] = array_merge(
 	$cfg['directory_list'], [
