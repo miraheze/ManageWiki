@@ -2,8 +2,6 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
-use ExtensionProcessor;
-use ExtensionRegistry;
 use InvalidArgumentException;
 use ManualLogEntry;
 use MediaWiki\Config\Config;
@@ -12,6 +10,8 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Registration\ExtensionProcessor;
+use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;

@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki;
 
 use Exception;
+use MediaWiki\Content\TextContentHandler;
 use MediaWiki\Installer\DatabaseUpdater;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
@@ -11,7 +12,6 @@ use MediaWiki\User\User;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
-use TextContentHandler;
 use Wikimedia\Rdbms\IReadableDatabase;
 
 class Hooks {
