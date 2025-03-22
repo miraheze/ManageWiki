@@ -211,7 +211,9 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-		$hookRunner->onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, $remoteWiki, $formDescriptor );
+		$hookRunner->onManageWikiCoreAddFormFields(
+			$context, $remoteWiki, $dbName, $ceMW, $formDescriptor
+		);
 
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) ) {
 			$clusterList = array_merge( (array)$config->get( 'CreateWikiDatabaseClusters' ), (array)$config->get( 'ManageWikiDatabaseClustersInactive' ) );
@@ -983,7 +985,9 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-		$hookRunner->onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData, $remoteWiki );
+		$hookRunner->onManageWikiCoreFormSubmission(
+			$context, $dbw, $remoteWiki, $dbName, $formData
+		);
 
 		return $remoteWiki;
 	}
