@@ -2,7 +2,10 @@
 
 namespace Miraheze\ManageWiki\Hooks;
 
+use MediaWiki\Context\IContextSource;
 use MediaWiki\HookContainer\HookContainer;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiHookRunner implements
 	ManageWikiCoreAddFormFieldsHook,
@@ -22,18 +25,30 @@ class ManageWikiHookRunner implements
 	}
 
 	/** @inheritDoc */
-	public function onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, $remoteWiki, &$formDescriptor ): void {
+	public function onManageWikiCoreAddFormFields(
+		IContextSource $context,
+		RemoteWikiFactory $remoteWiki,
+		string $dbName,
+		bool $ceMW,
+		array &$formDescriptor
+	): void {
 		$this->container->run(
 			'ManageWikiCoreAddFormFields',
-			[ $ceMW, $context, $dbName, $remoteWiki, &$formDescriptor ]
+			[ $context, $remoteWiki, $dbName, $ceMW, &$formDescriptor ]
 		);
 	}
 
 	/** @inheritDoc */
-	public function onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData, $remoteWiki ): void {
+	public function onManageWikiCoreFormSubmission(
+		IContextSource $context,
+		IDatabase $dbw,
+		RemoteWikiFactory $remoteWiki,
+		string $dbName,
+		array $formData
+	): void {
 		$this->container->run(
 			'ManageWikiCoreFormSubmission',
-			[ $context, $dbName, $dbw, $formData, $remoteWiki ]
+			[ $context, $dbw, $remoteWiki, $dbName, $formData ]
 		);
 	}
 }
