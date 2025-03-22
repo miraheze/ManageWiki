@@ -8,12 +8,18 @@ use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 interface ManageWikiCoreAddFormFieldsHook {
 
 	/**
-	 * @param bool $ceMW
 	 * @param IContextSource $context
-	 * @param string $dbName
 	 * @param RemoteWikiFactory $remoteWiki
+	 * @param string $dbName
+	 * @param bool $ceMW
 	 * @param array &$formDescriptor
 	 * @return void
 	 */
-	public function onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, $remoteWiki, &$formDescriptor ): void;
+	public function onManageWikiCoreAddFormFields(
+		IContextSource $context,
+		RemoteWikiFactory $remoteWiki,
+		string $dbName,
+		bool $ceMW,
+		array &$formDescriptor
+	): void;
 }
