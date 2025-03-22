@@ -11,9 +11,9 @@ interface ManageWikiCoreAddFormFieldsHook {
 	 * @param bool $ceMW
 	 * @param IContextSource $context
 	 * @param string $dbName
-	 * @param array &$formDescriptor
 	 * @param RemoteWikiFactory $remoteWiki
+	 * @param array &$formDescriptor
 	 * @return void
 	 */
-	public function onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, &$formDescriptor, $remoteWiki ): void;
+	public function onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, $remoteWiki, &$formDescriptor ): void;
 }
