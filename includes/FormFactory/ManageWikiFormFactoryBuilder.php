@@ -59,6 +59,20 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * This function is a wrapper for trim() that takes in only one argument.
+	 * The reason for this function's existence is for use in filter-callback,
+	 * where the function is invoked with three arguments, while trim() takes
+	 * in two: the string itself, and characters to trim. Therefore, we must
+	 * ensure that trim() is only provided with one argument for it to trim as
+	 * we expected.
+	 *
+	 * @internal
+	 */
+	public static function trimCallback( string $input ): string {
+		return trim( $input );
+	}
+
 	private static function buildDescriptorCore(
 		string $dbName,
 		bool $ceMW,
@@ -98,6 +112,7 @@ class ManageWikiFormFactoryBuilder {
 			'sitename' => [
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
+				'filter-callback' => [ self::class, 'trimCallback' ],
 				'default' => $remoteWiki->getSitename(),
 				'disabled' => !$ceMW,
 				'required' => true,
@@ -152,6 +167,7 @@ class ManageWikiFormFactoryBuilder {
 			'server' => [
 				'if' => $config->get( 'ManageWikiUseCustomDomains' ),
 				'type' => 'text',
+				'filter-callback' => [ self::class, 'trimCallback' ],
 				'default' => $remoteWiki->getServerName(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
 			],
@@ -181,6 +197,10 @@ class ManageWikiFormFactoryBuilder {
 				if ( $data['options'] ?? false ) {
 					$formDescriptor[$name]['options'] = $data['options'] ?? [];
 				}
+
+				if ( $data['type'] === 'text' ) {
+					$formDescriptior[$name]['filter-callback'] = [ self::class, 'trimCallback' ];
+				}
 			}
 		}
 
@@ -203,6 +223,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor['description'] = [
 				'label-message' => 'managewiki-label-description',
 				'type' => 'text',
+				'filter-callback' => [ self::class, 'trimCallback' ],
 				'default' => $setList['wgWikiDiscoverDescription'] ?? '',
 				'maxlength' => 512,
 				'disabled' => !$ceMW,
@@ -480,6 +501,7 @@ class ManageWikiFormFactoryBuilder {
 				"namespace-$name" => [
 					'type' => 'text',
 					'label' => wfMessage( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
+					'filter-callback' => [ self::class, 'trimCallback' ],
 					'default' => $namespaceData['name'] ?: $create,
 					'disabled' => ( $namespaceData['core'] || !$ceMW ),
 					'required' => true,

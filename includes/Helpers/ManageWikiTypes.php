@@ -6,6 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
+use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactoryBuilder;
 use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
@@ -293,12 +294,17 @@ class ManageWikiTypes {
 					$configs['dropdown'] = true;
 				}
 				break;
+			case 'text':
+				$configs = [
+					'filter-callback' => [ ManageWikiFormFactoryBuilder::class, 'trimCallback' ],
+				];
 			case 'texts':
 				$configs = [
 					'type' => 'cloner',
 					'fields' => [
 						'value' => [
 							'type' => 'text',
+							'filter-callback' => [ ManageWikiFormFactoryBuilder::class, 'trimCallback' ],
 						],
 						'delete' => [
 							'type' => 'submit',
