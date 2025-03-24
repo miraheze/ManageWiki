@@ -24,7 +24,7 @@ class MigrateDescriptions extends Maintenance {
 			if ( $setList['wgWikiDiscoverDescription'] ?? false ) {
 				$this->output( "Migrating description for $wiki\n" );
 
-				$remoteWiki->setExtraFieldData( 'description', $setList['wgWikiDiscoverDescription'] );
+				$remoteWiki->setExtraFieldData( 'description', $setList['wgWikiDiscoverDescription'] ?? null );
 				$remoteWiki->commit();
 
 				$mwSettings->remove( [ 'wgWikiDiscoverDescription' ] );
