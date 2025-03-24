@@ -298,6 +298,7 @@ class ManageWikiTypes {
 				$configs = [
 					'filter-callback' => [ ManageWikiFormFactoryBuilder::class, 'trimCallback' ],
 				];
+				break;
 			case 'texts':
 				$configs = [
 					'type' => 'cloner',
