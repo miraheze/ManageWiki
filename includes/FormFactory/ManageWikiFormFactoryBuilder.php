@@ -199,7 +199,7 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				if ( $data['type'] === 'text' ) {
-					$formDescriptior[$name]['filter-callback'] = [ self::class, 'trimCallback' ];
+					$formDescriptor[$name]['filter-callback'] = [ self::class, 'trimCallback' ];
 				}
 			}
 		}
