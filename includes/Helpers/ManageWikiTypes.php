@@ -311,13 +311,6 @@ class ManageWikiTypes {
 					}, $value ?? $options['overridedefault'] ),
 				];
 				break;
-			case 'timezone':
-				$configs = [
-					'type' => 'select',
-					'options' => ManageWiki::getTimezoneList(),
-					'default' => $value ?? $options['overridedefault']
-				];
-				break;
 			case 'user':
 				$configs = [
 					'type' => 'user',
