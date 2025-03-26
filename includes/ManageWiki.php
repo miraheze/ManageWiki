@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki;
 
-use DateTimeZone;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
@@ -38,22 +37,6 @@ class ManageWiki {
 		}
 
 		return true;
-	}
-
-	public static function getTimezoneList() {
-		$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
-		$timeZoneList = [];
-
-		foreach ( $identifiers as $identifier ) {
-			$parts = explode( '/', $identifier, 2 );
-			if ( count( $parts ) !== 2 && $parts[0] !== 'UTC' ) {
-				continue;
-			}
-
-			$timeZoneList[$identifier] = $identifier;
-		}
-
-		return $timeZoneList;
 	}
 
 	public static function handleMatrix( $conversion, $to ) {
