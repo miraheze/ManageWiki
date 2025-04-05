@@ -202,7 +202,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'text',
 				'default' => $remoteWiki->getExtraFieldData( 'description' ) ?? '',
 				'maxlength' => 512,
-				'disabled' => !$ceMW,
+				'disabled' => true,
 				'section' => 'main'
 			];
 		}
