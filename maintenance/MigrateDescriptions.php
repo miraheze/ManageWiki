@@ -10,10 +10,13 @@ class MigrateDescriptions extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
+
+		$this->addOption( 'remove', 'Remove current value of wgWikiDiscoverDescription' );
 		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute(): void {
+		$remove = $this->hasOption( 'remove' );
 		$remoteWikiFactory = $this->getServiceContainer()->get( 'RemoteWikiFactory' );
 
 		foreach ( $this->getConfig()->get( MainConfigNames::LocalDatabases ) as $wiki ) {
@@ -24,8 +27,11 @@ class MigrateDescriptions extends Maintenance {
 			if ( $setList['wgWikiDiscoverDescription'] ?? false ) {
 				$this->output( "Migrating description for $wiki\n" );
 
-				$remoteWiki->setExtraFieldData( 'description', $setList['wgWikiDiscoverDescription'] ?? null );
-				$remoteWiki->commit();
+				if ( !$remove ) {
+					$remoteWiki->setExtraFieldData( 'description', $setList['wgWikiDiscoverDescription'] ?? null );
+					$remoteWiki->commit();
+					continue;
+				}
 
 				$mwSettings->remove( [ 'wgWikiDiscoverDescription' ] );
 				$mwSettings->commit();
