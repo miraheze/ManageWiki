@@ -4,12 +4,17 @@ namespace Miraheze\ManageWiki;
 
 use DateTimeZone;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Output\OutputPage;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
 class ManageWiki {
 
-	public static function checkSetup( string $module, bool $verbose = false, $out = null ) {
+	public static function checkSetup(
+		string $module,
+		bool $verbose = false,
+		?OutputPage $out = null
+	): bool {
 		// Checks ManageWiki module is enabled before doing anything
 		// $verbose means output an error. Otherwise return true/false.
 		if ( !MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWiki' )[$module] ) {
@@ -23,11 +28,15 @@ class ManageWiki {
 		return true;
 	}
 
-	public static function listModules() {
+	public static function listModules(): array {
 		return array_keys( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWiki' ), true );
 	}
 
-	public static function checkPermission( RemoteWikiFactory $remoteWiki, User $user, string $perm ) {
+	public static function checkPermission(
+		RemoteWikiFactory $remoteWiki,
+		User $user,
+		string $perm
+	): bool {
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		if ( $remoteWiki->isLocked() && !$permissionManager->userHasRight( $user, 'managewiki-restricted' ) ) {
 			return false;
@@ -40,7 +49,7 @@ class ManageWiki {
 		return true;
 	}
 
-	public static function getTimezoneList() {
+	public static function getTimezoneList(): array {
 		$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
 		$timeZoneList = [];
 
@@ -56,7 +65,10 @@ class ManageWiki {
 		return $timeZoneList;
 	}
 
-	public static function handleMatrix( $conversion, $to ) {
+	public static function handleMatrix(
+		array|string $conversion,
+		string $to
+	): ?array {
 		if ( $to === 'php' ) {
 			// $to is php, therefore $conversion must be json
 			$phpin = json_decode( $conversion, true );
@@ -89,13 +101,13 @@ class ManageWiki {
 		return null;
 	}
 
-	public static function namespaceID( string $namespace ) {
+	public static function namespaceID( string $namespace ): int {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
 		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
 			->getReplicaDatabase( 'virtual-createwiki' );
 
-		$nsID = ( $namespace == '' ) ? false : $dbr->selectRow(
+		$nsID = ( $namespace === '' ) ? false : $dbr->selectRow(
 			'mw_namespaces',
 			'ns_namespace_id',
 			[

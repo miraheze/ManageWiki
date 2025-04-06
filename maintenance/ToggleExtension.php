@@ -22,7 +22,7 @@ class ToggleExtension extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$forceRemove = $this->getOption( 'force-remove', false );
 		$noList = $this->getOption( 'no-list', false );
 		$allWikis = $this->getOption( 'all-wikis', false );

@@ -6,6 +6,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\AtEase\AtEase;
+use Wikimedia\Rdbms\IDatabase;
 
 class PopulateNamespaces extends Maintenance {
 
@@ -14,7 +15,7 @@ class PopulateNamespaces extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
@@ -53,20 +54,25 @@ class PopulateNamespaces extends Maintenance {
 			);
 
 			if ( !$res || $res->count() === 0 ) {
-				$this->insertNamespace( $dbw, $id, $name, $nsAliases );
+				$this->insertNamespace( $dbw, (int)$id, (string)$name, $nsAliases );
 			}
 		}
 
 		AtEase::restoreWarnings();
 	}
 
-	public function insertNamespace( $dbw, $id, $name, $nsAliases ) {
+	private function insertNamespace(
+		IDatabase $dbw,
+		int $id,
+		string $name,
+		array $nsAliases
+	): void {
 		$dbw->insert(
 			'mw_namespaces',
 			[
 				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-				'ns_namespace_id' => (int)$id,
-				'ns_namespace_name' => (string)$name,
+				'ns_namespace_id' => $id,
+				'ns_namespace_name' => $name,
 				'ns_searchable' => (int)$this->getConfig()->get( MainConfigNames::NamespacesToBeSearchedDefault )[$id],
 				'ns_subpages' => (int)$this->getConfig()->get( MainConfigNames::NamespacesWithSubpages )[$id],
 				'ns_content' => (int)$this->getConfig()->get( MainConfigNames::ContentNamespaces )[$id],
@@ -74,9 +80,9 @@ class PopulateNamespaces extends Maintenance {
 				'ns_protection' => ( is_array( $this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id] ) ) ?
 					(string)$this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id][0] :
 					(string)$this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id],
-				'ns_aliases' => (string)json_encode( $nsAliases ),
-				'ns_core' => (int)( $id < 1000 ),
-				'ns_additional' => (string)json_encode( [] ),
+				'ns_aliases' => json_encode( $nsAliases ) ?: '[]',
+				'ns_core' => $id < 1000,
+				'ns_additional' => json_encode( [] ) ?: '[]',
 			],
 			__METHOD__
 		);

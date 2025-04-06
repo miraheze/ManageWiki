@@ -23,7 +23,7 @@ class ModifyGroupPermission extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$mwPermissions = new ManageWikiPermissions( $this->getConfig()->get( MainConfigNames::DBname ) );
 
 		$permData = [
@@ -54,7 +54,11 @@ class ModifyGroupPermission extends Maintenance {
 		}
 	}
 
-	private function changeGroup( string $name, array $permData, object $mwPermissions ) {
+	private function changeGroup(
+		string $name,
+		array $permData,
+		ManageWikiPermissions $mwPermissions
+	): void {
 		$permList = $mwPermissions->list( $name );
 
 		if ( !in_array( $name, $this->getConfig()->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
@@ -66,7 +70,7 @@ class ModifyGroupPermission extends Maintenance {
 		$mwPermissions->commit();
 	}
 
-	private function getValue( string $option ) {
+	private function getValue( string $option ): array {
 		return $this->getOption( $option, '' ) === '' ?
 			[] : explode( ',', $this->getOption( $option, '' ) );
 	}

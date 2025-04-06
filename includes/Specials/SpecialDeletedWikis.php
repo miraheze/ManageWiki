@@ -11,7 +11,7 @@ class SpecialDeletedWikis extends SpecialPage {
 		parent::__construct( 'DeletedWikis' );
 	}
 
-	public function execute( $par ) {
+	public function execute( $par ): void {
 		$this->setHeaders();
 		$this->outputHeader();
 

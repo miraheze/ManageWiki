@@ -15,7 +15,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
 		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
 
