@@ -968,9 +968,9 @@ class ManageWikiFormFactoryBuilder {
 			$remoteWiki->setDBCluster( $formData['dbcluster'] );
 		}
 
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) && isset( $formData['description'] ) ) {
-			$remoteWiki->setExtraFieldData( 'description', $formData['description'] ?: null );
-		}
+		// if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) && isset( $formData['description'] ) ) {
+			// $remoteWiki->setExtraFieldData( 'description', $formData['description'] ?: null );
+		// }
 
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
 		$hookRunner->onManageWikiCoreFormSubmission(
