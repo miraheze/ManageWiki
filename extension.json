@@ -45,6 +45,7 @@
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
 				"CreateWikiDatabaseUtils",
+				"PermissionManager",
 				"RemoteWikiFactory"
 			]
 		},
