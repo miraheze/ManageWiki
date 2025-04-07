@@ -41,7 +41,13 @@
 	},
 	"SpecialPages": {
 		"DeletedWikis": "Miraheze\\ManageWiki\\Specials\\SpecialDeletedWikis",
-		"ManageWiki": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
+		"ManageWiki": {
+			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
+			"services": [
+				"CreateWikiDatabaseUtils",
+				"RemoteWikiFactory"
+			]
+		},
 		"ManageWikiDefaultPermissions": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaultPermissions",
 			"services": [
@@ -141,10 +147,10 @@
 			"Miraheze\\ManageWiki\\Hooks::onGetPreferences"
 		],
 		"LoadExtensionSchemaUpdates": [
-			"Miraheze\\ManageWiki\\Hooks::fnManageWikiSchemaUpdates"
+			"Miraheze\\ManageWiki\\Hooks::onLoadExtensionSchemaUpdates"
 		],
 		"SidebarBeforeOutput": [
-			"Miraheze\\ManageWiki\\Hooks::fnNewSidebarItem"
+			"Miraheze\\ManageWiki\\Hooks::onSidebarBeforeOutput"
 		]
 	},
 	"ResourceModules": {

@@ -28,16 +28,16 @@ class ModifyGroupPermission extends Maintenance {
 
 		$permData = [
 			'permissions' => [
-				'add' => (array)$this->getValue( 'addperms' ),
-				'remove' => (array)$this->getValue( 'removeperms' ),
+				'add' => $this->getValue( 'addperms' ),
+				'remove' => $this->getValue( 'removeperms' ),
 			],
 			'addgroups' => [
-				'add' => (array)$this->getValue( 'newaddgroups' ),
-				'remove' => (array)$this->getValue( 'removeaddgroups' ),
+				'add' => $this->getValue( 'newaddgroups' ),
+				'remove' => $this->getValue( 'removeaddgroups' ),
 			],
 			'removegroups' => [
-				'add' => (array)$this->getValue( 'newremovegroups' ),
-				'remove' => (array)$this->getValue( 'removeremovegroups' ),
+				'add' => $this->getValue( 'newremovegroups' ),
+				'remove' => $this->getValue( 'removeremovegroups' ),
 			]
 		];
 

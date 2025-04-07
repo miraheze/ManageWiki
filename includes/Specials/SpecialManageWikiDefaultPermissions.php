@@ -51,7 +51,10 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		return $this->msg( $this->canModify() ? 'managewikidefaultpermissions' : 'managewikidefaultpermissions-view' )->text();
 	}
 
-	public function execute( $par ) {
+	/**
+	 * @param ?string $par
+	 */
+	public function execute( $par ): void {
 		$this->setHeaders();
 		$out = $this->getOutput();
 
@@ -67,7 +70,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		}
 	}
 
-	public function buildMainView() {
+	public function buildMainView(): void {
 		$canModify = $this->canModify();
 
 		$out = $this->getOutput();
@@ -158,7 +161,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$resetCacheForm = HTMLForm::factory( 'ooui', $resetCacheDescriptor, $this->getContext() );
 			$resetCacheForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetcache-title' );
 			$resetCacheForm->setMethod( 'post' )->setFormIdentifier( 'resetcacheform' )->setSubmitTextMsg( 'managewikidefaultpermissions-resetcache' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitCacheResetForm' ] )->prepareForm()->show();
-
 		}
 	}
 

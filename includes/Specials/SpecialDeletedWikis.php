@@ -11,12 +11,16 @@ class SpecialDeletedWikis extends SpecialPage {
 		parent::__construct( 'DeletedWikis' );
 	}
 
+	/**
+	 * @param ?string $par
+	 */
 	public function execute( $par ): void {
 		$this->setHeaders();
 		$this->outputHeader();
 
 		$pager = new ManageWikiDeletedWikiPager( $this );
 
-		$this->getOutput()->addParserOutputContent( $pager->getFullOutput() );
+		$table = $pager->getFullOutput();
+		$this->getOutput()->addParserOutputContent( $table );
 	}
 }

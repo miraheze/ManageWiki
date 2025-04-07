@@ -68,7 +68,7 @@ class ManageWiki {
 	public static function handleMatrix(
 		array|string $conversion,
 		string $to
-	): ?array {
+	): array|string|null {
 		if ( $to === 'php' ) {
 			// $to is php, therefore $conversion must be json
 			$phpin = json_decode( $conversion, true );
@@ -95,7 +95,7 @@ class ManageWiki {
 			return $phparrayout;
 		} elseif ( $to == 'json' ) {
 			// $to is json, therefore $conversion must be php
-			return json_encode( $conversion );
+			return json_encode( $conversion ) ?: null;
 		}
 
 		return null;

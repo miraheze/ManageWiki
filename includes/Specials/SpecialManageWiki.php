@@ -2,11 +2,9 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use MediaWiki\Config\Config;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
@@ -19,29 +17,27 @@ use OOUI\SearchInputWidget;
 
 class SpecialManageWiki extends SpecialPage {
 
-	private Config $config;
-	private CreateWikiDatabaseUtils $databaseUtils;
-	private RemoteWikiFactory $remoteWikiFactory;
-
-	public function __construct() {
+	public function __construct(
+		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly RemoteWikiFactory $remoteWikiFactory
+	) {
 		parent::__construct( 'ManageWiki' );
-
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$this->databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$this->remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 	}
 
-	public function execute( $par ) {
+	/**
+	 * @param ?string $par
+ 	 */
+	public function execute( $par ): void {
 		$par = explode( '/', $par ?? '', 3 );
 
 		$out = $this->getOutput();
 		$this->setHeaders();
 
-		if ( $this->config->get( 'ManageWikiHelpUrl' ) ) {
-			$out->addHelpLink( $this->config->get( 'ManageWikiHelpUrl' ), true );
+		if ( $this->getConfig()->get( 'ManageWikiHelpUrl' ) ) {
+			$out->addHelpLink( $this->getConfig()->get( 'ManageWikiHelpUrl' ), true );
 		}
 
-		if ( array_key_exists( $par[0], $this->config->get( 'ManageWiki' ) ) ) {
+		if ( array_key_exists( $par[0], $this->getConfig()->get( 'ManageWiki' ) ) ) {
 			$module = $par[0];
 		} else {
 			$module = 'core';
@@ -73,18 +69,19 @@ class SpecialManageWiki extends SpecialPage {
 		$isCentralWiki = $this->databaseUtils->isCurrentWikiCentral();
 
 		if ( !$isCentralWiki ) {
-			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
+			$this->showWikiForm( $this->getConfig()->get( 'DBname' ), $module, $additional, $filtered );
 		} elseif ( $par[0] == '' ) {
 			$this->showInputBox();
 		} elseif ( $module == 'core' ) {
-			$dbName = $par[1] ?? $this->config->get( 'DBname' );
+			$dbName = $par[1] ?? $this->getConfig()->get( 'DBname' );
 			$this->showWikiForm( strtolower( $dbName ), 'core', '', '' );
 		} else {
-			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
+			$this->showWikiForm( $this->getConfig()->get( 'DBname' ), $module, $additional, $filtered );
 		}
 	}
 
-	public function getSubpagesForPrefixSearch() {
+	/** @inheritDoc */
+	public function getSubpagesForPrefixSearch(): array {
 		return [
 			'core',
 			'extensions',
@@ -94,7 +91,7 @@ class SpecialManageWiki extends SpecialPage {
 		];
 	}
 
-	public function showInputBox() {
+	private function showInputBox(): void {
 		$formDescriptor = [
 			'info' => [
 				'default' => $this->msg( 'managewiki-core-info' )->text(),
@@ -114,21 +111,20 @@ class SpecialManageWiki extends SpecialPage {
 			->setSubmitCallback( [ $this, 'onSubmitRedirectToWikiForm' ] )
 			->prepareForm()
 			->show();
-
-		return true;
 	}
 
-	public function onSubmitRedirectToWikiForm( array $params ) {
-		if ( $params['dbname'] !== '' ) {
-			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', 'core' )->getFullURL() . '/' . $params['dbname'] );
-		} else {
-			return 'Invalid url.';
-		}
-
-		return true;
+	public function onSubmitRedirectToWikiForm( array $formData ): void {
+		$this->getOutput()->redirect(
+			SpecialPage::getTitleFor( 'ManageWiki', 'core/' . $formData['dbname'] )->getFullURL()
+		);
 	}
 
-	public function showWikiForm( $wiki, $module, $special, $filtered ) {
+	private function showWikiForm(
+		string $wiki,
+		string $module,
+		string $special,
+		string $filtered
+	): void {
 		$out = $this->getOutput();
 
 		if ( $special !== '' || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
@@ -151,7 +147,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$options = [];
 
-		if ( $module != 'core' ) {
+		if ( $module !== 'core' ) {
 			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
@@ -169,7 +165,7 @@ class SpecialManageWiki extends SpecialPage {
 			}
 		}
 
-		if ( $module == 'permissions' && !$special ) {
+		if ( $module === 'permissions' && !$special ) {
 			$language = RequestContext::getMain()->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( $wiki );
 			$groups = array_keys( $mwPermissions->list() );
@@ -180,7 +176,7 @@ class SpecialManageWiki extends SpecialPage {
 			}
 
 			$this->reusableFormDescriptor( $module, $options );
-		} elseif ( $module == 'namespaces' && $special == '' ) {
+		} elseif ( $module === 'namespaces' && $special == '' ) {
 			$mwNamespaces = new ManageWikiNamespaces( $wiki );
 			$namespaces = $mwNamespaces->list();
 
@@ -195,7 +191,7 @@ class SpecialManageWiki extends SpecialPage {
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
 			$formFactory = new ManageWikiFormFactory();
-			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
+			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->getConfig(), $module, strtolower( $special ), $filtered );
 
 			$out->addHTML( new FieldLayout(
 				new SearchInputWidget( [
@@ -213,7 +209,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 	}
 
-	private function reusableFormDescriptor( string $module, array $options ) {
+	private function reusableFormDescriptor( string $module, array $options ): void {
 		$hidden = [];
 		$selector = [];
 		$create = [];
@@ -256,21 +252,22 @@ class SpecialManageWiki extends SpecialPage {
 		}
 	}
 
-	public function reusableFormSubmission( array $formData, HTMLForm $form ) {
+	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
 		$module = $formData['module'];
-		$createNamespace = ( $form->getSubmitText() == $this->msg( 'managewiki-namespaces-create-submit' )->plain() ) ? '' : $formData['out'];
-		$url = ( $module == 'namespaces' ) ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
+		$createNamespace = ( $form->getSubmitText() === $this->msg( 'managewiki-namespaces-create-submit' )->plain() ) ? '' : $formData['out'];
+		$url = ( $module === 'namespaces' ) ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
 
 		if ( $module === 'namespaces' ) {
 			$form->getRequest()->getSession()->set( 'create', $formData['out'] );
 		}
 
-		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() . "/{$url}" );
-
-		return true;
+		$this->getOutput()->redirect(
+			SpecialPage::getTitleFor( 'ManageWiki', "$module/$url" )->getFullURL()
+		);
 	}
 
-	protected function getGroupName() {
+	/** @inheritDoc */
+	protected function getGroupName(): string {
 		return 'wikimanage';
 	}
 }
