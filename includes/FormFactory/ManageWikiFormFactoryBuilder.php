@@ -197,15 +197,12 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) ) {
-			$mwSettings = new ManageWikiSettings( $dbName );
-			$setList = $mwSettings->list();
-
 			$formDescriptor['description'] = [
 				'label-message' => 'managewiki-label-description',
 				'type' => 'text',
-				'default' => $setList['wgWikiDiscoverDescription'] ?? '',
+				'default' => $remoteWiki->getExtraFieldData( 'description' ) ?? '',
 				'maxlength' => 512,
-				'disabled' => !$ceMW,
+				'disabled' => true,
 				'section' => 'main'
 			];
 		}
@@ -971,18 +968,9 @@ class ManageWikiFormFactoryBuilder {
 			$remoteWiki->setDBCluster( $formData['dbcluster'] );
 		}
 
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) && isset( $formData['description'] ) ) {
-			$mwSettings = new ManageWikiSettings( $dbName );
-
-			$description = $mwSettings->list()['wgWikiDiscoverDescription'] ?? '';
-
-			if ( $formData['description'] !== $description ) {
-				$mwSettings->modify( [ 'wgWikiDiscoverDescription' => $formData['description'] ] );
-				$mwSettings->commit();
-
-				$remoteWiki->trackChange( 'description', $description, $formData['description'] );
-			}
-		}
+		// if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) && isset( $formData['description'] ) ) {
+			// $remoteWiki->setExtraFieldData( 'description', $formData['description'] ?: null );
+		// }
 
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
 		$hookRunner->onManageWikiCoreFormSubmission(
