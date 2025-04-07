@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Api;
 
 use MediaWiki\Api\ApiBase;
+use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
@@ -13,11 +14,14 @@ use Wikimedia\ParamValidator\ParamValidator;
 
 class QueryWikiConfig extends ApiQueryBase {
 
-	public function __construct( $query, $moduleName ) {
+	public function __construct(
+		ApiQuery $query,
+		string $moduleName
+	) {
 		parent::__construct( $query, $moduleName, 'wcf' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$params = $this->extractRequestParams();
 		$result = $this->getResult();
 		$prop = array_flip( $params['prop'] );
@@ -75,7 +79,8 @@ class QueryWikiConfig extends ApiQueryBase {
 		$result->addValue( 'query', $this->getModuleName(), $data );
 	}
 
-	protected function getAllowedParams() {
+	/** @inheritDoc */
+	protected function getAllowedParams(): array {
 		return [
 			'prop' => [
 				ParamValidator::PARAM_ISMULTI => true,
@@ -99,11 +104,8 @@ class QueryWikiConfig extends ApiQueryBase {
 		];
 	}
 
-	/**
-	 * @see ApiBase::getExamplesMessages()
-	 * @return array
-	 */
-	protected function getExamplesMessages() {
+	/** @inheritDoc */
+	protected function getExamplesMessages(): array {
 		return [
 			'action=query&list=wikiconfig&wcfwikis=metawiki'
 				=> 'apihelp-query+wikiconfig-example-1',

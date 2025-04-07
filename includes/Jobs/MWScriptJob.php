@@ -8,18 +8,14 @@ use MediaWiki\Title\Title;
 
 class MWScriptJob extends Job {
 
-	/**
-	 * @param Title $title
-	 * @param string[] $params
-	 */
-	public function __construct( Title $title, $params ) {
+	public function __construct( Title $title, array $params ) {
 		parent::__construct( 'MWScriptJob', $params );
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function run() {
+	public function run(): bool {
 		$scriptParams = [
 			'--wiki',
 			$this->params['dbname']

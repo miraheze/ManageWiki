@@ -25,7 +25,7 @@ class ManageWikiFormFactory {
 		Config $config,
 		string $special = '',
 		string $filtered = ''
-	) {
+	): array {
 		OutputPage::setupOOUI(
 			strtolower( $context->getSkin()->getSkinName() ),
 			$context->getLanguage()->getDir()
@@ -41,9 +41,8 @@ class ManageWikiFormFactory {
 		Config $config,
 		string $module,
 		string $special = '',
-		string $filtered = '',
-		string $formClass = ManageWikiOOUIForm::class
-	) {
+		string $filtered = ''
+	): ManageWikiOOUIForm {
 		$dbw = MediaWikiServices::getInstance()->getConnectionProvider()
 			->getPrimaryDatabase( 'virtual-createwiki' );
 
@@ -51,7 +50,7 @@ class ManageWikiFormFactory {
 
 		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special, $filtered );
 
-		$htmlForm = new $formClass( $formDescriptor, $context, $module );
+		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
 
 		if ( !$ceMW ) {
 			$htmlForm->suppressDefaultSubmit();
@@ -82,7 +81,7 @@ class ManageWikiFormFactory {
 		Config $config,
 		string $special = '',
 		string $filtered = ''
-	) {
+	): void {
 		$context = $form->getContext();
 		$out = $context->getOutput();
 
@@ -113,7 +112,7 @@ class ManageWikiFormFactory {
 					'mw-notify-error'
 				)
 			);
-			return null;
+			return;
 		}
 
 		$out->addHTML(

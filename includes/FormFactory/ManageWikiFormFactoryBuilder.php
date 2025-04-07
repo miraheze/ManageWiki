@@ -34,7 +34,7 @@ class ManageWikiFormFactoryBuilder {
 		string $special,
 		string $filtered,
 		Config $config
-	) {
+	): array {
 		switch ( $module ) {
 			case 'core':
 				$formDescriptor = self::buildDescriptorCore( $dbName, $ceMW, $context, $remoteWiki, $config );
@@ -64,7 +64,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
 		Config $config
-	) {
+	): array {
 		$formDescriptor = [];
 
 		$formDescriptor['dbname'] = [
@@ -221,7 +221,7 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		RemoteWikiFactory $remoteWiki,
 		Config $config
-	) {
+	): array {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 
@@ -338,7 +338,7 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWikiFactory $remoteWiki,
 		Config $config,
 		string $filtered
-	) {
+	): array {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 		$mwSettings = new ManageWikiSettings( $dbName );
@@ -436,7 +436,7 @@ class ManageWikiFormFactoryBuilder {
 		string $special,
 		RemoteWikiFactory $remoteWiki,
 		Config $config
-	) {
+	): array {
 		$mwNamespace = new ManageWikiNamespaces( $dbName );
 
 		$mwExt = new ManageWikiExtensions( $dbName );
@@ -620,7 +620,7 @@ class ManageWikiFormFactoryBuilder {
 		bool &$ceMW,
 		string $group,
 		Config $config
-	) {
+	): array {
 		if ( in_array( $group, $config->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
 			$ceMW = false;
 		}
@@ -822,7 +822,7 @@ class ManageWikiFormFactoryBuilder {
 		Config $config,
 		string $special = '',
 		string $filtered = ''
-	) {
+	): mixed {
 		switch ( $module ) {
 			case 'core':
 				$mwReturn = self::submissionCore( $formData, $dbName, $context, $remoteWiki, $dbw, $config );
@@ -876,7 +876,7 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWikiFactory $remoteWiki,
 		IDatabase $dbw,
 		Config $config
-	) {
+	): RemoteWikiFactory {
 		$mwActions = [
 			'delete',
 			'undelete',
@@ -968,7 +968,7 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbName,
 		Config $config
-	) {
+	): ManageWikiExtensions {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$newExtList = [];
 
@@ -990,7 +990,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
 		Config $config
-	) {
+	): ManageWikiSettings {
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
 
@@ -1083,7 +1083,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbName,
 		string $special,
 		Config $config
-	) {
+	): ManageWikiNamespaces {
 		$mwNamespaces = new ManageWikiNamespaces( $dbName );
 
 		if ( $formData['delete-checkbox'] ) {
@@ -1130,7 +1130,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		string $group,
 		Config $config
-	) {
+	): ManageWikiPermissions {
 		$mwPermissions = new ManageWikiPermissions( $dbname );
 		$permList = $mwPermissions->list( $group );
 		$assignablePerms = array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group], $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] ) : $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] );

@@ -5,24 +5,21 @@ namespace Miraheze\ManageWiki\Jobs;
 use Job;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
+use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Used on namespace creation and deletion to move pages into and out of namespaces
  */
 class NamespaceMigrationJob extends Job {
 
-	/**
-	 * @param Title $title
-	 * @param string[] $params
-	 */
-	public function __construct( Title $title, $params ) {
+	public function __construct( Title $title, array $params ) {
 		parent::__construct( 'NamespaceMigrationJob', $params );
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function run() {
+	public function run(): bool {
 		$dbw = MediaWikiServices::getInstance()
 			->getDBLoadBalancer()
 			->getMaintenanceConnectionRef( DB_PRIMARY );
@@ -101,7 +98,11 @@ class NamespaceMigrationJob extends Job {
 		return true;
 	}
 
-	private function pageExists( $pageName, $nsID, $dbw ) {
+	private function pageExists(
+		string $pageName,
+		int $nsID,
+		IDatabase $dbw
+	): bool {
 		$row = $dbw->selectRow(
 			'page',
 			'page_title',

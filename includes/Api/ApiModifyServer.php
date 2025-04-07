@@ -9,7 +9,7 @@ use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiModifyServer extends ApiBase {
 
-	public function execute() {
+	public function execute(): void {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 
@@ -42,27 +42,30 @@ class ApiModifyServer extends ApiBase {
 		$this->getResult()->addValue( null, $this->getModuleName(), $params );
 	}
 
-	private function setServer( string $wiki, string $server ) {
+	private function setServer( string $wiki, string $server ): void {
 		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 		$remoteWiki = $remoteWikiFactory->newInstance( $wiki );
 		$remoteWiki->setServerName( $server );
 		$remoteWiki->commit();
 	}
 
-	private static function validDatabase( string $wiki ) {
+	private static function validDatabase( string $wiki ): bool {
 		$localDatabases = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'LocalDatabases' );
 		return in_array( $wiki, $localDatabases );
 	}
 
-	public function mustBePosted() {
+	/** @inheritDoc */
+	public function mustBePosted(): bool {
 		return true;
 	}
 
-	public function isWriteMode() {
+	/** @inheritDoc */
+	public function isWriteMode(): bool {
 		return true;
 	}
 
-	public function getAllowedParams() {
+	/** @inheritDoc */
+	public function getAllowedParams(): array {
 		return [
 			'server' => [
 				ParamValidator::PARAM_TYPE => 'string',
@@ -75,11 +78,13 @@ class ApiModifyServer extends ApiBase {
 		];
 	}
 
-	public function needsToken() {
+	/** @inheritDoc */
+	public function needsToken(): string {
 		return 'csrf';
 	}
 
-	protected function getExamplesMessages() {
+	/** @inheritDoc */
+	protected function getExamplesMessages(): array {
 		return [
 			'action=modifyserver&wiki=database_name&server=https://example.com&token=123ABC'
 				=> 'apihelp-modifyserver-example',

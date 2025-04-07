@@ -309,12 +309,14 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$htmlForm->show();
 	}
 
-	public function isListed() {
+	/** @inheritDoc */
+	public function isListed(): bool {
 		// Only appear on the central wiki or if the user can reset permissions on this wiki
 		return $this->databaseUtils->isCurrentWikiCentral() || $this->canModify();
 	}
 
-	protected function getGroupName() {
+	/** @inheritDoc */
+	protected function getGroupName(): string {
 		return 'wikimanage';
 	}
 }
