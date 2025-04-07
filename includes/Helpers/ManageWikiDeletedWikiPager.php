@@ -9,7 +9,7 @@ use MediaWiki\SpecialPage\SpecialPage;
 class ManageWikiDeletedWikiPager extends TablePager {
 
 	public function __construct( $page ) {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 		$this->mDb = MediaWikiServices::getInstance()->getConnectionProvider()
 			->getReplicaDatabase( 'virtual-createwiki' );
 

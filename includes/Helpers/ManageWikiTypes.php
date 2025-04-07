@@ -2,8 +2,8 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use ContentHandler;
 use MediaWiki\Config\Config;
+use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\ManageWiki;

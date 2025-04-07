@@ -2,8 +2,8 @@
 
 namespace Miraheze\ManageWiki\Api;
 
-use ApiBase;
-use ApiQueryBase;
+use MediaWiki\Api\ApiBase;
+use MediaWiki\Api\ApiQueryBase;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
@@ -47,7 +47,7 @@ class QueryWikiConfig extends ApiQueryBase {
 			if ( isset( $prop['settings'] ) ) {
 				$wikiData['settings'] = $mwSet->list();
 
-				$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+				$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
 				foreach ( $config->get( 'ManageWikiSettings' ) as $setting => $options ) {
 					if ( isset( $options['requires']['visibility']['permissions'] ) ) {

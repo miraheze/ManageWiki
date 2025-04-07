@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki;
 
 use Exception;
+use MediaWiki\Content\TextContentHandler;
 use MediaWiki\Installer\DatabaseUpdater;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
@@ -11,13 +12,12 @@ use MediaWiki\User\User;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
-use TextContentHandler;
 use Wikimedia\Rdbms\IReadableDatabase;
 
 class Hooks {
 
 	private static function getConfig( string $var ) {
-		return MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( $var );
+		return MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( $var );
 	}
 
 	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
@@ -99,14 +99,6 @@ class Hooks {
 			"$dir/patches/patch-permissions-add-indexes.sql",
 			true,
 		] );
-	}
-
-	public static function onRegistration() {
-		global $wgLogTypes;
-
-		if ( !in_array( 'farmer', $wgLogTypes ) ) {
-			$wgLogTypes[] = 'farmer';
-		}
 	}
 
 	public static function onContentHandlerForModelID( $modelId, &$handler ) {

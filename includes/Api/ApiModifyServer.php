@@ -2,7 +2,7 @@
 
 namespace Miraheze\ManageWiki\Api;
 
-use ApiBase;
+use MediaWiki\Api\ApiBase;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ParamValidator\ParamValidator;
@@ -10,7 +10,7 @@ use Wikimedia\ParamValidator\ParamValidator;
 class ApiModifyServer extends ApiBase {
 
 	public function execute() {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' );
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 
 		$this->useTransactionalTimeLimit();
@@ -50,7 +50,7 @@ class ApiModifyServer extends ApiBase {
 	}
 
 	private static function validDatabase( string $wiki ) {
-		$localDatabases = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'managewiki' )->get( 'LocalDatabases' );
+		$localDatabases = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'LocalDatabases' );
 		return in_array( $wiki, $localDatabases );
 	}
 
