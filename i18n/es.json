@@ -85,6 +85,7 @@
 	"managewiki-error-emptygroup": "No puedes crear un grupo sin ningún permiso asignado.",
 	"managewiki-error-install": "La extensión $1 no se pudo instalar.",
 	"managewiki-error-nopermission": "Puedes ver la configuración de esta wiki pero no tienes permiso para editarla.",
+	"managewiki-error-nopermission-remote": "Estás viendo remotamente la configuración de una wiki. Si eres operador de una wiki, navega a tu wiki para modificar su configuración. No puedes editarla desde aquí.",
 	"managewiki-error-requirements": "No se puede activar la extensión «$1» ya que no cumple con sus requisitos.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-extension-settings": "Gestiona opciones de configuración disponibles para esta extensión",
