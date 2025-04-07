@@ -70,7 +70,6 @@
 	"managewiki-label-category": "{{Identical|Category}}",
 	"managewiki-label-closed": "Used as a label for 'closed'. An adjective that describes a closed wiki.\n{{Identical|Closed}}",
 	"managewiki-label-dbname": "Used as a label for 'dbname'.\n{{Identical|Database name}}",
-	"managewiki-label-description": "Used as a label for 'description'.",
 	"managewiki-label-experimental": "Used as a label for 'experimental'",
 	"managewiki-label-inactive": "Used as a label for 'inactive'. An adjective that describes a wiki.\n{{Identical|Inactive}}",
 	"managewiki-label-inactive-exempt-reason": "Used as a label for 'inactive-exempt-reason'",
