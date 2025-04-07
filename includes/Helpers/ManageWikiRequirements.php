@@ -13,7 +13,7 @@ use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 class ManageWikiRequirements {
 
 	/**
-	 * Master class for evaluating whether requirements are met, and at what level
+	 * Main class for evaluating whether requirements are met, and at what level
 	 *
 	 * @param array $actions Requirements that need to be met
 	 * @param array $extensionList Enabled extensions on the wiki

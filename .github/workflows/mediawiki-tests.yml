@@ -2,13 +2,13 @@ name: Call reusable MediaWiki tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   call-mediawiki-tests-workflow:
-    uses: miraheze/.github/.github/workflows/mediawiki-tests.yml@master
+    uses: miraheze/.github/.github/workflows/mediawiki-tests.yml@main
     strategy:
       matrix:
         include:
@@ -41,7 +41,7 @@ jobs:
   notify-irc:
     needs: call-mediawiki-tests-workflow
     runs-on: ubuntu-latest
-    if: ${{ always() && github.repository_owner == 'miraheze' && ( github.ref == 'refs/heads/master' || github.event_name == 'pull_request' ) }}
+    if: ${{ always() && github.repository_owner == 'miraheze' && ( github.ref == 'refs/heads/main' || github.event_name == 'pull_request' ) }}
     steps:
       - name: succeeded
         uses: technote-space/workflow-conclusion-action@v3
