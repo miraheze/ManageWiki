@@ -2,8 +2,6 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
-use ExtensionProcessor;
-use ExtensionRegistry;
 use InvalidArgumentException;
 use ManualLogEntry;
 use MediaWiki\Config\Config;
@@ -13,6 +11,7 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
+use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
@@ -197,22 +196,10 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) ) {
-			$mwSettings = new ManageWikiSettings( $dbName );
-			$setList = $mwSettings->list();
-
-			$formDescriptor['description'] = [
-				'label-message' => 'managewiki-label-description',
-				'type' => 'text',
-				'default' => $setList['wgWikiDiscoverDescription'] ?? '',
-				'maxlength' => 512,
-				'disabled' => !$ceMW,
-				'section' => 'main'
-			];
-		}
-
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-		$hookRunner->onManageWikiCoreAddFormFields( $ceMW, $context, $dbName, $formDescriptor );
+		$hookRunner->onManageWikiCoreAddFormFields(
+			$context, $remoteWiki, $dbName, $ceMW, $formDescriptor
+		);
 
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) ) {
 			$clusterList = array_merge( (array)$config->get( 'CreateWikiDatabaseClusters' ), (array)$config->get( 'ManageWikiDatabaseClustersInactive' ) );
@@ -1001,21 +988,10 @@ class ManageWikiFormFactoryBuilder {
 			$remoteWiki->setDBCluster( $formData['dbcluster'] );
 		}
 
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) && isset( $formData['description'] ) ) {
-			$mwSettings = new ManageWikiSettings( $dbName );
-
-			$description = $mwSettings->list()['wgWikiDiscoverDescription'] ?? '';
-
-			if ( $formData['description'] !== $description ) {
-				$mwSettings->modify( [ 'wgWikiDiscoverDescription' => $formData['description'] ] );
-				$mwSettings->commit();
-
-				$remoteWiki->trackChange( 'description', $description, $formData['description'] );
-			}
-		}
-
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-		$hookRunner->onManageWikiCoreFormSubmission( $context, $dbName, $dbw, $formData, $remoteWiki );
+		$hookRunner->onManageWikiCoreFormSubmission(
+			$context, $dbw, $remoteWiki, $dbName, $formData
+		);
 
 		return $remoteWiki;
 	}

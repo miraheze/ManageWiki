@@ -2,7 +2,7 @@
 
 namespace Miraheze\ManageWiki\Api;
 
-use ApiBase;
+use MediaWiki\Api\ApiBase;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ParamValidator\ParamValidator;

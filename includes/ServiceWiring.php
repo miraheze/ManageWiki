@@ -1,5 +1,7 @@
 <?php
 
+namespace Miraheze\ManageWiki;
+
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
 

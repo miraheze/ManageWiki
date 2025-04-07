@@ -2,8 +2,8 @@
 
 namespace Miraheze\ManageWiki\Api;
 
-use ApiBase;
-use ApiQueryBase;
+use MediaWiki\Api\ApiBase;
+use MediaWiki\Api\ApiQueryBase;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
