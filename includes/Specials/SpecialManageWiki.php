@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use MediaWiki\Context\RequestContext;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -12,6 +11,7 @@ use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\ManageWiki;
+use MediaWiki\Permissions\PermissionManager;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
 
@@ -19,6 +19,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly PermissionManager $permissionManager,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
 		parent::__construct( 'ManageWiki' );
@@ -59,7 +60,7 @@ class SpecialManageWiki extends SpecialPage {
 		$filtered = $par[2] ?? $par[1] ?? '';
 
 		if ( !ManageWiki::checkSetup( $module, true, $out ) ) {
-			return false;
+			return;
 		}
 
 		if ( $module === 'permissions' && $additional ) {
@@ -166,7 +167,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( $module === 'permissions' && !$special ) {
-			$language = RequestContext::getMain()->getLanguage();
+			$language = $this->getContext()->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( $wiki );
 			$groups = array_keys( $mwPermissions->list() );
 
@@ -234,8 +235,7 @@ class SpecialManageWiki extends SpecialPage {
 		$selectForm->setWrapperLegendMsg( "managewiki-{$module}-select-header" );
 		$selectForm->setMethod( 'post' )->setFormIdentifier( 'selector' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->prepareForm()->show();
 
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-' . $module ) ) {
+		if ( $this->permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-' . $module ) ) {
 			$create['info'] = [
 				'type' => 'info',
 				'default' => $this->msg( "managewiki-{$module}-create-info" )->text(),
