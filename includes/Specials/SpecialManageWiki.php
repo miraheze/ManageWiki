@@ -26,7 +26,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	/**
 	 * @param ?string $par
- 	 */
+	 */
 	public function execute( $par ): void {
 		$par = explode( '/', $par ?? '', 3 );
 
