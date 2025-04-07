@@ -11,7 +11,6 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Registration\ExtensionProcessor;
-use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
@@ -192,17 +191,6 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $remoteWiki->getCategory(),
 				'disabled' => !$ceMW,
 				'cssclass' => 'managewiki-infuse',
-				'section' => 'main'
-			];
-		}
-
-		if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) ) {
-			$formDescriptor['description'] = [
-				'label-message' => 'managewiki-label-description',
-				'type' => 'text',
-				'default' => $remoteWiki->getExtraFieldData( 'description' ) ?? '',
-				'maxlength' => 512,
-				'disabled' => true,
 				'section' => 'main'
 			];
 		}
@@ -967,10 +955,6 @@ class ManageWikiFormFactoryBuilder {
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) && ( $formData['dbcluster'] !== $remoteWiki->getDBCluster() ) ) {
 			$remoteWiki->setDBCluster( $formData['dbcluster'] );
 		}
-
-		// if ( ExtensionRegistry::getInstance()->isLoaded( 'WikiDiscover' ) && $config->get( 'WikiDiscoverUseDescriptions' ) && isset( $formData['description'] ) ) {
-			// $remoteWiki->setExtraFieldData( 'description', $formData['description'] ?: null );
-		// }
 
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
 		$hookRunner->onManageWikiCoreFormSubmission(
