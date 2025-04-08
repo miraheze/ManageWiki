@@ -352,7 +352,7 @@ class ManageWikiTypes {
 			case 'usergroups':
 				$language = RequestContext::getMain()->getLanguage();
 				$groups = [];
-				foreach ( (array)$groupList as $group ) {
+				foreach ( $groupList as $group ) {
 					$lowerCaseGroupName = strtolower( $group );
 					$groups[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 				}
