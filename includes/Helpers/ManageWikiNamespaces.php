@@ -86,7 +86,7 @@ class ManageWikiNamespaces {
 	 * Modify a namespace handler
 	 * @param int $id Namespace ID
 	 * @param array $data Overriding information about the namespace
-	 * @param bool $maintainPrefix|false
+	 * @param bool $maintainPrefix
 	 */
 	public function modify(
 		int $id,
@@ -135,7 +135,7 @@ class ManageWikiNamespaces {
 	 * Remove a namespace
 	 * @param int $id Namespace ID
 	 * @param int $newNamespace Namespace ID to migrate to
-	 * @param bool $maintainPrefix|false
+	 * @param bool $maintainPrefix
 	 */
 	public function remove(
 		int $id,
