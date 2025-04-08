@@ -11,34 +11,21 @@ use Wikimedia\Rdbms\IDatabase;
  */
 class ManageWikiSettings {
 
-	/** @var bool Whether changes have been committed */
-	private $committed = false;
-	/** @var Config Configuration object */
-	private $config;
-	/** @var IDatabase Database object */
-	private $dbw;
-	/** @var array Current settings with their respective values */
-	private $liveSettings;
-	/** @var array Settings configuration ($wgManageWikiSettings) */
-	private $settingsConfig;
-	/** @var array Maintenance scripts that need to be ran on enabling/disabling a setting */
-	private $scripts = [];
-	/** @var string WikiID */
-	private $wiki;
+	private Config $config;
+	private IDatabase $dbw;
 
-	/** @var array Changes to be committed */
-	public $changes = [];
-	/** @var array Errors */
-	public $errors = [];
-	/** @var string Log type */
-	public $log = 'settings';
-	/** @var array Log parameters */
-	public $logParams = [];
+	private array $liveSettings;
+	private array $settingsConfig;
+	private array $scripts = [];
 
-	/**
-	 * ManageWikiSettings constructor.
-	 * @param string $wiki WikiID
-	 */
+	private string $wiki;
+
+	public array $changes = [];
+	public array $errors = [];
+	public array $logParams = [];
+
+	public string $log = 'settings';
+
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
@@ -51,7 +38,7 @@ class ManageWikiSettings {
 			'mw_settings',
 			's_settings',
 			[
-				's_dbname' => $wiki
+				's_dbname' => $wiki,
 			],
 			__METHOD__
 		)->s_settings ?? '[]';
@@ -62,10 +49,10 @@ class ManageWikiSettings {
 
 	/**
 	 * Lists either all settings or the value of a specific one
-	 * @param string|null $setting Setting to retrieve value of
-	 * @return array|string|null Value or all settings, null if no value
+	 * @param ?string $setting Setting to retrieve value of
+	 * @return mixed Value or all settings, null if no value
 	 */
-	public function list( ?string $setting = null ) {
+	public function list( ?string $setting = null ): mixed {
 		if ( $setting === null ) {
 			return $this->liveSettings;
 		} else {
@@ -78,13 +65,13 @@ class ManageWikiSettings {
 	 * @param array $settings Setting to change with value
 	 * @param mixed $default Default to use if none can be found
 	 */
-	public function modify( array $settings, $default = null ) {
+	public function modify( array $settings, mixed $default = null ): void {
 		// We will handle all processing in final stages
 		foreach ( $settings as $var => $value ) {
 			if ( $value != ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default ) ) {
 				$this->changes[$var] = [
 					'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default,
-					'new' => $value
+					'new' => $value,
 				];
 
 				$this->liveSettings[$var] = $value;
@@ -100,20 +87,20 @@ class ManageWikiSettings {
 
 	/**
 	 * Removes a setting
-	 * @param string|string[] $settings Settings to remove
+	 * @param string[] $settings Settings to remove
 	 * @param mixed $default Default to use if none can be found
 	 */
-	public function remove( $settings, $default = null ) {
+	public function remove( array $settings, mixed $default = null ): void {
 		// We allow removing of a single variable or many variables
 		// We will handle all processing in final stages
-		foreach ( (array)$settings as $var ) {
+		foreach ( $settings as $var ) {
 			if ( !isset( $this->liveSettings[$var] ) ) {
 				continue;
 			}
 
 			$this->changes[$var] = [
 				'old' => $this->liveSettings[$var],
-				'new' => $this->settingsConfig[$var]['overridedefault'] ?? $default
+				'new' => $this->settingsConfig[$var]['overridedefault'] ?? $default,
 			];
 
 			unset( $this->liveSettings[$var] );
@@ -125,12 +112,15 @@ class ManageWikiSettings {
 	 * @param array $settings Settings to change
 	 * @param bool $remove Whether to remove settings if they do not exist
 	 */
-	public function overwriteAll( array $settings, bool $remove = true ) {
+	public function overwriteAll(
+		array $settings,
+		bool $remove = true
+	): void {
 		$overwrittenSettings = $this->list();
 
 		foreach ( $this->settingsConfig as $var => $setConfig ) {
 			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) && $remove ) {
-				$this->remove( $var );
+				$this->remove( [ $var ] );
 			} elseif ( ( $settings[$var] ?? null ) !== null ) {
 				$this->modify( [ $var => $settings[$var] ] );
 			}
@@ -157,19 +147,16 @@ class ManageWikiSettings {
 		return $this->logParams;
 	}
 
-	/**
-	 * Commits all changes to the database
-	 */
-	public function commit() {
+	public function commit(): void {
 		$this->dbw->upsert(
 			'mw_settings',
 			[
 				's_dbname' => $this->wiki,
-				's_settings' => json_encode( $this->liveSettings )
+				's_settings' => json_encode( $this->liveSettings ),
 			],
 			[ [ 's_dbname' ] ],
 			[
-				's_settings' => json_encode( $this->liveSettings )
+				's_settings' => json_encode( $this->liveSettings ),
 			],
 			__METHOD__
 		);
@@ -182,19 +169,8 @@ class ManageWikiSettings {
 		$data = $dataFactory->newInstance( $this->wiki );
 		$data->resetWikiData( isNewChanges: true );
 
-		$this->committed = true;
-
 		$this->logParams = [
-			'5::changes' => implode( ', ', array_keys( $this->changes ) )
+			'5::changes' => implode( ', ', array_keys( $this->changes ) ),
 		];
-	}
-
-	/**
-	 * Checks whether changes have been committed
-	 */
-	public function __destruct() {
-		if ( !$this->committed && $this->changes ) {
-			print 'Changes have not been committed to the database!';
-		}
 	}
 }

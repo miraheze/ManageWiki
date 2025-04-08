@@ -13,33 +13,20 @@ use Wikimedia\Rdbms\IDatabase;
  */
 class ManageWikiNamespaces {
 
-	/** @var bool Whether changes are committed to the database */
-	private $committed = false;
-	/** @var Config Configuration object */
-	private $config;
-	/** @var IDatabase Database connection */
-	private $dbw;
-	/** @var array Namespace IDs to be deleted */
-	private $deleteNamespaces = [];
-	/** @var array Known namespaces configuration */
-	private $liveNamespaces = [];
-	/** @var string WikiID */
-	private $wiki;
+	private Config $config;
+	private IDatabase $dbw;
 
-	/** @var array Changes to be committed */
-	public $changes = [];
+	private array $deleteNamespaces = [];
+	private array $liveNamespaces = [];
 
-	/** @var array Errors */
-	public $errors = [];
-	/** @var string Log type */
-	public $log = 'namespaces';
-	/** @var array Log parameters */
-	public $logParams = [];
+	private string $wiki;
 
-	/**
-	 * ManageWikiNamespaces constructor.
-	 * @param string $wiki WikiID
-	 */
+	public array $changes = [];
+	public array $errors = [];
+	public array $logParams = [];
+
+	public string $log = 'namespaces';
+
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
@@ -51,7 +38,7 @@ class ManageWikiNamespaces {
 			'mw_namespaces',
 			'*',
 			[
-				'ns_dbname' => $wiki
+				'ns_dbname' => $wiki,
 			],
 			__METHOD__
 		);
@@ -67,7 +54,7 @@ class ManageWikiNamespaces {
 				'protection' => $ns->ns_protection,
 				'aliases' => json_decode( $ns->ns_aliases, true ),
 				'core' => $ns->ns_core,
-				'additional' => json_decode( $ns->ns_additional, true )
+				'additional' => json_decode( $ns->ns_additional, true ),
 			];
 		}
 	}
@@ -77,7 +64,7 @@ class ManageWikiNamespaces {
 	 * @param int|null $id Namespace ID wanted (null for all)
 	 * @return array Namespace configuration
 	 */
-	public function list( ?int $id = null ) {
+	public function list( ?int $id = null ): array {
 		if ( $id === null ) {
 			return $this->liveNamespaces;
 		} else {
@@ -90,7 +77,7 @@ class ManageWikiNamespaces {
 					'protection' => '',
 					'aliases' => [],
 					'core' => 0,
-					'additional' => []
+					'additional' => [],
 				];
 		}
 	}
@@ -101,13 +88,17 @@ class ManageWikiNamespaces {
 	 * @param array $data Overriding information about the namespace
 	 * @param bool $maintainPrefix|false
 	 */
-	public function modify( int $id, array $data, bool $maintainPrefix = false ) {
+	public function modify(
+		int $id,
+		array $data,
+		bool $maintainPrefix = false
+	): void {
 		$excluded = array_map( 'strtolower', $this->config->get( 'ManageWikiNamespacesDisallowedNames' ) );
 		if ( in_array( strtolower( $data['name'] ), $excluded ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
-					$data['name']
-				]
+					$data['name'],
+				],
 			];
 		}
 
@@ -122,15 +113,15 @@ class ManageWikiNamespaces {
 			'aliases' => $this->liveNamespaces[$id]['aliases'] ?? [],
 			'core' => $this->liveNamespaces[$id]['core'] ?? 0,
 			'additional' => $this->liveNamespaces[$id]['additional'] ?? [],
-			'maintainprefix' => $maintainPrefix
+			'maintainprefix' => $maintainPrefix,
 		];
 
 		// Overwrite the defaults above with our new modified values
 		foreach ( $data as $name => $value ) {
-			if ( $nsData[$name] != $value ) {
+			if ( $nsData[$name] !== $value ) {
 				$this->changes[$id][$name] = [
 					'old' => $nsData[$name],
-					'new' => $value
+					'new' => $value,
 				];
 
 				$nsData[$name] = $value;
@@ -146,7 +137,11 @@ class ManageWikiNamespaces {
 	 * @param int $newNamespace Namespace ID to migrate to
 	 * @param bool $maintainPrefix|false
 	 */
-	public function remove( int $id, int $newNamespace, bool $maintainPrefix = false ) {
+	public function remove(
+		int $id,
+		int $newNamespace,
+		bool $maintainPrefix = false
+	): void {
 		// Utilise changes differently in this case
 		$this->changes[$id] = [
 			'old' => [
@@ -154,8 +149,8 @@ class ManageWikiNamespaces {
 			],
 			'new' => [
 				'name' => $newNamespace,
-				'maintainprefix' => $maintainPrefix
-			]
+				'maintainprefix' => $maintainPrefix,
+			],
 		];
 
 		// We will handle all processing in final stages
@@ -185,18 +180,14 @@ class ManageWikiNamespaces {
 		return $this->logParams;
 	}
 
-	/**
-	 * Commits all changes to database. Also files a job to move pages into or out of namespace
-	 * @param bool $runNamespaceMigrationJob|true
-	 */
-	public function commit( bool $runNamespaceMigrationJob = true ) {
+	public function commit( bool $runNamespaceMigrationJob = true ): void {
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( in_array( $id, $this->deleteNamespaces ) ) {
 				$this->log = 'namespaces-delete';
 
 				if ( !( $id % 2 ) ) {
 					$this->logParams = [
-						'5::namespace' => $this->changes[$id]['old']['name']
+						'5::namespace' => $this->changes[$id]['old']['name'],
 					];
 				}
 
@@ -204,7 +195,7 @@ class ManageWikiNamespaces {
 					'mw_namespaces',
 					[
 						'ns_dbname' => $this->wiki,
-						'ns_namespace_id' => $id
+						'ns_namespace_id' => $id,
 					],
 					__METHOD__
 				);
@@ -214,7 +205,7 @@ class ManageWikiNamespaces {
 					'nsID' => $id,
 					'nsName' => $this->changes[$id]['old']['name'],
 					'nsNew' => $this->changes[$id]['new']['name'],
-					'maintainPrefix' => $this->changes[$id]['new']['maintainprefix']
+					'maintainPrefix' => $this->changes[$id]['new']['maintainprefix'],
 				];
 			} else {
 				$builtTable = [
@@ -226,27 +217,27 @@ class ManageWikiNamespaces {
 					'ns_protection' => $this->liveNamespaces[$id]['protection'],
 					'ns_aliases' => json_encode( $this->liveNamespaces[$id]['aliases'] ),
 					'ns_core' => $this->liveNamespaces[$id]['core'],
-					'ns_additional' => json_encode( $this->liveNamespaces[$id]['additional'] )
+					'ns_additional' => json_encode( $this->liveNamespaces[$id]['additional'] ),
 				];
 
 				$jobParams = [
 					'action' => 'rename',
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
-					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix'] ?? false
+					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix'] ?? false,
 				];
 
 				$this->dbw->upsert(
 					'mw_namespaces',
 					[
 						'ns_dbname' => $this->wiki,
-						'ns_namespace_id' => $id
+						'ns_namespace_id' => $id,
 					] + $builtTable,
 					[
 						[
 							'ns_dbname',
-							'ns_namespace_id'
-						]
+							'ns_namespace_id',
+						],
 					],
 					$builtTable,
 					__METHOD__
@@ -254,7 +245,7 @@ class ManageWikiNamespaces {
 
 				if ( !$this->logParams || !( $id % 2 ) ) {
 					$this->logParams = [
-						'5::namespace' => $this->liveNamespaces[$id]['name']
+						'5::namespace' => $this->liveNamespaces[$id]['name'],
 					];
 				}
 			}
@@ -269,17 +260,6 @@ class ManageWikiNamespaces {
 			$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
 			$data = $dataFactory->newInstance( $this->wiki );
 			$data->resetWikiData( isNewChanges: true );
-		}
-
-		$this->committed = true;
-	}
-
-	/**
-	 * Checks if changes are committed to the database or not
-	 */
-	public function __destruct() {
-		if ( !$this->committed && $this->changes ) {
-			print 'Changes have not been committed to the database!';
 		}
 	}
 }

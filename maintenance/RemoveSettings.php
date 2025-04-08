@@ -19,7 +19,7 @@ class RemoveSettings extends Maintenance {
 		$setting = $this->getArg( 0 );
 
 		$mwSetting = new ManageWikiSettings( $this->getConfig()->get( MainConfigNames::DBname ) );
-		$mwSetting->remove( $setting );
+		$mwSetting->remove( [ $setting ] );
 		$mwSetting->commit();
 	}
 }

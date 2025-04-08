@@ -12,33 +12,21 @@ use Wikimedia\Rdbms\IDatabase;
  */
 class ManageWikiExtensions {
 
-	/** @var bool Whether changes are committed or not */
-	private $committed = false;
-	/** @var Config Configuration Object */
-	private $config;
-	/** @var IDatabase Database Connection */
-	private $dbw;
-	/** @var array Extension configuration ($wgManageWikiExtensions) */
-	private $extConfig;
-	/** @var array Array of enabled extensions with their configuration */
-	private $liveExts = [];
-	/** @var array Array of extensions to be removed with configuration */
-	private $removedExts = [];
-	/** @var string WikiID */
-	private $wiki;
+	private Config $config;
+	private IDatabase $dbw;
 
-	/** @var array Changes that are being made on commit() */
-	public $changes = [];
-	/** @var array Errors */
-	public $errors = [];
-	/** @var string Log type */
-	public $log = 'settings';
-	/** @var array Log parameters */
-	public $logParams = [];
+	private array $extConfig;
+	private array $liveExts = [];
+	private array $removedExts = [];
 
-	/**
-	 * @param string $wiki WikiID
-	 */
+	private string $wiki;
+
+	public array $changes = [];
+	public array $errors = [];
+	public array $logParams = [];
+
+	public string $log = 'settings';
+
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
@@ -51,7 +39,7 @@ class ManageWikiExtensions {
 			'mw_settings',
 			's_extensions',
 			[
-				's_dbname' => $wiki
+				's_dbname' => $wiki,
 			],
 			__METHOD__
 		)->s_extensions ?? '[]';
@@ -75,36 +63,39 @@ class ManageWikiExtensions {
 	 * Lists an array of all extensions currently 'enabled'
 	 * @return array 1D array of extensions enabled
 	 */
-	public function list() {
+	public function list(): array {
 		return array_keys( $this->liveExts );
 	}
 
 	/**
 	 * Adds an extension to the 'enabled' list
-	 * @param string|string[] $extensions Either an array or string of extensions to enable
+	 * @param string[] $extensions an array of extensions to enable
 	 */
-	public function add( $extensions ) {
+	public function add( array $extensions ): void {
 		// We allow adding either one extension (string) or many (array)
 		// We will handle all processing in final stages
-		foreach ( (array)$extensions as $ext ) {
+		foreach ( $extensions as $ext ) {
 			$this->liveExts[$ext] = $this->extConfig[$ext];
 
 			$this->changes[$ext] = [
 				'old' => 0,
-				'new' => 1
+				'new' => 1,
 			];
 		}
 	}
 
 	/**
 	 * Removes an extension from the 'enabled' list
-	 * @param string|string[] $extensions Either an array or string of extensions to disable
+	 * @param string[] $extensions an array of extensions to disable
 	 * @param bool $forceRemove Force removing extension incase it is removed from config
 	 */
-	public function remove( $extensions, $forceRemove = false ) {
+	public function remove(
+		array $extensions,
+		bool $forceRemove = false
+	): void {
 		// We allow remove either one extension (string) or many (array)
 		// We will handle all processing in final stages
-		foreach ( (array)$extensions as $ext ) {
+		foreach ( $extensions as $ext ) {
 			if ( !isset( $this->liveExts[$ext] ) && !$forceRemove ) {
 				continue;
 			}
@@ -114,7 +105,7 @@ class ManageWikiExtensions {
 
 			$this->changes[$ext] = [
 				'old' => 1,
-				'new' => 0
+				'new' => 0,
 			];
 		}
 	}
@@ -123,7 +114,7 @@ class ManageWikiExtensions {
 	 * Allows multiples extensions to be either enabled or disabled
 	 * @param array $extensions Array of extensions that should be enabled, absolute
 	 */
-	public function overwriteAll( array $extensions ) {
+	public function overwriteAll( array $extensions ): void {
 		$overwrittenExts = $this->list();
 
 		foreach ( $this->extConfig as $ext => $extConfig ) {
@@ -132,9 +123,9 @@ class ManageWikiExtensions {
 			}
 
 			if ( in_array( $ext, $extensions ) && !in_array( $ext, $overwrittenExts ) ) {
-				$this->add( $ext );
+				$this->add( [ $ext ] );
 			} elseif ( !in_array( $ext, $extensions ) && in_array( $ext, $overwrittenExts ) ) {
-				$this->remove( $ext );
+				$this->remove( [ $ext ] );
 			}
 		}
 	}
@@ -159,10 +150,7 @@ class ManageWikiExtensions {
 		return $this->logParams;
 	}
 
-	/**
-	 * Commits all changes made to extension lists to the database
-	 */
-	public function commit() {
+	public function commit(): void {
 		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 		$remoteWiki = $remoteWikiFactory->newInstance( $this->wiki );
 
@@ -174,8 +162,8 @@ class ManageWikiExtensions {
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
 						$extConfig['name'],
-						$extConfig['conflicts']
-					]
+						$extConfig['conflicts'],
+					],
 				];
 
 				// We have a conflict and we have unset it. Therefore we have nothing else to do for this extension
@@ -195,8 +183,8 @@ class ManageWikiExtensions {
 					unset( $this->changes[$name] );
 					$this->errors[] = [
 						'managewiki-error-install' => [
-							$extConfig['name']
-						]
+							$extConfig['name'],
+						],
 					];
 				}
 			} else {
@@ -204,8 +192,8 @@ class ManageWikiExtensions {
 				unset( $this->changes[$name] );
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
-						$extConfig['name']
-					]
+						$extConfig['name'],
+					],
 				];
 			}
 		}
@@ -223,37 +211,23 @@ class ManageWikiExtensions {
 		$data = $dataFactory->newInstance( $this->wiki );
 		$data->resetWikiData( isNewChanges: true );
 
-		$this->committed = true;
-
 		$this->logParams = [
-			'5::changes' => implode( ', ', array_keys( $this->changes ) )
+			'5::changes' => implode( ', ', array_keys( $this->changes ) ),
 		];
 	}
 
-	/**
-	 * Function to write changes to the databases
-	 */
-	private function write() {
+	private function write(): void {
 		$this->dbw->upsert(
 			'mw_settings',
 			[
 				's_dbname' => $this->wiki,
-				's_extensions' => json_encode( $this->list() )
+				's_extensions' => json_encode( $this->list() ),
 			],
 			[ [ 's_dbname' ] ],
 			[
-				's_extensions' => json_encode( $this->list() )
+				's_extensions' => json_encode( $this->list() ),
 			],
 			__METHOD__
 		);
-	}
-
-	/**
-	 * Safe check to inform of non-committed changed
-	 */
-	public function __destruct() {
-		if ( !$this->committed && $this->changes ) {
-			print 'Changes have not been committed to the database!';
-		}
 	}
 }

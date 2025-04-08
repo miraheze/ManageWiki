@@ -10,7 +10,17 @@ use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
 
-	public static function process( Config $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
+	public static function process(
+		Config $config,
+		bool $disabled,
+		array $groupList,
+		string $module,
+		array $options,
+		mixed $value,
+		?string $name = null,
+		mixed $overrideDefault = false,
+		string $type = ''
+	): array {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {
 				$options['overridedefault'] = $overrideDefault;
@@ -26,7 +36,14 @@ class ManageWikiTypes {
 		return self::common( $config, $disabled, $groupList, $name, $options, $value );
 	}
 
-	private static function common( Config $config, $disabled, $groupList, $name, $options, $value ) {
+	private static function common(
+		Config $config,
+		bool $disabled,
+		array $groupList,
+		?string $name,
+		array $options,
+		mixed $value
+	): array {
 		switch ( $options['type'] ) {
 			case 'database':
 				$configs = [
@@ -387,13 +404,16 @@ class ManageWikiTypes {
 					'type' => $options['type'],
 					'default' => $value ?? $options['overridedefault']
 				];
-				break;
 		}
 
 		return $configs;
 	}
 
-	private static function namespaces( $overrideDefault, $type, $value ) {
+	private static function namespaces(
+		mixed $overrideDefault,
+		string $type,
+		mixed $value
+	): array {
 		$configs = [];
 
 		if ( $type === 'contentmodel' ) {

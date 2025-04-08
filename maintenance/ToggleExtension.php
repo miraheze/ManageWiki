@@ -41,13 +41,13 @@ class ToggleExtension extends Maintenance {
 			$mwExt = new ManageWikiExtensions( $wiki );
 			$extensionList = $mwExt->list();
 			if ( $disable && ( in_array( $ext, $extensionList ) || $forceRemove ) ) {
-				$mwExt->remove( $ext, $forceRemove );
+				$mwExt->remove( [ $ext ], $forceRemove );
 				$mwExt->commit();
 				if ( !$noList ) {
 					$this->output( "Removed $ext from $wiki\n" );
 				}
 			} elseif ( !in_array( $ext, $extensionList ) && !$disable ) {
-				$mwExt->add( $ext );
+				$mwExt->add( [ $ext ] );
 				$mwExt->commit();
 				if ( !$noList ) {
 					$this->output( "Enabled $ext on $wiki\n" );

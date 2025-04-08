@@ -21,7 +21,12 @@ class ManageWikiRequirements {
 	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool Whether the extension can be enabled
 	 */
-	public static function process( array $actions, array $extensionList, bool $ignorePerms, RemoteWikiFactory $remoteWiki ) {
+	public static function process(
+		array $actions,
+		array $extensionList,
+		bool $ignorePerms,
+		RemoteWikiFactory $remoteWiki
+	): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
@@ -64,7 +69,7 @@ class ManageWikiRequirements {
 	 * @param array $data Array of permissions needed
 	 * @return bool Whether permissions requirements are met
 	 */
-	private static function permissions( array $data ) {
+	private static function permissions( array $data ): bool {
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		foreach ( $data as $perm ) {
 			if ( !$permissionManager->userHasRight( RequestContext::getMain()->getUser(), $perm ) ) {
@@ -80,7 +85,10 @@ class ManageWikiRequirements {
 	 * @param array $extensionList Extensions already enabled on the wiki
 	 * @return bool Whether extension requirements are met
 	 */
-	private static function extensions( array $data, array $extensionList ) {
+	private static function extensions(
+		array $data,
+		array $extensionList
+	): bool {
 		foreach ( $data as $extension ) {
 			if ( is_array( $extension ) ) {
 				$count = 0;
@@ -105,7 +113,7 @@ class ManageWikiRequirements {
 	 * @param int $lim Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function activeUsers( int $lim ) {
+	private static function activeUsers( int $lim ): bool {
 		return ( SiteStats::activeUsers() <= $lim );
 	}
 
@@ -113,7 +121,7 @@ class ManageWikiRequirements {
 	 * @param int $lim Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function articles( int $lim ) {
+	private static function articles( int $lim ): bool {
 		return ( SiteStats::articles() <= $lim );
 	}
 
@@ -121,7 +129,7 @@ class ManageWikiRequirements {
 	 * @param int $lim Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function pages( int $lim ) {
+	private static function pages( int $lim ): bool {
 		return ( SiteStats::pages() <= $lim );
 	}
 
@@ -129,7 +137,7 @@ class ManageWikiRequirements {
 	 * @param int $lim Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function images( int $lim ) {
+	private static function images( int $lim ): bool {
 		return ( SiteStats::images() <= $lim );
 	}
 
@@ -137,7 +145,7 @@ class ManageWikiRequirements {
 	 * @param array $data
 	 * @return bool
 	 */
-	private static function settings( array $data ) {
+	private static function settings( array $data ): bool {
 		$config = MediaWikiServices::getInstance()->getMainConfig();
 
 		$database = $data['dbname'] ?? $config->get( 'DBname' );
@@ -165,7 +173,10 @@ class ManageWikiRequirements {
 	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool
 	 */
-	private static function visibility( array $data, RemoteWikiFactory $remoteWiki ) {
+	private static function visibility(
+		array $data,
+		RemoteWikiFactory $remoteWiki
+	): bool {
 		$ret = [];
 
 		foreach ( $data as $key => $val ) {

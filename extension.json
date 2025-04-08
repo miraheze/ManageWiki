@@ -54,6 +54,7 @@
 			"services": [
 				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
+				"PermissionManager",
 				"RemoteWikiFactory"
 			]
 		}

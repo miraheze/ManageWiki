@@ -12,7 +12,11 @@ use RuntimeException;
 
 class ManageWikiInstaller {
 
-	public static function process( string $dbname, array $actions, bool $install = true ) {
+	public static function process(
+		string $dbname,
+		array $actions,
+		bool $install = true
+	): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepresponse = [];
 
@@ -44,7 +48,10 @@ class ManageWikiInstaller {
 		return !(bool)array_search( false, $stepresponse );
 	}
 
-	private static function sql( string $dbname, array $data ) {
+	private static function sql(
+		string $dbname,
+		array $data
+	): bool {
 		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
 			->getMainLB( $dbname )
 			->getMaintenanceConnectionRef( DB_PRIMARY, [], $dbname );
@@ -69,7 +76,10 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function files( string $dbname, array $data ) {
+	private static function files(
+		string $dbname,
+		array $data
+	): bool {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
 		$baseloc = $config->get( 'UploadDirectory' ) . $dbname;
@@ -99,7 +109,11 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function permissions( string $dbname, array $data, bool $install ) {
+	private static function permissions(
+		string $dbname,
+		array $data,
+		bool $install
+	): bool {
 		$mwPermissions = new ManageWikiPermissions( $dbname );
 
 		$action = ( $install ) ? 'add' : 'remove';
@@ -125,7 +139,11 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function namespaces( string $dbname, array $data, bool $install ) {
+	private static function namespaces(
+		string $dbname,
+		array $data,
+		bool $install
+	): bool {
 		$mwNamespaces = new ManageWikiNamespaces( $dbname );
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
@@ -144,7 +162,10 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function mwscript( string $dbname, array $data ) {
+	private static function mwscript(
+		string $dbname,
+		array $data
+	): bool {
 		if ( Shell::isDisabled() ) {
 			throw new RuntimeException( 'Shell is disabled.' );
 		}
@@ -182,7 +203,10 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function settings( string $dbname, array $data ) {
+	private static function settings(
+		string $dbname,
+		array $data
+	): bool {
 		$mwSettings = new ManageWikiSettings( $dbname );
 		$mwSettings->modify( $data );
 		$mwSettings->commit();

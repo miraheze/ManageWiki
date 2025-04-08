@@ -11,32 +11,20 @@ use Wikimedia\Rdbms\IDatabase;
  */
 class ManageWikiPermissions {
 
-	/** @var bool Whether changes are committed to the database */
-	private $committed = false;
-	/** @var Config Configuration object */
-	private $config;
-	/** @var IDatabase Database connection */
-	private $dbw;
-	/** @var array Deletion queue */
-	private $deleteGroups = [];
-	/** @var array Permissions configuration */
-	private $livePermissions = [];
-	/** @var string WikiID */
-	private $wiki;
+	private Config $config;
+	private IDatabase $dbw;
 
-	/** @var array Changes to be committed */
-	public $changes = [];
-	/** @var array Errors */
-	public $errors = [];
-	/** @var string Log type */
-	public $log = 'rights';
-	/** @var array Log parameters */
-	public $logParams = [];
+	private array $deleteGroups = [];
+	private array $livePermissions = [];
 
-	/**
-	 * ManageWikiPermissions constructor.
-	 * @param string $wiki WikiID
-	 */
+	private string $wiki;
+
+	public array $changes = [];
+	public array $errors = [];
+	public array $logParams = [];
+
+	public string $log = 'rights';
+
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
@@ -47,7 +35,7 @@ class ManageWikiPermissions {
 			'mw_permissions',
 			'*',
 			[
-				'perm_dbname' => $wiki
+				'perm_dbname' => $wiki,
 			],
 			__METHOD__
 		);
@@ -60,7 +48,7 @@ class ManageWikiPermissions {
 				'removegroups' => json_decode( $perm->perm_removegroups, true ),
 				'addself' => json_decode( $perm->perm_addgroupstoself, true ),
 				'removeself' => json_decode( $perm->perm_removegroupsfromself, true ),
-				'autopromote' => json_decode( $perm->perm_autopromote ?? '', true )
+				'autopromote' => json_decode( $perm->perm_autopromote ?? '', true ),
 			];
 		}
 	}
@@ -76,10 +64,10 @@ class ManageWikiPermissions {
 
 	/**
 	 * Lists either all groups or a specific one
-	 * @param string|null $group Group wanted (null for all)
+	 * @param ?string $group Group wanted (null for all)
 	 * @return array Group configuration
 	 */
-	public function list( ?string $group = null ) {
+	public function list( ?string $group = null ): array {
 		if ( $group === null ) {
 			return $this->livePermissions;
 		} else {
@@ -89,7 +77,7 @@ class ManageWikiPermissions {
 					'removegroups' => [],
 					'addself' => [],
 					'removeself' => [],
-					'autopromote' => null
+					'autopromote' => null,
 				];
 		}
 	}
@@ -99,7 +87,7 @@ class ManageWikiPermissions {
 	 * @param string $group Group name
 	 * @param array $data Merging information about the group
 	 */
-	public function modify( string $group, array $data ) {
+	public function modify( string $group, array $data ): void {
 		// We will handle all processing in final stages
 		$permData = [
 			'permissions' => $this->livePermissions[$group]['permissions'] ?? [],
@@ -107,7 +95,7 @@ class ManageWikiPermissions {
 			'removegroups' => $this->livePermissions[$group]['removegroups'] ?? [],
 			'addself' => $this->livePermissions[$group]['addself'] ?? [],
 			'removeself' => $this->livePermissions[$group]['removeself'] ?? [],
-			'autopromote' => $this->livePermissions[$group]['autopromote'] ?? null
+			'autopromote' => $this->livePermissions[$group]['autopromote'] ?? null,
 		];
 
 		// Overwrite the defaults above with our new modified values
@@ -132,12 +120,12 @@ class ManageWikiPermissions {
 	 * Remove a group
 	 * @param string $group Group name
 	 */
-	public function remove( string $group ) {
+	public function remove( string $group ): void {
 		// Utilise changes differently in this case
 		foreach ( $this->livePermissions[$group] as $name => $value ) {
 			$this->changes[$group][$name] = [
 				'add' => null,
-				'remove' => $value
+				'remove' => $value,
 			];
 		}
 
@@ -168,10 +156,7 @@ class ManageWikiPermissions {
 		return $this->logParams;
 	}
 
-	/**
-	 * Commits all changes to database
-	 */
-	public function commit() {
+	public function commit(): void {
 		$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
 
 		foreach ( array_keys( $this->changes ) as $group ) {
@@ -182,7 +167,7 @@ class ManageWikiPermissions {
 					'mw_permissions',
 					[
 						'perm_dbname' => $this->wiki,
-						'perm_group' => $group
+						'perm_group' => $group,
 					],
 					__METHOD__
 				);
@@ -191,7 +176,7 @@ class ManageWikiPermissions {
 			} else {
 				if ( empty( $this->livePermissions[$group]['permissions'] ) ) {
 					$this->errors[] = [
-						'managewiki-error-emptygroup' => []
+						'managewiki-error-emptygroup' => [],
 					];
 				} else {
 					$builtTable = [
@@ -200,20 +185,20 @@ class ManageWikiPermissions {
 						'perm_removegroups' => json_encode( $this->livePermissions[$group]['removegroups'] ),
 						'perm_addgroupstoself' => json_encode( $this->livePermissions[$group]['addself'] ),
 						'perm_removegroupsfromself' => json_encode( $this->livePermissions[$group]['removeself'] ),
-						'perm_autopromote' => $this->livePermissions[$group]['autopromote'] === null ? null : json_encode( $this->livePermissions[$group]['autopromote'] ?? '' )
+						'perm_autopromote' => $this->livePermissions[$group]['autopromote'] === null ? null : json_encode( $this->livePermissions[$group]['autopromote'] ?? '' ),
 					];
 
 					$this->dbw->upsert(
 						'mw_permissions',
 						[
 							'perm_dbname' => $this->wiki,
-							'perm_group' => $group
+							'perm_group' => $group,
 						] + $builtTable,
 						[
 							[
 								'perm_dbname',
-								'perm_group'
-							]
+								'perm_group',
+							],
 						],
 						$builtTable,
 						__METHOD__
@@ -231,7 +216,7 @@ class ManageWikiPermissions {
 						'11::rags' => !empty( $this->changes[$group]['addself']['remove'] ) ? implode( ', ', $this->changes[$group]['addself']['remove'] ) : $logNULL,
 						'12::args' => !empty( $this->changes[$group]['removeself']['add'] ) ? implode( ', ', $this->changes[$group]['removeself']['add'] ) : $logNULL,
 						'13::rrgs' => !empty( $this->changes[$group]['removeself']['remove'] ) ? implode( ', ', $this->changes[$group]['removeself']['remove'] ) : $logNULL,
-						'14::ap' => strtolower( wfMessage( $logAP )->inContentLanguage()->text() )
+						'14::ap' => strtolower( wfMessage( $logAP )->inContentLanguage()->text() ),
 					];
 				}
 			}
@@ -242,11 +227,9 @@ class ManageWikiPermissions {
 			$data = $dataFactory->newInstance( $this->wiki );
 			$data->resetWikiData( isNewChanges: true );
 		}
-
-		$this->committed = true;
 	}
 
-	private function deleteUsersFromGroup( string $group ) {
+	private function deleteUsersFromGroup( string $group ): void {
 		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
 		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
 		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
@@ -256,22 +239,13 @@ class ManageWikiPermissions {
 			'user_groups',
 			'ug_user',
 			[
-				'ug_group' => $group
+				'ug_group' => $group,
 			],
 			__METHOD__
 		);
 
 		foreach ( $res as $row ) {
 			$groupManager->removeUserFromGroup( $userFactory->newFromId( $row->ug_user ), $group );
-		}
-	}
-
-	/**
-	 * Checks if changes are committed to the database or not
-	 */
-	public function __destruct() {
-		if ( !$this->committed && $this->changes ) {
-			print 'Changes have not been committed to the database!';
 		}
 	}
 }
