@@ -11,7 +11,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Wikimedia\ParamValidator\ParamValidator;
 
-class QueryWikiConfig extends ApiQueryBase {
+class ApiQueryWikiConfig extends ApiQueryBase {
 
 	public function __construct(
 		ApiQuery $query,

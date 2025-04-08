@@ -23,7 +23,7 @@
 	},
 	"APIListModules": {
 		"wikiconfig": {
-			"class": "Miraheze\\ManageWiki\\Api\\QueryWikiConfig",
+			"class": "Miraheze\\ManageWiki\\Api\\ApiQueryWikiConfig",
 			"services": [
 				"RemoteWikiFactory"
 			]

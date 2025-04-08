@@ -1,6 +1,6 @@
 <?php
 
-namespace Miraheze\ManageWiki\Tests;
+namespace Miraheze\ManageWiki\Tests\Api;
 
 use MediaWiki\Tests\Api\ApiTestCase;
 
@@ -8,9 +8,9 @@ use MediaWiki\Tests\Api\ApiTestCase;
  * @group ManageWiki
  * @group Database
  * @group medium
- * @coversDefaultClass \Miraheze\ManageWiki\Api\QueryWikiConfig
+ * @coversDefaultClass \Miraheze\ManageWiki\Api\ApiQueryWikiConfig
  */
-class QueryWikiConfigTest extends ApiTestCase {
+class ApiQueryWikiConfigTest extends ApiTestCase {
 
 	/**
 	 * @covers ::__construct
