@@ -34,18 +34,19 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	 */
 	public function execute( $par ): void {
 		$this->setHeaders();
-		$out = $this->getOutput();
-
 		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ '1' => 'permissions' ] );
 		}
 
+		$this->getOutput()->addModules( [ 'mediawiki.special.userrights' ] );
+
 		if ( $par && $this->databaseUtils->isCurrentWikiCentral() ) {
 			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 			$this->buildGroupView( $par );
-		} else {
-			$this->buildMainView();
+			return;
 		}
+
+		$this->buildMainView()
 	}
 
 	private function buildGroupView( string $group ): void {
@@ -57,21 +58,25 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			'mediawiki.widgets.TagMultiselectWidget.styles',
 		] );
 		$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
-		$out->addModules( [ 'mediawiki.special.userrights' ] );
 
 		$remoteWiki = $this->remoteWikiFactory->newInstance( $this->databaseUtils->getCentralWikiID() );
 
 		$formFactory = new ManageWikiFormFactory();
-		$htmlForm = $formFactory->getForm( 'default', $remoteWiki, $this->getContext(), $this->getConfig(), 'permissions', $group );
+		$htmlForm = $formFactory->getForm(
+			wiki: 'default',
+			remoteWiki: $remoteWiki,
+			context: $this->getContext(),
+			config: $this->getConfig(),
+			module: 'permissions',
+			special: $group,
+			filtered: ''
+		);
 
 		$htmlForm->show();
 	}
 
 	private function buildMainView(): void {
 		$canModify = $this->canModify();
-
-		$out = $this->getOutput();
-		$out->addModules( [ 'mediawiki.special.userrights' ] );
 
 		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
 			$language = $this->getContext()->getLanguage();
@@ -85,7 +90,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			}
 
 			$groupSelector = [];
-
 			$groupSelector['info'] = [
 				'default' => $this->msg( 'managewikidefaultpermissions-select-info' )->text(),
 				'type' => 'info',
@@ -98,12 +102,16 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			];
 
 			$selectForm = HTMLForm::factory( 'ooui', $groupSelector, $this->getContext(), 'groupSelector' );
-			$selectForm->setWrapperLegendMsg( 'managewiki-permissions-select-header' );
-			$selectForm->setMethod( 'post' )->setFormIdentifier( 'groupSelector' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
+			$selectForm
+				->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )
+				->setFormIdentifier( 'groupSelector' )
+				->setMethod( 'post' )
+				->setWrapperLegendMsg( 'managewiki-permissions-select-header' )
+				->prepareForm()
+				->show();
 
 			if ( $canModify ) {
 				$createDescriptor = [];
-
 				$createDescriptor['info'] = [
 					'type' => 'info',
 					'default' => $this->msg( 'managewikidefaultpermissions-create-info' )->text(),
@@ -116,48 +124,73 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				];
 
 				$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
-				$createForm->setWrapperLegendMsg( 'managewiki-permissions-create-header' );
-				$createForm->setMethod( 'post' )->setFormIdentifier( 'createForm' )->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )->prepareForm()->show();
+				$createForm
+					->setSubmitCallback( [ $this, 'onSubmitRedirectToPermissionsPage' ] )
+					->setFormIdentifier( 'createForm' )
+					->setMethod( 'post' )
+					->setWrapperLegendMsg( 'managewiki-permissions-create-header' )
+					->prepareForm()
+					->show();
 			}
 		} elseif ( !$this->databaseUtils->isCurrentWikiCentral() && !$canModify ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-notcentralwiki' );
 		}
 
 		if ( !$this->databaseUtils->isCurrentWikiCentral() && $canModify ) {
-			$out->setPageTitle( $this->msg( 'managewiki-permissions-resetgroups-title' )->plain() );
+			$this->getOutput()->setPageTitle(
+				$this->msg( 'managewiki-permissions-resetgroups-title' )->plain()
+			);
 
 			$resetPermissionsDescriptor = [];
-
 			$resetPermissionsDescriptor['info'] = [
 				'type' => 'info',
 				'default' => $this->msg( 'managewikidefaultpermissions-resetgroups-header' ),
 			];
 
 			$resetPermissionsForm = HTMLForm::factory( 'ooui', $resetPermissionsDescriptor, $this->getContext() );
-			$resetPermissionsForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetgroups-title' );
-			$resetPermissionsForm->setMethod( 'post' )->setFormIdentifier( 'resetpermissionsform' )->setSubmitTextMsg( 'managewikidefaultpermissions-resetgroups' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitPermissionsResetForm' ] )->prepareForm()->show();
+			$resetPermissionsForm
+				->setSubmitCallback( [ $this, 'onSubmitPermissionsResetForm' ] )
+				->setFormIdentifier( 'resetpermissionsform' )
+				->setMethod( 'post' )
+				->setWrapperLegendMsg( 'managewikidefaultpermissions-resetgroups-title' )
+				->setSubmitTextMsg( 'managewikidefaultpermissions-resetgroups' )
+				->setSubmitDestructive()
+				->prepareForm()
+				->show();
 
 			$resetSettingsDescriptor = [];
-
 			$resetSettingsDescriptor['info'] = [
 				'type' => 'info',
 				'default' => $this->msg( 'managewikidefaultpermissions-resetsettings-header' ),
 			];
 
 			$resetSettingsForm = HTMLForm::factory( 'ooui', $resetSettingsDescriptor, $this->getContext() );
-			$resetSettingsForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetsettings-title' );
-			$resetSettingsForm->setMethod( 'post' )->setFormIdentifier( 'resetsettingsform' )->setSubmitTextMsg( 'managewikidefaultpermissions-resetsettings' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitSettingsResetForm' ] )->prepareForm()->show();
+			$resetSettingsForm
+				->setSubmitCallback( [ $this, 'onSubmitSettingsResetForm' ] )
+				->setFormIdentifier( 'resetsettingsform' )
+				->setMethod( 'post' )
+				->setWrapperLegendMsg( 'managewikidefaultpermissions-resetsettings-title' )
+				->setSubmitTextMsg( 'managewikidefaultpermissions-resetsettings' )
+				->setSubmitDestructive()
+				->prepareForm()
+				->show();
 
 			$resetCacheDescriptor = [];
-
 			$resetCacheDescriptor['info'] = [
 				'type' => 'info',
 				'default' => $this->msg( 'managewikidefaultpermissions-resetcache-header' ),
 			];
 
 			$resetCacheForm = HTMLForm::factory( 'ooui', $resetCacheDescriptor, $this->getContext() );
-			$resetCacheForm->setWrapperLegendMsg( 'managewikidefaultpermissions-resetcache-title' );
-			$resetCacheForm->setMethod( 'post' )->setFormIdentifier( 'resetcacheform' )->setSubmitTextMsg( 'managewikidefaultpermissions-resetcache' )->setSubmitDestructive()->setSubmitCallback( [ $this, 'onSubmitCacheResetForm' ] )->prepareForm()->show();
+			$resetCacheForm
+				->setSubmitCallback( [ $this, 'onSubmitCacheResetForm' ] )
+				->setFormIdentifier( 'resetcacheform' )
+				->setMethod( 'post' )
+				->setWrapperLegendMsg( 'managewikidefaultpermissions-resetcache-title' )
+				->setSubmitTextMsg( 'managewikidefaultpermissions-resetcache' )
+				->setSubmitDestructive()
+				->prepareForm()
+				->show();
 		}
 	}
 
@@ -176,9 +209,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitPermissionsResetForm( array $formData ): bool {
-		$out = $this->getOutput();
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
-
 		$dbw->delete(
 			'mw_permissions',
 			[
@@ -197,7 +228,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
-		$out->addHTML(
+		$this->getOutput()->addHTML(
 			Html::successBox(
 				Html::element(
 					'p',
@@ -212,9 +243,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitSettingsResetForm( array $formData ): bool {
-		$out = $this->getOutput();
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
-
 		// Set the values to the defaults
 		$dbw->update(
 			'mw_settings',
@@ -238,7 +267,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
-		$out->addHTML(
+		$this->getOutput()->addHTML(
 			Html::successBox(
 				Html::element(
 					'p',
@@ -253,7 +282,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitCacheResetForm( array $formData ): bool {
-		$out = $this->getOutput();
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 
 		// Reset the cache or else the changes won't work
@@ -267,7 +295,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
-		$out->addHTML(
+		$this->getOutput()->addHTML(
 			Html::successBox(
 				Html::element(
 					'p',
