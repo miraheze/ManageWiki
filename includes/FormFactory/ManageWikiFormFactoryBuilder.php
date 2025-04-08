@@ -822,7 +822,7 @@ class ManageWikiFormFactoryBuilder {
 		Config $config,
 		string $special = '',
 		string $filtered = ''
-	): mixed {
+	): array {
 		switch ( $module ) {
 			case 'core':
 				$mwReturn = self::submissionCore( $formData, $dbName, $context, $remoteWiki, $dbw, $config );
@@ -862,11 +862,7 @@ class ManageWikiFormFactoryBuilder {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}
 
-		if ( $module === 'permissions' && $mwReturn->errors ) {
-			return $mwReturn->errors;
-		}
-
-		return $mwReturn->errors ?? [];
+		return $mwReturn->errors;
 	}
 
 	private static function submissionCore(
