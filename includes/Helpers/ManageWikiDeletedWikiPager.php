@@ -18,20 +18,12 @@ class ManageWikiDeletedWikiPager extends TablePager {
 
 	/** @inheritDoc */
 	public function getFieldNames(): array {
-		static $headers = null;
-
-		$headers = [
-			'wiki_dbname' => 'managewiki-label-dbname',
-			'wiki_creation' => 'managewiki-label-creationdate',
-			'wiki_deleted_timestamp' => 'managewiki-label-deletiondate',
-			'wiki_deleted' => 'managewiki-label-undeletewiki',
+		return [
+			'wiki_dbname' => $this->msg( 'managewiki-label-dbname' )->text(),
+			'wiki_creation' => $this->msg( 'managewiki-label-creationdate' )->text(),
+			'wiki_deleted_timestamp' => $this->msg( 'managewiki-label-deletiondate' )->text(),
+			'wiki_deleted' => $this->msg( 'managewiki-label-undeletewiki' )->text(),
 		];
-
-		foreach ( $headers as &$msg ) {
-			$msg = $this->msg( $msg )->text();
-		}
-
-		return $headers;
 	}
 
 	/** @inheritDoc */
@@ -50,7 +42,7 @@ class ManageWikiDeletedWikiPager extends TablePager {
 				break;
 			case 'wiki_deleted':
 				$formatted = $this->getLinkRenderer()->makeExternalLink(
-					SpecialPage::getTitleFor( 'ManageWiki', 'core' )->getFullURL() . '/' . $row->wiki_dbname,
+					SpecialPage::getTitleFor( 'ManageWiki', 'core/' . $row->wiki_dbname )->getFullURL(),
 					$this->msg( 'managewiki-label-goto' )->text(),
 					SpecialPage::getTitleFor( 'ManageWiki', 'core' )
 				);

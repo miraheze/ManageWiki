@@ -2,11 +2,10 @@
 
 namespace Miraheze\ManageWiki\Api;
 
-use MediaWiki\Api\ApiBase;
 use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
-use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
@@ -16,7 +15,8 @@ class QueryWikiConfig extends ApiQueryBase {
 
 	public function __construct(
 		ApiQuery $query,
-		string $moduleName
+		string $moduleName,
+		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
 		parent::__construct( $query, $moduleName, 'wcf' );
 	}
@@ -28,11 +28,9 @@ class QueryWikiConfig extends ApiQueryBase {
 
 		$data = [];
 
-		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
-
 		foreach ( $params['wikis'] as $wiki ) {
 			try {
-				$remoteWiki = $remoteWikiFactory->newInstance( $wiki );
+				$remoteWiki = $this->remoteWikiFactory->newInstance( $wiki );
 			} catch ( MissingWikiError $e ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
 				continue;
@@ -51,9 +49,7 @@ class QueryWikiConfig extends ApiQueryBase {
 			if ( isset( $prop['settings'] ) ) {
 				$wikiData['settings'] = $mwSet->list();
 
-				$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-
-				foreach ( $config->get( 'ManageWikiSettings' ) as $setting => $options ) {
+				foreach ( $this->getConfig()->get( 'ManageWikiSettings' ) as $setting => $options ) {
 					if ( isset( $options['requires']['visibility']['permissions'] ) ) {
 						unset( $wikiData['settings'][$setting] );
 					}
@@ -83,19 +79,18 @@ class QueryWikiConfig extends ApiQueryBase {
 	protected function getAllowedParams(): array {
 		return [
 			'prop' => [
+				ParamValidator::PARAM_DEFAULT => 'extensions|settings|sitename',
 				ParamValidator::PARAM_ISMULTI => true,
 				ParamValidator::PARAM_TYPE => [
-					'sitename',
+					'closed',
+					'extensions',
 					'inactive',
 					'inactive-exempt',
-					'closed',
-					'private',
-					'extensions',
-					'settings',
 					'permissions',
+					'private',
+					'settings',
+					'sitename',
 				],
-				ParamValidator::PARAM_DEFAULT => 'sitename|extensions|settings',
-				ApiBase::PARAM_HELP_MSG_PER_VALUE => [],
 			],
 			'wikis' => [
 				ParamValidator::PARAM_ISMULTI => true,

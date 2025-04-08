@@ -22,10 +22,22 @@
 		}
 	},
 	"APIListModules": {
-		"wikiconfig": "Miraheze\\ManageWiki\\Api\\QueryWikiConfig"
+		"wikiconfig": {
+			"class": "Miraheze\\ManageWiki\\Api\\QueryWikiConfig",
+			"services": [
+				"RemoteWikiFactory"
+			]
+		}
 	},
 	"APIModules": {
-		"modifyserver": "Miraheze\\ManageWiki\\Api\\ApiModifyServer"
+		"modifyserver": {
+			"class": "Miraheze\\ManageWiki\\Api\\ApiModifyServer",
+			"services": [
+				"CreateWikiValidator",
+				"PermissionManager",
+				"RemoteWikiFactory"
+			]
+		}
 	},
 	"AvailableRights": [
 		"managewiki-core",

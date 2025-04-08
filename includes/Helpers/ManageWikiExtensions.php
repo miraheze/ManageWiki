@@ -78,7 +78,6 @@ class ManageWikiExtensions {
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
 			$this->liveExts[$ext] = $this->extConfig[$ext];
-
 			$this->changes[$ext] = [
 				'old' => 0,
 				'new' => 1,

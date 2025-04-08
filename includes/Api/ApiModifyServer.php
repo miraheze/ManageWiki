@@ -3,20 +3,29 @@
 namespace Miraheze\ManageWiki\Api;
 
 use MediaWiki\Api\ApiBase;
-use MediaWiki\MainConfigNames;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Api\ApiMain;
+use MediaWiki\Permissions\PermissionManager;
+use Miraheze\CreateWiki\Services\CreateWikiValidator;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiModifyServer extends ApiBase {
 
-	public function execute(): void {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+	public function __construct(
+		ApiMain $mainModule,
+		string $moduleName,
+		private readonly CreateWikiValidator $validator,
+		private readonly PermissionManager $permissionManager,
+		private readonly RemoteWikiFactory $remoteWikiFactory
+	) {
+		parent::__construct( $mainModule, $moduleName );
+	}
 
+	public function execute(): void {
 		$this->useTransactionalTimeLimit();
 
-		if ( !$config->get( 'ManageWikiUseCustomDomains' ) ) {
+		if ( !$this->getConfig()->get( 'ManageWikiUseCustomDomains' ) ) {
 			$this->dieWithError( [ 'managewiki-custom-domains-disabled' ] );
 		}
 
@@ -26,11 +35,11 @@ class ApiModifyServer extends ApiBase {
 
 		$params = $this->extractRequestParams();
 
-		if ( !$permissionManager->userHasRight( $this->getUser(), 'managewiki-restricted' ) ) {
+		if ( !$this->permissionManager->userHasRight( $this->getUser(), 'managewiki-restricted' ) ) {
 			return;
 		}
 
-		if ( !self::validDatabase( $params['wiki'] ) ) {
+		if ( !$this->validator->databaseExists( $params['wiki'] ) ) {
 			$this->dieWithError( [ 'managewiki-invalid-wiki' ] );
 		}
 
@@ -44,15 +53,9 @@ class ApiModifyServer extends ApiBase {
 	}
 
 	private function setServer( string $wiki, string $server ): void {
-		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
-		$remoteWiki = $remoteWikiFactory->newInstance( $wiki );
+		$remoteWiki = $this->remoteWikiFactory->newInstance( $wiki );
 		$remoteWiki->setServerName( $server );
 		$remoteWiki->commit();
-	}
-
-	private static function validDatabase( string $wiki ): bool {
-		$localDatabases = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( MainConfigNames::LocalDatabases );
-		return in_array( $wiki, $localDatabases );
 	}
 
 	/** @inheritDoc */
@@ -69,12 +72,12 @@ class ApiModifyServer extends ApiBase {
 	public function getAllowedParams(): array {
 		return [
 			'server' => [
-				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
+				ParamValidator::PARAM_TYPE => 'string',
 			],
 			'wiki' => [
-				ParamValidator::PARAM_TYPE => 'string',
 				ParamValidator::PARAM_REQUIRED => true,
+				ParamValidator::PARAM_TYPE => 'string',
 			],
 		];
 	}
