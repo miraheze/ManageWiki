@@ -183,7 +183,7 @@ class ManageWikiRequirements {
 			if ( $key === 'state' ) {
 				$ret['state'] = ( ( $val === 'private' && $remoteWiki->isPrivate() ) || ( $val === 'public' && !$remoteWiki->isPrivate() ) );
 			} elseif ( $key === 'permissions' ) {
-				$ret['permissions'] = (bool)( self::permissions( $val ) );
+				$ret['permissions'] = self::permissions( $val );
 			}
 		}
 
