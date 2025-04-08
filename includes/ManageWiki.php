@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki;
 
 use DateTimeZone;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\User\User;
@@ -83,7 +84,7 @@ class ManageWiki {
 			}
 
 			return $phpout;
-		} elseif ( $to == 'phparray' ) {
+		} elseif ( $to === 'phparray' ) {
 			// $to is phparray therefore $conversion must be php as json will be already phparray'd
 			$phparrayout = [];
 
@@ -93,7 +94,7 @@ class ManageWiki {
 			}
 
 			return $phparrayout;
-		} elseif ( $to == 'json' ) {
+		} elseif ( $to === 'json' ) {
 			// $to is json, therefore $conversion must be php
 			return json_encode( $conversion ) ?: null;
 		}
@@ -107,12 +108,12 @@ class ManageWiki {
 		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
 			->getReplicaDatabase( 'virtual-createwiki' );
 
-		$nsID = ( $namespace === '' ) ? false : $dbr->selectRow(
+		$nsID = $namespace === '' ? false : $dbr->selectRow(
 			'mw_namespaces',
 			'ns_namespace_id',
 			[
-				'ns_dbname' => $config->get( 'DBname' ),
-				'ns_namespace_id' => $namespace
+				'ns_dbname' => $config->get( MainConfigNames::DBname ),
+				'ns_namespace_id' => $namespace,
 			],
 			__METHOD__
 		)->ns_namespace_id;
@@ -122,16 +123,16 @@ class ManageWiki {
 				'mw_namespaces',
 				'ns_namespace_id',
 				[
-					'ns_dbname' => $config->get( 'DBname' ),
-					'ns_namespace_id >= 3000'
+					'ns_dbname' => $config->get( MainConfigNames::DBname ),
+					'ns_namespace_id >= 3000',
 				],
 				__METHOD__,
 				[
-					'ORDER BY' => 'ns_namespace_id DESC'
+					'ORDER BY' => 'ns_namespace_id DESC',
 				]
 			);
 
-			$nsID = ( $lastID ) ? $lastID->ns_namespace_id + 1 : 3000;
+			$nsID = $lastID ? $lastID->ns_namespace_id + 1 : 3000;
 		}
 
 		return $nsID;

@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Specials;
 
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\MainConfigNames;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
@@ -38,10 +39,9 @@ class SpecialManageWiki extends SpecialPage {
 			$out->addHelpLink( $this->getConfig()->get( 'ManageWikiHelpUrl' ), true );
 		}
 
+		$module = 'core';
 		if ( array_key_exists( $par[0], $this->getConfig()->get( 'ManageWiki' ) ) ) {
 			$module = $par[0];
-		} else {
-			$module = 'core';
 		}
 
 		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
@@ -70,14 +70,14 @@ class SpecialManageWiki extends SpecialPage {
 		$isCentralWiki = $this->databaseUtils->isCurrentWikiCentral();
 
 		if ( !$isCentralWiki ) {
-			$this->showWikiForm( $this->getConfig()->get( 'DBname' ), $module, $additional, $filtered );
-		} elseif ( $par[0] == '' ) {
+			$this->showWikiForm( $this->getConfig()->get( MainConfigNames::DBname ), $module, $additional, $filtered );
+		} elseif ( $par[0] === '' ) {
 			$this->showInputBox();
-		} elseif ( $module == 'core' ) {
-			$dbName = $par[1] ?? $this->getConfig()->get( 'DBname' );
+		} elseif ( $module === 'core' ) {
+			$dbName = $par[1] ?? $this->getConfig()->get( MainConfigNames::DBname );
 			$this->showWikiForm( strtolower( $dbName ), 'core', '', '' );
 		} else {
-			$this->showWikiForm( $this->getConfig()->get( 'DBname' ), $module, $additional, $filtered );
+			$this->showWikiForm( $this->getConfig()->get( MainConfigNames::DBname ), $module, $additional, $filtered );
 		}
 	}
 
@@ -177,7 +177,7 @@ class SpecialManageWiki extends SpecialPage {
 			}
 
 			$this->reusableFormDescriptor( $module, $options );
-		} elseif ( $module === 'namespaces' && $special == '' ) {
+		} elseif ( $module === 'namespaces' && $special === '' ) {
 			$mwNamespaces = new ManageWikiNamespaces( $wiki );
 			$namespaces = $mwNamespaces->list();
 
@@ -217,7 +217,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$hidden['module'] = [
 			'type' => 'hidden',
-			'default' => $module
+			'default' => $module,
 		];
 
 		$selector['info'] = [
@@ -228,7 +228,7 @@ class SpecialManageWiki extends SpecialPage {
 		$selector['out'] = [
 			'type' => 'select',
 			'label-message' => "managewiki-{$module}-select",
-			'options' => $options
+			'options' => $options,
 		];
 
 		$selectForm = HTMLForm::factory( 'ooui', $hidden + $selector, $this->getContext(), 'selector' );
@@ -255,7 +255,7 @@ class SpecialManageWiki extends SpecialPage {
 	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
 		$module = $formData['module'];
 		$createNamespace = ( $form->getSubmitText() === $this->msg( 'managewiki-namespaces-create-submit' )->plain() ) ? '' : $formData['out'];
-		$url = ( $module === 'namespaces' ) ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
+		$url = $module === 'namespaces' ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
 
 		if ( $module === 'namespaces' ) {
 			$form->getRequest()->getSession()->set( 'create', $formData['out'] );

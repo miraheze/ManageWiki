@@ -53,8 +53,10 @@ class ManageWikiExtensions {
 				$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
 					'ext' => $ext,
 				] );
+
 				continue;
 			}
+
 			$this->liveExts[$ext] = $this->extConfig[$ext];
 		}
 	}
@@ -124,7 +126,10 @@ class ManageWikiExtensions {
 
 			if ( in_array( $ext, $extensions ) && !in_array( $ext, $overwrittenExts ) ) {
 				$this->add( [ $ext ] );
-			} elseif ( !in_array( $ext, $extensions ) && in_array( $ext, $overwrittenExts ) ) {
+				continue;
+			}
+
+			if ( !in_array( $ext, $extensions ) && in_array( $ext, $overwrittenExts ) ) {
 				$this->remove( [ $ext ] );
 			}
 		}
@@ -187,15 +192,17 @@ class ManageWikiExtensions {
 						],
 					];
 				}
-			} else {
-				unset( $this->liveExts[$name] );
-				unset( $this->changes[$name] );
-				$this->errors[] = [
-					'managewiki-error-requirements' => [
-						$extConfig['name'],
-					],
-				];
+
+				continue;
 			}
+
+			unset( $this->liveExts[$name] );
+			unset( $this->changes[$name] );
+			$this->errors[] = [
+				'managewiki-error-requirements' => [
+					$extConfig['name'],
+				],
+			];
 		}
 
 		foreach ( $this->removedExts as $name => $extConfig ) {

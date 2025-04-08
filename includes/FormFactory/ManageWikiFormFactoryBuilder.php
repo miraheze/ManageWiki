@@ -9,6 +9,7 @@ use MediaWiki\Context\IContextSource;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -72,15 +73,15 @@ class ManageWikiFormFactoryBuilder {
 			'type' => 'text',
 			'default' => $dbName,
 			'disabled' => true,
-			'section' => 'main'
+			'section' => 'main',
 		];
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 
 		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && ( $remoteWiki->getDBname() !== $databaseUtils->getCentralWikiID() ) ) {
 			$mwActions = [
-				( $remoteWiki->isDeleted() ) ? 'undelete' : 'delete',
-				( $remoteWiki->isLocked() ) ? 'unlock' : 'lock'
+				$remoteWiki->isDeleted() ? 'undelete' : 'delete',
+				$remoteWiki->isLocked() ? 'unlock' : 'lock',
 			];
 
 			foreach ( $mwActions as $mwAction ) {
@@ -88,7 +89,7 @@ class ManageWikiFormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => "managewiki-label-{$mwAction}wiki",
 					'default' => false,
-					'section' => 'main'
+					'section' => 'main',
 				];
 			}
 		}
@@ -100,7 +101,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $remoteWiki->getSitename(),
 				'disabled' => !$ceMW,
 				'required' => true,
-				'section' => 'main'
+				'section' => 'main',
 			],
 			'language' => [
 				'label-message' => 'managewiki-label-language',
@@ -109,8 +110,8 @@ class ManageWikiFormFactoryBuilder {
 				'disabled' => !$ceMW,
 				'required' => true,
 				'cssclass' => 'managewiki-infuse',
-				'section' => 'main'
-			]
+				'section' => 'main',
+			],
 		];
 
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
@@ -120,25 +121,25 @@ class ManageWikiFormFactoryBuilder {
 				'if' => $config->get( 'CreateWikiUsePrivateWikis' ),
 				'type' => 'check',
 				'default' => $remoteWiki->isPrivate(),
-				'access' => !$ceMW
+				'access' => !$ceMW,
 			],
 			'closed' => [
 				'if' => $config->get( 'CreateWikiUseClosedWikis' ),
 				'type' => 'check',
 				'default' => $remoteWiki->isClosed(),
-				'access' => !$ceMW
+				'access' => !$ceMW,
 			],
 			'inactive' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
 				'type' => 'check',
 				'default' => $remoteWiki->isInactive(),
-				'access' => !$ceMW
+				'access' => !$ceMW,
 			],
 			'inactive-exempt' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
 				'type' => 'check',
 				'default' => $remoteWiki->isInactiveExempt(),
-				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
+				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 			],
 			'inactive-exempt-reason' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( 'ManageWikiInactiveExemptReasonOptions' ),
@@ -146,20 +147,20 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'selectorother',
 				'default' => $remoteWiki->getInactiveExemptReason(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
-				'options' => $config->get( 'ManageWikiInactiveExemptReasonOptions' )
+				'options' => $config->get( 'ManageWikiInactiveExemptReasonOptions' ),
 			],
 			'server' => [
 				'if' => $config->get( 'ManageWikiUseCustomDomains' ),
 				'type' => 'text',
 				'default' => $remoteWiki->getServerName(),
-				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
+				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 			],
 			'experimental' => [
 				'if' => $config->get( 'CreateWikiUseExperimental' ),
 				'type' => 'check',
 				'default' => $remoteWiki->isExperimental(),
-				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
-			]
+				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+			],
 		];
 
 		foreach ( $addedModules as $name => $data ) {
@@ -170,7 +171,7 @@ class ManageWikiFormFactoryBuilder {
 					'default' => $data['default'],
 					'disabled' => $data['access'],
 					'cssclass' => 'managewiki-infuse',
-					'section' => 'main'
+					'section' => 'main',
 				];
 
 				if ( $data['hide-if'] ?? false ) {
@@ -191,7 +192,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $remoteWiki->getCategory(),
 				'disabled' => !$ceMW,
 				'cssclass' => 'managewiki-infuse',
-				'section' => 'main'
+				'section' => 'main',
 			];
 		}
 
@@ -209,7 +210,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $remoteWiki->getDBCluster(),
 				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 				'cssclass' => 'managewiki-infuse',
-				'section' => 'main'
+				'section' => 'main',
 			];
 		}
 
@@ -228,8 +229,8 @@ class ManageWikiFormFactoryBuilder {
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
 
 		$queue = array_fill_keys( array_merge(
-				glob( $config->get( 'ExtensionDirectory' ) . '/*/extension*.json' ),
-				glob( $config->get( 'StyleDirectory' ) . '/*/skin.json' )
+				glob( $config->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
+				glob( $config->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
 			),
 		true );
 
@@ -246,7 +247,7 @@ class ManageWikiFormFactoryBuilder {
 		$data = $processor->getExtractedInfo();
 
 		$credits = $data['credits'];
-		$legacyCredits = $config->get( 'ExtensionCredits' );
+		$legacyCredits = $config->get( MainConfigNames::ExtensionCredits );
 		if ( $legacyCredits ) {
 			$credits = array_merge( $credits, array_values(
 					array_merge( ...array_values( $legacyCredits ) )
@@ -258,7 +259,7 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
 			$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $name ) {
-				return $value['from'] == $name;
+				return $value['from'] === $name;
 			} );
 
 			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
@@ -319,7 +320,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => [
 					'managewiki-extension-name',
 					$ext['linkPage'],
-					$extDisplayName ?? ( $namemsg ? wfMessage( $namemsg )->text() : $extname ) ?? $ext['name']
+					$extDisplayName ?? ( $namemsg ? wfMessage( $namemsg )->text() : $extname ) ?? $ext['name'],
 				],
 				'default' => in_array( $name, $extList ),
 				'disabled' => ( $ceMW ) ? !$mwRequirements : true,
@@ -349,7 +350,7 @@ class ManageWikiFormFactoryBuilder {
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
 
 		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered, $extList ) {
-			return $value['from'] == strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || ( array_key_exists( 'global', $value ) && $value['global'] ) );
+			return $value['from'] === strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || ( array_key_exists( 'global', $value ) && $value['global'] ) );
 		} );
 
 		$formDescriptor = [];
@@ -368,7 +369,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) && ( (bool)( $set['global'] ?? false ) || in_array( $set['from'], $extList ) );
-			$disabled = ( $ceMW ) ? !$mwRequirements : true;
+			$disabled = $ceMW ? !$mwRequirements : true;
 
 			$msgName = wfMessage( "managewiki-setting-{$name}-name" );
 			$msgHelp = wfMessage( "managewiki-setting-{$name}-help" );
@@ -381,7 +382,7 @@ class ManageWikiFormFactoryBuilder {
 
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
 
-				$help = ( $msgHelp->exists() ) ? $msgHelp->escaped() : $set['help'];
+				$help = $msgHelp->exists() ? $msgHelp->escaped() : $set['help'];
 				if ( $set['requires'] ) {
 					$requires = [];
 					$requiresLabel = wfMessage( 'managewiki-requires' )->escaped();
@@ -417,11 +418,11 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				$formDescriptor["set-$name"] = [
-					'label' => ( ( $msgName->exists() ) ? $msgName->text() : $set['name'] ) . $varName,
+					'label' => ( $msgName->exists() ? $msgName->text() : $set['name'] ) . $varName,
 					'disabled' => $disabled,
 					'help' => $help,
 					'cssclass' => 'managewiki-infuse',
-					'section' => $set['section']
+					'section' => $set['section'],
 				] + $configs;
 			}
 		}
@@ -459,43 +460,43 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $nsID as $name => $id ) {
 			$namespaceData = $mwNamespace->list( $id );
 
-			$create = ucfirst( $session->get( 'create' ) ) . ( $name == 'namespacetalk' && $session->get( 'create' ) ? '_talk' : null );
+			$create = ucfirst( $session->get( 'create' ) ) . ( $name === 'namespacetalk' && $session->get( 'create' ) ? '_talk' : null );
 
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
 					'label' => wfMessage( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
 					'default' => $namespaceData['name'] ?: $create,
-					'disabled' => ( $namespaceData['core'] || !$ceMW ),
+					'disabled' => $namespaceData['core'] || !$ceMW,
 					'required' => true,
-					'section' => $name
+					'section' => $name,
 				],
 				"content-$name" => [
 					'type' => 'check',
 					'label' => wfMessage( 'namespaces-content' )->text() . ' ($wgContentNamespaces)',
 					'default' => $namespaceData['content'],
 					'disabled' => !$ceMW,
-					'section' => $name
+					'section' => $name,
 				],
 				"subpages-$name" => [
 					'type' => 'check',
 					'label' => wfMessage( 'namespaces-subpages' )->text() . ' ($wgNamespacesWithSubpages)',
 					'default' => $namespaceData['subpages'],
 					'disabled' => !$ceMW,
-					'section' => $name
+					'section' => $name,
 				],
 				"search-$name" => [
 					'type' => 'check',
 					'label' => wfMessage( 'namespaces-search' )->text() . ' ($wgNamespacesToBeSearchedDefault)',
 					'default' => $namespaceData['searchable'],
 					'disabled' => !$ceMW,
-					'section' => $name
+					'section' => $name,
 				],
 				"contentmodel-$name" => [
 					'label' => wfMessage( 'namespaces-contentmodel' )->text() . ' ($wgNamespaceContentModels)',
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
-					'section' => $name
+					'section' => $name,
 				] + ManageWikiTypes::process( $config, false, [], 'namespaces', [], $namespaceData['contentmodel'], null, false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
@@ -506,17 +507,17 @@ class ManageWikiFormFactoryBuilder {
 						'None' => '',
 						'editinterface' => 'editinterface',
 						'editsemiprotected' => 'editsemiprotected',
-						'editprotected' => 'editprotected'
+						'editprotected' => 'editprotected',
 					],
 					'disabled' => !$ceMW,
-					'section' => $name
-				]
+					'section' => $name,
+				],
 			];
 
 			foreach ( (array)$config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $remoteWiki ) : true;
 
-				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] == 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
+				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] === 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
 				$disabled = ( $ceMW ) ? !$mwRequirements : true;
 
 				$msgName = wfMessage( "managewiki-namespaces-{$key}-name" );
@@ -525,8 +526,8 @@ class ManageWikiFormFactoryBuilder {
 				if (
 					$add &&
 					(
-						( $a['main'] && $name == 'namespace' ) ||
-						( $a['talk'] && $name == 'namespacetalk' )
+						( $a['main'] && $name === 'namespace' ) ||
+						( $a['talk'] && $name === 'namespacetalk' )
 					) &&
 					!in_array( $id, (array)( $a['excluded'] ?? [] ) ) &&
 					in_array( $id, (array)( $a['only'] ?? [ $id ] ) )
@@ -537,7 +538,7 @@ class ManageWikiFormFactoryBuilder {
 
 					$configs = ManageWikiTypes::process( $config, $disabled, [], 'namespaces', $a, $namespaceData['additional'][$key] ?? null, null, $a['overridedefault'], $a['type'] );
 
-					$help = ( $msgHelp->exists() ) ? $msgHelp->escaped() : $a['help'];
+					$help = $msgHelp->exists() ? $msgHelp->escaped() : $a['help'];
 					if ( $a['requires'] ) {
 						$requires = [];
 						$requiresLabel = wfMessage( 'managewiki-requires' )->escaped();
@@ -558,11 +559,11 @@ class ManageWikiFormFactoryBuilder {
 					}
 
 					$formDescriptor["$key-$name"] = [
-						'label' => ( ( $msgName->exists() ) ? $msgName->text() : $a['name'] ) . " (\${$key})",
+						'label' => ( $msgName->exists() ? $msgName->text() : $a['name'] ) . " (\${$key})",
 						'help' => $help,
 						'cssclass' => 'managewiki-infuse',
 						'disabled' => $disabled,
-						'section' => $name
+						'section' => $name,
 					] + $configs;
 				}
 			}
@@ -571,7 +572,7 @@ class ManageWikiFormFactoryBuilder {
 				'label' => wfMessage( 'namespaces-aliases' )->text() . ' ($wgNamespaceAliases)',
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
-				'section' => $name
+				'section' => $name,
 			] + ManageWikiTypes::process( $config, false, [], 'namespaces', [], $namespaceData['aliases'], null, [], 'texts' );
 		}
 
@@ -586,10 +587,11 @@ class ManageWikiFormFactoryBuilder {
 
 				if ( $id !== $nsID['namespace'] ) {
 					$craftedNamespaces[$config['name']] = $id;
-				} else {
-					// Existing namespace
-					$canDelete = true;
+					continue;
 				}
+
+				// Existing namespace
+				$canDelete = true;
 			}
 
 			$formDescriptor += [
@@ -598,7 +600,7 @@ class ManageWikiFormFactoryBuilder {
 					'label-message' => 'namespaces-delete-checkbox',
 					'default' => 0,
 					'disabled' => !$canDelete,
-					'section' => 'delete'
+					'section' => 'delete',
 				],
 				'delete-migrate-to' => [
 					'type' => 'select',
@@ -607,8 +609,8 @@ class ManageWikiFormFactoryBuilder {
 					'options' => $craftedNamespaces,
 					'default' => 0,
 					'disabled' => !$canDelete,
-					'section' => 'delete'
-				]
+					'section' => 'delete',
+				],
 			];
 		}
 
@@ -632,7 +634,7 @@ class ManageWikiFormFactoryBuilder {
 			'wgAddGroups' => $permList['addgroups'],
 			'wgRemoveGroups' => $permList['removegroups'],
 			'wgGroupsAddToSelf' => $permList['addself'],
-			'wgGroupsRemoveFromSelf' => $permList['removeself']
+			'wgGroupsRemoveFromSelf' => $permList['removeself'],
 		];
 
 		$userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
@@ -642,30 +644,30 @@ class ManageWikiFormFactoryBuilder {
 			'assignedPermissions' => $permList['permissions'] ?? [],
 			'allGroups' => array_diff( array_keys( $mwPermissions->list() ), $config->get( 'ManageWikiPermissionsDisallowedGroups' ), $userGroupManager->listAllImplicitGroups() ),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
-			'autopromote' => $permList['autopromote'] ?? null
+			'autopromote' => $permList['autopromote'] ?? null,
 		];
 
 		$formDescriptor = [
 			'assigned' => [
 				'type' => 'info',
 				'default' => wfMessage( 'managewiki-permissions-assigned' )->text(),
-				'section' => 'assigned'
+				'section' => 'assigned',
 			],
 			'unassigned' => [
 				'type' => 'info',
 				'default' => wfMessage( 'managewiki-permissions-unassigned' )->text(),
-				'section' => 'unassigned'
+				'section' => 'unassigned',
 			],
 			'group' => [
 				'type' => 'info',
 				'default' => wfMessage( 'managewiki-permissions-group' )->text(),
-				'section' => 'group'
+				'section' => 'group',
 			],
 			'autopromote' => [
 				'type' => 'info',
 				'default' => wfMessage( 'managewiki-permissions-autopromote' )->text(),
-				'section' => 'autopromote'
-			]
+				'section' => 'autopromote',
+			],
 		];
 
 		foreach ( $groupData['allPermissions'] as $perm ) {
@@ -675,9 +677,9 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'check',
 				'label' => $perm,
 				'help' => htmlspecialchars( User::getRightDescription( $perm ) ),
-				'section' => ( $assigned ) ? 'assigned' : 'unassigned',
+				'section' => $assigned ? 'assigned' : 'unassigned',
 				'default' => $assigned,
-				'disabled' => !$ceMW
+				'disabled' => !$ceMW,
 			];
 		}
 
@@ -695,12 +697,12 @@ class ManageWikiFormFactoryBuilder {
 				wfMessage( 'managewiki-permissions-addall' )->escaped() => 'wgAddGroups',
 				wfMessage( 'managewiki-permissions-removeall' )->escaped() => 'wgRemoveGroups',
 				wfMessage( 'managewiki-permissions-addself' )->escaped() => 'wgGroupsAddToSelf',
-				wfMessage( 'managewiki-permissions-removeself' )->escaped() => 'wgGroupsRemoveFromSelf'
+				wfMessage( 'managewiki-permissions-removeself' )->escaped() => 'wgGroupsRemoveFromSelf',
 			],
 			'rows' => $rowsBuilt,
 			'section' => 'group',
 			'default' => $groupData['groupMatrix'],
-			'disabled' => !$ceMW
+			'disabled' => !$ceMW,
 		];
 
 		// This is not a good method but it is a method.
@@ -719,7 +721,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-autopromote-enable',
 				'default' => $aP !== null,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'autopromote',
 			],
 			'conds' => [
 				'type' => 'select',
@@ -727,12 +729,12 @@ class ManageWikiFormFactoryBuilder {
 				'options' => [
 					wfMessage( 'managewiki-permissions-autopromote-conds-and' )->text() => '&',
 					wfMessage( 'managewiki-permissions-autopromote-conds-or' )->text() => '|',
-					wfMessage( 'managewiki-permissions-autopromote-conds-not' )->text() => '!'
+					wfMessage( 'managewiki-permissions-autopromote-conds-not' )->text() => '!',
 				],
-				'default' => ( $aP === null ) ? '&' : $aP[0],
+				'default' => $aP === null ? '&' : $aP[0],
 				'disabled' => !$ceMW,
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'section' => 'autopromote'
+				'section' => 'autopromote',
 			],
 			'once' => [
 				'type' => 'check',
@@ -740,7 +742,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => is_int( array_search( 'once', (array)$aP ) ),
 				'disabled' => !$ceMW,
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'section' => 'autopromote'
+				'section' => 'autopromote',
 			],
 			'editcount' => [
 				'type' => 'int',
@@ -749,7 +751,7 @@ class ManageWikiFormFactoryBuilder {
 				'min' => 0,
 				'default' => $aPArray[APCOND_EDITCOUNT] ?? 0,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'autopromote',
 			],
 			'age' => [
 				'type' => 'int',
@@ -758,7 +760,7 @@ class ManageWikiFormFactoryBuilder {
 				'min' => 0,
 				'default' => isset( $aPArray[APCOND_AGE] ) ? $aPArray[APCOND_AGE] / 86400 : 0,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'autopromote',
 			],
 			'emailconfirmed' => [
 				'type' => 'check',
@@ -766,7 +768,7 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => is_int( array_search( APCOND_EMAILCONFIRMED, (array)$aP ) ),
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'autopromote',
 			],
 			'blocked' => [
 				'type' => 'check',
@@ -774,7 +776,7 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => is_int( array_search( APCOND_BLOCKED, (array)$aP ) ),
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'autopromote',
 			],
 			'bot' => [
 				'type' => 'check',
@@ -782,7 +784,7 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => is_int( array_search( APCOND_ISBOT, (array)$aP ) ),
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'autopromote',
 			],
 			'groups' => [
 				'type' => 'multiselect',
@@ -791,8 +793,8 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ 'OR', [ '!==', 'enable', '1' ], [ '===', 'conds', '|' ] ],
 				'default' => $aPArray[APCOND_INGROUPS] ?? [],
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
-			]
+				'section' => 'autopromote',
+			],
 		];
 
 		if (
@@ -804,7 +806,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'permissions-delete-checkbox',
 				'default' => 0,
-				'section' => 'delete'
+				'section' => 'delete',
 			];
 		}
 
@@ -877,7 +879,7 @@ class ManageWikiFormFactoryBuilder {
 			'delete',
 			'undelete',
 			'lock',
-			'unlock'
+			'unlock',
 		];
 
 		foreach ( $mwActions as $mwAction ) {
@@ -888,11 +890,11 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		if ( $config->get( 'CreateWikiUsePrivateWikis' ) && ( $remoteWiki->isPrivate() !== $formData['private'] ) ) {
-			( $formData['private'] ) ? $remoteWiki->markPrivate() : $remoteWiki->markPublic();
+			$formData['private'] ? $remoteWiki->markPrivate() : $remoteWiki->markPublic();
 		}
 
 		if ( $config->get( 'CreateWikiUseExperimental' ) && ( $remoteWiki->isExperimental() !== $formData['experimental'] ) ) {
-			( $formData['experimental'] ) ? $remoteWiki->markExperimental() : $remoteWiki->unMarkExperimental();
+			$formData['experimental'] ? $remoteWiki->markExperimental() : $remoteWiki->unMarkExperimental();
 		}
 
 		if ( $config->get( 'CreateWikiUseClosedWikis' ) ) {
@@ -912,7 +914,7 @@ class ManageWikiFormFactoryBuilder {
 			$newInactiveExempt = $formData['inactive-exempt'];
 
 			if ( $newInactive !== $inactive ) {
-				( $newInactive ) ? $remoteWiki->markInactive() : $remoteWiki->markActive();
+				$newInactive ? $remoteWiki->markInactive() : $remoteWiki->markActive();
 			}
 
 			$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
@@ -1064,7 +1066,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
 		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered, $extList ) {
-			return $value['from'] == strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || ( array_key_exists( 'global', $value ) && $value['global'] ) );
+			return $value['from'] === strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || ( array_key_exists( 'global', $value ) && $value['global'] ) );
 		} );
 
 		$remove = !( count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0 );
@@ -1090,7 +1092,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$nsID = [
 			'namespace' => (int)$special,
-			'namespacetalk' => (int)$special + 1
+			'namespacetalk' => (int)$special + 1,
 		];
 
 		foreach ( $nsID as $name => $id ) {
@@ -1112,7 +1114,7 @@ class ManageWikiFormFactoryBuilder {
 				'content' => (int)$formData["content-$name"],
 				'contentmodel' => $formData["contentmodel-$name"],
 				'aliases' => array_filter( array_column( $formData["aliases-$name"], 'value' ) ),
-				'additional' => $additionalBuilt
+				'additional' => $additionalBuilt,
 			];
 
 			$mwNamespaces->modify( $id, $build );
@@ -1145,7 +1147,10 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $assignablePerms as $perm ) {
 			if ( $formData["right-$perm"] && !is_int( array_search( $perm, $permList['permissions'] ) ) ) {
 				$addedPerms[] = $perm;
-			} elseif ( !$formData["right-$perm"] && is_int( array_search( $perm, $permList['permissions'] ) ) ) {
+				continue;
+			}
+
+			if ( !$formData["right-$perm"] && is_int( array_search( $perm, $permList['permissions'] ) ) ) {
 				$removedPerms[] = $perm;
 			}
 		}
@@ -1153,7 +1158,7 @@ class ManageWikiFormFactoryBuilder {
 		// Add permission changes to permData
 		$permData['permissions'] = [
 			'add' => $addedPerms,
-			'remove' => $removedPerms
+			'remove' => $removedPerms,
 		];
 
 		$newMatrix = ManageWiki::handleMatrix( $formData['group-matrix'], 'phparray' );
@@ -1162,14 +1167,14 @@ class ManageWikiFormFactoryBuilder {
 			'addgroups' => array_diff( $newMatrix['wgAddGroups'] ?? [], $permList['addgroups'] ),
 			'removegroups' => array_diff( $newMatrix['wgRemoveGroups'] ?? [], $permList['removegroups'] ),
 			'addself' => array_diff( $newMatrix['wgGroupsAddToSelf'] ?? [], $permList['addself'] ),
-			'removeself' => array_diff( $newMatrix['wgGroupsRemoveFromSelf'] ?? [], $permList['removeself'] )
+			'removeself' => array_diff( $newMatrix['wgGroupsRemoveFromSelf'] ?? [], $permList['removeself'] ),
 		];
 
 		$matrixOld = [
 			'addgroups' => array_diff( $permList['addgroups'], $newMatrix['wgAddGroups'] ?? [] ),
 			'removegroups' => array_diff( $permList['removegroups'], $newMatrix['wgRemoveGroups'] ?? [] ),
 			'addself' => array_diff( $permList['addself'], $newMatrix['wgGroupsAddToSelf'] ?? [] ),
-			'removeself' => array_diff( $permList['removeself'], $newMatrix['wgGroupsRemoveFromSelf'] ?? [] )
+			'removeself' => array_diff( $permList['removeself'], $newMatrix['wgGroupsRemoveFromSelf'] ?? [] ),
 		];
 
 		foreach ( $matrixNew as $type => $array ) {
@@ -1205,7 +1210,7 @@ class ManageWikiFormFactoryBuilder {
 				'emailconfirmed' => APCOND_EMAILCONFIRMED,
 				'blocked' => APCOND_BLOCKED,
 				'bot' => APCOND_ISBOT,
-				'groups' => array_merge( [ APCOND_INGROUPS ], $formData['groups'] )
+				'groups' => array_merge( [ APCOND_INGROUPS ], $formData['groups'] ),
 			];
 
 			foreach ( $loopBuild as $type => $value ) {

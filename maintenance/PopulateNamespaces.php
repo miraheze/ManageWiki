@@ -44,11 +44,11 @@ class PopulateNamespaces extends Maintenance {
 				'mw_namespaces',
 				[
 					'ns_namespace_name',
-					'ns_namespace_id'
+					'ns_namespace_id',
 				],
 				[
 					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-					'ns_namespace_id' => (int)$id
+					'ns_namespace_id' => (int)$id,
 				],
 				__METHOD__
 			);

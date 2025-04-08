@@ -38,7 +38,7 @@ class ModifyGroupPermission extends Maintenance {
 			'removegroups' => [
 				'add' => $this->getValue( 'newremovegroups' ),
 				'remove' => $this->getValue( 'removeremovegroups' ),
-			]
+			],
 		];
 
 		if ( $this->getOption( 'all' ) ) {
@@ -47,11 +47,16 @@ class ModifyGroupPermission extends Maintenance {
 			foreach ( $groups as $group ) {
 				$this->changeGroup( $group, $permData, $mwPermissions );
 			}
-		} elseif ( $this->getArg( 0 ) ) {
-			$this->changeGroup( $this->getArg( 0 ), $permData, $mwPermissions );
-		} else {
-			$this->output( 'You must supply either the group as a arg or use --all' );
+
+			return;
 		}
+
+		if ( $this->getArg( 0 ) ) {
+			$this->changeGroup( $this->getArg( 0 ), $permData, $mwPermissions );
+			return;
+		}
+
+		$this->output( 'You must supply either the group as a arg or use --all' );
 	}
 
 	private function changeGroup(
@@ -61,7 +66,7 @@ class ModifyGroupPermission extends Maintenance {
 	): void {
 		$permList = $mwPermissions->list( $name );
 
-		if ( !in_array( $name, $this->getConfig()->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
+		if ( !in_array( $name, $this->getConfig()->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) === count( $permData['permissions']['remove'] ) ) ) {
 			$mwPermissions->remove( $name );
 		} else {
 			$mwPermissions->modify( $name, $permData );

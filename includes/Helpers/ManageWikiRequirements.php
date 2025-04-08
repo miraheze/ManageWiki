@@ -3,12 +3,13 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Context\RequestContext;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SiteStats\SiteStats;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
 /**
- * Helper class for de-centralising requirement checking
+ * Helper class for de-centralizing requirement checking
  */
 class ManageWikiRequirements {
 
@@ -110,35 +111,35 @@ class ManageWikiRequirements {
 	}
 
 	/**
-	 * @param int $lim Cut off number
+	 * @param int $limit Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function activeUsers( int $lim ): bool {
-		return ( SiteStats::activeUsers() <= $lim );
+	private static function activeUsers( int $limit ): bool {
+		return SiteStats::activeUsers() <= $limit;
 	}
 
 	/**
-	 * @param int $lim Cut off number
+	 * @param int $limit Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function articles( int $lim ): bool {
-		return ( SiteStats::articles() <= $lim );
+	private static function articles( int $limit ): bool {
+		return SiteStats::articles() <= $limit;
 	}
 
 	/**
-	 * @param int $lim Cut off number
+	 * @param int $limit Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function pages( int $lim ): bool {
-		return ( SiteStats::pages() <= $lim );
+	private static function pages( int $limit ): bool {
+		return SiteStats::pages() <= $limit;
 	}
 
 	/**
-	 * @param int $lim Cut off number
+	 * @param int $limit Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function images( int $lim ): bool {
-		return ( SiteStats::images() <= $lim );
+	private static function images( int $limit ): bool {
+		return SiteStats::images() <= $limit;
 	}
 
 	/**
@@ -148,7 +149,7 @@ class ManageWikiRequirements {
 	private static function settings( array $data ): bool {
 		$config = MediaWikiServices::getInstance()->getMainConfig();
 
-		$database = $data['dbname'] ?? $config->get( 'DBname' );
+		$database = $data['dbname'] ?? $config->get( MainConfigNames::DBname );
 		$setting = $data['setting'];
 		$value = $data['value'];
 
@@ -181,8 +182,11 @@ class ManageWikiRequirements {
 
 		foreach ( $data as $key => $val ) {
 			if ( $key === 'state' ) {
-				$ret['state'] = ( ( $val === 'private' && $remoteWiki->isPrivate() ) || ( $val === 'public' && !$remoteWiki->isPrivate() ) );
-			} elseif ( $key === 'permissions' ) {
+				$ret['state'] = ( $val === 'private' && $remoteWiki->isPrivate() ) || ( $val === 'public' && !$remoteWiki->isPrivate() );
+				continue;
+			}
+
+			if ( $key === 'permissions' ) {
 				$ret['permissions'] = self::permissions( $val );
 			}
 		}

@@ -75,7 +75,7 @@ class PopulateGroupPermissions extends Maintenance {
 				[ 'perm_group' ],
 				[
 					'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-					'perm_group' => $groupname
+					'perm_group' => $groupname,
 				],
 				__METHOD__
 			);
@@ -90,7 +90,7 @@ class PopulateGroupPermissions extends Maintenance {
 						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
 						'perm_addgroupstoself' => empty( $groupatr['addself'] ) ? json_encode( [] ) : $groupatr['addself'],
 						'perm_removegroupsfromself' => empty( $groupatr['removeself'] ) ? json_encode( [] ) : $groupatr['removeself'],
-						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote']
+						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote'],
 					],
 					__METHOD__
 				);

@@ -92,14 +92,14 @@ class QueryWikiConfig extends ApiQueryBase {
 					'private',
 					'extensions',
 					'settings',
-					'permissions'
+					'permissions',
 				],
 				ParamValidator::PARAM_DEFAULT => 'sitename|extensions|settings',
 				ApiBase::PARAM_HELP_MSG_PER_VALUE => [],
 			],
 			'wikis' => [
 				ParamValidator::PARAM_ISMULTI => true,
-				ParamValidator::PARAM_REQUIRED => true
+				ParamValidator::PARAM_REQUIRED => true,
 			],
 		];
 	}

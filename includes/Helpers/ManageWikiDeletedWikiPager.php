@@ -24,7 +24,7 @@ class ManageWikiDeletedWikiPager extends TablePager {
 			'wiki_dbname' => 'managewiki-label-dbname',
 			'wiki_creation' => 'managewiki-label-creationdate',
 			'wiki_deleted_timestamp' => 'managewiki-label-deletiondate',
-			'wiki_deleted' => 'managewiki-label-undeletewiki'
+			'wiki_deleted' => 'managewiki-label-undeletewiki',
 		];
 
 		foreach ( $headers as &$msg ) {

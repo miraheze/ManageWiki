@@ -67,19 +67,19 @@ class ManageWikiNamespaces {
 	public function list( ?int $id = null ): array {
 		if ( $id === null ) {
 			return $this->liveNamespaces;
-		} else {
-			return $this->liveNamespaces[$id] ?? [
-					'name' => null,
-					'searchable' => 0,
-					'subpages' => 0,
-					'content' => 0,
-					'contentmodel' => 'wikitext',
-					'protection' => '',
-					'aliases' => [],
-					'core' => 0,
-					'additional' => [],
-				];
 		}
+
+		return $this->liveNamespaces[$id] ?? [
+			'name' => null,
+			'searchable' => 0,
+			'subpages' => 0,
+			'content' => 0,
+			'contentmodel' => 'wikitext',
+			'protection' => '',
+			'aliases' => [],
+			'core' => 0,
+			'additional' => [],
+		];
 	}
 
 	/**

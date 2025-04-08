@@ -7,6 +7,7 @@ use ManualLogEntry;
 use MediaWiki\Config\GlobalVarConfig;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\MainConfigNames;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
@@ -181,18 +182,18 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$dbw->delete(
 			'mw_permissions',
 			[
-				'perm_dbname' => $this->getConfig()->get( 'DBname' ),
+				'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 			],
 			__METHOD__
 		);
 
 		$cwConfig = new GlobalVarConfig( 'cw' );
-		Hooks::onCreateWikiCreation( $this->getConfig()->get( 'DBname' ), $cwConfig->get( 'Private' ) );
+		Hooks::onCreateWikiCreation( $this->getConfig()->get( MainConfigNames::DBname ), $cwConfig->get( 'Private' ) );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getContext()->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
-		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( 'DBname' ) ] );
+		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
@@ -221,19 +222,19 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				's_settings' => '[]',
 			],
 			[
-				's_dbname' => $this->getConfig()->get( 'DBname' ),
+				's_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 			],
 			__METHOD__
 		);
 
 		// Reset the cache or else the changes won't work
-		$data = $this->dataFactory->newInstance( $this->getConfig()->get( 'DBname' ) );
+		$data = $this->dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
 		$data->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
 		$logEntry->setPerformer( $this->getContext()->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
-		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( 'DBname' ) ] );
+		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
@@ -256,13 +257,13 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 
 		// Reset the cache or else the changes won't work
-		$data = $this->dataFactory->newInstance( $this->getConfig()->get( 'DBname' ) );
+		$data = $this->dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
 		$data->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'cache-reset' );
 		$logEntry->setPerformer( $this->getContext()->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
-		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( 'DBname' ) ] );
+		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 

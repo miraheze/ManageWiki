@@ -121,7 +121,7 @@ class Hooks {
 			'mw_settings',
 			'*',
 			[
-				's_dbname' => $wiki
+				's_dbname' => $wiki,
 			],
 			__METHOD__
 		);
@@ -138,11 +138,12 @@ class Hooks {
 				if ( isset( $manageWikiExtensions[$ext] ) ) {
 					$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
 						$manageWikiExtensions[$ext]['name'];
-				} else {
-					$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
-						'ext' => $ext,
-					] );
+					continue;
 				}
+
+				$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
+					'ext' => $ext,
+				] );
 			}
 		}
 
@@ -152,7 +153,7 @@ class Hooks {
 				'mw_namespaces',
 				'*',
 				[
-					'ns_dbname' => $wiki
+					'ns_dbname' => $wiki,
 				],
 				__METHOD__
 			);
@@ -187,7 +188,7 @@ class Hooks {
 					'contentmodel' => $ns->ns_content_model,
 					'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
 					'aliases' => array_merge( json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '' ), true ), (array)$lcAlias ),
-					'additional' => json_decode( $ns->ns_additional ?? '', true )
+					'additional' => json_decode( $ns->ns_additional ?? '', true ),
 				];
 
 				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
@@ -244,7 +245,7 @@ class Hooks {
 				'mw_permissions',
 				'*',
 				[
-					'perm_dbname' => $wiki
+					'perm_dbname' => $wiki,
 				],
 				__METHOD__
 			);
@@ -279,7 +280,7 @@ class Hooks {
 					),
 					'addself' => json_decode( $perm->perm_addgroupstoself ?? '', true ),
 					'removeself' => json_decode( $perm->perm_removegroupsfromself ?? '', true ),
-					'autopromote' => json_decode( $perm->perm_autopromote ?? '', true )
+					'autopromote' => json_decode( $perm->perm_autopromote ?? '', true ),
 				];
 			}
 
@@ -302,7 +303,7 @@ class Hooks {
 					'removegroups' => self::getConfig( 'ManageWikiPermissionsAdditionalRemoveGroups' )[$missingKey] ?? [],
 					'addself' => [],
 					'removeself' => [],
-					'autopromote' => []
+					'autopromote' => [],
 				];
 			}
 		}
@@ -332,7 +333,7 @@ class Hooks {
 				$cacheArray['settings'][$var][$nsID] = true;
 				break;
 			default:
-				if ( ( $varConf['constant'] ) ?? false ) {
+				if ( $varConf['constant'] ?? false ) {
 					$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
 				} else {
 					$cacheArray['settings'][$var][$nsID] = $val;
@@ -357,6 +358,7 @@ class Hooks {
 		if ( isset( $conf['only'] ) ) {
 			$only = $conf['only'];
 		}
+
 		if ( is_int( $only ) ) {
 			$only = [ $only ];
 		}
@@ -375,11 +377,12 @@ class Hooks {
 				$groupArray = [];
 
 				foreach ( $groupData as $name => $value ) {
-					if ( $name == 'autopromote' ) {
+					if ( $name === 'autopromote' ) {
 						$groupArray[$name] = $value;
-					} else {
-						$groupArray[$name]['add'] = $value;
+						continue;
 					}
+
+					$groupArray[$name]['add'] = $value;
 				}
 
 				$mwPermissions->modify( $newgroup, $groupArray );
@@ -434,11 +437,12 @@ class Hooks {
 			$privateArray = [];
 
 			foreach ( $defaultPrivate as $name => $value ) {
-				if ( $name == 'autopromote' ) {
+				if ( $name === 'autopromote' ) {
 					$privateArray[$name] = $value;
-				} else {
-					$privateArray[$name]['add'] = $value;
+					continue;
 				}
+
+				$privateArray[$name]['add'] = $value;
 			}
 
 			$mwPermissions->modify( self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ), $privateArray );
@@ -483,7 +487,7 @@ class Hooks {
 			$sidebar['managewiki-sidebar-header'][] = [
 				'text' => $skin->msg( "managewiki-link-{$module}{$append}" )->text(),
 				'id' => "managewiki{$module}link",
-				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() )
+				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() ),
 			];
 		}
 	}

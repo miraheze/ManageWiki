@@ -55,9 +55,9 @@ class ManageWikiSettings {
 	public function list( ?string $setting = null ): mixed {
 		if ( $setting === null ) {
 			return $this->liveSettings;
-		} else {
-			return $this->liveSettings[$setting] ?? null;
 		}
+
+		return $this->liveSettings[$setting] ?? null;
 	}
 
 	/**
@@ -68,7 +68,7 @@ class ManageWikiSettings {
 	public function modify( array $settings, mixed $default = null ): void {
 		// We will handle all processing in final stages
 		foreach ( $settings as $var => $value ) {
-			if ( $value != ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default ) ) {
+			if ( $value !== ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default ) ) {
 				$this->changes[$var] = [
 					'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default,
 					'new' => $value,
@@ -121,7 +121,10 @@ class ManageWikiSettings {
 		foreach ( $this->settingsConfig as $var => $setConfig ) {
 			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) && $remove ) {
 				$this->remove( [ $var ] );
-			} elseif ( ( $settings[$var] ?? null ) !== null ) {
+				continue;
+			}
+
+			if ( ( $settings[$var] ?? null ) !== null ) {
 				$this->modify( [ $var => $settings[$var] ] );
 			}
 		}

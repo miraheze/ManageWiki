@@ -23,7 +23,7 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 			$dbw->delete(
 				'mw_permissions',
 				[
-					'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
+					'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 				],
 				__METHOD__
 			);
@@ -32,10 +32,10 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 		$checkRow = $dbw->selectRow(
 			'mw_permissions',
 			[
-				'*'
+				'*',
 			],
 			[
-				'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
+				'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 			],
 			__METHOD__
 		);
@@ -50,11 +50,12 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 				$groupArray = [];
 
 				foreach ( $groupData as $name => $value ) {
-					if ( $name == 'autopromote' ) {
+					if ( $name === 'autopromote' ) {
 						$groupArray[$name] = $value;
-					} else {
-						$groupArray[$name]['add'] = $value;
+						continue;
 					}
+
+					$groupArray[$name]['add'] = $value;
 				}
 
 				$mwPermissions->modify( $newgroup, $groupArray );

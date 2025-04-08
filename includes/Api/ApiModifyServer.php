@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Api;
 
 use MediaWiki\Api\ApiBase;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ParamValidator\ParamValidator;
@@ -50,7 +51,7 @@ class ApiModifyServer extends ApiBase {
 	}
 
 	private static function validDatabase( string $wiki ): bool {
-		$localDatabases = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'LocalDatabases' );
+		$localDatabases = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( MainConfigNames::LocalDatabases );
 		return in_array( $wiki, $localDatabases );
 	}
 

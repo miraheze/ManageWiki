@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 use MediaWiki\Title\Title;
@@ -68,6 +69,7 @@ class ManageWikiInstaller {
 						'db' => $dbname,
 						'exception' => $e,
 					] );
+
 					return false;
 				}
 			}
@@ -82,10 +84,10 @@ class ManageWikiInstaller {
 	): bool {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
-		$baseloc = $config->get( 'UploadDirectory' ) . $dbname;
+		$baseloc = $config->get( MainConfigNames::UploadDirectory ) . $dbname;
 
 		foreach ( $data as $location => $source ) {
-			if ( substr( $location, -1 ) == '/' ) {
+			if ( substr( $location, -1 ) === '/' ) {
 				if ( $source === true ) {
 					if ( !is_dir( $baseloc . $location ) && !mkdir( $baseloc . $location ) ) {
 						return false;
@@ -116,19 +118,19 @@ class ManageWikiInstaller {
 	): bool {
 		$mwPermissions = new ManageWikiPermissions( $dbname );
 
-		$action = ( $install ) ? 'add' : 'remove';
+		$action = $install ? 'add' : 'remove';
 
 		foreach ( $data as $group => $mod ) {
 			$groupData = [
 				'permissions' => [
-					$action => $mod['permissions'] ?? []
+					$action => $mod['permissions'] ?? [],
 				],
 				'addgroups' => [
-					$action => $mod['addgroups'] ?? []
+					$action => $mod['addgroups'] ?? [],
 				],
 				'removegroups' => [
-					$action => $mod['removegroups'] ?? []
-				]
+					$action => $mod['removegroups'] ?? [],
+				],
 			];
 
 			$mwPermissions->modify( $group, $groupData );
@@ -152,9 +154,10 @@ class ManageWikiInstaller {
 				$i['name'] = $name;
 
 				$mwNamespaces->modify( $id, $i, true );
-			} else {
-				$mwNamespaces->remove( $i['id'], $i['id'] % 2, true );
+				continue;
 			}
+
+			$mwNamespaces->remove( $i['id'], $i['id'] % 2, true );
 		}
 
 		$mwNamespaces->commit();
