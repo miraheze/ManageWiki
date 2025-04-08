@@ -59,7 +59,9 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		] );
 		$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $this->databaseUtils->getCentralWikiID() );
+		$remoteWiki = $this->remoteWikiFactory->newInstance(
+			$this->databaseUtils->getCentralWikiID()
+		);
 
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm(
