@@ -46,7 +46,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			return;
 		}
 
-		$this->buildMainView()
+		$this->buildMainView();
 	}
 
 	private function buildGroupView( string $group ): void {
