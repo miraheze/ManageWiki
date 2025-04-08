@@ -103,7 +103,6 @@ class ManageWikiTypes {
 
 				foreach ( $prefixes as $row ) {
 					$prefix = $row['iw_prefix'];
-
 					$interwikiPrefixes[$prefix] = $prefix;
 				}
 
@@ -197,9 +196,7 @@ class ManageWikiTypes {
 				}
 
 				if ( !$config->get( MainConfigNames::EnableEmail ) ) {
-					if ( !$config->get( MainConfigNames::AllowRequiringEmailForResets ) ) {
-						$excludedPrefs[] = 'requireemail';
-					}
+					$excludedPrefs[] = 'requireemail';
 
 					if ( !$config->get( MainConfigNames::EnableUserEmail ) ) {
 						$excludedPrefs[] = 'disablemail';
