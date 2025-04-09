@@ -1145,12 +1145,12 @@ class ManageWikiFormFactoryBuilder {
 		$removedPerms = [];
 
 		foreach ( $assignablePerms as $perm ) {
-			if ( $formData["right-$perm"] && !is_int( array_search( $perm, $permList['permissions'] ) ) ) {
+			if ( $formData["right-$perm"] && array_search( $perm, $permList['permissions'], true ) === false ) {
 				$addedPerms[] = $perm;
 				continue;
 			}
 
-			if ( !$formData["right-$perm"] && is_int( array_search( $perm, $permList['permissions'] ) ) ) {
+			if ( !$formData["right-$perm"] && array_search( $perm, $permList['permissions'], true ) !== false ) {
 				$removedPerms[] = $perm;
 			}
 		}
