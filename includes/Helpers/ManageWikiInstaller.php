@@ -87,7 +87,7 @@ class ManageWikiInstaller {
 		$baseloc = $config->get( MainConfigNames::UploadDirectory ) . $dbname;
 
 		foreach ( $data as $location => $source ) {
-			if ( substr( $location, -1 ) === '/' ) {
+			if ( str_ends_with( $location, '/' ) ) {
 				if ( $source === true ) {
 					if ( !is_dir( $baseloc . $location ) && !mkdir( $baseloc . $location ) ) {
 						return false;
