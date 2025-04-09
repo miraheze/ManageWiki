@@ -139,8 +139,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		}
 
 		if ( !$this->databaseUtils->isCurrentWikiCentral() && $canModify ) {
-			$this->getOutput()->setPageTitle(
-				$this->msg( 'managewiki-permissions-resetgroups-title' )->plain()
+			$this->getOutput()->setPageTitleMsg(
+				$this->msg( 'managewiki-permissions-resetgroups-title' )
 			);
 
 			$resetPermissionsDescriptor = [];
