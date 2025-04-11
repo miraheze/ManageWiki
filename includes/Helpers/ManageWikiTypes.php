@@ -7,6 +7,7 @@ use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Message\Message;
 use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
@@ -31,7 +32,8 @@ class ManageWikiTypes {
 				$options['type'] = $type;
 			}
 
-			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $groupList, $name, $options, $value );
+			return self::namespaces( $overrideDefault, $type, $value ) ?:
+				self::common( $config, $disabled, $groupList, $name, $options, $value );
 		}
 
 		return self::common( $config, $disabled, $groupList, $name, $options, $value );
@@ -50,7 +52,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'text',
 					'default' => $value ?? $options['overridedefault'],
-					'validation-callback' => static function ( $database ) use ( $config, $name ) {
+					'validation-callback' => static function ( string $database ) use ( $config, $name ): bool|Message {
 						if ( !in_array( $database, $config->get( MainConfigNames::LocalDatabases ) ) ) {
 							return wfMessage( 'managewiki-invalid-database', $database, $name );
 						}
@@ -90,7 +92,7 @@ class ManageWikiTypes {
 							'flags' => [ 'destructive' ],
 						],
 					],
-					'default' => array_map( static function ( $num ) {
+					'default' => array_map( static function ( int $num ): array {
 						return [ 'value' => $num ];
 					}, $value ?? $options['overridedefault'] ),
 				];
@@ -325,7 +327,7 @@ class ManageWikiTypes {
 							'flags' => [ 'destructive' ],
 						],
 					],
-					'default' => array_map( static function ( $text ) {
+					'default' => array_map( static function ( string $text ): array {
 						return [ 'value' => $text ];
 					}, $value ?? $options['overridedefault'] ),
 				];

@@ -258,7 +258,7 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
-			$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $name ) {
+			$filteredList = array_filter( $manageWikiSettings, static function ( array $value ) use ( $name ): bool {
 				return $value['from'] === $name;
 			} );
 
@@ -349,7 +349,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
 
-		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered, $extList ) {
+		$filteredList = array_filter( $manageWikiSettings, static function ( array $value ) use ( $filtered, $extList ): bool {
 			return $value['from'] === strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || ( array_key_exists( 'global', $value ) && $value['global'] ) );
 		} );
 
@@ -822,8 +822,8 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWikiFactory $remoteWiki,
 		IDatabase $dbw,
 		Config $config,
-		string $special = '',
-		string $filtered = ''
+		string $special,
+		string $filtered
 	): array {
 		switch ( $module ) {
 			case 'core':
@@ -1065,7 +1065,7 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
-		$filteredList = array_filter( $manageWikiSettings, static function ( $value ) use ( $filtered, $extList ) {
+		$filteredList = array_filter( $manageWikiSettings, static function ( array $value ) use ( $filtered, $extList ): bool {
 			return $value['from'] === strtolower( $filtered ) && ( in_array( $value['from'], $extList ) || ( array_key_exists( 'global', $value ) && $value['global'] ) );
 		} );
 

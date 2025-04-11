@@ -65,10 +65,11 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm(
-			wiki: 'default',
-			remoteWiki: $remoteWiki,
-			context: $this->getContext(),
 			config: $this->getConfig(),
+			context: $this->getContext(),
+			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
+			remoteWiki: $remoteWiki,
+			dbname: 'default',
 			module: 'permissions',
 			special: $group,
 			filtered: ''

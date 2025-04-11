@@ -353,14 +353,9 @@ class Hooks {
 		// namespace that we are on, otherwise it is very likely for the namespace to
 		// not have setting set, and cause settings set before to be ignored
 
-		/** @var int[]|null $only Array of namespace IDs where the additional setting applies, or null for all namespaces */
 		$only = null;
 		if ( isset( $conf['only'] ) ) {
-			$only = $conf['only'];
-		}
-
-		if ( is_int( $only ) ) {
-			$only = [ $only ];
+			$only = (array)$conf['only'];
 		}
 
 		return $only === null || in_array( $nsID, $only );
