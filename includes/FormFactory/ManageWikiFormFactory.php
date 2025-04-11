@@ -72,7 +72,7 @@ class ManageWikiFormFactory {
 				$module, $ceMW, $remoteWiki, $special,
 				$filtered, $dbw, $dbname, $config
 			): void {
-				return $this->submitForm(
+				$this->submitForm(
 					$config,
 					$dbw,
 					$form,
