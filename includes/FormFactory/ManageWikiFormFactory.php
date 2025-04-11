@@ -6,7 +6,6 @@ use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Output\OutputPage;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
@@ -16,42 +15,48 @@ use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiFormFactory {
 
-	public function getFormDescriptor(
-		string $module,
-		string $dbName,
-		bool $ceMW,
+	private function getFormDescriptor(
+		Config $config,
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		Config $config,
-		string $special = '',
-		string $filtered = ''
-	) {
+		string $dbname,
+		string $module,
+		string $special,
+		string $filtered,
+		bool $ceMW
+	): array {
 		OutputPage::setupOOUI(
 			strtolower( $context->getSkin()->getSkinName() ),
 			$context->getLanguage()->getDir()
 		);
 
-		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbName, $ceMW, $context, $remoteWiki, $special, $filtered, $config );
+		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbname, $ceMW, $context, $remoteWiki, $special, $filtered, $config );
 	}
 
 	public function getForm(
-		string $wiki,
-		RemoteWikiFactory $remoteWiki,
-		IContextSource $context,
 		Config $config,
+		IContextSource $context,
+		IDatabase $dbw,
+		RemoteWikiFactory $remoteWiki,
+		string $dbname,
 		string $module,
-		string $special = '',
-		string $filtered = '',
-		string $formClass = ManageWikiOOUIForm::class
-	) {
-		$dbw = MediaWikiServices::getInstance()->getConnectionProvider()
-			->getPrimaryDatabase( 'virtual-createwiki' );
-
+		string $special,
+		string $filtered
+	): ManageWikiOOUIForm {
 		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser(), $module );
 
-		$formDescriptor = $this->getFormDescriptor( $module, $wiki, $ceMW, $context, $remoteWiki, $config, $special, $filtered );
+		$formDescriptor = $this->getFormDescriptor(
+			$config,
+			$context,
+			$remoteWiki,
+			$dbname,
+			$module,
+			$special,
+			$filtered,
+			$ceMW
+		);
 
-		$htmlForm = new $formClass( $formDescriptor, $context, $module );
+		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
 
 		if ( !$ceMW ) {
 			$htmlForm->suppressDefaultSubmit();
@@ -63,8 +68,22 @@ class ManageWikiFormFactory {
 		$htmlForm->setSubmitID( 'managewiki-submit' );
 
 		$htmlForm->setSubmitCallback(
-			function ( array $formData, HTMLForm $form ) use ( $module, $ceMW, $remoteWiki, $special, $filtered, $dbw, $wiki, $config ) {
-				return $this->submitForm( $formData, $form, $module, $ceMW, $wiki, $remoteWiki, $dbw, $config, $special, $filtered );
+			function ( array $formData, HTMLForm $form ) use (
+				$module, $ceMW, $remoteWiki, $special,
+				$filtered, $dbw, $dbname, $config
+			): void {
+				$this->submitForm(
+					$config,
+					$dbw,
+					$form,
+					$remoteWiki,
+					$formData,
+					$dbname,
+					$module,
+					$special,
+					$filtered,
+					$ceMW
+				);
 			}
 		);
 
@@ -72,17 +91,17 @@ class ManageWikiFormFactory {
 	}
 
 	protected function submitForm(
-		array $formData,
-		HTMLForm $form,
-		string $module,
-		bool $ceMW,
-		string $dbName,
-		RemoteWikiFactory $remoteWiki,
-		IDatabase $dbw,
 		Config $config,
-		string $special = '',
-		string $filtered = ''
-	) {
+		IDatabase $dbw,
+		HTMLForm $form,
+		RemoteWikiFactory $remoteWiki,
+		array $formData,
+		string $dbname,
+		string $module,
+		string $special,
+		string $filtered,
+		bool $ceMW
+	): void {
 		$context = $form->getContext();
 		$out = $context->getOutput();
 
@@ -93,7 +112,18 @@ class ManageWikiFormFactory {
 		$form->getButtons();
 		$formData['reason'] = $form->getField( 'reason' )->loadDataFromRequest( $form->getRequest() );
 
-		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler( $formData, $form, $module, $dbName, $context, $remoteWiki, $dbw, $config, $special, $filtered );
+		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler(
+			$formData,
+			$form,
+			$module,
+			$dbname,
+			$context,
+			$remoteWiki,
+			$dbw,
+			$config,
+			$special,
+			$filtered
+		);
 
 		if ( $mwReturn ) {
 			$errorOut = [];
@@ -113,7 +143,7 @@ class ManageWikiFormFactory {
 					'mw-notify-error'
 				)
 			);
-			return null;
+			return;
 		}
 
 		$out->addHTML(

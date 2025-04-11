@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki;
 
 use Exception;
+use MediaWiki\Content\ContentHandler;
 use MediaWiki\Content\TextContentHandler;
 use MediaWiki\Installer\DatabaseUpdater;
 use MediaWiki\Logger\LoggerFactory;
@@ -12,15 +13,16 @@ use MediaWiki\User\User;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Skin;
 use Wikimedia\Rdbms\IReadableDatabase;
 
 class Hooks {
 
-	private static function getConfig( string $var ) {
+	private static function getConfig( string $var ): mixed {
 		return MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( $var );
 	}
 
-	public static function fnManageWikiSchemaUpdates( DatabaseUpdater $updater ) {
+	public static function onLoadExtensionSchemaUpdates( DatabaseUpdater $updater ): void {
 		$dir = __DIR__ . '/../sql';
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
@@ -101,18 +103,25 @@ class Hooks {
 		] );
 	}
 
-	public static function onContentHandlerForModelID( $modelId, &$handler ) {
-		$handler = new TextContentHandler( $modelId );
+	public static function onContentHandlerForModelID(
+		string $modelName,
+		ContentHandler &$handler
+	): void {
+		$handler = new TextContentHandler( $modelName );
 	}
 
-	public static function onCreateWikiDataFactoryBuilder( string $wiki, IReadableDatabase $dbr, array &$cacheArray ) {
+	public static function onCreateWikiDataFactoryBuilder(
+		string $wiki,
+		IReadableDatabase $dbr,
+		array &$cacheArray
+	): void {
 		$logger = LoggerFactory::getInstance( 'ManageWiki' );
 
 		$setObject = $dbr->selectRow(
 			'mw_settings',
 			'*',
 			[
-				's_dbname' => $wiki
+				's_dbname' => $wiki,
 			],
 			__METHOD__
 		);
@@ -129,11 +138,12 @@ class Hooks {
 				if ( isset( $manageWikiExtensions[$ext] ) ) {
 					$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
 						$manageWikiExtensions[$ext]['name'];
-				} else {
-					$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
-						'ext' => $ext,
-					] );
+					continue;
 				}
+
+				$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
+					'ext' => $ext,
+				] );
 			}
 		}
 
@@ -143,7 +153,7 @@ class Hooks {
 				'mw_namespaces',
 				'*',
 				[
-					'ns_dbname' => $wiki
+					'ns_dbname' => $wiki,
 				],
 				__METHOD__
 			);
@@ -178,7 +188,7 @@ class Hooks {
 					'contentmodel' => $ns->ns_content_model,
 					'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
 					'aliases' => array_merge( json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '' ), true ), (array)$lcAlias ),
-					'additional' => json_decode( $ns->ns_additional ?? '', true )
+					'additional' => json_decode( $ns->ns_additional ?? '', true ),
 				];
 
 				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
@@ -235,7 +245,7 @@ class Hooks {
 				'mw_permissions',
 				'*',
 				[
-					'perm_dbname' => $wiki
+					'perm_dbname' => $wiki,
 				],
 				__METHOD__
 			);
@@ -270,7 +280,7 @@ class Hooks {
 					),
 					'addself' => json_decode( $perm->perm_addgroupstoself ?? '', true ),
 					'removeself' => json_decode( $perm->perm_removegroupsfromself ?? '', true ),
-					'autopromote' => json_decode( $perm->perm_autopromote ?? '', true )
+					'autopromote' => json_decode( $perm->perm_autopromote ?? '', true ),
 				];
 			}
 
@@ -293,7 +303,7 @@ class Hooks {
 					'removegroups' => self::getConfig( 'ManageWikiPermissionsAdditionalRemoveGroups' )[$missingKey] ?? [],
 					'addself' => [],
 					'removeself' => [],
-					'autopromote' => []
+					'autopromote' => [],
 				];
 			}
 		}
@@ -309,8 +319,12 @@ class Hooks {
 	 * @param array $varConf variable config from wgManageWikiNamespacesAdditional[$var]
 	 */
 	private static function setNamespaceSettingJson(
-		array &$cacheArray, int $nsID, string $var, $val, array $varConf
-	) {
+		array &$cacheArray,
+		int $nsID,
+		string $var,
+		mixed $val,
+		array $varConf
+	): void {
 		switch ( $varConf['type'] ) {
 			case 'check':
 				$cacheArray['settings'][$var][] = $nsID;
@@ -319,7 +333,7 @@ class Hooks {
 				$cacheArray['settings'][$var][$nsID] = true;
 				break;
 			default:
-				if ( ( $varConf['constant'] ) ?? false ) {
+				if ( $varConf['constant'] ?? false ) {
 					$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
 				} else {
 					$cacheArray['settings'][$var][$nsID] = $val;
@@ -334,26 +348,20 @@ class Hooks {
 	 * @param int $nsID namespace ID to check if the setting is allowed for
 	 * @return bool Whether or not the setting is enabled for the namespace
 	 */
-	private static function isAdditionalSettingForNamespace(
-		array $conf, int $nsID
-	) {
+	private static function isAdditionalSettingForNamespace( array $conf, int $nsID ): bool {
 		// T12237: Do not apply additional settings if the setting is not for the
 		// namespace that we are on, otherwise it is very likely for the namespace to
 		// not have setting set, and cause settings set before to be ignored
 
-		/** @var int[]|null $only Array of namespace IDs where the additional setting applies, or null for all namespaces */
 		$only = null;
 		if ( isset( $conf['only'] ) ) {
-			$only = $conf['only'];
-		}
-		if ( is_int( $only ) ) {
-			$only = [ $only ];
+			$only = (array)$conf['only'];
 		}
 
 		return $only === null || in_array( $nsID, $only );
 	}
 
-	public static function onCreateWikiCreation( $dbname, $private ) {
+	public static function onCreateWikiCreation( string $dbname, bool $private ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
@@ -364,11 +372,12 @@ class Hooks {
 				$groupArray = [];
 
 				foreach ( $groupData as $name => $value ) {
-					if ( $name == 'autopromote' ) {
+					if ( $name === 'autopromote' ) {
 						$groupArray[$name] = $value;
-					} else {
-						$groupArray[$name]['add'] = $value;
+						continue;
 					}
+
+					$groupArray[$name]['add'] = $value;
 				}
 
 				$mwPermissions->modify( $newgroup, $groupArray );
@@ -400,7 +409,7 @@ class Hooks {
 		}
 	}
 
-	public static function onCreateWikiTables( &$tables ) {
+	public static function onCreateWikiTables( array &$tables ): void {
 		if ( ManageWiki::checkSetup( 'extensions' ) || ManageWiki::checkSetup( 'settings' ) ) {
 			$tables['mw_settings'] = 's_dbname';
 		}
@@ -414,7 +423,7 @@ class Hooks {
 		}
 	}
 
-	public static function onCreateWikiStatePrivate( $dbname ) {
+	public static function onCreateWikiStatePrivate( string $dbname ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) && self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
@@ -423,11 +432,12 @@ class Hooks {
 			$privateArray = [];
 
 			foreach ( $defaultPrivate as $name => $value ) {
-				if ( $name == 'autopromote' ) {
+				if ( $name === 'autopromote' ) {
 					$privateArray[$name] = $value;
-				} else {
-					$privateArray[$name]['add'] = $value;
+					continue;
 				}
+
+				$privateArray[$name]['add'] = $value;
 			}
 
 			$mwPermissions->modify( self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ), $privateArray );
@@ -436,7 +446,7 @@ class Hooks {
 		}
 	}
 
-	public static function onCreateWikiStatePublic( $dbname ) {
+	public static function onCreateWikiStatePublic( string $dbname ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) && self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ) {
 			$mwPermissions = new ManageWikiPermissions( $dbname );
 
@@ -450,7 +460,7 @@ class Hooks {
 		}
 	}
 
-	public static function fnNewSidebarItem( $skin, &$bar ) {
+	public static function onSidebarBeforeOutput( Skin $skin, array &$sidebar ): void {
 		$user = $skin->getUser();
 		$services = MediaWikiServices::getInstance();
 		$permissionManager = $services->getPermissionManager();
@@ -459,7 +469,7 @@ class Hooks {
 		$hideSidebar = !self::getConfig( 'ManageWikiForceSidebarLinks' ) &&
 			!$userOptionsLookup->getOption( $user, 'managewikisidebar', 0 );
 
-		foreach ( (array)ManageWiki::listModules() as $module ) {
+		foreach ( ManageWiki::listModules() as $module ) {
 			$append = '';
 			if ( !$permissionManager->userHasRight( $user, 'managewiki-' . $module ) ) {
 				if ( $hideSidebar ) {
@@ -469,15 +479,15 @@ class Hooks {
 				$append = '-view';
 			}
 
-			$bar['managewiki-sidebar-header'][] = [
+			$sidebar['managewiki-sidebar-header'][] = [
 				'text' => $skin->msg( "managewiki-link-{$module}{$append}" )->text(),
 				'id' => "managewiki{$module}link",
-				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() )
+				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() ),
 			];
 		}
 	}
 
-	public static function onGetPreferences( User $user, array &$preferences ) {
+	public static function onGetPreferences( User $user, array &$preferences ): void {
 		$preferences['managewikisidebar'] = [
 			'type' => 'toggle',
 			'label-message' => 'managewiki-toggle-forcesidebar',

@@ -22,7 +22,7 @@ class ToggleExtension extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$forceRemove = $this->getOption( 'force-remove', false );
 		$noList = $this->getOption( 'no-list', false );
 		$allWikis = $this->getOption( 'all-wikis', false );
@@ -41,13 +41,17 @@ class ToggleExtension extends Maintenance {
 			$mwExt = new ManageWikiExtensions( $wiki );
 			$extensionList = $mwExt->list();
 			if ( $disable && ( in_array( $ext, $extensionList ) || $forceRemove ) ) {
-				$mwExt->remove( $ext, $forceRemove );
+				$mwExt->remove( [ $ext ], $forceRemove );
 				$mwExt->commit();
 				if ( !$noList ) {
 					$this->output( "Removed $ext from $wiki\n" );
 				}
-			} elseif ( !in_array( $ext, $extensionList ) && !$disable ) {
-				$mwExt->add( $ext );
+
+				continue;
+			}
+
+			if ( !in_array( $ext, $extensionList ) && !$disable ) {
+				$mwExt->add( [ $ext ] );
 				$mwExt->commit();
 				if ( !$noList ) {
 					$this->output( "Enabled $ext on $wiki\n" );
@@ -58,9 +62,10 @@ class ToggleExtension extends Maintenance {
 		if ( $noList && count( $wikis ) > 1 ) {
 			if ( $disable ) {
 				$this->output( "Removed $ext from all wikis in that it was enabled on.\n" );
-			} else {
-				$this->output( "Enabled $ext on all wikis in \$wgLocalDatabases.\n" );
+				return;
 			}
+
+			$this->output( "Enabled $ext on all wikis in \$wgLocalDatabases.\n" );
 		}
 	}
 }

@@ -5,31 +5,28 @@ namespace Miraheze\ManageWiki\Jobs;
 use Job;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Title\Title;
+use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Used on namespace creation and deletion to move pages into and out of namespaces
  */
 class NamespaceMigrationJob extends Job {
 
-	/**
-	 * @param Title $title
-	 * @param string[] $params
-	 */
-	public function __construct( Title $title, $params ) {
+	public function __construct( Title $title, array $params ) {
 		parent::__construct( 'NamespaceMigrationJob', $params );
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function run() {
+	public function run(): bool {
 		$dbw = MediaWikiServices::getInstance()
 			->getDBLoadBalancer()
 			->getMaintenanceConnectionRef( DB_PRIMARY );
 
 		$maintainPrefix = $this->params['maintainPrefix'];
 
-		if ( $this->params['action'] == 'delete' ) {
+		if ( $this->params['action'] === 'delete' ) {
 			$nsSearch = $this->params['nsID'];
 			$pagePrefix = '';
 			$nsTo = $this->params['nsNew'];
@@ -47,7 +44,7 @@ class NamespaceMigrationJob extends Job {
 			],
 			[
 				'page_namespace' => $nsSearch,
-				"page_title LIKE '$pagePrefix%'"
+				"page_title LIKE '$pagePrefix%'",
 			],
 			__METHOD__
 		);
@@ -56,10 +53,10 @@ class NamespaceMigrationJob extends Job {
 			$pageTitle = $row->page_title;
 			$pageID = $row->page_id;
 
-			if ( $nsSearch == 0 ) {
+			if ( $nsSearch === 0 ) {
 				$replace = '';
 				$newTitle = str_replace( $pagePrefix, $replace, $pageTitle );
-			} elseif ( $maintainPrefix && $this->params['action'] == 'delete' ) {
+			} elseif ( $maintainPrefix && $this->params['action'] === 'delete' ) {
 				$pagePrefix = $this->params['nsName'] . ':';
 				$replace = '';
 				$newTitle = $pagePrefix . str_replace( $pagePrefix, $replace, $pageTitle );
@@ -78,7 +75,7 @@ class NamespaceMigrationJob extends Job {
 					'page_title' => trim( $newTitle, '_' ),
 				],
 				[
-					'page_id' => $pageID
+					'page_id' => $pageID,
 				],
 				__METHOD__
 			);
@@ -88,11 +85,11 @@ class NamespaceMigrationJob extends Job {
 				'recentchanges',
 				[
 					'rc_namespace' => $nsTo,
-					'rc_title' => trim( $newTitle, '_' )
+					'rc_title' => trim( $newTitle, '_' ),
 				],
 				[
 					'rc_namespace' => $nsSearch,
-					'rc_title' => $pageTitle
+					'rc_title' => $pageTitle,
 				],
 				__METHOD__
 			);
@@ -101,13 +98,17 @@ class NamespaceMigrationJob extends Job {
 		return true;
 	}
 
-	private function pageExists( $pageName, $nsID, $dbw ) {
+	private function pageExists(
+		string $pageName,
+		int $nsID,
+		IDatabase $dbw
+	): bool {
 		$row = $dbw->selectRow(
 			'page',
 			'page_title',
 			[
 				'page_title' => $pageName,
-				'page_namespace' => $nsID
+				'page_namespace' => $nsID,
 			],
 			__METHOD__
 		);

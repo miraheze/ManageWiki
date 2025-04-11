@@ -2,11 +2,10 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use MediaWiki\Config\Config;
-use MediaWiki\Context\RequestContext;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\MainConfigNames;
+use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
@@ -19,43 +18,41 @@ use OOUI\SearchInputWidget;
 
 class SpecialManageWiki extends SpecialPage {
 
-	private Config $config;
-	private CreateWikiDatabaseUtils $databaseUtils;
-	private RemoteWikiFactory $remoteWikiFactory;
-
-	public function __construct() {
+	public function __construct(
+		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly PermissionManager $permissionManager,
+		private readonly RemoteWikiFactory $remoteWikiFactory
+	) {
 		parent::__construct( 'ManageWiki' );
-
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$this->databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$this->remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 	}
 
-	public function execute( $par ) {
+	/**
+	 * @param ?string $par
+	 */
+	public function execute( $par ): void {
 		$par = explode( '/', $par ?? '', 3 );
 
 		$out = $this->getOutput();
 		$this->setHeaders();
 
-		if ( $this->config->get( 'ManageWikiHelpUrl' ) ) {
-			$out->addHelpLink( $this->config->get( 'ManageWikiHelpUrl' ), true );
+		if ( $this->getConfig()->get( 'ManageWikiHelpUrl' ) ) {
+			$out->addHelpLink( $this->getConfig()->get( 'ManageWikiHelpUrl' ), true );
 		}
 
-		if ( array_key_exists( $par[0], $this->config->get( 'ManageWiki' ) ) ) {
+		$module = 'core';
+		if ( array_key_exists( $par[0], $this->getConfig()->get( 'ManageWiki' ) ) ) {
 			$module = $par[0];
-		} else {
-			$module = 'core';
 		}
 
-		if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
-			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module . '-view' )->text() );
+		if ( !$this->getContext()->getUser()->isAllowed( "managewiki-$module" ) ) {
+			$out->setPageTitleMsg( $this->msg( "managewiki-link-$module-view" ) );
 			if ( $module !== 'permissions' || $module !== 'namespaces' ) {
-				$out->addWikiMsg( "managewiki-header-{$module}-view" );
+				$out->addWikiMsg( "managewiki-header-$module-view" );
 			}
 		} else {
-			$out->setPageTitle( $this->msg( 'managewiki-link-' . $module )->text() );
+			$out->setPageTitleMsg( $this->msg( "managewiki-link-$module" ) );
 			if ( $module !== 'permissions' || $module !== 'namespaces' ) {
-				$out->addWikiMsg( "managewiki-header-{$module}" );
+				$out->addWikiMsg( "managewiki-header-$module" );
 			}
 		}
 
@@ -63,7 +60,7 @@ class SpecialManageWiki extends SpecialPage {
 		$filtered = $par[2] ?? $par[1] ?? '';
 
 		if ( !ManageWiki::checkSetup( $module, true, $out ) ) {
-			return false;
+			return;
 		}
 
 		if ( $module === 'permissions' && $additional ) {
@@ -73,18 +70,19 @@ class SpecialManageWiki extends SpecialPage {
 		$isCentralWiki = $this->databaseUtils->isCurrentWikiCentral();
 
 		if ( !$isCentralWiki ) {
-			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
-		} elseif ( $par[0] == '' ) {
+			$this->showWikiForm( $this->getConfig()->get( MainConfigNames::DBname ), $module, $additional, $filtered );
+		} elseif ( $par[0] === '' ) {
 			$this->showInputBox();
-		} elseif ( $module == 'core' ) {
-			$dbName = $par[1] ?? $this->config->get( 'DBname' );
-			$this->showWikiForm( strtolower( $dbName ), 'core', '', '' );
+		} elseif ( $module === 'core' ) {
+			$dbname = $par[1] ?? $this->getConfig()->get( MainConfigNames::DBname );
+			$this->showWikiForm( strtolower( $dbname ), 'core', '', '' );
 		} else {
-			$this->showWikiForm( $this->config->get( 'DBname' ), $module, $additional, $filtered );
+			$this->showWikiForm( $this->getConfig()->get( MainConfigNames::DBname ), $module, $additional, $filtered );
 		}
 	}
 
-	public function getSubpagesForPrefixSearch() {
+	/** @inheritDoc */
+	public function getSubpagesForPrefixSearch(): array {
 		return [
 			'core',
 			'extensions',
@@ -94,7 +92,7 @@ class SpecialManageWiki extends SpecialPage {
 		];
 	}
 
-	public function showInputBox() {
+	private function showInputBox(): void {
 		$formDescriptor = [
 			'info' => [
 				'default' => $this->msg( 'managewiki-core-info' )->text(),
@@ -109,41 +107,42 @@ class SpecialManageWiki extends SpecialPage {
 		];
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'searchForm' );
-		$htmlForm->setWrapperLegendMsg( 'managewiki-core-header' );
-		$htmlForm->setMethod( 'post' )
+		$htmlForm
 			->setSubmitCallback( [ $this, 'onSubmitRedirectToWikiForm' ] )
+			->setMethod( 'post' )
+			->setWrapperLegendMsg( 'managewiki-core-header' )
 			->prepareForm()
 			->show();
-
-		return true;
 	}
 
-	public function onSubmitRedirectToWikiForm( array $params ) {
-		if ( $params['dbname'] !== '' ) {
-			header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', 'core' )->getFullURL() . '/' . $params['dbname'] );
-		} else {
-			return 'Invalid url.';
-		}
-
-		return true;
+	public function onSubmitRedirectToWikiForm( array $formData ): void {
+		$this->getOutput()->redirect(
+			SpecialPage::getTitleFor( 'ManageWiki', "core/{$formData['dbname']}" )->getFullURL()
+		);
 	}
 
-	public function showWikiForm( $wiki, $module, $special, $filtered ) {
+	private function showWikiForm(
+		string $dbname,
+		string $module,
+		string $special,
+		string $filtered
+	): void {
 		$out = $this->getOutput();
 
 		if ( $special !== '' || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
-			$out->addModules( [ 'ext.managewiki.oouiform' ] );
+			$out->addModules( [
+				'ext.managewiki.oouiform',
+				'mediawiki.special.userrights',
+			] );
 
 			$out->addModuleStyles( [
 				'ext.managewiki.oouiform.styles',
 				'mediawiki.widgets.TagMultiselectWidget.styles',
+				'oojs-ui-widgets.styles',
 			] );
-
-			$out->addModuleStyles( [ 'oojs-ui-widgets.styles' ] );
-			$out->addModules( [ 'mediawiki.special.userrights' ] );
 		}
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $wiki );
+		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
 
 		if ( $remoteWiki->isLocked() ) {
 			$out->addHTML( Html::errorBox( $this->msg( 'managewiki-mwlocked' )->escaped() ) );
@@ -151,7 +150,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$options = [];
 
-		if ( $module != 'core' ) {
+		if ( $module !== 'core' ) {
 			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
@@ -169,9 +168,9 @@ class SpecialManageWiki extends SpecialPage {
 			}
 		}
 
-		if ( $module == 'permissions' && !$special ) {
-			$language = RequestContext::getMain()->getLanguage();
-			$mwPermissions = new ManageWikiPermissions( $wiki );
+		if ( $module === 'permissions' && !$special ) {
+			$language = $this->getContext()->getLanguage();
+			$mwPermissions = new ManageWikiPermissions( $dbname );
 			$groups = array_keys( $mwPermissions->list() );
 
 			foreach ( $groups as $group ) {
@@ -180,8 +179,8 @@ class SpecialManageWiki extends SpecialPage {
 			}
 
 			$this->reusableFormDescriptor( $module, $options );
-		} elseif ( $module == 'namespaces' && $special == '' ) {
-			$mwNamespaces = new ManageWikiNamespaces( $wiki );
+		} elseif ( $module === 'namespaces' && $special === '' ) {
+			$mwNamespaces = new ManageWikiNamespaces( $dbname );
 			$namespaces = $mwNamespaces->list();
 
 			foreach ( $namespaces as $id => $namespace ) {
@@ -195,7 +194,16 @@ class SpecialManageWiki extends SpecialPage {
 			$this->reusableFormDescriptor( $module, $options );
 		} else {
 			$formFactory = new ManageWikiFormFactory();
-			$htmlForm = $formFactory->getForm( $wiki, $remoteWiki, $this->getContext(), $this->config, $module, strtolower( $special ), $filtered );
+			$htmlForm = $formFactory->getForm(
+				config: $this->getConfig(),
+				context: $this->getContext(),
+				dbw: $this->databaseUtils->getGlobalPrimaryDB(),
+				remoteWiki: $remoteWiki,
+				dbname: $dbname,
+				module: $module,
+				special: strtolower( $special ),
+				filtered: $filtered
+			);
 
 			$out->addHTML( new FieldLayout(
 				new SearchInputWidget( [
@@ -213,14 +221,14 @@ class SpecialManageWiki extends SpecialPage {
 		}
 	}
 
-	private function reusableFormDescriptor( string $module, array $options ) {
+	private function reusableFormDescriptor( string $module, array $options ): void {
 		$hidden = [];
 		$selector = [];
 		$create = [];
 
 		$hidden['module'] = [
 			'type' => 'hidden',
-			'default' => $module
+			'default' => $module,
 		];
 
 		$selector['info'] = [
@@ -231,15 +239,19 @@ class SpecialManageWiki extends SpecialPage {
 		$selector['out'] = [
 			'type' => 'select',
 			'label-message' => "managewiki-{$module}-select",
-			'options' => $options
+			'options' => $options,
 		];
 
 		$selectForm = HTMLForm::factory( 'ooui', $hidden + $selector, $this->getContext(), 'selector' );
-		$selectForm->setWrapperLegendMsg( "managewiki-{$module}-select-header" );
-		$selectForm->setMethod( 'post' )->setFormIdentifier( 'selector' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->prepareForm()->show();
+		$selectForm
+			->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )
+			->setFormIdentifier( 'selector' )
+			->setMethod( 'post' )
+			->setWrapperLegendMsg( "managewiki-{$module}-select-header" )
+			->prepareForm()
+			->show();
 
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-		if ( $permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-' . $module ) ) {
+		if ( $this->permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-' . $module ) ) {
 			$create['info'] = [
 				'type' => 'info',
 				'default' => $this->msg( "managewiki-{$module}-create-info" )->text(),
@@ -251,26 +263,33 @@ class SpecialManageWiki extends SpecialPage {
 			];
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
-			$createForm->setWrapperLegendMsg( "managewiki-{$module}-create-header" );
-			$createForm->setMethod( 'post' )->setFormIdentifier( 'create' )->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )->setSubmitText( $this->msg( "managewiki-{$module}-create-submit" )->plain() )->prepareForm()->show();
+			$createForm
+				->setSubmitCallback( [ $this, 'reusableFormSubmission' ] )
+				->setFormIdentifier( 'create' )
+				->setMethod( 'post' )
+				->setWrapperLegendMsg( "managewiki-{$module}-create-header" )
+				->setSubmitTextMsg( "managewiki-{$module}-create-submit" )
+				->prepareForm()
+				->show();
 		}
 	}
 
-	public function reusableFormSubmission( array $formData, HTMLForm $form ) {
+	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
 		$module = $formData['module'];
-		$createNamespace = ( $form->getSubmitText() == $this->msg( 'managewiki-namespaces-create-submit' )->plain() ) ? '' : $formData['out'];
-		$url = ( $module == 'namespaces' ) ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
+		$createNamespace = ( $form->getSubmitText() === $this->msg( 'managewiki-namespaces-create-submit' )->text() ) ? '' : $formData['out'];
+		$url = $module === 'namespaces' ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
 
 		if ( $module === 'namespaces' ) {
 			$form->getRequest()->getSession()->set( 'create', $formData['out'] );
 		}
 
-		header( 'Location: ' . SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() . "/{$url}" );
-
-		return true;
+		$this->getOutput()->redirect(
+			SpecialPage::getTitleFor( 'ManageWiki', "$module/$url" )->getFullURL()
+		);
 	}
 
-	protected function getGroupName() {
+	/** @inheritDoc */
+	protected function getGroupName(): string {
 		return 'wikimanage';
 	}
 }

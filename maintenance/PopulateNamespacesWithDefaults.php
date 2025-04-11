@@ -15,7 +15,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
 		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
 
@@ -23,7 +23,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 			$dbw->delete(
 				'mw_namespaces',
 				[
-					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
+					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 				],
 				__METHOD__
 			);
@@ -32,10 +32,10 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		$checkRow = $dbw->selectRow(
 			'mw_namespaces',
 			[
-				'*'
+				'*',
 			],
 			[
-				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
+				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 			],
 			__METHOD__
 		);

@@ -23,22 +23,22 @@ class ModifyGroupPermission extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$mwPermissions = new ManageWikiPermissions( $this->getConfig()->get( MainConfigNames::DBname ) );
 
 		$permData = [
 			'permissions' => [
-				'add' => (array)$this->getValue( 'addperms' ),
-				'remove' => (array)$this->getValue( 'removeperms' ),
+				'add' => $this->getValue( 'addperms' ),
+				'remove' => $this->getValue( 'removeperms' ),
 			],
 			'addgroups' => [
-				'add' => (array)$this->getValue( 'newaddgroups' ),
-				'remove' => (array)$this->getValue( 'removeaddgroups' ),
+				'add' => $this->getValue( 'newaddgroups' ),
+				'remove' => $this->getValue( 'removeaddgroups' ),
 			],
 			'removegroups' => [
-				'add' => (array)$this->getValue( 'newremovegroups' ),
-				'remove' => (array)$this->getValue( 'removeremovegroups' ),
-			]
+				'add' => $this->getValue( 'newremovegroups' ),
+				'remove' => $this->getValue( 'removeremovegroups' ),
+			],
 		];
 
 		if ( $this->getOption( 'all' ) ) {
@@ -47,17 +47,26 @@ class ModifyGroupPermission extends Maintenance {
 			foreach ( $groups as $group ) {
 				$this->changeGroup( $group, $permData, $mwPermissions );
 			}
-		} elseif ( $this->getArg( 0 ) ) {
-			$this->changeGroup( $this->getArg( 0 ), $permData, $mwPermissions );
-		} else {
-			$this->output( 'You must supply either the group as a arg or use --all' );
+
+			return;
 		}
+
+		if ( $this->getArg( 0 ) ) {
+			$this->changeGroup( $this->getArg( 0 ), $permData, $mwPermissions );
+			return;
+		}
+
+		$this->output( 'You must supply either the group as a arg or use --all' );
 	}
 
-	private function changeGroup( string $name, array $permData, object $mwPermissions ) {
+	private function changeGroup(
+		string $name,
+		array $permData,
+		ManageWikiPermissions $mwPermissions
+	): void {
 		$permList = $mwPermissions->list( $name );
 
-		if ( !in_array( $name, $this->getConfig()->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) == count( $permData['permissions']['remove'] ) ) ) {
+		if ( !in_array( $name, $this->getConfig()->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) === count( $permData['permissions']['remove'] ) ) ) {
 			$mwPermissions->remove( $name );
 		} else {
 			$mwPermissions->modify( $name, $permData );
@@ -66,7 +75,7 @@ class ModifyGroupPermission extends Maintenance {
 		$mwPermissions->commit();
 	}
 
-	private function getValue( string $option ) {
+	private function getValue( string $option ): array {
 		return $this->getOption( $option, '' ) === '' ?
 			[] : explode( ',', $this->getOption( $option, '' ) );
 	}

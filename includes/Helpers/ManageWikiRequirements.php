@@ -3,12 +3,13 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Context\RequestContext;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SiteStats\SiteStats;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
 /**
- * Helper class for de-centralising requirement checking
+ * Helper class for de-centralizing requirement checking
  */
 class ManageWikiRequirements {
 
@@ -21,7 +22,12 @@ class ManageWikiRequirements {
 	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool Whether the extension can be enabled
 	 */
-	public static function process( array $actions, array $extensionList, bool $ignorePerms, RemoteWikiFactory $remoteWiki ) {
+	public static function process(
+		array $actions,
+		array $extensionList,
+		bool $ignorePerms,
+		RemoteWikiFactory $remoteWiki
+	): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
@@ -64,7 +70,7 @@ class ManageWikiRequirements {
 	 * @param array $data Array of permissions needed
 	 * @return bool Whether permissions requirements are met
 	 */
-	private static function permissions( array $data ) {
+	private static function permissions( array $data ): bool {
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		foreach ( $data as $perm ) {
 			if ( !$permissionManager->userHasRight( RequestContext::getMain()->getUser(), $perm ) ) {
@@ -80,7 +86,10 @@ class ManageWikiRequirements {
 	 * @param array $extensionList Extensions already enabled on the wiki
 	 * @return bool Whether extension requirements are met
 	 */
-	private static function extensions( array $data, array $extensionList ) {
+	private static function extensions(
+		array $data,
+		array $extensionList
+	): bool {
 		foreach ( $data as $extension ) {
 			if ( is_array( $extension ) ) {
 				$count = 0;
@@ -102,45 +111,45 @@ class ManageWikiRequirements {
 	}
 
 	/**
-	 * @param int $lim Cut off number
+	 * @param int $limit Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function activeUsers( int $lim ) {
-		return ( SiteStats::activeUsers() <= $lim );
+	private static function activeUsers( int $limit ): bool {
+		return SiteStats::activeUsers() <= $limit;
 	}
 
 	/**
-	 * @param int $lim Cut off number
+	 * @param int $limit Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function articles( int $lim ) {
-		return ( SiteStats::articles() <= $lim );
+	private static function articles( int $limit ): bool {
+		return SiteStats::articles() <= $limit;
 	}
 
 	/**
-	 * @param int $lim Cut off number
+	 * @param int $limit Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function pages( int $lim ) {
-		return ( SiteStats::pages() <= $lim );
+	private static function pages( int $limit ): bool {
+		return SiteStats::pages() <= $limit;
 	}
 
 	/**
-	 * @param int $lim Cut off number
+	 * @param int $limit Cut off number
 	 * @return bool Whether limit is exceeded or not
 	 */
-	private static function images( int $lim ) {
-		return ( SiteStats::images() <= $lim );
+	private static function images( int $limit ): bool {
+		return SiteStats::images() <= $limit;
 	}
 
 	/**
 	 * @param array $data
 	 * @return bool
 	 */
-	private static function settings( array $data ) {
+	private static function settings( array $data ): bool {
 		$config = MediaWikiServices::getInstance()->getMainConfig();
 
-		$database = $data['dbname'] ?? $config->get( 'DBname' );
+		$database = $data['dbname'] ?? $config->get( MainConfigNames::DBname );
 		$setting = $data['setting'];
 		$value = $data['value'];
 
@@ -165,14 +174,20 @@ class ManageWikiRequirements {
 	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool
 	 */
-	private static function visibility( array $data, RemoteWikiFactory $remoteWiki ) {
+	private static function visibility(
+		array $data,
+		RemoteWikiFactory $remoteWiki
+	): bool {
 		$ret = [];
 
 		foreach ( $data as $key => $val ) {
 			if ( $key === 'state' ) {
-				$ret['state'] = ( ( $val === 'private' && $remoteWiki->isPrivate() ) || ( $val === 'public' && !$remoteWiki->isPrivate() ) );
-			} elseif ( $key === 'permissions' ) {
-				$ret['permissions'] = (bool)( self::permissions( $val ) );
+				$ret['state'] = ( $val === 'private' && $remoteWiki->isPrivate() ) || ( $val === 'public' && !$remoteWiki->isPrivate() );
+				continue;
+			}
+
+			if ( $key === 'permissions' ) {
+				$ret['permissions'] = self::permissions( $val );
 			}
 		}
 

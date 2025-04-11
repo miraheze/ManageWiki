@@ -2,33 +2,35 @@
 
 namespace Miraheze\ManageWiki\Api;
 
-use MediaWiki\Api\ApiBase;
+use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
-use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Wikimedia\ParamValidator\ParamValidator;
 
-class QueryWikiConfig extends ApiQueryBase {
+class ApiQueryWikiConfig extends ApiQueryBase {
 
-	public function __construct( $query, $moduleName ) {
+	public function __construct(
+		ApiQuery $query,
+		string $moduleName,
+		private readonly RemoteWikiFactory $remoteWikiFactory
+	) {
 		parent::__construct( $query, $moduleName, 'wcf' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$params = $this->extractRequestParams();
 		$result = $this->getResult();
 		$prop = array_flip( $params['prop'] );
 
 		$data = [];
 
-		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
-
 		foreach ( $params['wikis'] as $wiki ) {
 			try {
-				$remoteWiki = $remoteWikiFactory->newInstance( $wiki );
+				$remoteWiki = $this->remoteWikiFactory->newInstance( $wiki );
 			} catch ( MissingWikiError $e ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
 				continue;
@@ -47,9 +49,7 @@ class QueryWikiConfig extends ApiQueryBase {
 			if ( isset( $prop['settings'] ) ) {
 				$wikiData['settings'] = $mwSet->list();
 
-				$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-
-				foreach ( $config->get( 'ManageWikiSettings' ) as $setting => $options ) {
+				foreach ( $this->getConfig()->get( 'ManageWikiSettings' ) as $setting => $options ) {
 					if ( isset( $options['requires']['visibility']['permissions'] ) ) {
 						unset( $wikiData['settings'][$setting] );
 					}
@@ -75,35 +75,32 @@ class QueryWikiConfig extends ApiQueryBase {
 		$result->addValue( 'query', $this->getModuleName(), $data );
 	}
 
-	protected function getAllowedParams() {
+	/** @inheritDoc */
+	protected function getAllowedParams(): array {
 		return [
 			'prop' => [
+				ParamValidator::PARAM_DEFAULT => 'extensions|settings|sitename',
 				ParamValidator::PARAM_ISMULTI => true,
 				ParamValidator::PARAM_TYPE => [
-					'sitename',
+					'closed',
+					'extensions',
 					'inactive',
 					'inactive-exempt',
-					'closed',
+					'permissions',
 					'private',
-					'extensions',
 					'settings',
-					'permissions'
+					'sitename',
 				],
-				ParamValidator::PARAM_DEFAULT => 'sitename|extensions|settings',
-				ApiBase::PARAM_HELP_MSG_PER_VALUE => [],
 			],
 			'wikis' => [
 				ParamValidator::PARAM_ISMULTI => true,
-				ParamValidator::PARAM_REQUIRED => true
+				ParamValidator::PARAM_REQUIRED => true,
 			],
 		];
 	}
 
-	/**
-	 * @see ApiBase::getExamplesMessages()
-	 * @return array
-	 */
-	protected function getExamplesMessages() {
+	/** @inheritDoc */
+	protected function getExamplesMessages(): array {
 		return [
 			'action=query&list=wikiconfig&wcfwikis=metawiki'
 				=> 'apihelp-query+wikiconfig-example-1',
