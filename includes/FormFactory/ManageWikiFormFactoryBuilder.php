@@ -438,7 +438,7 @@ class ManageWikiFormFactoryBuilder {
 		RemoteWikiFactory $remoteWiki,
 		Config $config
 	): array {
-		$mwNamespace = new ManageWikiNamespaces( $dbName );
+		$mwNamespaces = new ManageWikiNamespaces( $dbName );
 
 		$mwExt = new ManageWikiExtensions( $dbName );
 		$extList = $mwExt->list();
@@ -449,8 +449,8 @@ class ManageWikiFormFactoryBuilder {
 		$nsID['namespace'] = (int)$special;
 
 		if (
-			$mwNamespace->list( (int)$special + 1 )['name'] ||
-			!$mwNamespace->list( (int)$special )['name']
+			$mwNamespaces->list( (int)$special + 1 )['name'] ||
+			!$mwNamespaces->list( (int)$special )['name']
 		) {
 			$nsID['namespacetalk'] = (int)$special + 1;
 		}
@@ -458,7 +458,7 @@ class ManageWikiFormFactoryBuilder {
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
-			$namespaceData = $mwNamespace->list( $id );
+			$namespaceData = $mwNamespaces->list( $id );
 
 			$create = ucfirst( $session->get( 'create' ) ) . ( $name === 'namespacetalk' && $session->get( 'create' ) ? '_talk' : null );
 
@@ -580,7 +580,7 @@ class ManageWikiFormFactoryBuilder {
 			$craftedNamespaces = [];
 			$canDelete = false;
 
-			foreach ( $mwNamespace->list() as $id => $config ) {
+			foreach ( $mwNamespaces->list() as $id => $config ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {
 					continue;
 				}
