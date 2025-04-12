@@ -184,7 +184,7 @@ class SpecialManageWiki extends SpecialPage {
 			$namespaces = $mwNamespaces->list();
 
 			foreach ( $namespaces as $id => $namespace ) {
-				if ( $id % 2 ) {
+				if ( $mwNamespaces->isTalk( $id ) ) {
 					continue;
 				}
 

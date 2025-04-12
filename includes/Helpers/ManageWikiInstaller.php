@@ -49,10 +49,7 @@ class ManageWikiInstaller {
 		return !(bool)array_search( false, $stepresponse );
 	}
 
-	private static function sql(
-		string $dbname,
-		array $data
-	): bool {
+	private static function sql( string $dbname, array $data ): bool {
 		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
 			->getMainLB( $dbname )
 			->getMaintenanceConnectionRef( DB_PRIMARY, [], $dbname );
@@ -78,12 +75,8 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function files(
-		string $dbname,
-		array $data
-	): bool {
+	private static function files( string $dbname, array $data ): bool {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-
 		$baseloc = $config->get( MainConfigNames::UploadDirectory ) . $dbname;
 
 		foreach ( $data as $location => $source ) {
@@ -117,7 +110,6 @@ class ManageWikiInstaller {
 		bool $install
 	): bool {
 		$mwPermissions = new ManageWikiPermissions( $dbname );
-
 		$action = $install ? 'add' : 'remove';
 
 		foreach ( $data as $group => $mod ) {
@@ -165,10 +157,7 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function mwscript(
-		string $dbname,
-		array $data
-	): bool {
+	private static function mwscript( string $dbname, array $data ): bool {
 		if ( Shell::isDisabled() ) {
 			throw new RuntimeException( 'Shell is disabled.' );
 		}
@@ -206,10 +195,7 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function settings(
-		string $dbname,
-		array $data
-	): bool {
+	private static function settings( string $dbname, array $data ): bool {
 		$mwSettings = new ManageWikiSettings( $dbname );
 		$mwSettings->modify( $data );
 		$mwSettings->commit();

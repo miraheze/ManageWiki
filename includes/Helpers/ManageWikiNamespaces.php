@@ -160,6 +160,10 @@ class ManageWikiNamespaces {
 		$this->deleteNamespaces[] = $id;
 	}
 
+	public function isTalk( int $id ): bool {
+		return $id % 2 === 1;
+	}
+
 	public function hasChanges(): bool {
 		return (bool)$this->changes;
 	}
@@ -185,7 +189,7 @@ class ManageWikiNamespaces {
 			if ( in_array( $id, $this->deleteNamespaces ) ) {
 				$this->log = 'namespaces-delete';
 
-				if ( !( $id % 2 ) ) {
+				if ( !$this->isTalk( $id ) ) {
 					$this->logParams = [
 						'5::namespace' => $this->changes[$id]['old']['name'],
 					];
@@ -243,7 +247,7 @@ class ManageWikiNamespaces {
 					__METHOD__
 				);
 
-				if ( !$this->logParams || !( $id % 2 ) ) {
+				if ( !$this->logParams || !$this->isTalk( $id ) ) {
 					$this->logParams = [
 						'5::namespace' => $this->liveNamespaces[$id]['name'],
 					];

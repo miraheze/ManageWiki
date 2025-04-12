@@ -581,7 +581,7 @@ class ManageWikiFormFactoryBuilder {
 			$canDelete = false;
 
 			foreach ( $mwNamespace->list() as $id => $config ) {
-				if ( $id % 2 ) {
+				if ( $mwNamespaces->isTalk( $id ) ) {
 					continue;
 				}
 
