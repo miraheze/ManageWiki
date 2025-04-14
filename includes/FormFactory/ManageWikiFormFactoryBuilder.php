@@ -864,7 +864,7 @@ class ManageWikiFormFactoryBuilder {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}
 
-		return $mwReturn->errors;
+		return $mwReturn->errors ?? [];
 	}
 
 	private static function submissionCore(
