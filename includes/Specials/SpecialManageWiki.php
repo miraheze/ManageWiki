@@ -64,7 +64,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( $module === 'permissions' && $additional ) {
-			$out->addSubtitle( $out->msg( 'editing' )->params( $additional ) );
+			$out->addSubtitle( $this->msg( 'editing', $additional ) );
 		}
 
 		$isCentralWiki = $this->databaseUtils->isCurrentWikiCentral();
@@ -151,17 +151,17 @@ class SpecialManageWiki extends SpecialPage {
 		$options = [];
 
 		if ( $module !== 'core' ) {
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
+			if ( !$this->getContext()->getUser()->isAllowed( "managewiki-$module" ) ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
 				);
 			}
 		} else {
-			if ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) && !( $this->databaseUtils->isCurrentWikiCentral() ) ) {
+			if ( !$this->getContext()->getUser()->isAllowed( "managewiki-$module" ) && !( $this->databaseUtils->isCurrentWikiCentral() ) ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission' )->escaped() )
 				);
-			} elseif ( !$this->getContext()->getUser()->isAllowed( 'managewiki-' . $module ) ) {
+			} elseif ( !$this->getContext()->getUser()->isAllowed( "managewiki-$module" ) ) {
 				$out->addHTML(
 					Html::errorBox( $this->msg( 'managewiki-error-nopermission-remote' )->escaped() )
 				);
