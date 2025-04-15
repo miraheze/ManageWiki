@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Specials;
 
 use ErrorPageError;
 use ManualLogEntry;
-use MediaWiki\Config\GlobalVarConfig;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
@@ -219,8 +218,14 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			__METHOD__
 		);
 
-		$cwConfig = new GlobalVarConfig( 'cw' );
-		Hooks::onCreateWikiCreation( $this->getConfig()->get( MainConfigNames::DBname ), $cwConfig->get( 'Private' ) );
+		$remoteWiki = $this->remoteWikiFactory->newInstance(
+			$this->getConfig()->get( MainConfigNames::DBname )
+		);
+
+		Hooks::onCreateWikiCreation(
+			$this->getConfig()->get( MainConfigNames::DBname ),
+			$remoteWiki->isPrivate()
+		);
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getUser() );
