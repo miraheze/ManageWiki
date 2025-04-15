@@ -10,7 +10,6 @@ use MediaWiki\Output\OutputPage;
 use MediaWiki\Permissions\PermissionManager;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
-use Miraheze\ManageWiki\ManageWiki;
 use UnexpectedValueException;
 use Wikimedia\Rdbms\IDatabase;
 
