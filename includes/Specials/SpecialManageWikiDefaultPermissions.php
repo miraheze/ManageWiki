@@ -144,7 +144,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$resetPermissionsDescriptor = [];
 			$resetPermissionsDescriptor['info'] = [
 				'type' => 'info',
-				'default' => $this->msg( 'managewikidefaultpermissions-resetgroups-header' ),
+				'default' => $this->msg( 'managewikidefaultpermissions-resetgroups-header' )->text(),
 			];
 
 			$resetPermissionsForm = HTMLForm::factory( 'ooui', $resetPermissionsDescriptor, $this->getContext() );
@@ -161,7 +161,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$resetSettingsDescriptor = [];
 			$resetSettingsDescriptor['info'] = [
 				'type' => 'info',
-				'default' => $this->msg( 'managewikidefaultpermissions-resetsettings-header' ),
+				'raw' => true,
+				'default' => $this->msg( 'managewikidefaultpermissions-resetsettings-header' )->parse(),
 			];
 
 			$resetSettingsForm = HTMLForm::factory( 'ooui', $resetSettingsDescriptor, $this->getContext() );
@@ -178,7 +179,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$resetCacheDescriptor = [];
 			$resetCacheDescriptor['info'] = [
 				'type' => 'info',
-				'default' => $this->msg( 'managewikidefaultpermissions-resetcache-header' ),
+				'default' => $this->msg( 'managewikidefaultpermissions-resetcache-header' )->text(),
 			];
 
 			$resetCacheForm = HTMLForm::factory( 'ooui', $resetCacheDescriptor, $this->getContext() );
