@@ -72,7 +72,7 @@ class ManageWikiExtensions implements IConfigModule {
 
 	/**
 	 * Adds an extension to the 'enabled' list
-	 * @param string[] $extensions an array of extensions to enable
+	 * @param string[] $extensions Array of extensions to enable
 	 */
 	public function add( array $extensions ): void {
 		// We allow adding either one extension (string) or many (array)
@@ -88,7 +88,7 @@ class ManageWikiExtensions implements IConfigModule {
 
 	/**
 	 * Removes an extension from the 'enabled' list
-	 * @param string[] $extensions an array of extensions to disable
+	 * @param string[] $extensions Array of extensions to disable
 	 * @param bool $force Force removing extension incase it is removed from config
 	 */
 	public function remove(
