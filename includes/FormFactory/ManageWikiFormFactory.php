@@ -65,35 +65,33 @@ class ManageWikiFormFactory {
 		);
 
 		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
+		$htmlForm
+			->setSubmitCallback(
+				function ( array $formData, HTMLForm $form ) use (
+					$module, $ceMW, $remoteWiki, $special,
+					$filtered, $dbw, $dbname, $config
+				): void {
+					$this->submitForm(
+						$config,
+						$dbw,
+						$form,
+						$remoteWiki,
+						$formData,
+						$dbname,
+						$module,
+						$special,
+						$filtered,
+						$ceMW
+					);
+				}
+			)
+			->setId( 'managewiki-form' )
+			->setSubmitID( 'managewiki-submit' )
+			->setSubmitTextMsg( 'managewiki-save' );
 
 		if ( !$ceMW ) {
 			$htmlForm->suppressDefaultSubmit();
 		}
-
-		$htmlForm->setSubmitTextMsg( 'managewiki-save' );
-
-		$htmlForm->setId( 'managewiki-form' );
-		$htmlForm->setSubmitID( 'managewiki-submit' );
-
-		$htmlForm->setSubmitCallback(
-			function ( array $formData, HTMLForm $form ) use (
-				$module, $ceMW, $remoteWiki, $special,
-				$filtered, $dbw, $dbname, $config
-			): void {
-				$this->submitForm(
-					$config,
-					$dbw,
-					$form,
-					$remoteWiki,
-					$formData,
-					$dbname,
-					$module,
-					$special,
-					$filtered,
-					$ceMW
-				);
-			}
-		);
 
 		return $htmlForm;
 	}
