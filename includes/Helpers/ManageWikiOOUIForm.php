@@ -23,7 +23,6 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 	 */
 	public function wrapForm( $html ) {
 		$html = Xml::tags( 'div', [ 'id' => 'managewiki' ], $html );
-
 		return parent::wrapForm( $html );
 	}
 
@@ -50,7 +49,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		$tabPanels = [];
 		foreach ( $this->mFieldTree as $key => $val ) {
 			if ( !is_array( $val ) ) {
-				wfDebug( __METHOD__ . " encountered a field not attached to a section: '{$key}'" );
+				wfDebug( __METHOD__ . " encountered a field not attached to a section: '$key'" );
 				continue;
 			}
 
@@ -61,16 +60,16 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 				$this->displaySection(
 					$val,
 					'',
-					"mw-section-{$key}-"
+					"mw-section-$key-"
 				) .
 				$this->getFooterHtml( $key );
 
-			$tabPanels[] = new TabPanelLayout( 'mw-section-' . $key, [
+			$tabPanels[] = new TabPanelLayout( "mw-section-$key", [
 				'classes' => [ 'mw-htmlform-autoinfuse-lazy' ],
 				'label' => $label,
 				'content' => new FieldsetLayout( [
 					'classes' => [ 'managewiki-section-fieldset' ],
-					'id' => "mw-section-{$key}",
+					'id' => "mw-section-$key",
 					'label' => $label,
 					'items' => [
 						new Widget( [
