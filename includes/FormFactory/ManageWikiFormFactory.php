@@ -135,13 +135,13 @@ class ManageWikiFormFactory {
 			$errorOut = [];
 			foreach ( $mwReturn as $errors ) {
 				foreach ( $errors as $msg => $params ) {
-					$errorOut[] = $form->msg( $msg, $params )->text();
+					$errorOut[] = $form->msg( $msg, $params )->escaped();
 				}
 			}
 
 			$form->getOutput()->addHTML(
 				Html::warningBox(
-					Html::element(
+					Html::rawElement(
 						'p',
 						[],
 						'The following errors occurred:<br />' . implode( '<br />', $errorOut )
