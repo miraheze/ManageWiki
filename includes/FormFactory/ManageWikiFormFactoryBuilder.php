@@ -718,10 +718,10 @@ class ManageWikiFormFactoryBuilder {
 			'conds' => [
 				'type' => 'select',
 				'label-message' => 'managewiki-permissions-autopromote-conds',
-				'options' => [
-					$context->msg( 'managewiki-permissions-autopromote-conds-and' )->text() => '&',
-					$context->msg( 'managewiki-permissions-autopromote-conds-or' )->text() => '|',
-					$context->msg( 'managewiki-permissions-autopromote-conds-not' )->text() => '!',
+				'options-messages' => [
+					'managewiki-permissions-autopromote-conds-and' => '&',
+					'managewiki-permissions-autopromote-conds-or' => '|',
+					'managewiki-permissions-autopromote-conds-not' => '!',
 				],
 				'default' => $aP === null ? '&' : $aP[0],
 				'disabled' => !$ceMW,
@@ -926,11 +926,11 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		if ( $config->get( 'CreateWikiCategories' ) && isset( $formData['category'] ) && ( $formData['category'] !== $remoteWiki->getCategory() ) ) {
+		if ( $config->get( 'CreateWikiCategories' ) && isset( $formData['category'] ) && $formData['category'] !== $remoteWiki->getCategory() ) {
 			$remoteWiki->setCategory( $formData['category'] );
 		}
 
-		if ( $config->get( 'ManageWikiUseCustomDomains' ) && ( $formData['server'] !== $remoteWiki->getServerName() ) ) {
+		if ( $config->get( 'ManageWikiUseCustomDomains' ) && $formData['server'] !== $remoteWiki->getServerName() ) {
 			$remoteWiki->setServerName( $formData['server'] );
 		}
 
@@ -942,7 +942,7 @@ class ManageWikiFormFactoryBuilder {
 			$remoteWiki->setLanguage( $formData['language'] );
 		}
 
-		if ( $config->get( 'CreateWikiDatabaseClusters' ) && ( $formData['dbcluster'] !== $remoteWiki->getDBCluster() ) ) {
+		if ( $config->get( 'CreateWikiDatabaseClusters' ) && $formData['dbcluster'] !== $remoteWiki->getDBCluster() ) {
 			$remoteWiki->setDBCluster( $formData['dbcluster'] );
 		}
 
