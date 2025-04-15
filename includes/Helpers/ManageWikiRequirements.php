@@ -17,14 +17,14 @@ class ManageWikiRequirements {
 	 * Main class for evaluating whether requirements are met, and at what level
 	 *
 	 * @param array $actions Requirements that need to be met
-	 * @param array $extensionList Enabled extensions on the wiki
+	 * @param array $extList Enabled extensions on the wiki
 	 * @param bool $ignorePerms Whether a permissions check should be carried out
 	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool Whether the extension can be enabled
 	 */
 	public static function process(
 		array $actions,
-		array $extensionList,
+		array $extList,
 		bool $ignorePerms,
 		RemoteWikiFactory $remoteWiki
 	): bool {
@@ -38,7 +38,7 @@ class ManageWikiRequirements {
 					$stepResponse['permissions'] = ( $ignorePerms || PHP_SAPI === 'cli' ) ? true : self::permissions( $data );
 					break;
 				case 'extensions':
-					$stepResponse['extensions'] = self::extensions( $data, $extensionList );
+					$stepResponse['extensions'] = self::extensions( $data, $extList );
 					break;
 				case 'activeusers':
 					$stepResponse['activeusers'] = self::activeUsers( $data );
@@ -63,7 +63,7 @@ class ManageWikiRequirements {
 			}
 		}
 
-		return !(bool)array_search( false, $stepResponse );
+		return array_search( false, $stepResponse, true ) === false;
 	}
 
 	/**
@@ -83,18 +83,18 @@ class ManageWikiRequirements {
 
 	/**
 	 * @param array $data Array of extensions needed
-	 * @param array $extensionList Extensions already enabled on the wiki
+	 * @param array $extList Extensions already enabled on the wiki
 	 * @return bool Whether extension requirements are met
 	 */
 	private static function extensions(
 		array $data,
-		array $extensionList
+		array $extList
 	): bool {
 		foreach ( $data as $extension ) {
 			if ( is_array( $extension ) ) {
 				$count = 0;
 				foreach ( $extension as $or ) {
-					if ( in_array( $or, $extensionList ) ) {
+					if ( in_array( $or, $extList ) ) {
 						$count++;
 					}
 				}
@@ -102,7 +102,7 @@ class ManageWikiRequirements {
 				if ( !$count ) {
 					return false;
 				}
-			} elseif ( !in_array( $extension, $extensionList ) ) {
+			} elseif ( !in_array( $extension, $extList ) ) {
 				return false;
 			}
 		}
@@ -191,6 +191,6 @@ class ManageWikiRequirements {
 			}
 		}
 
-		return !(bool)array_search( false, $ret );
+		return array_search( false, $ret, true ) === false;
 	}
 }

@@ -46,7 +46,7 @@ class ManageWikiInstaller {
 			}
 		}
 
-		return !(bool)array_search( false, $stepresponse );
+		return array_search( false, $stepresponse, true ) === false;
 	}
 
 	private static function sql( string $dbname, array $data ): bool {
@@ -129,7 +129,6 @@ class ManageWikiInstaller {
 		}
 
 		$mwPermissions->commit();
-
 		return true;
 	}
 
@@ -153,7 +152,6 @@ class ManageWikiInstaller {
 		}
 
 		$mwNamespaces->commit();
-
 		return true;
 	}
 
@@ -187,7 +185,6 @@ class ManageWikiInstaller {
 				];
 
 				$mwJob = new MWScriptJob( Title::newMainPage(), $params );
-
 				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
 			}
 		}
@@ -199,7 +196,6 @@ class ManageWikiInstaller {
 		$mwSettings = new ManageWikiSettings( $dbname );
 		$mwSettings->modify( $data );
 		$mwSettings->commit();
-
 		return true;
 	}
 }

@@ -50,10 +50,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	private function buildGroupView( string $group ): void {
-		$out = $this->getOutput();
-
-		$out->addModules( [ 'ext.managewiki.oouiform' ] );
-		$out->addModuleStyles( [
+		$this->getOutput()->addModules( [ 'ext.managewiki.oouiform' ] );
+		$this->getOutput()->addModuleStyles( [
 			'ext.managewiki.oouiform.styles',
 			'mediawiki.widgets.TagMultiselectWidget.styles',
 			'oojs-ui-widgets.styles',
@@ -64,25 +62,24 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		);
 
 		$formFactory = new ManageWikiFormFactory();
-		$htmlForm = $formFactory->getForm(
+		$formFactory->getForm(
 			config: $this->getConfig(),
 			context: $this->getContext(),
 			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
+			permissionManager: $this->permissionManager,
 			remoteWiki: $remoteWiki,
 			dbname: 'default',
 			module: 'permissions',
 			special: $group,
 			filtered: ''
-		);
-
-		$htmlForm->show();
+		)->show();
 	}
 
 	private function buildMainView(): void {
 		$canModify = $this->canModify();
 
 		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
-			$language = $this->getContext()->getLanguage();
+			$language = $this->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( 'default' );
 			$groups = array_keys( $mwPermissions->list() );
 			$craftedGroups = [];
@@ -198,7 +195,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	private function canModify(): bool {
-		if ( !$this->permissionManager->userHasRight( $this->getContext()->getUser(), 'managewiki-editdefault' ) ) {
+		if ( !$this->permissionManager->userHasRight( $this->getUser(), 'managewiki-editdefault' ) ) {
 			return false;
 		}
 
@@ -225,7 +222,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		Hooks::onCreateWikiCreation( $this->getConfig()->get( MainConfigNames::DBname ), $cwConfig->get( 'Private' ) );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
-		$logEntry->setPerformer( $this->getContext()->getUser() );
+		$logEntry->setPerformer( $this->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
 		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
 		$logID = $logEntry->insert();
@@ -236,7 +233,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				Html::element(
 					'p',
 					[],
-					$this->msg( 'managewiki-success' )->plain()
+					$this->msg( 'managewiki-success' )->text()
 				),
 				'mw-notify-success'
 			)
@@ -264,7 +261,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$data->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
-		$logEntry->setPerformer( $this->getContext()->getUser() );
+		$logEntry->setPerformer( $this->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
 		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
 		$logID = $logEntry->insert();
@@ -275,7 +272,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				Html::element(
 					'p',
 					[],
-					$this->msg( 'managewiki-success' )->plain()
+					$this->msg( 'managewiki-success' )->text()
 				),
 				'mw-notify-success'
 			)
@@ -292,7 +289,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		$data->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'cache-reset' );
-		$logEntry->setPerformer( $this->getContext()->getUser() );
+		$logEntry->setPerformer( $this->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
 		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
 		$logID = $logEntry->insert();
@@ -303,7 +300,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				Html::element(
 					'p',
 					[],
-					$this->msg( 'managewiki-success' )->plain()
+					$this->msg( 'managewiki-success' )->text()
 				),
 				'mw-notify-success'
 			)

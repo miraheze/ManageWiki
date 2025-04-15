@@ -16,27 +16,28 @@ class MWScriptJob extends Job {
 	 * @return bool
 	 */
 	public function run(): bool {
-		$scriptParams = [
-			'--wiki',
-			$this->params['dbname']
+		$limits = [ 'memory' => 0, 'filesize' => 0 ];
+		$script = $this->params['script'];
+		$arguments = [
+			'--wiki', $this->params['dbname'],
 		];
 
 		foreach ( (array)$this->params['options'] as $name => $val ) {
-			$scriptParams[] = "--{$name}";
+			$arguments[] = "--$name";
 
 			if ( !is_bool( $val ) ) {
-				$scriptParams[] = $val;
+				$arguments[] = $val;
 			}
 		}
 
-		$result = Shell::makeScriptCommand(
-			$this->params['script'],
-			$scriptParams
-		)->limits( [ 'memory' => 0, 'filesize' => 0 ] )->execute()->getExitCode();
+		$result = Shell::makeScriptCommand( $script, $arguments )
+			->limits( $limits )
+			->execute()
+			->getExitCode();
 
 		// An execute code higher then 0 indicates failure.
 		if ( $result ) {
-			wfDebugLog( 'ManageWiki', "MWScriptJob failure. Status {$result} running {$this->params['script']}" );
+			wfDebugLog( 'ManageWiki', "MWScriptJob failure. Status $result running $script" );
 		}
 
 		return true;

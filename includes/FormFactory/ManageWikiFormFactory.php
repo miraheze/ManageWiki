@@ -7,6 +7,7 @@ use MediaWiki\Context\IContextSource;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Output\OutputPage;
+use MediaWiki\Permissions\PermissionManager;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
 use Miraheze\ManageWiki\ManageWiki;
@@ -37,13 +38,21 @@ class ManageWikiFormFactory {
 		Config $config,
 		IContextSource $context,
 		IDatabase $dbw,
+		PermissionManager $permissionManager,
 		RemoteWikiFactory $remoteWiki,
 		string $dbname,
 		string $module,
 		string $special,
 		string $filtered
 	): ManageWikiOOUIForm {
-		$ceMW = ManageWiki::checkPermission( $remoteWiki, $context->getUser(), $module );
+		// Can the user modify ManageWiki?
+		$ceMW = !(
+			(
+				$remoteWiki->isLocked() &&
+				!$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
+			) ||
+			!$permissionManager->userHasRight( $context->getUser(), "managewiki-$module" )
+		);
 
 		$formDescriptor = $this->getFormDescriptor(
 			$config,
@@ -102,16 +111,14 @@ class ManageWikiFormFactory {
 		string $filtered,
 		bool $ceMW
 	): void {
-		$context = $form->getContext();
-		$out = $context->getOutput();
-
 		if ( !$ceMW ) {
-			throw new UnexpectedValueException( "User '{$context->getUser()->getName()}' without 'managewiki-{$module}' right tried to change wiki {$module}!" );
+			throw new UnexpectedValueException( "User '{$form->getUser()->getName()}' without 'managewiki-$module' right tried to change wiki $module!" );
 		}
 
 		$form->getButtons();
 		$formData['reason'] = $form->getField( 'reason' )->loadDataFromRequest( $form->getRequest() );
 
+		$context = $form->getContext();
 		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler(
 			$formData,
 			$form,
@@ -129,16 +136,16 @@ class ManageWikiFormFactory {
 			$errorOut = [];
 			foreach ( $mwReturn as $errors ) {
 				foreach ( $errors as $msg => $params ) {
-					$errorOut[] = wfMessage( $msg, $params )->plain();
+					$errorOut[] = $form->msg( $msg, $params )->text();
 				}
 			}
 
-			$out->addHTML(
+			$form->getOutput()->addHTML(
 				Html::warningBox(
 					Html::element(
 						'p',
 						[],
-						'The following errors occurred:<br>' . implode( '<br>', $errorOut )
+						'The following errors occurred:<br />' . implode( '<br />', $errorOut )
 					),
 					'mw-notify-error'
 				)
@@ -146,12 +153,12 @@ class ManageWikiFormFactory {
 			return;
 		}
 
-		$out->addHTML(
+		$form->getOutput()->addHTML(
 			Html::successBox(
 				Html::element(
 					'p',
 					[],
-					wfMessage( 'managewiki-success' )->plain()
+					$form->msg( 'managewiki-success' )->text()
 				),
 				'mw-notify-success'
 			)

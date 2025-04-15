@@ -5,49 +5,12 @@ namespace Miraheze\ManageWiki;
 use DateTimeZone;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Output\OutputPage;
-use MediaWiki\User\User;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
 class ManageWiki {
 
-	public static function checkSetup(
-		string $module,
-		bool $verbose = false,
-		?OutputPage $out = null
-	): bool {
-		// Checks ManageWiki module is enabled before doing anything
-		// $verbose means output an error. Otherwise return true/false.
-		if ( !MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWiki' )[$module] ) {
-			if ( $verbose && $out ) {
-				$out->addWikiMsg( 'managewiki-disabled', $module );
-			}
-
-			return false;
-		}
-
-		return true;
-	}
-
-	public static function listModules(): array {
-		return array_keys( MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWiki' ), true );
-	}
-
-	public static function checkPermission(
-		RemoteWikiFactory $remoteWiki,
-		User $user,
-		string $perm
-	): bool {
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-		if ( $remoteWiki->isLocked() && !$permissionManager->userHasRight( $user, 'managewiki-restricted' ) ) {
-			return false;
-		}
-
-		if ( !$permissionManager->userHasRight( $user, 'managewiki-' . $perm ) ) {
-			return false;
-		}
-
-		return true;
+	public static function checkSetup( string $module ): bool {
+		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
+		return $config->get( 'ManageWiki' )[$module] ?? false;
 	}
 
 	public static function getTimezoneList(): array {
@@ -103,10 +66,9 @@ class ManageWiki {
 	}
 
 	public static function namespaceID( string $namespace ): int {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-
-		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
-			->getReplicaDatabase( 'virtual-createwiki' );
+		$config = MediaWikiServices::getInstance()->getMainConfig();
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$dbr = $databaseUtils->getGlobalReplicaDB();
 
 		$nsID = $namespace === '' ? false : $dbr->selectRow(
 			'mw_namespaces',

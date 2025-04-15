@@ -365,7 +365,7 @@ class Hooks {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), (array)self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) );
+			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), [ self::getConfig( 'ManageWikiPermissionsDefaultPrivateGroup' ) ] );
 
 			foreach ( $defaultGroups as $newgroup ) {
 				$groupData = $mwPermissionsDefault->list( $newgroup );
@@ -471,9 +471,10 @@ class Hooks {
 		$hideSidebar = !self::getConfig( 'ManageWikiForceSidebarLinks' ) &&
 			!$userOptionsLookup->getOption( $user, 'managewikisidebar', 0 );
 
-		foreach ( ManageWiki::listModules() as $module ) {
+		$modules = array_keys( self::getConfig( 'ManageWiki' ), true );
+		foreach ( $modules as $module ) {
 			$append = '';
-			if ( !$permissionManager->userHasRight( $user, 'managewiki-' . $module ) ) {
+			if ( !$permissionManager->userHasRight( $user, "managewiki-$module" ) ) {
 				if ( $hideSidebar ) {
 					continue;
 				}
