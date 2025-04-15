@@ -45,9 +45,9 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				'private' => $remoteWiki->isPrivate(),
 			];
 
-			$mwSet = new ManageWikiSettings( $wiki );
+			$mwSettings = new ManageWikiSettings( $wiki );
 			if ( isset( $prop['settings'] ) ) {
-				$wikiData['settings'] = $mwSet->list();
+				$wikiData['settings'] = $mwSettings->list();
 
 				foreach ( $this->getConfig()->get( 'ManageWikiSettings' ) as $setting => $options ) {
 					if ( isset( $options['requires']['visibility']['permissions'] ) ) {
@@ -56,14 +56,14 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				}
 			}
 
-			$mwExt = new ManageWikiExtensions( $wiki );
+			$mwExtensions = new ManageWikiExtensions( $wiki );
 			if ( isset( $prop['extensions'] ) ) {
-				$wikiData['extensions'] = $mwExt->list();
+				$wikiData['extensions'] = $mwExtensions->list();
 			}
 
-			$mwPerms = new ManageWikiPermissions( $wiki );
+			$mwPermissions = new ManageWikiPermissions( $wiki );
 			if ( isset( $prop['permissions'] ) ) {
-				foreach ( $mwPerms->list() as $group => $data ) {
+				foreach ( $mwPermissions->list() as $group => $data ) {
 					$wikiData['permissions'][$group] = $data['permissions'];
 				}
 			}

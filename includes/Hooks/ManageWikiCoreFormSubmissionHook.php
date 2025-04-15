@@ -12,7 +12,7 @@ interface ManageWikiCoreFormSubmissionHook {
 	 * @param IContextSource $context
 	 * @param IDatabase $dbw
 	 * @param RemoteWikiFactory $remoteWiki
-	 * @param string $dbName
+	 * @param string $dbname
 	 * @param array $formData
 	 * @return void
 	 */
@@ -20,7 +20,7 @@ interface ManageWikiCoreFormSubmissionHook {
 		IContextSource $context,
 		IDatabase $dbw,
 		RemoteWikiFactory $remoteWiki,
-		string $dbName,
+		string $dbname,
 		array $formData
 	): void;
 }

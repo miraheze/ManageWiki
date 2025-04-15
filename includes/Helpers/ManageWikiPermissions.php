@@ -4,12 +4,13 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\IConfigModule;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler for interacting with Permissions
  */
-class ManageWikiPermissions {
+class ManageWikiPermissions implements IConfigModule {
 
 	private Config $config;
 	private IDatabase $dbw;
@@ -17,7 +18,7 @@ class ManageWikiPermissions {
 	private array $deleteGroups = [];
 	private array $livePermissions = [];
 
-	private string $wiki;
+	private string $dbname;
 
 	private array $changes = [];
 	private array $errors = [];
@@ -25,9 +26,10 @@ class ManageWikiPermissions {
 
 	private string $log = 'rights';
 
-	public function __construct( string $wiki ) {
-		$this->wiki = $wiki;
+	public function __construct( string $dbname ) {
+		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
+
 		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
 			->getPrimaryDatabase( 'virtual-createwiki' );
 
@@ -35,12 +37,11 @@ class ManageWikiPermissions {
 			'mw_permissions',
 			'*',
 			[
-				'perm_dbname' => $wiki,
+				'perm_dbname' => $dbname,
 			],
 			__METHOD__
 		);
 
-		// Bring database values to class scope
 		foreach ( $perms as $perm ) {
 			$this->livePermissions[$perm->perm_group] = [
 				'permissions' => json_decode( $perm->perm_permissions, true ),
@@ -170,7 +171,7 @@ class ManageWikiPermissions {
 				$this->dbw->delete(
 					'mw_permissions',
 					[
-						'perm_dbname' => $this->wiki,
+						'perm_dbname' => $this->dbname,
 						'perm_group' => $group,
 					],
 					__METHOD__
@@ -199,7 +200,7 @@ class ManageWikiPermissions {
 			$this->dbw->upsert(
 				'mw_permissions',
 				[
-					'perm_dbname' => $this->wiki,
+					'perm_dbname' => $this->dbname,
 					'perm_group' => $group,
 				] + $builtTable,
 				[
@@ -228,9 +229,9 @@ class ManageWikiPermissions {
 			];
 		}
 
-		if ( $this->wiki !== 'default' ) {
+		if ( $this->dbname !== 'default' ) {
 			$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $this->wiki );
+			$data = $dataFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}
@@ -239,7 +240,7 @@ class ManageWikiPermissions {
 		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
 		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
 		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
-			->getReplicaDatabase( $this->wiki );
+			->getReplicaDatabase( $this->dbname );
 
 		$res = $dbr->select(
 			'user_groups',

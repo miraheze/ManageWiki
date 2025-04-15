@@ -5,12 +5,13 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\IConfigModule;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler for all interactions with Extension changes within ManageWiki
  */
-class ManageWikiExtensions {
+class ManageWikiExtensions implements IConfigModule {
 
 	private Config $config;
 	private IDatabase $dbw;
@@ -19,7 +20,7 @@ class ManageWikiExtensions {
 	private array $liveExts = [];
 	private array $removedExts = [];
 
-	private string $wiki;
+	private string $dbname;
 
 	private array $changes = [];
 	private array $errors = [];
@@ -27,8 +28,8 @@ class ManageWikiExtensions {
 
 	private string $log = 'settings';
 
-	public function __construct( string $wiki ) {
-		$this->wiki = $wiki;
+	public function __construct( string $dbname ) {
+		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 		$this->extConfig = $this->config->get( 'ManageWikiExtensions' );
 
@@ -39,7 +40,7 @@ class ManageWikiExtensions {
 			'mw_settings',
 			's_extensions',
 			[
-				's_dbname' => $wiki,
+				's_dbname' => $dbname,
 			],
 			__METHOD__
 		)->s_extensions ?? '[]';
@@ -88,16 +89,16 @@ class ManageWikiExtensions {
 	/**
 	 * Removes an extension from the 'enabled' list
 	 * @param string[] $extensions an array of extensions to disable
-	 * @param bool $forceRemove Force removing extension incase it is removed from config
+	 * @param bool $force Force removing extension incase it is removed from config
 	 */
 	public function remove(
 		array $extensions,
-		bool $forceRemove = false
+		bool $force = false
 	): void {
 		// We allow remove either one extension (string) or many (array)
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
-			if ( !isset( $this->liveExts[$ext] ) && !$forceRemove ) {
+			if ( !isset( $this->liveExts[$ext] ) && !$force ) {
 				continue;
 			}
 
@@ -160,7 +161,7 @@ class ManageWikiExtensions {
 
 	public function commit(): void {
 		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
-		$remoteWiki = $remoteWikiFactory->newInstance( $this->wiki );
+		$remoteWiki = $remoteWikiFactory->newInstance( $this->dbname );
 
 		foreach ( $this->liveExts as $name => $extConfig ) {
 			// Check if we have a conflict first
@@ -184,7 +185,7 @@ class ManageWikiExtensions {
 			$requirementsCheck = ManageWikiRequirements::process( $extConfig['requires'] ?? [], $this->list(), $enabledExt, $remoteWiki );
 
 			if ( $requirementsCheck ) {
-				$installResult = ( !isset( $extConfig['install'] ) || $enabledExt ) ? true : ManageWikiInstaller::process( $this->wiki, $extConfig['install'] );
+				$installResult = ( !isset( $extConfig['install'] ) || $enabledExt ) ? true : ManageWikiInstaller::process( $this->dbname, $extConfig['install'] );
 
 				if ( !$installResult ) {
 					unset( $this->liveExts[$name] );
@@ -211,14 +212,14 @@ class ManageWikiExtensions {
 		foreach ( $this->removedExts as $name => $extConfig ) {
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it
 			if ( isset( $extConfig['remove'] ) ) {
-				ManageWikiInstaller::process( $this->wiki, $extConfig['remove'], false );
+				ManageWikiInstaller::process( $this->dbname, $extConfig['remove'], false );
 			}
 		}
 
 		$this->write();
 
 		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-		$data = $dataFactory->newInstance( $this->wiki );
+		$data = $dataFactory->newInstance( $this->dbname );
 		$data->resetWikiData( isNewChanges: true );
 
 		$this->logParams = [
@@ -230,7 +231,7 @@ class ManageWikiExtensions {
 		$this->dbw->upsert(
 			'mw_settings',
 			[
-				's_dbname' => $this->wiki,
+				's_dbname' => $this->dbname,
 				's_extensions' => json_encode( $this->list() ),
 			],
 			[ [ 's_dbname' ] ],

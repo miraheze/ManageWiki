@@ -11,7 +11,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 
-		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.', false, false );
+		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.' );
 		$this->requireExtension( 'ManageWiki' );
 	}
 
@@ -19,7 +19,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
 		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
 
-		if ( $this->getOption( 'overwrite' ) ) {
+		if ( $this->hasOption( 'overwrite' ) ) {
 			$dbw->delete(
 				'mw_namespaces',
 				[

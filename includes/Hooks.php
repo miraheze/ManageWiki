@@ -392,19 +392,21 @@ class Hooks {
 		}
 
 		if ( self::getConfig( 'ManageWikiExtensions' ) && self::getConfig( 'ManageWikiExtensionsDefault' ) ) {
-			$mwExt = new ManageWikiExtensions( $dbname );
-			$mwExt->add( self::getConfig( 'ManageWikiExtensionsDefault' ) );
-			$mwExt->commit();
+			$mwExtensions = new ManageWikiExtensions( $dbname );
+			$mwExtensions->add( self::getConfig( 'ManageWikiExtensionsDefault' ) );
+			$mwExtensions->commit();
 		}
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list() );
+
 			$mwNamespaces = new ManageWikiNamespaces( $dbname );
+			$mwNamespaces->disableNamespaceMigrationJob();
 
 			foreach ( $defaultNamespaces as $namespace ) {
 				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
-				$mwNamespaces->commit( false );
+				$mwNamespaces->commit();
 			}
 		}
 	}

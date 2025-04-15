@@ -23,26 +23,26 @@ class ToggleExtension extends Maintenance {
 	}
 
 	public function execute(): void {
-		$forceRemove = $this->getOption( 'force-remove', false );
-		$noList = $this->getOption( 'no-list', false );
-		$allWikis = $this->getOption( 'all-wikis', false );
+		$forceRemove = $this->hasOption( 'force-remove' );
+		$noList = $this->hasOption( 'no-list' );
+		$allWikis = $this->hasOption( 'all-wikis' );
 		$wikis = $allWikis ?
 			$this->getConfig()->get( MainConfigNames::LocalDatabases ) :
 			[ WikiMap::getCurrentWikiId() ];
 
 		$ext = $this->getArg( 0 );
-		$disable = $this->getOption( 'disable', false );
+		$disable = $this->hasOption( 'disable' );
 
-		if ( $allWikis && !$this->getOption( 'confirm', false ) ) {
+		if ( $allWikis && !$this->hasOption( 'confirm' ) ) {
 			$this->fatalError( 'You must run with --confirm when running with --all-wikis.', 2 );
 		}
 
 		foreach ( $wikis as $wiki ) {
-			$mwExt = new ManageWikiExtensions( $wiki );
-			$extensionList = $mwExt->list();
+			$mwExtensions = new ManageWikiExtensions( $wiki );
+			$extensionList = $mwExtensions->list();
 			if ( $disable && ( in_array( $ext, $extensionList ) || $forceRemove ) ) {
-				$mwExt->remove( [ $ext ], $forceRemove );
-				$mwExt->commit();
+				$mwExtensions->remove( [ $ext ], $forceRemove );
+				$mwExtensions->commit();
 				if ( !$noList ) {
 					$this->output( "Removed $ext from $wiki\n" );
 				}
@@ -51,8 +51,8 @@ class ToggleExtension extends Maintenance {
 			}
 
 			if ( !in_array( $ext, $extensionList ) && !$disable ) {
-				$mwExt->add( [ $ext ] );
-				$mwExt->commit();
+				$mwExtensions->add( [ $ext ] );
+				$mwExtensions->commit();
 				if ( !$noList ) {
 					$this->output( "Enabled $ext on $wiki\n" );
 				}

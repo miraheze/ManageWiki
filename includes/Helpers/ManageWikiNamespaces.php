@@ -5,13 +5,14 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
+use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler for interacting with Namespace configuration
  */
-class ManageWikiNamespaces {
+class ManageWikiNamespaces implements IConfigModule {
 
 	private Config $config;
 	private IDatabase $dbw;
@@ -19,16 +20,18 @@ class ManageWikiNamespaces {
 	private array $deleteNamespaces = [];
 	private array $liveNamespaces = [];
 
-	private string $wiki;
+	private string $dbname;
 
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
 
+	private bool $runNamespaceMigrationJob = true;
+
 	private string $log = 'namespaces';
 
-	public function __construct( string $wiki ) {
-		$this->wiki = $wiki;
+	public function __construct( string $dbname ) {
+		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
 		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
@@ -38,12 +41,11 @@ class ManageWikiNamespaces {
 			'mw_namespaces',
 			'*',
 			[
-				'ns_dbname' => $wiki,
+				'ns_dbname' => $dbname,
 			],
 			__METHOD__
 		);
 
-		// Bring database values to class scope
 		foreach ( $namespaces as $ns ) {
 			$this->liveNamespaces[$ns->ns_namespace_id] = [
 				'name' => $ns->ns_namespace_name,
@@ -164,6 +166,10 @@ class ManageWikiNamespaces {
 		return $id % 2 === 1;
 	}
 
+	public function disableNamespaceMigrationJob(): void {
+		$this->runNamespaceMigrationJob = false;
+	}
+
 	public function getErrors(): array {
 		return $this->errors;
 	}
@@ -188,7 +194,7 @@ class ManageWikiNamespaces {
 		return $this->logParams;
 	}
 
-	public function commit( bool $runNamespaceMigrationJob = true ): void {
+	public function commit(): void {
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( in_array( $id, $this->deleteNamespaces ) ) {
 				$this->log = 'namespaces-delete';
@@ -202,7 +208,7 @@ class ManageWikiNamespaces {
 				$this->dbw->delete(
 					'mw_namespaces',
 					[
-						'ns_dbname' => $this->wiki,
+						'ns_dbname' => $this->dbname,
 						'ns_namespace_id' => $id,
 					],
 					__METHOD__
@@ -238,7 +244,7 @@ class ManageWikiNamespaces {
 				$this->dbw->upsert(
 					'mw_namespaces',
 					[
-						'ns_dbname' => $this->wiki,
+						'ns_dbname' => $this->dbname,
 						'ns_namespace_id' => $id,
 					] + $builtTable,
 					[
@@ -258,15 +264,15 @@ class ManageWikiNamespaces {
 				}
 			}
 
-			if ( $this->wiki !== 'default' && $runNamespaceMigrationJob ) {
+			if ( $this->dbname !== 'default' && $this->runNamespaceMigrationJob ) {
 				$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
 				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $job );
 			}
 		}
 
-		if ( $this->wiki !== 'default' ) {
+		if ( $this->dbname !== 'default' ) {
 			$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $this->wiki );
+			$data = $dataFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}

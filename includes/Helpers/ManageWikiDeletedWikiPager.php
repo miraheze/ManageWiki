@@ -2,18 +2,21 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Context\IContextSource;
+use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Pager\TablePager;
 use MediaWiki\SpecialPage\SpecialPage;
+use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 
 class ManageWikiDeletedWikiPager extends TablePager {
 
-	public function __construct( SpecialPage $page ) {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$this->mDb = MediaWikiServices::getInstance()->getConnectionProvider()
-			->getReplicaDatabase( 'virtual-createwiki' );
-
-		parent::__construct( $page->getContext(), $page->getLinkRenderer() );
+	public function __construct(
+		CreateWikiDatabaseUtils $databaseUtils,
+		IContextSource $context,
+		LinkRenderer $linkRenderer
+	) {
+		parent::__construct( $context, $linkRenderer );
+		$this->mDb = $databaseUtils->getGlobalReplicaDB();
 	}
 
 	/** @inheritDoc */
@@ -35,10 +38,14 @@ class ManageWikiDeletedWikiPager extends TablePager {
 				$formatted = $this->escape( $row->wiki_dbname );
 				break;
 			case 'wiki_creation':
-				$formatted = $this->escape( wfTimestamp( TS_RFC2822, (int)$row->wiki_creation ) );
+				$formatted = $this->escape( $this->getLanguage()->userTimeAndDate(
+					$row->wiki_creation, $this->getUser()
+				) );
 				break;
 			case 'wiki_deleted_timestamp':
-				$formatted = $this->escape( wfTimestamp( TS_RFC2822, (int)$row->wiki_deleted_timestamp ) );
+				$formatted = $this->escape( $this->getLanguage()->userTimeAndDate(
+					$row->wiki_deleted_timestamp, $this->getUser()
+				) );
 				break;
 			case 'wiki_deleted':
 				$formatted = $this->getLinkRenderer()->makeExternalLink(

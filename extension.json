@@ -52,7 +52,12 @@
 		"managewikisidebar": 0
 	},
 	"SpecialPages": {
-		"DeletedWikis": "Miraheze\\ManageWiki\\Specials\\SpecialDeletedWikis",
+		"DeletedWikis": {
+			"class": "Miraheze\\ManageWiki\\Specials\\SpecialDeletedWikis",
+			"services": [
+				"CreateWikiDatabaseUtils"
+			]
+		},
 		"ManageWiki": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [

@@ -12,7 +12,7 @@ class ModifyGroupPermission extends Maintenance {
 		parent::__construct();
 
 		$this->addArg( 'group', 'The group name you want to change.', false );
-		$this->addOption( 'all', 'Gets all perm group names.', false );
+		$this->addOption( 'all', 'Gets all perm group names.' );
 		$this->addOption( 'addperms', 'Comma separated list of permissions to add.', false, true );
 		$this->addOption( 'removeperms', 'Comma separated list of permissions to remove.', false, true );
 		$this->addOption( 'newaddgroups', 'Comma separated list of groups to add to the list of addable groups.', false, true );
@@ -41,7 +41,7 @@ class ModifyGroupPermission extends Maintenance {
 			],
 		];
 
-		if ( $this->getOption( 'all' ) ) {
+		if ( $this->hasOption( 'all' ) ) {
 			$groups = array_keys( $mwPermissions->list() );
 
 			foreach ( $groups as $group ) {
@@ -64,9 +64,9 @@ class ModifyGroupPermission extends Maintenance {
 		array $permData,
 		ManageWikiPermissions $mwPermissions
 	): void {
-		$permList = $mwPermissions->list( $name );
+		$groupData = $mwPermissions->list( $name );
 
-		if ( !in_array( $name, $this->getConfig()->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $permList['permissions'] ) === count( $permData['permissions']['remove'] ) ) ) {
+		if ( !in_array( $name, $this->getConfig()->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $groupData['permissions'] ) === count( $permData['permissions']['remove'] ) ) ) {
 			$mwPermissions->remove( $name );
 		} else {
 			$mwPermissions->modify( $name, $permData );

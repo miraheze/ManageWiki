@@ -19,7 +19,7 @@ class PopulateWikiSettings extends Maintenance {
 	}
 
 	public function execute(): void {
-		if ( (bool)$this->getOption( 'remove' ) ) {
+		if ( $this->hasOption( 'remove' ) ) {
 			$mwSettings = new ManageWikiSettings( $this->getConfig()->get( MainConfigNames::DBname ) );
 			$mwSettings->remove( [ $this->getOption( 'wgsetting' ) ] );
 			$mwSettings->commit();

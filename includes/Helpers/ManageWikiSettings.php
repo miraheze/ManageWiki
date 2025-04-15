@@ -4,12 +4,13 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\IConfigModule;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler class for managing settings
  */
-class ManageWikiSettings {
+class ManageWikiSettings implements IConfigModule {
 
 	private Config $config;
 	private IDatabase $dbw;
@@ -18,7 +19,7 @@ class ManageWikiSettings {
 	private array $settingsConfig;
 	private array $scripts = [];
 
-	private string $wiki;
+	private string $dbname;
 
 	private array $changes = [];
 	private array $errors = [];
@@ -26,8 +27,8 @@ class ManageWikiSettings {
 
 	private string $log = 'settings';
 
-	public function __construct( string $wiki ) {
-		$this->wiki = $wiki;
+	public function __construct( string $dbname ) {
+		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 		$this->settingsConfig = $this->config->get( 'ManageWikiSettings' );
 
@@ -38,12 +39,11 @@ class ManageWikiSettings {
 			'mw_settings',
 			's_settings',
 			[
-				's_dbname' => $wiki,
+				's_dbname' => $dbname,
 			],
 			__METHOD__
 		)->s_settings ?? '[]';
 
-		// Bring json_decoded values to class scope
 		$this->liveSettings = (array)json_decode( $settings, true );
 	}
 
@@ -158,7 +158,7 @@ class ManageWikiSettings {
 		$this->dbw->upsert(
 			'mw_settings',
 			[
-				's_dbname' => $this->wiki,
+				's_dbname' => $this->dbname,
 				's_settings' => json_encode( $this->liveSettings ),
 			],
 			[ [ 's_dbname' ] ],
@@ -169,11 +169,11 @@ class ManageWikiSettings {
 		);
 
 		if ( $this->scripts ) {
-			ManageWikiInstaller::process( $this->wiki, [ 'mwscript' => $this->scripts ] );
+			ManageWikiInstaller::process( $this->dbname, [ 'mwscript' => $this->scripts ] );
 		}
 
 		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-		$data = $dataFactory->newInstance( $this->wiki );
+		$data = $dataFactory->newInstance( $this->dbname );
 		$data->resetWikiData( isNewChanges: true );
 
 		$this->logParams = [

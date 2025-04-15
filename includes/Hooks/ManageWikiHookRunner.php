@@ -21,13 +21,13 @@ class ManageWikiHookRunner implements
 	public function onManageWikiCoreAddFormFields(
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		string $dbName,
+		string $dbname,
 		bool $ceMW,
 		array &$formDescriptor
 	): void {
 		$this->container->run(
 			'ManageWikiCoreAddFormFields',
-			[ $context, $remoteWiki, $dbName, $ceMW, &$formDescriptor ]
+			[ $context, $remoteWiki, $dbname, $ceMW, &$formDescriptor ]
 		);
 	}
 
@@ -36,12 +36,12 @@ class ManageWikiHookRunner implements
 		IContextSource $context,
 		IDatabase $dbw,
 		RemoteWikiFactory $remoteWiki,
-		string $dbName,
+		string $dbname,
 		array $formData
 	): void {
 		$this->container->run(
 			'ManageWikiCoreFormSubmission',
-			[ $context, $dbw, $remoteWiki, $dbName, $formData ]
+			[ $context, $dbw, $remoteWiki, $dbname, $formData ]
 		);
 	}
 }
