@@ -21,11 +21,11 @@ class ManageWikiExtensions {
 
 	private string $wiki;
 
-	public array $changes = [];
-	public array $errors = [];
-	public array $logParams = [];
+	private array $changes = [];
+	private array $errors = [];
+	private array $logParams = [];
 
-	public string $log = 'settings';
+	private string $log = 'settings';
 
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
@@ -132,6 +132,10 @@ class ManageWikiExtensions {
 				$this->remove( [ $ext ] );
 			}
 		}
+	}
+
+	public function getErrors(): array {
+		return $this->errors;
 	}
 
 	public function hasChanges(): bool {

@@ -19,11 +19,11 @@ class ManageWikiPermissions {
 
 	private string $wiki;
 
-	public array $changes = [];
-	public array $errors = [];
-	public array $logParams = [];
+	private array $changes = [];
+	private array $errors = [];
+	private array $logParams = [];
 
-	public string $log = 'rights';
+	private string $log = 'rights';
 
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
@@ -134,6 +134,10 @@ class ManageWikiPermissions {
 
 		// Push to a deletion queue
 		$this->deleteGroups[] = $group;
+	}
+
+	public function getErrors(): array {
+		return $this->errors;
 	}
 
 	public function hasChanges(): bool {

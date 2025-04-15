@@ -21,11 +21,11 @@ class ManageWikiNamespaces {
 
 	private string $wiki;
 
-	public array $changes = [];
-	public array $errors = [];
-	public array $logParams = [];
+	private array $changes = [];
+	private array $errors = [];
+	private array $logParams = [];
 
-	public string $log = 'namespaces';
+	private string $log = 'namespaces';
 
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
@@ -162,6 +162,10 @@ class ManageWikiNamespaces {
 
 	public function isTalk( int $id ): bool {
 		return $id % 2 === 1;
+	}
+
+	public function getErrors(): array {
+		return $this->errors;
 	}
 
 	public function hasChanges(): bool {

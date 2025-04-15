@@ -20,11 +20,11 @@ class ManageWikiSettings {
 
 	private string $wiki;
 
-	public array $changes = [];
-	public array $errors = [];
-	public array $logParams = [];
+	private array $changes = [];
+	private array $errors = [];
+	private array $logParams = [];
 
-	public string $log = 'settings';
+	private string $log = 'settings';
 
 	public function __construct( string $wiki ) {
 		$this->wiki = $wiki;
@@ -128,6 +128,10 @@ class ManageWikiSettings {
 				$this->modify( [ $var => $settings[$var] ] );
 			}
 		}
+	}
+
+	public function getErrors(): array {
+		return $this->errors;
 	}
 
 	public function hasChanges(): bool {
