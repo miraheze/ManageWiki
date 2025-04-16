@@ -75,7 +75,7 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && $remoteWiki->getDBname() !== $databaseUtils->getCentralWikiID() ) {
+		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && !$databaseUtils->isRemoteWikiCentral( $dbname ) ) {
 			$actions = [
 				$remoteWiki->isDeleted() ? 'undelete' : 'delete',
 				$remoteWiki->isLocked() ? 'unlock' : 'lock',
