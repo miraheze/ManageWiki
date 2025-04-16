@@ -638,7 +638,6 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		$userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-
 		$assignedPermissions = $groupData['permissions'] ?? [];
 
 		$disallowed = array_merge(
@@ -1172,7 +1171,6 @@ class ManageWikiFormFactoryBuilder {
 		);
 
 		$allPermissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
-
 		$assignablePerms = array_diff( $allPermissions, $disallowed );
 
 		$extraAssigned = array_filter(
@@ -1190,7 +1188,6 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$permData = [];
-
 		$addedPerms = [];
 		$removedPerms = [];
 
@@ -1247,10 +1244,7 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$aE = $formData['enable'];
-
-		$aPBuild = $aE ? [
-			$formData['conds'],
-		] : [];
+		$aPBuild = $aE ? [ $formData['conds'] ] : [];
 
 		if ( count( $aPBuild ) !== 0 ) {
 			$loopBuild = [
