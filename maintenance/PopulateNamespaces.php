@@ -82,7 +82,7 @@ class PopulateNamespaces extends Maintenance {
 					(string)$this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id],
 				'ns_aliases' => json_encode( $nsAliases ) ?: '[]',
 				'ns_core' => $id < 1000,
-				'ns_additional' => json_encode( [] ) ?: '[]',
+				'ns_additional' => '[]',
 			],
 			__METHOD__
 		);

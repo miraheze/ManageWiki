@@ -195,11 +195,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	private function canModify(): bool {
-		if ( !$this->permissionManager->userHasRight( $this->getUser(), 'managewiki-editdefault' ) ) {
-			return false;
-		}
-
-		return true;
+		return $this->permissionManager->userHasRight( $this->getUser(), 'managewiki-editdefault' );
 	}
 
 	public function onSubmitRedirectToPermissionsPage( array $formData ): void {

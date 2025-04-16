@@ -222,7 +222,7 @@
 			"value": []
 		},
 		"ManageWikiForceSidebarLinks": {
-			"description": "Boolean. Whether to show the ManageWiki links in the side bar to all users. Will show a different message to unprivileged users.",
+			"description": "Boolean. Whether to show the ManageWiki links in the sidebar to all users. Will show a different message to unprivileged users.",
 			"value": false
 		},
 		"ManageWikiHelpUrl": {

@@ -56,7 +56,7 @@ class ModifyGroupPermission extends Maintenance {
 			return;
 		}
 
-		$this->output( 'You must supply either the group as a arg or use --all' );
+		$this->fatalError( 'You must supply either the group as a arg or use --all' );
 	}
 
 	private function changeGroup(
