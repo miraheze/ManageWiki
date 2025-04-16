@@ -1148,7 +1148,25 @@ class ManageWikiFormFactoryBuilder {
 	): ManageWikiPermissions {
 		$mwPermissions = new ManageWikiPermissions( $dbname );
 		$groupData = $mwPermissions->list( $group );
-		$assignablePerms = array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group], $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] ) : $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] );
+
+		$assignedPermissions = $groupData['permissions'] ?? [];
+
+		$disallowed = array_merge(
+			$config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ?? [],
+			$config->get( 'ManageWikiPermissionsDisallowedRights' )['any']
+		);
+
+		$allPermissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
+
+		$assignablePerms = array_diff( $allPermissions, $disallowed );
+
+		$extraAssigned = array_filter(
+			$assignedPermissions,
+			static fn ( string $perm ): bool => !in_array( $perm, $assignablePerms, true ) &&
+				!in_array( $perm, $disallowed, true )
+		);
+
+		$assignablePerms = array_unique( array_merge( $assignablePerms, $extraAssigned ) );
 
 		// Early escape for deletion
 		if ( $formData['delete-checkbox'] ?? false ) {
