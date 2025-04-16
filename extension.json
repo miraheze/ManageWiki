@@ -265,7 +265,7 @@
 			"value": []
 		},
 		"ManageWikiPermissionsDefaultPrivateGroup": {
-			"description": "String. Name of a group to add to private wikis. False disables this function.",
+			"description": "String. Name of a group to add to private wikis. Setting to an empty string disables this function.",
 			"value": ""
 		},
 		"ManageWikiPermissionsDisallowedGroups": {
