@@ -103,9 +103,11 @@ class ManageWikiPermissions implements IConfigModule {
 				foreach ( $array as $type => $value ) {
 					$original = array_values( $permData[$name] );
 					$new = $type === 'add' ?
-						array_merge( $permData[$name], $value ) :
-						array_diff( $permData[$name], $value );
+						array_merge( $permData[$name] ?? [], $value ) :
+						array_diff( $permData[$name] ?? [], $value );
 
+					// Make sure it is ordered properly to ensure we can compare
+					// the values and check for changes properly.
 					$new = array_values( $new );
 					sort( $original );
 					sort( $new );
