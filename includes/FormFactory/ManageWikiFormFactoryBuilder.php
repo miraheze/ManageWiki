@@ -633,12 +633,10 @@ class ManageWikiFormFactoryBuilder {
 
 		$assignedPermissions = $groupData['permissions'] ?? [];
 
-		$disallowed = isset( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ) ?
-			array_merge(
-				$config->get( 'ManageWikiPermissionsDisallowedRights' )[$group],
-				$config->get( 'ManageWikiPermissionsDisallowedRights' )['any']
-			) :
-			$config->get( 'ManageWikiPermissionsDisallowedRights' )['any'];
+		$disallowed = array_merge(
+			$config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ?? [],
+			$config->get( 'ManageWikiPermissionsDisallowedRights' )['any']
+		);
 
 		$allPermissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
 
