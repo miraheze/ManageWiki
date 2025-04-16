@@ -101,10 +101,14 @@ class ManageWikiPermissions implements IConfigModule {
 		foreach ( $data as $name => $array ) {
 			if ( $name !== 'autopromote' ) {
 				foreach ( $array as $type => $value ) {
-					$original = $permData[$name];
+					$original = array_values( $permData[$name] );
 					$new = $type === 'add' ?
 						array_merge( $permData[$name], $value ) :
 						array_diff( $permData[$name], $value );
+
+					$new = array_values( $new );
+					sort( $original );
+					sort( $new );
 
 					if ( $original !== $new ) {
 						$permData[$name] = $new;
