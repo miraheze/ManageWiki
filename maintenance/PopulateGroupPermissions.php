@@ -66,8 +66,8 @@ class PopulateGroupPermissions extends Maintenance {
 			}
 		}
 
-		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
-		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
+		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
 			$check = $dbw->selectRow(

@@ -845,7 +845,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn->addLogParam( '4::wiki', $dbname );
 			}
 
-			$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->getLogAction() ?? 'settings' );
+			$mwLogEntry = new ManualLogEntry( 'managewiki', $mwReturn->getLogAction() );
 			$mwLogEntry->setPerformer( $context->getUser() );
 			$mwLogEntry->setTarget( $form->getTitle() );
 			$mwLogEntry->setComment( $formData['reason'] );

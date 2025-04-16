@@ -17,25 +17,23 @@ class ManageWikiNamespaces implements IConfigModule {
 	private Config $config;
 	private IDatabase $dbw;
 
-	private array $deleteNamespaces = [];
-	private array $liveNamespaces = [];
-
-	private string $dbname;
-
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
+	private array $deleteNamespaces = [];
+	private array $liveNamespaces = [];
 
 	private bool $runNamespaceMigrationJob = true;
 
-	private string $log = 'namespaces';
+	private string $dbname;
+	private ?string $log = null;
 
 	public function __construct( string $dbname ) {
 		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
-		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
-			->getPrimaryDatabase( 'virtual-createwiki' );
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$namespaces = $this->dbw->select(
 			'mw_namespaces',
@@ -182,12 +180,12 @@ class ManageWikiNamespaces implements IConfigModule {
 		$this->log = $action;
 	}
 
-	public function addLogParam( string $param, mixed $value ): void {
-		$this->logParams[$param] = $value;
+	public function getLogAction(): string {
+		return $this->log ?? 'namespaces';
 	}
 
-	public function getLogAction(): ?string {
-		return $this->log;
+	public function addLogParam( string $param, mixed $value ): void {
+		$this->logParams[$param] = $value;
 	}
 
 	public function getLogParams(): array {

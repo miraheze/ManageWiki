@@ -16,8 +16,8 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 	}
 
 	public function execute(): void {
-		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
-		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
+		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		if ( $this->hasOption( 'overwrite' ) ) {
 			$dbw->delete(

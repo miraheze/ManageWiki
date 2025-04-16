@@ -15,23 +15,21 @@ class ManageWikiPermissions implements IConfigModule {
 	private Config $config;
 	private IDatabase $dbw;
 
+	private array $changes = [];
+	private array $errors = [];
+	private array $logParams = [];
 	private array $deleteGroups = [];
 	private array $livePermissions = [];
 
 	private string $dbname;
-
-	private array $changes = [];
-	private array $errors = [];
-	private array $logParams = [];
-
-	private string $log = 'rights';
+	private ?string $log = null;
 
 	public function __construct( string $dbname ) {
 		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
-		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
-			->getPrimaryDatabase( 'virtual-createwiki' );
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$perms = $this->dbw->select(
 			'mw_permissions',
@@ -149,12 +147,12 @@ class ManageWikiPermissions implements IConfigModule {
 		$this->log = $action;
 	}
 
-	public function addLogParam( string $param, mixed $value ): void {
-		$this->logParams[$param] = $value;
+	public function getLogAction(): string {
+		return $this->log ?? 'rights';
 	}
 
-	public function getLogAction(): ?string {
-		return $this->log;
+	public function addLogParam( string $param, mixed $value ): void {
+		$this->logParams[$param] = $value;
 	}
 
 	public function getLogParams(): array {
@@ -239,8 +237,9 @@ class ManageWikiPermissions implements IConfigModule {
 	private function deleteUsersFromGroup( string $group ): void {
 		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
 		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
-		$dbr = MediaWikiServices::getInstance()->getConnectionProvider()
-			->getReplicaDatabase( $this->dbname );
+
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$dbr = $databaseUtils->getRemoteWikiReplicaDB( $this->dbname );
 
 		$res = $dbr->select(
 			'user_groups',

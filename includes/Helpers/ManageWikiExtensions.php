@@ -16,25 +16,23 @@ class ManageWikiExtensions implements IConfigModule {
 	private Config $config;
 	private IDatabase $dbw;
 
-	private array $extConfig;
-	private array $liveExts = [];
-	private array $removedExts = [];
-
-	private string $dbname;
-
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
+	private array $liveExts = [];
+	private array $removedExts = [];
+	private array $extConfig;
 
-	private string $log = 'settings';
+	private string $dbname;
+	private ?string $log = null;
 
 	public function __construct( string $dbname ) {
 		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 		$this->extConfig = $this->config->get( 'ManageWikiExtensions' );
 
-		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
-			->getPrimaryDatabase( 'virtual-createwiki' );
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$exts = $this->dbw->selectRow(
 			'mw_settings',
@@ -147,12 +145,12 @@ class ManageWikiExtensions implements IConfigModule {
 		$this->log = $action;
 	}
 
-	public function addLogParam( string $param, mixed $value ): void {
-		$this->logParams[$param] = $value;
+	public function getLogAction(): string {
+		return $this->log ?? 'settings';
 	}
 
-	public function getLogAction(): ?string {
-		return $this->log;
+	public function addLogParam( string $param, mixed $value ): void {
+		$this->logParams[$param] = $value;
 	}
 
 	public function getLogParams(): array {
