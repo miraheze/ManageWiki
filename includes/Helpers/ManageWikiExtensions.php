@@ -216,18 +216,6 @@ class ManageWikiExtensions implements IConfigModule {
 			}
 		}
 
-		$this->write();
-
-		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-		$data = $dataFactory->newInstance( $this->dbname );
-		$data->resetWikiData( isNewChanges: true );
-
-		$this->logParams = [
-			'5::changes' => implode( ', ', array_keys( $this->changes ) ),
-		];
-	}
-
-	private function write(): void {
 		$this->dbw->upsert(
 			'mw_settings',
 			[
@@ -240,5 +228,13 @@ class ManageWikiExtensions implements IConfigModule {
 			],
 			__METHOD__
 		);
+
+		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
+		$data = $dataFactory->newInstance( $this->dbname );
+		$data->resetWikiData( isNewChanges: true );
+
+		$this->logParams = [
+			'5::changes' => implode( ', ', array_keys( $this->changes ) ),
+		];
 	}
 }
