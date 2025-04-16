@@ -711,8 +711,8 @@ class ManageWikiFormFactoryBuilder {
 		$language = $context->getLanguage();
 		$rowsBuilt = [];
 
-		foreach ( $groupData['allGroups'] as $group ) {
-			$lowerCaseGroupName = strtolower( $group );
+		foreach ( $groupData['allGroups'] as $groupName ) {
+			$lowerCaseGroupName = strtolower( $groupName );
 			$rowsBuilt[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 		}
 
