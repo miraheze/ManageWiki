@@ -631,10 +631,45 @@ class ManageWikiFormFactoryBuilder {
 
 		$userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
 
+		$assignedPermissions = $groupData['permissions'] ?? [];
+
+		$disallowed = isset( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ) ?
+			array_merge(
+				$config->get( 'ManageWikiPermissionsDisallowedRights' )[$group],
+				$config->get( 'ManageWikiPermissionsDisallowedRights' )['any']
+			) :
+			$config->get( 'ManageWikiPermissionsDisallowedRights' )['any'];
+
+		$allPermissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
+
+		// Start with all allowed permissions
+		$allPermissions = array_diff( $allPermissions, $disallowed );
+
+		/**
+		 * Include any assigned permissions that aren’t in
+		 * current available permissions and aren’t disallowed.
+		 * This may include permissions for extensions that have
+		 * since been disabled. We do this so that the permissions
+		 * can be removed from them, otherwise the groups that use
+		 * these permissions become undeletable.
+		 */
+		$extraAssigned = array_filter(
+			$assignedPermissions,
+			static fn ( string $perm ): bool => !in_array( $perm, $allPermissions, true ) &&
+				!in_array( $perm, $disallowed, true )
+		);
+
+		// Merge and deduplicate
+		$allPermissions = array_unique( array_merge( $allPermissions, $extraAssigned ) );
+
 		$groupData = [
-			'allPermissions' => array_diff( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions(), ( isset( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ) ) ? array_merge( $config->get( 'ManageWikiPermissionsDisallowedRights' )[$group], $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] ) : $config->get( 'ManageWikiPermissionsDisallowedRights' )['any'] ),
-			'assignedPermissions' => $groupData['permissions'] ?? [],
-			'allGroups' => array_diff( array_keys( $mwPermissions->list() ), $config->get( 'ManageWikiPermissionsDisallowedGroups' ), $userGroupManager->listAllImplicitGroups() ),
+			'allPermissions' => $allPermissions,
+			'assignedPermissions' => $assignedPermissions,
+			'allGroups' => array_diff(
+				array_keys( $mwPermissions->list() ),
+				$config->get( 'ManageWikiPermissionsDisallowedGroups' ),
+				$userGroupManager->listAllImplicitGroups()
+			),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $groupData['autopromote'] ?? null,
 		];
