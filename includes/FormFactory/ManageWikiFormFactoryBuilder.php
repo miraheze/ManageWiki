@@ -1178,9 +1178,10 @@ class ManageWikiFormFactoryBuilder {
 		);
 
 		$assignablePerms = array_unique( array_merge( $assignablePerms, $extraAssigned ) );
+		$isRemovable = !in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true );
 
 		// Early escape for deletion
-		if ( $formData['delete-checkbox'] ?? false ) {
+		if ( $isRemovable && ( $formData['delete-checkbox'] ?? false ) ) {
 			$mwPermissions->remove( $group );
 			return $mwPermissions;
 		}
@@ -1264,8 +1265,8 @@ class ManageWikiFormFactoryBuilder {
 
 		$permData['autopromote'] = count( $aPBuild ) > 1 ? $aPBuild : null;
 
-		$isRemovable = !in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true );
 		$allPermissionsRemoved = count( $permData['permissions']['remove'] ?? [] ) > 0 &&
+			count( $permData['permissions']['add'] ?? [] ) === 0 &&
 			count( $groupData['permissions'] ?? [] ) === count( $permData['permissions']['remove'] );
 
 		if ( $isRemovable && $allPermissionsRemoved ) {
