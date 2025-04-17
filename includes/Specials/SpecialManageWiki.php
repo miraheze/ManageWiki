@@ -41,6 +41,27 @@ class SpecialManageWiki extends SpecialPage {
 			);
 		}
 
+		$session = $this->getRequest()->getSession();
+		if ( $session->get( 'manageWikiSaveSuccess' ) ) {
+			// Remove session data for the success message
+			$session->remove( 'manageWikiSaveSuccess' );
+			$out->addModuleStyles( [
+				'mediawiki.codex.messagebox.styles',
+				'mediawiki.notification.convertmessagebox.styles',
+			] );
+
+			$out->addHTML(
+				Html::successBox(
+					Html::element(
+						'p',
+						[],
+						$this->msg( 'managewiki-success' )->text()
+					),
+					'mw-notify-success'
+				)
+			);
+		}
+
 		$module = 'core';
 		if ( array_key_exists( $par[0], $this->getConfig()->get( ConfigNames::ManageWiki ) ) ) {
 			$module = $par[0];
