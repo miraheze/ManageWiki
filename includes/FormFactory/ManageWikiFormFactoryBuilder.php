@@ -10,6 +10,7 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Message\Message;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
@@ -664,7 +665,7 @@ class ManageWikiFormFactoryBuilder {
 			'autopromote' => [
 				'type' => 'info',
 				'default' => wfMessage( 'managewiki-permissions-autopromote' )->text(),
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			]
 		];
 
@@ -719,7 +720,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-permissions-autopromote-enable',
 				'default' => $aP !== null,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			],
 			'conds' => [
 				'type' => 'select',
@@ -732,7 +733,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => ( $aP === null ) ? '&' : $aP[0],
 				'disabled' => !$ceMW,
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			],
 			'once' => [
 				'type' => 'check',
@@ -740,7 +741,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => is_int( array_search( 'once', (array)$aP ) ),
 				'disabled' => !$ceMW,
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			],
 			'editcount' => [
 				'type' => 'int',
@@ -749,7 +750,7 @@ class ManageWikiFormFactoryBuilder {
 				'min' => 0,
 				'default' => $aPArray[APCOND_EDITCOUNT] ?? 0,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			],
 			'age' => [
 				'type' => 'int',
@@ -758,7 +759,7 @@ class ManageWikiFormFactoryBuilder {
 				'min' => 0,
 				'default' => isset( $aPArray[APCOND_AGE] ) ? $aPArray[APCOND_AGE] / 86400 : 0,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			],
 			'emailconfirmed' => [
 				'type' => 'check',
@@ -766,7 +767,7 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => is_int( array_search( APCOND_EMAILCONFIRMED, (array)$aP ) ),
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			],
 			'blocked' => [
 				'type' => 'check',
@@ -774,7 +775,7 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => is_int( array_search( APCOND_BLOCKED, (array)$aP ) ),
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			],
 			'bot' => [
 				'type' => 'check',
@@ -782,7 +783,7 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => is_int( array_search( APCOND_ISBOT, (array)$aP ) ),
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			],
 			'groups' => [
 				'type' => 'multiselect',
@@ -791,24 +792,55 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ 'OR', [ '!==', 'enable', '1' ], [ '===', 'conds', '|' ] ],
 				'default' => $aPArray[APCOND_INGROUPS] ?? [],
 				'disabled' => !$ceMW,
-				'section' => 'autopromote'
+				'section' => 'advanced'
 			]
 		];
 
 		if (
 			$ceMW &&
 			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ) )
+			!in_array( $groupData['allGroups'], $config->get( 'ManageWikiPermissionsPermanentGroups' ) )
 		) {
+			$formDescriptor['rename-checkbox'] = [
+				'type' => 'check',
+				'label-message' => 'managewiki-permissions-rename-checkbox',
+				'disable-if' => [ '===', 'delete-checkbox', '1' ],
+				'section' => 'advanced'
+			];
+
+			$formDescriptor['rename-text'] = [
+				'type' => 'text',
+				'label-message' => 'managewiki-permissions-rename-text',
+				'help-message' => 'managewiki-permissions-rename-help',
+				'disable-if' => [ '===', 'wpdelete-checkbox', '1' ],
+				'hide-if' => [ '!==', 'rename-checkbox', '1' ],
+				'validation-callback' => [ self::class, 'validateNewGroupName' ],
+				'section' => 'advanced'
+			];
+
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
-				'label-message' => 'permissions-delete-checkbox',
+				'label-message' => 'managewiki-permissions-delete-checkbox',
+				'help-message' => 'managewiki-permissions-help-delete',
 				'default' => 0,
-				'section' => 'delete'
+				'disable-if' => [ '===', 'rename-checkbox', '1' ],
+				'section' => 'advanced'
 			];
 		}
 
 		return $formDescriptor;
+	}
+
+	public static function validateNewGroupName( string $newGroup ): bool|Message {
+		if ( in_array( $newGroup, MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' )->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
+			return wfMessage( 'managewiki-permissions-name-prohibited' );
+		}
+
+		if ( !ctype_alnum( $newGroup ) ) {
+			return wfMessage( 'managewiki-permissions-name-alphanumeric' );
+		}
+
+		return true;
 	}
 
 	public static function submissionHandler(
@@ -1138,6 +1170,11 @@ class ManageWikiFormFactoryBuilder {
 		// Early escape for deletion
 		if ( $formData['delete-checkbox'] ?? false ) {
 			$mwPermissions->remove( $group );
+			return $mwPermissions;
+		}
+
+		if ( $formData['rename-checkbox'] && $formData['rename-text'] ) {
+			$mwPermissions->rename( $group, $formData['rename-text'] );
 			return $mwPermissions;
 		}
 
