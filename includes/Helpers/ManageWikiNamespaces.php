@@ -48,9 +48,9 @@ class ManageWikiNamespaces implements IConfigModule {
 		foreach ( $namespaces as $ns ) {
 			$this->liveNamespaces[$ns->ns_namespace_id] = [
 				'name' => $ns->ns_namespace_name,
-				'searchable' => $ns->ns_searchable,
-				'subpages' => $ns->ns_subpages,
-				'content' => $ns->ns_content,
+				'searchable' => (int)$ns->ns_searchable,
+				'subpages' => (int)$ns->ns_subpages,
+				'content' => (int)$ns->ns_content,
 				'contentmodel' => $ns->ns_content_model,
 				'protection' => $ns->ns_protection,
 				'aliases' => json_decode( $ns->ns_aliases, true ),
