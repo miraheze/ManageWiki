@@ -892,8 +892,8 @@ class ManageWikiFormFactoryBuilder {
 			$mwLogEntry->publish( $mwLogID );
 
 			if ( $module === 'permissions' || $module === 'namespaces' ) {
-				$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
 				if ( $mwReturn->isDeleting( $special ) ) {
+					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
 					$context->getOutput()->redirect(
 						SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL()
 					);
