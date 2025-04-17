@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 
 class PopulateGroupPermissionsWithDefaults extends Maintenance {
@@ -43,10 +44,10 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 		if ( !$checkRow ) {
 			$mwPermissions = new ManageWikiPermissions( $this->getConfig()->get( MainConfigNames::DBname ) );
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list() ), [ $this->getConfig()->get( 'ManageWikiPermissionsDefaultPrivateGroup' ) ] );
+			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list( group: null ) ), [ $this->getConfig()->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] );
 
-			foreach ( $defaultGroups as $newgroup ) {
-				$groupData = $mwPermissionsDefault->list( $newgroup );
+			foreach ( $defaultGroups as $newGroup ) {
+				$groupData = $mwPermissionsDefault->list( $newGroup );
 				$groupArray = [];
 
 				foreach ( $groupData as $name => $value ) {
@@ -58,7 +59,7 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 					$groupArray[$name]['add'] = $value;
 				}
 
-				$mwPermissions->modify( $newgroup, $groupArray );
+				$mwPermissions->modify( $newGroup, $groupArray );
 			}
 
 			$mwPermissions->commit();

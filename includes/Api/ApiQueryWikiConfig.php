@@ -6,6 +6,7 @@ use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
@@ -49,7 +50,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 			if ( isset( $prop['settings'] ) ) {
 				$wikiData['settings'] = $mwSettings->list();
 
-				foreach ( $this->getConfig()->get( 'ManageWikiSettings' ) as $setting => $options ) {
+				foreach ( $this->getConfig()->get( ConfigNames::Settings ) as $setting => $options ) {
 					if ( isset( $options['requires']['visibility']['permissions'] ) ) {
 						unset( $wikiData['settings'][$setting] );
 					}
@@ -63,7 +64,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 			$mwPermissions = new ManageWikiPermissions( $wiki );
 			if ( isset( $prop['permissions'] ) ) {
-				foreach ( $mwPermissions->list() as $group => $data ) {
+				foreach ( $mwPermissions->list( group: null ) as $group => $data ) {
 					$wikiData['permissions'][$group] = $data['permissions'];
 				}
 			}

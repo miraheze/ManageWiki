@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 
 class ModifyGroupPermission extends Maintenance {
@@ -42,7 +43,7 @@ class ModifyGroupPermission extends Maintenance {
 		];
 
 		if ( $this->hasOption( 'all' ) ) {
-			$groups = array_keys( $mwPermissions->list() );
+			$groups = array_keys( $mwPermissions->list( group: null ) );
 
 			foreach ( $groups as $group ) {
 				$this->changeGroup( $group, $permData, $mwPermissions );
@@ -64,9 +65,9 @@ class ModifyGroupPermission extends Maintenance {
 		array $permData,
 		ManageWikiPermissions $mwPermissions
 	): void {
-		$groupData = $mwPermissions->list( $name );
+		$groupData = $mwPermissions->list( group: $name );
 
-		if ( !in_array( $name, $this->getConfig()->get( 'ManageWikiPermissionsPermanentGroups' ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $groupData['permissions'] ) === count( $permData['permissions']['remove'] ) ) ) {
+		if ( !in_array( $name, $this->getConfig()->get( ConfigNames::PermissionsPermanentGroups ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $groupData['permissions'] ) === count( $permData['permissions']['remove'] ) ) ) {
 			$mwPermissions->remove( $name );
 		} else {
 			$mwPermissions->modify( $name, $permData );

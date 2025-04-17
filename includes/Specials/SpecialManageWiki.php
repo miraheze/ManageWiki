@@ -9,6 +9,7 @@ use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -33,15 +34,15 @@ class SpecialManageWiki extends SpecialPage {
 		$par = explode( '/', $par ?? '', 3 );
 		$this->setHeaders();
 
-		if ( $this->getConfig()->get( 'ManageWikiHelpUrl' ) ) {
+		if ( $this->getConfig()->get( ConfigNames::HelpUrl ) ) {
 			$this->getOutput()->addHelpLink(
-				$this->getConfig()->get( 'ManageWikiHelpUrl' ),
+				$this->getConfig()->get( ConfigNames::HelpUrl ),
 				true
 			);
 		}
 
 		$module = 'core';
-		if ( array_key_exists( $par[0], $this->getConfig()->get( 'ManageWiki' ) ) ) {
+		if ( array_key_exists( $par[0], $this->getConfig()->get( ConfigNames::ManageWiki ) ) ) {
 			$module = $par[0];
 		}
 
@@ -216,7 +217,7 @@ class SpecialManageWiki extends SpecialPage {
 		if ( $module === 'permissions' && !$special ) {
 			$language = $this->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$groups = array_keys( $mwPermissions->list() );
+			$groups = array_keys( $mwPermissions->list( group: null ) );
 
 			foreach ( $groups as $group ) {
 				$lowerCaseGroupName = strtolower( $group );

@@ -9,7 +9,7 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Permissions\PermissionManager;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiOOUIForm;
+use Miraheze\ManageWiki\ManageWikiOOUIForm;
 use UnexpectedValueException;
 use Wikimedia\Rdbms\IDatabase;
 

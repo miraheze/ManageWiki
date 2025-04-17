@@ -14,6 +14,7 @@ use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -139,15 +140,15 @@ class ManageWikiFormFactoryBuilder {
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 			],
 			'inactive-exempt-reason' => [
-				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( 'ManageWikiInactiveExemptReasonOptions' ),
+				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( ConfigNames::InactiveExemptReasonOptions ),
 				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
 				'type' => 'selectorother',
 				'default' => $remoteWiki->getInactiveExemptReason(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
-				'options' => $config->get( 'ManageWikiInactiveExemptReasonOptions' ),
+				'options' => $config->get( ConfigNames::InactiveExemptReasonOptions ),
 			],
 			'server' => [
-				'if' => $config->get( 'ManageWikiUseCustomDomains' ),
+				'if' => $config->get( ConfigNames::UseCustomDomains ),
 				'type' => 'text',
 				'default' => $remoteWiki->getServerName(),
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
@@ -193,7 +194,7 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
-		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
+		$hookRunner = MediaWikiServices::getInstance()->get( ConfigNames::HookRunner );
 		$hookRunner->onManageWikiCoreAddFormFields(
 			$context, $remoteWiki, $dbname, $ceMW, $formDescriptor
 		);
@@ -201,7 +202,7 @@ class ManageWikiFormFactoryBuilder {
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) ) {
 			$clusterList = array_merge(
 				$config->get( 'CreateWikiDatabaseClusters' ),
-				$config->get( 'ManageWikiDatabaseClustersInactive' )
+				$config->get( ConfigNames::DatabaseClustersInactive )
 			);
 
 			$formDescriptor['dbcluster'] = [
@@ -228,7 +229,7 @@ class ManageWikiFormFactoryBuilder {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
 
-		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
+		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
 		$queue = array_fill_keys( array_merge(
 				glob( $config->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
@@ -251,7 +252,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$formDescriptor = [];
 
-		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
+		foreach ( $config->get( ConfigNames::Extensions ) as $name => $ext ) {
 			$filteredList = array_filter( $manageWikiSettings, static function ( array $value ) use ( $name ): bool {
 				return $value['from'] === $name;
 			} );
@@ -339,9 +340,9 @@ class ManageWikiFormFactoryBuilder {
 		$mwSettings = new ManageWikiSettings( $dbname );
 		$settingsList = $mwSettings->list();
 		$mwPermissions = new ManageWikiPermissions( $dbname );
-		$groupList = array_keys( $mwPermissions->list() );
+		$groupList = array_keys( $mwPermissions->list( group: null ) );
 
-		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
+		$manageWikiSettings = $config->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static function ( array $value ) use ( $filtered, $extList ): bool {
 			return $value['from'] === strtolower( $filtered ) && (
 				in_array( $value['from'], $extList ) || (
@@ -513,7 +514,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 			];
 
-			foreach ( $config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
+			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $remoteWiki ) : true;
 
 				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] === 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
@@ -623,7 +624,7 @@ class ManageWikiFormFactoryBuilder {
 		string $group,
 		Config $config
 	): array {
-		if ( in_array( $group, $config->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
+		if ( in_array( $group, $config->get( ConfigNames::PermissionsDisallowedGroups ) ) ) {
 			$ceMW = false;
 		}
 
@@ -641,8 +642,8 @@ class ManageWikiFormFactoryBuilder {
 		$assignedPermissions = $groupData['permissions'] ?? [];
 
 		$disallowed = array_merge(
-			$config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ?? [],
-			$config->get( 'ManageWikiPermissionsDisallowedRights' )['any']
+			$config->get( ConfigNames::PermissionsDisallowedRights )[$group] ?? [],
+			$config->get( ConfigNames::PermissionsDisallowedRights )['any']
 		);
 
 		$allPermissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
@@ -671,8 +672,8 @@ class ManageWikiFormFactoryBuilder {
 			'allPermissions' => $allPermissions,
 			'assignedPermissions' => $assignedPermissions,
 			'allGroups' => array_diff(
-				array_keys( $mwPermissions->list() ),
-				$config->get( 'ManageWikiPermissionsDisallowedGroups' ),
+				array_keys( $mwPermissions->list( group: null ) ),
+				$config->get( ConfigNames::PermissionsDisallowedGroups ),
 				$userGroupManager->listAllImplicitGroups()
 			),
 			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
@@ -831,7 +832,7 @@ class ManageWikiFormFactoryBuilder {
 		if (
 			$ceMW &&
 			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ) )
+			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ) )
 		) {
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
@@ -969,7 +970,7 @@ class ManageWikiFormFactoryBuilder {
 			$remoteWiki->setCategory( $formData['category'] );
 		}
 
-		if ( $config->get( 'ManageWikiUseCustomDomains' ) && $formData['server'] !== $remoteWiki->getServerName() ) {
+		if ( $config->get( ConfigNames::UseCustomDomains ) && $formData['server'] !== $remoteWiki->getServerName() ) {
 			$remoteWiki->setServerName( $formData['server'] );
 		}
 
@@ -985,7 +986,7 @@ class ManageWikiFormFactoryBuilder {
 			$remoteWiki->setDBCluster( $formData['dbcluster'] );
 		}
 
-		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
+		$hookRunner = MediaWikiServices::getInstance()->get( ConfigNames::HookRunner );
 		$hookRunner->onManageWikiCoreFormSubmission(
 			$context, $dbw, $remoteWiki, $dbname, $formData
 		);
@@ -1001,7 +1002,7 @@ class ManageWikiFormFactoryBuilder {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$newExtList = [];
 
-		foreach ( $config->get( 'ManageWikiExtensions' ) as $name => $ext ) {
+		foreach ( $config->get( ConfigNames::Extensions ) as $name => $ext ) {
 			if ( $formData["ext-$name"] ) {
 				$newExtList[] = $name;
 			}
@@ -1027,7 +1028,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$settingsArray = [];
 
-		foreach ( $config->get( 'ManageWikiSettings' ) as $name => $set ) {
+		foreach ( $config->get( ConfigNames::Settings ) as $name => $set ) {
 			// No need to do anything if setting does not 'exist'
 			if ( !isset( $formData["set-$name"] ) ) {
 				continue;
@@ -1088,7 +1089,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		$manageWikiSettings = $config->get( 'ManageWikiSettings' );
+		$manageWikiSettings = $config->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static function ( array $value ) use ( $filtered, $extList ): bool {
 			return $value['from'] === strtolower( $filtered ) && (
 				in_array( $value['from'], $extList ) || (
@@ -1128,7 +1129,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$additionalBuilt = [];
 
-			foreach ( $config->get( 'ManageWikiNamespacesAdditional' ) as $key => $a ) {
+			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				if ( isset( $formData["$key-$name"] ) ) {
 					$additionalBuilt[$key] = $formData["$key-$name"];
 				}
@@ -1163,8 +1164,8 @@ class ManageWikiFormFactoryBuilder {
 		$assignedPermissions = $groupData['permissions'] ?? [];
 
 		$disallowed = array_merge(
-			$config->get( 'ManageWikiPermissionsDisallowedRights' )[$group] ?? [],
-			$config->get( 'ManageWikiPermissionsDisallowedRights' )['any']
+			$config->get( ConfigNames::PermissionsDisallowedRights )[$group] ?? [],
+			$config->get( ConfigNames::PermissionsDisallowedRights )['any']
 		);
 
 		$allPermissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
@@ -1263,7 +1264,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$permData['autopromote'] = count( $aPBuild ) > 1 ? $aPBuild : null;
 
-		$isRemovable = !in_array( $group, $config->get( 'ManageWikiPermissionsPermanentGroups' ), true );
+		$isRemovable = !in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true );
 		$allPermissionsRemoved = count( $permData['permissions']['remove'] ?? [] ) > 0 &&
 			count( $groupData['permissions'] ?? [] ) === count( $permData['permissions']['remove'] );
 

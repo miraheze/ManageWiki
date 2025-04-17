@@ -1,6 +1,6 @@
 <?php
 
-namespace Miraheze\ManageWiki\Helpers;
+namespace Miraheze\ManageWiki;
 
 use MediaWiki\HTMLForm\OOUIHTMLForm;
 use MediaWiki\Xml\Xml;
@@ -112,7 +112,6 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		}
 
 		$descriptor = [];
-
 		$descriptor['reason'] = [
 			'type' => 'text',
 			'placeholder-message' => 'managewiki-placeholder-reason',

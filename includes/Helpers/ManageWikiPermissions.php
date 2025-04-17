@@ -66,7 +66,7 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @param ?string $group Group wanted (null for all)
 	 * @return array Group configuration
 	 */
-	public function list( ?string $group = null ): array {
+	public function list( ?string $group ): array {
 		if ( $group === null ) {
 			return $this->livePermissions;
 		}
@@ -134,7 +134,7 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @param string $group Group name
 	 */
 	public function remove( string $group ): void {
-		// Utilise changes differently in this case
+		// Utilize changes differently in this case
 		foreach ( $this->livePermissions[$group] as $name => $value ) {
 			$this->changes[$group][$name] = [
 				'add' => null,
@@ -249,23 +249,30 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	private function deleteUsersFromGroup( string $group ): void {
-		$groupManager = MediaWikiServices::getInstance()->getUserGroupManager();
-		$userFactory = MediaWikiServices::getInstance()->getUserFactory();
+		if ( $this->dbname === 'default' ) {
+			// Not a valid wiki to remove users from groups
+			return;
+		}
+
+		$userGroupManagerFactory = MediaWikiServices::getInstance()->getUserGroupManagerFactory();
+		$userGroupManager = $userGroupManagerFactory->getUserGroupManager( $this->dbname );
+
+		$actorStoreFactory = MediaWikiServices::getInstance()->getActorStoreFactory();
+		$userIdentityLookup = $actorStoreFactory->getUserIdentityLookup( $this->dbname );
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$dbr = $databaseUtils->getRemoteWikiReplicaDB( $this->dbname );
 
-		$res = $dbr->select(
-			'user_groups',
-			'ug_user',
-			[
-				'ug_group' => $group,
-			],
-			__METHOD__
-		);
+		$userIds = $dbr->newSelectQueryBuilder()
+			->select( 'ug_user' )
+			->from( 'user_groups' )
+			->where( [ 'ug_group' => $group ] )
+			->caller( __METHOD__ )
+			->fetchFieldValues();
 
-		foreach ( $res as $row ) {
-			$groupManager->removeUserFromGroup( $userFactory->newFromId( $row->ug_user ), $group );
+		foreach ( $userIds as $userId ) {
+			$remoteUser = $userIdentityLookup->getUserIdentityByUserId( $userId );
+			$userGroupManager->removeUserFromGroup( $remoteUser, $group );
 		}
 	}
 }

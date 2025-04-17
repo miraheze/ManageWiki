@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
+use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\Shell\Shell;
 use MediaWiki\Title\Title;
 
@@ -37,7 +38,11 @@ class MWScriptJob extends Job {
 
 		// An execute code higher then 0 indicates failure.
 		if ( $result ) {
-			wfDebugLog( 'ManageWiki', "MWScriptJob failure. Status $result running $script" );
+			$logger = LoggerFactory::getInstance( 'ManageWiki' );
+			$logger->error( 'MWScriptJob failure. Status {result} running {script}', [
+				'result' => $result,
+				'script' => $script,
+			] );
 		}
 
 		return true;

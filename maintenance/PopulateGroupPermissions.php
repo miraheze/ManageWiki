@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\ManageWiki;
 
 class PopulateGroupPermissions extends Maintenance {
@@ -18,7 +19,7 @@ class PopulateGroupPermissions extends Maintenance {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
-		$excluded = $this->getConfig()->get( 'ManageWikiPermissionsDisallowedGroups' );
+		$excluded = $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups );
 
 		$grouparray = [];
 

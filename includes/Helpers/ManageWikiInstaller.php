@@ -50,9 +50,8 @@ class ManageWikiInstaller {
 	}
 
 	private static function sql( string $dbname, array $data ): bool {
-		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $dbname )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $dbname );
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $dbname );
 
 		foreach ( $data as $table => $sql ) {
 			if ( !$dbw->tableExists( $table ) ) {
@@ -60,11 +59,11 @@ class ManageWikiInstaller {
 					$dbw->sourceFile( $sql );
 				} catch ( Exception $e ) {
 					$logger = LoggerFactory::getInstance( 'ManageWiki' );
-					$logger->error( 'Caught exception trying to load {path} for {table} on {db}: {exception}', [
+					$logger->error( 'Caught exception trying to load {path} for {table} on {dbname}: {exception}', [
+						'dbname' => $dbname,
+						'exception' => $e,
 						'path' => $sql,
 						'table' => $table,
-						'db' => $dbname,
-						'exception' => $e,
 					] );
 
 					return false;

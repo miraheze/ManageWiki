@@ -6,6 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\IConfigModule;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
 use Wikimedia\Rdbms\IDatabase;
 
@@ -93,7 +94,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		array $data,
 		bool $maintainPrefix = false
 	): void {
-		$excluded = array_map( 'strtolower', $this->config->get( 'ManageWikiNamespacesDisallowedNames' ) );
+		$excluded = array_map( 'strtolower', $this->config->get( ConfigNames::NamespacesDisallowedNames ) );
 		if ( in_array( strtolower( $data['name'] ), $excluded ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
@@ -142,7 +143,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		int $newNamespace,
 		bool $maintainPrefix = false
 	): void {
-		// Utilise changes differently in this case
+		// Utilize changes differently in this case
 		$this->changes[$id] = [
 			'old' => [
 				'name' => $this->liveNamespaces[$id]['name'],
@@ -214,6 +215,7 @@ class ManageWikiNamespaces implements IConfigModule {
 
 				$jobParams = [
 					'action' => 'delete',
+					'dbname' => $this->dbname,
 					'nsID' => $id,
 					'nsName' => $this->changes[$id]['old']['name'],
 					'nsNew' => $this->changes[$id]['new']['name'],
@@ -234,6 +236,7 @@ class ManageWikiNamespaces implements IConfigModule {
 
 				$jobParams = [
 					'action' => 'rename',
+					'dbname' => $this->dbname,
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
 					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix'] ?? false,

@@ -12,6 +12,7 @@ use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks;
@@ -80,7 +81,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
 			$language = $this->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( 'default' );
-			$groups = array_keys( $mwPermissions->list() );
+			$groups = array_keys( $mwPermissions->list( group: null ) );
 			$craftedGroups = [];
 
 			foreach ( $groups as $group ) {
@@ -312,7 +313,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function validateNewGroupName( string $newGroup ): string|bool {
-		if ( in_array( $newGroup, $this->getConfig()->get( 'ManageWikiPermissionsDisallowedGroups' ) ) ) {
+		if ( in_array( $newGroup, $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups ) ) ) {
 			return 'The group you attempted to create is not allowed. Please select a different name and try again.';
 		}
 

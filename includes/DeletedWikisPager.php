@@ -1,6 +1,6 @@
 <?php
 
-namespace Miraheze\ManageWiki\Helpers;
+namespace Miraheze\ManageWiki;
 
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Linker\LinkRenderer;
@@ -8,7 +8,7 @@ use MediaWiki\Pager\TablePager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 
-class ManageWikiDeletedWikiPager extends TablePager {
+class DeletedWikisPager extends TablePager {
 
 	public function __construct(
 		CreateWikiDatabaseUtils $databaseUtils,

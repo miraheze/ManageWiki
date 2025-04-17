@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\IConfigModule;
+use Miraheze\ManageWiki\ConfigNames;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
@@ -28,7 +29,7 @@ class ManageWikiSettings implements IConfigModule {
 	public function __construct( string $dbname ) {
 		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$this->settingsConfig = $this->config->get( 'ManageWikiSettings' );
+		$this->settingsConfig = $this->config->get( ConfigNames::Settings );
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->dbw = $databaseUtils->getGlobalPrimaryDB();

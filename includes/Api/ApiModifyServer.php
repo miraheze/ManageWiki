@@ -7,6 +7,7 @@ use MediaWiki\Api\ApiMain;
 use MediaWiki\Permissions\PermissionManager;
 use Miraheze\CreateWiki\Services\CreateWikiValidator;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ParamValidator\ParamValidator;
 
@@ -25,7 +26,7 @@ class ApiModifyServer extends ApiBase {
 	public function execute(): void {
 		$this->useTransactionalTimeLimit();
 
-		if ( !$this->getConfig()->get( 'ManageWikiUseCustomDomains' ) ) {
+		if ( !$this->getConfig()->get( ConfigNames::UseCustomDomains ) ) {
 			$this->dieWithError( [ 'managewiki-custom-domains-disabled' ] );
 		}
 

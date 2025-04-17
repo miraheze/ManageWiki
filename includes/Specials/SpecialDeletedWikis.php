@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Specials;
 
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
-use Miraheze\ManageWiki\Helpers\ManageWikiDeletedWikiPager;
+use Miraheze\ManageWiki\DeletedWikisPager;
 
 class SpecialDeletedWikis extends SpecialPage {
 
@@ -21,7 +21,7 @@ class SpecialDeletedWikis extends SpecialPage {
 		$this->setHeaders();
 		$this->outputHeader();
 
-		$pager = new ManageWikiDeletedWikiPager(
+		$pager = new DeletedWikisPager(
 			$this->databaseUtils,
 			$this->getContext(),
 			$this->getLinkRenderer()

@@ -6,6 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\IConfigModule;
+use Miraheze\ManageWiki\ConfigNames;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
@@ -29,7 +30,7 @@ class ManageWikiExtensions implements IConfigModule {
 	public function __construct( string $dbname ) {
 		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$this->extConfig = $this->config->get( 'ManageWikiExtensions' );
+		$this->extConfig = $this->config->get( ConfigNames::Extensions );
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
@@ -49,8 +50,9 @@ class ManageWikiExtensions implements IConfigModule {
 		// populate extension lists with config associated with them.
 		foreach ( json_decode( $exts, true ) as $ext ) {
 			if ( !isset( $this->extConfig[$ext] ) ) {
-				$logger->error( 'Extension/Skin {ext} not set in wgManageWikiExtensions', [
+				$logger->error( 'Extension/Skin {ext} not set in {config}', [
 					'ext' => $ext,
+					'config' => ConfigNames::Extensions,
 				] );
 
 				continue;
