@@ -41,27 +41,6 @@ class SpecialManageWiki extends SpecialPage {
 			);
 		}
 
-		$session = $this->getRequest()->getSession();
-		if ( $session->get( 'manageWikiSaveSuccess' ) ) {
-			// Remove session data for the success message
-			$session->remove( 'manageWikiSaveSuccess' );
-			$this->getOutput()->addModuleStyles( [
-				'mediawiki.codex.messagebox.styles',
-				'mediawiki.notification.convertmessagebox.styles',
-			] );
-
-			$this->getOutput()->addHTML(
-				Html::successBox(
-					Html::element(
-						'p',
-						[],
-						$this->msg( 'managewiki-success' )->text()
-					),
-					'mw-notify-success'
-				)
-			);
-		}
-
 		$module = 'core';
 		if ( array_key_exists( $par[0], $this->getConfig()->get( ConfigNames::ManageWiki ) ) ) {
 			$module = $par[0];
@@ -181,17 +160,31 @@ class SpecialManageWiki extends SpecialPage {
 		string $special,
 		string $filtered
 	): void {
-		if ( $special !== '' || in_array( $module, [ 'core', 'extensions', 'settings' ] ) ) {
-			$this->getOutput()->addModules( [
-				'ext.managewiki.oouiform',
-				'mediawiki.special.userrights',
-			] );
+		$this->getOutput()->addModules( [
+			'ext.managewiki.oouiform',
+			'mediawiki.special.userrights',
+		] );
 
-			$this->getOutput()->addModuleStyles( [
-				'ext.managewiki.oouiform.styles',
-				'mediawiki.widgets.TagMultiselectWidget.styles',
-				'oojs-ui-widgets.styles',
-			] );
+		$this->getOutput()->addModuleStyles( [
+			'ext.managewiki.oouiform.styles',
+			'mediawiki.widgets.TagMultiselectWidget.styles',
+			'oojs-ui-widgets.styles',
+		] );
+		
+		$session = $this->getRequest()->getSession();
+		if ( $session->get( 'manageWikiSaveSuccess' ) ) {
+			// Remove session data for the success message
+			$session->remove( 'manageWikiSaveSuccess' );
+			$this->getOutput()->addHTML(
+				Html::successBox(
+					Html::element(
+						'p',
+						[],
+						$this->msg( 'managewiki-success' )->text()
+					),
+					'mw-notify-success'
+				)
+			);
 		}
 
 		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
