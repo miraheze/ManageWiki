@@ -147,7 +147,7 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	public function hasChanges(): bool {
-		return (bool)$this->changes;
+		return $this->changes || $this->deleteGroups;
 	}
 
 	public function setLogAction( string $action ): void {
