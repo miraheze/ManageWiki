@@ -134,15 +134,8 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @param string $group Group name
 	 */
 	public function remove( string $group ): void {
-		// Utilize changes differently in this case
-		foreach ( $this->livePermissions[$group] as $name => $value ) {
-			$this->changes[$group][$name] = [
-				'add' => null,
-				'remove' => $value,
-			];
-		}
-
 		// We will handle all processing in final stages
+		unset( $this->changes[$group] );
 		unset( $this->livePermissions[$group] );
 
 		// Push to a deletion queue
@@ -176,23 +169,22 @@ class ManageWikiPermissions implements IConfigModule {
 	public function commit(): void {
 		$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
 
+		foreach ( $this->deleteGroups as $group ) {
+			$this->log = 'delete-group';
+
+			$this->dbw->delete(
+				'mw_permissions',
+				[
+					'perm_dbname' => $this->dbname,
+					'perm_group' => $group,
+				],
+				__METHOD__
+			);
+
+			$this->deleteUsersFromGroup( $group );
+		}
+
 		foreach ( array_keys( $this->changes ) as $group ) {
-			if ( in_array( $group, $this->deleteGroups ) ) {
-				$this->log = 'delete-group';
-
-				$this->dbw->delete(
-					'mw_permissions',
-					[
-						'perm_dbname' => $this->dbname,
-						'perm_group' => $group,
-					],
-					__METHOD__
-				);
-
-				$this->deleteUsersFromGroup( $group );
-				continue;
-			}
-
 			if ( empty( $this->livePermissions[$group]['permissions'] ) ) {
 				$this->errors[] = [
 					'managewiki-error-emptygroup' => [],
