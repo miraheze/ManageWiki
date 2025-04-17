@@ -747,6 +747,10 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
+		$canDelete = $ceMW &&
+			$mwPermissions->exists( $group ) &&
+			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ) );
+
 		$formDescriptor += [
 			'enable' => [
 				'type' => 'check',
@@ -827,20 +831,14 @@ class ManageWikiFormFactoryBuilder {
 				'disabled' => !$ceMW,
 				'section' => 'autopromote',
 			],
-		];
-
-		if (
-			$ceMW &&
-			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ) )
-		) {
-			$formDescriptor['delete-checkbox'] = [
+			'delete-checkbox' => [
 				'type' => 'check',
 				'label-message' => 'permissions-delete-checkbox',
 				'default' => false,
+				'disabled' => !$canDelete,
 				'section' => 'delete',
-			];
-		}
+			],
+		];
 
 		return $formDescriptor;
 	}
@@ -1181,7 +1179,7 @@ class ManageWikiFormFactoryBuilder {
 		$isRemovable = !in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true );
 
 		// Early escape for deletion
-		if ( $isRemovable && ( $formData['delete-checkbox'] ?? false ) ) {
+		if ( $isRemovable && $formData['delete-checkbox'] ) {
 			$mwPermissions->remove( $group );
 			return $mwPermissions;
 		}
