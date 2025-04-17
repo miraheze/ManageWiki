@@ -178,6 +178,10 @@ class ManageWikiNamespaces implements IConfigModule {
 		$this->runNamespaceMigrationJob = false;
 	}
 
+	public function isDeleting( int|string $namespace ): bool {
+		return in_array( (int)$namespace, $this->deleteNamespaces );
+	}
+
 	public function getErrors(): array {
 		return $this->errors;
 	}
@@ -204,7 +208,7 @@ class ManageWikiNamespaces implements IConfigModule {
 
 	public function commit(): void {
 		foreach ( array_keys( $this->changes ) as $id ) {
-			if ( in_array( $id, $this->deleteNamespaces ) ) {
+			if ( $this->isDeleting( $id ) ) {
 				$this->log = 'namespaces-delete';
 
 				if ( !$this->isTalk( $id ) ) {
