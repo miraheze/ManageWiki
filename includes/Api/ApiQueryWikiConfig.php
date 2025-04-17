@@ -48,7 +48,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 			$mwSettings = new ManageWikiSettings( $wiki );
 			if ( isset( $prop['settings'] ) ) {
-				$wikiData['settings'] = $mwSettings->list();
+				$wikiData['settings'] = $mwSettings->list( var: null );
 
 				foreach ( $this->getConfig()->get( ConfigNames::Settings ) as $setting => $options ) {
 					if ( isset( $options['requires']['visibility']['permissions'] ) ) {

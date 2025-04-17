@@ -400,7 +400,7 @@ class Hooks {
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
-			$defaultNamespaces = array_keys( $mwNamespacesDefault->list() );
+			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
 
 			$mwNamespaces = new ManageWikiNamespaces( $dbname );
 			$mwNamespaces->disableNamespaceMigrationJob();

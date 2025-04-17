@@ -48,15 +48,15 @@ class ManageWikiSettings implements IConfigModule {
 
 	/**
 	 * Lists either all settings or the value of a specific one
-	 * @param ?string $setting Setting to retrieve value of
+	 * @param ?string $var Setting variable to retrieve value of
 	 * @return mixed Value or all settings, null if no value
 	 */
-	public function list( ?string $setting = null ): mixed {
-		if ( $setting === null ) {
+	public function list( ?string $var ): mixed {
+		if ( $var === null ) {
 			return $this->liveSettings;
 		}
 
-		return $this->liveSettings[$setting] ?? null;
+		return $this->liveSettings[$var] ?? null;
 	}
 
 	/**
@@ -115,7 +115,7 @@ class ManageWikiSettings implements IConfigModule {
 		array $settings,
 		bool $remove = true
 	): void {
-		$overwrittenSettings = $this->list();
+		$overwrittenSettings = $this->list( var: null );
 
 		foreach ( $this->settingsConfig as $var => $setConfig ) {
 			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) && $remove ) {

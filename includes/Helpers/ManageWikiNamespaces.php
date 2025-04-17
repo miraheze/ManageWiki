@@ -61,11 +61,20 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	/**
+	 * Checks whether or not the specified namespace exists
+	 * @param int $id Namespace ID to check
+	 * @return bool Whether or not the namespace exists
+	 */
+	public function exists( int $id ): bool {
+		return isset( $this->liveNamespaces[$id] );
+	}
+
+	/**
 	 * Lists either all namespaces or a specific one
-	 * @param int|null $id Namespace ID wanted (null for all)
+	 * @param ?int $id Namespace ID wanted (null for all)
 	 * @return array Namespace configuration
 	 */
-	public function list( ?int $id = null ): array {
+	public function list( ?int $id ): array {
 		if ( $id === null ) {
 			return $this->liveNamespaces;
 		}

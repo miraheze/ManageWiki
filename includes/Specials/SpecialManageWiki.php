@@ -231,7 +231,7 @@ class SpecialManageWiki extends SpecialPage {
 		// Handle namespaces module when we are not editing a specific namespace.
 		if ( $module === 'namespaces' && !$special ) {
 			$mwNamespaces = new ManageWikiNamespaces( $dbname );
-			$namespaces = $mwNamespaces->list();
+			$namespaces = $mwNamespaces->list( id: null );
 
 			foreach ( $namespaces as $id => $namespace ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {

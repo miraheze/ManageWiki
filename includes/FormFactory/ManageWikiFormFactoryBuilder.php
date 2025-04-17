@@ -338,7 +338,7 @@ class ManageWikiFormFactoryBuilder {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
 		$mwSettings = new ManageWikiSettings( $dbname );
-		$settingsList = $mwSettings->list();
+		$settingsList = $mwSettings->list( var: null );
 		$mwPermissions = new ManageWikiPermissions( $dbname );
 		$groupList = array_keys( $mwPermissions->list( group: null ) );
 
@@ -578,9 +578,9 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
 			$craftedNamespaces = [];
-			$canDelete = false;
+			$canDelete = $mwNamespaces->exists( (int)$special );
 
-			foreach ( $mwNamespaces->list() as $id => $config ) {
+			foreach ( $mwNamespaces->list( id: null ) as $id => $config ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {
 					continue;
 				}
@@ -589,9 +589,6 @@ class ManageWikiFormFactoryBuilder {
 					$craftedNamespaces[$config['name']] = $id;
 					continue;
 				}
-
-				// Existing namespace
-				$canDelete = true;
 			}
 
 			$formDescriptor += [
@@ -1024,7 +1021,7 @@ class ManageWikiFormFactoryBuilder {
 		$extList = $mwExtensions->list();
 
 		$mwSettings = new ManageWikiSettings( $dbname );
-		$settingsList = $mwSettings->list();
+		$settingsList = $mwSettings->list( var: null );
 
 		$settingsArray = [];
 

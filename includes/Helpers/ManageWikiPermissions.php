@@ -58,7 +58,7 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @return bool Whether or not the group exists
 	 */
 	public function exists( string $group ): bool {
-		return array_key_exists( $group, $this->livePermissions );
+		return isset( $this->livePermissions[$group] );
 	}
 
 	/**
