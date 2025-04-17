@@ -272,7 +272,9 @@ class ManageWikiPermissions implements IConfigModule {
 
 		foreach ( $userIds as $userId ) {
 			$remoteUser = $userIdentityLookup->getUserIdentityByUserId( $userId );
-			$userGroupManager->removeUserFromGroup( $remoteUser, $group );
+			if ( $remoteUser ) {
+				$userGroupManager->removeUserFromGroup( $remoteUser, $group );
+			}
 		}
 	}
 }
