@@ -890,6 +890,15 @@ class ManageWikiFormFactoryBuilder {
 			$mwLogEntry->setParameters( $mwReturn->getLogParams() );
 			$mwLogID = $mwLogEntry->insert();
 			$mwLogEntry->publish( $mwLogID );
+
+			if ( $module === 'permissions' || $module === 'namespaces' ) {
+				if ( $mwReturn->isDeleting( $special ) ) {
+					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
+					$context->getOutput()->redirect(
+						SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL()
+					);
+				}
+			}
 		} else {
 			return [ [ 'managewiki-changes-none' => null ] ];
 		}

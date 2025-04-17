@@ -149,6 +149,10 @@ class ManageWikiPermissions implements IConfigModule {
 		$this->deleteGroups[] = $group;
 	}
 
+	public function isDeleting( string $group ): bool {
+		return in_array( $group, $this->deleteGroups );
+	}
+
 	public function getErrors(): array {
 		return $this->errors;
 	}
@@ -177,7 +181,7 @@ class ManageWikiPermissions implements IConfigModule {
 		$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
 
 		foreach ( array_keys( $this->changes ) as $group ) {
-			if ( in_array( $group, $this->deleteGroups ) ) {
+			if ( $this->isDeleting( $group ) ) {
 				$this->log = 'delete-group';
 
 				$this->dbw->delete(
