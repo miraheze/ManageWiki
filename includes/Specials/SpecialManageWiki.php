@@ -45,12 +45,12 @@ class SpecialManageWiki extends SpecialPage {
 		if ( $session->get( 'manageWikiSaveSuccess' ) ) {
 			// Remove session data for the success message
 			$session->remove( 'manageWikiSaveSuccess' );
-			$out->addModuleStyles( [
+			$this->getOutput()->addModuleStyles( [
 				'mediawiki.codex.messagebox.styles',
 				'mediawiki.notification.convertmessagebox.styles',
 			] );
 
-			$out->addHTML(
+			$this->getOutput()->addHTML(
 				Html::successBox(
 					Html::element(
 						'p',
