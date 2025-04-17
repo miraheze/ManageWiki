@@ -473,7 +473,7 @@ class Hooks {
 		$userOptionsLookup = $services->getUserOptionsLookup();
 
 		$hideSidebar = !self::getConfig( ConfigNames::ForceSidebarLinks ) &&
-			!$userOptionsLookup->getOption( $user, 'managewikisidebar', 0 );
+			!$userOptionsLookup->getBoolOption( $user, 'managewikisidebar' );
 
 		$modules = array_keys( self::getConfig( ConfigNames::ManageWiki ), true );
 		foreach ( $modules as $module ) {
