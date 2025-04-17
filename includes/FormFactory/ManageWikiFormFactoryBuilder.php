@@ -76,15 +76,15 @@ class ManageWikiFormFactoryBuilder {
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && !$databaseUtils->isRemoteWikiCentral( $dbname ) ) {
-			$actions = [
+			$mwActions = [
 				$remoteWiki->isDeleted() ? 'undelete' : 'delete',
 				$remoteWiki->isLocked() ? 'unlock' : 'lock',
 			];
 
-			foreach ( $actions as $action ) {
-				$formDescriptor[$action] = [
+			foreach ( $mwActions as $mwAction ) {
+				$formDescriptor[$mwAction] = [
 					'type' => 'check',
-					'label-message' => "managewiki-label-{$action}wiki",
+					'label-message' => "managewiki-label-{$mwAction}wiki",
 					'default' => false,
 					'section' => 'main',
 				];
@@ -704,7 +704,6 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $groupData['allPermissions'] as $perm ) {
 			$assigned = in_array( $perm, $groupData['assignedPermissions'] );
-
 			$formDescriptor["right-$perm"] = [
 				'type' => 'check',
 				'label' => $perm,
@@ -907,19 +906,17 @@ class ManageWikiFormFactoryBuilder {
 		IDatabase $dbw,
 		Config $config
 	): RemoteWikiFactory {
-		$deleteActions = [ 'delete', 'undelete' ];
-		foreach ( $deleteActions as $action ) {
-			if ( $formData[$action] ?? false ) {
-				$remoteWiki->$action();
-				return $remoteWiki;
-			}
-		}
+		$mwActions = [
+			'delete',
+			'lock',
+			'undelete',
+			'unlock',
+		];
 
-		$lockActions = [ 'lock', 'unlock' ];
-		foreach ( $lockActions as $action ) {
-			if ( $formData[$action] ?? false ) {
-				$remoteWiki->$action();
-				break;
+		foreach ( $mwActions as $mwAction ) {
+			if ( $formData[$mwAction] ?? false ) {
+				$remoteWiki->$mwAction();
+				return $remoteWiki;
 			}
 		}
 
