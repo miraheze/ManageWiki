@@ -170,7 +170,7 @@ class SpecialManageWiki extends SpecialPage {
 			'mediawiki.widgets.TagMultiselectWidget.styles',
 			'oojs-ui-widgets.styles',
 		] );
-		
+
 		$session = $this->getRequest()->getSession();
 		if ( $session->get( 'manageWikiSaveSuccess' ) ) {
 			// Remove session data for the success message
