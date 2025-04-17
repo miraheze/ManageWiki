@@ -606,6 +606,7 @@ class ManageWikiFormFactoryBuilder {
 					'options' => $craftedNamespaces,
 					'default' => NS_MAIN,
 					'disabled' => !$canDelete,
+					'hide-if' => [ '!==', 'delete-checkbox', '1' ],
 					'section' => 'delete',
 				],
 			];
