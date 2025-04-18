@@ -113,6 +113,9 @@ class SpecialManageWiki extends SpecialPage {
 			$dbname = $par[1];
 			$additional = $par[2] ?? '';
 			$filtered = $par[3] ?? $par[2] ?? '';
+			$this->getOutput()->setPageTitle(
+				"$dbname — {$this->getOutput()->getPageTitle()}"
+			);
 			$this->showWikiForm(
 				strtolower( $dbname ),
 				$module,
