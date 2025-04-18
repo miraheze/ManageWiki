@@ -37,8 +37,20 @@
 		"Miraheze\\ManageWiki\\Tests\\": "tests/phpunit/"
 	},
 	"JobClasses": {
-		"MWScriptJob": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
-		"NamespaceMigrationJob": "Miraheze\\ManageWiki\\Jobs\\NamespaceMigrationJob"
+		"MWScriptJob": {
+			"class": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
+			"services": [
+				"ManageWikiLogger"
+			],
+			"needsPage": false
+		},
+		"NamespaceMigrationJob": {
+			"class": "Miraheze\\ManageWiki\\Jobs\\NamespaceMigrationJob",
+			"services": [
+				"CreateWikiDatabaseUtils"
+			],
+			"needsPage": false
+		}
 	},
 	"AvailableRights": [
 		"managewiki-core",

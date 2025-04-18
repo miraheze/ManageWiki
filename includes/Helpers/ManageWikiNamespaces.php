@@ -2,9 +2,9 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use JobSpecification;
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
@@ -54,7 +54,7 @@ class ManageWikiNamespaces implements IConfigModule {
 				'contentmodel' => $ns->ns_content_model,
 				'protection' => $ns->ns_protection,
 				'aliases' => json_decode( $ns->ns_aliases, true ),
-				'core' => $ns->ns_core,
+				'core' => (int)$ns->ns_core,
 				'additional' => json_decode( $ns->ns_additional, true ),
 			];
 		}
@@ -252,6 +252,7 @@ class ManageWikiNamespaces implements IConfigModule {
 					'dbname' => $this->dbname,
 					'nsID' => $id,
 					'nsName' => $this->liveNamespaces[$id]['name'],
+					'nsNew' => null,
 					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix'] ?? false,
 				];
 
@@ -279,8 +280,15 @@ class ManageWikiNamespaces implements IConfigModule {
 			}
 
 			if ( $this->dbname !== 'default' && $this->runNamespaceMigrationJob ) {
-				$job = new NamespaceMigrationJob( SpecialPage::getTitleFor( 'ManageWiki' ), $jobParams );
-				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $job );
+				$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
+				$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
+
+				$jobQueueGroup->push(
+					new JobSpecification(
+						NamespaceMigrationJob::JOB_NAME,
+						$jobParams
+					)
+				);
 			}
 		}
 
