@@ -3,11 +3,11 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
+use JobSpecification;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
-use MediaWiki\Title\Title;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
 use RuntimeException;
 
@@ -169,25 +169,31 @@ class ManageWikiInstaller {
 				unset( $options['repeat-with'] );
 			}
 
-			$params = [
-				'dbname' => $dbname,
-				'script' => $script,
-				'options' => $options,
-			];
+			$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
+			$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
 
-			$mwJob = new MWScriptJob( Title::newMainPage(), $params );
-
-			MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
+			$jobQueueGroup->push(
+				new JobSpecification(
+					MWScriptJob::JOB_NAME,
+					[
+						'dbname' => $dbname,
+						'script' => $script,
+						'options' => $options,
+					]
+				)
+			);
 
 			if ( $repeatWith ) {
-				$params = [
-					'dbname' => $dbname,
-					'script' => $script,
-					'options' => $repeatWith,
-				];
-
-				$mwJob = new MWScriptJob( Title::newMainPage(), $params );
-				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
+				$jobQueueGroup->push(
+					new JobSpecification(
+						MWScriptJob::JOB_NAME,
+						[
+							'dbname' => $dbname,
+							'script' => $script,
+							'options' => $repeatWith,
+						]
+					)
+				);
 			}
 		}
 

@@ -3,14 +3,27 @@
 namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
-use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\Shell\Shell;
-use MediaWiki\Title\Title;
+use Psr\Log\LoggerInterface;
 
 class MWScriptJob extends Job {
 
-	public function __construct( Title $title, array $params ) {
-		parent::__construct( 'MWScriptJob', $params );
+	public const JOB_NAME = 'MWScriptJob';
+
+	private readonly string $dbname;
+	private readonly string $script;
+
+	private readonly array $options;
+
+	public function __construct(
+		array $params,
+		private readonly LoggerInterface $logger
+	) {
+		parent::__construct( self::JOB_NAME, $params );
+
+		$this->dbname = $params['dbname'];
+		$this->options = $params['options'];
+		$this->script = $params['script'];
 	}
 
 	/**
@@ -18,12 +31,9 @@ class MWScriptJob extends Job {
 	 */
 	public function run(): bool {
 		$limits = [ 'memory' => 0, 'filesize' => 0 ];
-		$script = $this->params['script'];
-		$arguments = [
-			'--wiki', $this->params['dbname'],
-		];
+		$arguments = [ '--wiki', $this->dbname ];
 
-		foreach ( (array)$this->params['options'] as $name => $val ) {
+		foreach ( $this->options as $name => $val ) {
 			$arguments[] = "--$name";
 
 			if ( !is_bool( $val ) ) {
@@ -31,17 +41,16 @@ class MWScriptJob extends Job {
 			}
 		}
 
-		$result = Shell::makeScriptCommand( $script, $arguments )
+		$result = Shell::makeScriptCommand( $this->script, $arguments )
 			->limits( $limits )
 			->execute()
 			->getExitCode();
 
 		// An execute code higher then 0 indicates failure.
 		if ( $result ) {
-			$logger = LoggerFactory::getInstance( 'ManageWiki' );
-			$logger->error( 'MWScriptJob failure. Status {result} running {script}', [
+			$this->logger->error( 'MWScriptJob failure. Status {result} running {script}', [
 				'result' => $result,
-				'script' => $script,
+				'script' => $this->script,
 			] );
 		}
 

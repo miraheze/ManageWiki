@@ -3,8 +3,7 @@
 namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
-use MediaWiki\MediaWikiServices;
-use MediaWiki\Title\Title;
+use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
@@ -12,27 +11,47 @@ use Wikimedia\Rdbms\IDatabase;
  */
 class NamespaceMigrationJob extends Job {
 
-	public function __construct( Title $title, array $params ) {
-		parent::__construct( 'NamespaceMigrationJob', $params );
+	public const JOB_NAME = 'NamespaceMigrationJob';
+
+	private readonly string $action;
+	private readonly string $dbname;
+	private readonly string $nsName;
+
+	private readonly bool $maintainPrefix;
+
+	private readonly int $nsID;
+	private readonly ?int $nsNew;
+
+	public function __construct(
+		array $params,
+		private readonly CreateWikiDatabaseUtils $databaseUtils
+	) {
+		parent::__construct( self::JOB_NAME, $params );
+
+		$this->action = $params['action'];
+		$this->dbname = $params['dbname'];
+
+		$this->nsID = $params['nsID'];
+		$this->nsName = $params['nsName'];
+		$this->nsNew = $params['nsNew'];
+
+		$this->maintainPrefix = $params['maintainPrefix'];
 	}
 
 	/**
 	 * @return bool
 	 */
 	public function run(): bool {
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $this->params['dbname'] );
+		$dbw = $this->databaseUtils->getRemoteWikiPrimaryDB( $this->dbname );
 
-		$maintainPrefix = $this->params['maintainPrefix'];
-
-		if ( $this->params['action'] === 'delete' ) {
-			$nsSearch = $this->params['nsID'];
+		if ( $this->action === 'delete' ) {
+			$nsSearch = $this->nsID;
 			$pagePrefix = '';
-			$nsTo = $this->params['nsNew'];
+			$nsTo = $this->nsNew;
 		} else {
 			$nsSearch = 0;
-			$pagePrefix = $this->params['nsName'] . ':';
-			$nsTo = $this->params['nsID'];
+			$pagePrefix = $this->nsName . ':';
+			$nsTo = $this->nsID;
 		}
 
 		$res = $dbw->select(
@@ -55,16 +74,16 @@ class NamespaceMigrationJob extends Job {
 			if ( $nsSearch === 0 ) {
 				$replace = '';
 				$newTitle = str_replace( $pagePrefix, $replace, $pageTitle );
-			} elseif ( $maintainPrefix && $this->params['action'] === 'delete' ) {
-				$pagePrefix = $this->params['nsName'] . ':';
+			} elseif ( $this->maintainPrefix && $this->action === 'delete' ) {
+				$pagePrefix = $this->nsName . ':';
 				$replace = '';
 				$newTitle = $pagePrefix . str_replace( $pagePrefix, $replace, $pageTitle );
 			} else {
 				$newTitle = $pageTitle;
 			}
 
-			if ( $this->params['action'] !== 'create' && $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
-				$newTitle .= '~' . $this->params['nsName'];
+			if ( $this->action !== 'create' && $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
+				$newTitle .= '~' . $this->nsName;
 			}
 
 			$dbw->update(
