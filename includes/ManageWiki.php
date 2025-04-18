@@ -65,8 +65,7 @@ class ManageWiki {
 		return null;
 	}
 
-	public static function namespaceID( string $namespace ): int {
-		$config = MediaWikiServices::getInstance()->getMainConfig();
+	public static function namespaceID( string $dbname, string $namespace ): int {
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$dbr = $databaseUtils->getGlobalReplicaDB();
 
@@ -74,7 +73,7 @@ class ManageWiki {
 			'mw_namespaces',
 			'ns_namespace_id',
 			[
-				'ns_dbname' => $config->get( MainConfigNames::DBname ),
+				'ns_dbname' => $dbname,
 				'ns_namespace_id' => $namespace,
 			],
 			__METHOD__
@@ -85,7 +84,7 @@ class ManageWiki {
 				'mw_namespaces',
 				'ns_namespace_id',
 				[
-					'ns_dbname' => $config->get( MainConfigNames::DBname ),
+					'ns_dbname' => $dbname,
 					'ns_namespace_id >= 3000',
 				],
 				__METHOD__,
