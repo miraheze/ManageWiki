@@ -108,6 +108,7 @@
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
 				"CreateWikiDatabaseUtils",
+				"CreateWikiValidator",
 				"PermissionManager",
 				"RemoteWikiFactory"
 			]
