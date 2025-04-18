@@ -327,7 +327,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'text',
 					'default' => $value ?? $options['overridedefault'],
-					'filter-callback' => static fn ( ?string $input ): string =>
+					'filter-callback' => static fn ( ?string $input ): ?string =>
 						$input !== '' && $input !== null ? $input : $options['overridedefault'],
 				];
 				break;
