@@ -100,7 +100,6 @@
 	"managewiki-label-dbname": "Имя базы данных",
 	"managewiki-label-deletewiki": "Удалить эту вики?",
 	"managewiki-label-deletiondate": "Дата удаления",
-	"managewiki-label-description": "Краткое описание",
 	"managewiki-label-experimental": "Экспериментальные особенности",
 	"managewiki-label-goto": "Перейти к Special:ManageWiki",
 	"managewiki-label-inactive": "Неактивна",

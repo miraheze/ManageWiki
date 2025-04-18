@@ -61,7 +61,6 @@
 	"managewiki-label-dbname": "Tietokannan nimi",
 	"managewiki-label-deletewiki": "Poista tämä wiki?",
 	"managewiki-label-deletiondate": "Poistopäivämäärä",
-	"managewiki-label-description": "Näytä kuvaus",
 	"managewiki-label-experimental": "Kokeelliset ominaisuudet",
 	"managewiki-label-inactive": "Inaktiivinen",
 	"managewiki-label-inactive-exempt": "Vapautus epäaktiivisuudesta",

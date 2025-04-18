@@ -81,7 +81,6 @@
 	"managewiki-label-dbname": "Назив на базата",
 	"managewiki-label-deletewiki": "Да го избришам викито?",
 	"managewiki-label-deletiondate": "Датум на бришење",
-	"managewiki-label-description": "Краток опис",
 	"managewiki-label-experimental": "Пробни можности",
 	"managewiki-label-goto": "Оди на Special:ManageWiki",
 	"managewiki-label-inactive": "Неактивно",

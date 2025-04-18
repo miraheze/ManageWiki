@@ -101,7 +101,6 @@
 	"managewiki-label-dbname": "Name der Datenbank",
 	"managewiki-label-deletewiki": "Dieses Wiki löschen?",
 	"managewiki-label-deletiondate": "Löschdatum",
-	"managewiki-label-description": "Kurze Beschreibung",
 	"managewiki-label-experimental": "Experimentelle Funktionen",
 	"managewiki-label-goto": "Zu Special:ManageWiki gehen",
 	"managewiki-label-inactive": "Inaktiv",

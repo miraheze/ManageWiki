@@ -55,7 +55,6 @@
 	"managewiki-label-dbname": "Databasnamn",
 	"managewiki-label-deletewiki": "Radera denna wiki?",
 	"managewiki-label-deletiondate": "Datum raderad",
-	"managewiki-label-description": "Kortbeskrivning",
 	"managewiki-label-experimental": "Experimentella funktioner",
 	"managewiki-label-goto": "Gå till Special:ManageWiki",
 	"managewiki-label-inactive": "Inaktiv",

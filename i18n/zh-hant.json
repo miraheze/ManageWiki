@@ -88,7 +88,6 @@
 	"managewiki-label-dbname": "資料庫名稱",
 	"managewiki-label-deletewiki": "刪除此 wiki？",
 	"managewiki-label-deletiondate": "刪除日期",
-	"managewiki-label-description": "簡短描述",
 	"managewiki-label-experimental": "實驗性功能",
 	"managewiki-label-goto": "前往 Special:ManageWiki",
 	"managewiki-label-inactive": "失效",
