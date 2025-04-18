@@ -82,7 +82,7 @@ class NamespaceMigrationJob extends Job {
 				$newTitle = $pageTitle;
 			}
 
-			if ( $this->action !== 'create' && $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
+			if ( $nsTo !== null && $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
 				$newTitle .= '~' . $this->nsName;
 			}
 
