@@ -98,10 +98,15 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// ManageWiki core (on the central wiki) — remote wiki management
-		if ( $module === 'core' ) {
+		if ( $module === 'core' || $module === 'settings' || $module === 'extensions' ) {
 			$dbname = $par[1] ?? $this->getConfig()->get( MainConfigNames::DBname );
+			$additional = $par[2] ?? '';
+			$filtered = $par[3] ?? $par[2] ?? '';
 			$this->showWikiForm(
-				strtolower( $dbname ), $module, '', ''
+				strtolower( $dbname ),
+				$module,
+				$additional,
+				$filtered
 			);
 			return;
 		}
