@@ -153,7 +153,7 @@ class ManageWikiTypes {
 					'options' => $options['options'],
 					'default' => array_keys( $value ?? $options['overridedefault'], true ),
 					'filter-callback' => static fn ( array $input ): array =>
-						array_fill_keys( $options['options'], false ) +
+						array_fill_keys( $options['allopts'], false ) +
 						array_fill_keys( $input, true ),
 				];
 
