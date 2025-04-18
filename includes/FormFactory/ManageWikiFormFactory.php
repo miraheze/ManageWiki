@@ -107,6 +107,8 @@ class ManageWikiFormFactory {
 			throw new UnexpectedValueException( "User '{$form->getUser()->getName()}' without 'managewiki-$module' right tried to change wiki $module!" );
 		}
 
+		// Avoid 'no field named reason' error
+		$form->getButtons();
 		$formData['reason'] = $form->getField( 'reason' )
 			->loadDataFromRequest( $form->getRequest() );
 
