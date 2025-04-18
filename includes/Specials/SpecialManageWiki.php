@@ -153,6 +153,17 @@ class SpecialManageWiki extends SpecialPage {
 				'label-message' => 'managewiki-label-dbname',
 				'required' => true,
 			],
+			'module' => [
+				'type' => 'select',
+				'label-message' => 'managewiki-label-module',
+				'default' => 'core',
+				'options' => [
+					'core' => 'core',
+					'settings' => 'settings',
+					'extensions' => 'extensions',
+					'namespaces' => 'namespaces',
+				],
+			],
 		];
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'searchForm' );
@@ -166,7 +177,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function onSubmitRedirectToWikiForm( array $formData ): void {
 		$this->getOutput()->redirect(
-			SpecialPage::getTitleFor( 'ManageWiki', "core/{$formData['dbname']}" )->getFullURL()
+			SpecialPage::getTitleFor( 'ManageWiki', "$formData['module']/{$formData['dbname']}" )->getFullURL()
 		);
 	}
 
