@@ -152,9 +152,14 @@ class ManageWikiTypes {
 					'type' => 'multiselect',
 					'options' => $options['options'],
 					'default' => array_keys( $value ?? $options['overridedefault'], true ),
-					'filter-callback' => static fn ( array $input ): array =>
-						array_fill_keys( $options['allopts'], false ) +
-						array_fill_keys( $input, true ),
+					'filter-callback' => static function ( array $input ) use ( $options ): array {
+						$filtered = [];
+						foreach ( $options['allopts'] as $opt ) {
+							$filtered[$opt] = in_array( $opt, $input, true );
+						}
+
+						return $filtered;
+					},
 				];
 
 				if ( !$disabled ) {
