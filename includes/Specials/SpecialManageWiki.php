@@ -388,6 +388,10 @@ class SpecialManageWiki extends SpecialPage {
 			$form->getRequest()->getSession()->set( 'create', $formData['out'] );
 		}
 
+		$special = ( isset( $formData['dbname'] ) && $formData['dbname'] !== $this->getConfig()->get( MainConfigNames::DBname ) )
+			? "{$formData['dbname']}/$special"
+			: $special;
+
 		$this->getOutput()->redirect(
 			SpecialPage::getTitleFor( 'ManageWiki', "$module/$special" )->getFullURL()
 		);
