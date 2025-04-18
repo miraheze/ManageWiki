@@ -8,6 +8,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
+use Miraheze\CreateWiki\Services\CreateWikiValidator;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
@@ -21,6 +22,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly CreateWikiValidator $validator,
 		private readonly PermissionManager $permissionManager,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
@@ -97,9 +99,18 @@ class SpecialManageWiki extends SpecialPage {
 			return;
 		}
 
-		// ManageWiki core (on the central wiki) — remote wiki management
-		if ( $module === 'core' || $module === 'settings' || $module === 'extensions' ) {
-			$dbname = $par[1] ?? $this->getConfig()->get( MainConfigNames::DBname );
+		// ManageWiki remote management (on the central wiki)
+		// Make sure we can access deleted wikis on ManageWiki core so we don't
+		// have a databaseExists check there
+		if (
+			isset( $par[1] ) &&
+			// ManageWiki permissions does not have a log parameter telling
+			// what wiki it's being modified on, so we don't enable
+			// remote management on permissions.
+			$module !== 'permissions' &&
+			( $module === 'core' || $this->validator->databaseExists( $par[1] ) )
+		) {
+			$dbname = $par[1];
 			$additional = $par[2] ?? '';
 			$filtered = $par[3] ?? $par[2] ?? '';
 			$this->showWikiForm(
