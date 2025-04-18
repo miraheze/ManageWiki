@@ -135,7 +135,7 @@ class ManageWikiFormFactory {
 			}
 
 			$form->getOutput()->addHTML(
-				Html::warningBox(
+				Html::errorBox(
 					Html::rawElement(
 						'p',
 						[],
