@@ -88,13 +88,14 @@ class ManageWikiTypes {
 						],
 						'delete' => [
 							'type' => 'submit',
-							'default' => wfMessage( 'htmlform-cloner-delete' )->escaped(),
+							'buttonlabel-message' => 'htmlform-cloner-delete',
 							'flags' => [ 'destructive' ],
 						],
 					],
-					'default' => array_map( static function ( int $num ): array {
-						return [ 'value' => $num ];
-					}, $value ?? $options['overridedefault'] ),
+					'default' => array_map(
+						static fn ( int $num ): array => [ 'value' => $num ],
+						$value ?? $options['overridedefault']
+					),
 				];
 				break;
 			case 'interwiki':
@@ -146,7 +147,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $options['options'],
-					'default' => $value !== null ? array_keys( $value, true ) : array_keys( $options['overridedefault'], true ),
+					'default' => array_keys( $value ?? $options['overridedefault'], true ),
 				];
 
 				if ( !$disabled ) {
@@ -281,7 +282,7 @@ class ManageWikiTypes {
 
 				$configs = [
 					'type' => 'select',
-					'options' => isset( $options['options'] ) ? array_merge( $enabledSkins, $options['options'] ) : $enabledSkins,
+					'options' => array_merge( $enabledSkins, $options['options'] ?? [] ),
 					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
@@ -323,13 +324,14 @@ class ManageWikiTypes {
 						],
 						'delete' => [
 							'type' => 'submit',
-							'default' => wfMessage( 'htmlform-cloner-delete' )->escaped(),
+							'buttonlabel-message' => 'htmlform-cloner-delete',
 							'flags' => [ 'destructive' ],
 						],
 					],
-					'default' => array_map( static function ( string $text ): array {
-						return [ 'value' => $text ];
-					}, $value ?? $options['overridedefault'] ),
+					'default' => array_map(
+						static fn ( string $text ): array => [ 'value' => $text ],
+						$value ?? $options['overridedefault']
+					),
 				];
 				break;
 			case 'timezone':
@@ -363,7 +365,7 @@ class ManageWikiTypes {
 
 				$configs = [
 					'type' => 'multiselect',
-					'options' => isset( $options['options'] ) ? array_merge( $groups, $options['options'] ) : $groups,
+					'options' => array_merge( $groups, $options['options'] ?? [] ),
 					'default' => $value ?? $options['overridedefault'],
 				];
 
@@ -379,7 +381,7 @@ class ManageWikiTypes {
 
 				$configs = [
 					'type' => 'multiselect',
-					'options' => isset( $options['options'] ) ? array_merge( $rights, $options['options'] ) : $rights,
+					'options' => array_merge( $rights, $options['options'] ?? [] ),
 					'default' => $value ?? $options['overridedefault'],
 				];
 
@@ -418,8 +420,6 @@ class ManageWikiTypes {
 		string $type,
 		mixed $value
 	): array {
-		$configs = [];
-
 		if ( $type === 'contentmodel' ) {
 			$contentHandlerFactory = MediaWikiServices::getInstance()->getContentHandlerFactory();
 
@@ -431,18 +431,20 @@ class ManageWikiTypes {
 
 			uksort( $contentModels, 'strcasecmp' );
 
-			$configs = [
+			return [
 				'type' => 'select',
 				'options' => $contentModels,
 				'default' => $value,
 			];
-		} elseif ( $type === 'vestyle' ) {
-			$configs = [
+		}
+
+		if ( $type === 'vestyle' ) {
+			return [
 				'type' => 'check',
 				'default' => $value ?? $overrideDefault,
 			];
 		}
 
-		return $configs;
+		return [];
 	}
 }

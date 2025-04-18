@@ -253,9 +253,10 @@ class ManageWikiFormFactoryBuilder {
 		$formDescriptor = [];
 
 		foreach ( $config->get( ConfigNames::Extensions ) as $name => $ext ) {
-			$filteredList = array_filter( $manageWikiSettings, static function ( array $value ) use ( $name ): bool {
-				return $value['from'] === $name;
-			} );
+			$filteredList = array_filter(
+				$manageWikiSettings,
+				static fn ( array $value ): bool => $value['from'] === $name
+			);
 
 			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
 
@@ -343,14 +344,12 @@ class ManageWikiFormFactoryBuilder {
 		$groupList = array_keys( $mwPermissions->list( group: null ) );
 
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
-		$filteredList = array_filter( $manageWikiSettings, static function ( array $value ) use ( $filtered, $extList ): bool {
-			return $value['from'] === strtolower( $filtered ) && (
-				in_array( $value['from'], $extList ) || (
-					array_key_exists( 'global', $value ) &&
-					$value['global']
-				)
-			);
-		} );
+		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
+			$value['from'] === strtolower( $filtered ) && (
+				in_array( $value['from'], $extList ) ||
+				( $value['global'] ?? false )
+			)
+		);
 
 		$formDescriptor = [];
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
@@ -1097,14 +1096,12 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
-		$filteredList = array_filter( $manageWikiSettings, static function ( array $value ) use ( $filtered, $extList ): bool {
-			return $value['from'] === strtolower( $filtered ) && (
-				in_array( $value['from'], $extList ) || (
-					array_key_exists( 'global', $value ) &&
-					$value['global']
-				)
-			);
-		} );
+		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
+			$value['from'] === strtolower( $filtered ) && (
+				in_array( $value['from'], $extList ) ||
+				( $value['global'] ?? false )
+			)
+		);
 
 		$remove = !( count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0 );
 
