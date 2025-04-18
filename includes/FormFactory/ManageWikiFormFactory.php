@@ -66,24 +66,19 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
 		$htmlForm
-			->setSubmitCallback(
-				function ( array $formData, HTMLForm $form ) use (
-					$module, $ceMW, $remoteWiki, $special,
-					$filtered, $dbw, $dbname, $config
-				): void {
-					$this->submitForm(
-						$config,
-						$dbw,
-						$form,
-						$remoteWiki,
-						$formData,
-						$dbname,
-						$module,
-						$special,
-						$filtered,
-						$ceMW
-					);
-				}
+			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): bool =>
+				$this->submitForm(
+					$config,
+					$dbw,
+					$form,
+					$remoteWiki,
+					$formData,
+					$dbname,
+					$module,
+					$special,
+					$filtered,
+					$ceMW
+				)
 			)
 			->setId( 'managewiki-form' )
 			->setSubmitID( 'managewiki-submit' )
@@ -107,13 +102,13 @@ class ManageWikiFormFactory {
 		string $special,
 		string $filtered,
 		bool $ceMW
-	): void {
+	): bool {
 		if ( !$ceMW ) {
 			throw new UnexpectedValueException( "User '{$form->getUser()->getName()}' without 'managewiki-$module' right tried to change wiki $module!" );
 		}
 
-		$form->getButtons();
-		$formData['reason'] = $form->getField( 'reason' )->loadDataFromRequest( $form->getRequest() );
+		$formData['reason'] = $form->getField( 'reason' )
+			->loadDataFromRequest( $form->getRequest() );
 
 		$context = $form->getContext();
 		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler(
@@ -147,7 +142,8 @@ class ManageWikiFormFactory {
 					'mw-notify-error'
 				)
 			);
-			return;
+
+			return false;
 		}
 
 		$form->getOutput()->addHTML(
@@ -160,5 +156,7 @@ class ManageWikiFormFactory {
 				'mw-notify-success'
 			)
 		);
+
+		return true;
 	}
 }
