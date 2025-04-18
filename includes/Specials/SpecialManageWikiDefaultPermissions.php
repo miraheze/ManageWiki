@@ -123,7 +123,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 					'validation-callback' => [ $this, 'validateNewGroupName' ],
 					// Groups should typically be lowercase so we do that here.
 					// Display names can be customized using interface messages.
-					'filter-callback' = static fn ( string $value ): string => strtolower( $value ),
+					'filter-callback' => static fn ( string $value ): string => strtolower( $value ),
 				];
 
 				$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
