@@ -96,6 +96,10 @@ class ManageWikiTypes {
 						static fn ( int $num ): array => [ 'value' => $num ],
 						$value ?? $options['overridedefault']
 					),
+					'filter-callback' => static fn ( array $input ): array =>
+						array_map( 'intval', array_filter(
+							array_column( $input, 'value' )
+						) ),
 				];
 				break;
 			case 'interwiki':
@@ -148,6 +152,9 @@ class ManageWikiTypes {
 					'type' => 'multiselect',
 					'options' => $options['options'],
 					'default' => array_keys( $value ?? $options['overridedefault'], true ),
+					'filter-callback' => static fn ( array $input ): array =>
+						array_fill_keys( $options['options'], false ) +
+						array_fill_keys( $input, true ),
 				];
 
 				if ( !$disabled ) {
@@ -160,6 +167,7 @@ class ManageWikiTypes {
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
 					'default' => $value !== null ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault'],
+					'filter-callback' => static fn ( array $input ): array => ManageWiki::handleMatrix( $input, 'phparray' ),
 				];
 				break;
 			case 'preferences':
@@ -315,6 +323,12 @@ class ManageWikiTypes {
 					$configs['dropdown'] = true;
 				}
 				break;
+			case 'text':
+				$configs = [
+					'filter-callback' => static fn ( ?string $input ): string =>
+						$input !== '' && $input !== null ? $input : $options['overridedefault'],
+				];
+				break;
 			case 'texts':
 				$configs = [
 					'type' => 'cloner',
@@ -332,6 +346,8 @@ class ManageWikiTypes {
 						static fn ( string $text ): array => [ 'value' => $text ],
 						$value ?? $options['overridedefault']
 					),
+					'filter-callback' => static fn ( array $input ): array =>
+						array_filter( array_column( $input, 'value' ) ),
 				];
 				break;
 			case 'timezone':
@@ -353,6 +369,8 @@ class ManageWikiTypes {
 					'type' => 'usersmultiselect',
 					'exists' => true,
 					'default' => implode( "\n", $value ?? $options['overridedefault'] ),
+					'filter-callback' => static fn ( string $input ): array =>
+						$input !== '' ? explode( "\n", $input ) : [],
 				];
 				break;
 			case 'usergroups':
@@ -403,6 +421,8 @@ class ManageWikiTypes {
 					'exists' => $options['exists'] ?? true,
 					'default' => implode( "\n", $value ?? $options['overridedefault'] ),
 					'required' => false,
+					'filter-callback' => static fn ( string $input ): array =>
+						$input !== '' ? explode( "\n", $input ) : [],
 				];
 				break;
 			default:
