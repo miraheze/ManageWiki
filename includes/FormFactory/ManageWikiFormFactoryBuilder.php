@@ -894,6 +894,10 @@ class ManageWikiFormFactoryBuilder {
 			if ( $module === 'permissions' || $module === 'namespaces' ) {
 				if ( $mwReturn->isDeleting( $special ) ) {
 					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
+					if ( $dbname !== $config->get( MainConfigNames::DBname ) ) {
+						$module .= "/$dbname";
+					}
+
 					$context->getOutput()->redirect(
 						SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL()
 					);
