@@ -357,8 +357,9 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $filteredSettings as $name => $set ) {
 			if ( !isset( $set['requires'] ) ) {
 				$logger = LoggerFactory::getInstance( 'ManageWiki' );
-				$logger->error( '\'requires\' is not set in ManageWikiSettings for {setting}', [
-					'setting' => $name,
+				$logger->error( '\'requires\' is not set in {config} for {var}', [
+					'config' => ConfigNames::Settings,
+					'var' => $name,
 				] );
 				$mwRequirements = true;
 			} else {
