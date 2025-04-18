@@ -3,7 +3,6 @@
 namespace Miraheze\ManageWiki;
 
 use DateTimeZone;
-use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 
 class ManageWiki {
