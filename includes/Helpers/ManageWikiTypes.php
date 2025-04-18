@@ -371,8 +371,6 @@ class ManageWikiTypes {
 					'type' => 'usersmultiselect',
 					'exists' => true,
 					'default' => implode( "\n", $value ?? $options['overridedefault'] ),
-					'filter-callback' => static fn ( string $input ): array =>
-						$input !== '' ? explode( "\n", $input ) : [],
 				];
 				break;
 			case 'usergroups':
@@ -423,8 +421,6 @@ class ManageWikiTypes {
 					'exists' => $options['exists'] ?? true,
 					'default' => implode( "\n", $value ?? $options['overridedefault'] ),
 					'required' => false,
-					'filter-callback' => static fn ( string $input ): array =>
-						$input !== '' ? explode( "\n", $input ) : [],
 				];
 				break;
 			default:
