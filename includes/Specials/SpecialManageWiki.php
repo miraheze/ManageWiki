@@ -177,7 +177,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function onSubmitRedirectToWikiForm( array $formData ): void {
 		$this->getOutput()->redirect(
-			SpecialPage::getTitleFor( 'ManageWiki', "$formData['module']/{$formData['dbname']}" )->getFullURL()
+			SpecialPage::getTitleFor( 'ManageWiki', "{$formData['module']}/{$formData['dbname']}" )->getFullURL()
 		);
 	}
 
