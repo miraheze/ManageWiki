@@ -66,7 +66,7 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
 		$htmlForm
-			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): bool =>
+			->setSubmitCallback( fn ( array $formData, HTMLForm $form ) =>
 				$this->submitForm(
 					$config,
 					$dbw,
@@ -102,7 +102,7 @@ class ManageWikiFormFactory {
 		string $special,
 		string $filtered,
 		bool $ceMW
-	): bool {
+	): void {
 		if ( !$ceMW ) {
 			throw new UnexpectedValueException( "User '{$form->getUser()->getName()}' without 'managewiki-$module' right tried to change wiki $module!" );
 		}
@@ -144,8 +144,7 @@ class ManageWikiFormFactory {
 					'mw-notify-error'
 				)
 			);
-
-			return false;
+			return;
 		}
 
 		$form->getOutput()->addHTML(
@@ -158,7 +157,5 @@ class ManageWikiFormFactory {
 				'mw-notify-success'
 			)
 		);
-
-		return true;
 	}
 }
