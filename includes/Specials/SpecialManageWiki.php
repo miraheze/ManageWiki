@@ -254,7 +254,8 @@ class SpecialManageWiki extends SpecialPage {
 				$options[$language->getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
-			$this->reusableFormDescriptor( $module, $options );
+			// We don't need to pass dbname here so just pass an empty string.
+			$this->reusableFormDescriptor( '', $module, $options );
 			return;
 		}
 
@@ -271,7 +272,7 @@ class SpecialManageWiki extends SpecialPage {
 				$options[$namespace['name']] = $id;
 			}
 
-			$this->reusableFormDescriptor( $module, $options );
+			$this->reusableFormDescriptor( $dbname, $module, $options );
 			return;
 		}
 
@@ -304,10 +305,21 @@ class SpecialManageWiki extends SpecialPage {
 		$htmlForm->show();
 	}
 
-	private function reusableFormDescriptor( string $module, array $options ): void {
+	private function reusableFormDescriptor(
+		string $dbname,
+		string $module,
+		array $options
+	): void {
 		$hidden = [];
 		$selector = [];
 		$create = [];
+
+		if ( $module === 'namespaces' ) {
+			$hidden['dbname'] = [
+				'type' => 'hidden',
+				'default' => $dbname,
+			];
+		}
 
 		$hidden['module'] = [
 			'type' => 'hidden',
@@ -366,7 +378,9 @@ class SpecialManageWiki extends SpecialPage {
 	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
 		$module = $formData['module'];
 		$createNamespace = $form->getSubmitText() === $this->msg( 'managewiki-namespaces-create-submit' )->text() ? '' : $formData['out'];
-		$special = $module === 'namespaces' ? ManageWiki::namespaceID( $createNamespace ) : $formData['out'];
+		$special = $module === 'namespaces' ?
+			ManageWiki::namespaceID( $formData['dbname'], $createNamespace ) :
+			$formData['out'];
 
 		if ( $module === 'namespaces' ) {
 			// Save the name of the namespace we are creating to the current session so that
