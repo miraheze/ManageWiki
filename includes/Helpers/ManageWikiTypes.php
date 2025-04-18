@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
@@ -19,7 +20,7 @@ class ManageWikiTypes {
 		string $module,
 		array $options,
 		mixed $value,
-		?string $name = null,
+		string $name,
 		mixed $overrideDefault = false,
 		string $type = ''
 	): array {
@@ -43,7 +44,7 @@ class ManageWikiTypes {
 		Config $config,
 		bool $disabled,
 		array $groupList,
-		?string $name,
+		string $name,
 		array $options,
 		mixed $value
 	): array {
@@ -52,9 +53,13 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'text',
 					'default' => $value ?? $options['overridedefault'],
-					'validation-callback' => static function ( string $database ) use ( $config, $name ): bool|Message {
+					'validation-callback' => static function (
+						string $database,
+						array $alldata,
+						HTMLForm $form
+					) use ( $config, $name ): bool|Message {
 						if ( !in_array( $database, $config->get( MainConfigNames::LocalDatabases ) ) ) {
-							return wfMessage( 'managewiki-invalid-database', $database, $name );
+							return $form->msg( 'managewiki-invalid-database', $database, $name );
 						}
 
 						return true;
