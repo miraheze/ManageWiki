@@ -33,7 +33,7 @@ class CreateWiki implements
 	) {
 	}
 
-    /** @inheritDoc */
+	/** @inheritDoc */
 	public function onCreateWikiCreation( string $dbname, bool $private ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
@@ -83,7 +83,7 @@ class CreateWiki implements
 		}
 	}
 
-    /** @inheritDoc */
+	/** @inheritDoc */
 	public function onCreateWikiDataFactoryBuilder(
 		string $wiki,
 		IReadableDatabase $dbr,
@@ -282,7 +282,7 @@ class CreateWiki implements
 		}
 	}
 
-    /** @inheritDoc */
+	/** @inheritDoc */
 	public function onCreateWikiStatePrivate( string $dbname ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) && $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
@@ -309,7 +309,7 @@ class CreateWiki implements
 		}
 	}
 
-    /** @inheritDoc */
+	/** @inheritDoc */
 	public function onCreateWikiStatePublic( string $dbname ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) && $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ) {
 			$mwPermissions = new ManageWikiPermissions( $dbname );
@@ -323,7 +323,7 @@ class CreateWiki implements
 		}
 	}
 
-    /** @inheritDoc */
+	/** @inheritDoc */
 	public function onCreateWikiTables( array &$tables ): void {
 		if ( ManageWiki::checkSetup( 'extensions' ) || ManageWiki::checkSetup( 'settings' ) ) {
 			$tables['mw_settings'] = 's_dbname';
