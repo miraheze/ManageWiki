@@ -100,14 +100,14 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// ManageWiki remote management (on the central wiki)
-		// Make sure we can access deleted wikis on ManageWiki core so we don't
-		// have a databaseExists check there
 		if (
 			isset( $par[1] ) &&
 			// ManageWiki permissions does not have a log parameter telling
 			// what wiki it's being modified on, so we don't enable
 			// remote management on permissions.
 			$module !== 'permissions' &&
+			// Make sure we can access deleted wikis on ManageWiki core so we don't
+			// have a databaseExists check there
 			( $module === 'core' || $this->validator->databaseExists( $par[1] ) )
 		) {
 			$dbname = $par[1];
