@@ -1046,43 +1046,8 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$mwAllowed = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $remoteWiki ) : true;
-			$type = $set['type'];
 
 			$value = $formData["set-$name"];
-
-			switch ( $type ) {
-				case 'integers':
-					$value = array_column( $value, 'value' );
-					$value = array_filter( $value );
-					$value = array_map( 'intval', $value );
-					break;
-				case 'list-multi-bool':
-					$setValue = [];
-					foreach ( $set['allopts'] as $opt ) {
-						$setValue[$opt] = in_array( $opt, $value );
-					}
-
-					$value = $setValue;
-					break;
-				case 'matrix':
-					$current = ManageWiki::handleMatrix( $current, 'php' );
-					$value = ManageWiki::handleMatrix( $value, 'phparray' );
-					break;
-				case 'text':
-					if ( !$value ) {
-						$value = $set['overridedefault'];
-					}
-					break;
-				case 'texts':
-					$value = array_column( $value, 'value' );
-					$value = array_filter( $value );
-					break;
-				case 'users':
-				case 'wikipages':
-					$value = $value ? explode( "\n", $value ) : [];
-					break;
-			}
-
 			if ( !$mwAllowed ) {
 				$value = $current;
 			}
