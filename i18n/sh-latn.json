@@ -72,7 +72,6 @@
 	"managewiki-label-dbname": "Naziv baze podataka",
 	"managewiki-label-deletewiki": "Obrisati ovaj viki?",
 	"managewiki-label-deletiondate": "Datum brisanja",
-	"managewiki-label-description": "Kratak opis",
 	"managewiki-label-experimental": "Probne funkcije",
 	"managewiki-label-goto": "Idi na Special:ManageWiki",
 	"managewiki-label-inactive": "Neaktivan",

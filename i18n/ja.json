@@ -110,7 +110,6 @@
 	"managewiki-label-dbname": "データベース名",
 	"managewiki-label-deletewiki": "このウィキを削除しますか?",
 	"managewiki-label-deletiondate": "削除日",
-	"managewiki-label-description": "説明を編集する",
 	"managewiki-label-experimental": "開発中の機能",
 	"managewiki-label-goto": "Special:ManageWiki へ移動",
 	"managewiki-label-inactive": "非アクティブ",

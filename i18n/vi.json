@@ -89,7 +89,6 @@
 	"managewiki-label-dbname": "Tên cơ sở dữ liệu (Chú ý: Không thể thay đổi giá trị này.)",
 	"managewiki-label-deletewiki": "Xóa wiki này?",
 	"managewiki-label-deletiondate": "Ngày xóa",
-	"managewiki-label-description": "Mô tả ngắn",
 	"managewiki-label-experimental": "Tính năng thử nghiệm",
 	"managewiki-label-goto": "Đi đến Đặc_biệt:ManageWiki",
 	"managewiki-label-inactive": "Không hoạt động",

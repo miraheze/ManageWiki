@@ -114,7 +114,6 @@
 	"managewiki-label-dbname": "Nom de base de données",
 	"managewiki-label-deletewiki": "Supprimer ce wiki ?",
 	"managewiki-label-deletiondate": "Date de suppression",
-	"managewiki-label-description": "Description courte",
 	"managewiki-label-experimental": "Fonctionnalités expérimentales",
 	"managewiki-label-goto": "Aller à Special:ManageWiki",
 	"managewiki-label-inactive": "Inactif",
