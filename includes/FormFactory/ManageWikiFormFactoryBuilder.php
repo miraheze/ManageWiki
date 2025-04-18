@@ -1048,6 +1048,10 @@ class ManageWikiFormFactoryBuilder {
 			$mwAllowed = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $remoteWiki ) : true;
 
 			$value = $formData["set-$name"];
+			if ( $set['type'] === 'users' || $set['type'] === 'wikipages' ) {
+				$value = $value ? explode( "\n", $value ) : [];
+			}
+
 			if ( !$mwAllowed ) {
 				$value = $current;
 			}
