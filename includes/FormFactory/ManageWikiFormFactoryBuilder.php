@@ -310,7 +310,7 @@ class ManageWikiFormFactoryBuilder {
 				}
 				$help[] = '<br />' . $linkRenderer->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "$module/$name" )->getFullURL(),
-					$context->msg( 'managewiki-extension-settings' )->text(),
+					$context->msg( 'managewiki-extension-settings' ),
 					SpecialPage::getTitleFor( 'ManageWiki', $module )
 				);
 			}
@@ -501,7 +501,7 @@ class ManageWikiFormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
-				] + ManageWikiTypes::process( $config, false, [], 'namespaces', [], $namespaceData['contentmodel'], null, false, 'contentmodel' ),
+				] + ManageWikiTypes::process( $config, false, [], 'namespaces', [], $namespaceData['contentmodel'], '', false, 'contentmodel' ),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label' => $context->msg( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
@@ -540,7 +540,7 @@ class ManageWikiFormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = ManageWikiTypes::process( $config, $disabled, [], 'namespaces', $a, $namespaceData['additional'][$key] ?? null, null, $a['overridedefault'], $a['type'] );
+					$configs = ManageWikiTypes::process( $config, $disabled, [], 'namespaces', $a, $namespaceData['additional'][$key] ?? null, '', $a['overridedefault'], $a['type'] );
 
 					$help = $msgHelp->exists() ? $msgHelp->escaped() : $a['help'];
 					if ( $a['requires'] ) {
@@ -577,7 +577,7 @@ class ManageWikiFormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
-			] + ManageWikiTypes::process( $config, false, [], 'namespaces', [], $namespaceData['aliases'], null, [], 'texts' );
+			] + ManageWikiTypes::process( $config, false, [], 'namespaces', [], $namespaceData['aliases'], '', [], 'texts' );
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {

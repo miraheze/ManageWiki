@@ -66,7 +66,6 @@
 	"managewiki-label-dbname": "Veritabanı adı",
 	"managewiki-label-deletewiki": "Bu viki silinsin mi?",
 	"managewiki-label-deletiondate": "Silinme tarihi",
-	"managewiki-label-description": "Kısa açıklama",
 	"managewiki-label-experimental": "Deneysel özellikler",
 	"managewiki-label-goto": "Special:ManageWiki'ye gidin:",
 	"managewiki-label-inactive": "Etkin değil",

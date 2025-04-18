@@ -65,7 +65,6 @@
 	"managewiki-label-dbname": "Назва бази даних",
 	"managewiki-label-deletewiki": "Вилучити цю вікі?",
 	"managewiki-label-deletiondate": "Дата вилучення",
-	"managewiki-label-description": "Короткий опис",
 	"managewiki-label-experimental": "Експериментальні функції",
 	"managewiki-label-goto": "Перейти до Special:ManageWiki",
 	"managewiki-label-inactive": "Неактивна",

@@ -72,7 +72,6 @@
 	"managewiki-label-dbname": "데이터베이스 이름",
 	"managewiki-label-deletewiki": "이 위키를 삭제하시겠습니까?",
 	"managewiki-label-deletiondate": "삭제일",
-	"managewiki-label-description": "짧은 설명",
 	"managewiki-label-experimental": "실험 기능",
 	"managewiki-label-goto": "특수:ManageWiki로 이동",
 	"managewiki-label-inactive": "비활성",

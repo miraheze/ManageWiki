@@ -118,7 +118,6 @@
 	"managewiki-label-dbname": "数据库名称",
 	"managewiki-label-deletewiki": "确定删除此wiki？",
 	"managewiki-label-deletiondate": "删除日期",
-	"managewiki-label-description": "简短描述",
 	"managewiki-label-experimental": "实验性功能",
 	"managewiki-label-goto": "前往Special:ManageWiki",
 	"managewiki-label-inactive": "不活跃",
