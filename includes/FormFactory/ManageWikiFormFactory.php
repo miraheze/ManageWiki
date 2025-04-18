@@ -141,7 +141,8 @@ class ManageWikiFormFactory {
 						[],
 						'The following errors occurred: <br />' . implode( '<br />', $errorOut )
 					),
-					'managewiki-error'
+					'',
+					'mw-notify-error'
 				)
 			);
 
