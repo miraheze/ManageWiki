@@ -5,6 +5,8 @@ namespace Miraheze\ManageWiki\Jobs;
 use Job;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Wikimedia\Rdbms\IDatabase;
+use Wikimedia\Rdbms\IExpression;
+use Wikimedia\Rdbms\LikeValue;
 
 /**
  * Used on namespace creation and deletion to move pages into and out of namespaces
@@ -61,8 +63,10 @@ class NamespaceMigrationJob extends Job {
 				'page_id',
 			] )
 			->where( [
+				$dbw->expr( 'page_title', IExpression::LIKE,
+					new LikeValue( $pagePrefix, $dbw->anyString() )
+				),
 				'page_namespace' => $nsSearch,
-				"page_title LIKE '$pagePrefix%'",
 			] )
 			->caller( __METHOD__ )
 			->fetchResultSet();
