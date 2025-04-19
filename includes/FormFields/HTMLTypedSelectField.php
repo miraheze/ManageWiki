@@ -41,6 +41,14 @@ class HTMLTypedSelectField extends HTMLSelectField {
 
 	public function loadDataFromRequest( $request ) {
 		$data = parent::loadDataFromRequest( $request );
+		foreach ( $this->mParams['options'] as $label => $originalValue ) {
+			// string cast for comparison
+			if ( (string)$originalValue === (string)$data ) {
+				// return $originalValue;
+				$data = $originalValue;
+				break;
+			}
+		}
 		var_dump( $this->getName() . ':' . gettype( $data ) );
 
 		return $data;
