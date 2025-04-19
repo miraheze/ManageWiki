@@ -13,15 +13,18 @@ class HTMLTypedMultiSelectField extends HTMLMultiSelectField {
 
 	public function __construct( array $params ) {
 		parent::__construct( $params );
-
 		$this->actualOptions = $params['options'] ?? [];
+	}
 
+	public function getOptions(): array {
 		// Replace options with stringified version for rendering and HTMLForm internals
 		// Otherwise the form fields break.
-		$this->mParams['options'] = [];
+		$this->mOptions = [];
 		foreach ( $this->actualOptions as $label => $value ) {
-			$this->mParams['options'][$label] = (string)$value;
+			$this->mOptions[$label] = (string)$value;
 		}
+
+		return $this->mOptions;
 	}
 
 	/**
