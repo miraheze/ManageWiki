@@ -67,7 +67,7 @@ class PopulateNamespaces extends Maintenance {
 		string $name,
 		array $nsAliases
 	): void {
-		$dbw->newSelectQueryBuilder()
+		$dbw->newInsertQueryBuilder()
 			->insertInto( 'mw_namespaces' )
 			->row( [
 				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
