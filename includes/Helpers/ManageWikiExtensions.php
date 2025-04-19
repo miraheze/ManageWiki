@@ -35,20 +35,18 @@ class ManageWikiExtensions implements IConfigModule {
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$exts = $this->dbw->selectRow(
-			'mw_settings',
-			's_extensions',
-			[
-				's_dbname' => $dbname,
-			],
-			__METHOD__
-		)->s_extensions ?? '[]';
+		$exts = $this->dbw->newSelectQueryBuilder()
+			->select( 's_extensions' )
+			->from( 'mw_settings' )
+			->where( [ 's_dbname' => $dbname ] )
+			->caller( __METHOD__ )
+			->fetchField();
 
 		$logger = LoggerFactory::getInstance( 'ManageWiki' );
 
 		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
 		// populate extension lists with config associated with them.
-		foreach ( json_decode( $exts, true ) as $ext ) {
+		foreach ( json_decode( $exts ?: '[]', true ) as $ext ) {
 			if ( !isset( $this->extConfig[$ext] ) ) {
 				$logger->error( 'Extension/Skin {ext} not set in {config}', [
 					'ext' => $ext,
@@ -216,18 +214,17 @@ class ManageWikiExtensions implements IConfigModule {
 			}
 		}
 
-		$this->dbw->upsert(
-			'mw_settings',
-			[
+		$this->dbw->newInsertQueryBuilder()
+			->insertInto( 'mw_namespaces' )
+			->row( [
 				's_dbname' => $this->dbname,
 				's_extensions' => json_encode( $this->list() ),
-			],
-			[ [ 's_dbname' ] ],
-			[
-				's_extensions' => json_encode( $this->list() ),
-			],
-			__METHOD__
-		);
+			] )
+			->onDuplicateKeyUpdate()
+			->uniqueIndexFields( [ 's_dbname' ] )
+			->set( [ 's_extensions' => json_encode( $this->list() ) ] )
+			->caller( __METHOD__ )
+			->execute();
 
 		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
 		$data = $dataFactory->newInstance( $this->dbname );
