@@ -2,7 +2,8 @@
 
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
-use MediaWiki\Content\ContentHandler\ContentHandlerForModelIDHook;
+use MediaWiki\Config\Config;
+use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
 use MediaWiki\Content\TextContentHandler;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Permissions\PermissionManager;

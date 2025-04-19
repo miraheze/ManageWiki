@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
 // @codeCoverageIgnoreStart
 
 return [
-	'CreateWikiHookHandler' => static function ( MediaWikiServices $services ): ManageWikiHookRunner {
+	'CreateWikiHookHandler' => static function ( MediaWikiServices $services ): CreateWiki {
 		return new CreateWiki(
 			$services->get( 'ManageWikiConfig' ),
 			$services->get( 'ManageWikiLogger' ),
