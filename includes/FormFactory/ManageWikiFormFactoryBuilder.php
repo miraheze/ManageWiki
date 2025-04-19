@@ -1066,6 +1066,45 @@ class ManageWikiFormFactoryBuilder {
 					$value = array_filter( $value );
 					$value = array_map( 'intval', $value );
 					break;
+				case 'list':
+					if ( isset( $set['options'] ) && is_array( $set['options'] ) ) {
+						$reverseOptions = array_flip(
+							array_map(
+								static fn ( mixed $v ): int|string =>
+									is_bool( $v ) ? (int) $v : $v,
+									$set['options']
+							)
+						);
+
+						$found = false;
+						foreach ( $set['options'] as $label => $typedValue ) {
+							if ( (string)$typedValue === (string)$value ) {
+								$value = $typedValue;
+								$found = true;
+								break;
+							}
+						}
+
+						if ( !$found ) {
+							$value = $set['overridedefault'] ?? null;
+						}
+					}
+					break;
+				case 'list-multi':
+					// Ensure types from options are retained (int/bool/etc.)
+					$setValue = [];
+					foreach ( $value as $val ) {
+						foreach ( $set['options'] as $optKey => $optValue ) {
+							if ( $val === (string)$optKey || $val === $optKey ) {
+								$setValue[] = is_int( $optValue ) ? (int)$optKey
+									: ( is_bool( $optValue ) ? (bool)$optKey : $optKey );
+								break;
+							}
+						}
+					}
+
+					$value = $setValue;
+					break;
 				case 'list-multi-bool':
 					$setValue = [];
 					foreach ( $set['allopts'] as $opt ) {
