@@ -215,7 +215,7 @@ class ManageWikiExtensions implements IConfigModule {
 		}
 
 		$this->dbw->newInsertQueryBuilder()
-			->insertInto( 'mw_namespaces' )
+			->insertInto( 'mw_settings' )
 			->row( [
 				's_dbname' => $this->dbname,
 				's_extensions' => json_encode( $this->list() ),
