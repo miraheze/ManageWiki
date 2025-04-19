@@ -8,6 +8,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
+use Miraheze\CreateWiki\Services\CreateWikiValidator;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
@@ -21,6 +22,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly CreateWikiValidator $validator,
 		private readonly PermissionManager $permissionManager,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
@@ -97,11 +99,28 @@ class SpecialManageWiki extends SpecialPage {
 			return;
 		}
 
-		// ManageWiki core (on the central wiki) — remote wiki management
-		if ( $module === 'core' ) {
-			$dbname = $par[1] ?? $this->getConfig()->get( MainConfigNames::DBname );
+		// ManageWiki remote management (on the central wiki)
+		if (
+			isset( $par[1] ) &&
+			// ManageWiki permissions does not have a log parameter telling
+			// what wiki it's being modified on, so we don't enable
+			// remote management on permissions.
+			$module !== 'permissions' &&
+			// Make sure we can access deleted wikis on ManageWiki core so we don't
+			// have a databaseExists check there
+			( $module === 'core' || $this->validator->databaseExists( $par[1] ) )
+		) {
+			$dbname = $par[1];
+			$additional = $par[2] ?? '';
+			$filtered = $par[3] ?? $par[2] ?? '';
+			$this->getOutput()->setPageTitle(
+				"$dbname — {$this->getOutput()->getPageTitle()}"
+			);
 			$this->showWikiForm(
-				strtolower( $dbname ), $module, '', ''
+				strtolower( $dbname ),
+				$module,
+				$additional,
+				$filtered
 			);
 			return;
 		}
@@ -137,6 +156,17 @@ class SpecialManageWiki extends SpecialPage {
 				'label-message' => 'managewiki-label-dbname',
 				'required' => true,
 			],
+			'module' => [
+				'type' => 'select',
+				'label-message' => 'managewiki-label-module',
+				'default' => 'core',
+				'options' => [
+					'core' => 'core',
+					'settings' => 'settings',
+					'extensions' => 'extensions',
+					'namespaces' => 'namespaces',
+				],
+			],
 		];
 
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext(), 'searchForm' );
@@ -150,7 +180,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function onSubmitRedirectToWikiForm( array $formData ): void {
 		$this->getOutput()->redirect(
-			SpecialPage::getTitleFor( 'ManageWiki', "core/{$formData['dbname']}" )->getFullURL()
+			SpecialPage::getTitleFor( 'ManageWiki', "{$formData['module']}/{$formData['dbname']}" )->getFullURL()
 		);
 	}
 
@@ -371,6 +401,10 @@ class SpecialManageWiki extends SpecialPage {
 			// we can autofill the input boxes for the namespace in the next form.
 			$form->getRequest()->getSession()->set( 'create', $formData['out'] );
 		}
+
+		$special = ( isset( $formData['dbname'] ) && $formData['dbname'] !== $this->getConfig()->get( MainConfigNames::DBname ) )
+			? "{$formData['dbname']}/$special"
+			: $special;
 
 		$this->getOutput()->redirect(
 			SpecialPage::getTitleFor( 'ManageWiki', "$module/$special" )->getFullURL()

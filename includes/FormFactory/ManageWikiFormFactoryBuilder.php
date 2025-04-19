@@ -304,10 +304,14 @@ class ManageWikiFormFactoryBuilder {
 
 			if ( $hasSettings && in_array( $name, $extList ) ) {
 				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
+				$module = 'settings';
+				if ( $dbname !== $config->get( MainConfigNames::DBname ) ) {
+					$module .= "/$dbname";
+				}
 				$help[] = '<br />' . $linkRenderer->makeExternalLink(
-					SpecialPage::getTitleFor( 'ManageWiki', "settings/$name" )->getFullURL(),
+					SpecialPage::getTitleFor( 'ManageWiki', "$module/$name" )->getFullURL(),
 					$context->msg( 'managewiki-extension-settings' ),
-					SpecialPage::getTitleFor( 'ManageWiki', 'settings' )
+					SpecialPage::getTitleFor( 'ManageWiki', $module )
 				);
 			}
 
@@ -894,6 +898,10 @@ class ManageWikiFormFactoryBuilder {
 			if ( $module === 'permissions' || $module === 'namespaces' ) {
 				if ( $mwReturn->isDeleting( $special ) ) {
 					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
+					if ( $dbname !== $config->get( MainConfigNames::DBname ) ) {
+						$module .= "/$dbname";
+					}
+
 					$context->getOutput()->redirect(
 						SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL()
 					);
