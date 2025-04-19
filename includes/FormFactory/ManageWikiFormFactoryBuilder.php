@@ -1061,6 +1061,12 @@ class ManageWikiFormFactoryBuilder {
 			$value = $formData["set-$name"];
 
 			switch ( $type ) {
+				case 'float':
+					$value = (float)$value;
+					break;
+				case 'integer':
+					$value = (int)$value;
+					break;
 				case 'integers':
 					$value = array_column( $value, 'value' );
 					$value = array_filter( $value );
