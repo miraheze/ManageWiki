@@ -36,11 +36,11 @@ class HTMLTypedSelectField extends HTMLSelectField {
 	private function getOptionKeyForValue( $value ): string {
 		foreach ( $this->getOptions() as $label => $optionValue ) {
 			if ( $optionValue === $value ) {
-				return (string)$optionValue;
+				return $optionValue;
 			}
 		}
 		// fallback for non-matching values
-		return (string)$value;
+		return $value;
 	}
 
 	/**
