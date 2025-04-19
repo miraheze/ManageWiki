@@ -34,16 +34,14 @@ class ManageWikiSettings implements IConfigModule {
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$settings = $this->dbw->selectRow(
-			'mw_settings',
-			's_settings',
-			[
-				's_dbname' => $dbname,
-			],
-			__METHOD__
-		)->s_settings ?? '[]';
+		$settings = $this->dbw->newSelectQueryBuilder()
+			->select( 's_settings' )
+			->from( 'mw_settings' )
+			->where( [ 's_dbname' => $dbname ] )
+			->caller( __METHOD__ )
+			->fetchField();
 
-		$this->liveSettings = (array)json_decode( $settings, true );
+		$this->liveSettings = (array)json_decode( $settings ?: '[]', true );
 	}
 
 	/**
@@ -154,18 +152,17 @@ class ManageWikiSettings implements IConfigModule {
 	}
 
 	public function commit(): void {
-		$this->dbw->upsert(
-			'mw_settings',
-			[
+		$this->dbw->newInsertQueryBuilder()
+			->insertInto( 'mw_settings' )
+			->row( [
 				's_dbname' => $this->dbname,
 				's_settings' => json_encode( $this->liveSettings ),
-			],
-			[ [ 's_dbname' ] ],
-			[
-				's_settings' => json_encode( $this->liveSettings ),
-			],
-			__METHOD__
-		);
+			] )
+			->onDuplicateKeyUpdate()
+			->uniqueIndexFields( [ 's_dbname' ] )
+			->set( [ 's_settings' => json_encode( $this->liveSettings ) ] )
+			->caller( __METHOD__ )
+			->execute();
 
 		if ( $this->scripts ) {
 			ManageWikiInstaller::process( $this->dbname, [ 'mwscript' => $this->scripts ] );

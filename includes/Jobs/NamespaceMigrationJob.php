@@ -5,9 +5,11 @@ namespace Miraheze\ManageWiki\Jobs;
 use Job;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Wikimedia\Rdbms\IDatabase;
+use Wikimedia\Rdbms\IExpression;
+use Wikimedia\Rdbms\LikeValue;
 
 /**
- * Used on namespace creation and deletion to move pages into and out of namespaces
+ * Used on namespace rename and deletion to move pages in and out of namespaces.
  */
 class NamespaceMigrationJob extends Job {
 
@@ -28,6 +30,7 @@ class NamespaceMigrationJob extends Job {
 	) {
 		parent::__construct( self::JOB_NAME, $params );
 
+		// Action will either be 'delete' or 'rename'
 		$this->action = $params['action'];
 		$this->dbname = $params['dbname'];
 
@@ -49,29 +52,31 @@ class NamespaceMigrationJob extends Job {
 			$pagePrefix = '';
 			$nsTo = $this->nsNew;
 		} else {
-			$nsSearch = 0;
+			$nsSearch = NS_MAIN;
 			$pagePrefix = $this->nsName . ':';
 			$nsTo = $this->nsID;
 		}
 
-		$res = $dbw->select(
-			'page',
-			[
+		$res = $dbw->newSelectQueryBuilder()
+			->table( 'page' )
+			->fields( [
 				'page_title',
 				'page_id',
-			],
-			[
+			] )
+			->where( [
+				$dbw->expr( 'page_title', IExpression::LIKE,
+					new LikeValue( $pagePrefix, $dbw->anyString() )
+				),
 				'page_namespace' => $nsSearch,
-				"page_title LIKE '$pagePrefix%'",
-			],
-			__METHOD__
-		);
+			] )
+			->caller( __METHOD__ )
+			->fetchResultSet();
 
 		foreach ( $res as $row ) {
 			$pageTitle = $row->page_title;
 			$pageID = $row->page_id;
 
-			if ( $nsSearch === 0 ) {
+			if ( $nsSearch === NS_MAIN ) {
 				$replace = '';
 				$newTitle = str_replace( $pagePrefix, $replace, $pageTitle );
 			} elseif ( $this->maintainPrefix && $this->action === 'delete' ) {
@@ -86,31 +91,29 @@ class NamespaceMigrationJob extends Job {
 				$newTitle .= '~' . $this->nsName;
 			}
 
-			$dbw->update(
-				'page',
-				[
+			$dbw->newUpdateQueryBuilder()
+				->update( 'page' )
+				->set( [
 					'page_namespace' => $nsTo,
 					'page_title' => trim( $newTitle, '_' ),
-				],
-				[
-					'page_id' => $pageID,
-				],
-				__METHOD__
-			);
+				] )
+				->where( [ 'page_id' => $pageID ] )
+				->caller( __METHOD__ )
+				->execute();
 
 			// Update recentchanges as this is not normally done
-			$dbw->update(
-				'recentchanges',
-				[
+			$dbw->newUpdateQueryBuilder()
+				->update( 'recentchanges' )
+				->set( [
 					'rc_namespace' => $nsTo,
 					'rc_title' => trim( $newTitle, '_' ),
-				],
-				[
+				] )
+				->where( [
 					'rc_namespace' => $nsSearch,
 					'rc_title' => $pageTitle,
-				],
-				__METHOD__
-			);
+				] )
+				->caller( __METHOD__ )
+				->execute();
 		}
 
 		return true;
@@ -121,16 +124,14 @@ class NamespaceMigrationJob extends Job {
 		int $nsID,
 		IDatabase $dbw
 	): bool {
-		$row = $dbw->selectRow(
-			'page',
-			'page_title',
-			[
+		return (bool)$dbw->newSelectQueryBuilder()
+			->select( 'page_title' )
+			->from( 'page' )
+			->where( [
 				'page_title' => $pageName,
 				'page_namespace' => $nsID,
-			],
-			__METHOD__
-		);
-
-		return (bool)$row;
+			] )
+			->caller( __METHOD__ )
+			->fetchRow();
 	}
 }
