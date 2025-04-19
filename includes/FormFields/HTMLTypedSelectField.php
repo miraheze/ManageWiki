@@ -30,6 +30,10 @@ class HTMLTypedSelectField extends HTMLSelectField {
 
 	private function encodeValue( mixed $val ): string {
 		// Simple, unique string representation for HTML keys
+		if ( is_string( $val ) ) {
+			return $val;
+		}
+
 		return sha1( serialize( $val ) );
 	}
 
@@ -45,7 +49,7 @@ class HTMLTypedSelectField extends HTMLSelectField {
 	public function validate( $value, $alldata ) {
 		// validate() receives decoded values already
 		foreach ( $this->typedMap as $encoded => $typed ) {
-			if ( $typed === $value || (string)$typed === (string)$value ) {
+			if ( $typed === $value ) {
 				return true;
 			}
 		}
