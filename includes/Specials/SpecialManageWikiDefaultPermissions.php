@@ -218,19 +218,15 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			->caller( __METHOD__ )
 			->execute();
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance(
-			$this->getConfig()->get( MainConfigNames::DBname )
-		);
-
+		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
 		$this->hookHandler->onCreateWikiCreation(
-			$this->getConfig()->get( MainConfigNames::DBname ),
-			$remoteWiki->isPrivate()
+			$dbname, $remoteWiki->isPrivate()
 		);
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
-		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
+		$logEntry->setParameters( [ '4::wiki' => $dbname ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
@@ -260,13 +256,13 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			->execute();
 
 		// Reset the cache or else the changes won't work
-		$data = $this->dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
+		$data = $this->dataFactory->newInstance( $dbname );
 		$data->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
 		$logEntry->setPerformer( $this->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
-		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
+		$logEntry->setParameters( [ '4::wiki' => $dbname ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
@@ -285,8 +281,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitCacheResetForm( array $formData ): bool {
-		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
-
 		// Reset the cache or else the changes won't work
 		$data = $this->dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
 		$data->resetWikiData( isNewChanges: true );
