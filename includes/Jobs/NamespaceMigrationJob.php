@@ -54,18 +54,18 @@ class NamespaceMigrationJob extends Job {
 			$nsTo = $this->nsID;
 		}
 
-		$res = $dbw->select(
-			'page',
-			[
+		$res = $dbw->newSelectQueryBuilder()
+			->table( 'page' )
+			->fields( [
 				'page_title',
 				'page_id',
-			],
-			[
+			] )
+			->where( [
 				'page_namespace' => $nsSearch,
 				"page_title LIKE '$pagePrefix%'",
-			],
-			__METHOD__
-		);
+			] )
+			->caller( __METHOD__ )
+			->fetchResultSet();
 
 		foreach ( $res as $row ) {
 			$pageTitle = $row->page_title;
@@ -86,31 +86,29 @@ class NamespaceMigrationJob extends Job {
 				$newTitle .= '~' . $this->nsName;
 			}
 
-			$dbw->update(
-				'page',
-				[
+			$dbw->newUpdateQueryBuilder()
+				->update( 'page' )
+				->set( [
 					'page_namespace' => $nsTo,
 					'page_title' => trim( $newTitle, '_' ),
-				],
-				[
-					'page_id' => $pageID,
-				],
-				__METHOD__
-			);
+				] )
+				->where( [ 'page_id' => $pageID ] )
+				->caller( __METHOD__ )
+				->execute();
 
 			// Update recentchanges as this is not normally done
-			$dbw->update(
-				'recentchanges',
-				[
+			$dbw->newUpdateQueryBuilder()
+				->update( 'recentchanges' )
+				->set( [
 					'rc_namespace' => $nsTo,
 					'rc_title' => trim( $newTitle, '_' ),
-				],
-				[
+				] )
+				->where( [
 					'rc_namespace' => $nsSearch,
 					'rc_title' => $pageTitle,
-				],
-				__METHOD__
-			);
+				] )
+				->caller( __METHOD__ )
+				->execute();
 		}
 
 		return true;
@@ -121,16 +119,14 @@ class NamespaceMigrationJob extends Job {
 		int $nsID,
 		IDatabase $dbw
 	): bool {
-		$row = $dbw->selectRow(
-			'page',
-			'page_title',
-			[
+		return (bool)$dbw->newSelectQueryBuilder()
+			->select( 'page_title' )
+			->from( 'page' )
+			->where( [
 				'page_title' => $pageName,
 				'page_namespace' => $nsID,
-			],
-			__METHOD__
-		);
-
-		return (bool)$row;
+			] )
+			->caller( __METHOD__ )
+			->fetchRow();
 	}
 }
