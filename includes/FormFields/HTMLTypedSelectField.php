@@ -3,54 +3,61 @@
 namespace Miraheze\ManageWiki\FormFields;
 
 use MediaWiki\HTMLForm\Field\HTMLSelectField;
-use MediaWiki\Xml\XmlSelect;
-use OOUI\DropdownInputWidget;
-use OOUI\Element;
-use MediaWiki\MediaWikiServices;
-use Miraheze\ManageWiki\ConfigNames;
 
 /**
  * Select field that preserves original value types.
  */
 class HTMLTypedSelectField extends HTMLSelectField {
+
 	/**
-	 * Basically don't do any validation. If it's a number that's fine. Also,
-	 * add it to the list if it's not there already
-	 *
-	 * @param string $value
-	 * @param array $alldata
-	 * @return bool
+	 * Skip strict validation — we’ll restore types ourselves.
+	 * @inheritDoc
 	 */
 	public function validate( $value, $alldata ) {
-		$config = MediaWikiServices::getInstance()->getMainConfig();
-		$settings = $config->get( ConfigNames::Settings );
-		
-		//if ( $value === '' ) {
-		//	return true;
-		//}
-		$name = str_replace( 'wpset-', '', $this->getName() );
-		foreach ( $this->mParams['options'] as $label => $val ) {
-			$this->mParams['options'] = $settings[$name]['options'];
-		}
-		foreach ( $this->mParams['options'] as $label => $val ) {
-			var_dump( "$label: " . gettype( $val ) );
-		}
-
 		return true;
 	}
 
+	/**
+	 * Convert request string values back to their original types
+	 * based on the defined options array.
+	 * @inheritDoc
+	 */
 	public function loadDataFromRequest( $request ) {
 		$data = parent::loadDataFromRequest( $request );
-		foreach ( $this->mParams['options'] as $label => $originalValue ) {
-			// string cast for comparison
+		$options = $this->mParams['options'] ?? [];
+
+		// Flatten options in case of grouped ones
+		$flatOptions = $this->flattenOptions( $options );
+
+		foreach ( $flatOptions as $originalValue ) {
 			if ( (string)$originalValue === (string)$data ) {
-				// return $originalValue;
-				$data = $originalValue;
-				break;
+				return $originalValue;
 			}
 		}
-		var_dump( $this->getName() . ':' . gettype( $data ) );
 
 		return $data;
+	}
+
+	/**
+	 * Flatten grouped options to a simple [label => value] list.
+	 * 
+	 * @param array $options
+	 * @return array
+	 */
+	private function flattenOptions( array $options ): array {
+		$flat = [];
+
+		foreach ( $options as $key => $value ) {
+			if ( is_array( $value ) ) {
+				// Grouped options
+				foreach ( $value as $subKey => $subValue ) {
+					$flat[$subKey] = $subValue;
+				}
+			} else {
+				$flat[$key] = $value;
+			}
+		}
+
+		return $flat;
 	}
 }
