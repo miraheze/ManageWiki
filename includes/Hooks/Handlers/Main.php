@@ -40,7 +40,7 @@ class Main implements
 	}
 
 	/** @inheritDoc */
-	public function onSidebarBeforeOutput( $skin, &$sidebar ) {
+	public function onSidebarBeforeOutput( $skin, &$sidebar ): void {
 		$user = $skin->getUser();
 
 		$hideSidebar = !$this->config->get( ConfigNames::ForceSidebarLinks ) &&
