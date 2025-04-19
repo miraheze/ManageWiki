@@ -29,6 +29,7 @@ class HTMLTypedSelectField extends HTMLSelectField {
 		//	return true;
 		//}
 		foreach ( $this->mParams['options'] as $label => $val ) {
+			var_dump( $this->getName() );
 			$this->mParams['options'] = $settings["set-{$this->getName()}"]['options'];
 		}
 		foreach ( $this->mParams['options'] as $label => $val ) {
