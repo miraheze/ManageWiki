@@ -152,7 +152,7 @@ class ManageWikiTypes {
 				break;
 			case 'list-multi-bool':
 				$configs = [
-					'class' => HTMLTypedMultiSelectField::class,
+					'type' => 'multiselect',
 					'options' => $options['options'],
 					'default' => array_keys( $value ?? $options['overridedefault'], true, true ),
 				];
