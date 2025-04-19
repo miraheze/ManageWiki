@@ -24,7 +24,7 @@ class HTMLTypedSelectField extends HTMLSelectField {
 			return true;
 		}
 		foreach ( $this->mParams['options'] as $label => $val ) {
-			var_dump( '$label: ' . gettype( $val ) );
+			var_dump( "$label: " . gettype( $val ) );
 		}
 
 		return true;
