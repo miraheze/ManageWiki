@@ -33,7 +33,7 @@ class PopulateNamespaces extends Maintenance {
 				continue;
 			}
 
-			$matchedNSKeys = array_keys( $this->getConfig()->get( MainConfigNames::NamespaceAliases ), $id );
+			$matchedNSKeys = array_keys( $this->getConfig()->get( MainConfigNames::NamespaceAliases ), $id, true );
 			$nsAliases = [];
 
 			foreach ( $matchedNSKeys as $o => $n ) {

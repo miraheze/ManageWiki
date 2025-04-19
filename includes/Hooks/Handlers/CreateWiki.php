@@ -382,6 +382,6 @@ class CreateWiki implements
 			$only = (array)$conf['only'];
 		}
 
-		return $only === null || in_array( $nsID, $only );
+		return $only === null || in_array( $nsID, $only, true );
 	}
 }

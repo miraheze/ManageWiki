@@ -102,7 +102,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		bool $maintainPrefix = false
 	): void {
 		$excluded = array_map( 'strtolower', $this->config->get( ConfigNames::NamespacesDisallowedNames ) );
-		if ( in_array( strtolower( $data['name'] ), $excluded ) ) {
+		if ( in_array( strtolower( $data['name'] ), $excluded, true ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
 					$data['name'],
@@ -177,7 +177,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	public function isDeleting( int|string $namespace ): bool {
-		return in_array( (int)$namespace, $this->deleteNamespaces );
+		return in_array( (int)$namespace, $this->deleteNamespaces, true );
 	}
 
 	public function getErrors(): array {

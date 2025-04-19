@@ -122,12 +122,12 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			if ( in_array( $ext, $extensions ) && !in_array( $ext, $overwrittenExts ) ) {
+			if ( in_array( $ext, $extensions, true ) && !in_array( $ext, $overwrittenExts, true ) ) {
 				$this->add( [ $ext ] );
 				continue;
 			}
 
-			if ( !in_array( $ext, $extensions ) && in_array( $ext, $overwrittenExts ) ) {
+			if ( !in_array( $ext, $extensions, true ) && in_array( $ext, $overwrittenExts, true ) ) {
 				$this->remove( [ $ext ] );
 			}
 		}
@@ -163,7 +163,7 @@ class ManageWikiExtensions implements IConfigModule {
 
 		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
-			if ( in_array( $extensionsConfig['conflicts'] ?? [], $this->list() ) ) {
+			if ( in_array( $extensionsConfig['conflicts'] ?? [], $this->list(), true ) ) {
 				unset( $this->liveExtensions[$name] );
 				unset( $this->changes[$name] );
 				$this->errors[] = [

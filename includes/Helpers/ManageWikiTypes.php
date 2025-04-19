@@ -58,7 +58,7 @@ class ManageWikiTypes {
 						array $alldata,
 						HTMLForm $form
 					) use ( $config, $name ): bool|Message {
-						if ( !in_array( $database, $config->get( MainConfigNames::LocalDatabases ) ) ) {
+						if ( !in_array( $database, $config->get( MainConfigNames::LocalDatabases ), true ) ) {
 							return $form->msg( 'managewiki-invalid-database', $database, $name );
 						}
 
@@ -152,7 +152,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $options['options'],
-					'default' => array_keys( $value ?? $options['overridedefault'], true ),
+					'default' => array_keys( $value ?? $options['overridedefault'], true, true ),
 				];
 
 				if ( !$disabled ) {
@@ -249,7 +249,7 @@ class ManageWikiTypes {
 				$excludedPrefs[] = 'downloaduserdata';
 
 				foreach ( $allPreferences as $pref => $val ) {
-					if ( !in_array( $pref, $excludedPrefs ) ) {
+					if ( !in_array( $pref, $excludedPrefs, true ) ) {
 						$preferences[$pref] = $pref;
 					}
 				}

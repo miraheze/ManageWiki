@@ -307,7 +307,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function validateNewGroupName( string $newGroup ): string|bool {
-		if ( in_array( $newGroup, $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups ) ) ) {
+		if ( in_array( $newGroup, $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			return 'The group you attempted to create is not allowed. Please select a different name and try again.';
 		}
 

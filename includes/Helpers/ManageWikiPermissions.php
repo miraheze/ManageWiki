@@ -148,7 +148,7 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	public function isDeleting( string $group ): bool {
-		return in_array( $group, $this->deleteGroups );
+		return in_array( $group, $this->deleteGroups, true );
 	}
 
 	public function getErrors(): array {

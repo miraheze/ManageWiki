@@ -311,7 +311,7 @@ class ManageWikiFormFactoryBuilder {
 				$help[] = "<br />{$ext['help']}";
 			}
 
-			if ( $hasSettings && in_array( $name, $extList ) ) {
+			if ( $hasSettings && in_array( $name, $extList, true ) ) {
 				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 				$help[] = '<br />' . $linkRenderer->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "settings/$name" )->getFullURL(),
@@ -327,7 +327,7 @@ class ManageWikiFormFactoryBuilder {
 					$ext['linkPage'],
 					$extDisplayName ?? ( $namemsg ? $context->msg( $namemsg )->text() : $extname ) ?? $ext['name'],
 				],
-				'default' => in_array( $name, $extList ),
+				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
 				'help' => implode( ' ', $help ),
 				'section' => $ext['section'],
@@ -355,7 +355,7 @@ class ManageWikiFormFactoryBuilder {
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
 			$value['from'] === strtolower( $filtered ) && (
-				in_array( $value['from'], $extList ) ||
+				in_array( $value['from'], $extList, true ) ||
 				( $value['global'] ?? false )
 			)
 		);
@@ -377,7 +377,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) &&
-				( (bool)( $set['global'] ?? false ) || in_array( $set['from'], $extList ) );
+				( (bool)( $set['global'] ?? false ) || in_array( $set['from'], $extList, true ) );
 
 			$disabled = $ceMW ? !$mwRequirements : true;
 
@@ -526,7 +526,7 @@ class ManageWikiFormFactoryBuilder {
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $remoteWiki ) : true;
 
-				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] === 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
+				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] === 'mediawiki' ) || ( in_array( $a['from'], $extList, true ) ) );
 				$disabled = $ceMW ? !$mwRequirements : true;
 
 				$msgName = $context->msg( "managewiki-namespaces-$key-name" );
@@ -538,8 +538,8 @@ class ManageWikiFormFactoryBuilder {
 						( $a['main'] && $name === 'namespace' ) ||
 						( $a['talk'] && $name === 'namespacetalk' )
 					) &&
-					!in_array( $id, (array)( $a['excluded'] ?? [] ) ) &&
-					in_array( $id, (array)( $a['only'] ?? [ $id ] ) )
+					!in_array( $id, (array)( $a['excluded'] ?? [] ), true ) &&
+					in_array( $id, (array)( $a['only'] ?? [ $id ] ), true )
 				) {
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
@@ -631,7 +631,7 @@ class ManageWikiFormFactoryBuilder {
 		string $group,
 		Config $config
 	): array {
-		if ( in_array( $group, $config->get( ConfigNames::PermissionsDisallowedGroups ) ) ) {
+		if ( in_array( $group, $config->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			$ceMW = false;
 		}
 
@@ -711,7 +711,7 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		foreach ( $groupData['allPermissions'] as $perm ) {
-			$assigned = in_array( $perm, $groupData['assignedPermissions'] );
+			$assigned = in_array( $perm, $groupData['assignedPermissions'], true );
 			$formDescriptor["right-$perm"] = [
 				'type' => 'check',
 				'label' => $perm,
@@ -839,7 +839,7 @@ class ManageWikiFormFactoryBuilder {
 		if (
 			$ceMW &&
 			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ) )
+			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true )
 		) {
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
@@ -1069,7 +1069,7 @@ class ManageWikiFormFactoryBuilder {
 				case 'list-multi-bool':
 					$setValue = [];
 					foreach ( $set['allopts'] as $opt ) {
-						$setValue[$opt] = in_array( $opt, $value );
+						$setValue[$opt] = in_array( $opt, $value, true );
 					}
 
 					$value = $setValue;
@@ -1108,7 +1108,7 @@ class ManageWikiFormFactoryBuilder {
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
 			$value['from'] === strtolower( $filtered ) && (
-				in_array( $value['from'], $extList ) ||
+				in_array( $value['from'], $extList, true ) ||
 				( $value['global'] ?? false )
 			)
 		);

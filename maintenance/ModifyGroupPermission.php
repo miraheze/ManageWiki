@@ -67,7 +67,7 @@ class ModifyGroupPermission extends Maintenance {
 	): void {
 		$groupData = $mwPermissions->list( group: $name );
 
-		if ( !in_array( $name, $this->getConfig()->get( ConfigNames::PermissionsPermanentGroups ) ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $groupData['permissions'] ) === count( $permData['permissions']['remove'] ) ) ) {
+		if ( !in_array( $name, $this->getConfig()->get( ConfigNames::PermissionsPermanentGroups ), true ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $groupData['permissions'] ) === count( $permData['permissions']['remove'] ) ) ) {
 			$mwPermissions->remove( $name );
 		} else {
 			$mwPermissions->modify( $name, $permData );

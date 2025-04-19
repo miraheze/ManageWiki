@@ -26,7 +26,7 @@ class PopulateGroupPermissions extends Maintenance {
 		foreach ( $this->getConfig()->get( MainConfigNames::GroupPermissions ) as $group => $perm ) {
 			$permsarray = [];
 
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				foreach ( $perm as $name => $value ) {
 					if ( $value ) {
 						$permsarray[] = $name;
@@ -38,31 +38,31 @@ class PopulateGroupPermissions extends Maintenance {
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::AddGroups ) as $group => $add ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['add'] = json_encode( $add );
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::RemoveGroups ) as $group => $remove ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['remove'] = json_encode( $remove );
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::GroupsAddToSelf ) as $group => $adds ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['addself'] = json_encode( $adds );
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::GroupsRemoveFromSelf ) as $group => $removes ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['removeself'] = json_encode( $removes );
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::Autopromote ) as $group => $promo ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['autopromote'] = json_encode( $promo );
 			}
 		}
