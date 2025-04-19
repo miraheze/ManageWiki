@@ -38,4 +38,11 @@ class HTMLTypedSelectField extends HTMLSelectField {
 
 		return true;
 	}
+
+	public function loadDataFromRequest( $request ) {
+		$data = parent::loadDataFromRequest( $request );
+		var_dump( $this->getName() . ':' . gettype( $data ) );
+
+		return $data;
+	}
 }
