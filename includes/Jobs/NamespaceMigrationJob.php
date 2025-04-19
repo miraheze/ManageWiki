@@ -9,7 +9,7 @@ use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;
 
 /**
- * Used on namespace creation and deletion to move pages into and out of namespaces
+ * Used on namespace rename and deletion to move pages in and out of namespaces.
  */
 class NamespaceMigrationJob extends Job {
 
@@ -30,6 +30,7 @@ class NamespaceMigrationJob extends Job {
 	) {
 		parent::__construct( self::JOB_NAME, $params );
 
+		// Action will either be 'delete' or 'rename'
 		$this->action = $params['action'];
 		$this->dbname = $params['dbname'];
 
@@ -51,7 +52,7 @@ class NamespaceMigrationJob extends Job {
 			$pagePrefix = '';
 			$nsTo = $this->nsNew;
 		} else {
-			$nsSearch = 0;
+			$nsSearch = NS_MAIN;
 			$pagePrefix = $this->nsName . ':';
 			$nsTo = $this->nsID;
 		}
@@ -75,7 +76,7 @@ class NamespaceMigrationJob extends Job {
 			$pageTitle = $row->page_title;
 			$pageID = $row->page_id;
 
-			if ( $nsSearch === 0 ) {
+			if ( $nsSearch === NS_MAIN ) {
 				$replace = '';
 				$newTitle = str_replace( $pagePrefix, $replace, $pageTitle );
 			} elseif ( $this->maintainPrefix && $this->action === 'delete' ) {
