@@ -10,14 +10,6 @@ use MediaWiki\HTMLForm\Field\HTMLSelectField;
 class HTMLTypedSelectField extends HTMLSelectField {
 
 	/**
-	 * Skip strict validation — we’ll restore types ourselves.
-	 * @inheritDoc
-	 */
-	public function validate( $value, $alldata ) {
-		return true;
-	}
-
-	/**
 	 * Convert request string values back to their original types
 	 * based on the defined options array.
 	 * @inheritDoc
