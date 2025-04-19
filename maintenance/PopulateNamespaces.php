@@ -40,20 +40,20 @@ class PopulateNamespaces extends Maintenance {
 				$nsAliases[] = $n;
 			}
 
-			$res = $dbw->select(
-				'mw_namespaces',
-				[
+			$check = $dbw->newSelectQueryBuilder()
+				->table( 'mw_namespaces' )
+				->fields( [
 					'ns_namespace_name',
 					'ns_namespace_id',
-				],
-				[
+				] )
+				->where( [
 					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 					'ns_namespace_id' => (int)$id,
-				],
-				__METHOD__
-			);
+				] )
+				->caller( __METHOD__ )
+				->fetchRow();
 
-			if ( !$res || $res->count() === 0 ) {
+			if ( !$check ) {
 				$this->insertNamespace( $dbw, (int)$id, (string)$name, $nsAliases );
 			}
 		}
@@ -67,9 +67,9 @@ class PopulateNamespaces extends Maintenance {
 		string $name,
 		array $nsAliases
 	): void {
-		$dbw->insert(
-			'mw_namespaces',
-			[
+		$dbw->newSelectQueryBuilder()
+			->insertInto( 'mw_namespaces' )
+			->row( [
 				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 				'ns_namespace_id' => $id,
 				'ns_namespace_name' => $name,
@@ -83,9 +83,9 @@ class PopulateNamespaces extends Maintenance {
 				'ns_aliases' => json_encode( $nsAliases ) ?: '[]',
 				'ns_core' => $id < 1000,
 				'ns_additional' => '[]',
-			],
-			__METHOD__
-		);
+			] )
+			->caller( __METHOD__ )
+			->execute();
 	}
 }
 
