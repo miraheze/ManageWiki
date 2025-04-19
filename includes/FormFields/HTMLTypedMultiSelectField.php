@@ -46,4 +46,10 @@ class HTMLTypedMultiSelectField extends HTMLMultiSelectField {
 			(array)$data
 		);
 	}
+
+	
+	/** @inheritDoc */
+	public function getDefault() {
+		return array_map( 'strval', $this->mDefault ?? [] );
+	}
 }
