@@ -10,6 +10,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
 use Miraheze\ManageWiki\ManageWiki;
+use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 
 class ManageWikiTypes {
 
@@ -132,7 +133,7 @@ class ManageWikiTypes {
 				break;
 			case 'list':
 				$configs = [
-					'type' => 'select',
+					'class' => HTMLTypedSelectField::class,
 					'options' => $options['options'],
 					'default' => $value ?? $options['overridedefault'],
 				];
