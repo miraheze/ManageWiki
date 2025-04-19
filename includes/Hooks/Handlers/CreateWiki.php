@@ -89,22 +89,20 @@ class CreateWiki implements
 		IReadableDatabase $dbr,
 		array &$cacheArray
 	): void {
-		$setObject = $dbr->selectRow(
-			'mw_settings',
-			'*',
-			[
-				's_dbname' => $wiki,
-			],
-			__METHOD__
-		);
+		$setObject = $dbr->newSelectQueryBuilder()
+			->select( '*' )
+			->from( 'mw_settings' )
+			->where( [ 's_dbname' => $wiki ] )
+			->caller( __METHOD__ )
+			->fetchRow();
 
 		// Don't need to manipulate this much
-		if ( ManageWiki::checkSetup( 'settings' ) ) {
+		if ( $setObject !== false && ManageWiki::checkSetup( 'settings' ) ) {
 			$cacheArray['settings'] = json_decode( $setObject->s_settings ?? '[]', true );
 		}
 
 		// Let's create an array of variables so we can easily loop these to enable
-		if ( ManageWiki::checkSetup( 'extensions' ) ) {
+		if ( $setObject !== false && ManageWiki::checkSetup( 'extensions' ) ) {
 			$manageWikiExtensions = $this->config->get( ConfigNames::Extensions );
 			foreach ( json_decode( $setObject->s_extensions ?? '[]', true ) as $ext ) {
 				if ( isset( $manageWikiExtensions[$ext] ) ) {
@@ -122,14 +120,12 @@ class CreateWiki implements
 
 		// Collate NS entries and decode their entries for the array
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-			$nsObjects = $dbr->select(
-				'mw_namespaces',
-				'*',
-				[
-					'ns_dbname' => $wiki,
-				],
-				__METHOD__
-			);
+			$nsObjects = $dbr->newSelectQueryBuilder()
+				->select( '*' )
+				->from( 'mw_namespaces' )
+				->where( [ 'ns_dbname' => $wiki ] )
+				->caller( __METHOD__ )
+				->fetchResultSet();
 
 			$lcName = [];
 			$lcEN = [];
@@ -197,6 +193,7 @@ class CreateWiki implements
 					}
 				}
 			}
+
 			// Search for and apply overridedefaults to NS_SPECIAL
 			// Notably, we do not apply 'default' overridedefault to NS_SPECIAL
 			// It must exist as it's own key in overridedefault
@@ -214,14 +211,12 @@ class CreateWiki implements
 
 		// Same as NS above but for permissions
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$permObjects = $dbr->select(
-				'mw_permissions',
-				'*',
-				[
-					'perm_dbname' => $wiki,
-				],
-				__METHOD__
-			);
+			$permObjects = $dbr->newSelectQueryBuilder()
+				->select( '*' )
+				->from( 'mw_permissions' )
+				->where( [ 'perm_dbname' => $wiki ] )
+				->caller( __METHOD__ )
+				->fetchResultSet();
 
 			foreach ( $permObjects as $perm ) {
 				$addPerms = [];

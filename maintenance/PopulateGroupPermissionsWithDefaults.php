@@ -20,29 +20,25 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
+		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
+
 		if ( $this->hasOption( 'overwrite' ) ) {
-			$dbw->delete(
-				'mw_permissions',
-				[
-					'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-				],
-				__METHOD__
-			);
+			$dbw->newDeleteQueryBuilder()
+				->deleteFrom( 'mw_permissions' )
+				->where( [ 'perm_dbname' => $dbname ] )
+				->caller( __METHOD__ )
+				->execute();
 		}
 
-		$checkRow = $dbw->selectRow(
-			'mw_permissions',
-			[
-				'*',
-			],
-			[
-				'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-			],
-			__METHOD__
-		);
+		$checkRow = $dbw->newSelectQueryBuilder()
+			->select( '*' )
+			->from( 'mw_permissions' )
+			->where( [ 'perm_dbname' => $dbname ] )
+			->caller( __METHOD__ )
+			->fetchRow();
 
 		if ( !$checkRow ) {
-			$mwPermissions = new ManageWikiPermissions( $this->getConfig()->get( MainConfigNames::DBname ) );
+			$mwPermissions = new ManageWikiPermissions( $dbname );
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list( group: null ) ), [ $this->getConfig()->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] );
 
@@ -65,7 +61,7 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 			$mwPermissions->commit();
 
 			$dataFactory = $this->getServiceContainer()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
+			$data = $dataFactory->newInstance( $dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}

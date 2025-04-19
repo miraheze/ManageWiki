@@ -71,19 +71,20 @@ class PopulateGroupPermissions extends Maintenance {
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
-			$check = $dbw->selectRow(
-				'mw_permissions',
-				[ 'perm_group' ],
-				[
+			$check = $dbw->newSelectQueryBuilder()
+				->select( 'perm_group' )
+				->from( 'mw_permissions' )
+				->where( [
 					'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 					'perm_group' => $groupname,
-				],
-				__METHOD__
-			);
+				] )
+				->caller( __METHOD__ )
+				->fetchRow();
 
 			if ( !$check ) {
-				$dbw->insert( 'mw_permissions',
-					[
+				$dbw->newInsertQueryBuilder()
+					->insertInto( 'mw_permissions' )
+					->row( [
 						'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 						'perm_group' => $groupname,
 						'perm_permissions' => empty( $groupatr['perms'] ) ? json_encode( [] ) : $groupatr['perms'],
@@ -92,9 +93,9 @@ class PopulateGroupPermissions extends Maintenance {
 						'perm_addgroupstoself' => empty( $groupatr['addself'] ) ? json_encode( [] ) : $groupatr['addself'],
 						'perm_removegroupsfromself' => empty( $groupatr['removeself'] ) ? json_encode( [] ) : $groupatr['removeself'],
 						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote'],
-					],
-					__METHOD__
-				);
+					] )
+					->caller( __METHOD__ )
+					->execute();
 			}
 		}
 	}

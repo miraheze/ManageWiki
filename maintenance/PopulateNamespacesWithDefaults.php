@@ -19,29 +19,25 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
+		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
+
 		if ( $this->hasOption( 'overwrite' ) ) {
-			$dbw->delete(
-				'mw_namespaces',
-				[
-					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-				],
-				__METHOD__
-			);
+			$dbw->newDeleteQueryBuilder()
+				->deleteFrom( 'mw_namespaces' )
+				->where( [ 'ns_dbname' => $dbname ] )
+				->caller( __METHOD__ )
+				->execute();
 		}
 
-		$checkRow = $dbw->selectRow(
-			'mw_namespaces',
-			[
-				'*',
-			],
-			[
-				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-			],
-			__METHOD__
-		);
+		$checkRow = $dbw->newSelectQueryBuilder()
+			->select( '*' )
+			->from( 'mw_namespaces' )
+			->where( [ 'ns_dbname' => $dbname ] )
+			->caller( __METHOD__ )
+			->fetchRow();
 
 		if ( !$checkRow ) {
-			$mwNamespaces = new ManageWikiNamespaces( $this->getConfig()->get( MainConfigNames::DBname ) );
+			$mwNamespaces = new ManageWikiNamespaces( $dbname );
 			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
 
@@ -51,7 +47,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 			}
 
 			$dataFactory = $this->getServiceContainer()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
+			$data = $dataFactory->newInstance( $dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}
