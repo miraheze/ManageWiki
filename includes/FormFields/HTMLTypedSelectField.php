@@ -27,7 +27,7 @@ class HTMLTypedSelectField extends HTMLSelectField {
 		$options = $this->mParams['options'] ?? [];
 
 		// Flatten options in case of grouped ones
-		$flatOptions = $this->flattenSelectOptions( $options );
+		$flatOptions = self::flattenOptions( $options );
 
 		foreach ( $flatOptions as $originalValue ) {
 			if ( (string)$originalValue === (string)$data ) {
@@ -36,28 +36,5 @@ class HTMLTypedSelectField extends HTMLSelectField {
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Flatten grouped options to a simple [label => value] list.
-	 * 
-	 * @param array $options
-	 * @return array
-	 */
-	private function flattenSelectOptions( array $options ): array {
-		$flat = [];
-
-		foreach ( $options as $key => $value ) {
-			if ( is_array( $value ) ) {
-				// Grouped options
-				foreach ( $value as $subKey => $subValue ) {
-					$flat[$subKey] = $subValue;
-				}
-			} else {
-				$flat[$key] = $value;
-			}
-		}
-
-		return $flat;
 	}
 }
