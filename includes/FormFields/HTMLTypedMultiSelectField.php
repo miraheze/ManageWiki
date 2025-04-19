@@ -9,6 +9,21 @@ use MediaWiki\HTMLForm\Field\HTMLMultiSelectField;
  */
 class HTMLTypedMultiSelectField extends HTMLMultiSelectField {
 
+	private array $actualOptions;
+
+	public function __construct( array $params ) {
+		$this->actualOptions = $params['options'] ?? [];
+
+		// Replace options with stringified version for rendering and HTMLForm internals
+		// Otherwise the form fields break.
+		$params['options'] = [];
+		foreach ( $this->actualOptions as $label => $value ) {
+			$params['options'][$label] = (string)$value;
+		}
+
+		parent::__construct( $params );
+	}
+
 	/**
 	 * Convert request string values back to their original types
 	 * based on the defined options array.
@@ -16,11 +31,9 @@ class HTMLTypedMultiSelectField extends HTMLMultiSelectField {
 	 */
 	public function loadDataFromRequest( $request ) {
 		$data = parent::loadDataFromRequest( $request );
-		$options = $this->mParams['options'] ?? [];
+		$flatOptions = self::flattenOptions( $this->actualOptions );
 
-		$flatOptions = self::flattenOptions( $options );
 		$reverseLookup = [];
-
 		foreach ( $flatOptions as $originalValue ) {
 			$reverseLookup[(string)$originalValue] = $originalValue;
 		}
