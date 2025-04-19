@@ -15,7 +15,7 @@ use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
-use Miraheze\ManageWiki\Hooks;
+use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 use Miraheze\ManageWiki\ManageWiki;
 
 class SpecialManageWikiDefaultPermissions extends SpecialPage {
@@ -23,6 +23,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly CreateWiki $hookHandler,
 		private readonly PermissionManager $permissionManager,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
@@ -222,7 +223,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$this->getConfig()->get( MainConfigNames::DBname )
 		);
 
-		Hooks::onCreateWikiCreation(
+		$this->hookHandler->onCreateWikiCreation(
 			$this->getConfig()->get( MainConfigNames::DBname ),
 			$remoteWiki->isPrivate()
 		);

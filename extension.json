@@ -130,6 +130,7 @@
 			"services": [
 				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
+				"CreateWikiHookHandler",
 				"PermissionManager",
 				"RemoteWikiFactory"
 			]
@@ -154,33 +155,54 @@
 		}
 	},
 	"Hooks": {
-		"ContentHandlerForModelID": [
-			"Miraheze\\ManageWiki\\Hooks::onContentHandlerForModelID"
-		],
-		"CreateWikiCreation": [
-			"Miraheze\\ManageWiki\\Hooks::onCreateWikiCreation"
-		],
-		"CreateWikiDataFactoryBuilder": [
-			"Miraheze\\ManageWiki\\Hooks::onCreateWikiDataFactoryBuilder"
-		],
-		"CreateWikiStatePrivate": [
-			"Miraheze\\ManageWiki\\Hooks::onCreateWikiStatePrivate"
-		],
-		"CreateWikiStatePublic": [
-			"Miraheze\\ManageWiki\\Hooks::onCreateWikiStatePublic"
-		],
-		"CreateWikiTables": [
-			"Miraheze\\ManageWiki\\Hooks::onCreateWikiTables"
-		],
-		"GetPreferences": [
-			"Miraheze\\ManageWiki\\Hooks::onGetPreferences"
-		],
-		"LoadExtensionSchemaUpdates": [
-			"Miraheze\\ManageWiki\\Hooks::onLoadExtensionSchemaUpdates"
-		],
-		"SidebarBeforeOutput": [
-			"Miraheze\\ManageWiki\\Hooks::onSidebarBeforeOutput"
-		]
+		"ContentHandlerForModelID": {
+			"handler": "Main"
+		},
+		"CreateWikiCreation": {
+			"handler": "CreateWiki"
+		},
+		"CreateWikiDataFactoryBuilder": {
+			"handler": "CreateWiki"
+		},
+		"CreateWikiStatePrivate": {
+			"handler": "CreateWiki"
+		},
+		"CreateWikiStatePublic": {
+			"handler": "CreateWiki"
+		},
+		"CreateWikiTables": {
+			"handler": "CreateWiki"
+		},
+		"GetPreferences": {
+			"handler": "Main"
+		},
+		"LoadExtensionSchemaUpdates": {
+			"handler": "Installer"
+		},
+		"SidebarBeforeOutput": {
+			"handler": "Main"
+		}
+	},
+	"HookHandlers": {
+		"CreateWiki": {
+			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\CreateWiki",
+			"services": [
+				"ManageWikiConfig",
+				"ManageWikiLogger",
+				"LocalisationCache"
+			]
+		},
+		"Installer": {
+			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\Installer"
+		},
+		"Main": {
+			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\Main",
+			"services": [
+				"ManageWikiConfig",
+				"PermissionManager",
+				"UserOptionsLookup"
+			]
+		}
 	},
 	"ResourceModules": {
 		"ext.managewiki.oouiform": {
