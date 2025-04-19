@@ -28,9 +28,9 @@ class HTMLTypedSelectField extends HTMLSelectField {
 		//if ( $value === '' ) {
 		//	return true;
 		//}
+		$name = str_replace( 'wpset-', '', $this->getName() );
 		foreach ( $this->mParams['options'] as $label => $val ) {
-			var_dump( $this->getName() );
-			$this->mParams['options'] = $settings["set-{$this->getName()}"]['options'];
+			$this->mParams['options'] = $settings[$name]['options'];
 		}
 		foreach ( $this->mParams['options'] as $label => $val ) {
 			var_dump( "$label: " . gettype( $val ) );
