@@ -10,6 +10,7 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
+use Wikimedia\ObjectCache\WANObjectCache;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
@@ -231,24 +232,32 @@ class ManageWikiFormFactoryBuilder {
 
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
-		$queue = array_fill_keys( array_merge(
-				glob( $config->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
-				glob( $config->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
-			),
-		true );
+		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
+		$cache = $objectCacheFactory->getLocalClusterInstance();
 
-		$processor = new ExtensionProcessor();
+		$credits = $cache->getWithSetCallback(
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
+			WANObjectCache::TTL_DAY,
+			static function () use ( $config ): array {
+				$queue = array_fill_keys( array_merge(
+					glob( $config->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
+					glob( $config->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
+				), true );
 
-		foreach ( $queue as $path => $mtime ) {
-			$json = file_get_contents( $path );
-			$info = json_decode( $json, true );
-			$version = $info['manifest_version'] ?? 2;
+				$processor = new ExtensionProcessor();
 
-			$processor->extractInfo( $path, $info, $version );
-		}
+				foreach ( $queue as $path => $_ ) {
+					$json = file_get_contents( $path );
+					$info = json_decode( $json, true );
+					$version = $info['manifest_version'] ?? 2;
 
-		$data = $processor->getExtractedInfo();
-		$credits = $data['credits'];
+					$processor->extractInfo( $path, $info, $version );
+				}
+
+				$data = $processor->getExtractedInfo();
+				return $data['credits'];
+			}
+		);
 
 		$formDescriptor = [];
 
