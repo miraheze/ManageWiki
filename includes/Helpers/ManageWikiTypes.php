@@ -5,12 +5,25 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Message\Message;
 use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
 
-	public static function process( Config $config, $disabled, $groupList, $module, $options, $value, $name = false, $overrideDefault = false, $type = false ) {
+	public static function process(
+		Config $config,
+		bool $disabled,
+		array $groupList,
+		string $module,
+		array $options,
+		mixed $value,
+		string $name,
+		mixed $overrideDefault = false,
+		string $type = ''
+	): array {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {
 				$options['overridedefault'] = $overrideDefault;
@@ -20,25 +33,37 @@ class ManageWikiTypes {
 				$options['type'] = $type;
 			}
 
-			return self::namespaces( $overrideDefault, $type, $value ) ?: self::common( $config, $disabled, $groupList, $name, $options, $value );
+			return self::namespaces( $overrideDefault, $type, $value ) ?:
+				self::common( $config, $disabled, $groupList, $name, $options, $value );
 		}
 
 		return self::common( $config, $disabled, $groupList, $name, $options, $value );
 	}
 
-	private static function common( Config $config, $disabled, $groupList, $name, $options, $value ) {
+	private static function common(
+		Config $config,
+		bool $disabled,
+		array $groupList,
+		string $name,
+		array $options,
+		mixed $value
+	): array {
 		switch ( $options['type'] ) {
 			case 'database':
 				$configs = [
 					'type' => 'text',
 					'default' => $value ?? $options['overridedefault'],
-					'validation-callback' => static function ( $database ) use ( $config, $name ) {
-						if ( !in_array( $database, $config->get( 'LocalDatabases' ) ) ) {
-							return wfMessage( 'managewiki-invalid-database', $database, $name );
+					'validation-callback' => static function (
+						string $database,
+						array $alldata,
+						HTMLForm $form
+					) use ( $config, $name ): bool|Message {
+						if ( !in_array( $database, $config->get( MainConfigNames::LocalDatabases ) ) ) {
+							return $form->msg( 'managewiki-invalid-database', $database, $name );
 						}
 
 						return true;
-					}
+					},
 				];
 				break;
 			case 'float':
@@ -46,7 +71,7 @@ class ManageWikiTypes {
 					'type' => 'float',
 					'min' => $options['minfloat'],
 					'max' => $options['maxfloat'],
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
 			case 'integer':
@@ -54,7 +79,7 @@ class ManageWikiTypes {
 					'type' => 'int',
 					'min' => $options['minint'],
 					'max' => $options['maxint'],
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
 			case 'integers':
@@ -68,13 +93,14 @@ class ManageWikiTypes {
 						],
 						'delete' => [
 							'type' => 'submit',
-							'default' => wfMessage( 'htmlform-cloner-delete' )->escaped(),
+							'buttonlabel-message' => 'htmlform-cloner-delete',
 							'flags' => [ 'destructive' ],
 						],
 					],
-					'default' => array_map( static function ( $num ) {
-						return [ 'value' => $num ];
-					}, $value ?? $options['overridedefault'] ),
+					'default' => array_map(
+						static fn ( int $num ): array => [ 'value' => $num ],
+						$value ?? $options['overridedefault']
+					),
 				];
 				break;
 			case 'interwiki':
@@ -85,14 +111,13 @@ class ManageWikiTypes {
 
 				foreach ( $prefixes as $row ) {
 					$prefix = $row['iw_prefix'];
-
 					$interwikiPrefixes[$prefix] = $prefix;
 				}
 
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $interwikiPrefixes,
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 
 				if ( !$disabled ) {
@@ -102,21 +127,21 @@ class ManageWikiTypes {
 			case 'language':
 				$configs = [
 					'type' => 'language',
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
 			case 'list':
 				$configs = [
 					'type' => 'select',
 					'options' => $options['options'],
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
 			case 'list-multi':
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $options['options'],
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 
 				if ( !$disabled ) {
@@ -127,7 +152,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $options['options'],
-					'default' => $value !== null ? array_keys( $value, true ) : array_keys( $options['overridedefault'], true )
+					'default' => array_keys( $value ?? $options['overridedefault'], true ),
 				];
 
 				if ( !$disabled ) {
@@ -139,7 +164,7 @@ class ManageWikiTypes {
 					'type' => 'checkmatrix',
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
-					'default' => $value !== null ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault']
+					'default' => $value !== null ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault'],
 				];
 				break;
 			case 'preferences':
@@ -148,12 +173,12 @@ class ManageWikiTypes {
 				$allPreferences = MediaWikiServices::getInstance()->getUserOptionsLookup()->getDefaultOptions();
 
 				// Don't show preferences hidden by configuratiom
-				if ( !$config->get( 'AllowUserCssPrefs' ) ) {
+				if ( !$config->get( MainConfigNames::AllowUserCssPrefs ) ) {
 					$excludedPrefs[] = 'underline';
 					$excludedPrefs[] = 'editfont';
 				}
 
-				if ( $config->get( 'DisableLangConversion' ) ) {
+				if ( $config->get( MainConfigNames::DisableLangConversion ) ) {
 					$excludedPrefs[] = 'variant';
 				} else {
 					foreach ( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
@@ -161,52 +186,50 @@ class ManageWikiTypes {
 					}
 				}
 
-				if ( $config->get( 'ForceHTTPS' ) || !$config->get( 'SecureLogin' ) ) {
+				if ( $config->get( MainConfigNames::ForceHTTPS ) || !$config->get( MainConfigNames::SecureLogin ) ) {
 					$excludedPrefs[] = 'prefershttps';
 				}
 
-				if ( !$config->get( 'RCShowWatchingUsers' ) ) {
+				if ( !$config->get( MainConfigNames::RCShowWatchingUsers ) ) {
 					$excludedPrefs[] = 'shownumberswatching';
 				}
 
-				if ( !$config->get( 'RCWatchCategoryMembership' ) ) {
+				if ( !$config->get( MainConfigNames::RCWatchCategoryMembership ) ) {
 					$excludedPrefs[] = 'hidecategorization';
 					$excludedPrefs[] = 'watchlisthidecategorization';
 				}
 
-				if ( !$config->get( 'SearchMatchRedirectPreference' ) ) {
+				if ( !$config->get( MainConfigNames::SearchMatchRedirectPreference ) ) {
 					$excludedPrefs[] = 'search-match-redirect';
 				}
 
-				if ( !$config->get( 'EnableEmail' ) ) {
-					if ( !$config->get( 'AllowRequiringEmailForResets' ) ) {
-						$excludedPrefs[] = 'requireemail';
-					}
+				if ( !$config->get( MainConfigNames::EnableEmail ) ) {
+					$excludedPrefs[] = 'requireemail';
 
-					if ( !$config->get( 'EnableUserEmail' ) ) {
+					if ( !$config->get( MainConfigNames::EnableUserEmail ) ) {
 						$excludedPrefs[] = 'disablemail';
 						$excludedPrefs[] = 'email-allow-new-users';
 						$excludedPrefs[] = 'ccmeonemails';
 
-						if ( !$config->get( 'EnableUserEmailMuteList' ) ) {
+						if ( !$config->get( MainConfigNames::EnableUserEmailMuteList ) ) {
 							$excludedPrefs[] = 'email-blacklist';
 						}
 					}
 
-					if ( !$config->get( 'EnotifWatchlist' ) ) {
+					if ( !$config->get( MainConfigNames::EnotifWatchlist ) ) {
 						$excludedPrefs[] = 'enotifwatchlistpages';
 					}
 
-					if ( !$config->get( 'EnotifUserTalk' ) ) {
+					if ( !$config->get( MainConfigNames::EnotifUserTalk ) ) {
 						$excludedPrefs[] = 'enotifusertalkpages';
 					}
 
-					if ( !$config->get( 'EnotifUserTalk' ) && !$config->get( 'EnotifWatchlist' ) ) {
-						if ( !$config->get( 'EnotifMinorEdits' ) ) {
+					if ( !$config->get( MainConfigNames::EnotifUserTalk ) && !$config->get( MainConfigNames::EnotifWatchlist ) ) {
+						if ( !$config->get( MainConfigNames::EnotifMinorEdits ) ) {
 							$excludedPrefs[] = 'enotifminoredits';
 						}
 
-						if ( !$config->get( 'EnotifRevealEditorAddress' ) ) {
+						if ( !$config->get( MainConfigNames::EnotifRevealEditorAddress ) ) {
 							$excludedPrefs[] = 'enotifrevealaddr';
 						}
 					}
@@ -236,7 +259,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $preferences,
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 
 				if ( !$disabled ) {
@@ -246,13 +269,15 @@ class ManageWikiTypes {
 			case 'skin':
 				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getInstalledSkins();
 
-				unset( $enabledSkins['fallback'] );
-				unset( $enabledSkins['apioutput'] );
-				unset( $enabledSkins['authentication-popup'] );
-				unset( $enabledSkins['json'] );
+				unset(
+					$enabledSkins['apioutput'],
+					$enabledSkins['authentication-popup'],
+					$enabledSkins['fallback'],
+					$enabledSkins['json']
+				);
 
 				if ( $options['excludeSkipSkins'] ?? false ) {
-					foreach ( $config->get( 'SkipSkins' ) as $skip ) {
+					foreach ( $config->get( MainConfigNames::SkipSkins ) as $skip ) {
 						unset( $enabledSkins[$skip] );
 					}
 				}
@@ -262,20 +287,22 @@ class ManageWikiTypes {
 
 				$configs = [
 					'type' => 'select',
-					'options' => isset( $options['options'] ) ? array_merge( $enabledSkins, $options['options'] ) : $enabledSkins,
-					'default' => $value ?? $options['overridedefault']
+					'options' => array_merge( $enabledSkins, $options['options'] ?? [] ),
+					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
 			case 'skins':
 				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getInstalledSkins();
 
-				unset( $enabledSkins['fallback'] );
-				unset( $enabledSkins['apioutput'] );
-				unset( $enabledSkins['authentication-popup'] );
-				unset( $enabledSkins['json'] );
+				unset(
+					$enabledSkins['apioutput'],
+					$enabledSkins['authentication-popup'],
+					$enabledSkins['fallback'],
+					$enabledSkins['json']
+				);
 
 				if ( $options['excludeSkipSkins'] ?? false ) {
-					foreach ( $config->get( 'SkipSkins' ) as $skip ) {
+					foreach ( $config->get( MainConfigNames::SkipSkins ) as $skip ) {
 						unset( $enabledSkins[$skip] );
 					}
 				}
@@ -286,7 +313,7 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => isset( $options['options'] ) ? array_merge( $enabledSkins, $options['options'] ) : $enabledSkins,
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 
 				if ( !$disabled ) {
@@ -302,48 +329,49 @@ class ManageWikiTypes {
 						],
 						'delete' => [
 							'type' => 'submit',
-							'default' => wfMessage( 'htmlform-cloner-delete' )->escaped(),
+							'buttonlabel-message' => 'htmlform-cloner-delete',
 							'flags' => [ 'destructive' ],
 						],
 					],
-					'default' => array_map( static function ( $text ) {
-						return [ 'value' => $text ];
-					}, $value ?? $options['overridedefault'] ),
+					'default' => array_map(
+						static fn ( string $text ): array => [ 'value' => $text ],
+						$value ?? $options['overridedefault']
+					),
 				];
 				break;
 			case 'timezone':
 				$configs = [
 					'type' => 'select',
 					'options' => ManageWiki::getTimezoneList(),
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
 			case 'user':
 				$configs = [
 					'type' => 'user',
 					'exists' => true,
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
 			case 'users':
 				$configs = [
 					'type' => 'usersmultiselect',
 					'exists' => true,
-					'default' => implode( "\n", $value ?? $options['overridedefault'] )
+					'default' => implode( "\n", $value ?? $options['overridedefault'] ),
 				];
 				break;
 			case 'usergroups':
 				$language = RequestContext::getMain()->getLanguage();
 				$groups = [];
-				foreach ( (array)$groupList as $group ) {
+				foreach ( $groupList as $group ) {
 					$lowerCaseGroupName = strtolower( $group );
 					$groups[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 				}
 
 				$configs = [
 					'type' => 'multiselect',
-					'options' => isset( $options['options'] ) ? array_merge( $groups, $options['options'] ) : $groups,
-					'default' => $value ?? $options['overridedefault']
+					'options' => array_merge( $groups, $options['options'] ?? [] ),
+					'default' => $value ?? $options['overridedefault'],
 				];
 
 				if ( !$disabled ) {
@@ -358,8 +386,8 @@ class ManageWikiTypes {
 
 				$configs = [
 					'type' => 'multiselect',
-					'options' => isset( $options['options'] ) ? array_merge( $rights, $options['options'] ) : $rights,
-					'default' => $value ?? $options['overridedefault']
+					'options' => array_merge( $rights, $options['options'] ?? [] ),
+					'default' => $value ?? $options['overridedefault'],
 				];
 
 				if ( !$disabled ) {
@@ -371,7 +399,7 @@ class ManageWikiTypes {
 					'type' => 'title',
 					'exists' => $options['exists'] ?? true,
 					'default' => $value ?? $options['overridedefault'],
-					'required' => false
+					'required' => false,
 				];
 				break;
 			case 'wikipages':
@@ -379,23 +407,24 @@ class ManageWikiTypes {
 					'type' => 'titlesmultiselect',
 					'exists' => $options['exists'] ?? true,
 					'default' => implode( "\n", $value ?? $options['overridedefault'] ),
-					'required' => false
+					'required' => false,
 				];
 				break;
 			default:
 				$configs = [
 					'type' => $options['type'],
-					'default' => $value ?? $options['overridedefault']
+					'default' => $value ?? $options['overridedefault'],
 				];
-				break;
 		}
 
 		return $configs;
 	}
 
-	private static function namespaces( $overrideDefault, $type, $value ) {
-		$configs = [];
-
+	private static function namespaces(
+		mixed $overrideDefault,
+		string $type,
+		mixed $value
+	): array {
 		if ( $type === 'contentmodel' ) {
 			$contentHandlerFactory = MediaWikiServices::getInstance()->getContentHandlerFactory();
 
@@ -407,18 +436,20 @@ class ManageWikiTypes {
 
 			uksort( $contentModels, 'strcasecmp' );
 
-			$configs = [
+			return [
 				'type' => 'select',
 				'options' => $contentModels,
-				'default' => $value
-			];
-		} elseif ( $type === 'vestyle' ) {
-			$configs = [
-				'type' => 'check',
-				'default' => $value ?? $overrideDefault
+				'default' => $value,
 			];
 		}
 
-		return $configs;
+		if ( $type === 'vestyle' ) {
+			return [
+				'type' => 'check',
+				'default' => $value ?? $overrideDefault,
+			];
+		}
+
+		return [];
 	}
 }

@@ -10,7 +10,7 @@ interface ManageWikiCoreAddFormFieldsHook {
 	/**
 	 * @param IContextSource $context
 	 * @param RemoteWikiFactory $remoteWiki
-	 * @param string $dbName
+	 * @param string $dbname
 	 * @param bool $ceMW
 	 * @param array &$formDescriptor
 	 * @return void
@@ -18,7 +18,7 @@ interface ManageWikiCoreAddFormFieldsHook {
 	public function onManageWikiCoreAddFormFields(
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		string $dbName,
+		string $dbname,
 		bool $ceMW,
 		array &$formDescriptor
 	): void;

@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\ManageWiki;
 
 class PopulateGroupPermissions extends Maintenance {
@@ -13,12 +14,12 @@ class PopulateGroupPermissions extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
-		$excluded = $this->getConfig()->get( 'ManageWikiPermissionsDisallowedGroups' );
+		$excluded = $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups );
 
 		$grouparray = [];
 
@@ -66,8 +67,8 @@ class PopulateGroupPermissions extends Maintenance {
 			}
 		}
 
-		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
-		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
+		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
 			$check = $dbw->selectRow(
@@ -75,7 +76,7 @@ class PopulateGroupPermissions extends Maintenance {
 				[ 'perm_group' ],
 				[
 					'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-					'perm_group' => $groupname
+					'perm_group' => $groupname,
 				],
 				__METHOD__
 			);
@@ -90,7 +91,7 @@ class PopulateGroupPermissions extends Maintenance {
 						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
 						'perm_addgroupstoself' => empty( $groupatr['addself'] ) ? json_encode( [] ) : $groupatr['addself'],
 						'perm_removegroupsfromself' => empty( $groupatr['removeself'] ) ? json_encode( [] ) : $groupatr['removeself'],
-						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote']
+						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote'],
 					],
 					__METHOD__
 				);

@@ -11,19 +11,19 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 
-		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.', false, false );
+		$this->addOption( 'overwrite', 'This overwrites namespaces to reset them back to the default.' );
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
-		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
-		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
+	public function execute(): void {
+		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		if ( $this->getOption( 'overwrite' ) ) {
+		if ( $this->hasOption( 'overwrite' ) ) {
 			$dbw->delete(
 				'mw_namespaces',
 				[
-					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
+					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 				],
 				__METHOD__
 			);
@@ -32,10 +32,10 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		$checkRow = $dbw->selectRow(
 			'mw_namespaces',
 			[
-				'*'
+				'*',
 			],
 			[
-				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname )
+				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 			],
 			__METHOD__
 		);
@@ -43,7 +43,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		if ( !$checkRow ) {
 			$mwNamespaces = new ManageWikiNamespaces( $this->getConfig()->get( MainConfigNames::DBname ) );
 			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
-			$defaultNamespaces = array_keys( $mwNamespacesDefault->list() );
+			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
 
 			foreach ( $defaultNamespaces as $namespace ) {
 				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );

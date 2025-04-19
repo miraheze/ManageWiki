@@ -15,12 +15,12 @@ class RemoveSettings extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$setting = $this->getArg( 0 );
 
-		$mwSetting = new ManageWikiSettings( $this->getConfig()->get( MainConfigNames::DBname ) );
-		$mwSetting->remove( $setting );
-		$mwSetting->commit();
+		$mwSettings = new ManageWikiSettings( $this->getConfig()->get( MainConfigNames::DBname ) );
+		$mwSettings->remove( [ $setting ] );
+		$mwSettings->commit();
 	}
 }
 

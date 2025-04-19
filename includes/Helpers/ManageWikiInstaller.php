@@ -3,16 +3,21 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
+use JobSpecification;
 use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
-use MediaWiki\Title\Title;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
 use RuntimeException;
 
 class ManageWikiInstaller {
 
-	public static function process( string $dbname, array $actions, bool $install = true ) {
+	public static function process(
+		string $dbname,
+		array $actions,
+		bool $install = true
+	): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepresponse = [];
 
@@ -41,13 +46,12 @@ class ManageWikiInstaller {
 			}
 		}
 
-		return !(bool)array_search( false, $stepresponse );
+		return array_search( false, $stepresponse, true ) === false;
 	}
 
-	private static function sql( string $dbname, array $data ) {
-		$dbw = MediaWikiServices::getInstance()->getDBLoadBalancerFactory()
-			->getMainLB( $dbname )
-			->getMaintenanceConnectionRef( DB_PRIMARY, [], $dbname );
+	private static function sql( string $dbname, array $data ): bool {
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $dbname );
 
 		foreach ( $data as $table => $sql ) {
 			if ( !$dbw->tableExists( $table ) ) {
@@ -55,12 +59,13 @@ class ManageWikiInstaller {
 					$dbw->sourceFile( $sql );
 				} catch ( Exception $e ) {
 					$logger = LoggerFactory::getInstance( 'ManageWiki' );
-					$logger->error( 'Caught exception trying to load {path} for {table} on {db}: {exception}', [
+					$logger->error( 'Caught exception trying to load {path} for {table} on {dbname}: {exception}', [
+						'dbname' => $dbname,
+						'exception' => $e,
 						'path' => $sql,
 						'table' => $table,
-						'db' => $dbname,
-						'exception' => $e,
 					] );
+
 					return false;
 				}
 			}
@@ -69,13 +74,12 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function files( string $dbname, array $data ) {
+	private static function files( string $dbname, array $data ): bool {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-
-		$baseloc = $config->get( 'UploadDirectory' ) . $dbname;
+		$baseloc = $config->get( MainConfigNames::UploadDirectory ) . $dbname;
 
 		foreach ( $data as $location => $source ) {
-			if ( substr( $location, -1 ) == '/' ) {
+			if ( str_ends_with( $location, '/' ) ) {
 				if ( $source === true ) {
 					if ( !is_dir( $baseloc . $location ) && !mkdir( $baseloc . $location ) ) {
 						return false;
@@ -99,33 +103,39 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function permissions( string $dbname, array $data, bool $install ) {
+	private static function permissions(
+		string $dbname,
+		array $data,
+		bool $install
+	): bool {
 		$mwPermissions = new ManageWikiPermissions( $dbname );
-
-		$action = ( $install ) ? 'add' : 'remove';
+		$action = $install ? 'add' : 'remove';
 
 		foreach ( $data as $group => $mod ) {
 			$groupData = [
 				'permissions' => [
-					$action => $mod['permissions'] ?? []
+					$action => $mod['permissions'] ?? [],
 				],
 				'addgroups' => [
-					$action => $mod['addgroups'] ?? []
+					$action => $mod['addgroups'] ?? [],
 				],
 				'removegroups' => [
-					$action => $mod['removegroups'] ?? []
-				]
+					$action => $mod['removegroups'] ?? [],
+				],
 			];
 
 			$mwPermissions->modify( $group, $groupData );
 		}
 
 		$mwPermissions->commit();
-
 		return true;
 	}
 
-	private static function namespaces( string $dbname, array $data, bool $install ) {
+	private static function namespaces(
+		string $dbname,
+		array $data,
+		bool $install
+	): bool {
 		$mwNamespaces = new ManageWikiNamespaces( $dbname );
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
@@ -134,17 +144,20 @@ class ManageWikiInstaller {
 				$i['name'] = $name;
 
 				$mwNamespaces->modify( $id, $i, true );
-			} else {
-				$mwNamespaces->remove( $i['id'], $i['id'] % 2, true );
+				continue;
 			}
+
+			// We migrate to either NS_MAIN (0) or NS_TALK (1),
+			// depending on if this is a talk namespace or not.
+			$newNamespace = $i['id'] % 2;
+			$mwNamespaces->remove( $i['id'], $newNamespace, true );
 		}
 
 		$mwNamespaces->commit();
-
 		return true;
 	}
 
-	private static function mwscript( string $dbname, array $data ) {
+	private static function mwscript( string $dbname, array $data ): bool {
 		if ( Shell::isDisabled() ) {
 			throw new RuntimeException( 'Shell is disabled.' );
 		}
@@ -156,37 +169,41 @@ class ManageWikiInstaller {
 				unset( $options['repeat-with'] );
 			}
 
-			$params = [
-				'dbname' => $dbname,
-				'script' => $script,
-				'options' => $options,
-			];
+			$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
+			$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
 
-			$mwJob = new MWScriptJob( Title::newMainPage(), $params );
-
-			MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
+			$jobQueueGroup->push(
+				new JobSpecification(
+					MWScriptJob::JOB_NAME,
+					[
+						'dbname' => $dbname,
+						'script' => $script,
+						'options' => $options,
+					]
+				)
+			);
 
 			if ( $repeatWith ) {
-				$params = [
-					'dbname' => $dbname,
-					'script' => $script,
-					'options' => $repeatWith,
-				];
-
-				$mwJob = new MWScriptJob( Title::newMainPage(), $params );
-
-				MediaWikiServices::getInstance()->getJobQueueGroupFactory()->makeJobQueueGroup()->push( $mwJob );
+				$jobQueueGroup->push(
+					new JobSpecification(
+						MWScriptJob::JOB_NAME,
+						[
+							'dbname' => $dbname,
+							'script' => $script,
+							'options' => $repeatWith,
+						]
+					)
+				);
 			}
 		}
 
 		return true;
 	}
 
-	private static function settings( string $dbname, array $data ) {
+	private static function settings( string $dbname, array $data ): bool {
 		$mwSettings = new ManageWikiSettings( $dbname );
 		$mwSettings->modify( $data );
 		$mwSettings->commit();
-
 		return true;
 	}
 }
