@@ -20,9 +20,9 @@ class ManageWikiExtensions implements IConfigModule {
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
-	private array $liveExts = [];
+	private array $liveExtensions = [];
 	private array $removedExts = [];
-	private array $extConfig;
+	private array $extensionsConfig;
 
 	private string $dbname;
 	private ?string $log = null;
@@ -30,7 +30,7 @@ class ManageWikiExtensions implements IConfigModule {
 	public function __construct( string $dbname ) {
 		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$this->extConfig = $this->config->get( ConfigNames::Extensions );
+		$this->extensionsConfig = $this->config->get( ConfigNames::Extensions );
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
@@ -47,7 +47,7 @@ class ManageWikiExtensions implements IConfigModule {
 		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
 		// populate extension lists with config associated with them.
 		foreach ( json_decode( $extensions ?: '[]', true ) as $extension ) {
-			if ( !isset( $this->extConfig[$extension] ) ) {
+			if ( !isset( $this->extensionsConfig[$extension] ) ) {
 				$logger->error( 'Extension/Skin {extension} not set in {config}', [
 					'config' => ConfigNames::Extensions,
 					'extension' => $extension,
@@ -56,7 +56,7 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			$this->liveExts[$extension] = $this->extConfig[$extension];
+			$this->liveExtensions[$extension] = $this->extensionsConfig[$extension];
 		}
 	}
 
@@ -65,7 +65,7 @@ class ManageWikiExtensions implements IConfigModule {
 	 * @return array 1D array of extensions enabled
 	 */
 	public function list(): array {
-		return array_keys( $this->liveExts );
+		return array_keys( $this->liveExtensions );
 	}
 
 	/**
@@ -76,7 +76,7 @@ class ManageWikiExtensions implements IConfigModule {
 		// We allow adding either one extension (string) or many (array)
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
-			$this->liveExts[$ext] = $this->extConfig[$ext];
+			$this->liveExtensions[$ext] = $this->extensionsConfig[$ext];
 			$this->changes[$ext] = [
 				'old' => 0,
 				'new' => 1,
@@ -96,12 +96,12 @@ class ManageWikiExtensions implements IConfigModule {
 		// We allow remove either one extension (string) or many (array)
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
-			if ( !isset( $this->liveExts[$ext] ) && !$force ) {
+			if ( !isset( $this->liveExtensions[$ext] ) && !$force ) {
 				continue;
 			}
 
-			$this->removedExts[$ext] = $this->liveExts[$ext] ?? [];
-			unset( $this->liveExts[$ext] );
+			$this->removedExts[$ext] = $this->liveExtensions[$ext] ?? [];
+			unset( $this->liveExtensions[$ext] );
 
 			$this->changes[$ext] = [
 				'old' => 1,
@@ -117,7 +117,7 @@ class ManageWikiExtensions implements IConfigModule {
 	public function overwriteAll( array $extensions ): void {
 		$overwrittenExts = $this->list();
 
-		foreach ( $this->extConfig as $ext => $extConfig ) {
+		foreach ( $this->extensionsConfig as $ext => $extensionsConfig ) {
 			if ( !is_string( $ext ) ) {
 				continue;
 			}
@@ -161,15 +161,15 @@ class ManageWikiExtensions implements IConfigModule {
 		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 		$remoteWiki = $remoteWikiFactory->newInstance( $this->dbname );
 
-		foreach ( $this->liveExts as $name => $extConfig ) {
+		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
-			if ( in_array( $extConfig['conflicts'] ?? [], $this->list() ) ) {
-				unset( $this->liveExts[$name] );
+			if ( in_array( $extensionsConfig['conflicts'] ?? [], $this->list() ) ) {
+				unset( $this->liveExtensions[$name] );
 				unset( $this->changes[$name] );
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
-						$extConfig['name'],
-						$extConfig['conflicts'],
+						$extensionsConfig['name'],
+						$extensionsConfig['conflicts'],
 					],
 				];
 
@@ -180,17 +180,17 @@ class ManageWikiExtensions implements IConfigModule {
 			// Define a 'current' extension as one with no changes entry
 			$enabledExt = !isset( $this->changes[$name] );
 			// Now we need to check if we fulfil the requirements to enable this extension
-			$requirementsCheck = ManageWikiRequirements::process( $extConfig['requires'] ?? [], $this->list(), $enabledExt, $remoteWiki );
+			$requirementsCheck = ManageWikiRequirements::process( $extensionsConfig['requires'] ?? [], $this->list(), $enabledExt, $remoteWiki );
 
 			if ( $requirementsCheck ) {
-				$installResult = ( !isset( $extConfig['install'] ) || $enabledExt ) ? true : ManageWikiInstaller::process( $this->dbname, $extConfig['install'] );
+				$installResult = ( !isset( $extensionsConfig['install'] ) || $enabledExt ) ? true : ManageWikiInstaller::process( $this->dbname, $extensionsConfig['install'] );
 
 				if ( !$installResult ) {
-					unset( $this->liveExts[$name] );
+					unset( $this->liveExtensions[$name] );
 					unset( $this->changes[$name] );
 					$this->errors[] = [
 						'managewiki-error-install' => [
-							$extConfig['name'],
+							$extensionsConfig['name'],
 						],
 					];
 				}
@@ -198,19 +198,19 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			unset( $this->liveExts[$name] );
+			unset( $this->liveExtensions[$name] );
 			unset( $this->changes[$name] );
 			$this->errors[] = [
 				'managewiki-error-requirements' => [
-					$extConfig['name'],
+					$extensionsConfig['name'],
 				],
 			];
 		}
 
-		foreach ( $this->removedExts as $name => $extConfig ) {
+		foreach ( $this->removedExts as $name => $extensionsConfig ) {
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it
-			if ( isset( $extConfig['remove'] ) ) {
-				ManageWikiInstaller::process( $this->dbname, $extConfig['remove'], false );
+			if ( isset( $extensionsConfig['remove'] ) ) {
+				ManageWikiInstaller::process( $this->dbname, $extensionsConfig['remove'], false );
 			}
 		}
 
