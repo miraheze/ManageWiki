@@ -106,14 +106,13 @@ class CreateWiki implements
 			$manageWikiExtensions = $this->config->get( ConfigNames::Extensions );
 			foreach ( json_decode( $setObject->s_extensions ?? '[]', true ) as $ext ) {
 				if ( isset( $manageWikiExtensions[$ext] ) ) {
-					$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
-						$manageWikiExtensions[$ext]['name'];
+					$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['name'];
 					continue;
 				}
 
 				$this->logger->error( 'Extension/Skin {ext} not set in {config}', [
-					'ext' => $ext,
 					'config' => ConfigNames::Extensions,
+					'ext' => $ext,
 				] );
 			}
 		}
