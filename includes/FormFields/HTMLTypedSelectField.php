@@ -45,7 +45,7 @@ class HTMLTypedSelectField extends HTMLSelectField {
 	public function validate( $value, $alldata ) {
 		// validate() receives decoded values already
 		foreach ( $this->typedMap as $encoded => $typed ) {
-			if ( $typed === $value ) {
+			if ( $typed === $value || (string)$typed === (string)$value ) {
 				return true;
 			}
 		}
