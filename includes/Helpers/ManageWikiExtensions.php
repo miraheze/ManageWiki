@@ -21,7 +21,7 @@ class ManageWikiExtensions implements IConfigModule {
 	private array $errors = [];
 	private array $logParams = [];
 	private array $liveExtensions = [];
-	private array $removedExts = [];
+	private array $removedExtensions = [];
 	private array $extensionsConfig;
 
 	private string $dbname;
@@ -100,7 +100,7 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			$this->removedExts[$ext] = $this->liveExtensions[$ext] ?? [];
+			$this->removedExtensions[$ext] = $this->liveExtensions[$ext] ?? [];
 			unset( $this->liveExtensions[$ext] );
 
 			$this->changes[$ext] = [
@@ -207,7 +207,7 @@ class ManageWikiExtensions implements IConfigModule {
 			];
 		}
 
-		foreach ( $this->removedExts as $name => $extensionsConfig ) {
+		foreach ( $this->removedExtensions as $name => $extensionsConfig ) {
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it
 			if ( isset( $extensionsConfig['remove'] ) ) {
 				ManageWikiInstaller::process( $this->dbname, $extensionsConfig['remove'], false );
