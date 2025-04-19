@@ -35,7 +35,7 @@ class ManageWikiExtensions implements IConfigModule {
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$exts = $this->dbw->newSelectQueryBuilder()
+		$extensions = $this->dbw->newSelectQueryBuilder()
 			->select( 's_extensions' )
 			->from( 'mw_settings' )
 			->where( [ 's_dbname' => $dbname ] )
@@ -46,17 +46,17 @@ class ManageWikiExtensions implements IConfigModule {
 
 		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
 		// populate extension lists with config associated with them.
-		foreach ( json_decode( $exts ?: '[]', true ) as $ext ) {
-			if ( !isset( $this->extConfig[$ext] ) ) {
-				$logger->error( 'Extension/Skin {ext} not set in {config}', [
-					'ext' => $ext,
+		foreach ( json_decode( $extensions ?: '[]', true ) as $extension ) {
+			if ( !isset( $this->extConfig[$extension] ) ) {
+				$logger->error( 'Extension/Skin {extension} not set in {config}', [
 					'config' => ConfigNames::Extensions,
+					'extension' => $extension,
 				] );
 
 				continue;
 			}
 
-			$this->liveExts[$ext] = $this->extConfig[$ext];
+			$this->liveExts[$extension] = $this->extConfig[$extension];
 		}
 	}
 
