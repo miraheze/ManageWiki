@@ -33,7 +33,7 @@ class HTMLTypedSelectField extends HTMLSelectField {
 	/**
 	 * Helper: get the string key that matches the given typed value
 	 */
-	private function getOptionKeyForValue( $value ): string {
+	private function getOptionKeyForValue( $value ): mixed {
 		foreach ( $this->getOptions() as $label => $optionValue ) {
 			if ( $optionValue === $value ) {
 				return $optionValue;
