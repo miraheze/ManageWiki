@@ -38,7 +38,10 @@ class CreateWiki implements
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list( group: null ) ), [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] );
+			$defaultGroups = array_diff(
+				array_keys( $mwPermissionsDefault->list( group: null ) ),
+				[ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
+			);
 
 			foreach ( $defaultGroups as $newGroup ) {
 				$groupData = $mwPermissionsDefault->list( $newGroup );
@@ -63,7 +66,10 @@ class CreateWiki implements
 			}
 		}
 
-		if ( $this->config->get( ConfigNames::Extensions ) && $this->config->get( ConfigNames::ExtensionsDefault ) ) {
+		if (
+			$this->config->get( ConfigNames::Extensions ) &&
+			$this->config->get( ConfigNames::ExtensionsDefault )
+		) {
 			$mwExtensions = new ManageWikiExtensions( $dbname );
 			$mwExtensions->add( $this->config->get( ConfigNames::ExtensionsDefault ) );
 			$mwExtensions->commit();
