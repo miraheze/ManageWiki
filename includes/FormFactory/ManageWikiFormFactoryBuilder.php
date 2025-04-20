@@ -1085,6 +1085,9 @@ class ManageWikiFormFactoryBuilder {
 
 					$value = $setValue;
 					break;
+				case 'list-multi-int':
+					$value = array_map( 'intval', $value );
+					break;
 				case 'matrix':
 					$current = ManageWiki::handleMatrix( $current, 'php' );
 					$value = ManageWiki::handleMatrix( $value, 'phparray' );
