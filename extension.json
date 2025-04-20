@@ -124,8 +124,8 @@
 				"RemoteWikiFactory"
 			]
 		},
-		"ManageWikiDefaultPermissions": {
-			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaultPermissions",
+		"ManageWikiDefaults": {
+			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaults",
 			"services": [
 				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",

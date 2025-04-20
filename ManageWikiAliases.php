@@ -5,17 +5,17 @@ $specialPageAliases = [];
 $specialPageAliases['en'] = [
 	'DeletedWikis' => [ 'DeletedWikis' ],
 	'ManageWiki' => [ 'ManageWiki' ],
-	'ManageWikiDefaultPermissions' => [ 'ManageWikiDefaultPermissions' ],
+	'ManageWikiDefaults' => [ 'ManageWikiDefaults' ],
 ];
 
 $specialPageAliases['vi'] = [
 	'DeletedWikis' => [ 'Wiki bị xóa' ],
 	'ManageWiki' => [ 'Quản lý wiki' ],
-	'ManageWikiDefaultPermissions' => [ 'Quản lý quyền mặc định của wiki' ],
+	'ManageWikiDefaults' => [ 'Quản lý quyền mặc định của wiki' ],
 ];
 
 $specialPageAliases['ja'] = [
 	'DeletedWikis' => [ '削除されたウィキ' ],
 	'ManageWiki' => [ 'ウィキ管理' ],
-	'ManageWikiDefaultPermissions' => [ 'ウィキ管理既定権限' ],
+	'ManageWikiDefaults' => [ 'ウィキ管理既定権限' ],
 ];
