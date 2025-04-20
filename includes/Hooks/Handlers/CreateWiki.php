@@ -309,12 +309,12 @@ class CreateWiki implements
 			$mwPermissions->modify( 'sysop', [
 				'addgroups' => [
 					'add' => [
-					       $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
+						   $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
 					],
 				],
 				'removegroups' => [
 					'add' => [
-					       $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
+						   $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
 					],
 				],
 			] );
@@ -332,12 +332,12 @@ class CreateWiki implements
 				$mwPermissions->modify( $group, [
 					'addgroups' => [
 						'remove' => [
-						       $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
+							   $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
 						],
 					],
 					'removegroups' => [
 						'remove' => [
-						       $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
+							   $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
 						],
 					],
 				] );
