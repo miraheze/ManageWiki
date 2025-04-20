@@ -168,6 +168,17 @@ class ManageWikiTypes {
 					$configs['dropdown'] = true;
 				}
 				break;
+			case 'list-multi-int':
+				$configs = [
+					'type' => 'multiselect',
+					'options' => $options['options'],
+					'default' => array_map( 'strval', $value ?? $options['overridedefault'] ),
+				];
+
+				if ( !$disabled ) {
+					$configs['dropdown'] = true;
+				}
+				break;
 			case 'matrix':
 				$configs = [
 					'type' => 'checkmatrix',
