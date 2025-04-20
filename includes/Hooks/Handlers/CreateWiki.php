@@ -211,7 +211,8 @@ class CreateWiki implements
 					( $conf['overridedefault'][NS_SPECIAL] ?? false ) &&
 					$this->isAdditionalSettingForNamespace( $conf, NS_SPECIAL )
 				) {
-					$this->setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $conf );
+					$val = $conf['overridedefault'][NS_SPECIAL];
+					$this->setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $val, $conf );
 				}
 			}
 		}
@@ -376,6 +377,7 @@ class CreateWiki implements
 		array &$cacheArray,
 		int $nsID,
 		string $var,
+		mixed $val,
 		array $varConf
 	): void {
 		if ( $varConf['type'] === 'check' ) {
@@ -388,7 +390,6 @@ class CreateWiki implements
 			return;
 		}
 
-		$val = $varConf['overridedefault'][NS_SPECIAL];
 		if ( $varConf['constant'] ?? false ) {
 			$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
 			return;
