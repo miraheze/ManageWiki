@@ -50,6 +50,7 @@
 	"logentry-managewiki-rename": "A message that is logged when a user group has been renamed using ManageWiki",
 	"logentry-managewiki-rights-reset": "Log entry. $1 is a user name. 'reset' is the simple past tense of 'to reset'.",
 	"logentry-managewiki-settings": "A message that is logged when a wiki's settings have been modified using ManageWiki",
+	"logentry-managewiki-settings-reset": "Log entry. $1 is a user name. 'reset' is the simple past tense of 'to reset'.",
 	"logentry-managewiki-undelete": "A message that is logged when a wiki has been undeleted using ManageWiki",
 	"logentry-managewiki-unlock": "A message that is logged when a wiki has been unlocked using ManageWiki",
 	"managewiki": "User right to manage a wiki's settings",
