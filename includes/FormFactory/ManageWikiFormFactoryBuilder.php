@@ -1073,10 +1073,9 @@ class ManageWikiFormFactoryBuilder {
 					$value = array_map( 'intval', $value );
 					break;
 				case 'list-multi':
-					if ( $name === 'wgRCLinkDays' || $set['list-multi-int'] ?? false ) {
+					if ( $set['list-multi-int'] ?? false ) {
 						$value = array_map( 'intval', $value );
 					}				
-
 					break;
 				case 'list-multi-bool':
 					$setValue = [];
