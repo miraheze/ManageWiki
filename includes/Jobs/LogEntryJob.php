@@ -6,7 +6,6 @@ use Job;
 use ManualLogEntry;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
-use Wikimedia\Rdbms\IReadableDatabase;
 
 class LogEntryJob extends Job {
 
