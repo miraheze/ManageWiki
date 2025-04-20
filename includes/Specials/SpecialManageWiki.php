@@ -42,7 +42,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$module = 'core';
-		if ( array_key_exists( $par[0], $this->getConfig()->get( ConfigNames::EnabledModules ) ) ) {
+		if ( array_key_exists( $par[0], $this->getConfig()->get( ConfigNames::ModulesEnabled ) ) ) {
 			$module = $par[0];
 		}
 

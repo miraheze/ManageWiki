@@ -11,8 +11,6 @@ class ConfigNames {
 
 	public const DatabaseClustersInactive = 'ManageWikiDatabaseClustersInactive';
 
-	public const EnabledModules = 'ManageWikiEnabledModules';
-
 	public const Extensions = 'ManageWikiExtensions';
 
 	public const ExtensionsDefault = 'ManageWikiExtensionsDefault';
@@ -22,6 +20,8 @@ class ConfigNames {
 	public const HelpUrl = 'ManageWikiHelpUrl';
 
 	public const InactiveExemptReasonOptions = 'ManageWikiInactiveExemptReasonOptions';
+
+	public const ModulesEnabled = 'ManageWikiModulesEnabled';
 
 	public const NamespacesAdditional = 'ManageWikiNamespacesAdditional';
 
