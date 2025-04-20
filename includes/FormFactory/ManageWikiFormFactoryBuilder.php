@@ -279,7 +279,12 @@ class ManageWikiFormFactoryBuilder {
 				$help[] = "$conflictLabel {$ext['conflicts']}<br />";
 			}
 
+			$disableIf = [];
 			if ( $ext['requires'] ) {
+				if ( $ext['requires']['extensions'] ?? false ) {
+					$disableIf = ManageWiki::buildDisableIfFromRequires( $ext['requires'] );
+				}
+
 				$requires = [];
 				foreach ( $ext['requires'] as $require => $data ) {
 					if ( is_array( $data ) ) {
@@ -329,6 +334,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
+				'disable-if' => $disableIf,
 				'help' => implode( ' ', $help ),
 				'section' => $ext['section'],
 			];
