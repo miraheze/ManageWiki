@@ -1075,7 +1075,7 @@ class ManageWikiFormFactoryBuilder {
 				case 'list-multi':
 					if ( $set['list-multi-int'] ?? false ) {
 						$value = array_map( 'intval', $value );
-					}				
+					}
 					break;
 				case 'list-multi-bool':
 					$setValue = [];
