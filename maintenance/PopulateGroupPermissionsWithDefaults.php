@@ -40,7 +40,10 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 		if ( !$checkRow ) {
 			$mwPermissions = new ManageWikiPermissions( $dbname );
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list( group: null ) ), [ $this->getConfig()->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] );
+			$defaultGroups = array_diff(
+				array_keys( $mwPermissionsDefault->list( group: null ) ),
+				[ $this->getConfig()->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
+			);
 
 			foreach ( $defaultGroups as $newGroup ) {
 				$groupData = $mwPermissionsDefault->list( $newGroup );
