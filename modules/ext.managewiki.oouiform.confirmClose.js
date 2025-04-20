@@ -25,6 +25,10 @@
 
 			$fields = $( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' );
 			for ( i = 0; i < $fields.length; i++ ) {
+				if ( $fields[ i ].disabled ) {
+					continue;
+				}
+
 				if ( $fields[ i ].defaultChecked !== undefined && $fields[ i ].type === 'checkbox' && $fields[ i ].defaultChecked !== $fields[ i ].checked ) {
 					return true;
 				} else if ( $fields[ i ].defaultValue !== undefined && $fields[ i ].defaultValue !== $fields[ i ].value ) {
