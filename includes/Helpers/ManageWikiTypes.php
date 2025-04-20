@@ -172,6 +172,8 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $options['options'],
+					// multiselect only accepts string values, so we use string here and convert
+					// the values to int on submission, otherwise the field breaks.
 					'default' => array_map( 'strval', $value ?? $options['overridedefault'] ),
 				];
 
