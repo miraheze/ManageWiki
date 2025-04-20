@@ -23,7 +23,8 @@ class PopulateNamespaces extends Maintenance {
 		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ) + [ 0 => '<Main>' ];
+		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ) +
+			[ NS_MAIN => '<Main>' ];
 
 		AtEase::suppressWarnings();
 
@@ -76,8 +77,8 @@ class PopulateNamespaces extends Maintenance {
 				'ns_searchable' => (int)$this->getConfig()->get( MainConfigNames::NamespacesToBeSearchedDefault )[$id],
 				'ns_subpages' => (int)$this->getConfig()->get( MainConfigNames::NamespacesWithSubpages )[$id],
 				'ns_content' => (int)$this->getConfig()->get( MainConfigNames::ContentNamespaces )[$id],
-				'ns_content_model' => (string)( $this->getConfig()->get( MainConfigNames::NamespaceContentModels )[$id] ?? 'wikitext' ),
-				'ns_protection' => ( is_array( $this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id] ) ) ?
+				'ns_content_model' => (string)( $this->getConfig()->get( MainConfigNames::NamespaceContentModels )[$id] ?? CONTENT_MODEL_WIKITEXT ),
+				'ns_protection' => is_array( $this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id] ) ?
 					(string)$this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id][0] :
 					(string)$this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id],
 				'ns_aliases' => json_encode( $nsAliases ) ?: '[]',
