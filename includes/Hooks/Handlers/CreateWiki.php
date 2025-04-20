@@ -283,56 +283,61 @@ class CreateWiki implements
 	/** @inheritDoc */
 	public function onCreateWikiStatePrivate( string $dbname ): void {
 		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
-		if ( ManageWiki::checkSetup( 'permissions' ) && $defaultPrivateGroup ) {
-			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-			$mwPermissions = new ManageWikiPermissions( $dbname );
+		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {
+			return;
+		}
 
-			$defaultPrivate = $mwPermissionsDefault->list( $defaultPrivateGroup );
+		$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
+		$mwPermissions = new ManageWikiPermissions( $dbname );
 
-			$privateArray = [];
-			foreach ( $defaultPrivate as $name => $value ) {
-				if ( $name === 'autopromote' ) {
-					$privateArray[$name] = $value;
-					continue;
-				}
+		$defaultPrivate = $mwPermissionsDefault->list( $defaultPrivateGroup );
 
-				$privateArray[$name]['add'] = $value;
+		$privateArray = [];
+		foreach ( $defaultPrivate as $name => $value ) {
+			if ( $name === 'autopromote' ) {
+				$privateArray[$name] = $value;
+				continue;
 			}
 
-			$mwPermissions->modify( $defaultPrivateGroup, $privateArray );
-
-			$mwPermissions->modify( 'sysop', [
-				'addgroups' => [
-					'add' => [ $defaultPrivateGroup ],
-				],
-				'removegroups' => [
-					'add' => [ $defaultPrivateGroup ],
-				],
-			] );
-			$mwPermissions->commit();
+			$privateArray[$name]['add'] = $value;
 		}
+
+		$mwPermissions->modify( $defaultPrivateGroup, $privateArray );
+
+		$mwPermissions->modify( 'sysop', [
+			'addgroups' => [
+				'add' => [ $defaultPrivateGroup ],
+			],
+			'removegroups' => [
+				'add' => [ $defaultPrivateGroup ],
+			],
+		] );
+
+		$mwPermissions->commit();
 	}
 
 	/** @inheritDoc */
 	public function onCreateWikiStatePublic( string $dbname ): void {
 		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
-		if ( ManageWiki::checkSetup( 'permissions' ) && $defaultPrivateGroup ) {
-			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$mwPermissions->remove( $defaultPrivateGroup );
-
-			foreach ( array_keys( $mwPermissions->list( group: null ) ) as $group ) {
-				$mwPermissions->modify( $group, [
-					'addgroups' => [
-						'remove' => [ $defaultPrivateGroup ],
-					],
-					'removegroups' => [
-						'remove' => [ $defaultPrivateGroup ],
-					],
-				] );
-			}
-
-			$mwPermissions->commit();
+		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {
+			return;
 		}
+
+		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$mwPermissions->remove( $defaultPrivateGroup );
+
+		foreach ( array_keys( $mwPermissions->list( group: null ) ) as $group ) {
+			$mwPermissions->modify( $group, [
+				'addgroups' => [
+					'remove' => [ $defaultPrivateGroup ],
+				],
+				'removegroups' => [
+					'remove' => [ $defaultPrivateGroup ],
+				],
+			] );
+		}
+
+		$mwPermissions->commit();
 	}
 
 	/** @inheritDoc */
