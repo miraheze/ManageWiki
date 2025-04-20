@@ -78,7 +78,7 @@ class ManageWiki {
 
 				$conditions[] = count( $orConditions ) === 1 ?
 					$orConditions[0] :
-					array_merge( [ 'OR' ], $orConditions );
+					array_merge( [ 'AND' ], $orConditions );
 			} else {
 				// Simple AND logic
 				$conditions[] = [ '!==', "ext-$entry", '1' ];
@@ -87,7 +87,7 @@ class ManageWiki {
 
 		return count( $conditions ) === 1 ?
 			$conditions[0] :
-			array_merge( [ 'AND' ], $conditions );
+			array_merge( [ 'OR' ], $conditions );
 	}
 
 	public static function namespaceID( string $dbname, string $namespace ): int {
