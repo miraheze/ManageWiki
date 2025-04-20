@@ -431,6 +431,7 @@ class ManageWikiFormFactoryBuilder {
 					'label' => ( $msgName->exists() ? $msgName->text() : $set['name'] ) . $varName,
 					'disabled' => $disabled,
 					'help' => $help,
+					'cssclass' => 'managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
 			}
