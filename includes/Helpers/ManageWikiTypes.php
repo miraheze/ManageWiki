@@ -142,7 +142,7 @@ class ManageWikiTypes {
 				break;
 			case 'list-multi':
 				if ( $options['list-multi-int'] ?? false ) {
-					$options['overridedefault'] = array_map( 'strval', $options['overridedefault'] );
+					$value = array_map( 'strval', $value ?? $options['overridedefault'] );
 				}
 
 				$configs = [
