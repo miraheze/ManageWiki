@@ -5,10 +5,13 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\HTMLForm\Field\HTMLMultiSelectField;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
+use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
+use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
@@ -132,14 +135,16 @@ class ManageWikiTypes {
 				break;
 			case 'list':
 				$configs = [
-					'type' => 'select',
+					'class' => HTMLTypedSelectField::class,
 					'options' => $options['options'],
 					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
 			case 'list-multi':
 				$configs = [
-					'type' => 'multiselect',
+					'class' => ( $options['list-multi-int'] ?? false ) ?
+						HTMLMultiSelectField::class :
+						HTMLTypedMultiSelectField::class,
 					'options' => $options['options'],
 					'default' => $value ?? $options['overridedefault'],
 				];

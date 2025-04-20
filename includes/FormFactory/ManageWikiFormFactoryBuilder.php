@@ -1061,10 +1061,21 @@ class ManageWikiFormFactoryBuilder {
 			$value = $formData["set-$name"];
 
 			switch ( $type ) {
+				case 'float':
+					$value = (float)$value;
+					break;
+				case 'integer':
+					$value = (int)$value;
+					break;
 				case 'integers':
 					$value = array_column( $value, 'value' );
 					$value = array_filter( $value );
 					$value = array_map( 'intval', $value );
+					break;
+				case 'list-multi':
+					if ( $set['list-multi-int'] ?? false ) {
+						$value = array_map( 'intval', $value );
+					}				
 					break;
 				case 'list-multi-bool':
 					$setValue = [];
