@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use MediaWiki\WikiMap\WikiMap;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 
 class ToggleExtension extends Maintenance {
@@ -12,7 +11,7 @@ class ToggleExtension extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 
-		$this->addArg( 'ext', 'The ManageWiki name of the extension.', true );
+		$this->addOption( 'ext', 'The ManageWiki name of the extension.', true, true );
 		$this->addOption( 'disable', 'Disable the extension. If not given, enabling is assumed.' );
 		$this->addOption( 'all-wikis', 'Run on all wikis present in $wgLocalDatabases.' );
 		$this->addOption( 'confirm', 'Confirm execution. Required if using --all-wikis' );
@@ -28,9 +27,9 @@ class ToggleExtension extends Maintenance {
 		$allWikis = $this->hasOption( 'all-wikis' );
 		$wikis = $allWikis ?
 			$this->getConfig()->get( MainConfigNames::LocalDatabases ) :
-			[ WikiMap::getCurrentWikiId() ];
+			[ $this->getConfig()->get( MainConfigNames::DBname ) ];
 
-		$ext = $this->getArg( 0 );
+		$ext = $this->getOption( 'ext' );
 		$disable = $this->hasOption( 'disable' );
 
 		if ( $allWikis && !$this->hasOption( 'confirm' ) ) {
