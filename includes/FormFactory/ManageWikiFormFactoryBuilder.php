@@ -291,7 +291,7 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				$requires = [];
-				foreach ( $ext['requires'] + $extRequires as $require => $data ) {
+				foreach ( array_merge( $ext['requires'], $extRequires ) as $require => $data ) {
 					if ( is_array( $data ) ) {
 						foreach ( $data as $index => $element ) {
 							if ( is_array( $element ) ) {
