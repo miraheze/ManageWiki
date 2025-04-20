@@ -46,7 +46,7 @@ class Main implements
 		$hideSidebar = !$this->config->get( ConfigNames::ForceSidebarLinks ) &&
 			!$this->userOptionsLookup->getBoolOption( $user, 'managewikisidebar' );
 
-		$modules = array_keys( $this->config->get( ConfigNames::ManageWiki ), true, true );
+		$modules = array_keys( $this->config->get( ConfigNames::EnabledModules ), true, true );
 		foreach ( $modules as $module ) {
 			$append = '';
 			if ( !$this->permissionManager->userHasRight( $user, "managewiki-$module" ) ) {

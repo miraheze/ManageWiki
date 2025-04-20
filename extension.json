@@ -247,6 +247,16 @@
 			"description": "Array. LBFactory clusters which are not considered active, which we hide in ManageWiki.",
 			"value": []
 		},
+		"ManageWikiEnabledModules": {
+			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
+			"value": {
+				"core": false,
+				"extensions": false,
+				"namespaces": false,
+				"permissions": false,
+				"settings": false
+			}
+		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"value": []

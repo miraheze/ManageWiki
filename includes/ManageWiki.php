@@ -10,7 +10,7 @@ class ManageWiki {
 
 	public static function checkSetup( string $module ): bool {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		return $config->get( ConfigNames::ManageWiki )[$module] ?? false;
+		return $config->get( ConfigNames::EnabledModules )[$module] ?? false;
 	}
 
 	public static function getTimezoneList(): array {
