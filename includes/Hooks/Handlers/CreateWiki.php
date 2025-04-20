@@ -171,32 +171,33 @@ class CreateWiki implements
 				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
 
 				foreach ( $additional as $var => $conf ) {
-					if ( !$this->isAdditionalSettingForNamespace( $conf, (int)$ns->ns_namespace_id ) ) {
+					$nsID = (int)$ns->ns_namespace_id;
+
+					if ( !$this->isAdditionalSettingForNamespace( $conf, $nsID ) ) {
 						continue;
 					}
 
-					// Select value if configured, otherwise fall back to overridedefault
 					if ( isset( $nsAdditional[$var] ) ) {
 						$val = $nsAdditional[$var];
 					} elseif ( is_array( $conf['overridedefault'] ) ) {
-						if ( array_key_exists( (int)$ns->ns_namespace_id, $conf['overridedefault'] ) ) {
-							$val = $conf['overridedefault'][(int)$ns->ns_namespace_id];
-						} elseif ( array_key_exists( 'default', $conf['overridedefault'] ) ) {
-							$val = $conf['overridedefault']['default'];
-						} else {
-							// TODO: throw error? this should probably not be allowed
-							$val = null;
+						$val = $conf['overridedefault'][$nsID]
+							?? $conf['overridedefault']['default']
+							?? null;
+
+						if ( $val === null ) {
+							// Skip if no fallback exists
+							continue;
 						}
 					} else {
 						$val = $conf['overridedefault'];
 					}
 
 					if ( $val ) {
-						$this->setNamespaceSettingJson( $cacheArray, (int)$ns->ns_namespace_id, $var, $val, $conf );
-					} elseif (
-						!isset( $conf['constant'] ) &&
-						( !isset( $cacheArray['settings'][$var] ) || !$cacheArray['settings'][$var] )
-					) {
+						$this->setNamespaceSettingJson( $cacheArray, $nsID, $var, $val, $conf );
+						continue;
+					}
+
+					if ( empty( $conf['constant'] ) && empty( $cacheArray['settings'][$var] ) ) {
 						$cacheArray['settings'][$var] = [];
 					}
 				}
