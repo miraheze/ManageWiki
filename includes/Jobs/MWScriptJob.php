@@ -4,43 +4,54 @@ namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
 use MediaWiki\Shell\Shell;
-use MediaWiki\Title\Title;
+use Psr\Log\LoggerInterface;
 
 class MWScriptJob extends Job {
 
-	/**
-	 * @param Title $title
-	 * @param string[] $params
-	 */
-	public function __construct( Title $title, $params ) {
-		parent::__construct( 'MWScriptJob', $params );
+	public const JOB_NAME = 'MWScriptJob';
+
+	private readonly string $dbname;
+	private readonly string $script;
+
+	private readonly array $options;
+
+	public function __construct(
+		array $params,
+		private readonly LoggerInterface $logger
+	) {
+		parent::__construct( self::JOB_NAME, $params );
+
+		$this->dbname = $params['dbname'];
+		$this->options = $params['options'];
+		$this->script = $params['script'];
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function run() {
-		$scriptParams = [
-			'--wiki',
-			$this->params['dbname']
-		];
+	public function run(): bool {
+		$limits = [ 'memory' => 0, 'filesize' => 0 ];
+		$arguments = [ '--wiki', $this->dbname ];
 
-		foreach ( (array)$this->params['options'] as $name => $val ) {
-			$scriptParams[] = "--{$name}";
+		foreach ( $this->options as $name => $val ) {
+			$arguments[] = "--$name";
 
 			if ( !is_bool( $val ) ) {
-				$scriptParams[] = $val;
+				$arguments[] = $val;
 			}
 		}
 
-		$result = Shell::makeScriptCommand(
-			$this->params['script'],
-			$scriptParams
-		)->limits( [ 'memory' => 0, 'filesize' => 0 ] )->execute()->getExitCode();
+		$result = Shell::makeScriptCommand( $this->script, $arguments )
+			->limits( $limits )
+			->execute()
+			->getExitCode();
 
 		// An execute code higher then 0 indicates failure.
 		if ( $result ) {
-			wfDebugLog( 'ManageWiki', "MWScriptJob failure. Status {$result} running {$this->params['script']}" );
+			$this->logger->error( 'MWScriptJob failure. Status {result} running {script}', [
+				'result' => $result,
+				'script' => $this->script,
+			] );
 		}
 
 		return true;

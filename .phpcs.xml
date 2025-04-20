@@ -3,7 +3,6 @@
 	<file>.</file>
 	<rule ref="./vendor/mediawiki/mediawiki-codesniffer/MediaWiki">
 		<exclude name="Generic.Files.LineLength.TooLong" />
-		<exclude name="MediaWiki.Commenting.FunctionComment" />
 	</rule>
 	<rule ref="Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma">
 		<severity>5</severity>

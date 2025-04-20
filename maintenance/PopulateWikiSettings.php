@@ -12,18 +12,22 @@ class PopulateWikiSettings extends Maintenance {
 		parent::__construct();
 
 		$this->addOption( 'wgsetting', 'The $wg setting minus $.', true, true );
-		$this->addOption( 'sourcelist', 'File in format of "wiki|value" for the $wg setting above.', true, true );
+		$this->addOption( 'sourcelist', 'File in format of "wiki|value" for the $wg setting above.', false, true );
 		$this->addOption( 'remove', 'Removes setting listed with --wgsetting.' );
 
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
-		if ( (bool)$this->getOption( 'remove' ) ) {
+	public function execute(): void {
+		if ( $this->hasOption( 'remove' ) ) {
 			$mwSettings = new ManageWikiSettings( $this->getConfig()->get( MainConfigNames::DBname ) );
 			$mwSettings->remove( [ $this->getOption( 'wgsetting' ) ] );
 			$mwSettings->commit();
 			return;
+		}
+
+		if ( !$this->hasOption( 'sourcelist' ) ) {
+			$this->fatalError( 'You must provide --sourcelist when not using --remove' );
 		}
 
 		$settingsource = file( $this->getOption( 'sourcelist' ) );

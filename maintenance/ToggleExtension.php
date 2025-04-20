@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use MediaWiki\WikiMap\WikiMap;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 
 class ToggleExtension extends Maintenance {
@@ -12,7 +11,7 @@ class ToggleExtension extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 
-		$this->addArg( 'ext', 'The ManageWiki name of the extension.', true );
+		$this->addOption( 'ext', 'The ManageWiki name of the extension.', true, true );
 		$this->addOption( 'disable', 'Disable the extension. If not given, enabling is assumed.' );
 		$this->addOption( 'all-wikis', 'Run on all wikis present in $wgLocalDatabases.' );
 		$this->addOption( 'confirm', 'Confirm execution. Required if using --all-wikis' );
@@ -22,33 +21,37 @@ class ToggleExtension extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
-		$forceRemove = $this->getOption( 'force-remove', false );
-		$noList = $this->getOption( 'no-list', false );
-		$allWikis = $this->getOption( 'all-wikis', false );
+	public function execute(): void {
+		$forceRemove = $this->hasOption( 'force-remove' );
+		$noList = $this->hasOption( 'no-list' );
+		$allWikis = $this->hasOption( 'all-wikis' );
 		$wikis = $allWikis ?
 			$this->getConfig()->get( MainConfigNames::LocalDatabases ) :
-			[ WikiMap::getCurrentWikiId() ];
+			[ $this->getConfig()->get( MainConfigNames::DBname ) ];
 
-		$ext = $this->getArg( 0 );
-		$disable = $this->getOption( 'disable', false );
+		$ext = $this->getOption( 'ext' );
+		$disable = $this->hasOption( 'disable' );
 
-		if ( $allWikis && !$this->getOption( 'confirm', false ) ) {
+		if ( $allWikis && !$this->hasOption( 'confirm' ) ) {
 			$this->fatalError( 'You must run with --confirm when running with --all-wikis.', 2 );
 		}
 
 		foreach ( $wikis as $wiki ) {
-			$mwExt = new ManageWikiExtensions( $wiki );
-			$extensionList = $mwExt->list();
-			if ( $disable && ( in_array( $ext, $extensionList ) || $forceRemove ) ) {
-				$mwExt->remove( $ext, $forceRemove );
-				$mwExt->commit();
+			$mwExtensions = new ManageWikiExtensions( $wiki );
+			$extList = $mwExtensions->list();
+			if ( $disable && ( in_array( $ext, $extList, true ) || $forceRemove ) ) {
+				$mwExtensions->remove( [ $ext ], $forceRemove );
+				$mwExtensions->commit();
 				if ( !$noList ) {
 					$this->output( "Removed $ext from $wiki\n" );
 				}
-			} elseif ( !in_array( $ext, $extensionList ) && !$disable ) {
-				$mwExt->add( $ext );
-				$mwExt->commit();
+
+				continue;
+			}
+
+			if ( !in_array( $ext, $extList, true ) && !$disable ) {
+				$mwExtensions->add( [ $ext ] );
+				$mwExtensions->commit();
 				if ( !$noList ) {
 					$this->output( "Enabled $ext on $wiki\n" );
 				}
@@ -58,9 +61,10 @@ class ToggleExtension extends Maintenance {
 		if ( $noList && count( $wikis ) > 1 ) {
 			if ( $disable ) {
 				$this->output( "Removed $ext from all wikis in that it was enabled on.\n" );
-			} else {
-				$this->output( "Enabled $ext on all wikis in \$wgLocalDatabases.\n" );
+				return;
 			}
+
+			$this->output( "Enabled $ext on all wikis in \$wgLocalDatabases.\n" );
 		}
 	}
 }

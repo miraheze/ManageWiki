@@ -4,73 +4,57 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
+use Miraheze\CreateWiki\IConfigModule;
+use Miraheze\ManageWiki\ConfigNames;
 use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler class for managing settings
  */
-class ManageWikiSettings {
+class ManageWikiSettings implements IConfigModule {
 
-	/** @var bool Whether changes have been committed */
-	private $committed = false;
-	/** @var Config Configuration object */
-	private $config;
-	/** @var IDatabase Database object */
-	private $dbw;
-	/** @var array Current settings with their respective values */
-	private $liveSettings;
-	/** @var array Settings configuration ($wgManageWikiSettings) */
-	private $settingsConfig;
-	/** @var array Maintenance scripts that need to be ran on enabling/disabling a setting */
-	private $scripts = [];
-	/** @var string WikiID */
-	private $wiki;
+	private Config $config;
+	private IDatabase $dbw;
 
-	/** @var array Changes to be committed */
-	public $changes = [];
-	/** @var array Errors */
-	public $errors = [];
-	/** @var string Log type */
-	public $log = 'settings';
-	/** @var array Log parameters */
-	public $logParams = [];
+	private array $changes = [];
+	private array $errors = [];
+	private array $logParams = [];
+	private array $scripts = [];
+	private array $liveSettings;
+	private array $settingsConfig;
 
-	/**
-	 * ManageWikiSettings constructor.
-	 * @param string $wiki WikiID
-	 */
-	public function __construct( string $wiki ) {
-		$this->wiki = $wiki;
+	private string $dbname;
+	private ?string $log = null;
+
+	public function __construct( string $dbname ) {
+		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$this->settingsConfig = $this->config->get( 'ManageWikiSettings' );
+		$this->settingsConfig = $this->config->get( ConfigNames::Settings );
 
-		$this->dbw = MediaWikiServices::getInstance()->getConnectionProvider()
-			->getPrimaryDatabase( 'virtual-createwiki' );
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$settings = $this->dbw->selectRow(
-			'mw_settings',
-			's_settings',
-			[
-				's_dbname' => $wiki
-			],
-			__METHOD__
-		)->s_settings ?? '[]';
+		$settings = $this->dbw->newSelectQueryBuilder()
+			->select( 's_settings' )
+			->from( 'mw_settings' )
+			->where( [ 's_dbname' => $dbname ] )
+			->caller( __METHOD__ )
+			->fetchField();
 
-		// Bring json_decoded values to class scope
-		$this->liveSettings = (array)json_decode( $settings, true );
+		$this->liveSettings = (array)json_decode( $settings ?: '[]', true );
 	}
 
 	/**
 	 * Lists either all settings or the value of a specific one
-	 * @param string|null $setting Setting to retrieve value of
-	 * @return array|string|null Value or all settings, null if no value
+	 * @param ?string $var Setting variable to retrieve value of
+	 * @return mixed Value or all settings, null if no value
 	 */
-	public function list( ?string $setting = null ) {
-		if ( $setting === null ) {
+	public function list( ?string $var ): mixed {
+		if ( $var === null ) {
 			return $this->liveSettings;
-		} else {
-			return $this->liveSettings[$setting] ?? null;
 		}
+
+		return $this->liveSettings[$var] ?? null;
 	}
 
 	/**
@@ -78,13 +62,13 @@ class ManageWikiSettings {
 	 * @param array $settings Setting to change with value
 	 * @param mixed $default Default to use if none can be found
 	 */
-	public function modify( array $settings, $default = null ) {
+	public function modify( array $settings, mixed $default = null ): void {
 		// We will handle all processing in final stages
 		foreach ( $settings as $var => $value ) {
-			if ( $value != ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default ) ) {
+			if ( $value !== ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default ) ) {
 				$this->changes[$var] = [
 					'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default,
-					'new' => $value
+					'new' => $value,
 				];
 
 				$this->liveSettings[$var] = $value;
@@ -100,20 +84,20 @@ class ManageWikiSettings {
 
 	/**
 	 * Removes a setting
-	 * @param string|string[] $settings Settings to remove
+	 * @param string[] $settings Settings to remove
 	 * @param mixed $default Default to use if none can be found
 	 */
-	public function remove( $settings, $default = null ) {
+	public function remove( array $settings, mixed $default = null ): void {
 		// We allow removing of a single variable or many variables
 		// We will handle all processing in final stages
-		foreach ( (array)$settings as $var ) {
+		foreach ( $settings as $var ) {
 			if ( !isset( $this->liveSettings[$var] ) ) {
 				continue;
 			}
 
 			$this->changes[$var] = [
 				'old' => $this->liveSettings[$var],
-				'new' => $this->settingsConfig[$var]['overridedefault'] ?? $default
+				'new' => $this->settingsConfig[$var]['overridedefault'] ?? $default,
 			];
 
 			unset( $this->liveSettings[$var] );
@@ -125,16 +109,26 @@ class ManageWikiSettings {
 	 * @param array $settings Settings to change
 	 * @param bool $remove Whether to remove settings if they do not exist
 	 */
-	public function overwriteAll( array $settings, bool $remove = true ) {
-		$overwrittenSettings = $this->list();
+	public function overwriteAll(
+		array $settings,
+		bool $remove = true
+	): void {
+		$overwrittenSettings = $this->list( var: null );
 
 		foreach ( $this->settingsConfig as $var => $setConfig ) {
 			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) && $remove ) {
-				$this->remove( $var );
-			} elseif ( ( $settings[$var] ?? null ) !== null ) {
+				$this->remove( [ $var ] );
+				continue;
+			}
+
+			if ( ( $settings[$var] ?? null ) !== null ) {
 				$this->modify( [ $var => $settings[$var] ] );
 			}
 		}
+	}
+
+	public function getErrors(): array {
+		return $this->errors;
 	}
 
 	public function hasChanges(): bool {
@@ -145,56 +139,41 @@ class ManageWikiSettings {
 		$this->log = $action;
 	}
 
-	public function addLogParam( string $param, mixed $value ): void {
-		$this->logParams[$param] = $value;
+	public function getLogAction(): string {
+		return $this->log ?? 'settings';
 	}
 
-	public function getLogAction(): ?string {
-		return $this->log;
+	public function addLogParam( string $param, mixed $value ): void {
+		$this->logParams[$param] = $value;
 	}
 
 	public function getLogParams(): array {
 		return $this->logParams;
 	}
 
-	/**
-	 * Commits all changes to the database
-	 */
-	public function commit() {
-		$this->dbw->upsert(
-			'mw_settings',
-			[
-				's_dbname' => $this->wiki,
-				's_settings' => json_encode( $this->liveSettings )
-			],
-			[ [ 's_dbname' ] ],
-			[
-				's_settings' => json_encode( $this->liveSettings )
-			],
-			__METHOD__
-		);
+	public function commit(): void {
+		$this->dbw->newInsertQueryBuilder()
+			->insertInto( 'mw_settings' )
+			->row( [
+				's_dbname' => $this->dbname,
+				's_settings' => json_encode( $this->liveSettings ),
+			] )
+			->onDuplicateKeyUpdate()
+			->uniqueIndexFields( [ 's_dbname' ] )
+			->set( [ 's_settings' => json_encode( $this->liveSettings ) ] )
+			->caller( __METHOD__ )
+			->execute();
 
 		if ( $this->scripts ) {
-			ManageWikiInstaller::process( $this->wiki, [ 'mwscript' => $this->scripts ] );
+			ManageWikiInstaller::process( $this->dbname, [ 'mwscript' => $this->scripts ] );
 		}
 
 		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-		$data = $dataFactory->newInstance( $this->wiki );
+		$data = $dataFactory->newInstance( $this->dbname );
 		$data->resetWikiData( isNewChanges: true );
 
-		$this->committed = true;
-
 		$this->logParams = [
-			'5::changes' => implode( ', ', array_keys( $this->changes ) )
+			'5::changes' => implode( ', ', array_keys( $this->changes ) ),
 		];
-	}
-
-	/**
-	 * Checks whether changes have been committed
-	 */
-	public function __destruct() {
-		if ( !$this->committed && $this->changes ) {
-			print 'Changes have not been committed to the database!';
-		}
 	}
 }

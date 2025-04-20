@@ -24,7 +24,7 @@ class AddNamespaces extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		$mwNamespaces = new ManageWikiNamespaces( $this->getConfig()->get( MainConfigNames::DBname ) );
 
 		$nsData = [
@@ -34,7 +34,7 @@ class AddNamespaces extends Maintenance {
 			'protection' => (string)$this->getOption( 'protection' ),
 			'content' => (int)$this->getOption( 'content' ),
 			'contentmodel' => (string)$this->getOption( 'contentmodel' ),
-			'core' => (int)$this->getOption( 'core' )
+			'core' => (int)$this->getOption( 'core' ),
 		];
 
 		$mwNamespaces->modify( (int)$this->getOption( 'id' ), $nsData );

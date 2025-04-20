@@ -58,6 +58,7 @@
 	"logentry-managewiki-rights": "$1 {{GENDER:$2|changed}} group metadata for $3: added rights $4; removed rights $5; added addgroups $6; removed addgroups $7; added removegroups $8; removed removegroups $9; added addgroupstoself $10; removed addgroupstoself $11; added removegroupsfromself $12; removed removegroupsfromself $13; modified autopromotion ($14)",
 	"logentry-managewiki-rights-reset": "$1 {{GENDER:$2|reset}} group permissions to the defaults for \"$4\"",
 	"logentry-managewiki-settings": "$1 {{GENDER:$2|changed}} the settings \"$5\" for \"$4\"",
+	"logentry-managewiki-settings-reset": "$1 {{GENDER:$2|reset}} the settings to the defaults for \"$4\"",
 	"logentry-managewiki-undelete": "$1 {{GENDER:$2|undeleted}} the wiki \"$4\"",
 	"logentry-managewiki-unlock": "$1 {{GENDER:$2|unlocked}} the wiki \"$4\"",
 	"managewiki": "Manage a wiki",

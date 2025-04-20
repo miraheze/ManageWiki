@@ -1,6 +1,6 @@
 <?php
 
-namespace Miraheze\ManageWiki\Helpers;
+namespace Miraheze\ManageWiki;
 
 use MediaWiki\HTMLForm\OOUIHTMLForm;
 use MediaWiki\Xml\Xml;
@@ -14,7 +14,7 @@ use OOUI\Widget;
 
 class ManageWikiOOUIForm extends OOUIHTMLForm {
 
-	/** @var bool */
+	/** @var bool Override default value from HTMLForm */
 	protected $mSubSectionBeforeFields = false;
 
 	/**
@@ -23,7 +23,6 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 	 */
 	public function wrapForm( $html ) {
 		$html = Xml::tags( 'div', [ 'id' => 'managewiki' ], $html );
-
 		return parent::wrapForm( $html );
 	}
 
@@ -50,8 +49,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		$tabPanels = [];
 		foreach ( $this->mFieldTree as $key => $val ) {
 			if ( !is_array( $val ) ) {
-				wfDebug( __METHOD__ . " encountered a field not attached to a section: '{$key}'" );
-
+				wfDebug( __METHOD__ . " encountered a field not attached to a section: '$key'" );
 				continue;
 			}
 
@@ -62,20 +60,20 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 				$this->displaySection(
 					$val,
 					'',
-					"mw-section-{$key}-"
+					"mw-section-$key-"
 				) .
 				$this->getFooterHtml( $key );
 
-			$tabPanels[] = new TabPanelLayout( 'mw-section-' . $key, [
+			$tabPanels[] = new TabPanelLayout( "mw-section-$key", [
 				'classes' => [ 'mw-htmlform-autoinfuse-lazy' ],
 				'label' => $label,
 				'content' => new FieldsetLayout( [
 					'classes' => [ 'managewiki-section-fieldset' ],
-					'id' => "mw-section-{$key}",
+					'id' => "mw-section-$key",
 					'label' => $label,
 					'items' => [
 						new Widget( [
-							'content' => new HtmlSnippet( $content )
+							'content' => new HtmlSnippet( $content ),
 						] ),
 					],
 				] ),
@@ -99,7 +97,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			'framed' => true,
 			'expanded' => false,
 			'classes' => [ 'managewiki-tabs-wrapper' ],
-			'content' => $indexLayout
+			'content' => $indexLayout,
 		] );
 
 		return $header . $form;
@@ -114,12 +112,11 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		}
 
 		$descriptor = [];
-
 		$descriptor['reason'] = [
 			'type' => 'text',
 			'placeholder-message' => 'managewiki-placeholder-reason',
 			'id' => 'managewiki-submit-reason',
-			'required' => true
+			'required' => true,
 		];
 
 		$field = $this->hasField( 'reason' ) ?
@@ -132,7 +129,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 
 		$html .= new ButtonInputWidget( [
 			'label' => $this->msg( 'managewiki-review' )->text(),
-			'id' => 'managewiki-review'
+			'id' => 'managewiki-review',
 		] );
 
 		$html = Xml::tags( 'div', [ 'class' => 'managewiki-submit-formfields' ], $html );

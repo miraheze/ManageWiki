@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\ManageWiki;
 
 class PopulateGroupPermissions extends Maintenance {
@@ -13,19 +14,19 @@ class PopulateGroupPermissions extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
-		$excluded = $this->getConfig()->get( 'ManageWikiPermissionsDisallowedGroups' );
+		$excluded = $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups );
 
 		$grouparray = [];
 
 		foreach ( $this->getConfig()->get( MainConfigNames::GroupPermissions ) as $group => $perm ) {
 			$permsarray = [];
 
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				foreach ( $perm as $name => $value ) {
 					if ( $value ) {
 						$permsarray[] = $name;
@@ -37,52 +38,53 @@ class PopulateGroupPermissions extends Maintenance {
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::AddGroups ) as $group => $add ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['add'] = json_encode( $add );
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::RemoveGroups ) as $group => $remove ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['remove'] = json_encode( $remove );
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::GroupsAddToSelf ) as $group => $adds ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['addself'] = json_encode( $adds );
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::GroupsRemoveFromSelf ) as $group => $removes ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['removeself'] = json_encode( $removes );
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::Autopromote ) as $group => $promo ) {
-			if ( !in_array( $group, $excluded ) ) {
+			if ( !in_array( $group, $excluded, true ) ) {
 				$grouparray[$group]['autopromote'] = json_encode( $promo );
 			}
 		}
 
-		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
-		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
+		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		foreach ( $grouparray as $groupname => $groupatr ) {
-			$check = $dbw->selectRow(
-				'mw_permissions',
-				[ 'perm_group' ],
-				[
+			$check = $dbw->newSelectQueryBuilder()
+				->select( 'perm_group' )
+				->from( 'mw_permissions' )
+				->where( [
 					'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-					'perm_group' => $groupname
-				],
-				__METHOD__
-			);
+					'perm_group' => $groupname,
+				] )
+				->caller( __METHOD__ )
+				->fetchRow();
 
 			if ( !$check ) {
-				$dbw->insert( 'mw_permissions',
-					[
+				$dbw->newInsertQueryBuilder()
+					->insertInto( 'mw_permissions' )
+					->row( [
 						'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 						'perm_group' => $groupname,
 						'perm_permissions' => empty( $groupatr['perms'] ) ? json_encode( [] ) : $groupatr['perms'],
@@ -90,10 +92,10 @@ class PopulateGroupPermissions extends Maintenance {
 						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
 						'perm_addgroupstoself' => empty( $groupatr['addself'] ) ? json_encode( [] ) : $groupatr['addself'],
 						'perm_removegroupsfromself' => empty( $groupatr['removeself'] ) ? json_encode( [] ) : $groupatr['removeself'],
-						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote']
-					],
-					__METHOD__
-				);
+						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote'],
+					] )
+					->caller( __METHOD__ )
+					->execute();
 			}
 		}
 	}

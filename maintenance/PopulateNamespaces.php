@@ -6,6 +6,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\AtEase\AtEase;
+use Wikimedia\Rdbms\IDatabase;
 
 class PopulateNamespaces extends Maintenance {
 
@@ -14,15 +15,16 @@ class PopulateNamespaces extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute() {
+	public function execute(): void {
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
 
-		$connectionProvider = $this->getServiceContainer()->getConnectionProvider();
-		$dbw = $connectionProvider->getPrimaryDatabase( 'virtual-createwiki' );
+		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ) + [ 0 => '<Main>' ];
+		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ) +
+			[ NS_MAIN => '<Main>' ];
 
 		AtEase::suppressWarnings();
 
@@ -32,54 +34,59 @@ class PopulateNamespaces extends Maintenance {
 				continue;
 			}
 
-			$matchedNSKeys = array_keys( $this->getConfig()->get( MainConfigNames::NamespaceAliases ), $id );
+			$matchedNSKeys = array_keys( $this->getConfig()->get( MainConfigNames::NamespaceAliases ), $id, true );
 			$nsAliases = [];
 
 			foreach ( $matchedNSKeys as $o => $n ) {
 				$nsAliases[] = $n;
 			}
 
-			$res = $dbw->select(
-				'mw_namespaces',
-				[
+			$check = $dbw->newSelectQueryBuilder()
+				->table( 'mw_namespaces' )
+				->fields( [
 					'ns_namespace_name',
-					'ns_namespace_id'
-				],
-				[
+					'ns_namespace_id',
+				] )
+				->where( [
 					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-					'ns_namespace_id' => (int)$id
-				],
-				__METHOD__
-			);
+					'ns_namespace_id' => (int)$id,
+				] )
+				->caller( __METHOD__ )
+				->fetchRow();
 
-			if ( !$res || $res->count() === 0 ) {
-				$this->insertNamespace( $dbw, $id, $name, $nsAliases );
+			if ( !$check ) {
+				$this->insertNamespace( $dbw, (int)$id, (string)$name, $nsAliases );
 			}
 		}
 
 		AtEase::restoreWarnings();
 	}
 
-	public function insertNamespace( $dbw, $id, $name, $nsAliases ) {
-		$dbw->insert(
-			'mw_namespaces',
-			[
+	private function insertNamespace(
+		IDatabase $dbw,
+		int $id,
+		string $name,
+		array $nsAliases
+	): void {
+		$dbw->newInsertQueryBuilder()
+			->insertInto( 'mw_namespaces' )
+			->row( [
 				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-				'ns_namespace_id' => (int)$id,
-				'ns_namespace_name' => (string)$name,
+				'ns_namespace_id' => $id,
+				'ns_namespace_name' => $name,
 				'ns_searchable' => (int)$this->getConfig()->get( MainConfigNames::NamespacesToBeSearchedDefault )[$id],
 				'ns_subpages' => (int)$this->getConfig()->get( MainConfigNames::NamespacesWithSubpages )[$id],
 				'ns_content' => (int)$this->getConfig()->get( MainConfigNames::ContentNamespaces )[$id],
-				'ns_content_model' => (string)( $this->getConfig()->get( MainConfigNames::NamespaceContentModels )[$id] ?? 'wikitext' ),
-				'ns_protection' => ( is_array( $this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id] ) ) ?
+				'ns_content_model' => (string)( $this->getConfig()->get( MainConfigNames::NamespaceContentModels )[$id] ?? CONTENT_MODEL_WIKITEXT ),
+				'ns_protection' => is_array( $this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id] ) ?
 					(string)$this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id][0] :
 					(string)$this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id],
-				'ns_aliases' => (string)json_encode( $nsAliases ),
-				'ns_core' => (int)( $id < 1000 ),
-				'ns_additional' => (string)json_encode( [] ),
-			],
-			__METHOD__
-		);
+				'ns_aliases' => json_encode( $nsAliases ) ?: '[]',
+				'ns_core' => $id < 1000,
+				'ns_additional' => '[]',
+			] )
+			->caller( __METHOD__ )
+			->execute();
 	}
 }
 
