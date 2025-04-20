@@ -207,9 +207,7 @@ class CreateWiki implements
 			// It must exist as it's own key in overridedefault
 			foreach ( $additional as $var => $conf ) {
 				if (
-					is_array( $conf['overridedefault'] ) &&
-					array_key_exists( NS_SPECIAL, $conf['overridedefault'] ) &&
-					$conf['overridedefault'][NS_SPECIAL] &&
+					( $conf['overridedefault'][NS_SPECIAL] ?? false ) &&
 					$this->isAdditionalSettingForNamespace( $conf, NS_SPECIAL )
 				) {
 					$this->setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $conf );
