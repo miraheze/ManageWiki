@@ -1,5 +1,5 @@
 ( function () {
-	$( function () {
+	$( () => {
 		function ProcessDialog( config ) {
 			ProcessDialog.super.call( this, config );
 		}
@@ -23,8 +23,8 @@
 				expanded: false
 			} );
 
-			var dialog = this;
-			$( '#managewiki-review' ).on( 'click', function () {
+			const dialog = this;
+			$( '#managewiki-review' ).on( 'click', () => {
 				dialog.content.$element.html( '' );
 				$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
 					if ( this.type === 'checkbox' && this.defaultChecked !== undefined && this.defaultChecked !== this.checked ) {
@@ -44,9 +44,9 @@
 		};
 
 		ProcessDialog.prototype.getActionProcess = function ( action ) {
-			var dialog = this;
+			const dialog = this;
 			if ( action ) {
-				return new OO.ui.Process( function () {
+				return new OO.ui.Process( () => {
 					dialog.close( {
 						action: action
 					} );
@@ -60,16 +60,16 @@
 			return this.content.$element.outerHeight( true );
 		};
 
-		var windowManager = new OO.ui.WindowManager();
+		const windowManager = new OO.ui.WindowManager();
 		$( document.body ).append( windowManager.$element );
 
-		var processDialog = new ProcessDialog( {
+		const processDialog = new ProcessDialog( {
 			size: 'large'
 		} );
 
 		windowManager.addWindows( [ processDialog ] );
 
-		$( '#managewiki-review' ).on( 'click', function () {
+		$( '#managewiki-review' ).on( 'click', () => {
 			windowManager.openWindow( processDialog );
 		} );
 	} );

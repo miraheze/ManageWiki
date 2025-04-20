@@ -1,13 +1,13 @@
 ( function () {
-	$( function () {
-		var tabs, previousTab, switchingNoHash;
+	$( () => {
+		let tabs, previousTab, switchingNoHash;
 
 		tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 
 		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
-			var $infuse = $( panel.$element ).find( '.managewiki-infuse' );
+			const $infuse = $( panel.$element ).find( '.managewiki-infuse' );
 			$infuse.each( function () {
 				try {
 					OO.ui.infuse( this );
@@ -25,7 +25,7 @@
 		}
 
 		function onTabPanelSet( panel ) {
-			var scrollTop, active;
+			let scrollTop, active;
 
 			if ( switchingNoHash ) {
 				return;
@@ -65,7 +65,7 @@
 		// Jump to correct section as indicated by the hash.
 		// This function is called onload and onhashchange.
 		function detectHash() {
-			var hash = location.hash,
+			let hash = location.hash,
 				matchedElement, $parentSection;
 			if ( hash.match( /^#mw-section-[\w-]+$/ ) ) {
 				mw.storage.session.remove( 'managewiki-prevTab' );
@@ -82,8 +82,8 @@
 			}
 		}
 
-		$( window ).on( 'hashchange', function () {
-			var hash = location.hash;
+		$( window ).on( 'hashchange', () => {
+			const hash = location.hash;
 			if ( hash.match( /^#mw-[\w-]+/ ) ) {
 				detectHash();
 			} else if ( hash === '' ) {
@@ -101,24 +101,24 @@
 			mw.storage.session.remove( 'managewiki-prevTab' );
 		}
 
-		$( '#managewiki-form' ).on( 'submit', function () {
-			var value = tabs.getCurrentTabPanelName();
+		$( '#managewiki-form' ).on( 'submit', () => {
+			const value = tabs.getCurrentTabPanelName();
 			mw.storage.session.set( 'managewiki-prevTab', value );
 		} );
 
 		// Search index
-		var index, texts;
+		let index, texts;
 		function buildIndex() {
 			index = {};
-			var $fields = tabs.contentPanel.$element.find( '[class^=mw-htmlform-field-]:not( .managewiki-search-noindex )' );
-			var $descFields = $fields.filter(
+			const $fields = tabs.contentPanel.$element.find( '[class^=mw-htmlform-field-]:not( .managewiki-search-noindex )' );
+			const $descFields = $fields.filter(
 				'.oo-ui-fieldsetLayout-group > .oo-ui-widget > .mw-htmlform-field-HTMLInfoField'
 			);
 			$fields.not( $descFields ).each( function () {
-				var $field = $( this );
-				var $wrapper = $field.parents( '.managewiki-fieldset-wrapper' );
-				var $tabPanel = $field.closest( '.oo-ui-tabPanelLayout' );
-				var $labels = $field.find(
+				let $field = $( this );
+				const $wrapper = $field.parents( '.managewiki-fieldset-wrapper' );
+				const $tabPanel = $field.closest( '.oo-ui-tabPanelLayout' );
+				const $labels = $field.find(
 					'.oo-ui-labelElement-label, .oo-ui-textInputWidget .oo-ui-inputWidget-input, p'
 				).add(
 					$wrapper.find( '> .oo-ui-fieldsetLayout > .oo-ui-fieldsetLayout-header .oo-ui-labelElement-label' )
@@ -126,7 +126,7 @@
 				$field = $field.add( $tabPanel.find( $descFields ) );
 
 				function addToIndex( $label, $highlight ) {
-					var text = $label.val() || $label[ 0 ].textContent.toLowerCase().trim().replace( /\s+/, ' ' );
+					const text = $label.val() || $label[ 0 ].textContent.toLowerCase().trim().replace( /\s+/, ' ' );
 					if ( text ) {
 						index[ text ] = index[ text ] || [];
 						index[ text ].push( {
@@ -142,12 +142,12 @@
 					addToIndex( $( this ) );
 
 					// Check if there we are in an infusable dropdown and collect other options
-					var $dropdown = $( this ).closest( '.oo-ui-dropdownInputWidget[data-ooui],.mw-widget-selectWithInputWidget[data-ooui]' );
+					const $dropdown = $( this ).closest( '.oo-ui-dropdownInputWidget[data-ooui],.mw-widget-selectWithInputWidget[data-ooui]' );
 					if ( $dropdown.length ) {
-						var dropdown = OO.ui.infuse( $dropdown[ 0 ] );
-						var dropdownWidget = ( dropdown.dropdowninput || dropdown ).dropdownWidget;
+						const dropdown = OO.ui.infuse( $dropdown[ 0 ] );
+						const dropdownWidget = ( dropdown.dropdowninput || dropdown ).dropdownWidget;
 						if ( dropdownWidget ) {
-							dropdownWidget.getMenu().getItems().forEach( function ( option ) {
+							dropdownWidget.getMenu().getItems().forEach( ( option ) => {
 								// Highlight the dropdown handle and the matched label, for when the dropdown is opened
 								addToIndex( option.$label, dropdownWidget.$handle );
 								addToIndex( option.$label, option.$label );
@@ -161,8 +161,8 @@
 		}
 
 		function infuseAllPanels() {
-			tabs.stackLayout.items.forEach( function ( tabPanel ) {
-				var wasVisible = tabPanel.isVisible();
+			tabs.stackLayout.items.forEach( ( tabPanel ) => {
+				const wasVisible = tabPanel.isVisible();
 				// Force panel to be visible while infusing
 				tabPanel.toggle( true );
 
@@ -173,8 +173,8 @@
 			} );
 		}
 
-		var search = OO.ui.infuse( $( '.managewiki-search' ) ).fieldWidget;
-		search.$input.on( 'focus', function () {
+		const search = OO.ui.infuse( $( '.managewiki-search' ) ).fieldWidget;
+		search.$input.on( 'focus', () => {
 			if ( !index ) {
 				// Lazy-build index on first focus
 				// Infuse all widgets as we may end up showing a large subset of them
@@ -182,28 +182,28 @@
 				buildIndex();
 			}
 		} );
-		var $noResults = $( '<div>' ).addClass( 'managewiki-search-noresults' ).text( mw.msg( 'managewiki-search-noresults' ) );
-		search.on( 'change', function ( val ) {
+		const $noResults = $( '<div>' ).addClass( 'managewiki-search-noresults' ).text( mw.msg( 'managewiki-search-noresults' ) );
+		search.on( 'change', ( val ) => {
 			if ( !index ) {
 				// In case 'focus' hasn't fired yet
 				infuseAllPanels();
 				buildIndex();
 			}
-			var isSearching = !!val;
+			const isSearching = !!val;
 			tabs.$element.toggleClass( 'managewiki-tabs-searching', isSearching );
 			tabs.tabSelectWidget.toggle( !isSearching );
 			tabs.contentPanel.setContinuous( isSearching );
 
 			$( '.managewiki-search-matched' ).removeClass( 'managewiki-search-matched' );
 			$( '.managewiki-search-highlight' ).removeClass( 'managewiki-search-highlight' );
-			var hasResults = false;
+			let hasResults = false;
 			if ( isSearching ) {
 				val = val.toLowerCase();
-				texts.forEach( function ( text ) {
+				texts.forEach( ( text ) => {
 					// TODO: Could use Intl.Collator.prototype.compare like OO.ui.mixin.LabelElement.static.highlightQuery
 					// but might be too slow.
-					if ( text.indexOf( val ) !== -1 ) {
-						index[ text ].forEach( function ( item ) {
+					if ( text.includes( val ) ) {
+						index[ text ].forEach( ( item ) => {
 							item.$highlight.addClass( 'managewiki-search-highlight' );
 							item.$field.addClass( 'managewiki-search-matched' );
 							item.$wrapper.addClass( 'managewiki-search-matched' );

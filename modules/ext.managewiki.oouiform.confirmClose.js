@@ -3,8 +3,8 @@
  * closed when any form field is changed.
  */
 ( function () {
-	$( function () {
-		var allowCloseWindow, saveButton;
+	$( () => {
+		let allowCloseWindow, saveButton;
 
 		if ( !( $( '#managewiki-submit' ).length > 0 ) ) {
 			return;
@@ -14,7 +14,7 @@
 		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
 		// slower and more complicated. It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
-			var $fields, i;
+			let $fields, i;
 
 			$fields = $( '#managewiki-form  .mw-htmlform-cloner-ul' );
 			for ( i = 0; i < $fields.length; i++ ) {
@@ -54,10 +54,10 @@
 		//   so the event is not fired on descendant elements
 		// * Attach to the document because the dropdowns are in the .oo-ui-defaultOverlay element
 		//   (and it doesn't exist yet at this point, so we can't attach them to it)
-		[ 'change', 'keyup', 'mouseup' ].forEach( function ( eventType ) {
-			document.addEventListener( eventType, function () {
+		[ 'change', 'keyup', 'mouseup' ].forEach( ( eventType ) => {
+			document.addEventListener( eventType, () => {
 				// Make sure SelectWidget's event handlers run first
-				setTimeout( function () {
+				setTimeout( () => {
 					saveButton.setDisabled( !isManageWikiChanged() );
 				} );
 			}, true );
