@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\HTMLForm\Field\HTMLMultiSelectField;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
@@ -141,7 +142,9 @@ class ManageWikiTypes {
 				break;
 			case 'list-multi':
 				$configs = [
-					'class' => $name === 'wgRCLinkDays' ? \MediaWiki\HTMLForm\Field\HTMLMultiSelectField::class : HTMLTypedMultiSelectField::class,
+					'class' => ( $options['list-multi-int'] ?? false ) ?
+						HTMLMultiSelectField::class :
+						HTMLTypedMultiSelectField::class,
 					'options' => $options['options'],
 					'default' => $value ?? $options['overridedefault'],
 				];
