@@ -65,8 +65,7 @@ class ManageWiki {
 		return null;
 	}
 
-	public static function buildDisableIfFromRequires( array $requires ): array {
-		$exts = $requires['extensions'] ?? [];
+	public static function buildDisableIfFromRequires( array $exts ): array {
 		$conditions = [];
 
 		foreach ( $exts as $entry ) {
