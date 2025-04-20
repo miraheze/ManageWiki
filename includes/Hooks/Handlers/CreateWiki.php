@@ -161,7 +161,10 @@ class CreateWiki implements
 					'content' => (bool)$ns->ns_content,
 					'contentmodel' => $ns->ns_content_model,
 					'protection' => $ns->ns_protection ?: false,
-					'aliases' => array_merge( json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '' ), true ), (array)$lcAlias ),
+					'aliases' => array_merge(
+						json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '' ), true ),
+						(array)$lcAlias
+					),
 					'additional' => json_decode( $ns->ns_additional ?? '', true ),
 				];
 
@@ -209,7 +212,7 @@ class CreateWiki implements
 					$conf['overridedefault'][NS_SPECIAL] &&
 					$this->isAdditionalSettingForNamespace( $conf, NS_SPECIAL )
 				) {
-					$this->setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $conf['overridedefault'][NS_SPECIAL], $conf );
+					$this->setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $conf );
 				}
 			}
 		}
@@ -374,7 +377,6 @@ class CreateWiki implements
 		array &$cacheArray,
 		int $nsID,
 		string $var,
-		mixed $val,
 		array $varConf
 	): void {
 		if ( $varConf['type'] === 'check' ) {
@@ -387,6 +389,7 @@ class CreateWiki implements
 			return;
 		}
 
+		$val = $varConf['overridedefault'][NS_SPECIAL];
 		if ( $varConf['constant'] ?? false ) {
 			$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
 			return;
