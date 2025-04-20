@@ -217,11 +217,15 @@ class CreateWiki implements
 				->caller( __METHOD__ )
 				->fetchResultSet();
 
+			$additionalRights = $this->config->get( ConfigNames::PermissionsAdditionalRights );
+			$additionalAddGroups = $this->config->get( ConfigNames::PermissionsAdditionalAddGroups );
+			$additionalRemoveGroups = $this->config->get( ConfigNames::PermissionsAdditionalRemoveGroups );
+
 			foreach ( $permObjects as $perm ) {
 				$addPerms = [];
 				$removePerms = [];
 
-				foreach ( $this->config->get( ConfigNames::PermissionsAdditionalRights )[$perm->perm_group] ?? [] as $right => $bool ) {
+				foreach ( $additionalRights[$perm->perm_group] ?? [] as $right => $bool ) {
 					if ( $bool ) {
 						$addPerms[] = $right;
 						continue;
@@ -239,11 +243,11 @@ class CreateWiki implements
 					'permissions' => $filteredPermissions,
 					'addgroups' => array_merge(
 						json_decode( $perm->perm_addgroups ?? '', true ) ?? [],
-						$this->config->get( ConfigNames::PermissionsAdditionalAddGroups )[$perm->perm_group] ?? []
+						$additionalAddGroups[$perm->perm_group] ?? []
 					),
 					'removegroups' => array_merge(
 						json_decode( $perm->perm_removegroups ?? '', true ) ?? [],
-						$this->config->get( ConfigNames::PermissionsAdditionalRemoveGroups )[$perm->perm_group] ?? []
+						$additionalRemoveGroups[$perm->perm_group] ?? []
 					),
 					'addself' => json_decode( $perm->perm_addgroupstoself ?? '', true ),
 					'removeself' => json_decode( $perm->perm_removegroupsfromself ?? '', true ),
@@ -252,13 +256,13 @@ class CreateWiki implements
 			}
 
 			$diffKeys = array_keys(
-				array_diff_key( $this->config->get( ConfigNames::PermissionsAdditionalRights ), $cacheArray['permissions'] ?? [] )
+				array_diff_key( $additionalRights, $cacheArray['permissions'] ?? [] )
 			);
 
 			foreach ( $diffKeys as $missingKey ) {
 				$missingPermissions = [];
 
-				foreach ( $this->config->get( ConfigNames::PermissionsAdditionalRights )[$missingKey] as $right => $bool ) {
+				foreach ( $additionalRights[$missingKey] as $right => $bool ) {
 					if ( $bool ) {
 						$missingPermissions[] = $right;
 					}
@@ -266,8 +270,8 @@ class CreateWiki implements
 
 				$cacheArray['permissions'][$missingKey] = [
 					'permissions' => $missingPermissions,
-					'addgroups' => $this->config->get( ConfigNames::PermissionsAdditionalAddGroups )[$missingKey] ?? [],
-					'removegroups' => $this->config->get( ConfigNames::PermissionsAdditionalRemoveGroups )[$missingKey] ?? [],
+					'addgroups' => $additionalAddGroups[$missingKey] ?? [],
+					'removegroups' => $additionalRemoveGroups[$missingKey] ?? [],
 					'addself' => [],
 					'removeself' => [],
 					'autopromote' => [],
@@ -297,8 +301,23 @@ class CreateWiki implements
 				$privateArray[$name]['add'] = $value;
 			}
 
-			$mwPermissions->modify( $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ), $privateArray );
-			$mwPermissions->modify( 'sysop', [ 'addgroups' => [ 'add' => [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] ], 'removegroups' => [ 'add' => [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] ] ] );
+			$mwPermissions->modify(
+				$this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
+				$privateArray
+			);
+
+			$mwPermissions->modify( 'sysop', [
+				'addgroups' => [
+					'add' => [
+					       $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
+					],
+				],
+				'removegroups' => [
+					'add' => [
+					       $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
+					],
+				],
+			] );
 			$mwPermissions->commit();
 		}
 	}
@@ -310,7 +329,18 @@ class CreateWiki implements
 			$mwPermissions->remove( $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) );
 
 			foreach ( array_keys( $mwPermissions->list( group: null ) ) as $group ) {
-				$mwPermissions->modify( $group, [ 'addgroups' => [ 'remove' => [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] ], 'removegroups' => [ 'remove' => [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] ] ] );
+				$mwPermissions->modify( $group, [
+					'addgroups' => [
+						'remove' => [
+						       $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
+						],
+					],
+					'removegroups' => [
+						'remove' => [
+						       $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
+						],
+					],
+				] );
 			}
 
 			$mwPermissions->commit();
