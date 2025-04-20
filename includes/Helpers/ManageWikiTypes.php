@@ -141,7 +141,7 @@ class ManageWikiTypes {
 				break;
 			case 'list-multi':
 				$configs = [
-					'class' => HTMLTypedMultiSelectField::class,
+					'class' => $name === 'wgRCLinkDays' ? \MediaWiki\HTMLForm\Field\HTMLMultiSelectField::class : HTMLTypedMultiSelectField::class,
 					'options' => $options['options'],
 					'default' => $value ?? $options['overridedefault'],
 				];
