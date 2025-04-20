@@ -269,6 +269,11 @@ class ManageWikiFormFactoryBuilder {
 
 			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
 
+			// Don't check for extension requirements as we dont want
+			// to disable the field, we use disable-if for that.
+			$extRequires = $ext['requires']['extensions'] ?? [];
+			unset( $ext['requires']['extensions'] );
+
 			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process( $ext['requires'], $extList, false, $remoteWiki ) : true;
 
 			$help = [];
@@ -281,8 +286,8 @@ class ManageWikiFormFactoryBuilder {
 
 			$disableIf = [];
 			if ( $ext['requires'] ) {
-				if ( $ext['requires']['extensions'] ?? false ) {
-					$disableIf = ManageWiki::buildDisableIfFromRequires( $ext['requires'] );
+				if ( $extRequires ?? false ) {
+					$disableIf = ManageWiki::buildDisableIfFromRequires( $extRequires );
 				}
 
 				$requires = [];
