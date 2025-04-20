@@ -282,16 +282,14 @@ class CreateWiki implements
 
 	/** @inheritDoc */
 	public function onCreateWikiStatePrivate( string $dbname ): void {
-		if ( ManageWiki::checkSetup( 'permissions' ) && $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ) {
+		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
+		if ( ManageWiki::checkSetup( 'permissions' ) && $defaultPrivateGroup ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
 
-			$defaultPrivate = $mwPermissionsDefault->list(
-				$this->config->get( ConfigNames::PermissionsDefaultPrivateGroup )
-			);
+			$defaultPrivate = $mwPermissionsDefault->list( $defaultPrivateGroup );
 
 			$privateArray = [];
-
 			foreach ( $defaultPrivate as $name => $value ) {
 				if ( $name === 'autopromote' ) {
 					$privateArray[$name] = $value;
@@ -301,21 +299,14 @@ class CreateWiki implements
 				$privateArray[$name]['add'] = $value;
 			}
 
-			$mwPermissions->modify(
-				$this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
-				$privateArray
-			);
+			$mwPermissions->modify( $defaultPrivateGroup, $privateArray );
 
 			$mwPermissions->modify( 'sysop', [
 				'addgroups' => [
-					'add' => [
-						   $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
-					],
+					'add' => [ $defaultPrivateGroup ],
 				],
 				'removegroups' => [
-					'add' => [
-						   $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
-					],
+					'add' => [ $defaultPrivateGroup ],
 				],
 			] );
 			$mwPermissions->commit();
@@ -324,21 +315,18 @@ class CreateWiki implements
 
 	/** @inheritDoc */
 	public function onCreateWikiStatePublic( string $dbname ): void {
-		if ( ManageWiki::checkSetup( 'permissions' ) && $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ) {
+		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
+		if ( ManageWiki::checkSetup( 'permissions' ) && $defaultPrivateGroup ) {
 			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$mwPermissions->remove( $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) );
+			$mwPermissions->remove( $defaultPrivateGroup );
 
 			foreach ( array_keys( $mwPermissions->list( group: null ) ) as $group ) {
 				$mwPermissions->modify( $group, [
 					'addgroups' => [
-						'remove' => [
-							   $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
-						],
+						'remove' => [ $defaultPrivateGroup ],
 					],
 					'removegroups' => [
-						'remove' => [
-							   $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ),
-						],
+						'remove' => [ $defaultPrivateGroup ],
 					],
 				] );
 			}
