@@ -36,17 +36,15 @@ class ManageWikiNamespaces implements IConfigModule {
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$namespaces = $this->dbw->select(
-			'mw_namespaces',
-			'*',
-			[
-				'ns_dbname' => $dbname,
-			],
-			__METHOD__
-		);
+		$namespaces = $this->dbw->newSelectQueryBuilder()
+			->select( '*' )
+			->from( 'mw_namespaces' )
+			->where( [ 'ns_dbname' => $dbname ] )
+			->caller( __METHOD__ )
+			->fetchResultSet();
 
 		foreach ( $namespaces as $ns ) {
-			$this->liveNamespaces[$ns->ns_namespace_id] = [
+			$this->liveNamespaces[(int)$ns->ns_namespace_id] = [
 				'name' => $ns->ns_namespace_name,
 				'searchable' => (int)$ns->ns_searchable,
 				'subpages' => (int)$ns->ns_subpages,
@@ -104,7 +102,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		bool $maintainPrefix = false
 	): void {
 		$excluded = array_map( 'strtolower', $this->config->get( ConfigNames::NamespacesDisallowedNames ) );
-		if ( in_array( strtolower( $data['name'] ), $excluded ) ) {
+		if ( in_array( strtolower( $data['name'] ), $excluded, true ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
 					$data['name'],
@@ -179,7 +177,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	public function isDeleting( int|string $namespace ): bool {
-		return in_array( (int)$namespace, $this->deleteNamespaces );
+		return in_array( (int)$namespace, $this->deleteNamespaces, true );
 	}
 
 	public function getErrors(): array {
@@ -217,14 +215,14 @@ class ManageWikiNamespaces implements IConfigModule {
 					];
 				}
 
-				$this->dbw->delete(
-					'mw_namespaces',
-					[
+				$this->dbw->newDeleteQueryBuilder()
+					->deleteFrom( 'mw_namespaces' )
+					->where( [
 						'ns_dbname' => $this->dbname,
 						'ns_namespace_id' => $id,
-					],
-					__METHOD__
-				);
+					] )
+					->caller( __METHOD__ )
+					->execute();
 
 				$jobParams = [
 					'action' => 'delete',
@@ -256,21 +254,20 @@ class ManageWikiNamespaces implements IConfigModule {
 					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix'] ?? false,
 				];
 
-				$this->dbw->upsert(
-					'mw_namespaces',
-					[
+				$this->dbw->newInsertQueryBuilder()
+					->insertInto( 'mw_namespaces' )
+					->row( [
 						'ns_dbname' => $this->dbname,
 						'ns_namespace_id' => $id,
-					] + $builtTable,
-					[
-						[
-							'ns_dbname',
-							'ns_namespace_id',
-						],
-					],
-					$builtTable,
-					__METHOD__
-				);
+					] + $builtTable )
+					->onDuplicateKeyUpdate()
+					->uniqueIndexFields( [
+						'ns_dbname',
+						'ns_namespace_id',
+					] )
+					->set( $builtTable )
+					->caller( __METHOD__ )
+					->execute();
 
 				if ( !$this->logParams || !$this->isTalk( $id ) ) {
 					$this->logParams = [

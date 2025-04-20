@@ -38,7 +38,10 @@ class CreateWiki implements
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
 			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$defaultGroups = array_diff( array_keys( $mwPermissionsDefault->list( group: null ) ), [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] );
+			$defaultGroups = array_diff(
+				array_keys( $mwPermissionsDefault->list( group: null ) ),
+				[ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
+			);
 
 			foreach ( $defaultGroups as $newGroup ) {
 				$groupData = $mwPermissionsDefault->list( $newGroup );
@@ -63,7 +66,10 @@ class CreateWiki implements
 			}
 		}
 
-		if ( $this->config->get( ConfigNames::Extensions ) && $this->config->get( ConfigNames::ExtensionsDefault ) ) {
+		if (
+			$this->config->get( ConfigNames::Extensions ) &&
+			$this->config->get( ConfigNames::ExtensionsDefault )
+		) {
 			$mwExtensions = new ManageWikiExtensions( $dbname );
 			$mwExtensions->add( $this->config->get( ConfigNames::ExtensionsDefault ) );
 			$mwExtensions->commit();
@@ -89,47 +95,42 @@ class CreateWiki implements
 		IReadableDatabase $dbr,
 		array &$cacheArray
 	): void {
-		$setObject = $dbr->selectRow(
-			'mw_settings',
-			'*',
-			[
-				's_dbname' => $wiki,
-			],
-			__METHOD__
-		);
+		$setObject = $dbr->newSelectQueryBuilder()
+			->select( '*' )
+			->from( 'mw_settings' )
+			->where( [ 's_dbname' => $wiki ] )
+			->caller( __METHOD__ )
+			->fetchRow();
 
 		// Don't need to manipulate this much
-		if ( ManageWiki::checkSetup( 'settings' ) ) {
+		if ( $setObject !== false && ManageWiki::checkSetup( 'settings' ) ) {
 			$cacheArray['settings'] = json_decode( $setObject->s_settings ?? '[]', true );
 		}
 
 		// Let's create an array of variables so we can easily loop these to enable
-		if ( ManageWiki::checkSetup( 'extensions' ) ) {
+		if ( $setObject !== false && ManageWiki::checkSetup( 'extensions' ) ) {
 			$manageWikiExtensions = $this->config->get( ConfigNames::Extensions );
 			foreach ( json_decode( $setObject->s_extensions ?? '[]', true ) as $ext ) {
 				if ( isset( $manageWikiExtensions[$ext] ) ) {
-					$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['var'] ??
-						$manageWikiExtensions[$ext]['name'];
+					$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['name'];
 					continue;
 				}
 
 				$this->logger->error( 'Extension/Skin {ext} not set in {config}', [
-					'ext' => $ext,
 					'config' => ConfigNames::Extensions,
+					'ext' => $ext,
 				] );
 			}
 		}
 
 		// Collate NS entries and decode their entries for the array
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-			$nsObjects = $dbr->select(
-				'mw_namespaces',
-				'*',
-				[
-					'ns_dbname' => $wiki,
-				],
-				__METHOD__
-			);
+			$nsObjects = $dbr->newSelectQueryBuilder()
+				->select( '*' )
+				->from( 'mw_namespaces' )
+				->where( [ 'ns_dbname' => $wiki ] )
+				->caller( __METHOD__ )
+				->fetchResultSet();
 
 			$lcName = [];
 			$lcEN = [];
@@ -149,85 +150,91 @@ class CreateWiki implements
 
 			$additional = $this->config->get( ConfigNames::NamespacesAdditional );
 			foreach ( $nsObjects as $ns ) {
-				$nsName = $lcName[$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
-				$lcAlias = $lcEN[$ns->ns_namespace_id] ?? null;
+				$nsName = $lcName[(int)$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
+				$lcAlias = $lcEN[(int)$ns->ns_namespace_id] ?? null;
 
 				$cacheArray['namespaces'][$nsName] = [
-					'id' => $ns->ns_namespace_id,
+					'id' => (int)$ns->ns_namespace_id,
 					'core' => (bool)$ns->ns_core,
 					'searchable' => (bool)$ns->ns_searchable,
 					'subpages' => (bool)$ns->ns_subpages,
 					'content' => (bool)$ns->ns_content,
 					'contentmodel' => $ns->ns_content_model,
-					'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
-					'aliases' => array_merge( json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '' ), true ), (array)$lcAlias ),
+					'protection' => $ns->ns_protection ?: false,
+					'aliases' => array_merge(
+						json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '' ), true ),
+						(array)$lcAlias
+					),
 					'additional' => json_decode( $ns->ns_additional ?? '', true ),
 				];
 
 				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
 
 				foreach ( $additional as $var => $conf ) {
-					if ( !$this->isAdditionalSettingForNamespace( $conf, $ns->ns_namespace_id ) ) {
+					$nsID = (int)$ns->ns_namespace_id;
+
+					if ( !$this->isAdditionalSettingForNamespace( $conf, $nsID ) ) {
 						continue;
 					}
 
-					// Select value if configured, otherwise fall back to overridedefault
 					if ( isset( $nsAdditional[$var] ) ) {
 						$val = $nsAdditional[$var];
 					} elseif ( is_array( $conf['overridedefault'] ) ) {
-						if ( array_key_exists( (int)$ns->ns_namespace_id, $conf['overridedefault'] ) ) {
-							$val = $conf['overridedefault'][(int)$ns->ns_namespace_id];
-						} elseif ( array_key_exists( 'default', $conf['overridedefault'] ) ) {
-							$val = $conf['overridedefault']['default'];
-						} else {
-							// TODO: throw error? this should probably not be allowed
-							$val = null;
+						$val = $conf['overridedefault'][$nsID]
+							?? $conf['overridedefault']['default']
+							?? null;
+
+						if ( $val === null ) {
+							// Skip if no fallback exists
+							continue;
 						}
 					} else {
 						$val = $conf['overridedefault'];
 					}
 
 					if ( $val ) {
-						$this->setNamespaceSettingJson( $cacheArray, (int)$ns->ns_namespace_id, $var, $val, $conf );
-					} elseif (
-						!isset( $conf['constant'] ) &&
-						( !isset( $cacheArray['settings'][$var] ) || !$cacheArray['settings'][$var] )
-					) {
+						$this->setNamespaceSettingJson( $cacheArray, $nsID, $var, $val, $conf );
+						continue;
+					}
+
+					if ( empty( $conf['constant'] ) && empty( $cacheArray['settings'][$var] ) ) {
 						$cacheArray['settings'][$var] = [];
 					}
 				}
 			}
+
 			// Search for and apply overridedefaults to NS_SPECIAL
 			// Notably, we do not apply 'default' overridedefault to NS_SPECIAL
 			// It must exist as it's own key in overridedefault
 			foreach ( $additional as $var => $conf ) {
 				if (
-					is_array( $conf['overridedefault'] ) &&
-					array_key_exists( NS_SPECIAL, $conf['overridedefault'] ) &&
-					$conf['overridedefault'][NS_SPECIAL] &&
+					( $conf['overridedefault'][NS_SPECIAL] ?? false ) &&
 					$this->isAdditionalSettingForNamespace( $conf, NS_SPECIAL )
 				) {
-					$this->setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $conf['overridedefault'][NS_SPECIAL], $conf );
+					$val = $conf['overridedefault'][NS_SPECIAL];
+					$this->setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $val, $conf );
 				}
 			}
 		}
 
 		// Same as NS above but for permissions
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$permObjects = $dbr->select(
-				'mw_permissions',
-				'*',
-				[
-					'perm_dbname' => $wiki,
-				],
-				__METHOD__
-			);
+			$permObjects = $dbr->newSelectQueryBuilder()
+				->select( '*' )
+				->from( 'mw_permissions' )
+				->where( [ 'perm_dbname' => $wiki ] )
+				->caller( __METHOD__ )
+				->fetchResultSet();
+
+			$additionalRights = $this->config->get( ConfigNames::PermissionsAdditionalRights );
+			$additionalAddGroups = $this->config->get( ConfigNames::PermissionsAdditionalAddGroups );
+			$additionalRemoveGroups = $this->config->get( ConfigNames::PermissionsAdditionalRemoveGroups );
 
 			foreach ( $permObjects as $perm ) {
 				$addPerms = [];
 				$removePerms = [];
 
-				foreach ( $this->config->get( ConfigNames::PermissionsAdditionalRights )[$perm->perm_group] ?? [] as $right => $bool ) {
+				foreach ( $additionalRights[$perm->perm_group] ?? [] as $right => $bool ) {
 					if ( $bool ) {
 						$addPerms[] = $right;
 						continue;
@@ -245,11 +252,11 @@ class CreateWiki implements
 					'permissions' => $filteredPermissions,
 					'addgroups' => array_merge(
 						json_decode( $perm->perm_addgroups ?? '', true ) ?? [],
-						$this->config->get( ConfigNames::PermissionsAdditionalAddGroups )[$perm->perm_group] ?? []
+						$additionalAddGroups[$perm->perm_group] ?? []
 					),
 					'removegroups' => array_merge(
 						json_decode( $perm->perm_removegroups ?? '', true ) ?? [],
-						$this->config->get( ConfigNames::PermissionsAdditionalRemoveGroups )[$perm->perm_group] ?? []
+						$additionalRemoveGroups[$perm->perm_group] ?? []
 					),
 					'addself' => json_decode( $perm->perm_addgroupstoself ?? '', true ),
 					'removeself' => json_decode( $perm->perm_removegroupsfromself ?? '', true ),
@@ -258,13 +265,13 @@ class CreateWiki implements
 			}
 
 			$diffKeys = array_keys(
-				array_diff_key( $this->config->get( ConfigNames::PermissionsAdditionalRights ), $cacheArray['permissions'] ?? [] )
+				array_diff_key( $additionalRights, $cacheArray['permissions'] ?? [] )
 			);
 
 			foreach ( $diffKeys as $missingKey ) {
 				$missingPermissions = [];
 
-				foreach ( $this->config->get( ConfigNames::PermissionsAdditionalRights )[$missingKey] as $right => $bool ) {
+				foreach ( $additionalRights[$missingKey] as $right => $bool ) {
 					if ( $bool ) {
 						$missingPermissions[] = $right;
 					}
@@ -272,8 +279,8 @@ class CreateWiki implements
 
 				$cacheArray['permissions'][$missingKey] = [
 					'permissions' => $missingPermissions,
-					'addgroups' => $this->config->get( ConfigNames::PermissionsAdditionalAddGroups )[$missingKey] ?? [],
-					'removegroups' => $this->config->get( ConfigNames::PermissionsAdditionalRemoveGroups )[$missingKey] ?? [],
+					'addgroups' => $additionalAddGroups[$missingKey] ?? [],
+					'removegroups' => $additionalRemoveGroups[$missingKey] ?? [],
 					'addself' => [],
 					'removeself' => [],
 					'autopromote' => [],
@@ -284,43 +291,62 @@ class CreateWiki implements
 
 	/** @inheritDoc */
 	public function onCreateWikiStatePrivate( string $dbname ): void {
-		if ( ManageWiki::checkSetup( 'permissions' ) && $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ) {
-			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-			$mwPermissions = new ManageWikiPermissions( $dbname );
+		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
+		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {
+			return;
+		}
 
-			$defaultPrivate = $mwPermissionsDefault->list(
-				$this->config->get( ConfigNames::PermissionsDefaultPrivateGroup )
-			);
+		$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
+		$mwPermissions = new ManageWikiPermissions( $dbname );
 
-			$privateArray = [];
+		$defaultPrivate = $mwPermissionsDefault->list( $defaultPrivateGroup );
 
-			foreach ( $defaultPrivate as $name => $value ) {
-				if ( $name === 'autopromote' ) {
-					$privateArray[$name] = $value;
-					continue;
-				}
-
-				$privateArray[$name]['add'] = $value;
+		$privateArray = [];
+		foreach ( $defaultPrivate as $name => $value ) {
+			if ( $name === 'autopromote' ) {
+				$privateArray[$name] = $value;
+				continue;
 			}
 
-			$mwPermissions->modify( $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ), $privateArray );
-			$mwPermissions->modify( 'sysop', [ 'addgroups' => [ 'add' => [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] ], 'removegroups' => [ 'add' => [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] ] ] );
-			$mwPermissions->commit();
+			$privateArray[$name]['add'] = $value;
 		}
+
+		$mwPermissions->modify( $defaultPrivateGroup, $privateArray );
+
+		$mwPermissions->modify( 'sysop', [
+			'addgroups' => [
+				'add' => [ $defaultPrivateGroup ],
+			],
+			'removegroups' => [
+				'add' => [ $defaultPrivateGroup ],
+			],
+		] );
+
+		$mwPermissions->commit();
 	}
 
 	/** @inheritDoc */
 	public function onCreateWikiStatePublic( string $dbname ): void {
-		if ( ManageWiki::checkSetup( 'permissions' ) && $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ) {
-			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$mwPermissions->remove( $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) );
-
-			foreach ( array_keys( $mwPermissions->list( group: null ) ) as $group ) {
-				$mwPermissions->modify( $group, [ 'addgroups' => [ 'remove' => [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] ], 'removegroups' => [ 'remove' => [ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ] ] ] );
-			}
-
-			$mwPermissions->commit();
+		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
+		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {
+			return;
 		}
+
+		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$mwPermissions->remove( $defaultPrivateGroup );
+
+		foreach ( array_keys( $mwPermissions->list( group: null ) ) as $group ) {
+			$mwPermissions->modify( $group, [
+				'addgroups' => [
+					'remove' => [ $defaultPrivateGroup ],
+				],
+				'removegroups' => [
+					'remove' => [ $defaultPrivateGroup ],
+				],
+			] );
+		}
+
+		$mwPermissions->commit();
 	}
 
 	/** @inheritDoc */
@@ -354,20 +380,22 @@ class CreateWiki implements
 		mixed $val,
 		array $varConf
 	): void {
-		switch ( $varConf['type'] ) {
-			case 'check':
-				$cacheArray['settings'][$var][] = $nsID;
-				break;
-			case 'vestyle':
-				$cacheArray['settings'][$var][$nsID] = true;
-				break;
-			default:
-				if ( $varConf['constant'] ?? false ) {
-					$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
-				} else {
-					$cacheArray['settings'][$var][$nsID] = $val;
-				}
+		if ( $varConf['type'] === 'check' ) {
+			$cacheArray['settings'][$var][] = $nsID;
+			return;
 		}
+
+		if ( $varConf['type'] === 'vestyle' ) {
+			$cacheArray['settings'][$var][$nsID] = true;
+			return;
+		}
+
+		if ( $varConf['constant'] ?? false ) {
+			$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
+			return;
+		}
+
+		$cacheArray['settings'][$var][$nsID] = $val;
 	}
 
 	/**
@@ -382,11 +410,7 @@ class CreateWiki implements
 		// namespace that we are on, otherwise it is very likely for the namespace to
 		// not have setting set, and cause settings set before to be ignored
 
-		$only = null;
-		if ( isset( $conf['only'] ) ) {
-			$only = (array)$conf['only'];
-		}
-
-		return $only === null || in_array( $nsID, $only );
+		$only = $conf['only'] ?? null;
+		return $only === null || in_array( $nsID, (array)$only, true );
 	}
 }

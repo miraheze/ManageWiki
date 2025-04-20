@@ -211,27 +211,22 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public function onSubmitPermissionsResetForm( array $formData ): bool {
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
-		$dbw->delete(
-			'mw_permissions',
-			[
-				'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-			],
-			__METHOD__
-		);
+		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
+		$dbw->newDeleteQueryBuilder()
+			->deleteFrom( 'mw_permissions' )
+			->where( [ 'perm_dbname' => $dbname ] )
+			->caller( __METHOD__ )
+			->execute();
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance(
-			$this->getConfig()->get( MainConfigNames::DBname )
-		);
-
+		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
 		$this->hookHandler->onCreateWikiCreation(
-			$this->getConfig()->get( MainConfigNames::DBname ),
-			$remoteWiki->isPrivate()
+			$dbname, $remoteWiki->isPrivate()
 		);
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
-		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
+		$logEntry->setParameters( [ '4::wiki' => $dbname ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
@@ -251,26 +246,23 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public function onSubmitSettingsResetForm( array $formData ): bool {
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
+		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
 		// Set the values to the defaults
-		$dbw->update(
-			'mw_settings',
-			[
-				's_settings' => '[]',
-			],
-			[
-				's_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-			],
-			__METHOD__
-		);
+		$dbw->newUpdateQueryBuilder()
+			->update( 'mw_settings' )
+			->set( [ 's_settings' => '[]' ] )
+			->where( [ 's_dbname' => $dbname ] )
+			->caller( __METHOD__ )
+			->execute();
 
 		// Reset the cache or else the changes won't work
-		$data = $this->dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
+		$data = $this->dataFactory->newInstance( $dbname );
 		$data->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
 		$logEntry->setPerformer( $this->getUser() );
 		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
-		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
+		$logEntry->setParameters( [ '4::wiki' => $dbname ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
 
@@ -289,8 +281,6 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function onSubmitCacheResetForm( array $formData ): bool {
-		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
-
 		// Reset the cache or else the changes won't work
 		$data = $this->dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
 		$data->resetWikiData( isNewChanges: true );
@@ -317,7 +307,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	}
 
 	public function validateNewGroupName( string $newGroup ): string|bool {
-		if ( in_array( $newGroup, $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups ) ) ) {
+		if ( in_array( $newGroup, $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			return 'The group you attempted to create is not allowed. Please select a different name and try again.';
 		}
 

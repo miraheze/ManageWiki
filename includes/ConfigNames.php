@@ -21,7 +21,7 @@ class ConfigNames {
 
 	public const InactiveExemptReasonOptions = 'ManageWikiInactiveExemptReasonOptions';
 
-	public const ManageWiki = 'ManageWiki';
+	public const ModulesEnabled = 'ManageWikiModulesEnabled';
 
 	public const NamespacesAdditional = 'ManageWikiNamespacesAdditional';
 

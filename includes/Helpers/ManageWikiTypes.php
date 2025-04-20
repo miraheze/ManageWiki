@@ -5,10 +5,13 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
+use MediaWiki\HTMLForm\Field\HTMLMultiSelectField;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
+use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
+use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
@@ -58,7 +61,7 @@ class ManageWikiTypes {
 						array $alldata,
 						HTMLForm $form
 					) use ( $config, $name ): bool|Message {
-						if ( !in_array( $database, $config->get( MainConfigNames::LocalDatabases ) ) ) {
+						if ( !in_array( $database, $config->get( MainConfigNames::LocalDatabases ), true ) ) {
 							return $form->msg( 'managewiki-invalid-database', $database, $name );
 						}
 
@@ -132,14 +135,20 @@ class ManageWikiTypes {
 				break;
 			case 'list':
 				$configs = [
-					'type' => 'select',
+					'class' => HTMLTypedSelectField::class,
 					'options' => $options['options'],
 					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
 			case 'list-multi':
+				if ( $options['list-multi-int'] ?? false ) {
+					$value = array_map( 'strval', $value ?? $options['overridedefault'] );
+				}
+
 				$configs = [
-					'type' => 'multiselect',
+					'class' => ( $options['list-multi-int'] ?? false ) ?
+						HTMLMultiSelectField::class :
+						HTMLTypedMultiSelectField::class,
 					'options' => $options['options'],
 					'default' => $value ?? $options['overridedefault'],
 				];
@@ -152,7 +161,20 @@ class ManageWikiTypes {
 				$configs = [
 					'type' => 'multiselect',
 					'options' => $options['options'],
-					'default' => array_keys( $value ?? $options['overridedefault'], true ),
+					'default' => array_keys( $value ?? $options['overridedefault'], true, true ),
+				];
+
+				if ( !$disabled ) {
+					$configs['dropdown'] = true;
+				}
+				break;
+			case 'list-multi-int':
+				$configs = [
+					'type' => 'multiselect',
+					'options' => $options['options'],
+					// multiselect only accepts string values, so we use string here and convert
+					// the values to int on submission, otherwise the field breaks.
+					'default' => array_map( 'strval', $value ?? $options['overridedefault'] ),
 				];
 
 				if ( !$disabled ) {
@@ -249,7 +271,7 @@ class ManageWikiTypes {
 				$excludedPrefs[] = 'downloaduserdata';
 
 				foreach ( $allPreferences as $pref => $val ) {
-					if ( !in_array( $pref, $excludedPrefs ) ) {
+					if ( !in_array( $pref, $excludedPrefs, true ) ) {
 						$preferences[$pref] = $pref;
 					}
 				}

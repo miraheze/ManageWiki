@@ -31,14 +31,12 @@ class ManageWikiPermissions implements IConfigModule {
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$perms = $this->dbw->select(
-			'mw_permissions',
-			'*',
-			[
-				'perm_dbname' => $dbname,
-			],
-			__METHOD__
-		);
+		$perms = $this->dbw->newSelectQueryBuilder()
+			->select( '*' )
+			->from( 'mw_permissions' )
+			->where( [ 'perm_dbname' => $dbname ] )
+			->caller( __METHOD__ )
+			->fetchResultSet();
 
 		foreach ( $perms as $perm ) {
 			$this->livePermissions[$perm->perm_group] = [
@@ -150,7 +148,7 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	public function isDeleting( string $group ): bool {
-		return in_array( $group, $this->deleteGroups );
+		return in_array( $group, $this->deleteGroups, true );
 	}
 
 	public function getErrors(): array {
@@ -184,14 +182,14 @@ class ManageWikiPermissions implements IConfigModule {
 			if ( $this->isDeleting( $group ) ) {
 				$this->log = 'delete-group';
 
-				$this->dbw->delete(
-					'mw_permissions',
-					[
+				$this->dbw->newDeleteQueryBuilder()
+					->deleteFrom( 'mw_permissions' )
+					->where( [
 						'perm_dbname' => $this->dbname,
 						'perm_group' => $group,
-					],
-					__METHOD__
-				);
+					] )
+					->caller( __METHOD__ )
+					->execute();
 
 				$this->deleteUsersFromGroup( $group );
 				continue;
@@ -213,21 +211,20 @@ class ManageWikiPermissions implements IConfigModule {
 				'perm_autopromote' => $this->livePermissions[$group]['autopromote'] === null ? null : json_encode( $this->livePermissions[$group]['autopromote'] ?? '' ),
 			];
 
-			$this->dbw->upsert(
-				'mw_permissions',
-				[
+			$this->dbw->newInsertQueryBuilder()
+				->insertInto( 'mw_permissions' )
+				->row( [
 					'perm_dbname' => $this->dbname,
 					'perm_group' => $group,
-				] + $builtTable,
-				[
-					[
-						'perm_dbname',
-						'perm_group',
-					],
-				],
-				$builtTable,
-				__METHOD__
-			);
+				] + $builtTable )
+				->onDuplicateKeyUpdate()
+				->uniqueIndexFields( [
+					'perm_dbname',
+					'perm_group',
+				] )
+				->set( $builtTable )
+				->caller( __METHOD__ )
+				->execute();
 
 			$logAP = ( $this->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
 			$this->logParams = [

@@ -4,12 +4,13 @@ namespace Miraheze\ManageWiki;
 
 use DateTimeZone;
 use MediaWiki\MediaWikiServices;
+use Wikimedia\Rdbms\SelectQueryBuilder;
 
 class ManageWiki {
 
 	public static function checkSetup( string $module ): bool {
 		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		return $config->get( ConfigNames::ManageWiki )[$module] ?? false;
+		return $config->get( ConfigNames::ModulesEnabled )[$module] ?? false;
 	}
 
 	public static function getTimezoneList(): array {
@@ -68,31 +69,29 @@ class ManageWiki {
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$dbr = $databaseUtils->getGlobalReplicaDB();
 
-		$nsID = $namespace === '' ? false : $dbr->selectRow(
-			'mw_namespaces',
-			'ns_namespace_id',
-			[
+		$nsID = $namespace === '' ? false : $dbr->newSelectQueryBuilder()
+			->select( 'ns_namespace_id' )
+			->from( 'mw_namespaces' )
+			->where( [
 				'ns_dbname' => $dbname,
 				'ns_namespace_id' => $namespace,
-			],
-			__METHOD__
-		)->ns_namespace_id;
+			] )
+			->caller( __METHOD__ )
+			->fetchField();
 
-		if ( is_bool( $nsID ) ) {
-			$lastID = $dbr->selectRow(
-				'mw_namespaces',
-				'ns_namespace_id',
-				[
+		if ( $nsID === false ) {
+			$lastID = $dbr->newSelectQueryBuilder()
+				->select( 'ns_namespace_id' )
+				->from( 'mw_namespaces' )
+				->where( [
 					'ns_dbname' => $dbname,
-					'ns_namespace_id >= 3000',
-				],
-				__METHOD__,
-				[
-					'ORDER BY' => 'ns_namespace_id DESC',
-				]
-			);
+					$dbr->expr( 'ns_namespace_id', '>=', 3000 ),
+				] )
+				->orderBy( 'ns_namespace_id', SelectQueryBuilder::SORT_DESC )
+				->caller( __METHOD__ )
+				->fetchField();
 
-			$nsID = $lastID ? $lastID->ns_namespace_id + 1 : 3000;
+			$nsID = $lastID !== false ? $lastID + 1 : 3000;
 		}
 
 		return $nsID;

@@ -22,6 +22,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
+use Wikimedia\ObjectCache\WANObjectCache;
 use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiFormFactoryBuilder {
@@ -231,24 +232,32 @@ class ManageWikiFormFactoryBuilder {
 
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
-		$queue = array_fill_keys( array_merge(
-				glob( $config->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
-				glob( $config->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
-			),
-		true );
+		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
+		$cache = $objectCacheFactory->getLocalClusterInstance();
 
-		$processor = new ExtensionProcessor();
+		$credits = $cache->getWithSetCallback(
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
+			WANObjectCache::TTL_DAY,
+			static function () use ( $config ): array {
+				$queue = array_fill_keys( array_merge(
+					glob( $config->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
+					glob( $config->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
+				), true );
 
-		foreach ( $queue as $path => $mtime ) {
-			$json = file_get_contents( $path );
-			$info = json_decode( $json, true );
-			$version = $info['manifest_version'] ?? 2;
+				$processor = new ExtensionProcessor();
 
-			$processor->extractInfo( $path, $info, $version );
-		}
+				foreach ( $queue as $path => $_ ) {
+					$json = file_get_contents( $path );
+					$info = json_decode( $json, true );
+					$version = $info['manifest_version'] ?? 2;
 
-		$data = $processor->getExtractedInfo();
-		$credits = $data['credits'];
+					$processor->extractInfo( $path, $info, $version );
+				}
+
+				$data = $processor->getExtractedInfo();
+				return $data['credits'];
+			}
+		);
 
 		$formDescriptor = [];
 
@@ -302,7 +311,7 @@ class ManageWikiFormFactoryBuilder {
 				$help[] = "<br />{$ext['help']}";
 			}
 
-			if ( $hasSettings && in_array( $name, $extList ) ) {
+			if ( $hasSettings && in_array( $name, $extList, true ) ) {
 				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 				$module = 'settings';
 				if ( $dbname !== $config->get( MainConfigNames::DBname ) ) {
@@ -322,7 +331,7 @@ class ManageWikiFormFactoryBuilder {
 					$ext['linkPage'],
 					$extDisplayName ?? ( $namemsg ? $context->msg( $namemsg )->text() : $extname ) ?? $ext['name'],
 				],
-				'default' => in_array( $name, $extList ),
+				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
 				'help' => implode( ' ', $help ),
 				'section' => $ext['section'],
@@ -350,7 +359,7 @@ class ManageWikiFormFactoryBuilder {
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
 			$value['from'] === strtolower( $filtered ) && (
-				in_array( $value['from'], $extList ) ||
+				in_array( $value['from'], $extList, true ) ||
 				( $value['global'] ?? false )
 			)
 		);
@@ -372,7 +381,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) &&
-				( (bool)( $set['global'] ?? false ) || in_array( $set['from'], $extList ) );
+				( (bool)( $set['global'] ?? false ) || in_array( $set['from'], $extList, true ) );
 
 			$disabled = $ceMW ? !$mwRequirements : true;
 
@@ -521,7 +530,7 @@ class ManageWikiFormFactoryBuilder {
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $remoteWiki ) : true;
 
-				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] === 'mediawiki' ) || ( in_array( $a['from'], $extList ) ) );
+				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] === 'mediawiki' ) || ( in_array( $a['from'], $extList, true ) ) );
 				$disabled = $ceMW ? !$mwRequirements : true;
 
 				$msgName = $context->msg( "managewiki-namespaces-$key-name" );
@@ -533,8 +542,8 @@ class ManageWikiFormFactoryBuilder {
 						( $a['main'] && $name === 'namespace' ) ||
 						( $a['talk'] && $name === 'namespacetalk' )
 					) &&
-					!in_array( $id, (array)( $a['excluded'] ?? [] ) ) &&
-					in_array( $id, (array)( $a['only'] ?? [ $id ] ) )
+					!in_array( $id, (array)( $a['excluded'] ?? [] ), true ) &&
+					in_array( $id, (array)( $a['only'] ?? [ $id ] ), true )
 				) {
 					if ( is_array( $a['overridedefault'] ) ) {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
@@ -626,7 +635,7 @@ class ManageWikiFormFactoryBuilder {
 		string $group,
 		Config $config
 	): array {
-		if ( in_array( $group, $config->get( ConfigNames::PermissionsDisallowedGroups ) ) ) {
+		if ( in_array( $group, $config->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			$ceMW = false;
 		}
 
@@ -706,7 +715,7 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		foreach ( $groupData['allPermissions'] as $perm ) {
-			$assigned = in_array( $perm, $groupData['assignedPermissions'] );
+			$assigned = in_array( $perm, $groupData['assignedPermissions'], true );
 			$formDescriptor["right-$perm"] = [
 				'type' => 'check',
 				'label' => $perm,
@@ -834,7 +843,7 @@ class ManageWikiFormFactoryBuilder {
 		if (
 			$ceMW &&
 			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ) )
+			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true )
 		) {
 			$formDescriptor['delete-checkbox'] = [
 				'type' => 'check',
@@ -1060,18 +1069,32 @@ class ManageWikiFormFactoryBuilder {
 			$value = $formData["set-$name"];
 
 			switch ( $type ) {
+				case 'float':
+					$value = (float)$value;
+					break;
+				case 'integer':
+					$value = (int)$value;
+					break;
 				case 'integers':
 					$value = array_column( $value, 'value' );
 					$value = array_filter( $value );
 					$value = array_map( 'intval', $value );
 					break;
+				case 'list-multi':
+					if ( $set['list-multi-int'] ?? false ) {
+						$value = array_map( 'intval', $value );
+					}
+					break;
 				case 'list-multi-bool':
 					$setValue = [];
 					foreach ( $set['allopts'] as $opt ) {
-						$setValue[$opt] = in_array( $opt, $value );
+						$setValue[$opt] = in_array( $opt, $value, true );
 					}
 
 					$value = $setValue;
+					break;
+				case 'list-multi-int':
+					$value = array_map( 'intval', $value );
 					break;
 				case 'matrix':
 					$current = ManageWiki::handleMatrix( $current, 'php' );
@@ -1107,7 +1130,7 @@ class ManageWikiFormFactoryBuilder {
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
 			$value['from'] === strtolower( $filtered ) && (
-				in_array( $value['from'], $extList ) ||
+				in_array( $value['from'], $extList, true ) ||
 				( $value['global'] ?? false )
 			)
 		);

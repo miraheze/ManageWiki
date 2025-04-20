@@ -94,7 +94,7 @@ class ManageWikiRequirements {
 			if ( is_array( $extension ) ) {
 				$count = 0;
 				foreach ( $extension as $or ) {
-					if ( in_array( $or, $extList ) ) {
+					if ( in_array( $or, $extList, true ) ) {
 						$count++;
 					}
 				}
@@ -102,7 +102,7 @@ class ManageWikiRequirements {
 				if ( !$count ) {
 					return false;
 				}
-			} elseif ( !in_array( $extension, $extList ) ) {
+			} elseif ( !in_array( $extension, $extList, true ) ) {
 				return false;
 			}
 		}
@@ -161,7 +161,7 @@ class ManageWikiRequirements {
 			// We need to cast $wikiValue to an array
 			// to convert any values (boolean) to an array.
 			// Otherwise TypeError is thrown.
-			if ( $wikiValue === $value || in_array( $value, (array)$wikiValue ) ) {
+			if ( $wikiValue === $value || in_array( $value, (array)$wikiValue, true ) ) {
 				return true;
 			}
 		}
