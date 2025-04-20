@@ -285,13 +285,13 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$disableIf = [];
-			if ( $ext['requires'] ) {
-				if ( $extRequires ?? false ) {
+			if ( $ext['requires'] || $extRequires ) {
+				if ( $extRequires ) {
 					$disableIf = ManageWiki::buildDisableIfFromRequires( $extRequires );
 				}
 
 				$requires = [];
-				foreach ( $ext['requires'] as $require => $data ) {
+				foreach ( $ext['requires'] + $extRequires as $require => $data ) {
 					if ( is_array( $data ) ) {
 						foreach ( $data as $index => $element ) {
 							if ( is_array( $element ) ) {
