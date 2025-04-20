@@ -144,17 +144,17 @@ class CreateWiki implements
 
 			$additional = $this->config->get( ConfigNames::NamespacesAdditional );
 			foreach ( $nsObjects as $ns ) {
-				$nsName = $lcName[$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
-				$lcAlias = $lcEN[$ns->ns_namespace_id] ?? null;
+				$nsName = $lcName[(int)$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
+				$lcAlias = $lcEN[(int)$ns->ns_namespace_id] ?? null;
 
 				$cacheArray['namespaces'][$nsName] = [
-					'id' => $ns->ns_namespace_id,
+					'id' => (int)$ns->ns_namespace_id,
 					'core' => (bool)$ns->ns_core,
 					'searchable' => (bool)$ns->ns_searchable,
 					'subpages' => (bool)$ns->ns_subpages,
 					'content' => (bool)$ns->ns_content,
 					'contentmodel' => $ns->ns_content_model,
-					'protection' => ( (bool)$ns->ns_protection ) ? $ns->ns_protection : false,
+					'protection' => $ns->ns_protection ?: false,
 					'aliases' => array_merge( json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '' ), true ), (array)$lcAlias ),
 					'additional' => json_decode( $ns->ns_additional ?? '', true ),
 				];
@@ -162,7 +162,7 @@ class CreateWiki implements
 				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
 
 				foreach ( $additional as $var => $conf ) {
-					if ( !$this->isAdditionalSettingForNamespace( $conf, $ns->ns_namespace_id ) ) {
+					if ( !$this->isAdditionalSettingForNamespace( $conf, (int)$ns->ns_namespace_id ) ) {
 						continue;
 					}
 
@@ -348,20 +348,22 @@ class CreateWiki implements
 		mixed $val,
 		array $varConf
 	): void {
-		switch ( $varConf['type'] ) {
-			case 'check':
-				$cacheArray['settings'][$var][] = $nsID;
-				break;
-			case 'vestyle':
-				$cacheArray['settings'][$var][$nsID] = true;
-				break;
-			default:
-				if ( $varConf['constant'] ?? false ) {
-					$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
-				} else {
-					$cacheArray['settings'][$var][$nsID] = $val;
-				}
+		if ( $varConf['type'] === 'check' ) {
+			$cacheArray['settings'][$var][] = $nsID;
+			return;
 		}
+
+		if ( $varConf['type'] === 'vestyle' ) {
+			$cacheArray['settings'][$var][$nsID] = true;
+			return;
+		}
+
+		if ( $varConf['constant'] ?? false ) {
+			$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
+			return;
+		}
+
+		$cacheArray['settings'][$var][$nsID] = $val;
 	}
 
 	/**
@@ -376,11 +378,7 @@ class CreateWiki implements
 		// namespace that we are on, otherwise it is very likely for the namespace to
 		// not have setting set, and cause settings set before to be ignored
 
-		$only = null;
-		if ( isset( $conf['only'] ) ) {
-			$only = (array)$conf['only'];
-		}
-
-		return $only === null || in_array( $nsID, $only, true );
+		$only = $conf['only'] ?? null;
+		return $only === null || in_array( $nsID, (array)$only, true );
 	}
 }
