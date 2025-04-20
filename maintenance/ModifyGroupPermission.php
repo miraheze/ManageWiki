@@ -61,24 +61,29 @@ class ModifyGroupPermission extends Maintenance {
 	}
 
 	private function changeGroup(
-		string $name,
+		string $group,
 		array $permData,
 		ManageWikiPermissions $mwPermissions
 	): void {
-		$groupData = $mwPermissions->list( group: $name );
+		$groupData = $mwPermissions->list( $group );
 
-		if ( !in_array( $name, $this->getConfig()->get( ConfigNames::PermissionsPermanentGroups ), true ) && ( count( $permData['permissions']['remove'] ) > 0 ) && ( count( $groupData['permissions'] ) === count( $permData['permissions']['remove'] ) ) ) {
-			$mwPermissions->remove( $name );
+		$isRemovable = !in_array( $group, $this->getConfig()->get( ConfigNames::PermissionsPermanentGroups ), true )
+		$allPermissionsRemoved = count( $permData['permissions']['remove'] ?? [] ) > 0 &&
+			count( $permData['permissions']['add'] ?? [] ) === 0 &&
+			count( $groupData['permissions'] ?? [] ) === count( $permData['permissions']['remove'] );
+
+		if ( $isRemovable && $allPermissionsRemoved ) {
+			$mwPermissions->remove( $group );
 		} else {
-			$mwPermissions->modify( $name, $permData );
+			$mwPermissions->modify( $group, $permData );
 		}
 
 		$mwPermissions->commit();
 	}
 
 	private function getValue( string $option ): array {
-		return $this->getOption( $option, '' ) === '' ?
-			[] : explode( ',', $this->getOption( $option, '' ) );
+		$value = $this->getOption( $option, '' );
+		return $value === '' ? [] : explode( ',', $value );
 	}
 }
 
