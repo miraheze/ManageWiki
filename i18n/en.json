@@ -68,7 +68,7 @@
 	"managewiki-core-info": "Insert the database name of the wiki you wish to view core configuration for.",
 	"managewiki-desc": "Allows users to manage their wiki's configuration with ease through a web interface.",
 	"managewiki-disabled": "This \"$1\" module has not been enabled on this wiki and cannot be used.",
-	"managewiki-error-conflict": "The extension \"$1\" cannot enabled because it conflicts with $2.",
+	"managewiki-error-conflict": "The extension \"$1\" cannot be enabled because it conflicts with $2.",
 	"managewiki-error-disallowednamespace": "The namespace \"$1\" is not allowed.",
 	"managewiki-error-emptygroup": "You cannot create a group without any permissions assigned.",
 	"managewiki-error-install": "The extension \"$1\" failed to be enabled. If this keeps occurring, please ",

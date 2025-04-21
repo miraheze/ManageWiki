@@ -887,6 +887,9 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $mwReturn->hasChanges() ) {
 			$mwReturn->commit();
+			if ( $module === 'extensions' && $mwReturn->getErrors() ) {
+				return $mwReturn->getErrors();
+			}
 
 			if ( $module !== 'permissions' ) {
 				$mwReturn->addLogParam( '4::wiki', $dbname );
