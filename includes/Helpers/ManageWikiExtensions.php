@@ -176,7 +176,7 @@ class ManageWikiExtensions implements IConfigModule {
 
 		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
-			if ( !$this->isEnabled( $name ) && $this->isEnabling( $extensionsConfig['conflicts'] ) ) {
+			if ( !$this->isEnabling( $name ) && $this->isEnabling( $extensionsConfig['conflicts'] ) ) {
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
 						$extensionsConfig['name'],
