@@ -139,10 +139,9 @@ class ManageWikiFormFactory {
 					Html::rawElement(
 						'p',
 						[],
-						'The following errors occurred: <br />' . implode( '<br />', $errorOut )
+						implode( '<br />', $errorOut )
 					),
-					'',
-					'mw-notify-error'
+					'The following errors occurred:'
 				)
 			);
 
