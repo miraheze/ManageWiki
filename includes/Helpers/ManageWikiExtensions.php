@@ -164,8 +164,6 @@ class ManageWikiExtensions implements IConfigModule {
 		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
 			if ( in_array( $extensionsConfig['conflicts'] ?? [], $this->list(), true ) ) {
-				unset( $this->liveExtensions[$name] );
-				unset( $this->changes[$name] );
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
 						$extensionsConfig['name'],
@@ -173,7 +171,12 @@ class ManageWikiExtensions implements IConfigModule {
 					],
 				];
 
-				// We have a conflict and we have unset it. Therefore we have nothing else to do for this extension
+				// We have a conflict, we have nothing else to do for this extension.
+				continue;
+			}
+
+			if ( $this->getErrors() ) {
+				// If we have errors we don't want to save anything
 				continue;
 			}
 
@@ -186,8 +189,6 @@ class ManageWikiExtensions implements IConfigModule {
 				$installResult = ( !isset( $extensionsConfig['install'] ) || $enabledExt ) ? true : ManageWikiInstaller::process( $this->dbname, $extensionsConfig['install'] );
 
 				if ( !$installResult ) {
-					unset( $this->liveExtensions[$name] );
-					unset( $this->changes[$name] );
 					$this->errors[] = [
 						'managewiki-error-install' => [
 							$extensionsConfig['name'],
@@ -198,13 +199,16 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			unset( $this->liveExtensions[$name] );
-			unset( $this->changes[$name] );
 			$this->errors[] = [
 				'managewiki-error-requirements' => [
 					$extensionsConfig['name'],
 				],
 			];
+		}
+		
+		if ( $this->getErrors() ) {
+			// If we have errors we don't want to save anything
+			return;
 		}
 
 		foreach ( $this->removedExtensions as $name => $extensionsConfig ) {
