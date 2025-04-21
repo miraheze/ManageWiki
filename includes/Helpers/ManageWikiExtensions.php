@@ -205,7 +205,7 @@ class ManageWikiExtensions implements IConfigModule {
 				],
 			];
 		}
-		
+
 		if ( $this->getErrors() ) {
 			// If we have errors we don't want to save anything
 			return;
