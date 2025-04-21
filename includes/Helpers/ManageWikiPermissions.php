@@ -161,6 +161,14 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @param string $group Group name
 	 */
 	public function remove( string $group ): void {
+		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-settings' );
+		if ( $groupsWithPermission === [ $group ] ) {
+			$this->errors[] = [
+				'managewiki-error-missingpermission' => [],
+			];
+			return;
+		}
+
 		// Utilize changes differently in this case
 		foreach ( $this->livePermissions[$group] as $name => $value ) {
 			$this->changes[$group][$name] = [
@@ -205,16 +213,15 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	public function commit(): void {
+		if ( $this->getErrors() ) {
+			// Don't save anything if we have errors
+			return;
+		}
+
 		$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
 
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( $this->isDeleting( $group ) ) {
-				if ( $this->getGroupsWithPermission( 'managewiki-settings' ) === [ $group ] ) {
-					$this->errors[] = [
-						'managewiki-error-missingpermission' => [],
-					];
-					return;
-				}
 				$this->log = 'delete-group';
 
 				$this->dbw->newDeleteQueryBuilder()
