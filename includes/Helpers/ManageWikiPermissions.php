@@ -93,7 +93,7 @@ class ManageWikiPermissions implements IConfigModule {
 			}
 		}
 
-		return $groups;
+		return array_unique( $groups );
 	}
 
 	/**
