@@ -85,19 +85,22 @@ class ManageWiki {
 			}
 		}
 
-		$finalCondition = count( $conditions ) === 1 ?
-			$conditions[0] :
-			array_merge( [ 'OR' ], $conditions );
+		// Initial OR of required conditions
+		$finalCondition = count( $conditions ) === 1
+			? $conditions[0]
+			: ( count( $conditions ) > 1 ? array_merge( [ 'OR' ], $conditions ) : null );
 
 		if ( $conflict ) {
-			$finalCondition = [
-				'OR',
-				$finalCondition,
-				[ '===', "ext-$conflict", '1' ]
-			];
+			$conflictCondition = [ '===', "ext-$conflict", '1' ];
+
+			if ( $finalCondition ) {
+				$finalCondition = [ 'OR', $finalCondition, $conflictCondition ];
+			} else {
+				$finalCondition = $conflictCondition;
+			}
 		}
 
-		return $finalCondition;
+		return $finalCondition ?? [];
 	}
 
 	public static function namespaceID( string $dbname, string $namespace ): int {
