@@ -7,6 +7,7 @@ use ManualLogEntry;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Message\Message;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
@@ -92,8 +93,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 			$groupSelector = [];
 			$groupSelector['info'] = [
-				'default' => $this->msg( 'managewikidefaults-select-info' )->text(),
 				'type' => 'info',
+				'default' => $this->msg( 'managewikidefaults-selectgroup-info' )->text(),
 			];
 
 			$groupSelector['group'] = [
@@ -115,7 +116,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 				$createDescriptor = [];
 				$createDescriptor['info'] = [
 					'type' => 'info',
-					'default' => $this->msg( 'managewikidefaults-create-info' )->text(),
+					'default' => $this->msg( 'managewikidefaults-creategroup-info' )->text(),
 				];
 
 				$createDescriptor['group'] = [
@@ -306,9 +307,9 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		return false;
 	}
 
-	public function validateNewGroupName( string $newGroup ): string|bool {
+	public function validateNewGroupName( string $newGroup ): bool|Message {
 		if ( in_array( $newGroup, $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
-			return 'The group you attempted to create is not allowed. Please select a different name and try again.';
+			return $this->msg( 'managewiki-permissions-group-disallowed' );
 		}
 
 		return true;

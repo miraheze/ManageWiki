@@ -127,7 +127,7 @@
 	"managewiki-toggle-forcesidebar": "Kenar çubuğunda ManageWiki bağlantılarının görüntülenmesini zorlayın.",
 	"managewiki-warning-changes": "ManageWiki'de henüz kaydedilmemiş değişiklikler yaptınız.\nBu sayfadan \"$1\" düğmesine tıklamadan ayrılırsanız ManageWiki değişiklikleriniz güncellenmeyecektir.",
 	"managewikidefaultpermissions": "Viki çiftliğin varsayılan izinlerini yönet",
-	"managewikidefaultpermissions-resetgroups": "Tüm grupları varsayılana sıfırla",
+	"managewikidefaults-resetgroups": "Tüm grupları varsayılana sıfırla",
 	"managewikiextensions": "Vikinin uzantıları yönet",
 	"managewikinamespaces": "Vikinin ad alanları yönet",
 	"managewikipermissions": "Vikinin yetkileri yönet",

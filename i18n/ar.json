@@ -121,7 +121,7 @@
 	"managewiki-success": "لقد تم حفظ التغييرات الخاصة بك.",
 	"managewiki-toggle-forcesidebar": "فرض عرض روابط إدارة الويكي في الشريط الجانبي.",
 	"managewikidefaultpermissions": "إدارة الأذونات الافتراضية للويكيات الجديدة",
-	"managewikidefaultpermissions-resetgroups": "إعادة تعيين جميع المجموعات إلى الافتراضي",
+	"managewikidefaults-resetgroups": "إعادة تعيين جميع المجموعات إلى الافتراضي",
 	"managewikiextensions": "إدارة امتدادات ويكي",
 	"managewikinamespaces": "إدارة نطاقات ويكي",
 	"managewikipermissions": "إدارة صلاحيات ويكي",

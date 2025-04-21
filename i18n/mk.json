@@ -149,7 +149,7 @@
 	"managewiki-unavailable-notcentralwiki": "Оваа страница е недостапна на ова вики. Посетете го централното вики на вашата фарма за да ја користите страницава.",
 	"managewiki-warning-changes": "Направивте промени во Раководење со вики, но не ги зачувавте.\nИзмената нема да се изврши ако ја напуштите страницава без да стиснете на „$1“.",
 	"managewikidefaultpermissions": "Раководење со основни дозволи на нови викија",
-	"managewikidefaultpermissions-resetgroups": "Врати ги сите групи по основно",
+	"managewikidefaults-resetgroups": "Врати ги сите групи по основно",
 	"managewikiextensions": "Раководење со додатоци на вики",
 	"managewikinamespaces": "Раководење со именски простори на вики",
 	"managewikipermissions": "Раководење дозволи на вики",

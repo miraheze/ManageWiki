@@ -125,7 +125,7 @@
 	"managewiki-unavailable": "Nepasiekiama",
 	"managewiki-unavailable-notcentralwiki": "Šis puslapis šioje viki nepasiekiamas. Prašome apsilankyti savo fermos centrinę vikį, kad galėtumėte naudoti šį puslapį.",
 	"managewikidefaultpermissions": "Tvarkyti viki fermos numatytuosius leidimus",
-	"managewikidefaultpermissions-resetgroups": "Atstatyti visas grupes į numatytuosius nustatymus",
+	"managewikidefaults-resetgroups": "Atstatyti visas grupes į numatytuosius nustatymus",
 	"managewikiextensions": "Tvarkyti viki plėtrinius",
 	"managewikinamespaces": "Tvarkyti viki vardų sritis",
 	"managewikipermissions": "Tvarkyti viki leidimus",

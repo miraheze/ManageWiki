@@ -79,7 +79,7 @@
 	"managewiki-success": "Ваше измене су сачуване.",
 	"managewiki-unavailable": "Није доступно",
 	"managewikidefaultpermissions": "Управљање подразумеваним дозволама за нове викије",
-	"managewikidefaultpermissions-resetgroups": "Ресетуј све групе на подразумевано",
+	"managewikidefaults-resetgroups": "Ресетуј све групе на подразумевано",
 	"managewikiextensions": "Управљање додацима викија",
 	"managewikinamespaces": "Управљање именском просторима викија",
 	"managewikipermissions": "Управљање дозволама викијa",
