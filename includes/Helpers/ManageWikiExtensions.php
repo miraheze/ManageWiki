@@ -175,10 +175,10 @@ class ManageWikiExtensions implements IConfigModule {
 			if ( in_array( $extensionsConfig['conflicts'], $enabled, true ) ) {
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
-						$extensionsConfig['name'],
 						$this->getExtensionName(
 							$extensionsConfig['conflicts']
 						),
+						$extensionsConfig['name'],
 					],
 				];
 
