@@ -176,7 +176,7 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	public function commit(): void {
-		$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
+		$logNULL = wfMessage( 'rightsnone' )->text();
 
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( $this->isDeleting( $group ) ) {
