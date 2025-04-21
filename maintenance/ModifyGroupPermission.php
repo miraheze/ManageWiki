@@ -12,7 +12,7 @@ class ModifyGroupPermission extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 
-		$this->addArg( 'group', 'The group name you want to change.', false );
+		$this->addOption( 'group', 'The group name you want to change.', false, true );
 		$this->addOption( 'all', 'Gets all perm group names.' );
 		$this->addOption( 'addperms', 'Comma separated list of permissions to add.', false, true );
 		$this->addOption( 'removeperms', 'Comma separated list of permissions to remove.', false, true );
@@ -52,12 +52,12 @@ class ModifyGroupPermission extends Maintenance {
 			return;
 		}
 
-		if ( $this->getArg( 0 ) ) {
-			$this->changeGroup( $this->getArg( 0 ), $permData, $mwPermissions );
+		if ( $this->hasOption( 'group' ) ) {
+			$this->changeGroup( $this->getOption( 'group' ), $permData, $mwPermissions );
 			return;
 		}
 
-		$this->fatalError( 'You must supply either the group as a arg or use --all' );
+		$this->fatalError( 'You must supply either supply --group or use --all' );
 	}
 
 	private function changeGroup(
