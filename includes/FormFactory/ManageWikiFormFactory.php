@@ -136,14 +136,7 @@ class ManageWikiFormFactory {
 				}
 			}
 
-			/*$form->getOutput()->addHTML(
-				Html::errorBox(
-					implode( '<br />', $errorOut ) . '<br />',
-					'Errors occurred'
-				)
-			);*/
-
-			return Status::newFatal( new RawMessage( implode( '<br />', $errorOut ) ) );
+			return Status::newFatal( new RawMessage( implode( "\n", $errorOut ) ) );
 		}
 
 		$form->getOutput()->addHTML(
