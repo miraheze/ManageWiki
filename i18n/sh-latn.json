@@ -138,7 +138,7 @@
 	"managewiki-unavailable-notcentralwiki": "Ova stranica nije dostupna na ovom vikiju. Molimo posjetite središnji viki svoje farme da biste koristili ovu stranicu.",
 	"managewiki-warning-changes": "Napravili ste promjene na ManageWiki, koje još nisu sačuvane.\nIzmjena neće biti izvedena ako napustite ovu stranicu bez klika na \"$1\".",
 	"managewikidefaultpermissions": "Upravljanje podrazumijevanim dozvolama vikifarme",
-	"managewikidefaultpermissions-resetgroups": "Resetuj sve grupe na podrazumijevano",
+	"managewikidefaults-resetgroups": "Resetuj sve grupe na podrazumijevano",
 	"managewikiextensions": "Upravljanje dodacima vikija",
 	"managewikinamespaces": "Upravljanje imenskom prostorima vikija",
 	"managewikipermissions": "Upravljanje dozvolama vikija",

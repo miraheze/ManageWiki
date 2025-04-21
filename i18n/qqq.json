@@ -79,6 +79,7 @@
 	"managewiki-label-sitename": "Used as a label for 'sitename'.\n{{Identical|Sitename}}",
 	"managewiki-permissions-autopromote": "{{Doc-singularthey}}",
 	"managewiki-permissions-autopromote-email": "{{doc-singularthey}}",
+	"managewiki-permissions-group-disallowed": "Error message when a user attempts to create a group that is disallowed.",
 	"managewiki-placeholder-reason": "Used as a placeholder for 'reason'",
 	"managewiki-requires": "Text that indicates a particular setting needs something else to be enabled first",
 	"managewiki-review": "Text for the ManageWiki 'Review' button.\n{{Identical|Review}}",

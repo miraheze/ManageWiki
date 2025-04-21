@@ -55,7 +55,7 @@
 	"managewiki-permissions-create": "napravite novu korisničku grupu",
 	"managewiki-success": "Podešavanja su uspešno promenjena.",
 	"managewikidefaultpermissions": "Upravljanje podrazumevanim dozvolama farmi vikija",
-	"managewikidefaultpermissions-resetgroups": "Resetuj sve grupe na podrazumevano",
+	"managewikidefaults-resetgroups": "Resetuj sve grupe na podrazumevano",
 	"managewikiextensions": "Upravljanje dodacima vikija",
 	"managewikinamespaces": "Upravljanje imenskom prostorima vikija",
 	"managewikipermissions": "Upravljanje dozvolama vikija",

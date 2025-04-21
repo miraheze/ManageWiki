@@ -7,6 +7,7 @@ use ManualLogEntry;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Message\Message;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
@@ -18,7 +19,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 use Miraheze\ManageWiki\ManageWiki;
 
-class SpecialManageWikiDefaultPermissions extends SpecialPage {
+class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
@@ -27,7 +28,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		private readonly PermissionManager $permissionManager,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
-		parent::__construct( 'ManageWikiDefaultPermissions' );
+		parent::__construct( 'ManageWikiDefaults' );
 	}
 
 	/**
@@ -36,7 +37,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 	public function execute( $par ): void {
 		$this->setHeaders();
 		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
-			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ '1' => 'permissions' ] );
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ 'permissions' ] );
 		}
 
 		$this->getOutput()->addModules( [ 'mediawiki.special.userrights' ] );
@@ -92,8 +93,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 			$groupSelector = [];
 			$groupSelector['info'] = [
-				'default' => $this->msg( 'managewikidefaultpermissions-select-info' )->text(),
 				'type' => 'info',
+				'default' => $this->msg( 'managewikidefaults-selectgroup-info' )->text(),
 			];
 
 			$groupSelector['group'] = [
@@ -115,7 +116,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				$createDescriptor = [];
 				$createDescriptor['info'] = [
 					'type' => 'info',
-					'default' => $this->msg( 'managewikidefaultpermissions-create-info' )->text(),
+					'default' => $this->msg( 'managewikidefaults-creategroup-info' )->text(),
 				];
 
 				$createDescriptor['group'] = [
@@ -148,7 +149,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$resetPermissionsDescriptor = [];
 			$resetPermissionsDescriptor['info'] = [
 				'type' => 'info',
-				'default' => $this->msg( 'managewikidefaultpermissions-resetgroups-header' )->text(),
+				'default' => $this->msg( 'managewikidefaults-resetgroups-header' )->text(),
 			];
 
 			$resetPermissionsForm = HTMLForm::factory( 'ooui', $resetPermissionsDescriptor, $this->getContext() );
@@ -156,8 +157,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				->setSubmitCallback( [ $this, 'onSubmitPermissionsResetForm' ] )
 				->setFormIdentifier( 'resetpermissionsform' )
 				->setMethod( 'post' )
-				->setWrapperLegendMsg( 'managewikidefaultpermissions-resetgroups-title' )
-				->setSubmitTextMsg( 'managewikidefaultpermissions-resetgroups' )
+				->setWrapperLegendMsg( 'managewikidefaults-resetgroups-title' )
+				->setSubmitTextMsg( 'managewikidefaults-resetgroups' )
 				->setSubmitDestructive()
 				->prepareForm()
 				->show();
@@ -166,7 +167,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$resetSettingsDescriptor['info'] = [
 				'type' => 'info',
 				'raw' => true,
-				'default' => $this->msg( 'managewikidefaultpermissions-resetsettings-header' )->parse(),
+				'default' => $this->msg( 'managewikidefaults-resetsettings-header' )->parse(),
 			];
 
 			$resetSettingsForm = HTMLForm::factory( 'ooui', $resetSettingsDescriptor, $this->getContext() );
@@ -174,8 +175,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				->setSubmitCallback( [ $this, 'onSubmitSettingsResetForm' ] )
 				->setFormIdentifier( 'resetsettingsform' )
 				->setMethod( 'post' )
-				->setWrapperLegendMsg( 'managewikidefaultpermissions-resetsettings-title' )
-				->setSubmitTextMsg( 'managewikidefaultpermissions-resetsettings' )
+				->setWrapperLegendMsg( 'managewikidefaults-resetsettings-title' )
+				->setSubmitTextMsg( 'managewikidefaults-resetsettings' )
 				->setSubmitDestructive()
 				->prepareForm()
 				->show();
@@ -183,7 +184,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 			$resetCacheDescriptor = [];
 			$resetCacheDescriptor['info'] = [
 				'type' => 'info',
-				'default' => $this->msg( 'managewikidefaultpermissions-resetcache-header' )->text(),
+				'default' => $this->msg( 'managewikidefaults-resetcache-header' )->text(),
 			];
 
 			$resetCacheForm = HTMLForm::factory( 'ooui', $resetCacheDescriptor, $this->getContext() );
@@ -191,8 +192,8 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 				->setSubmitCallback( [ $this, 'onSubmitCacheResetForm' ] )
 				->setFormIdentifier( 'resetcacheform' )
 				->setMethod( 'post' )
-				->setWrapperLegendMsg( 'managewikidefaultpermissions-resetcache-title' )
-				->setSubmitTextMsg( 'managewikidefaultpermissions-resetcache' )
+				->setWrapperLegendMsg( 'managewikidefaults-resetcache-title' )
+				->setSubmitTextMsg( 'managewikidefaults-resetcache' )
 				->setSubmitDestructive()
 				->prepareForm()
 				->show();
@@ -205,7 +206,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	public function onSubmitRedirectToPermissionsPage( array $formData ): void {
 		$this->getOutput()->redirect(
-			SpecialPage::getTitleFor( 'ManageWikiDefaultPermissions', $formData['group'] )->getFullURL()
+			SpecialPage::getTitleFor( 'ManageWikiDefaults', $formData['group'] )->getFullURL()
 		);
 	}
 
@@ -225,7 +226,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getUser() );
-		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
+		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaults' ) );
 		$logEntry->setParameters( [ '4::wiki' => $dbname ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
@@ -261,7 +262,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
 		$logEntry->setPerformer( $this->getUser() );
-		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
+		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaults' ) );
 		$logEntry->setParameters( [ '4::wiki' => $dbname ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
@@ -287,7 +288,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'cache-reset' );
 		$logEntry->setPerformer( $this->getUser() );
-		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaultPermissions' ) );
+		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaults' ) );
 		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
@@ -306,9 +307,9 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 		return false;
 	}
 
-	public function validateNewGroupName( string $newGroup ): string|bool {
+	public function validateNewGroupName( string $newGroup ): bool|Message {
 		if ( in_array( $newGroup, $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
-			return 'The group you attempted to create is not allowed. Please select a different name and try again.';
+			return $this->msg( 'managewiki-permissions-group-disallowed' );
 		}
 
 		return true;
@@ -316,7 +317,7 @@ class SpecialManageWikiDefaultPermissions extends SpecialPage {
 
 	/** @inheritDoc */
 	public function getDescription(): string {
-		return $this->msg( $this->canModify() ? 'managewikidefaultpermissions' : 'managewikidefaultpermissions-view' )->text();
+		return $this->msg( $this->canModify() ? 'managewikidefaults' : 'managewikidefaults-view' )->text();
 	}
 
 	/** @inheritDoc */

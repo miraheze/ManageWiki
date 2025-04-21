@@ -126,7 +126,7 @@
 	"managewiki-toggle-forcesidebar": "Примусово відображати посилання ManageWiki в бічній панелі.",
 	"managewiki-warning-changes": "Ви внесли зміни до ManageWiki, які ще не були збережені.\nЯкщо ви залишите цю сторінку, не натиснувши «$1», ваші зміни в ManageWiki не будуть оновлені.",
 	"managewikidefaultpermissions": "Керувати дозволами за замовчуванням для нових вікі",
-	"managewikidefaultpermissions-resetgroups": "Скинути всі групи за замовчуванням",
+	"managewikidefaults-resetgroups": "Скинути всі групи за замовчуванням",
 	"managewikiextensions": "Керувати розширеннями вікі",
 	"managewikinamespaces": "Керувати просторами назв вікі",
 	"managewikipermissions": "Керувати правами вікі",
