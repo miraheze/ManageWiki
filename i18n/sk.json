@@ -120,7 +120,7 @@
 	"managewiki-toggle-forcesidebar": "Vynútiť zobrazenie odkazov Správy wiki na bočnom panely.",
 	"managewiki-warning-changes": "Urobili ste zmeny v ManageWiki, ktoré ešte neboli uložené. Ak opustíte túto stránku bez kliknutia na „ $1 “, Vaše zmeny v ManageWiki sa neaktualizujú.",
 	"managewikidefaultpermissions": "Spravovať predvolené povolenia wikifarmy",
-	"managewikidefaultpermissions-resetgroups": "Vrátiť všetky skupiny na predvolené",
+	"managewikidefaults-resetgroups": "Vrátiť všetky skupiny na predvolené",
 	"managewikiextensions": "Spravovať rozšírenia wiki",
 	"managewikinamespaces": "Spravovať menné priestory wiki",
 	"managewikipermissions": "Spravovať povolenia wiki",

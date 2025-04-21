@@ -111,7 +111,7 @@
 	"managewiki-success": "Inställningarna har ändrats.",
 	"managewiki-toggle-forcesidebar": "Tvinga ManageWiki att visas i sidofältet.",
 	"managewikidefaultpermissions": "Hantera standardbehörigheter för en wikifarm",
-	"managewikidefaultpermissions-resetgroups": "Återställ alla grupper till standardvärden",
+	"managewikidefaults-resetgroups": "Återställ alla grupper till standardvärden",
 	"managewikiextensions": "Hantera en wikis tillägg",
 	"managewikinamespaces": "Hantera en wikis namnrymder",
 	"managewikipermissions": "Hantera en wikis behörigheter",

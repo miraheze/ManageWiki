@@ -45,7 +45,7 @@
 	"managewiki-permissions-create": "Crear un novo grupo de usuarios",
 	"managewiki-success": "A configuración modificouse correctamente.",
 	"managewikidefaultpermissions": "Xestionar un wiki (permisos por defecto)",
-	"managewikidefaultpermissions-resetgroups": "Reinicializar ós permisos de grupo por defecto",
+	"managewikidefaults-resetgroups": "Reinicializar ós permisos de grupo por defecto",
 	"managewikiextensions": "Xestionar unha wiki (extensións)",
 	"managewikipermissions": "Xestionar un wiki (permisos)",
 	"managewikisettings": "Xestionar un wiki (configuración)",

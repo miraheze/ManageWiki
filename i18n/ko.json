@@ -127,7 +127,7 @@
 	"managewiki-toggle-forcesidebar": "사이드바에 ManageWiki 링크를 강제로 표시.",
 	"managewiki-unavailable": "사용 불가",
 	"managewikidefaultpermissions": "새 위키의 기본 권한 관리",
-	"managewikidefaultpermissions-resetgroups": "모든 그룹을 기본값으로 재설정",
+	"managewikidefaults-resetgroups": "모든 그룹을 기본값으로 재설정",
 	"managewikiextensions": "위키의 확장 기능 관리",
 	"managewikinamespaces": "위키의 이름공간 관리",
 	"managewikipermissions": "위키의 권한 관리",

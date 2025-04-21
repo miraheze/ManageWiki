@@ -133,7 +133,7 @@
 	"managewiki-toggle-forcesidebar": "Forçar a apresentação das hiperligações de ManageWiki na barra lateral.",
 	"managewiki-warning-changes": "Fez alterações no ManageWiki que ainda não foram gravadas.\nSe sair desta página sem clicar em \"$1\", as suas alterações no ManageWiki não serão atualizadas.",
 	"managewikidefaultpermissions": "Gerir os privilégios padrão de uma wiki",
-	"managewikidefaultpermissions-resetgroups": "Reiniciar todos os grupos para a definição padrão",
+	"managewikidefaults-resetgroups": "Reiniciar todos os grupos para a definição padrão",
 	"managewikiextensions": "Gerir as extensões de uma wiki",
 	"managewikinamespaces": "Gerir os espaços nominais de uma wiki",
 	"managewikipermissions": "Gerir os privilégios de uma wiki",
