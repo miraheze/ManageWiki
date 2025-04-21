@@ -168,7 +168,8 @@ class ManageWikiExtensions implements IConfigModule {
 		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
 			if (
-				$this->changes[$extensionsConfig['conflicts']] ?? false &&
+				$extensionsConfig['conflicts'] &&
+				$this->changes[$extensionsConfig['conflicts']]['new'] ?? 0 === 1 &&
 				in_array( $extensionsConfig['conflicts'], $this->list(), true )
 			) {
 				$this->errors[] = [
