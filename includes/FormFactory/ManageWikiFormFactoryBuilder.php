@@ -912,7 +912,8 @@ class ManageWikiFormFactoryBuilder {
 				}
 			}
 		} else {
-			return [ [ 'managewiki-changes-none' => null ] ];
+			return $mwReturn->getErrors() ?:
+				[ [ 'managewiki-changes-none' => null ] ];
 		}
 
 		return $mwReturn->getErrors();
