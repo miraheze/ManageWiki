@@ -136,7 +136,9 @@ class ManageWikiFormFactory {
 				}
 			}
 
-			return Status::newFatal( new RawMessage( implode( "\n\n", $errorOut ) ) );
+			return Status::newFatal(
+				new RawMessage( implode( '<br />', $errorOut ) )
+			);
 		}
 
 		$form->getOutput()->addHTML(
