@@ -285,7 +285,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$disableIf = [];
-			if ( $ext['requires']['extensions'] ?? false || $ext['conflicts'] ) {
+			if ( isset( $ext['requires']['extensions'] ) || $ext['conflicts'] ) {
 				$disableIf = ManageWiki::buildDisableIf(
 					$ext['requires']['extensions'] ?? [],
 					$ext['conflicts'] ?: ''
