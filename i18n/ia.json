@@ -52,6 +52,7 @@
 	"logentry-managewiki-rights": "$1 ha {{GENDER:$2|cambiate}} le metadatos de gruppo pro $3: derectos $4 addite; derectos $5 removite; addgroups $6 addite; addgroups $7 removite; removegroups $8 addite; removegroups $9 removite; addgroupstoself $10 addite;  addgroupstoself $11 removite; removegroupsfromself $12 addite; removegroupsfromself $13 removite; autopromotion ($14) modificate",
 	"logentry-managewiki-rights-reset": "$1 ha {{GENDER:$2|reinitialisate}} le permissiones de gruppo pro “$4” al valores predefinite",
 	"logentry-managewiki-settings": "$1 ha {{GENDER:$2|cambiate}} le parametros “$5” pro “$4”",
+	"logentry-managewiki-settings-reset": "$1 {{GENDER:$2|ha reinitialisate}} le parametros de “$4” al valores predefinite",
 	"logentry-managewiki-undelete": "$1 ha {{GENDER:$2|restaurate}} le wiki “$4”",
 	"logentry-managewiki-unlock": "$1 ha {{GENDER:$2|disserrate}} le wiki “$4”",
 	"managewiki": "Gerer un wiki",

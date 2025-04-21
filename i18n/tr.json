@@ -58,7 +58,7 @@
 	"managewiki-header-extensions": "Bu vikinin uzantılarını ve görünümlerini bu panelden yönetebilirsiniz. Bu panel var olan tüm uzantıları ve görünümleri yansıtır. Gerek duyduğunuz uzantıyı ya da görünümü görmüyorsanız lütfen sistem yöneticinizle iletişime geçin.\n\nBitirdiğinizde, 'Kaydet'e tıklayın ve uzantınız ya da görünümünüz birkaç saniye içinde yüklenecektir.",
 	"managewiki-header-namespaces": "Aşağıdan düzenlemek için bir ad alanı seçin (konuşma ad alanları ana ad alanlarıyla ilişkilendirilir) veya yeni bir ana ad alanı oluşturmak için düğmeye basın.",
 	"managewiki-header-permissions": "Aşağıdaki kutuda değiştirmek veya yeni bir kullanıcı grubu oluşturmak için zaten var olan bir grubu seçin.",
-	"managewiki-header-settings": "Bu sayfa <b>'$1'</b> viki ayarlarını yönetmek için kullanılır. İstediğiniz bir özellik henüz burada yoksa, lütfen talep etmek için <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features/tr Phorge]</span>'u kullanın. <br>İşiniz bittiğinde, değişikliklerinizi kaydetmek için \"kaydet\" düğmesine basın.",
+	"managewiki-header-settings": "Bu vikinin ayarlarını (imlek, biçem ve daha fazlası gibi) bu panelden yönetebilirsiniz. Dikkatli olun! Ayar açıklamalarını dikkatlice okuduğunuzdan ve ne işe yaradığını anlamadığınız sürece rastgele ayarları gelişigüzel değiştirmediğinizden emin olun. İşiniz bittiğinde 'Kaydet'e tıklayın ve tercihleriniz birkaç saniye içinde yansıyacaktır. \n\nGrileşmiş seçenekler yalnızca küme operatörleri tarafından değiştirilebilir. Viki adı ve dili gibi temel ayarları [[Special:ManageWiki/core]] adresinden yönetebilirsiniz.",
 	"managewiki-label-category": "Kategori",
 	"managewiki-label-closed": "Kapandı",
 	"managewiki-label-creationdate": "Oluşturma tarihi",
