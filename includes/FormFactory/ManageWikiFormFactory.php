@@ -8,6 +8,7 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Permissions\PermissionManager;
+use MediaWiki\Status\Status;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ManageWikiOOUIForm;
 use UnexpectedValueException;
@@ -66,7 +67,7 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
 		$htmlForm
-			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): bool =>
+			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status =>
 				$this->submitForm(
 					$config,
 					$dbw,
@@ -102,7 +103,7 @@ class ManageWikiFormFactory {
 		string $special,
 		string $filtered,
 		bool $ceMW
-	): bool {
+	): Status {
 		if ( !$ceMW ) {
 			throw new UnexpectedValueException( "User '{$form->getUser()->getName()}' without 'managewiki-$module' right tried to change wiki $module!" );
 		}
@@ -134,14 +135,14 @@ class ManageWikiFormFactory {
 				}
 			}
 
-			$form->getOutput()->addHTML(
+			/*$form->getOutput()->addHTML(
 				Html::errorBox(
 					implode( '<br />', $errorOut ) . '<br />',
 					'Errors occurred'
 				)
-			);
+			);*/
 
-			return false;
+			return Status::newFatal( implode( '<br />', $errorOut ) );
 		}
 
 		$form->getOutput()->addHTML(
@@ -157,6 +158,6 @@ class ManageWikiFormFactory {
 
 		// Even though it's successful we still return false so
 		// that the form does not dissappear when submitted.
-		return false;
+		return Status::newGood();
 	}
 }
