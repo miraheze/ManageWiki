@@ -285,7 +285,14 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$disableIf = [];
-			if ( isset( $ext['requires']['extensions'] ) || $ext['conflicts'] ) {
+			if (
+				// Don't want to disable fields for extensions already
+				// enabled otherwise it makes disabling them more complicate.
+				!in_array( $name, $extList, true ) && (
+					isset( $ext['requires']['extensions'] ) ||
+					$ext['conflicts']
+				)
+			) {
 				$disableIf = ManageWiki::buildDisableIf(
 					$ext['requires']['extensions'] ?? [],
 					$ext['conflicts'] ?: ''
