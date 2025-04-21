@@ -102,9 +102,9 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @param array $data Merging information about the group
 	 */
 	public function modify( string $group, array $data ): void {
-		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions' );
+		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-settings' );
 		$isRemovingPermission = in_array(
-			'managewiki-permissions', $data['permissions']['remove'], true
+			'managewiki-settings', $data['permissions']['remove'], true
 		);
 
 		if ( $isRemovingPermission && $groupsWithPermission === [ $group ] ) {
@@ -209,7 +209,7 @@ class ManageWikiPermissions implements IConfigModule {
 
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( $this->isDeleting( $group ) ) {
-				if ( $this->getGroupsWithPermission() === [ $group ] ) {
+				if ( $this->getGroupsWithPermission( 'managewiki-settings' ) === [ $group ] ) {
 					$this->errors[] = [
 						'managewiki-error-missingpermission' => [],
 					];
