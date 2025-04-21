@@ -270,7 +270,7 @@ class ManageWikiFormFactoryBuilder {
 			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
 
 			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process(
-				// Don't check for extension requirements as we dont want
+				// Don't check for extension requirements as we don't want
 				// to disable the field, we use disable-if for that.
 				array_diff_key( $ext['requires'], [ 'extensions' => true ] ),
 				$extList, false, $remoteWiki
