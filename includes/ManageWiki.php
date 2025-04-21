@@ -85,19 +85,27 @@ class ManageWiki {
 			}
 		}
 
-		$finalCondition = count( $conditions ) === 1 ?
-			$conditions[0] :
-			array_merge( [ 'OR' ], $conditions );
+		// Base condition (OR of all extension conditions)
+		$baseCondition = count( $conditions ) === 1 ?
+			$conditions[0] : ( count( $conditions ) > 1 ?
+				array_merge( [ 'OR' ], $conditions ) :
+			 	[]
+			);
 
+		// Handle conflicts
 		if ( $conflict ) {
-			$finalCondition = [
-				'OR',
-				$finalCondition,
-				[ '===', "ext-$conflict", '1' ]
-			];
+			$conflictCondition = [ '===', "ext-$conflict", '1' ];
+			if ( $baseCondition ) {
+				// Combine both
+				return [ 'OR', $baseCondition, $conflictCondition ];
+			} else {
+				// Only conflict
+				return $conflictCondition;
+			}
 		}
 
-		return $finalCondition;
+		// Only requires or no conditions
+		return $baseCondition;
 	}
 
 	public static function namespaceID( string $dbname, string $namespace ): int {
