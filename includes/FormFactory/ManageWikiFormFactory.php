@@ -6,6 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Language\RawMessage;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Status\Status;
@@ -142,7 +143,7 @@ class ManageWikiFormFactory {
 				)
 			);*/
 
-			return Status::newFatal( implode( '<br />', $errorOut ) );
+			return Status::newFatal( new RawMessage( implode( '<br />', $errorOut ) ) );
 		}
 
 		$form->getOutput()->addHTML(
