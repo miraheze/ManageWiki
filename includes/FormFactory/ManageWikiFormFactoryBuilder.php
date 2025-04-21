@@ -281,6 +281,7 @@ class ManageWikiFormFactoryBuilder {
 			$requiresLabel = $context->msg( 'managewiki-requires' )->escaped();
 
 			if ( $ext['conflicts'] ) {
+				$ext[$ext['conflicts']]['conflicts'] = $name;
 				$help[] = "$conflictLabel {$ext['conflicts']}<br />";
 			}
 
