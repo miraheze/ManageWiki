@@ -887,7 +887,7 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $mwReturn->hasChanges() ) {
 			$mwReturn->commit();
-			if ( $module === 'extensions' && $mwReturn->getErrors() ) {
+			if ( $mwReturn->getErrors() ) {
 				return $mwReturn->getErrors();
 			}
 
