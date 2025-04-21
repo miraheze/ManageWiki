@@ -104,7 +104,7 @@ class ManageWikiPermissions implements IConfigModule {
 	public function modify( string $group, array $data ): void {
 		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-settings' );
 		$isRemovingPermission = in_array(
-			'managewiki-settings', $data['permissions']['remove'], true
+			'managewiki-permissions', $data['permissions']['remove'], true
 		);
 
 		if ( $isRemovingPermission && $groupsWithPermission === [ $group ] ) {
@@ -161,7 +161,7 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @param string $group Group name
 	 */
 	public function remove( string $group ): void {
-		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-settings' );
+		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions' );
 		if ( $groupsWithPermission === [ $group ] ) {
 			$this->errors[] = [
 				'managewiki-error-missingpermission' => [],
