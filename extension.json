@@ -187,6 +187,9 @@
 		},
 		"SidebarBeforeOutput": {
 			"handler": "Main"
+		},
+		"UserGetReservedNames": {
+			"handler": "Main"
 		}
 	},
 	"HookHandlers": {
