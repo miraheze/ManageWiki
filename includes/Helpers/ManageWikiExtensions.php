@@ -138,7 +138,7 @@ class ManageWikiExtensions implements IConfigModule {
 	}
 
 	public function hasChanges(): bool {
-		return $this->changes && !$this->errors;
+		return (bool)$this->changes;
 	}
 
 	public function setLogAction( string $action ): void {
