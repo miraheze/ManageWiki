@@ -136,12 +136,7 @@ class ManageWikiFormFactory {
 
 			$form->getOutput()->addHTML(
 				Html::errorBox(
-					Html::rawElement(
-						'p',
-						[],
-						implode( '<br />', $errorOut )
-					),
-					'The following errors occurred:'
+					'The following errors occurred:<br />' . implode( '<br />', $errorOut )
 				)
 			);
 
