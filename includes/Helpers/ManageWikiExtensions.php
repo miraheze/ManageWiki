@@ -164,10 +164,15 @@ class ManageWikiExtensions implements IConfigModule {
 	public function commit(): void {
 		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 		$remoteWiki = $remoteWikiFactory->newInstance( $this->dbname );
-
+		$enabled = array_keys(
+			array_filter(
+				$this->changes,
+				static fn ( array $change ): bool => ( $change['new'] ?? 0 ) === 1
+			)
+		);
 		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
-			if ( in_array( $extensionsConfig['conflicts'], array_keys( $this->changes ), true ) ) {
+			if ( in_array( $extensionsConfig['conflicts'], $enabled, true ) ) {
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
 						$extensionsConfig['name'],
