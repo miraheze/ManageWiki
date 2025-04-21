@@ -133,56 +133,8 @@ class ManageWikiExtensions implements IConfigModule {
 		}
 	}
 
-	private function handleConflicts( string $name ): bool {
-		$config = $this->changes[$name];
-		if ( ( $config['new'] ?? 0 ) !== 1 ) {
-			return false;
-		}
-
-		$extensionsConfig = $this->extensionConfig[$name] ?? [];
-		$conflict = $extensionsConfig['conflicts'] ?? null;
-
-		if ( !$conflict || !isset( $this->changes[$conflict] ) ) {
-			return false;
-		}
-
-		$conflictKey = $name < $conflict ? "$name:$conflict" : "$conflict:$name";
-		if ( isset( $this->conflictHandled[$conflictKey] ) ) {
-			return false;
-		}
-
-		$this->conflictHandled[$conflictKey] = true;
-
-		$otherChange = $this->changes[$conflict];
-		$isOtherEnabled = ( $otherChange['new'] ?? 0 ) === 1;
-
-		if ( !$isOtherEnabled ) {
-			// Only this extension is being enabled – allow it
-			return false;
-		}
-
-		// Both are being enabled – show error
-		$this->errors[] = [
-			'managewiki-error-conflict' => [
-				$extensionsConfig['name'] ?? $name,
-				$this->getExtensionName( $conflict ),
-			],
-		];
-
-		return true;
-	}
-
 	private function getExtensionName( string $extension ): string {
 		return $this->extensionsConfig[$extension]['name'] ?? '';
-	}
-
-	private function getNewlyEnabledExtensions(): array {
-		return array_keys(
-			array_filter(
-				$this->changes,
-				static fn ( array $change ): bool => ( $change['new'] ?? 0 ) === 1
-			)
-		);
 	}
 
 	public function getErrors(): array {
@@ -215,7 +167,16 @@ class ManageWikiExtensions implements IConfigModule {
 
 		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
-			if ( $this->handleConflicts( $name ) ) {
+			if ( in_array( $extensionsConfig['conflicts'], array_keys( $this->changes ), true ) ) {
+				$this->errors[] = [
+					'managewiki-error-conflict' => [
+						$extensionsConfig['name'],
+						$this->getExtensionName(
+							$extensionsConfig['conflicts']
+						),
+					],
+				];
+
 				// We have a conflict, we have nothing else to do for this extension.
 				continue;
 			}
