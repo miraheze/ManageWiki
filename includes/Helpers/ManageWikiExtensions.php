@@ -133,7 +133,7 @@ class ManageWikiExtensions implements IConfigModule {
 		}
 	}
 
-	private function getExtensionName( string $extension ): string {
+	private function getName( string $extension ): string {
 		return $this->extensionsConfig[$extension]['name'] ?? '';
 	}
 
@@ -164,20 +164,22 @@ class ManageWikiExtensions implements IConfigModule {
 	public function commit(): void {
 		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 		$remoteWiki = $remoteWikiFactory->newInstance( $this->dbname );
-		$enabled = array_keys(
+
+		// We use this to check for conflicts only for
+		// extensions we are currently enabling.
+		$enabling = array_keys(
 			array_filter(
 				$this->changes,
 				static fn ( array $change ): bool => ( $change['new'] ?? 0 ) === 1
 			)
 		);
+
 		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
-			if ( in_array( $extensionsConfig['conflicts'], $enabled, true ) ) {
+			if ( in_array( $extensionsConfig['conflicts'], $enabling, true ) ) {
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
-						$this->getExtensionName(
-							$extensionsConfig['conflicts']
-						),
+						$this->getName( $extensionsConfig['conflicts'] ),
 						$extensionsConfig['name'],
 					],
 				];
