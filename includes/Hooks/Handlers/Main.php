@@ -9,13 +9,15 @@ use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\Hook\UserGetReservedNamesHook;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\ConfigNames;
 
 class Main implements
 	ContentHandlerForModelIDHook,
 	GetPreferencesHook,
-	SidebarBeforeOutputHook
+	SidebarBeforeOutputHook,
+	UserGetReservedNamesHook
 {
 
 	public function __construct(
@@ -63,5 +65,10 @@ class Main implements
 				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() ),
 			];
 		}
+	}
+
+	/** @inheritDoc */
+	public function onUserGetReservedNames( &$reservedUsernames ) {
+		$reservedUsernames[] = 'ManageWiki';
 	}
 }
