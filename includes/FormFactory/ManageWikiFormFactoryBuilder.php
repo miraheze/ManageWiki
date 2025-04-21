@@ -285,13 +285,14 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$disableIf = [];
-			if ( $ext['requires'] ) {
-				if ( $ext['requires']['extensions'] ?? [] ) {
-					$disableIf = ManageWiki::buildDisableIfFromRequires(
-						$ext['requires']['extensions']
-					);
-				}
+			if ( $ext['requires']['extensions'] ?? [] || $ext['conflicts'] ) {
+				$disableIf = ManageWiki::buildDisableIf(
+					$ext['requires']['extensions'] ?? [],
+					$ext['conflicts'] ?: ''
+				);
+			}
 
+			if ( $ext['requires'] ) {
 				$requires = [];
 				foreach ( $ext['requires'] as $require => $data ) {
 					if ( is_array( $data ) ) {

@@ -65,7 +65,7 @@ class ManageWiki {
 		return null;
 	}
 
-	public static function buildDisableIfFromRequires( array $exts ): array {
+	public static function buildDisableIf( array $exts, string $conflict ): array {
 		$conditions = [];
 
 		foreach ( $exts as $entry ) {
@@ -85,9 +85,19 @@ class ManageWiki {
 			}
 		}
 
-		return count( $conditions ) === 1 ?
+		$finalCondition = count( $conditions ) === 1 ?
 			$conditions[0] :
 			array_merge( [ 'OR' ], $conditions );
+
+		if ( $conflict ) {
+			$finalCondition = [
+				'OR',
+				$finalCondition,
+				[ '===', "ext-$conflict", '1' ]
+			];
+		}
+
+		return $finalCondition;
 	}
 
 	public static function namespaceID( string $dbname, string $namespace ): int {
