@@ -68,7 +68,7 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
 		$htmlForm
-			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status =>
+			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
 					$config,
 					$dbw,
@@ -104,7 +104,7 @@ class ManageWikiFormFactory {
 		string $special,
 		string $filtered,
 		bool $ceMW
-	): Status {
+	): Status|bool {
 		if ( !$ceMW ) {
 			throw new UnexpectedValueException( "User '{$form->getUser()->getName()}' without 'managewiki-$module' right tried to change wiki $module!" );
 		}
@@ -159,6 +159,6 @@ class ManageWikiFormFactory {
 
 		// Even though it's successful we still return false so
 		// that the form does not dissappear when submitted.
-		return Status::newGood();
+		return false;
 	}
 }
