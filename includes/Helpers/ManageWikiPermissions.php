@@ -213,7 +213,7 @@ class ManageWikiPermissions implements IConfigModule {
 					$this->errors[] = [
 						'managewiki-error-missingpermission' => [],
 					];
-					continue;
+					return;
 				}
 				$this->log = 'delete-group';
 
