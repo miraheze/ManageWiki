@@ -133,6 +133,10 @@ class ManageWikiExtensions implements IConfigModule {
 		}
 	}
 
+	private function getName( string $extension ): string {
+		return $this->extensionsConfig[$extension]['name'] ?? '';
+	}
+
 	public function getErrors(): array {
 		return $this->errors;
 	}
@@ -161,19 +165,31 @@ class ManageWikiExtensions implements IConfigModule {
 		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
 		$remoteWiki = $remoteWikiFactory->newInstance( $this->dbname );
 
+		// We use this to check for conflicts only for
+		// extensions we are currently enabling.
+		$enabling = array_keys(
+			array_filter(
+				$this->changes,
+				static fn ( array $change ): bool => ( $change['new'] ?? 0 ) === 1
+			)
+		);
+
 		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
-			if ( in_array( $extensionsConfig['conflicts'] ?? [], $this->list(), true ) ) {
-				unset( $this->liveExtensions[$name] );
-				unset( $this->changes[$name] );
+			if ( in_array( $extensionsConfig['conflicts'], $enabling, true ) ) {
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
+						$this->getName( $extensionsConfig['conflicts'] ),
 						$extensionsConfig['name'],
-						$extensionsConfig['conflicts'],
 					],
 				];
 
-				// We have a conflict and we have unset it. Therefore we have nothing else to do for this extension
+				// We have a conflict, we have nothing else to do for this extension.
+				continue;
+			}
+
+			if ( $this->getErrors() ) {
+				// If we have errors we don't want to save anything
 				continue;
 			}
 
@@ -186,8 +202,6 @@ class ManageWikiExtensions implements IConfigModule {
 				$installResult = ( !isset( $extensionsConfig['install'] ) || $enabledExt ) ? true : ManageWikiInstaller::process( $this->dbname, $extensionsConfig['install'] );
 
 				if ( !$installResult ) {
-					unset( $this->liveExtensions[$name] );
-					unset( $this->changes[$name] );
 					$this->errors[] = [
 						'managewiki-error-install' => [
 							$extensionsConfig['name'],
@@ -198,13 +212,16 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			unset( $this->liveExtensions[$name] );
-			unset( $this->changes[$name] );
 			$this->errors[] = [
 				'managewiki-error-requirements' => [
 					$extensionsConfig['name'],
 				],
 			];
+		}
+
+		if ( $this->getErrors() ) {
+			// If we have errors we don't want to save anything
+			return;
 		}
 
 		foreach ( $this->removedExtensions as $name => $extensionsConfig ) {
