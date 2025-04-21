@@ -68,6 +68,14 @@ class ManageWikiExtensions implements IConfigModule {
 		return array_keys( $this->liveExtensions );
 	}
 
+	public function isEnabled( string $extension ): bool {
+		return in_array( $extension, $this->list(), true );
+	}
+
+	public function getExtensionName( string $extension ): string {
+		return $this->extensionsConfig[$extension]['name'] ?? '';
+	}
+
 	/**
 	 * Adds an extension to the 'enabled' list
 	 * @param string[] $extensions Array of extensions to enable
@@ -163,11 +171,13 @@ class ManageWikiExtensions implements IConfigModule {
 
 		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
 			// Check if we have a conflict first
-			if ( in_array( $extensionsConfig['conflicts'] ?? [], $this->list(), true ) ) {
+			if ( !$this-isEnabled( $name ) && $this->isEnabled( $extensionsConfig['conflicts'] ) ) {
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
 						$extensionsConfig['name'],
-						$extensionsConfig['conflicts'],
+						$this->getExtensionName(
+							$extensionsConfig['conflicts']
+						),
 					],
 				];
 
