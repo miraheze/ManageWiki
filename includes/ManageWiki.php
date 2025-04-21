@@ -85,23 +85,15 @@ class ManageWiki {
 			}
 		}
 
-		$finalCondition = [];
-		if ( $conditions ) {
-			$finalCondition = count( $conditions ) === 1 ?
-				$conditions[0] :
-				array_merge( [ 'OR' ], $conditions );
-		}
+		$finalCondition = count( $conditions ) === 1 ?
+			$conditions[0] :
+			array_merge( [ 'OR' ], $conditions );
 
 		if ( $conflict ) {
-			$conflictCondition = [ '===', "ext-$conflict", '1' ];
-			if ( !$finalCondition ) {
-				return $conflictCondition;
-			}
-
 			$finalCondition = [
 				'OR',
 				$finalCondition,
-				$conflictCondition,
+				[ '===', "ext-$conflict", '1' ]
 			];
 		}
 
