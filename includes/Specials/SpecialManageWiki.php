@@ -228,7 +228,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// Handle permissions module when we are not editing a specific group.
-		if ( $module === 'permissions' && $special !== '' ) {
+		if ( $module === 'permissions' && $special === '' ) {
 			$language = $this->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( $dbname );
 			$groups = array_keys( $mwPermissions->list( group: null ) );
@@ -244,7 +244,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// Handle namespaces module when we are not editing a specific namespace.
-		if ( $module === 'namespaces' && $special !== '' ) {
+		if ( $module === 'namespaces' && $special === '' ) {
 			$mwNamespaces = new ManageWikiNamespaces( $dbname );
 			$namespaces = $mwNamespaces->list( id: null );
 
