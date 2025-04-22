@@ -54,7 +54,7 @@
 			.map( ns => ns.toString().toLowerCase() );
 
 		// Allow creating a new namespace without making any changes to the form
-		if ( !isManageWikiNamespaces || namespaceIds.includes( lastPart ) ) {
+		if ( !isManageWikiNamespaces || !namespaceIds.includes( lastPart ) ) {
 			saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
 			// Disable the save button unless settings have changed
