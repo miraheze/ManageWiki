@@ -69,19 +69,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		return isset( $this->liveNamespaces[$id] );
 	}
 
-	public function validateNamespaceName( string $name ): bool|Message {
-		if ( $this->namespaceNameExists( $name ) ) {
-			return wfMessage( 'managewiki-namespace-exists' );
-		}
-
-		if ( str_ends_with( strtolower( trim( $name ) ), 'talk' ) ) {
-			return wfMessage( 'managewiki-namespace-invalid' );
-		}
-
-		return true;
-	}
-
-	private function namespaceNameExists( string $name ): bool {
+	public function namespaceNameExists( string $name ): bool {
 		$name = strtolower( trim( $name ) );
 		if ( $this->isMetaNamespace( $name ) ) {
 			return true;
@@ -181,12 +169,6 @@ class ManageWikiNamespaces implements IConfigModule {
 					'managewiki-namespace-exists' => [],
 				];
 			}
-
-			if ( !$this->isTalk( $id ) && str_ends_with( strtolower( trim( $name ) ), 'talk' ) ) {
-				$this->errors[] = [
-					'managewiki-namespace-invalid' => [],
-				];
-			}
 		}
 
 		if ( $data['aliases'] !== $nsData['aliases'] ) {
@@ -194,12 +176,6 @@ class ManageWikiNamespaces implements IConfigModule {
 				if ( $this->namespaceNameExists( $alias ) ) {
 					$this->errors[] = [
 						'managewiki-namespace-alias-conflict' => [ $alias ],
-					];
-				}
-
-				if ( !$this->isTalk( $id ) && str_ends_with( strtolower( trim( $alias ) ), 'talk' ) ) {
-					$this->errors[] = [
-						'managewiki-namespace-alias-invalid' => [ $alias ],
 					];
 				}
 			}
