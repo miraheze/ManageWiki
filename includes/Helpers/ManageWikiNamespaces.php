@@ -176,18 +176,30 @@ class ManageWikiNamespaces implements IConfigModule {
 		];
 
 		if ( $data['name'] !== $nsData['name'] ) {
-			if ( $this->validateNamespaceName( $data['name'] ) !== true ) {
+			if ( $this->namespaceNameExists( $data['name'] ) ) {
 				$this->errors[] = [
 					'managewiki-namespace-exists' => [],
+				];
+			}
+
+			if ( !$this->isTalk( $id ) && str_ends_with( strtolower( trim( $name ) ), 'talk' ) ) {
+				$this->errors[] = [
+					'managewiki-namespace-invalid' => [],
 				];
 			}
 		}
 
 		if ( $data['aliases'] !== $nsData['aliases'] ) {
 			foreach ( $data['aliases'] as $alias ) {
-				if ( $this->validateNamespaceName( $alias ) !== true ) {
+				if ( $this->namespaceNameExists( $alias ) ) {
 					$this->errors[] = [
-						'managewiki-invalid-alias' => [ $alias ],
+						'managewiki-namespace-alias-conflict' => [ $alias ],
+					];
+				}
+				
+				if ( !$this->isTalk( $id ) && str_ends_with( strtolower( trim( $alias ) ), 'talk' ) ) {
+					$this->errors[] = [
+						'managewiki-namespace-alias-invalid' => [ $alias ],
 					];
 				}
 			}
