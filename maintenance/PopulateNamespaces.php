@@ -24,8 +24,10 @@ class PopulateNamespaces extends Maintenance {
 		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ) +
-			[ NS_MAIN => '<Main>' ];
+		$namespaces = array_merge(
+			$this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ),
+			[ NS_MAIN => '<Main>' ]
+		);
 
 		foreach ( $namespaces as $id => $name ) {
 			if ( $id < 0 ) {
