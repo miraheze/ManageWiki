@@ -102,7 +102,7 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @param array $data Merging information about the group
 	 */
 	public function modify( string $group, array $data ): void {
-		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-settings' );
+		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions' );
 		$isRemovingPermission = in_array(
 			'managewiki-permissions', $data['permissions']['remove'], true
 		);
