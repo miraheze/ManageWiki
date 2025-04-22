@@ -103,12 +103,13 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	private function isMetaNamespace( string $name ): bool {
+		$name = str_replace( ' ', '_', $name );
 		$metaNamespace = strtolower( trim(
-			$this->config->get( MainConfigNames::MetaNamespace )
+			str_replace( ' ', '_', $this->config->get( MainConfigNames::MetaNamespace ) )
 		) );
 
 		$metaNamespaceTalk = strtolower( trim(
-			$this->config->get( MainConfigNames::MetaNamespaceTalk )
+			str_replace( ' ', '_', $this->config->get( MainConfigNames::MetaNamespaceTalk ) )
 		) );
 
 		return $name === $metaNamespace || $name === $metaNamespaceTalk;
