@@ -87,7 +87,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	 * @param string $name The namespace name to check
 	 * @return bool True if a matching namespace name exists, false otherwise
 	 */
-	public function namespaceNameExists( string $name ): bool {
+	private function namespaceNameExists( string $name ): bool {
 		$name = strtolower( trim( $name ) );
 		if ( $this->isMetaNamespace( $name ) ) {
 			return true;
