@@ -50,7 +50,6 @@ class ManageWikiFormFactoryBuilder {
 				break;
 			case 'namespaces':
 				$formDescriptor = self::buildDescriptorNamespaces( $dbname, $ceMW, $context, $special, $remoteWiki, $config );
-				$context->getRequest()->getSession()->remove( 'create' );
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions( $dbname, $ceMW, $context, $special, $config );
@@ -634,6 +633,7 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+		$context->getRequest()->getSession()->remove( 'create' );
 		return $formDescriptor;
 	}
 
