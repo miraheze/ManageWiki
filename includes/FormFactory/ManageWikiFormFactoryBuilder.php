@@ -457,6 +457,12 @@ class ManageWikiFormFactoryBuilder {
 
 		$nsID['namespace'] = (int)$special;
 
+		if ( !$mwNamespaces->exists( $nsID['namespace'] ) ) {
+			$context->getOutput()->addBodyClasses(
+				[ 'ext-managewiki-create-namespace' ]
+			);
+		}
+
 		if (
 			$mwNamespaces->list( (int)$special + 1 )['name'] ||
 			!$mwNamespaces->list( (int)$special )['name']
@@ -526,7 +532,11 @@ class ManageWikiFormFactoryBuilder {
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $remoteWiki ) : true;
 
-				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] === 'mediawiki' ) || ( in_array( $a['from'], $extList, true ) ) );
+				$hasVisibilityRequirement = isset( $a['requires']['visibility'] );
+				$isFromMediaWiki = $a['from'] === 'mediawiki';
+				$isInExtList = in_array( $a['from'], $extList, true );
+
+				$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isFromMediaWiki || $isInExtList );
 				$disabled = $ceMW ? !$mwRequirements : true;
 
 				$msgName = $context->msg( "managewiki-namespaces-$key-name" );
