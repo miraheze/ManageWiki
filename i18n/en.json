@@ -72,6 +72,7 @@
 	"managewiki-error-disallowednamespace": "The namespace \"$1\" is not allowed.",
 	"managewiki-error-emptygroup": "You cannot create a group without any permissions assigned.",
 	"managewiki-error-install": "The extension \"$1\" failed to be enabled. If this keeps occurring, please ",
+	"managewiki-error-missingpermission": "Cannot remove the 'managewiki-permissions' right from this group, as no other groups have the right. Removing it would prevent access to ManageWiki.",
 	"managewiki-error-nopermission": "You may view this wiki's configuration but you do not have permission to edit it.",
 	"managewiki-error-nopermission-remote": "You are remotely viewing a wiki's configuration. If you are a wiki operator, please navigate to your wiki to modify its configuration. You may not edit it from here.",
 	"managewiki-error-requirements": "The extension \"$1\" cannot be enabled because it fails to meet its requirements.",

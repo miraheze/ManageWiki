@@ -281,6 +281,7 @@ class ManageWikiNamespaces implements IConfigModule {
 
 	public function commit(): void {
 		if ( $this->getErrors() ) {
+			// Don't save anything if we have errors
 			return;
 		}
 

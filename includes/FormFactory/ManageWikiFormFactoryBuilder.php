@@ -463,6 +463,12 @@ class ManageWikiFormFactoryBuilder {
 
 		$nsID['namespace'] = $namespaceID;
 
+		if ( !$mwNamespaces->exists( $nsID['namespace'] ) ) {
+			$context->getOutput()->addBodyClasses(
+				[ 'ext-managewiki-create-namespace' ]
+			);
+		}
+
 		if (
 			$mwNamespaces->list( $namespaceID + 1 )['name'] ||
 			!$mwNamespaces->list( $namespaceID )['name']
@@ -538,7 +544,11 @@ class ManageWikiFormFactoryBuilder {
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $remoteWiki ) : true;
 
-				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] === 'mediawiki' ) || ( in_array( $a['from'], $extList, true ) ) );
+				$hasVisibilityRequirement = isset( $a['requires']['visibility'] );
+				$isFromMediaWiki = $a['from'] === 'mediawiki';
+				$isInExtList = in_array( $a['from'], $extList, true );
+
+				$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isFromMediaWiki || $isInExtList );
 				$disabled = $ceMW ? !$mwRequirements : true;
 
 				$msgName = $context->msg( "managewiki-namespaces-$key-name" );
@@ -897,9 +907,16 @@ class ManageWikiFormFactoryBuilder {
 				throw new InvalidArgumentException( "$module not recognized" );
 		}
 
+		/**
+		 * We check for errors in multiple places here because modules may add them at different stages.
+		 * Some errors can be set even when there are no changes, such as validation failures.
+		 * Others might occur during commit(), or after commit logic that reveals issues late.
+		 * This approach ensures all potential errors—regardless of when they're added—are caught.
+		 */
+
 		if ( $mwReturn->hasChanges() ) {
 			$mwReturn->commit();
-			if ( $module === 'extensions' && $mwReturn->getErrors() ) {
+			if ( $mwReturn->getErrors() ) {
 				return $mwReturn->getErrors();
 			}
 
@@ -924,7 +941,8 @@ class ManageWikiFormFactoryBuilder {
 				}
 			}
 		} else {
-			return [ [ 'managewiki-changes-none' => null ] ];
+			return $mwReturn->getErrors() ?:
+				[ [ 'managewiki-changes-none' => null ] ];
 		}
 
 		return $mwReturn->getErrors();
