@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
+use ErrorPageError;
 use InvalidArgumentException;
 use ManualLogEntry;
 use MediaWiki\Config\Config;
@@ -451,6 +452,10 @@ class ManageWikiFormFactoryBuilder {
 		$mwNamespaces = new ManageWikiNamespaces( $dbname );
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
+
+		if ( $mwNamespaces->isTalk( (int)$special ) ) {
+			throw new ErrorPageError( 'managewiki-error', 'managewiki-namespace-invalid' );
+		}
 
 		$formDescriptor = [];
 		$nsID = [];
