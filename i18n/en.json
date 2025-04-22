@@ -119,7 +119,7 @@
 	"managewiki-link-settings": "Manage this wiki's additional settings",
 	"managewiki-link-settings-view": "View this wiki's additional settings",
 	"managewiki-mwlocked": "This wiki has had its ability to use ManageWiki restricted.",
-	"managewiki-namespace-conflicts": "The namespace \"$1\" already exists and cannot be modified.",
+	"managewiki-namespace-conflicts": "The namespace \"$1\" already exists or is an alias of another namespace.",
 	"managewiki-namespaces-create": "Name of the new namespace",
 	"managewiki-namespaces-create-header": "Create a new namespace",
 	"managewiki-namespaces-create-info": "Use the field below to create a new namespace.",
