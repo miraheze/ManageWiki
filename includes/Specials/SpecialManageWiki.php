@@ -354,7 +354,8 @@ class SpecialManageWiki extends SpecialPage {
 				$mwNamespaces = new ManageWikiNamespaces( $dbname );
 				$create['out']['filter-callback'] = static fn ( string $value ): string => trim( $value );
 				$create['out']['validation-callback'] = fn ( string $value ): bool|Message =>
-					!$mwNamespaces->namespaceNameExists( $value ) ?: $this->msg( 'managewiki-namespace-exists' );
+					!$mwNamespaces->namespaceNameExists( $value ) ?:
+						$this->msg( 'managewiki-namespace-conflicts', $value );
 			}
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
