@@ -169,7 +169,7 @@ class ManageWikiNamespaces implements IConfigModule {
 
 		if ( $this->validateNamespaceName( $data['name'] ) !== true ) {
 			$this->errors[] = [
-				$this->validateNamespaceName( $data['name'] ) => [],
+				'managewiki-namespace-exists' => [],
 			];
 		}
 
