@@ -348,6 +348,7 @@ class SpecialManageWiki extends SpecialPage {
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
 				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( trim( $value ) );
+				$create['out']['validation-callback'] = [ $this, 'validateNewGroupName' ];
 			}
 
 			if ( $module === 'namespaces' ) {
@@ -355,6 +356,7 @@ class SpecialManageWiki extends SpecialPage {
 				$mwNamespaces = new ManageWikiNamespaces( $dbname );
 				$create['out']['filter-callback'] = static fn ( string $value ): string =>
 					ucfirst( trim( trim( $value ), '_:' ) );
+
 				$create['out']['validation-callback'] = function ( string $value ) use ( $mwNamespaces ): bool|Message {
 					$disallowed = array_map( 'strtolower',
 						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
@@ -400,6 +402,15 @@ class SpecialManageWiki extends SpecialPage {
 		$this->getOutput()->redirect(
 			SpecialPage::getTitleFor( 'ManageWiki', "$module/$special" )->getFullURL()
 		);
+	}
+
+	public function validateNewGroupName( string $newGroup ): bool|Message {
+		$disallowed = $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups );
+		if ( in_array( $newGroup, $disallowed, true ) ) {
+			return $this->msg( 'managewiki-permissions-group-disallowed' );
+		}
+
+		return true;
 	}
 
 	/** @inheritDoc */
