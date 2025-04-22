@@ -349,6 +349,7 @@ class SpecialManageWiki extends SpecialPage {
 			}
 
 			if ( $module === 'namespaces' ) {
+				$mwNamespaces = new ManageWikiNamespaces( $dbname );
 				$create['out']['filter-callback'] = static fn ( string $value ): string => trim( $value );
 				$create['out']['validation-callback'] = fn ( string $value ): bool|Message =>
 					!$mwNamespaces->namespaceNameExists( $value ) ?: $this->msg( 'managewiki-namespace-exists' );
