@@ -187,6 +187,10 @@ class ManageWikiNamespaces implements IConfigModule {
 
 		if ( $data['aliases'] !== $nsData['aliases'] ) {
 			foreach ( $data['aliases'] as $alias ) {
+				if ( in_array( $alias, $nsData['aliases'], true ) ) {
+					continue;
+				}
+
 				if ( $this->namespaceNameExists( $alias ) ) {
 					$this->errors[] = [
 						'managewiki-namespace-conflicts' => [ $alias ],
