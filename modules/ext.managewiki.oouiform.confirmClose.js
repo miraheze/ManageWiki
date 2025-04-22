@@ -43,10 +43,13 @@
 			}
 		} );
 
+		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
+		saveButton.on( 'click', () => {
+			$( 'body' ).removeClass( 'ext-managewiki-create-namespace' );
+		} );
+
 		// Allow creating a new namespace without making any changes to the form
 		if ( !$( 'body' ).hasClass( 'ext-managewiki-create-namespace' ) ) {
-			saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
-
 			// Disable the save button unless settings have changed
 			// Check if settings have been changed before JS has finished loading
 			saveButton.setDisabled( !isManageWikiChanged() );
