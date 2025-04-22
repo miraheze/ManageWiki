@@ -352,7 +352,7 @@ class ManageWikiTypes {
 						static fn ( string $text ): array => [ 'value' => $text ],
 						$value ?? $options['overridedefault']
 					),
-				] + [ $options['validation-callback'] ?? null ];
+				];
 				break;
 			case 'timezone':
 				$configs = [
