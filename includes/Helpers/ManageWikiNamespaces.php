@@ -69,18 +69,32 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	public function namespaceNameExists( string $name ): bool {
-		$name = strtolower( trim( $name ) );
+		// Normalize
+		$name = str_replace(
+			[ ' ', ':' ], '_',
+			strtolower( trim( $name ) )
+		);
+
 		if ( $this->isMetaNamespace( $name ) ) {
 			return true;
 		}
 
 		foreach ( $this->liveNamespaces as $ns ) {
-			if ( strtolower( trim( $ns['name'] ) ) === $name ) {
+			// Normalize
+			$nsName = str_replace(
+				[ ' ', ':' ], '_',
+				strtolower( trim( $ns['name'] ) )
+			);
+
+			if ( $nsName === $name ) {
 				return true;
 			}
 
 			$normalizedAliases = array_map(
-				static fn ( string $alias ): string => strtolower( trim( $alias ) ),
+				static fn ( string $alias ): string => str_replace(
+					[ ' ', ':' ], '_',
+					strtolower( trim( $alias ) )
+				),
 				$ns['aliases']
 			);
 
@@ -93,13 +107,12 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	private function isMetaNamespace( string $name ): bool {
-		$name = str_replace( ' ', '_', $name );
 		$metaNamespace = strtolower( trim(
-			str_replace( ' ', '_', $this->config->get( MainConfigNames::MetaNamespace ) )
+			str_replace( [ ' ', ':' ], '_', $this->config->get( MainConfigNames::MetaNamespace ) )
 		) );
 
 		$metaNamespaceTalk = strtolower( trim(
-			str_replace( ' ', '_', $this->config->get( MainConfigNames::MetaNamespaceTalk ) )
+			str_replace( [ ' ', ':' ], '_', $this->config->get( MainConfigNames::MetaNamespaceTalk ) )
 		) );
 
 		return $name === $metaNamespace || $name === $metaNamespaceTalk;
