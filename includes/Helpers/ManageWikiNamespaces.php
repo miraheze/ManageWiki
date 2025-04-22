@@ -80,7 +80,6 @@ class ManageWikiNamespaces implements IConfigModule {
 
 		return true;
 	}
-
 	/**
 	 * Checks whether a namespace name exists (case-insensitive and trimmed)
 	 *
@@ -98,13 +97,19 @@ class ManageWikiNamespaces implements IConfigModule {
 				return true;
 			}
 
-			if ( in_array( str_replace( ' ', '_', $name ), array_keys( $ns['aliases'] ), true ) ) {
+			$normalizedAliases = array_map(
+				fn ( string $alias ): array => strtolower( trim( $alias ) ),
+				array_keys( $ns['aliases'] )
+			);
+
+			if ( in_array( $name, $normalizedAliases, true ) ) {
 				return true;
 			}
 		}
 
 		return false;
 	}
+
 
 	private function isMetaNamespace( string $name ): bool {
 		$name = str_replace( ' ', '_', $name );
