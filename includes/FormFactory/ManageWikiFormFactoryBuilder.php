@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
+use ErrorPageError;
 use InvalidArgumentException;
 use ManualLogEntry;
 use MediaWiki\Config\Config;
@@ -452,10 +453,15 @@ class ManageWikiFormFactoryBuilder {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
 
+		$namespaceID = (int)$special;
+		if ( $namespaceID < 0 || $mwNamespaces->isTalk( $namespaceID ) ) {
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-ns-invalidid' );
+		}
+
 		$formDescriptor = [];
 		$nsID = [];
 
-		$nsID['namespace'] = (int)$special;
+		$nsID['namespace'] = $namespaceID;
 
 		if ( !$mwNamespaces->exists( $nsID['namespace'] ) ) {
 			$context->getOutput()->addBodyClasses(
@@ -464,23 +470,29 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		if (
-			$mwNamespaces->list( (int)$special + 1 )['name'] ||
-			!$mwNamespaces->list( (int)$special )['name']
+			$mwNamespaces->list( $namespaceID + 1 )['name'] ||
+			!$mwNamespaces->list( $namespaceID )['name']
 		) {
-			$nsID['namespacetalk'] = (int)$special + 1;
+			$nsID['namespacetalk'] = $namespaceID + 1;
 		}
 
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
 			$namespaceData = $mwNamespaces->list( $id );
-			$create = ucfirst( $session->get( 'create' ) ) .
-				( $name === 'namespacetalk' && $session->get( 'create' ) ? '_talk' : null );
+
+			$create = $session->get( 'create' );
+			if ( $session->get( 'create' ) && $mwNamespaces->isTalk( $id ) ) {
+				$create .= ' talk';
+			}
 
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label' => $context->msg( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
+					'label' => $context->msg( "namespaces-$name" )->text() . (
+						// Core namespaces are not set with $wgExtraNamespaces
+						$namespaceData['core'] ? '' : ' ($wgExtraNamespaces)'
+					),
 					'default' => $namespaceData['name'] ?: $create,
 					'disabled' => $namespaceData['core'] || !$ceMW,
 					'required' => true,
@@ -597,7 +609,7 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
 			$craftedNamespaces = [];
-			$canDelete = $mwNamespaces->exists( (int)$special );
+			$canDelete = $mwNamespaces->exists( $namespaceID );
 
 			foreach ( $mwNamespaces->list( id: null ) as $id => $config ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {
@@ -631,6 +643,7 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+		$context->getRequest()->getSession()->remove( 'create' );
 		return $formDescriptor;
 	}
 
@@ -886,7 +899,6 @@ class ManageWikiFormFactoryBuilder {
 				break;
 			case 'namespaces':
 				$mwReturn = self::submissionNamespaces( $formData, $dbname, $special, $config );
-				$form->getRequest()->getSession()->remove( 'create' );
 				break;
 			case 'permissions':
 				$mwReturn = self::submissionPermissions( $formData, $dbname, $special, $config );

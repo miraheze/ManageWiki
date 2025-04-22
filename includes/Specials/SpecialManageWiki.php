@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Specials;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Message\Message;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
@@ -339,12 +340,36 @@ class SpecialManageWiki extends SpecialPage {
 			$create['out'] = [
 				'type' => 'text',
 				'label-message' => "managewiki-$module-create",
+				'maxlength' => 255,
+				'required' => true,
 			];
 
 			if ( $module === 'permissions' ) {
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
-				$create['out']['filter-callback'] = static fn ( string $value ): string => trim( strtolower( $value ) );
+				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( trim( $value ) );
+			}
+
+			if ( $module === 'namespaces' ) {
+				// Handle namespace validation and normalization
+				$mwNamespaces = new ManageWikiNamespaces( $dbname );
+				$create['out']['filter-callback'] = static fn ( string $value ): string =>
+					ucfirst( trim( trim( $value ), '_:' ) );
+				$create['out']['validation-callback'] = function ( string $value ) use ( $mwNamespaces ): bool|Message {
+					$disallowed = array_map( 'strtolower',
+						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
+					);
+
+					if ( in_array( strtolower( $value ), $disallowed, true ) ) {
+						return $this->msg( 'managewiki-error-disallowednamespace', $value );
+					}
+
+					if ( $mwNamespaces->namespaceNameExists( $value ) ) {
+						return $this->msg( 'managewiki-namespace-conflicts', $value );
+					}
+
+					return true;
+				};
 			}
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
