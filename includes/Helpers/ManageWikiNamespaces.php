@@ -6,7 +6,6 @@ use JobSpecification;
 use MediaWiki\Config\Config;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Message\Message;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
