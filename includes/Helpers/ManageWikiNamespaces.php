@@ -98,7 +98,7 @@ class ManageWikiNamespaces implements IConfigModule {
 				return true;
 			}
 
-			if ( in_array( str_replace( ' ', '_', $name ), $ns['aliases'], true ) ) {
+			if ( in_array( str_replace( ' ', '_', $name ), array_keys( $ns['aliases'] ), true ) ) {
 				return true;
 			}
 		}
