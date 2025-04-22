@@ -341,7 +341,7 @@ class ManageWikiTypes {
 					'fields' => [
 						'value' => [
 							'type' => 'text',
-						],
+						] + [ $options['validation-callback'] ?? null ],
 						'delete' => [
 							'type' => 'submit',
 							'buttonlabel-message' => 'htmlform-cloner-delete',
