@@ -80,11 +80,40 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	/**
+	 * Get all groups that have the specified permission
+	 *
+	 * @param string $permission The permission to look for
+	 * @return array List of group names that have the permission
+	 */
+	public function getGroupsWithPermission( string $permission ): array {
+		$groups = [];
+		foreach ( $this->livePermissions as $group => $data ) {
+			if ( in_array( $permission, $data['permissions'] ?? [], true ) ) {
+				$groups[] = $group;
+			}
+		}
+
+		return array_unique( $groups );
+	}
+
+	/**
 	 * Modify a group handler
 	 * @param string $group Group name
 	 * @param array $data Merging information about the group
 	 */
 	public function modify( string $group, array $data ): void {
+		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-settings' );
+		$isRemovingPermission = in_array(
+			'managewiki-permissions', $data['permissions']['remove'], true
+		);
+
+		if ( $isRemovingPermission && $groupsWithPermission === [ $group ] ) {
+			$this->errors[] = [
+				'managewiki-error-missingpermission' => [],
+			];
+			return;
+		}
+
 		// We will handle all processing in final stages
 		$permData = [
 			'permissions' => $this->livePermissions[$group]['permissions'] ?? [],
@@ -132,6 +161,14 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @param string $group Group name
 	 */
 	public function remove( string $group ): void {
+		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions' );
+		if ( $groupsWithPermission === [ $group ] ) {
+			$this->errors[] = [
+				'managewiki-error-missingpermission' => [],
+			];
+			return;
+		}
+
 		// Utilize changes differently in this case
 		foreach ( $this->livePermissions[$group] as $name => $value ) {
 			$this->changes[$group][$name] = [
@@ -176,6 +213,11 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	public function commit(): void {
+		if ( $this->getErrors() ) {
+			// Don't save anything if we have errors
+			return;
+		}
+
 		$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
 
 		foreach ( array_keys( $this->changes ) as $group ) {

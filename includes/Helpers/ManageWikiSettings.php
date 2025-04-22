@@ -17,7 +17,6 @@ class ManageWikiSettings implements IConfigModule {
 	private IDatabase $dbw;
 
 	private array $changes = [];
-	private array $errors = [];
 	private array $logParams = [];
 	private array $scripts = [];
 	private array $liveSettings;
@@ -128,7 +127,9 @@ class ManageWikiSettings implements IConfigModule {
 	}
 
 	public function getErrors(): array {
-		return $this->errors;
+		// This class doesn't produce errors, but the method
+		// may be called by consumers, so return an empty array.
+		return [];
 	}
 
 	public function hasChanges(): bool {
