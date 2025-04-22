@@ -44,6 +44,7 @@
 		} );
 
 		// Allow creating a new namespace without making any changes to the form
+		// eslint-disable-next-line no-jquery/no-class-state
 		if ( !$( 'body' ).hasClass( 'ext-managewiki-create-namespace' ) ) {
 			saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
