@@ -340,6 +340,8 @@ class SpecialManageWiki extends SpecialPage {
 			$create['out'] = [
 				'type' => 'text',
 				'label-message' => "managewiki-$module-create",
+				'maxlength' => 255,
+				'required' => true,
 			];
 
 			if ( $module === 'permissions' ) {
