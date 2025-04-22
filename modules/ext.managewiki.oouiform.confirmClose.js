@@ -43,13 +43,20 @@
 			}
 		} );
 
-		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
-		saveButton.on( 'click', () => {
-			$( 'body' ).removeClass( 'ext-managewiki-create-namespace' );
-		} );
+		const pageName = mw.config.get( 'wgPageName' ) || '';
+		const parts = pageName.split( '/' );
+		const lastPart = parts[ parts.length - 1 ]?.toLowerCase();
+
+		const isManageWikiNamespaces = parts.length >= 2 &&
+			parts[ parts.length - 2 ].toLowerCase() === 'namespaces';
+
+		const namespaceIds = Object.values( mw.config.get( 'wgNamespaceIds' ) || {} )
+			.map( ns => ns.toString().toLowerCase() );
 
 		// Allow creating a new namespace without making any changes to the form
-		if ( !$( 'body' ).hasClass( 'ext-managewiki-create-namespace' ) ) {
+		if ( !isManageWikiNamespaces || !namespaceIds.includes( lastPart ) ) {
+			saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
+
 			// Disable the save button unless settings have changed
 			// Check if settings have been changed before JS has finished loading
 			saveButton.setDisabled( !isManageWikiChanged() );
