@@ -68,6 +68,24 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	/**
+	 * Checks whether a namespace name exists (case-insensitive and trimmed)
+	 *
+	 * @param string $name The namespace name to check
+	 * @return bool True if a matching namespace name exists, false otherwise
+	 */
+	public function namespaceNameExists( string $name ): bool {
+		$needle = strtolower( trim( $name ) );
+
+		foreach ( $this->liveNamespaces as $ns ) {
+			if ( strtolower( trim( $ns['name'] ) ) === $needle ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Lists either all namespaces or a specific one
 	 * @param ?int $id Namespace ID wanted (null for all)
 	 * @return array Namespace configuration
