@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Specials;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Message\Message;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
@@ -344,7 +345,13 @@ class SpecialManageWiki extends SpecialPage {
 			if ( $module === 'permissions' ) {
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
-				$create['out']['filter-callback'] = static fn ( string $value ): string => trim( strtolower( $value ) );
+				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( trim( $value ) );
+			}
+
+			if ( $module === 'namespaces' ) {
+				$create['out']['filter-callback'] = static fn ( string $value ): string => trim( $value );
+				$create['out']['validation-callback'] = fn ( string $value ): bool|Message =>
+					!$mwNamespaces->namespaceNameExists( $value ) ?: $this->msg( 'managewiki-namespace-exists' );
 			}
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
