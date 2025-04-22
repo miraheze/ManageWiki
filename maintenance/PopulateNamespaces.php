@@ -24,12 +24,11 @@ class PopulateNamespaces extends Maintenance {
 		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		$namespaces = array_merge(
-			$this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ),
-			[ NS_MAIN => '<Main>' ]
-		);
+		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames );
+		$namespaces[NS_MAIN] = '<Main>';
 
 		foreach ( $namespaces as $id => $name ) {
+			$id = (int)$id;
 			if ( $id < 0 ) {
 				// We don't like 'imaginary' namespaces
 				continue;
@@ -50,13 +49,13 @@ class PopulateNamespaces extends Maintenance {
 				] )
 				->where( [
 					'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-					'ns_namespace_id' => (int)$id,
+					'ns_namespace_id' => $id,
 				] )
 				->caller( __METHOD__ )
 				->fetchRow();
 
 			if ( !$check ) {
-				$this->insertNamespace( $dbw, (int)$id, (string)$name, $nsAliases );
+				$this->insertNamespace( $dbw, $id, (string)$name, $nsAliases );
 			}
 		}
 	}
