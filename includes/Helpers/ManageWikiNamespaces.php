@@ -4,7 +4,9 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use JobSpecification;
 use MediaWiki\Config\Config;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Message\Message;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
@@ -67,6 +69,18 @@ class ManageWikiNamespaces implements IConfigModule {
 		return isset( $this->liveNamespaces[$id] );
 	}
 
+	public function validateNamespaceName( string $name ): bool|Message {
+		if ( $this->namespaceNameExists( $name ) ) {
+			return wfMessage( 'managewiki-namespace-exists' );
+		}
+
+		if ( str_ends_with( strtolower( trim( $name ) ), 'talk' ) ) {
+			return wfMessage( 'managewiki-namespace-invalid' );
+		}
+
+		return true;
+	}
+
 	/**
 	 * Checks whether a namespace name exists (case-insensitive and trimmed)
 	 *
@@ -74,15 +88,30 @@ class ManageWikiNamespaces implements IConfigModule {
 	 * @return bool True if a matching namespace name exists, false otherwise
 	 */
 	public function namespaceNameExists( string $name ): bool {
-		$needle = strtolower( trim( $name ) );
+		$name = strtolower( trim( $name ) );
+		if ( $this->isMetaNamespace( $name ) ) {
+			return true;
+		}
 
 		foreach ( $this->liveNamespaces as $ns ) {
-			if ( strtolower( trim( $ns['name'] ) ) === $needle ) {
+			if ( strtolower( trim( $ns['name'] ) ) === $name ) {
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	private function isMetaNamespace( string $name ): bool {
+		$metaNamespace = strtolower( trim(
+			$this->config->get( MainConfigNames::MetaNamespace )
+		) );
+
+		$metaNamespaceTalk = strtolower( trim(
+			$this->config->get( MainConfigNames::MetaNamespaceTalk )
+		) );
+
+		return $name === $metaNamespace || $name === $metaNamespaceTalk;
 	}
 
 	/**
