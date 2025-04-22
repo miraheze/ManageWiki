@@ -885,6 +885,13 @@ class ManageWikiFormFactoryBuilder {
 				throw new InvalidArgumentException( "$module not recognized" );
 		}
 
+		/**
+		 * We check for errors in multiple places here because modules may add them at different stages.
+		 * Some errors can be set even when there are no changes, such as validation failures.
+		 * Others might occur during commit(), or after commit logic that reveals issues late.
+		 * This approach ensures all potential errors—regardless of when they're added—are caught.
+		 */
+
 		if ( $mwReturn->hasChanges() ) {
 			$mwReturn->commit();
 			if ( $mwReturn->getErrors() ) {
