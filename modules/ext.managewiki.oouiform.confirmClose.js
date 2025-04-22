@@ -29,14 +29,41 @@
 					continue;
 				}
 
-				if ( $fields[ i ].defaultChecked !== undefined && $fields[ i ].type === 'checkbox' && $fields[ i ].defaultChecked !== $fields[ i ].checked ) {
+				if (
+					$fields[ i ].defaultChecked !== undefined &&
+					$fields[ i ].type === 'checkbox' &&
+					$fields[ i ].defaultChecked !== $fields[ i ].checked
+				) {
 					return true;
-				} else if ( $fields[ i ].defaultValue !== undefined && $fields[ i ].defaultValue !== $fields[ i ].value ) {
+				} else if (
+					$fields[ i ].defaultValue !== undefined &&
+					$fields[ i ].defaultValue !== $fields[ i ].value
+				) {
 					return true;
 				}
 			}
 
 			return false;
+		}
+
+		// Check if a submit reason was entered
+		function hasSubmitReason() {
+			const $reason = $( '#managewiki-submit-reason' ).find( ':input[name]' );
+			for ( let i = 0; i < $reason.length; i++ ) {
+				if ( $reason[ i ].value.trim() !== '' ) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		// Determine if the save button should be enabled
+		function updateSaveButtonState() {
+			const changed = isManageWikiChanged();
+			const reasonFilled = hasSubmitReason();
+			// eslint-disable-next-line no-jquery/no-class-state
+			const isCreateNamespace = $( 'body' ).hasClass( 'ext-managewiki-create-namespace' );
+			saveButton.setDisabled( !( changed || ( isCreateNamespace && reasonFilled ) ) );
 		}
 
 		// Store the initial number of children of cloners for later use, as an equivalent of
@@ -51,7 +78,7 @@
 
 		// Disable the save button unless settings have changed
 		// Check if settings have been changed before JS has finished loading
-		saveButton.setDisabled( !isManageWikiChanged() );
+		updateSaveButtonState();
 
 		// Attach capturing event handlers to the document, to catch events inside OOUI dropdowns:
 		// * Use capture because OO.ui.SelectWidget also does, and it stops event propagation,
@@ -61,9 +88,7 @@
 		[ 'change', 'keyup', 'mouseup' ].forEach( ( eventType ) => {
 			document.addEventListener( eventType, () => {
 				// Make sure SelectWidget's event handlers run first
-				setTimeout( () => {
-					saveButton.setDisabled( !isManageWikiChanged() );
-				} );
+				setTimeout( updateSaveButtonState );
 			}, true );
 		} );
 

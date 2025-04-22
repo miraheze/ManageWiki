@@ -10,6 +10,7 @@
 	],
 	"url": "https://github.com/miraheze/ManageWiki",
 	"descriptionmsg": "managewiki-desc",
+	"namemsg": "managewiki-extensionname",
 	"license-name": "GPL-3.0-or-later",
 	"type": "specialpage",
 	"requires": {

@@ -27,7 +27,8 @@ class ManageWikiHookRunner implements
 	): void {
 		$this->container->run(
 			'ManageWikiCoreAddFormFields',
-			[ $context, $remoteWiki, $dbname, $ceMW, &$formDescriptor ]
+			[ $context, $remoteWiki, $dbname, $ceMW, &$formDescriptor ],
+			[ 'abortable' => false ]
 		);
 	}
 
@@ -41,7 +42,8 @@ class ManageWikiHookRunner implements
 	): void {
 		$this->container->run(
 			'ManageWikiCoreFormSubmission',
-			[ $context, $dbw, $remoteWiki, $dbname, $formData ]
+			[ $context, $dbw, $remoteWiki, $dbname, $formData ],
+			[ 'abortable' => false ]
 		);
 	}
 }

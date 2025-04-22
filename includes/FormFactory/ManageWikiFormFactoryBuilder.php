@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
+use ErrorPageError;
 use InvalidArgumentException;
 use ManualLogEntry;
 use MediaWiki\Config\Config;
@@ -473,29 +474,46 @@ class ManageWikiFormFactoryBuilder {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
 
+		$namespaceID = (int)$special;
+		if ( $namespaceID < 0 || $mwNamespaces->isTalk( $namespaceID ) ) {
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-ns-invalidid' );
+		}
+
 		$formDescriptor = [];
 		$nsID = [];
 
-		$nsID['namespace'] = (int)$special;
+		$nsID['namespace'] = $namespaceID;
+
+		if ( !$mwNamespaces->exists( $nsID['namespace'] ) ) {
+			$context->getOutput()->addBodyClasses(
+				[ 'ext-managewiki-create-namespace' ]
+			);
+		}
 
 		if (
-			$mwNamespaces->list( (int)$special + 1 )['name'] ||
-			!$mwNamespaces->list( (int)$special )['name']
+			$mwNamespaces->list( $namespaceID + 1 )['name'] ||
+			!$mwNamespaces->list( $namespaceID )['name']
 		) {
-			$nsID['namespacetalk'] = (int)$special + 1;
+			$nsID['namespacetalk'] = $namespaceID + 1;
 		}
 
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
 			$namespaceData = $mwNamespaces->list( $id );
-			$create = ucfirst( $session->get( 'create' ) ) .
-				( $name === 'namespacetalk' && $session->get( 'create' ) ? '_talk' : null );
+
+			$create = $session->get( 'create' );
+			if ( $session->get( 'create' ) && $mwNamespaces->isTalk( $id ) ) {
+				$create .= ' talk';
+			}
 
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label' => $context->msg( "namespaces-$name" )->text() . ' ($wgExtraNamespaces)',
+					'label' => $context->msg( "namespaces-$name" )->text() . (
+						// Core namespaces are not set with $wgExtraNamespaces
+						$namespaceData['core'] ? '' : ' ($wgExtraNamespaces)'
+					),
 					'default' => $namespaceData['name'] ?: $create,
 					'disabled' => $namespaceData['core'] || !$ceMW,
 					'required' => true,
@@ -547,7 +565,11 @@ class ManageWikiFormFactoryBuilder {
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $remoteWiki ) : true;
 
-				$add = ( isset( $a['requires']['visibility'] ) ? $mwRequirements : true ) && ( ( $a['from'] === 'mediawiki' ) || ( in_array( $a['from'], $extList, true ) ) );
+				$hasVisibilityRequirement = isset( $a['requires']['visibility'] );
+				$isFromMediaWiki = $a['from'] === 'mediawiki';
+				$isInExtList = in_array( $a['from'], $extList, true );
+
+				$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isFromMediaWiki || $isInExtList );
 				$disabled = $ceMW ? !$mwRequirements : true;
 
 				$msgName = $context->msg( "managewiki-namespaces-$key-name" );
@@ -608,7 +630,7 @@ class ManageWikiFormFactoryBuilder {
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
 			$craftedNamespaces = [];
-			$canDelete = $mwNamespaces->exists( (int)$special );
+			$canDelete = $mwNamespaces->exists( $namespaceID );
 
 			foreach ( $mwNamespaces->list( id: null ) as $id => $config ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {
@@ -642,6 +664,7 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
+		$context->getRequest()->getSession()->remove( 'create' );
 		return $formDescriptor;
 	}
 
@@ -897,7 +920,6 @@ class ManageWikiFormFactoryBuilder {
 				break;
 			case 'namespaces':
 				$mwReturn = self::submissionNamespaces( $formData, $dbname, $special, $config );
-				$form->getRequest()->getSession()->remove( 'create' );
 				break;
 			case 'permissions':
 				$mwReturn = self::submissionPermissions( $formData, $dbname, $special, $config );
@@ -906,9 +928,16 @@ class ManageWikiFormFactoryBuilder {
 				throw new InvalidArgumentException( "$module not recognized" );
 		}
 
+		/**
+		 * We check for errors in multiple places here because modules may add them at different stages.
+		 * Some errors can be set even when there are no changes, such as validation failures.
+		 * Others might occur during commit(), or after commit logic that reveals issues late.
+		 * This approach ensures all potential errors—regardless of when they're added—are caught.
+		 */
+
 		if ( $mwReturn->hasChanges() ) {
 			$mwReturn->commit();
-			if ( $module === 'extensions' && $mwReturn->getErrors() ) {
+			if ( $mwReturn->getErrors() ) {
 				return $mwReturn->getErrors();
 			}
 
@@ -933,7 +962,8 @@ class ManageWikiFormFactoryBuilder {
 				}
 			}
 		} else {
-			return [ [ 'managewiki-changes-none' => null ] ];
+			return $mwReturn->getErrors() ?:
+				[ [ 'managewiki-changes-none' => null ] ];
 		}
 
 		return $mwReturn->getErrors();

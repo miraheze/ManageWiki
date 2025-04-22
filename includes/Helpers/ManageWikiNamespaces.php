@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use JobSpecification;
 use MediaWiki\Config\Config;
+use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\ConfigNames;
@@ -67,6 +68,56 @@ class ManageWikiNamespaces implements IConfigModule {
 		return isset( $this->liveNamespaces[$id] );
 	}
 
+	public function namespaceNameExists( string $name ): bool {
+		// Normalize
+		$name = str_replace(
+			[ ' ', ':' ], '_',
+			strtolower( trim( $name ) )
+		);
+
+		if ( $this->isMetaNamespace( $name ) ) {
+			return true;
+		}
+
+		foreach ( $this->liveNamespaces as $ns ) {
+			// Normalize
+			$nsName = str_replace(
+				[ ' ', ':' ], '_',
+				strtolower( trim( $ns['name'] ) )
+			);
+
+			if ( $nsName === $name ) {
+				return true;
+			}
+
+			$normalizedAliases = array_map(
+				static fn ( string $alias ): string => str_replace(
+					[ ' ', ':' ], '_',
+					strtolower( trim( $alias ) )
+				),
+				$ns['aliases']
+			);
+
+			if ( in_array( $name, $normalizedAliases, true ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private function isMetaNamespace( string $name ): bool {
+		$metaNamespace = strtolower( trim(
+			str_replace( [ ' ', ':' ], '_', $this->config->get( MainConfigNames::MetaNamespace ) )
+		) );
+
+		$metaNamespaceTalk = strtolower( trim(
+			str_replace( [ ' ', ':' ], '_', $this->config->get( MainConfigNames::MetaNamespaceTalk ) )
+		) );
+
+		return $name === $metaNamespace || $name === $metaNamespaceTalk;
+	}
+
 	/**
 	 * Lists either all namespaces or a specific one
 	 * @param ?int $id Namespace ID wanted (null for all)
@@ -123,6 +174,30 @@ class ManageWikiNamespaces implements IConfigModule {
 			'additional' => $this->liveNamespaces[$id]['additional'] ?? [],
 			'maintainprefix' => $maintainPrefix,
 		];
+
+		if ( $data['name'] !== $nsData['name'] ) {
+			if ( $this->namespaceNameExists( $data['name'] ) ) {
+				$this->errors[] = [
+					'managewiki-namespace-conflicts' => [
+						$data['name'],
+					],
+				];
+			}
+		}
+
+		if ( $data['aliases'] !== $nsData['aliases'] ) {
+			foreach ( $data['aliases'] as $alias ) {
+				if ( in_array( $alias, $nsData['aliases'], true ) ) {
+					continue;
+				}
+
+				if ( $this->namespaceNameExists( $alias ) ) {
+					$this->errors[] = [
+						'managewiki-namespace-conflicts' => [ $alias ],
+					];
+				}
+			}
+		}
 
 		// Overwrite the defaults above with our new modified values
 		foreach ( $data as $name => $value ) {
@@ -205,6 +280,11 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	public function commit(): void {
+		if ( $this->getErrors() ) {
+			// Don't save anything if we have errors
+			return;
+		}
+
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( $this->isDeleting( $id ) ) {
 				$this->log = 'namespaces-delete';

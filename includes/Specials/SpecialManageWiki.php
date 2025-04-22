@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Specials;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
+use MediaWiki\Message\Message;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
@@ -228,7 +229,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// Handle permissions module when we are not editing a specific group.
-		if ( $module === 'permissions' && !$special ) {
+		if ( $module === 'permissions' && $special === '' ) {
 			$language = $this->getLanguage();
 			$mwPermissions = new ManageWikiPermissions( $dbname );
 			$groups = array_keys( $mwPermissions->list( group: null ) );
@@ -244,7 +245,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// Handle namespaces module when we are not editing a specific namespace.
-		if ( $module === 'namespaces' && !$special ) {
+		if ( $module === 'namespaces' && $special === '' ) {
 			$mwNamespaces = new ManageWikiNamespaces( $dbname );
 			$namespaces = $mwNamespaces->list( id: null );
 
@@ -339,12 +340,38 @@ class SpecialManageWiki extends SpecialPage {
 			$create['out'] = [
 				'type' => 'text',
 				'label-message' => "managewiki-$module-create",
+				'maxlength' => 255,
+				'required' => true,
 			];
 
 			if ( $module === 'permissions' ) {
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
-				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( $value );
+				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( trim( $value ) );
+				$create['out']['validation-callback'] = [ $this, 'validateNewGroupName' ];
+			}
+
+			if ( $module === 'namespaces' ) {
+				// Handle namespace validation and normalization
+				$mwNamespaces = new ManageWikiNamespaces( $dbname );
+				$create['out']['filter-callback'] = static fn ( string $value ): string =>
+					ucfirst( trim( trim( $value ), '_:' ) );
+
+				$create['out']['validation-callback'] = function ( string $value ) use ( $mwNamespaces ): bool|Message {
+					$disallowed = array_map( 'strtolower',
+						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
+					);
+
+					if ( in_array( strtolower( $value ), $disallowed, true ) ) {
+						return $this->msg( 'managewiki-error-disallowednamespace', $value );
+					}
+
+					if ( $mwNamespaces->namespaceNameExists( $value ) ) {
+						return $this->msg( 'managewiki-namespace-conflicts', $value );
+					}
+
+					return true;
+				};
 			}
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
@@ -375,6 +402,15 @@ class SpecialManageWiki extends SpecialPage {
 		$this->getOutput()->redirect(
 			SpecialPage::getTitleFor( 'ManageWiki', "$module/$special" )->getFullURL()
 		);
+	}
+
+	public function validateNewGroupName( string $newGroup ): bool|Message {
+		$disallowed = $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups );
+		if ( in_array( $newGroup, $disallowed, true ) ) {
+			return $this->msg( 'managewiki-permissions-group-disallowed' );
+		}
+
+		return true;
 	}
 
 	/** @inheritDoc */
