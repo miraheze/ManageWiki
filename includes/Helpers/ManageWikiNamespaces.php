@@ -165,7 +165,9 @@ class ManageWikiNamespaces implements IConfigModule {
 		if ( $data['name'] !== $nsData['name'] ) {
 			if ( $this->namespaceNameExists( $data['name'] ) ) {
 				$this->errors[] = [
-					'managewiki-namespace-exists' => [],
+					'managewiki-namespace-conflicts' => [
+						$data['name'],
+					],
 				];
 			}
 		}
@@ -174,7 +176,7 @@ class ManageWikiNamespaces implements IConfigModule {
 			foreach ( $data['aliases'] as $alias ) {
 				if ( $this->namespaceNameExists( $alias ) ) {
 					$this->errors[] = [
-						'managewiki-namespace-alias-conflict' => [ $alias ],
+						'managewiki-namespace-conflicts' => [ $alias ],
 					];
 				}
 			}
