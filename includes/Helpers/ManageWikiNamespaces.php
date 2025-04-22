@@ -280,6 +280,10 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	public function commit(): void {
+		if ( $this->getErrors() ) {
+			return;
+		}
+
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( $this->isDeleting( $id ) ) {
 				$this->log = 'namespaces-delete';
