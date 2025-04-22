@@ -5,18 +5,19 @@ namespace Miraheze\ManageWiki\Maintenance;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ManageWiki;
-use Wikimedia\AtEase\AtEase;
 use Wikimedia\Rdbms\IDatabase;
 
 class PopulateNamespaces extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
+
+		$this->addOption( 'force', 'Force populating namespaces even if ManageWiki namespaces is enabled.' );
 		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute(): void {
-		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+		if ( !$this->hasOption( 'force' ) && ManageWiki::checkSetup( 'namespaces' ) ) {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
 
@@ -25,8 +26,6 @@ class PopulateNamespaces extends Maintenance {
 
 		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames ) +
 			[ NS_MAIN => '<Main>' ];
-
-		AtEase::suppressWarnings();
 
 		foreach ( $namespaces as $id => $name ) {
 			if ( $id < 0 ) {
@@ -58,8 +57,6 @@ class PopulateNamespaces extends Maintenance {
 				$this->insertNamespace( $dbw, (int)$id, (string)$name, $nsAliases );
 			}
 		}
-
-		AtEase::restoreWarnings();
 	}
 
 	private function insertNamespace(
