@@ -344,7 +344,7 @@ class SpecialManageWiki extends SpecialPage {
 			if ( $module === 'permissions' ) {
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
-				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( $value );
+				$create['out']['filter-callback'] = static fn ( string $value ): string => trim( strtolower( $value ) );
 			}
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
