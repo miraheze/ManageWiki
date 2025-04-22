@@ -196,7 +196,7 @@ class ManageWikiNamespaces implements IConfigModule {
 						'managewiki-namespace-alias-conflict' => [ $alias ],
 					];
 				}
-				
+
 				if ( !$this->isTalk( $id ) && str_ends_with( strtolower( trim( $alias ) ), 'talk' ) ) {
 					$this->errors[] = [
 						'managewiki-namespace-alias-invalid' => [ $alias ],
