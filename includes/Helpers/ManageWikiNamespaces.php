@@ -81,12 +81,6 @@ class ManageWikiNamespaces implements IConfigModule {
 		return true;
 	}
 
-	/**
-	 * Checks whether a namespace name exists (case-insensitive and trimmed)
-	 *
-	 * @param string $name The namespace name to check
-	 * @return bool True if a matching namespace name exists, false otherwise
-	 */
 	private function namespaceNameExists( string $name ): bool {
 		$name = strtolower( trim( $name ) );
 		if ( $this->isMetaNamespace( $name ) ) {
