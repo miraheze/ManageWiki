@@ -351,11 +351,25 @@ class SpecialManageWiki extends SpecialPage {
 			}
 
 			if ( $module === 'namespaces' ) {
+				// Handle namespace validation and normalization
 				$mwNamespaces = new ManageWikiNamespaces( $dbname );
-				$create['out']['filter-callback'] = static fn ( string $value ): string => ucfirst( trim( $value ) );
-				$create['out']['validation-callback'] = fn ( string $value ): bool|Message =>
-					!$mwNamespaces->namespaceNameExists( $value ) ?:
-						$this->msg( 'managewiki-namespace-conflicts', $value );
+				$create['out']['filter-callback'] = static fn ( string $value ): string =>
+					ucfirst( trim( trim( $value ), '_:' ) );
+				$create['out']['validation-callback'] = function ( string $value ) use ( $mwNamespaces ): bool|Message {
+					$disallowed = array_map( 'strtolower',
+						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
+					);
+
+					if ( in_array( strtolower( $value ), $disallowed, true ) ) {
+						return $this->msg( 'managewiki-error-disallowednamespace', $value );
+					}
+
+					if ( $mwNamespaces->namespaceNameExists( $value ) ) {
+						return $this->msg( 'managewiki-namespace-conflicts', $value );
+					}
+
+					return true;
+				};
 			}
 
 			$createForm = HTMLForm::factory( 'ooui', $hidden + $create, $this->getContext(), 'create' );
