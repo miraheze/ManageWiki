@@ -167,6 +167,20 @@ class ManageWikiNamespaces implements IConfigModule {
 			];
 		}
 
+		if ( $this->validateNamespaceName( $data['name'] ) !== true ) {
+			$this->errors[] = [
+				$this->validateNamespaceName( $data['name'] ) => [],
+			];
+		}
+
+		foreach ( $data['aliases'] as $alias ) {
+			if ( $this->validateNamespaceName( $alias ) !== true ) {
+				$this->errors[] = [
+					'managewiki-invalid-alias' => [ $alias ],
+				];
+			}
+		}
+
 		// We will handle all processing in final stages
 		$nsData = [
 			'name' => $this->liveNamespaces[$id]['name'] ?? null,
