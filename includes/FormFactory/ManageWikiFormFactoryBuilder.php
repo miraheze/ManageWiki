@@ -586,8 +586,8 @@ class ManageWikiFormFactoryBuilder {
 				$config, false, [],
 				'namespaces',
 				[
-					'validation-callback' => static fn ( string $value ): bool|Message =>
-						$mwNamespaces->validateNamespaceName( $value ),
+					'validation-callback' => static fn ( string $value ) =>
+						var_dump( $value ),
 				],
 				$namespaceData['aliases'], '', [], 'texts'
 			);
