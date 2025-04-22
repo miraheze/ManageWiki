@@ -43,18 +43,8 @@
 			}
 		} );
 
-		const pageName = mw.config.get( 'wgPageName' ) || '';
-		const parts = pageName.split( '/' );
-		const lastPart = parts[ parts.length - 1 ]?.toLowerCase();
-
-		const isManageWikiNamespaces = parts.length >= 2 &&
-			parts[ parts.length - 2 ].toLowerCase() === 'namespaces';
-
-		const namespaceIds = Object.values( mw.config.get( 'wgNamespaceIds' ) || {} )
-			.map( ns => ns.toString().toLowerCase() );
-
 		// Allow creating a new namespace without making any changes to the form
-		if ( !isManageWikiNamespaces || namespaceIds.includes( lastPart ) ) {
+		if ( !$( 'body' ).hasClass( 'ext-managewiki-create-namespace' ) ) {
 			saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
 			// Disable the save button unless settings have changed
