@@ -454,7 +454,7 @@ class ManageWikiFormFactoryBuilder {
 		$extList = $mwExtensions->list();
 
 		if ( $mwNamespaces->isTalk( (int)$special ) ) {
-			throw new ErrorPageError( 'managewiki-error', 'managewiki-namespace-invalid' );
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-ns-invalidid' );
 		}
 
 		$formDescriptor = [];
