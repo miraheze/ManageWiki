@@ -97,6 +97,10 @@ class ManageWikiNamespaces implements IConfigModule {
 			if ( strtolower( trim( $ns['name'] ) ) === $name ) {
 				return true;
 			}
+
+			if ( in_array( str_replace( ' ', '_', $name ), $ns['aliases'], true ) ) {
+				return true;
+			}
 		}
 
 		return false;
