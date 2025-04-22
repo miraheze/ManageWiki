@@ -167,20 +167,6 @@ class ManageWikiNamespaces implements IConfigModule {
 			];
 		}
 
-		if ( $this->validateNamespaceName( $data['name'] ) !== true ) {
-			$this->errors[] = [
-				'managewiki-namespace-exists' => [],
-			];
-		}
-
-		foreach ( $data['aliases'] as $alias ) {
-			if ( $this->validateNamespaceName( $alias ) !== true ) {
-				$this->errors[] = [
-					'managewiki-invalid-alias' => [ $alias ],
-				];
-			}
-		}
-
 		// We will handle all processing in final stages
 		$nsData = [
 			'name' => $this->liveNamespaces[$id]['name'] ?? null,
@@ -194,6 +180,24 @@ class ManageWikiNamespaces implements IConfigModule {
 			'additional' => $this->liveNamespaces[$id]['additional'] ?? [],
 			'maintainprefix' => $maintainPrefix,
 		];
+
+		if ( $data['name'] !== $nsData['name'] ) {
+			if ( $this->validateNamespaceName( $data['name'] ) !== true ) {
+				$this->errors[] = [
+					'managewiki-namespace-exists' => [],
+				];
+			}
+		}
+
+		if ( $data['aliases'] !== $nsData['aliases'] ) {
+			foreach ( $data['aliases'] as $alias ) {
+				if ( $this->validateNamespaceName( $alias ) !== true ) {
+					$this->errors[] = [
+						'managewiki-invalid-alias' => [ $alias ],
+					];
+				}
+			}
+		}
 
 		// Overwrite the defaults above with our new modified values
 		foreach ( $data as $name => $value ) {
