@@ -98,7 +98,7 @@ class ManageWikiNamespaces implements IConfigModule {
 			}
 
 			$normalizedAliases = array_map(
-				fn ( string $alias ): array => strtolower( trim( $alias ) ),
+				fn ( string $alias ): string => strtolower( trim( $alias ) ),
 				array_keys( $ns['aliases'] )
 			);
 
