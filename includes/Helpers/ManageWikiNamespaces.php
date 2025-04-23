@@ -249,10 +249,10 @@ class ManageWikiNamespaces implements IConfigModule {
 		$this->deleteNamespaces[] = $id;
 	}
 
-	public function hasPagesToRestore( string $name ): bool {
+	public function hasPagesToRestore( int $id ): bool {
 		$dbr = $this->databaseUtils->getRemoteWikiReplicaDB( $this->dbname );
 
-		$prefix = $name . ':';
+		$prefix = $this->liveNamespaces[$id]['name'] . ':';
 		$count = $dbr->newSelectQueryBuilder()
 			->select( '1' )
 			->from( 'page' )
