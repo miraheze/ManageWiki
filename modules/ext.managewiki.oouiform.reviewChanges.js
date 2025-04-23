@@ -31,7 +31,6 @@
 					.not( '#managewiki-submit-reason :input[name]' );
 
 				$inputs.each( function () {
-					const $input = $( this );
 					const name = this.name
 						.replace( 'wp', '' )
 						.replace( /-namespace|-namespacetalk|ext-|set-/, '' );
@@ -47,7 +46,7 @@
 						this.defaultChecked !== this.checked
 					) {
 						dialog.content.$element.append(
-							`<li><b>${name} (${label})</b> was <i>${
+							`<li><b>${ name } (${ label })</b> was <i>${
 								this.checked ? 'enabled' : 'disabled'
 							}</i></li>`
 						);
@@ -58,7 +57,7 @@
 						const oldVal = this.defaultValue || '&lt;none&gt;';
 						const newVal = this.value || '&lt;none&gt;';
 						dialog.content.$element.append(
-							`<li><b>${name} (${label})</b> was changed from <i>${oldVal}</i> to <i>${newVal}</i></li>`
+							`<li><b>${ name } (${ label })</b> was changed from <i>${ oldVal }</i> to <i>${ newVal }</i></li>`
 						);
 					}
 				} );
