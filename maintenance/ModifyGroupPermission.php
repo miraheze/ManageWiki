@@ -16,10 +16,26 @@ class ModifyGroupPermission extends Maintenance {
 		$this->addOption( 'all', 'Gets all perm group names.' );
 		$this->addOption( 'addperms', 'Comma separated list of permissions to add.', false, true );
 		$this->addOption( 'removeperms', 'Comma separated list of permissions to remove.', false, true );
-		$this->addOption( 'newaddgroups', 'Comma separated list of groups to add to the list of addable groups.', false, true );
-		$this->addOption( 'removeaddgroups', 'Comma separated list of groups to remove from the list of addable groups.', false, true );
-		$this->addOption( 'newremovegroups', 'Comma separated list of groups to add to the list of removable groups.', false, true );
-		$this->addOption( 'removeremovegroups', 'Comma separated list of groups to remove from the list of removable groups.', false, true );
+
+		$this->addOption( 'newaddgroups',
+			'Comma separated list of groups to add to the list of addable groups.',
+			false, true
+		);
+
+		$this->addOption( 'removeaddgroups',
+			'Comma separated list of groups to remove from the list of addable groups.',
+			false, true
+		);
+
+		$this->addOption( 'newremovegroups',
+			'Comma separated list of groups to add to the list of removable groups.',
+			false, true
+		);
+
+		$this->addOption( 'removeremovegroups',
+			'Comma separated list of groups to remove from the list of removable groups.',
+			false, true
+		);
 
 		$this->requireExtension( 'ManageWiki' );
 	}
