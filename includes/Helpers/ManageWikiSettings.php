@@ -64,7 +64,11 @@ class ManageWikiSettings implements IConfigModule {
 	public function modify( array $settings, mixed $default = null ): void {
 		// We will handle all processing in final stages
 		foreach ( $settings as $var => $value ) {
-			if ( $value !== ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default ) ) {
+			$live = $this->liveSettings[$var] ?? null;
+			$override = $this->settingsConfig[$var]['overridedefault'] ?? null;
+			$current = $live ?? $override ?? $default;
+
+			if ( $value !== $current ) {
 				$this->changes[$var] = [
 					'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default,
 					'new' => $value,
