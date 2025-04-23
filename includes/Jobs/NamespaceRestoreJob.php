@@ -52,7 +52,7 @@ class NamespaceRestoreJob extends Job {
 			$newTitle = $oldTitle;
 
 			// Handle ~nsName and optional digit suffix
-			if ( preg_match( '/^(.*)~' . preg_quote( $this->nsName, '/' ) . '(\d*)$/', $newTitle, $matches ) ) {
+			if ( preg_match( '/^(.*)~' . preg_quote( $this->nsName, '/' ) . '\((\d*)\)$/', $newTitle, $matches ) ) {
 				$newTitle = $matches[1] . ( $matches[2] ?: '' );
 			} else {
 				$newTitle = preg_replace( '/~' . preg_quote( $this->nsName, '/' ) . '$/', '', $newTitle );
@@ -67,7 +67,7 @@ class NamespaceRestoreJob extends Job {
 			$baseTitle = $newTitle;
 			$counter = 1;
 			while ( $this->pageExists( $newTitle, $dbw ) ) {
-				$newTitle = $baseTitle . $counter;
+				$newTitle = "$baseTitle($counter)";
 				$counter++;
 			}
 
