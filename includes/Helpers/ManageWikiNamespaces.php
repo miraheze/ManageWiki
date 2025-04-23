@@ -252,13 +252,13 @@ class ManageWikiNamespaces implements IConfigModule {
 	public function hasPagesToRestore( int $id ): bool {
 		$dbr = $this->databaseUtils->getRemoteWikiReplicaDB( $this->dbname );
 
-		$prefix = $this->liveNamespaces[$id]['name'] . ':';
+		$suffix = '~' . $this->liveNamespaces[$id]['name'];
 		$count = $dbr->newSelectQueryBuilder()
 			->select( '1' )
 			->from( 'page' )
 			->where( [
 				$dbr->expr( 'page_title', IExpression::LIKE,
-					new LikeValue( $prefix, $dbr->anyString() )
+					new LikeValue( $dbr->anyString(), $suffix, $dbr->anyString() )
 				),
 			] )
 			->caller( __METHOD__ )
