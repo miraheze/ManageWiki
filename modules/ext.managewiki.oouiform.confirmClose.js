@@ -9,8 +9,8 @@
 		}
 
 		// Check if all of the form values are unchanged.
-		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
-		// slower and more complicated. It works fine to treat them as HTML elements.)
+		// (This function could be changed to infuse and check OOUI widgets, but that would only
+		// make it slower and more complicated. It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
 			let $fields, i;
 
@@ -21,7 +21,9 @@
 				}
 			}
 
-			$fields = $( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' );
+			$fields = $( '#managewiki-form :input[name]' )
+				.not( '#managewiki-submit-reason :input[name]' );
+
 			for ( i = 0; i < $fields.length; i++ ) {
 				if (
 					$fields[ i ].defaultChecked !== undefined &&
@@ -51,6 +53,8 @@
 			return false;
 		}
 
+		const saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
+
 		// Determine if the save button should be enabled
 		function updateSaveButtonState() {
 			const changed = isManageWikiChanged();
@@ -67,8 +71,6 @@
 				this.dataset.initialFieldSize = this.children.length;
 			}
 		} );
-
-		const saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
 		// Disable the save button unless settings have changed
 		// Check if settings have been changed before JS has finished loading
