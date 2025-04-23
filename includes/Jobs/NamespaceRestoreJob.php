@@ -31,7 +31,7 @@ class NamespaceRestoreJob extends Job {
 	public function run(): bool {
 		$dbw = $this->databaseUtils->getRemoteWikiPrimaryDB( $this->dbname );
 
-		$prefix = $this->nsName . ':';
+		$suffix = '~' . $this->nsName;
 		$res = $dbw->newSelectQueryBuilder()
 			->table( 'page' )
 			->fields( [
@@ -40,7 +40,7 @@ class NamespaceRestoreJob extends Job {
 			] )
 			->where( [
 				$dbw->expr( 'page_title', IExpression::LIKE,
-					new LikeValue( $prefix, $dbw->anyString() )
+					new LikeValue( $dbw->anyString(), $suffix, $dbw->anyString() )
 				),
 			] )
 			->caller( __METHOD__ )
