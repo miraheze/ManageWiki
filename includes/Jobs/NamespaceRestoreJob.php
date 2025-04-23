@@ -16,7 +16,6 @@ class NamespaceRestoreJob extends Job {
 	private readonly string $nsName;
 
 	private readonly int $nsID;
-	private readonly int $nsOld;
 
 	public function __construct(
 		array $params,
@@ -27,7 +26,6 @@ class NamespaceRestoreJob extends Job {
 		$this->dbname = $params['dbname'];
 		$this->nsID = $params['nsID'];
 		$this->nsName = $params['nsName'];
-		$this->nsOld = $params['nsOld'];
 	}
 
 	public function run(): bool {
@@ -68,7 +66,7 @@ class NamespaceRestoreJob extends Job {
 			// Ensure uniqueness in nsOld
 			$baseTitle = $newTitle;
 			$counter = 1;
-			while ( $this->pageExists( $newTitle, $this->nsOld, $dbw ) ) {
+			while ( $this->pageExists( $newTitle, $dbw ) ) {
 				$newTitle = $baseTitle . $counter;
 				$counter++;
 			}
@@ -76,7 +74,7 @@ class NamespaceRestoreJob extends Job {
 			$dbw->newUpdateQueryBuilder()
 				->update( 'page' )
 				->set( [
-					'page_namespace' => $this->nsOld,
+					'page_namespace' => $this->nsID,
 					'page_title' => trim( $newTitle, '_' ),
 				] )
 				->where( [ 'page_id' => $pageID ] )
@@ -86,13 +84,10 @@ class NamespaceRestoreJob extends Job {
 			$dbw->newUpdateQueryBuilder()
 				->update( 'recentchanges' )
 				->set( [
-					'rc_namespace' => $this->nsOld,
+					'rc_namespace' => $this->nsID,
 					'rc_title' => trim( $newTitle, '_' ),
 				] )
-				->where( [
-					'rc_namespace' => $this->nsID,
-					'rc_title' => $oldTitle,
-				] )
+				->where( [ 'rc_title' => $oldTitle ] )
 				->caller( __METHOD__ )
 				->execute();
 		}
@@ -100,18 +95,11 @@ class NamespaceRestoreJob extends Job {
 		return true;
 	}
 
-	private function pageExists(
-		string $title,
-		int $namespace,
-		IDatabase $dbw
-	): bool {
+	private function pageExists( string $title, IDatabase $dbw ): bool {
 		return (bool)$dbw->newSelectQueryBuilder()
 			->select( 'page_id' )
 			->from( 'page' )
-			->where( [
-				'page_namespace' => $namespace,
-				'page_title' => $title,
-			] )
+			->where( [ 'page_title' => $title ] )
 			->caller( __METHOD__ )
 			->fetchRow();
 	}
