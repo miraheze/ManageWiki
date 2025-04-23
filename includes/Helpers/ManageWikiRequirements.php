@@ -34,8 +34,10 @@ class ManageWikiRequirements {
 		foreach ( $actions as $action => $data ) {
 			switch ( $action ) {
 				case 'permissions':
-					// We don't check permissions if we are in CLI mode, so that we can toggle restricted extensions in CLI
-					$stepResponse['permissions'] = ( $ignorePerms || PHP_SAPI === 'cli' ) ? true : self::permissions( $data );
+					// We don't check permissions if we are in CLI mode, so that we can
+					// toggle restricted extensions in CLI.
+					$stepResponse['permissions'] = ( $ignorePerms || PHP_SAPI === 'cli' ) ?
+						true : self::permissions( $data );
 					break;
 				case 'extensions':
 					$stepResponse['extensions'] = self::extensions( $data, $extList );
@@ -63,7 +65,7 @@ class ManageWikiRequirements {
 			}
 		}
 
-		return array_search( false, $stepResponse, true ) === false;
+		return !in_array( false, $stepResponse, true );
 	}
 
 	/**
@@ -182,15 +184,20 @@ class ManageWikiRequirements {
 
 		foreach ( $data as $key => $val ) {
 			if ( $key === 'state' ) {
-				$ret['state'] = ( $val === 'private' && $remoteWiki->isPrivate() ) || ( $val === 'public' && !$remoteWiki->isPrivate() );
+				$isPrivate = $remoteWiki->isPrivate();
+				$ret['state'] = (
+					( $val === 'private' && $isPrivate ) ||
+					( $val === 'public' && !$isPrivate )
+				);
 				continue;
 			}
 
 			if ( $key === 'permissions' ) {
 				$ret['permissions'] = self::permissions( $val );
+				continue;
 			}
 		}
 
-		return array_search( false, $ret, true ) === false;
+		return !in_array( false, $ret, true );
 	}
 }
