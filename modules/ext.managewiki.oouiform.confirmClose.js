@@ -16,7 +16,10 @@
 
 			$fields = $( '#managewiki-form  .mw-htmlform-cloner-ul' );
 			for ( i = 0; i < $fields.length; i++ ) {
-				if ( Number( $fields[ i ].dataset.initialFieldSize ) !== $fields[ i ].children.length ) {
+				const initialSize = Number( $fields[ i ].dataset.initialFieldSize );
+				const currentSize = $fields[ i ].children.length;
+
+				if ( initialSize !== currentSize ) {
 					return true;
 				}
 			}
