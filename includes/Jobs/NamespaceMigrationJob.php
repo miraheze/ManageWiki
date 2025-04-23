@@ -87,8 +87,18 @@ class NamespaceMigrationJob extends Job {
 				$newTitle = $pageTitle;
 			}
 
-			if ( $nsTo !== null && $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
-				$newTitle .= '~' . $this->nsName;
+			if ( $nsTo !== null ) {
+				$baseTitle = $newTitle;
+				$suffix = '~' . $this->nsName;
+				$counter = 1;
+
+				while ( $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
+					$newTitle = $baseTitle . $suffix;
+					if ( $counter > 1 ) {
+						$newTitle .= "($counter)";
+					}
+					$counter++;
+				}
 			}
 
 			$dbw->newUpdateQueryBuilder()
