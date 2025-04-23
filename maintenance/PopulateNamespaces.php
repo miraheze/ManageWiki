@@ -66,19 +66,22 @@ class PopulateNamespaces extends Maintenance {
 		string $name,
 		array $nsAliases
 	): void {
+		$namespacesToBeSearchedDefault = $this->getConfig()->get( MainConfigNames::NamespacesToBeSearchedDefault );
+		$namespaceContentModels = $this->getConfig()->get( MainConfigNames::NamespaceContentModels );
+		$namespaceProtection = $this->getConfig()->get( MainConfigNames::NamespaceProtection );
 		$dbw->newInsertQueryBuilder()
 			->insertInto( 'mw_namespaces' )
 			->row( [
 				'ns_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
 				'ns_namespace_id' => $id,
 				'ns_namespace_name' => $name,
-				'ns_searchable' => (int)( $this->getConfig()->get( MainConfigNames::NamespacesToBeSearchedDefault )[$id] ?? 0 ),
+				'ns_searchable' => (int)( $namespacesToBeSearchedDefault[$id] ?? 0 ),
 				'ns_subpages' => (int)( $this->getConfig()->get( MainConfigNames::NamespacesWithSubpages )[$id] ?? 0 ),
 				'ns_content' => (int)( $this->getConfig()->get( MainConfigNames::ContentNamespaces )[$id] ?? 0 ),
-				'ns_content_model' => (string)( $this->getConfig()->get( MainConfigNames::NamespaceContentModels )[$id] ?? CONTENT_MODEL_WIKITEXT ),
-				'ns_protection' => is_array( $this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id] ?? false ) ?
-					(string)( $this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id][0] ?? '' ) :
-					(string)( $this->getConfig()->get( MainConfigNames::NamespaceProtection )[$id] ?? '' ),
+				'ns_content_model' => (string)( $namespaceContentModels[$id] ?? CONTENT_MODEL_WIKITEXT ),
+				'ns_protection' => is_array( $namespaceProtection[$id] ?? false ) ?
+					(string)( $namespaceProtection[$id][0] ?? '' ) :
+					(string)( $namespaceProtection[$id] ?? '' ),
 				'ns_aliases' => json_encode( $nsAliases ) ?: '[]',
 				'ns_core' => $id < 1000,
 				'ns_additional' => '[]',
