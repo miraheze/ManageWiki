@@ -25,12 +25,41 @@
 
 			const dialog = this;
 			$( '#managewiki-review' ).on( 'click', () => {
-				dialog.content.$element.html( '' );
-				$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
-					if ( this.type === 'checkbox' && this.defaultChecked !== undefined && this.defaultChecked !== this.checked ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[ 0 ] ).text() + ')</b> was <i>' + ( this.checked === true ? 'enabled' : 'disabled' ) + '</i></li>' );
-					} else if ( this.defaultValue !== undefined && this.defaultValue !== this.value ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[ 0 ] ).text() + ')</b> was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
+				dialog.content.$element.empty();
+
+				const $inputs = $( '#managewiki-form :input[name]' )
+					.not( '#managewiki-submit-reason :input[name]' );
+
+				$inputs.each( function () {
+					const $input = $( this );
+					const name = this.name
+						.replace( 'wp', '' )
+						.replace( /-namespace|-namespacetalk|ext-|set-/, '' );
+					const label = $( this )
+						.parents( 'fieldset' )
+						.contents()
+						.first()
+						.text();
+
+					if (
+						this.type === 'checkbox' &&
+						this.defaultChecked !== undefined &&
+						this.defaultChecked !== this.checked
+					) {
+						dialog.content.$element.append(
+							`<li><b>${name} (${label})</b> was <i>${
+								this.checked ? 'enabled' : 'disabled'
+							}</i></li>`
+						);
+					} else if (
+						this.defaultValue !== undefined &&
+						this.defaultValue !== this.value
+					) {
+						const oldVal = this.defaultValue || '&lt;none&gt;';
+						const newVal = this.value || '&lt;none&gt;';
+						dialog.content.$element.append(
+							`<li><b>${name} (${label})</b> was changed from <i>${oldVal}</i> to <i>${newVal}</i></li>`
+						);
 					}
 				} );
 
