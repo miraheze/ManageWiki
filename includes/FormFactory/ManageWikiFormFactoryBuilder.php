@@ -683,6 +683,17 @@ class ManageWikiFormFactoryBuilder {
 					'section' => 'delete',
 				],
 			];
+
+			if ( $mwNamespaces->hasPagesToRestore( $namespaceID ) ) {
+				$formDescriptor['restore-checkbox'] = [
+					'type' => 'check',
+					'label-message' => 'namespaces-restore-checkbox',
+					'help-message' => 'namespaces-restore-help',
+					'default' => false,
+					'disabled' => !$canDelete,
+					'section' => 'delete',
+				];
+			}
 		}
 
 		$context->getRequest()->getSession()->remove( 'create' );
@@ -1219,6 +1230,11 @@ class ManageWikiFormFactoryBuilder {
 		if ( $formData['delete-checkbox'] ) {
 			$mwNamespaces->remove( (int)$special, $formData['delete-migrate-to'] );
 			$mwNamespaces->remove( (int)$special + 1, $formData['delete-migrate-to'] + 1 );
+			return $mwNamespaces;
+		}
+
+		if ( $formData['restore-checkbox'] ?? false ) {
+			$mwNamespaces->restorePagesInNamespace( (int)$special );
 			return $mwNamespaces;
 		}
 
