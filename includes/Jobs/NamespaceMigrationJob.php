@@ -19,8 +19,6 @@ class NamespaceMigrationJob extends Job {
 	private readonly string $dbname;
 	private readonly string $nsName;
 
-	private readonly bool $maintainPrefix;
-
 	private readonly int $nsID;
 	private readonly ?int $nsNew;
 
@@ -37,8 +35,6 @@ class NamespaceMigrationJob extends Job {
 		$this->nsID = $params['nsID'];
 		$this->nsName = $params['nsName'];
 		$this->nsNew = $params['nsNew'];
-
-		$this->maintainPrefix = $params['maintainPrefix'];
 	}
 
 	/**
@@ -76,20 +72,16 @@ class NamespaceMigrationJob extends Job {
 			$pageTitle = $row->page_title;
 			$pageID = $row->page_id;
 
-			if ( $nsSearch === NS_MAIN ) {
-				$replace = '';
-				$newTitle = str_replace( $pagePrefix, $replace, $pageTitle );
-			} elseif ( $this->maintainPrefix && $this->action === 'delete' ) {
+			$newTitle = $pageTitle;
+			if ( $this->action === 'delete' ) {
 				$pagePrefix = $this->nsName . ':';
 				$replace = '';
 				$newTitle = $pagePrefix . str_replace( $pagePrefix, $replace, $pageTitle );
-			} else {
-				$newTitle = $pageTitle;
 			}
 
 			if ( $nsTo !== null ) {
 				$baseTitle = $newTitle;
-				$suffix = '~' . $this->nsName;
+				$suffix = '~' . $this->action === 'rename' ? $this->nsName : '';
 				$counter = 1;
 
 				while ( $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
