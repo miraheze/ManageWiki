@@ -51,6 +51,13 @@
 				"CreateWikiDatabaseUtils"
 			],
 			"needsPage": false
+		},
+		"NamespaceRestoreJob": {
+			"class": "Miraheze\\ManageWiki\\Jobs\\NamespaceRestoreJob",
+			"services": [
+				"CreateWikiDatabaseUtils"
+			],
+			"needsPage": false
 		}
 	},
 	"AvailableRights": [
