@@ -16,7 +16,7 @@ class RestoreNamespaceJob extends Job {
 	private readonly string $nsName;
 
 	private readonly int $nsID;
-	private readonly ?int $nsOld;
+	private readonly int $nsOld;
 
 	public function __construct(
 		array $params,
