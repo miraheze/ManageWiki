@@ -73,16 +73,14 @@ class NamespaceMigrationJob extends Job {
 			$pageID = $row->page_id;
 
 			$newTitle = $pageTitle;
-			if ( $this->action === 'delete' ) {
-				$pagePrefix = $this->nsName . ':';
-				$replace = '';
-				$newTitle = $pagePrefix . str_replace( $pagePrefix, $replace, $pageTitle );
-			}
-
 			if ( $nsTo !== null ) {
 				$baseTitle = $newTitle;
-				$suffix = '~' . $this->action === 'rename' ? $this->nsName : '';
+				$suffix = '~' . $this->nsName;
 				$counter = 1;
+
+				if ( $this->action === 'delete' ) {
+					$baseTitle .= $suffix;
+				}
 
 				while ( $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
 					$newTitle = $baseTitle . $suffix;
