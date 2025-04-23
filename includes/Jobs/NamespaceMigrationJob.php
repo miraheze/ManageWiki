@@ -95,7 +95,7 @@ class NamespaceMigrationJob extends Job {
 				while ( $this->pageExists( $newTitle, $nsTo, $dbw ) ) {
 					$newTitle = $baseTitle . $suffix;
 					if ( $counter > 1 ) {
-						$newTitle .= $counter;
+						$newTitle .= "($counter)";
 					}
 					$counter++;
 				}
