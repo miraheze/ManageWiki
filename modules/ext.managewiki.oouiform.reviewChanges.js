@@ -46,7 +46,7 @@
 						this.defaultChecked !== this.checked
 					) {
 						dialog.content.$element.append(
-							`<li><b>${ name } (${ label })</b> was <i>${
+							`<li><b>${ name.replace( '[]', `[${ this.value }]` ) } (${ label })</b> was <i>${
 								this.checked ? 'enabled' : 'disabled'
 							}</i></li>`
 						);
