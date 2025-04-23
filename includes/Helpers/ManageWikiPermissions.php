@@ -279,7 +279,7 @@ class ManageWikiPermissions implements IConfigModule {
 			 * Keeps the logic out of the main logParams block for readability and reusability.
 			 */
 			$logValue = static fn ( ?array $value ): string =>
-				!empty( $value ) ? implode( ', ', $value ) : $logNULL;
+				$value ? implode( ', ', $value ) : $logNULL;
 
 			$this->logParams = [
 				'4::ar'   => $logValue( $this->changes[$group]['permissions']['add'] ?? null ),
