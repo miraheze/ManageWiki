@@ -1,9 +1,8 @@
 ( function () {
 	$( () => {
-		let tabs, previousTab, switchingNoHash;
+		let switchingNoHash;
 
-		tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
-
+		const tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
@@ -25,17 +24,15 @@
 		}
 
 		function onTabPanelSet( panel ) {
-			let scrollTop, active;
-
 			if ( switchingNoHash ) {
 				return;
 			}
 			// Handle hash manually to prevent jumping,
 			// therefore save and restore scrollTop to prevent jumping.
-			scrollTop = $( window ).scrollTop();
+			const scrollTop = $( window ).scrollTop();
 			// Changing the hash apparently causes keyboard focus to be lost?
 			// Save and restore it. This makes no sense though.
-			active = document.activeElement;
+			const active = document.activeElement;
 			location.hash = '#' + panel.getName();
 			if ( active ) {
 				active.focus();
@@ -65,8 +62,9 @@
 		// Jump to correct section as indicated by the hash.
 		// This function is called onload and onhashchange.
 		function detectHash() {
-			let hash = location.hash,
-				matchedElement, $parentSection;
+			let matchedElement, $parentSection;
+
+			const hash = location.hash;
 			if ( hash.match( /^#mw-section-[\w-]+$/ ) ) {
 				mw.storage.session.remove( 'managewiki-prevTab' );
 				switchManageWikiTab( hash.slice( 1 ) );
@@ -94,7 +92,7 @@
 			.trigger( 'hashchange' );
 
 		// Restore the active tab after saving the settings
-		previousTab = mw.storage.session.get( 'managewiki-prevTab' );
+		const previousTab = mw.storage.session.get( 'managewiki-prevTab' );
 		if ( previousTab ) {
 			switchManageWikiTab( previousTab, true );
 			// Deleting the key, the tab states should be reset until we press Save
