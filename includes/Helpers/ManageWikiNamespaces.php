@@ -10,6 +10,7 @@ use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
+use Miraheze\ManageWiki\Jobs\NamespaceRestoreJob;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;
@@ -264,6 +265,26 @@ class ManageWikiNamespaces implements IConfigModule {
 			->fetchField();
 
 		return (bool)$count;
+	}
+
+	public function restorePagesInNamespace( int $id ): void {
+		if ( $this->dbname === 'default' ) {
+			return;
+		}
+
+		$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
+		$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
+
+		$jobQueueGroup->push(
+			new JobSpecification(
+				NamespaceRestoreJob::JOB_NAME,
+				[
+					'dbname' => $this->dbname,
+					'nsID' => $id,
+					'nsName' => $this->liveNamespaces[$id]['name'],
+				]
+			)
+		);
 	}
 
 	public function isTalk( int $id ): bool {
