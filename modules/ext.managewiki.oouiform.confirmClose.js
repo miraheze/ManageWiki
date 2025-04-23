@@ -4,26 +4,29 @@
  */
 ( function () {
 	$( () => {
-		let allowCloseWindow, saveButton;
-
 		if ( !( $( '#managewiki-submit' ).length > 0 ) ) {
 			return;
 		}
 
 		// Check if all of the form values are unchanged.
-		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
-		// slower and more complicated. It works fine to treat them as HTML elements.)
+		// (This function could be changed to infuse and check OOUI widgets, but that would only
+		// make it slower and more complicated. It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
 			let $fields, i;
 
 			$fields = $( '#managewiki-form  .mw-htmlform-cloner-ul' );
 			for ( i = 0; i < $fields.length; i++ ) {
-				if ( Number( $fields[ i ].dataset.initialFieldSize ) !== $fields[ i ].children.length ) {
+				const initialSize = Number( $fields[ i ].dataset.initialFieldSize );
+				const currentSize = $fields[ i ].children.length;
+
+				if ( initialSize !== currentSize ) {
 					return true;
 				}
 			}
 
-			$fields = $( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' );
+			$fields = $( '#managewiki-form :input[name]' )
+				.not( '#managewiki-submit-reason :input[name]' );
+
 			for ( i = 0; i < $fields.length; i++ ) {
 				if (
 					$fields[ i ].defaultChecked !== undefined &&
@@ -53,6 +56,8 @@
 			return false;
 		}
 
+		const saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
+
 		// Determine if the save button should be enabled
 		function updateSaveButtonState() {
 			const changed = isManageWikiChanged();
@@ -69,8 +74,6 @@
 				this.dataset.initialFieldSize = this.children.length;
 			}
 		} );
-
-		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
 
 		// Disable the save button unless settings have changed
 		// Check if settings have been changed before JS has finished loading
@@ -90,7 +93,7 @@
 
 		// Set up a message to notify users if they try to leave the page without
 		// saving.
-		allowCloseWindow = mw.confirmCloseWindow( {
+		const allowCloseWindow = mw.confirmCloseWindow( {
 			test: isManageWikiChanged,
 			message: mw.msg( 'managewiki-warning-changes', mw.msg( 'managewiki-save' ) )
 		} );
