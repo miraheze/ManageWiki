@@ -387,8 +387,11 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
+		$isCreateNamespace = $form->getSubmitText() ===
+			$this->msg( 'managewiki-namespaces-create-submit' )->text();
+		$createNamespace = $isCreateNamespace ? '' : $formData['out'];
+
 		$module = $formData['module'];
-		$createNamespace = $form->getSubmitText() === $this->msg( 'managewiki-namespaces-create-submit' )->text() ? '' : $formData['out'];
 		$special = $module === 'namespaces' ?
 			ManageWiki::namespaceID( $formData['dbname'], $createNamespace ) :
 			$formData['out'];

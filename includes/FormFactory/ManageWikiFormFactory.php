@@ -32,7 +32,10 @@ class ManageWikiFormFactory {
 			$context->getLanguage()->getDir()
 		);
 
-		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbname, $ceMW, $context, $remoteWiki, $special, $filtered, $config );
+		return ManageWikiFormFactoryBuilder::buildDescriptor(
+			$module, $dbname, $ceMW, $context, $remoteWiki,
+			$special, $filtered, $config
+		);
 	}
 
 	public function getForm(
@@ -106,7 +109,10 @@ class ManageWikiFormFactory {
 		bool $ceMW
 	): Status|bool {
 		if ( !$ceMW ) {
-			throw new UnexpectedValueException( "User '{$form->getUser()->getName()}' without 'managewiki-$module' right tried to change wiki $module!" );
+			throw new UnexpectedValueException(
+				"User '{$form->getUser()->getName()}' without 'managewiki-$module' " .
+				"right tried to change wiki $module!"
+			);
 		}
 
 		// Avoid 'no field named reason' error

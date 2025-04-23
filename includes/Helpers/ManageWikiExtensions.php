@@ -196,10 +196,19 @@ class ManageWikiExtensions implements IConfigModule {
 			// Define a 'current' extension as one with no changes entry
 			$enabledExt = !isset( $this->changes[$name] );
 			// Now we need to check if we fulfil the requirements to enable this extension
-			$requirementsCheck = ManageWikiRequirements::process( $extensionsConfig['requires'] ?? [], $this->list(), $enabledExt, $remoteWiki );
+			$requirementsCheck = ManageWikiRequirements::process(
+				$extensionsConfig['requires'] ?? [], $this->list(),
+				$enabledExt, $remoteWiki
+			);
 
 			if ( $requirementsCheck ) {
-				$installResult = ( !isset( $extensionsConfig['install'] ) || $enabledExt ) ? true : ManageWikiInstaller::process( $this->dbname, $extensionsConfig['install'] );
+				$installResult = true;
+				if ( isset( $extensionsConfig['install'] ) && !$enabledExt ) {
+					$installResult = ManageWikiInstaller::process(
+						$this->dbname,
+						$extensionsConfig['install']
+					);
+				}
 
 				if ( !$installResult ) {
 					$this->errors[] = [
