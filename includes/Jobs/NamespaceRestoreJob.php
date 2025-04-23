@@ -8,9 +8,9 @@ use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;
 
-class RestoreNamespaceJob extends Job {
+class NamespaceRestoreJob extends Job {
 
-	public const JOB_NAME = 'RestoreNamespaceJob';
+	public const JOB_NAME = 'NamespaceRestoreJob';
 
 	private readonly string $dbname;
 	private readonly string $nsName;
@@ -44,7 +44,6 @@ class RestoreNamespaceJob extends Job {
 				$dbw->expr( 'page_title', IExpression::LIKE,
 					new LikeValue( $prefix, $dbw->anyString() )
 				),
-				'page_namespace' => $this->nsID,
 			] )
 			->caller( __METHOD__ )
 			->fetchResultSet();
