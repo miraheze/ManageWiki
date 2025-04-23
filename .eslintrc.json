@@ -6,7 +6,10 @@
 		"wikimedia/mediawiki"
 	],
 	"ignorePatterns": [ "vendor/**" ],
-	"rules": {},
+	"rules": {
+		"no-jquery/no-global-selector": "off",
+		"no-jquery/no-sizzle": "off"
+	},
 	"parserOptions": {
 		"ecmaVersion": 2024
 	}
