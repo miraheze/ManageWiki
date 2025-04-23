@@ -22,7 +22,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	private Config $config;
 	private IDatabase $dbw;
 
-	private readonly CreateWikiDatabaseUtils $createWikiDatabaseUtils;
+	private readonly CreateWikiDatabaseUtils $databaseUtils;
 
 	private array $changes = [];
 	private array $errors = [];
