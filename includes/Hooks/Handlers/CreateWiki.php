@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Hooks\Handlers;
 use Exception;
 use LocalisationCache;
 use MediaWiki\Config\Config;
+use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\Hooks\CreateWikiCreationHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiDataFactoryBuilderHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiStatePrivateHook;
@@ -135,12 +136,23 @@ class CreateWiki implements
 			$lcName = [];
 			$lcEN = [];
 
+			$metaNamespace = $this->config->get( MainConfigNames::MetaNamespace );
+			$metaNamespaceTalk = $this->config->get( MainConfigNames::MetaNamespaceTalk );
+
 			try {
 				$languageCode = $cacheArray['core']['wgLanguageCode'] ?? 'en';
 				$lcName = $this->localisationCache->getItem( $languageCode, 'namespaceNames' );
+				$lcName[NS_PROJECT_TALK] = str_replace( '$1',
+					$lcName[NS_PROJECT] ?? $metaNamespace,
+					$lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk
+				);
 
 				if ( $languageCode !== 'en' ) {
 					$lcEN = $this->localisationCache->getItem( 'en', 'namespaceNames' );
+					$lcEN[NS_PROJECT_TALK] = str_replace( '$1',
+						$lcEN[NS_PROJECT] ?? $metaNamespace,
+						$lcEN[NS_PROJECT_TALK] ?? $metaNamespaceTalk
+					);
 				}
 			} catch ( Exception $e ) {
 				$this->logger->warning( 'Caught exception trying to load Localisation Cache: {exception}', [
