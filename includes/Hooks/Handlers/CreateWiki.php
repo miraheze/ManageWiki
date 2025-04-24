@@ -142,17 +142,9 @@ class CreateWiki implements
 			try {
 				$languageCode = $cacheArray['core']['wgLanguageCode'] ?? 'en';
 				$lcName = $this->localisationCache->getItem( $languageCode, 'namespaceNames' );
-				$lcName[NS_PROJECT_TALK] = str_replace( '$1',
-					$lcName[NS_PROJECT] ?? $metaNamespace,
-					$lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk
-				);
 
 				if ( $languageCode !== 'en' ) {
 					$lcEN = $this->localisationCache->getItem( 'en', 'namespaceNames' );
-					$lcEN[NS_PROJECT_TALK] = str_replace( '$1',
-						$lcEN[NS_PROJECT] ?? $metaNamespace,
-						$lcEN[NS_PROJECT_TALK] ?? $metaNamespaceTalk
-					);
 				}
 			} catch ( Exception $e ) {
 				$this->logger->warning( 'Caught exception trying to load Localisation Cache: {exception}', [
@@ -162,6 +154,20 @@ class CreateWiki implements
 
 			$additional = $this->config->get( ConfigNames::NamespacesAdditional );
 			foreach ( $nsObjects as $ns ) {
+				if ( (int)$ns->ns_namespace_id === NS_PROJECT_TALK ) {
+					$lcName[NS_PROJECT_TALK] = str_replace( '$1',
+						$lcName[NS_PROJECT] ?? $metaNamespace,
+						$lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk
+					);
+
+					if ( $languageCode !== 'en' ) {
+						$lcEN[NS_PROJECT_TALK] = str_replace( '$1',
+							$lcEN[NS_PROJECT] ?? $metaNamespace,
+							$lcEN[NS_PROJECT_TALK] ?? $metaNamespaceTalk
+						);
+					}
+				}
+		
 				$nsName = $lcName[(int)$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
 				$lcAlias = $lcEN[(int)$ns->ns_namespace_id] ?? null;
 
