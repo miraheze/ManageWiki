@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki;
 use MediaWiki\Config\Config;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use Miraheze\ManageWiki\Helpers\MessageUpdater;
 use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
 use Psr\Log\LoggerInterface;
@@ -29,6 +30,12 @@ return [
 	},
 	'ManageWikiLogger' => static function (): LoggerInterface {
 		return LoggerFactory::getInstance( 'ManageWiki' );
+	},
+	'ManageWikiMessageUpdater' => static function ( MediaWikiServices $services ): MessageUpdater {
+		return new MessageUpdater(
+			$services->getTitleFactory(),
+			$services->getWikiPageFactory()
+		);
 	},
 ];
 
