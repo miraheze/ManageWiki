@@ -1234,9 +1234,21 @@ class ManageWikiFormFactoryBuilder {
 	): ManageWikiNamespaces {
 		$mwNamespaces = new ManageWikiNamespaces( $dbname );
 
+		$messageUpdater = MediaWikiServices::getInstance()->get( 'ManageWikiMessageUpdater' );
+
 		if ( $formData['delete-checkbox'] ) {
 			$mwNamespaces->remove( (int)$special, $formData['delete-migrate-to'] );
 			$mwNamespaces->remove( (int)$special + 1, $formData['delete-migrate-to'] + 1 );
+			$messageUpdater->doDelete(
+				name: "namespaceinfo-description-ns{$special}",
+				reason: 'managewiki-namespaces-description-deleted',
+				user: $context->getUser()
+			)
+			$messageUpdater->doDelete(
+				name: "namespaceinfo-description-ns{$special + 1}",
+				reason: 'managewiki-namespaces-description-deleted',
+				user: $context->getUser()
+			)
 			return $mwNamespaces;
 		}
 
@@ -1260,11 +1272,10 @@ class ManageWikiFormFactoryBuilder {
 			if ( $formData["description-$name"] && (
 				!$messageExists || $descriptionMsg->text() !== $formData["description-$name"]
 			) ) {
-				$messageUpdater = MediaWikiServices::getInstance()->get( 'ManageWikiMessageUpdater' );
 				$messageUpdater->doUpdate(
 					name: "namespaceinfo-description-ns{$id}",
 					content: $formData["description-$name"],
-					summary: $context->msg( 'managewiki-namespaces-description-updated' ),
+					summary: 'managewiki-namespaces-description-updated',
 					user: $context->getUser()
 				);
 			}
