@@ -213,8 +213,8 @@
 			],
 			"messages": [
 				"managewiki-review-changed",
-				"managewiki-review-enabled",
 				"managewiki-review-disabled",
+				"managewiki-review-enabled",
 				"managewiki-review-nochanges",
 				"managewiki-review-none",
 				"managewiki-review-title",
