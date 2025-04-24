@@ -519,16 +519,12 @@ class ManageWikiFormFactoryBuilder {
 			$defaultName = $namespaceData['name'] ?: $create;
 			if ( $id === NS_PROJECT ) {
 				$namespaceVar = ' ($wgMetaNamespace)';
-				$defaultName = str_replace( '_', ' ',
-					$config->get( MainConfigNames::MetaNamespace )
-				);
+				$defaultName = $config->get( MainConfigNames::MetaNamespace );
 			}
 
 			if ( $id === NS_PROJECT_TALK ) {
 				$namespaceVar = ' ($wgMetaNamespaceTalk)';
-				$defaultName = str_replace( '_', ' ',
-					$config->get( MainConfigNames::MetaNamespaceTalk )
-				);
+				$defaultName = $config->get( MainConfigNames::MetaNamespaceTalk );
 			}
 
 			if ( !$namespaceData['core'] ) {
@@ -543,7 +539,7 @@ class ManageWikiFormFactoryBuilder {
 				"namespace-$name" => [
 					'type' => 'text',
 					'label' => $context->msg( "namespaces-$name" )->text() . $namespaceVar,
-					'default' => $defaultName,
+					'default' => str_replace( '_', ' ', $defaultName ),
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
 					'section' => $name,
