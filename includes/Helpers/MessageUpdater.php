@@ -61,7 +61,6 @@ class MessageUpdater {
 
 		$reason = $this->textFormatter->format( MessageValue::new( $reason ) );
 
-		$page = $this->wikiPageFactory->newFromTitle( $title );
 		$movePage = $this->movePageFactory->newMovePage( $fromTitle, $toTitle );
 		$movePage->move( $user, $reason, createRedirect: false );
 	}
@@ -86,7 +85,6 @@ class MessageUpdater {
 		);
 
 		$summary = $this->textFormatter->format( MessageValue::new( $summary ) );
-
 		$comment = CommentStoreComment::newUnsavedComment( $summary );
 
 		// Hide from RC — we already have the ManageWiki log
