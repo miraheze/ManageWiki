@@ -518,15 +518,22 @@ class ManageWikiFormFactoryBuilder {
 			$namespaceVar = '';
 			if ( $id === NS_PROJECT ) {
 				$namespaceVar = ' ($wgMetaNamespace)';
+				$defaultName = str_replace( '_', ' ',
+					$config->get( MainConfigNames::MetaNamespace )
+				);
 			}
 
 			if ( $id === NS_PROJECT_TALK ) {
 				$namespaceVar = ' ($wgMetaNamespaceTalk)';
+				$defaultName = str_replace( '_', ' ',
+					$config->get( MainConfigNames::MetaNamespaceTalk )
+				);
 			}
 
 			if ( !$namespaceData['core'] ) {
 				// Core namespaces are not set with $wgExtraNamespaces
 				$namespaceVar = ' ($wgExtraNamespaces)';
+				$defaultName = $namespaceData['name'] ?: $create;
 			}
 
 			$canEditName = !$namespaceData['core'] ||
@@ -536,7 +543,7 @@ class ManageWikiFormFactoryBuilder {
 				"namespace-$name" => [
 					'type' => 'text',
 					'label' => $context->msg( "namespaces-$name" )->text() . $namespaceVar,
-					'default' => $namespaceData['name'] ?: $create,
+					'default' => $defaultName,
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
 					'section' => $name,
