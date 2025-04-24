@@ -29,7 +29,7 @@ class ManageWikiInstaller {
 				default => false,
 			};
 
-			if ( $result === false ) {
+			if ( !$result ) {
 				return false;
 			}
 		}
