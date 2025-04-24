@@ -515,23 +515,34 @@ class ManageWikiFormFactoryBuilder {
 				$create .= ' talk';
 			}
 
-			$namespaceVar = '';
-			$defaultName = $namespaceData['name'] ?: $create;
-			if ( $id === NS_PROJECT ) {
-				$namespaceVar = ' ($wgMetaNamespace)';
-				$defaultName = $config->get( MainConfigNames::MetaNamespace );
-			}
-
-			if ( $id === NS_PROJECT_TALK ) {
-				$namespaceVar = ' ($wgMetaNamespaceTalk)';
-				$defaultName = str_replace( $config->get( MainConfigNames::MetaNamespace ),
-					'$1', $config->get( MainConfigNames::MetaNamespaceTalk )
-				);
-			}
+			[ $namespaceVar, $defaultName ] = match ( $id ) {
+				NS_PROJECT => [
+					$context->msg( 'parentheses',
+						$this->getConfigVar( MainConfigNames::MetaNamespace )
+					)->text(),
+					$config->get( MainConfigNames::MetaNamespace ),
+				],
+				NS_PROJECT_TALK => [
+					$context->msg( 'parentheses',
+						$this->getConfigVar( MainConfigNames::MetaNamespaceTalk )
+					)->text(),
+					str_replace(
+						$config->get( MainConfigNames::MetaNamespace ),
+						'$1',
+						$config->get( MainConfigNames::MetaNamespaceTalk )
+					),
+				],
+				default => [
+					'',
+					$namespaceData['name'] ?: $create,
+				],
+			};
 
 			if ( !$namespaceData['core'] ) {
-				// Core namespaces are not set with $wgExtraNamespaces
-				$namespaceVar = ' ($wgExtraNamespaces)';
+				// Core namespaces are not set with ExtraNamespaces
+				$namespaceVar = $context->msg( 'parentheses',
+					$this->getConfigVar( MainConfigNames::ExtraNamespaces )
+				)->text(),
 			}
 
 			$canEditName = !$namespaceData['core'] ||
@@ -540,7 +551,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label' => $context->msg( "namespaces-$name" )->text() . $namespaceVar,
+					'label' => trim( $context->msg( "namespaces-$name" )->text() . " $namespaceVar" ),
 					'default' => $defaultName,
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
@@ -1405,5 +1416,9 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return $mwPermissions;
+	}
+
+	private function getConfigVar( string $name ): string {
+		return "wg$name";
 	}
 }
