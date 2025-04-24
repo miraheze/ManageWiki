@@ -1236,16 +1236,19 @@ class ManageWikiFormFactoryBuilder {
 
 		$messageUpdater = MediaWikiServices::getInstance()->get( 'ManageWikiMessageUpdater' );
 
+		$namespaceID = (int)$special;
+		$namespaceTalkID = $namespaceID + 1;
+
 		if ( $formData['delete-checkbox'] ) {
-			$mwNamespaces->remove( (int)$special, $formData['delete-migrate-to'] );
-			$mwNamespaces->remove( (int)$special + 1, $formData['delete-migrate-to'] + 1 );
+			$mwNamespaces->remove( $namespaceID, $formData['delete-migrate-to'] );
+			$mwNamespaces->remove( $namespaceTalkID, $formData['delete-migrate-to'] + 1 );
 			$messageUpdater->doDelete(
-				name: "namespaceinfo-description-ns{$special}",
+				name: "namespaceinfo-description-ns{$namespaceID}",
 				reason: 'managewiki-namespaces-description-deleted',
 				user: $context->getUser()
 			);
 			$messageUpdater->doDelete(
-				name: "namespaceinfo-description-ns{$special + 1}",
+				name: "namespaceinfo-description-ns{$namespaceTalkID}",
 				reason: 'managewiki-namespaces-description-deleted',
 				user: $context->getUser()
 			);
@@ -1253,8 +1256,8 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$nsID = [
-			'namespace' => (int)$special,
-			'namespacetalk' => (int)$special + 1,
+			'namespace' => $namespaceID,
+			'namespacetalk' => $namespaceTalkID,
 		];
 
 		foreach ( $nsID as $name => $id ) {
