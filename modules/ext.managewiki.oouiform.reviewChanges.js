@@ -63,8 +63,7 @@
 				} );
 
 				if ( !dialog.content.$element.html() ) {
-					/* eslint-disable-next-line no-jquery/no-parse-html-literal */
-					dialog.content.$element.append( '<i>No changes made.</i>' );
+					dialog.content.$element.append( $( '<i>' ).text( 'No changes made.' ) );
 				}
 
 				dialog.$body.append( dialog.content.$element );
