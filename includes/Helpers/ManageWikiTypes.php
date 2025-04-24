@@ -268,6 +268,9 @@ class ManageWikiTypes {
 				// Exclude downloaduserdata preference
 				$excludedPrefs[] = 'downloaduserdata';
 
+				// Exclude forcesafemode preference
+				$excludedPrefs[] = 'forcesafemode';
+
 				foreach ( $allPreferences as $pref => $val ) {
 					if ( !in_array( $pref, $excludedPrefs, true ) ) {
 						$preferences[$pref] = $pref;
@@ -399,10 +402,8 @@ class ManageWikiTypes {
 				}
 				break;
 			case 'userrights':
-				$rights = [];
-				foreach ( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions() as $right ) {
-					$rights[$right] = $right;
-				}
+				$permissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
+				$rights = array_combine( $permissions, $permissions );
 
 				$configs = [
 					'type' => 'multiselect',
