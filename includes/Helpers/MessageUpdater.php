@@ -9,6 +9,7 @@ use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\User\User;
+use RecentChange;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
 
@@ -88,12 +89,13 @@ class MessageUpdater {
 		);
 
 		$comment = CommentStoreComment::newUnsavedComment( $summary );
-		$flags = EDIT_FORCE_BOT | EDIT_MINOR | EDIT_INTERNAL;
+		$flags = EDIT_MINOR | EDIT_INTERNAL;
 		if ( !$shouldLog ) {
 			// Hide from RC — we may already have the ManageWiki log
 			$flags |= EDIT_SUPPRESS_RC;
 		}
 		$updater->setFlags( $flags );
+		$updater->setRcPatrolStatus( RecentChange::PRC_AUTOPATROLLED );
 		$updater->saveRevision( $comment );
 	}
 }
