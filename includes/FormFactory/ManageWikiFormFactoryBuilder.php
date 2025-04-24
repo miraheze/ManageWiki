@@ -638,6 +638,14 @@ class ManageWikiFormFactoryBuilder {
 				}
 			}
 
+			// Hack to prevent "implicit submission". See T275588 for more
+			$formDescriptor["fake-submit-aliases-$name"] = [
+				'type' => 'submit',
+				'disabled' => true,
+				'section' => $name,
+				'cssclass' => 'managewiki-fakesubmit',
+			];
+
 			$formDescriptor["aliases-$name"] = [
 				'label' => $context->msg( 'namespaces-aliases' )->text() . ' ($wgNamespaceAliases)',
 				'cssclass' => 'managewiki-infuse',
