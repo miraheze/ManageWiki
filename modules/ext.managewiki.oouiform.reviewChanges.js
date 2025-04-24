@@ -54,8 +54,8 @@
 
 						const message = mw.message( 'managewiki-review-toggled' )
 							.params(
-								`<b>${ mw.html.escape( setting ) }</b>`,
-								`<i>${ mw.html.escape( stateMsg ) }</i>`
+								`''${ mw.html.escape( setting ) }''`,
+								`'''${ mw.html.escape( stateMsg ) }'''`
 							)
 							.parse();
 
@@ -69,9 +69,9 @@
 
 						const message = mw.message( 'managewiki-review-changed' )
 							.params(
-								`<b>${ mw.html.escape( `${ name } (${ label })` ) }</b>`,
-								`<i>${ mw.html.escape( oldVal ) }</i>`,
-								`<i>${ mw.html.escape( newVal ) }</i>`
+								`''${ mw.html.escape( `${ name } (${ label })` ) }''`,
+								`'''${ mw.html.escape( oldVal ) }'''`,
+								`'''${ mw.html.escape( newVal ) }'''`
 							)
 							.parse();
 
