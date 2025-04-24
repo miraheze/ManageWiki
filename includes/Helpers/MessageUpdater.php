@@ -69,6 +69,7 @@ class MessageUpdater {
 		string $name,
 		string $content,
 		string $summary,
+		bool $shouldLog,
 		User $user
 	): void {
 		$title = $this->titleFactory->newFromText( $name, NS_MEDIAWIKI );
@@ -86,9 +87,12 @@ class MessageUpdater {
 
 		$summary = $this->textFormatter->format( MessageValue::new( $summary ) );
 		$comment = CommentStoreComment::newUnsavedComment( $summary );
-
-		// Hide from RC — we already have the ManageWiki log
-		$updater->setFlags( EDIT_SUPPRESS_RC | EDIT_INTERNAL );
+		$flags = EDIT_INTERNAL;
+		if ( !$shouldLog ) {
+			// Hide from RC — we may already have the ManageWiki log
+			$flags |= EDIT_SUPPRESS_RC;
+		}
+		$updater->setFlags( $flags );
 		$updater->saveRevision( $comment );
 	}
 }
