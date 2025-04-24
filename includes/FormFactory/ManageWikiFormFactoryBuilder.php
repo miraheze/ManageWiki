@@ -1266,7 +1266,7 @@ class ManageWikiFormFactoryBuilder {
 
 			if ( $id === NS_PROJECT_TALK ) {
 				$namespaceName = str_replace( '$1',
-					$config->get( MainConfigNames::MetaNamespace ),
+					$formData['namespace-namespace'],
 					$namespaceName
 				);
 			}
