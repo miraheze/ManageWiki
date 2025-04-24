@@ -918,16 +918,32 @@ class ManageWikiFormFactoryBuilder {
 			],
 		];
 
-		if (
-			$ceMW &&
-			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true )
-		) {
-			$formDescriptor['delete-checkbox'] = [
-				'type' => 'check',
-				'label-message' => 'permissions-delete-checkbox',
-				'default' => false,
-				'section' => 'delete',
+		if ( $ceMW && $mwPermissions->exists( $group ) ) {
+			$permanentGroups = $config->get( ConfigNames::PermissionsPermanentGroups );
+			if ( !in_array( $group, $permanentGroups, true ) ) {
+				$formDescriptor['delete-checkbox'] = [
+					'type' => 'check',
+					'label-message' => 'permissions-delete-checkbox',
+					'default' => false,
+					'section' => 'advanced',
+				];
+			}
+
+			$groupMsg = $context->msg( "group-$group" );
+			$groupMemberMsg = $context->msg( "group-$group-member" );
+			$formDescriptor += [
+				'group-message' => [
+					'type' => 'text',
+					'label-message' => 'permissions-group-message',
+					'default' => $groupMsg->exists() ? $groupMsg->text() : '',
+					'section' => 'advanced',
+				],
+				'group-member-message' => [
+					'type' => 'text',
+					'label-message' => 'permissions-group-member-message',
+					'default' => $groupMemberMsg->exists() ? $groupMemberMsg->text() : '',
+					'section' => 'advanced',
+				],
 			];
 		}
 
