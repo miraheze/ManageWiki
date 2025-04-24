@@ -515,6 +515,8 @@ class ManageWikiFormFactoryBuilder {
 				$create .= ' talk';
 			}
 
+			$descriptionMsg = $context->msg( "namespaceinfo-description-ns{$id}" );
+
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
@@ -525,6 +527,13 @@ class ManageWikiFormFactoryBuilder {
 					'default' => $namespaceData['name'] ?: $create,
 					'disabled' => $namespaceData['core'] || !$ceMW,
 					'required' => true,
+					'section' => $name,
+				],
+				"description-$name" => [
+					'type' => 'text',
+					'label' => $context->msg( 'namespaces-description' )->text(),
+					'default' => $descriptionMsg->exists() ? $descriptionMsg->text() : '',
+					'disabled' => !$ceMW,
 					'section' => $name,
 				],
 				"content-$name" => [
@@ -1239,11 +1248,24 @@ class ManageWikiFormFactoryBuilder {
 			$namespaceName = str_replace( [ ' ', ':' ], '_', $formData["namespace-$name"] );
 
 			$additionalBuilt = [];
-
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				if ( isset( $formData["$key-$name"] ) ) {
 					$additionalBuilt[$key] = $formData["$key-$name"];
 				}
+			}
+
+			$descriptionMsg = $context->msg( "namespaceinfo-description-ns{$id}" );
+			$messageExists = $descriptionMsg->exists();
+			if ( $formData["description-$name"] && (
+				!$messageExists || $descriptionMsg->text() !== $formData["description-$name"]
+			) ) {
+				$messageUpdater = MediaWikiServices::getInstance()->get( 'ManageWikiMessageUpdater' );
+				$messageUpdater->doUpdate(
+					name: "namespaceinfo-description-ns{$id}",
+					content: $formData["description-$name"],
+					summary: $context->msg( 'managewiki-namespaces-description-updated' ),
+					user: $context->getUser()
+				);
 			}
 
 			$build = [
