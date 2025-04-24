@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\CommentStore\CommentStoreComment;
+use MediaWiki\Message\Message;
 use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Revision\SlotRecord;
 use MediaWiki\Title\TitleFactory;
@@ -19,7 +20,7 @@ class MessageUpdater {
 	public function doUpdate(
 		string $name,
 		string $content,
-		string $summary,
+		Message $summary,
 		User $user
 	): void {
 		$title = $this->titleFactory->newFromText( $name, NS_MEDIAWIKI );
