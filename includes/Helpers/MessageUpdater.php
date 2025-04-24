@@ -53,7 +53,7 @@ class MessageUpdater {
 		$toTitle = $this->titleFactory->newFromText( $newName, NS_MEDIAWIKI );
 		if ( $toTitle === null || !$toTitle->canExist() ) {
 			// If we can't move it, we still don't need it.
-			$this->doDelete( $oldName, $reason, $user );
+			$this->doDelete( $oldName, $user );
 			return;
 		}
 
