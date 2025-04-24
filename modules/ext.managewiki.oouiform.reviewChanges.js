@@ -38,32 +38,44 @@
 						.parents( 'fieldset' )
 						.contents()
 						.first()
-						.text();
+						.text()
+						.trim();
 
 					if (
 						this.type === 'checkbox' &&
 						this.defaultChecked !== undefined &&
 						this.defaultChecked !== this.checked
 					) {
-						dialog.content.$element.append(
-							`<li><b>${ name.replace( '[]', `[${ this.value }]` ) } (${ label })</b> was <i>${
-								this.checked ? 'enabled' : 'disabled'
-							}</i></li>`
+						const stateMsg = mw.msg(
+							this.checked ? 'managewiki-review-enabled' : 'managewiki-review-disabled'
 						);
+
+						const setting = `${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`;
+						const message = mw.message( 'managewiki-review-toggled' ).escaped()
+							.replace( '$1', `<b>${ mw.html.escape( setting ) }</b>` )
+							.replace( '$2', `<i>${ mw.html.escape( stateMsg ) }</i>` );
+
+						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					} else if (
 						this.defaultValue !== undefined &&
 						this.defaultValue !== this.value
 					) {
-						const oldVal = this.defaultValue || '&lt;none&gt;';
-						const newVal = this.value || '&lt;none&gt;';
-						dialog.content.$element.append(
-							`<li><b>${ name } (${ label })</b> was changed from <i>${ oldVal }</i> to <i>${ newVal }</i></li>`
-						);
+						const oldVal = this.defaultValue || mw.msg( 'managewiki-review-none' );
+						const newVal = this.value || mw.msg( 'managewiki-review-none' );
+
+						const message = mw.message( 'managewiki-review-changed' ).escaped()
+							.replace( '$1', `<b>${ mw.html.escape( `${ name } (${ label })` ) }</b>` )
+							.replace( '$2', `<i>${ mw.html.escape( oldVal ) }</i>` )
+							.replace( '$3', `<i>${ mw.html.escape( newVal ) }</i>` );
+
+						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					}
 				} );
 
 				if ( !dialog.content.$element.html() ) {
-					dialog.content.$element.append( $( '<i>' ).text( 'No changes made.' ) );
+					dialog.content.$element.append(
+						$( '<i>' ).text( mw.msg( 'managewiki-review-nochanges' ) )
+					);
 				}
 
 				dialog.$body.append( dialog.content.$element );
