@@ -979,6 +979,11 @@ class ManageWikiFormFactoryBuilder {
 				return $mwReturn->getErrors();
 			}
 
+			// If we have no logParams, we don't want unformatted logs
+			if ( !$mwReturn->getLogParams() ) {
+				return [];
+			}
+
 			if ( $module !== 'permissions' ) {
 				$mwReturn->addLogParam( '4::wiki', $dbname );
 			}
