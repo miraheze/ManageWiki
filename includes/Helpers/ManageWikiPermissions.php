@@ -18,6 +18,7 @@ class ManageWikiPermissions implements IConfigModule {
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
+	private array $messageFields = [];
 	private array $deleteGroups = [];
 	private array $livePermissions = [];
 
@@ -158,6 +159,10 @@ class ManageWikiPermissions implements IConfigModule {
 		$this->livePermissions[$group] = $permData;
 	}
 
+	public function addMessageFields( string $group ): void {
+		$this->messageFields[] = $group;
+	}
+
 	/**
 	 * Remove a group
 	 * @param string $group Group name
@@ -195,7 +200,7 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	public function hasChanges(): bool {
-		return (bool)$this->changes;
+		return $this->changes || $this->messageFields;
 	}
 
 	public function setLogAction( string $action ): void {
