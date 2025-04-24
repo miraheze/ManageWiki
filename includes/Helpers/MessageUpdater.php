@@ -16,8 +16,17 @@ class MessageUpdater {
 	) {
 	}
 
-	public function doUpdate( string $name, string $content, User $user ): void {
+	public function doUpdate(
+		string $name,
+		string $content,
+		string $summary,
+		User $user
+	): void {
 		$title = $this->titleFactory->newFromText( $name, NS_MEDIAWIKI );
+		if ( $title === null ) {
+			return;
+		}
+
 		$page = $this->wikiPageFactory->newFromTitle( $title );
 
 		$updater = $page->newPageUpdater( $user );
