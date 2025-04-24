@@ -132,27 +132,26 @@ class CreateWiki implements
 				->caller( __METHOD__ )
 				->fetchResultSet();
 
-			$metaNamespace = $dbr->newSelectQueryBuilder()
-				->select( 'ns_namespace_name' )
-				->from( 'mw_namespaces' )
-				->where( [
-					'ns_dbname' => $wiki,
-					'ns_namespace_id' => NS_PROJECT,
-				] )
-				->limit( 1 )
-				->caller( __METHOD__ )
-				->fetchField();
+			$metaNamespace = null;
+			$metaNamespaceTalk = null;
 
-			$metaNamespaceTalk = $dbr->newSelectQueryBuilder()
-				->select( 'ns_namespace_name' )
-				->from( 'mw_namespaces' )
-				->where( [
-					'ns_dbname' => $wiki,
-					'ns_namespace_id' => NS_PROJECT_TALK,
-				] )
-				->limit( 1 )
-				->caller( __METHOD__ )
-				->fetchField();
+			foreach ( $nsRows as $row ) {
+				if ( $metaNamespace !== null && $metaNamespaceTalk !== null ) {
+					// Both found, no need to continue
+					break;
+				}
+
+				$id = (int)$row->ns_namespace_id;
+
+				if ( $id === NS_PROJECT ) {
+					$metaNamespace = $row->ns_namespace_name;
+					continue;
+				}
+
+				if ( $id === NS_PROJECT_TALK ) {
+					$metaNamespaceTalk = $row->ns_namespace_name;
+				}
+			}
 
 			$lcName = [];
 			$lcEN = [];
