@@ -212,7 +212,13 @@
 				"ext.managewiki.oouiform.tabs.js"
 			],
 			"messages": [
+				"managewiki-review-changed",
+				"managewiki-review-disabled",
+				"managewiki-review-enabled",
+				"managewiki-review-nochanges",
+				"managewiki-review-none",
 				"managewiki-review-title",
+				"managewiki-review-toggled",
 				"managewiki-save",
 				"managewiki-search-noresults",
 				"managewiki-warning-changes"

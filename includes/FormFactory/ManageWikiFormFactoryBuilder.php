@@ -40,19 +40,29 @@ class ManageWikiFormFactoryBuilder {
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$formDescriptor = self::buildDescriptorCore( $dbname, $ceMW, $context, $remoteWiki, $config );
+				$formDescriptor = self::buildDescriptorCore(
+					$dbname, $ceMW, $context, $remoteWiki, $config
+				);
 				break;
 			case 'extensions':
-				$formDescriptor = self::buildDescriptorExtensions( $dbname, $ceMW, $context, $remoteWiki, $config );
+				$formDescriptor = self::buildDescriptorExtensions(
+					$dbname, $ceMW, $context, $remoteWiki, $config
+				);
 				break;
 			case 'settings':
-				$formDescriptor = self::buildDescriptorSettings( $dbname, $ceMW, $context, $remoteWiki, $config, $filtered );
+				$formDescriptor = self::buildDescriptorSettings(
+					$dbname, $ceMW, $context, $remoteWiki, $config, $filtered
+				);
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces( $dbname, $ceMW, $context, $special, $remoteWiki, $config );
+				$formDescriptor = self::buildDescriptorNamespaces(
+					$dbname, $ceMW, $context, $special, $remoteWiki, $config
+				);
 				break;
 			case 'permissions':
-				$formDescriptor = self::buildDescriptorPermissions( $dbname, $ceMW, $context, $special, $config );
+				$formDescriptor = self::buildDescriptorPermissions(
+					$dbname, $ceMW, $context, $special, $config
+				);
 				break;
 			default:
 				throw new InvalidArgumentException( "$module not recognized" );
@@ -142,7 +152,8 @@ class ManageWikiFormFactoryBuilder {
 				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 			],
 			'inactive-exempt-reason' => [
-				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) && $config->get( ConfigNames::InactiveExemptReasonOptions ),
+				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) &&
+					$config->get( ConfigNames::InactiveExemptReasonOptions ),
 				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
 				'type' => 'selectorother',
 				'default' => $remoteWiki->getInactiveExemptReason(),
@@ -261,7 +272,6 @@ class ManageWikiFormFactoryBuilder {
 		);
 
 		$formDescriptor = [];
-
 		foreach ( $config->get( ConfigNames::Extensions ) as $name => $ext ) {
 			$filteredList = array_filter(
 				$manageWikiSettings,
@@ -323,10 +333,25 @@ class ManageWikiFormFactoryBuilder {
 			$namemsg = array_column( $credits, 'namemsg', 'name' )[ $ext['name'] ] ?? false;
 			$extname = array_column( $credits, 'name', 'name' )[ $ext['name'] ] ?? null;
 
-			$extDescription = ( $ext['description'] ?? false ) ? ( $context->msg( $ext['description'] )->exists() ? $context->msg( $ext['description'] )->parse() : $ext['description'] ) : null;
-			$extDisplayName = ( $ext['displayname'] ?? false ) ? ( $context->msg( $ext['displayname'] )->exists() ? $context->msg( $ext['displayname'] )->parse() : $ext['displayname'] ) : null;
+			$extDescription = null;
+			if ( !empty( $ext['description'] ) ) {
+				$msg = $context->msg( $ext['description'] );
+				$extDescription = $msg->exists() ? $msg->parse() : $ext['description'];
+			}
 
-			$help[] = $extDescription ?? ( $descriptionmsg ? ( $context->msg( $descriptionmsg )->exists() ? $context->msg( $descriptionmsg )->parse() : $descriptionmsg ) : null ) ?? $description;
+			$extDisplayName = null;
+			if ( !empty( $ext['displayname'] ) ) {
+				$msg = $context->msg( $ext['displayname'] );
+				$extDisplayName = $msg->exists() ? $msg->parse() : $ext['displayname'];
+			}
+
+			$descriptionFallback = null;
+			if ( $descriptionmsg ) {
+				$msg = $context->msg( $descriptionmsg );
+				$descriptionFallback = $msg->exists() ? $msg->parse() : $descriptionmsg;
+			}
+
+			$help[] = $extDescription ?? $descriptionFallback ?? $description;
 
 			if ( $ext['help'] ?? false ) {
 				$help[] = "<br />{$ext['help']}";
@@ -409,7 +434,8 @@ class ManageWikiFormFactoryBuilder {
 			if ( $add ) {
 				$value = $settingsList[$name] ?? null;
 				if ( isset( $set['associativeKey'] ) ) {
-					$value = $settingsList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
+					$value = $settingsList[$name][ $set['associativeKey'] ] ??
+						$set['overridedefault'][ $set['associativeKey'] ];
 				}
 
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
@@ -428,7 +454,8 @@ class ManageWikiFormFactoryBuilder {
 							}
 						}
 
-						$requires[] = ucfirst( $require ) . ' - ' . ( is_array( $data ) ? implode( ', ', $data ) : $data );
+						$requires[] = ucfirst( $require ) . ' - ' .
+							( is_array( $data ) ? implode( ', ', $data ) : $data );
 					}
 
 					$help .= "<br />$requiresLabel: " . implode( ' & ', $requires );
@@ -545,7 +572,10 @@ class ManageWikiFormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
-				] + ManageWikiTypes::process( $config, false, [], 'namespaces', [], $namespaceData['contentmodel'], '', false, 'contentmodel' ),
+				] + ManageWikiTypes::process(
+					$config, false, [], 'namespaces', [],
+					$namespaceData['contentmodel'], '', false, 'contentmodel'
+				),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label' => $context->msg( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
@@ -563,7 +593,9 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
-				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process( $a['requires'], $extList, false, $remoteWiki ) : true;
+				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process(
+					$a['requires'], $extList, false, $remoteWiki
+				) : true;
 
 				$hasVisibilityRequirement = isset( $a['requires']['visibility'] );
 				$isFromMediaWiki = $a['from'] === 'mediawiki';
@@ -588,7 +620,11 @@ class ManageWikiFormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = ManageWikiTypes::process( $config, $disabled, [], 'namespaces', $a, $namespaceData['additional'][$key] ?? null, '', $a['overridedefault'], $a['type'] );
+					$configs = ManageWikiTypes::process(
+						$config, $disabled, [], 'namespaces', $a,
+						$namespaceData['additional'][$key] ?? null, '',
+						$a['overridedefault'], $a['type']
+					);
 
 					$help = $msgHelp->exists() ? $msgHelp->escaped() : $a['help'];
 					if ( $a['requires'] ) {
@@ -604,7 +640,8 @@ class ManageWikiFormFactoryBuilder {
 								}
 							}
 
-							$requires[] = ucfirst( $require ) . ' - ' . ( is_array( $data ) ? implode( ', ', $data ) : $data );
+							$requires[] = ucfirst( $require ) . ' - ' .
+								( is_array( $data ) ? implode( ', ', $data ) : $data );
 						}
 
 						$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
@@ -625,7 +662,10 @@ class ManageWikiFormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
-			] + ManageWikiTypes::process( $config, false, [], 'namespaces', [], $namespaceData['aliases'], '', [], 'texts' );
+			] + ManageWikiTypes::process(
+				$config, false, [], 'namespaces', [],
+				$namespaceData['aliases'], '', [], 'texts'
+			);
 		}
 
 		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
@@ -995,7 +1035,9 @@ class ManageWikiFormFactoryBuilder {
 			$formData['private'] ? $remoteWiki->markPrivate() : $remoteWiki->markPublic();
 		}
 
-		if ( $config->get( 'CreateWikiUseExperimental' ) && $remoteWiki->isExperimental() !== $formData['experimental'] ) {
+		if ( $config->get( 'CreateWikiUseExperimental' ) &&
+			$remoteWiki->isExperimental() !== $formData['experimental']
+		   ) {
 			$formData['experimental'] ? $remoteWiki->markExperimental() : $remoteWiki->unMarkExperimental();
 		}
 
@@ -1036,7 +1078,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		if ( $config->get( 'CreateWikiCategories' ) && isset( $formData['category'] ) && $formData['category'] !== $remoteWiki->getCategory() ) {
+		if ( $config->get( 'CreateWikiCategories' ) && $formData['category'] !== $remoteWiki->getCategory() ) {
 			$remoteWiki->setCategory( $formData['category'] );
 		}
 
@@ -1106,12 +1148,15 @@ class ManageWikiFormFactoryBuilder {
 
 			$current = $settingsList[$name] ?? $set['overridedefault'];
 			if ( isset( $set['associativeKey'] ) ) {
-				$current = $settingsList[$name][ $set['associativeKey'] ] ?? $set['overridedefault'][ $set['associativeKey'] ];
+				$current = $settingsList[$name][ $set['associativeKey'] ] ??
+					$set['overridedefault'][ $set['associativeKey'] ];
 			}
 
-			$mwAllowed = $set['requires'] ? ManageWikiRequirements::process( $set['requires'], $extList, false, $remoteWiki ) : true;
-			$type = $set['type'];
+			$mwAllowed = $set['requires'] ? ManageWikiRequirements::process(
+				$set['requires'], $extList, false, $remoteWiki
+			) : true;
 
+			$type = $set['type'];
 			$value = $formData["set-$name"];
 
 			switch ( $type ) {

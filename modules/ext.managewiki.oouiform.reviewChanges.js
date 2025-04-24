@@ -25,23 +25,62 @@
 
 			const dialog = this;
 			$( '#managewiki-review' ).on( 'click', () => {
-				dialog.content.$element.html( '' );
-				$( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' ).each( function () {
-					if ( this.disabled ) {
+				dialog.content.$element.empty();
+
+				const $inputs = $( '#managewiki-form :input[name]' )
+					.not( '#managewiki-submit-reason :input[name]' );
+
+				$inputs.each( function () {
+					const name = this.name
+						.replace( 'wp', '' )
+						.replace( /-namespace|-namespacetalk|ext-|set-/, '' );
+					const label = $( this )
+						.parents( 'fieldset' )
+						.contents()
+						.first()
+						.text()
+						.trim();
+
+          if ( this.disabled ) {
 						// Don't show disabled fields in dialog
 						return;
 					}
 
-					if ( this.type === 'checkbox' && this.defaultChecked !== undefined && this.defaultChecked !== this.checked ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ).replace( '[]', '[' + this.value + ']' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[ 0 ] ).text() + ')</b> was <i>' + ( this.checked === true ? 'enabled' : 'disabled' ) + '</i></li>' );
-					} else if ( this.defaultValue !== undefined && this.defaultValue !== this.value ) {
-						dialog.content.$element.append( '<li><b>' + this.name.replace( 'wp', '' ).replace( /-namespace|-namespacetalk|ext-|set-/, '' ) + ' (' + $( $( this ).parents( 'fieldset' ).contents()[ 0 ] ).text() + ')</b> was changed from <i>' + ( this.defaultValue ? this.defaultValue : '&lt;none&gt;' ) + '</i> to <i>' + ( this.value ? this.value : '&lt;none&gt;' ) + '</i></li>' );
+					if (
+						this.type === 'checkbox' &&
+						this.defaultChecked !== undefined &&
+						this.defaultChecked !== this.checked
+					) {
+						const stateMsg = mw.msg(
+							this.checked ? 'managewiki-review-enabled' : 'managewiki-review-disabled'
+						);
+
+						const setting = `${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`;
+						const message = mw.message( 'managewiki-review-toggled' ).escaped()
+							.replace( '$1', `<b>${ mw.html.escape( setting ) }</b>` )
+							.replace( '$2', `<i>${ mw.html.escape( stateMsg ) }</i>` );
+
+						dialog.content.$element.append( $( '<li>' ).html( message ) );
+					} else if (
+						this.defaultValue !== undefined &&
+						this.defaultValue !== this.value
+					) {
+						const oldVal = this.defaultValue || mw.msg( 'managewiki-review-none' );
+						const newVal = this.value || mw.msg( 'managewiki-review-none' );
+
+						const message = mw.message( 'managewiki-review-changed' ).escaped()
+							.replace( '$1', `<b>${ mw.html.escape( `${ name } (${ label })` ) }</b>` )
+							.replace( '$2', `<i>${ mw.html.escape( oldVal ) }</i>` )
+							.replace( '$3', `<i>${ mw.html.escape( newVal ) }</i>` );
+
+						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					}
 				} );
 
 				if ( !dialog.content.$element.html() ) {
-					/* eslint-disable-next-line no-jquery/no-parse-html-literal */
-					dialog.content.$element.append( '<i>No changes made.</i>' );
+					dialog.content.$element.append(
+						$( '<i>' ).text( mw.msg( 'managewiki-review-nochanges' ) )
+					);
 				}
 
 				dialog.$body.append( dialog.content.$element );

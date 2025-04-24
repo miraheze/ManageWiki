@@ -19,34 +19,34 @@ class ManageWikiInstaller {
 		bool $install = true
 	): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
-		$stepresponse = [];
+		$stepResponse = [];
 
 		foreach ( $actions as $action => $data ) {
 			switch ( $action ) {
 				case 'sql':
-					$stepresponse['sql'] = self::sql( $dbname, $data );
+					$stepResponse['sql'] = self::sql( $dbname, $data );
 					break;
 				case 'files':
-					$stepresponse['files'] = self::files( $dbname, $data );
+					$stepResponse['files'] = self::files( $dbname, $data );
 					break;
 				case 'permissions':
-					$stepresponse['permissions'] = self::permissions( $dbname, $data, $install );
+					$stepResponse['permissions'] = self::permissions( $dbname, $data, $install );
 					break;
 				case 'namespaces':
-					$stepresponse['namespaces'] = self::namespaces( $dbname, $data, $install );
+					$stepResponse['namespaces'] = self::namespaces( $dbname, $data, $install );
 					break;
 				case 'mwscript':
-					$stepresponse['mwscript'] = self::mwscript( $dbname, $data );
+					$stepResponse['mwscript'] = self::mwscript( $dbname, $data );
 					break;
 				case 'settings':
-					$stepresponse['settings'] = self::settings( $dbname, $data );
+					$stepResponse['settings'] = self::settings( $dbname, $data );
 					break;
 				default:
 					return false;
 			}
 		}
 
-		return array_search( false, $stepresponse, true ) === false;
+		return !in_array( false, $stepResponse, true );
 	}
 
 	private static function sql( string $dbname, array $data ): bool {

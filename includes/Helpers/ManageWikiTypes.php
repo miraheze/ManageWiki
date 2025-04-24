@@ -179,7 +179,9 @@ class ManageWikiTypes {
 					'type' => 'checkmatrix',
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
-					'default' => $value !== null ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault'],
+					'default' => $value !== null ?
+						ManageWiki::handleMatrix( $value, 'php' ) :
+						$options['overridedefault'],
 				];
 				break;
 			case 'preferences':
@@ -239,7 +241,10 @@ class ManageWikiTypes {
 						$excludedPrefs[] = 'enotifusertalkpages';
 					}
 
-					if ( !$config->get( MainConfigNames::EnotifUserTalk ) && !$config->get( MainConfigNames::EnotifWatchlist ) ) {
+					if (
+						!$config->get( MainConfigNames::EnotifUserTalk ) &&
+						!$config->get( MainConfigNames::EnotifWatchlist )
+					) {
 						if ( !$config->get( MainConfigNames::EnotifMinorEdits ) ) {
 							$excludedPrefs[] = 'enotifminoredits';
 						}
@@ -327,7 +332,7 @@ class ManageWikiTypes {
 
 				$configs = [
 					'type' => 'multiselect',
-					'options' => isset( $options['options'] ) ? array_merge( $enabledSkins, $options['options'] ) : $enabledSkins,
+					'options' => array_merge( $enabledSkins, $options['options'] ?? [] ),
 					'default' => $value ?? $options['overridedefault'],
 				];
 
