@@ -56,7 +56,7 @@
 							changeText
 						).text();
 
-						this.content.$element.append( $( '<li>' ).text( message ) );
+						dialog.content.$element.append( $( '<li>' ).text( message ) );
 					} else if (
 						this.defaultValue !== undefined &&
 						this.defaultValue !== this.value
@@ -71,7 +71,7 @@
 							newVal
 						).text();
 
-						this.content.$element.append( $( '<li>' ).text( message ) );
+						dialog.content.$element.append( $( '<li>' ).text( message ) );
 					}
 				} );
 
