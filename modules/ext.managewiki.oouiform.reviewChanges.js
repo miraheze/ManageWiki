@@ -35,7 +35,7 @@
 						.replace( 'wp', '' )
 						.replace( /-namespace|-namespacetalk|ext-|set-/, '' );
 					const label = $( this )
-						.closest( 'fieldset' )
+						.parents( 'fieldset' )
 						.contents()
 						.first()
 						.text()
