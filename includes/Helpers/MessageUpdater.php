@@ -3,7 +3,6 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\CommentStore\CommentStoreComment;
-use MediaWiki\Message\Message;
 use MediaWiki\Page\DeletePageFactory;
 use MediaWiki\Page\WikiPageFactory;
 use MediaWiki\Revision\SlotRecord;
