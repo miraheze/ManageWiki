@@ -124,7 +124,9 @@ class ManageWikiNamespaces implements IConfigModule {
 			str_replace( [ ' ', ':' ], '_', $namespaceInfo->getCanonicalName( NS_PROJECT_TALK ) )
 		) );
 
-		return in_array( $name, $metaNamespace, $metaNamespaceTalk, $canonicalNameMain, $canonicalNameTalk, true );
+		return in_array( $name, [ $metaNamespace, $metaNamespaceTalk,
+			$canonicalNameMain, $canonicalNameTalk
+		], true );
 	}
 
 	/**
