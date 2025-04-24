@@ -115,7 +115,16 @@ class ManageWikiNamespaces implements IConfigModule {
 			str_replace( [ ' ', ':' ], '_', $this->config->get( MainConfigNames::MetaNamespaceTalk ) )
 		) );
 
-		return $name === $metaNamespace || $name === $metaNamespaceTalk;
+		$namespaceInfo = MediaWikiServices::getInstance()->getNamespaceInfo();
+		$canonicalNameMain = strtolower( trim(
+			str_replace( [ ' ', ':' ], '_', $namespaceInfo->getCanonicalName( NS_PROJECT ) )
+		) );
+
+		$canonicalNameTalk = strtolower( trim(
+			str_replace( [ ' ', ':' ], '_', $namespaceInfo->getCanonicalName( NS_PROJECT_TALK ) )
+		) );
+
+		return in_array( $name, $metaNamespace, $metaNamespaceTalk, $canonicalNameMain, $canonicalNameTalk, true );
 	}
 
 	/**
