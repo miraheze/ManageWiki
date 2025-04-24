@@ -42,7 +42,7 @@ class PopulateNamespaces extends Maintenance {
 			}
 
 			if ( $id === NS_PROJECT_TALK ) {
-				$name = "{$metaNS}_talk";
+				$name = '$1_talk';
 			}
 
 			$matchedNSKeys = array_keys( $this->getConfig()->get( MainConfigNames::NamespaceAliases ), $id, true );
