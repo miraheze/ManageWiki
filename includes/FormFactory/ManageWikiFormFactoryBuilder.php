@@ -516,6 +516,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$namespaceVar = '';
+			$defaultName = $namespaceData['name'] ?: $create;
 			if ( $id === NS_PROJECT ) {
 				$namespaceVar = ' ($wgMetaNamespace)';
 				$defaultName = str_replace( '_', ' ',
@@ -533,7 +534,6 @@ class ManageWikiFormFactoryBuilder {
 			if ( !$namespaceData['core'] ) {
 				// Core namespaces are not set with $wgExtraNamespaces
 				$namespaceVar = ' ($wgExtraNamespaces)';
-				$defaultName = $namespaceData['name'] ?: $create;
 			}
 
 			$canEditName = !$namespaceData['core'] ||
