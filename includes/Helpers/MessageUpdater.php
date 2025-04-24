@@ -27,7 +27,7 @@ class MessageUpdater {
 		User $user
 	): void {
 		$title = $this->titleFactory->newFromText( $name, NS_MEDIAWIKI );
-		if ( $title === null ) {
+		if ( $title === null || !$title->exists() ) {
 			return;
 		}
 
