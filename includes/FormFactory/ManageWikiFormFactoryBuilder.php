@@ -1419,6 +1419,6 @@ class ManageWikiFormFactoryBuilder {
 	}
 
 	private static function getConfigVar( string $name ): string {
-		return "wg$name";
+		return "\$wg$name";
 	}
 }
