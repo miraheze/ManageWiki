@@ -1264,13 +1264,6 @@ class ManageWikiFormFactoryBuilder {
 				}
 			}
 
-			if ( $id === NS_PROJECT_TALK ) {
-				$namespaceName = str_replace( '$1',
-					$formData['namespace-namespace'],
-					$namespaceName
-				);
-			}
-
 			$build = [
 				'name' => $namespaceName,
 				'searchable' => (int)$formData["search-$name"],
