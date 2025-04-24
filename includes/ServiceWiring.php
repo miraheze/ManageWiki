@@ -37,6 +37,7 @@ return [
 			$services->getMessageFormatterFactory()->getTextFormatter(
 				$services->getContentLanguageCode()->toString()
 			),
+			$services->getMovePageFactory(),
 			$services->getTitleFactory(),
 			$services->getWikiPageFactory()
 		);
