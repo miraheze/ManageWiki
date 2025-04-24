@@ -1265,12 +1265,10 @@ class ManageWikiFormFactoryBuilder {
 			$mwNamespaces->remove( $namespaceTalkID, $formData['delete-migrate-to'] + 1 );
 			$messageUpdater->doDelete(
 				name: "namespaceinfo-description-ns{$namespaceID}",
-				reason: 'managewiki-namespaces-description-deleted',
 				user: $context->getUser()
 			);
 			$messageUpdater->doDelete(
 				name: "namespaceinfo-description-ns{$namespaceTalkID}",
-				reason: 'managewiki-namespaces-description-deleted',
 				user: $context->getUser()
 			);
 			return $mwNamespaces;
@@ -1300,7 +1298,6 @@ class ManageWikiFormFactoryBuilder {
 				$messageUpdater->doUpdate(
 					name: "namespaceinfo-description-ns{$id}",
 					content: $formData["description-$name"],
-					summary: 'managewiki-namespaces-description-updated',
 					shouldLog: false,
 					user: $context->getUser()
 				);
@@ -1359,12 +1356,10 @@ class ManageWikiFormFactoryBuilder {
 			$mwPermissions->remove( $group );
 			$messageUpdater->doDelete(
 				name: "group-$group",
-				reason: 'managewiki-permissions-group-message-deleted',
 				user: $context->getUser()
 			);
 			$messageUpdater->doDelete(
 				name: "group-$group-member",
-				reason: 'managewiki-permissions-group-member-message-deleted',
 				user: $context->getUser()
 			);
 			return $mwPermissions;
@@ -1378,7 +1373,6 @@ class ManageWikiFormFactoryBuilder {
 			$messageUpdater->doUpdate(
 				name: "group-$group",
 				content: $formData['group-message'],
-				summary: 'managewiki-permissions-group-message-updated',
 				shouldLog: true,
 				user: $context->getUser()
 			);
@@ -1392,7 +1386,6 @@ class ManageWikiFormFactoryBuilder {
 			$messageUpdater->doUpdate(
 				name: "group-$group-member",
 				content: $formData['group-member-message'],
-				summary: 'managewiki-permissions-group-member-message-updated',
 				shouldLog: true,
 				user: $context->getUser()
 			);
