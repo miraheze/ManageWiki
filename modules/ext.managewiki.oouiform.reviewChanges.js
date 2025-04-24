@@ -7,6 +7,7 @@
 		OO.inheritClass( ProcessDialog, OO.ui.ProcessDialog );
 
 		ProcessDialog.static.name = 'managewiki-review';
+
 		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
 
 		ProcessDialog.static.actions = [ {
@@ -22,23 +23,19 @@
 				expanded: false
 			} );
 
-			this.$body.append( this.content.$element );
-
-			$( '#managewiki-review' ).off( 'click.review' ).on( 'click.review', () => {
-				this.content.$element.empty();
+			const dialog = this;
+			$( '#managewiki-review' ).on( 'click', () => {
+				dialog.content.$element.empty();
 
 				const $inputs = $( '#managewiki-form :input[name]' )
 					.not( '#managewiki-submit-reason :input[name]' );
 
-				let hasChanges = false;
-
 				$inputs.each( function () {
-					const $input = $( this );
 					const name = this.name
 						.replace( 'wp', '' )
 						.replace( /-namespace|-namespacetalk|ext-|set-/, '' );
 
-					const label = $input
+					const label = $( this )
 						.closest( 'fieldset' )
 						.contents()
 						.first()
@@ -61,7 +58,6 @@
 						).text();
 
 						this.content.$element.append( $( '<li>' ).text( message ) );
-						hasChanges = true;
 					} else if (
 						this.defaultValue !== undefined &&
 						this.defaultValue !== this.value
@@ -77,25 +73,27 @@
 						).text();
 
 						this.content.$element.append( $( '<li>' ).text( message ) );
-						hasChanges = true;
 					}
-				}.bind( this ) );
+				} );
 
-				if ( !hasChanges ) {
-					this.content.$element.append( $( '<i>' ).text( mw.msg( 'managewiki-review-nochanges' ) ) );
+				if ( !dialog.content.$element.html() ) {
+					dialog.content.$element.append( $( '<i>' ).text( mw.msg( 'managewiki-review-nochanges' ) ) );
 				}
 
-				const windowManager = OO.ui.getWindowManagerForElement( this.$element );
-				if ( windowManager ) {
-					windowManager.openWindow( this );
-				}
+				dialog.$body.append( dialog.content.$element );
 			} );
 		};
 
 		ProcessDialog.prototype.getActionProcess = function ( action ) {
+			const dialog = this;
 			if ( action ) {
-				return new OO.ui.Process( () => this.close( { action } ) );
+				return new OO.ui.Process( () => {
+					dialog.close( {
+						action: action
+					} );
+				} );
 			}
+
 			return ProcessDialog.super.prototype.getActionProcess.call( this, action );
 		};
 
@@ -109,6 +107,11 @@
 		const processDialog = new ProcessDialog( {
 			size: 'large'
 		} );
+
 		windowManager.addWindows( [ processDialog ] );
+
+		$( '#managewiki-review' ).on( 'click', () => {
+			windowManager.openWindow( processDialog );
+		} );
 	} );
 }() );
