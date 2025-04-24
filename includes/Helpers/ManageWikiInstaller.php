@@ -22,7 +22,7 @@ class ManageWikiInstaller {
 			$result = match ( $action ) {
 				'sql' => self::sql( $dbname, $data ),
 				'files' => self::files( $dbname, $data ),
-				'permissions'=> self::permissions( $dbname, $data, $install ),
+				'permissions' => self::permissions( $dbname, $data, $install ),
 				'namespaces' => self::namespaces( $dbname, $data, $install ),
 				'mwscript' => self::mwscript( $dbname, $data ),
 				'settings' => self::settings( $dbname, $data ),
