@@ -515,15 +515,29 @@ class ManageWikiFormFactoryBuilder {
 				$create .= ' talk';
 			}
 
+			$namespaceVar = '';
+			if ( $id === NS_PROJECT ) {
+				$namespaceVar = ' ($wgMetaNamespace)';
+			}
+
+			if ( $id === NS_PROJECT_TALK ) {
+				$namespaceVar = ' ($wgMetaNamespaceTalk)';
+			}
+
+			if ( !$namespaceData['core'] ) {
+				// Core namespaces are not set with $wgExtraNamespaces
+				$namespaceVar = ' ($wgExtraNamespaces)';
+			}
+
+			$canEditName = !$namespaceData['core'] ||
+				$id === NS_PROJECT || $id === NS_PROJECT_TALK;
+
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label' => $context->msg( "namespaces-$name" )->text() . (
-						// Core namespaces are not set with $wgExtraNamespaces
-						$namespaceData['core'] ? '' : ' ($wgExtraNamespaces)'
-					),
+					'label' => $context->msg( "namespaces-$name" )->text() . $namespaceVar,
 					'default' => $namespaceData['name'] ?: $create,
-					'disabled' => $namespaceData['core'] || !$ceMW,
+					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
 					'section' => $name,
 				],
