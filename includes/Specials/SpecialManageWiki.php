@@ -366,7 +366,7 @@ class SpecialManageWiki extends SpecialPage {
 						return $this->msg( 'managewiki-error-disallowednamespace', $value );
 					}
 
-					if ( $mwNamespaces->namespaceNameExists( $value ) ) {
+					if ( $mwNamespaces->namespaceNameExists( $value, checkMetaNS: true ) ) {
 						return $this->msg( 'managewiki-namespace-conflicts', $value );
 					}
 
