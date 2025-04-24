@@ -7,7 +7,6 @@
 		OO.inheritClass( ProcessDialog, OO.ui.ProcessDialog );
 
 		ProcessDialog.static.name = 'managewiki-review';
-
 		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
 
 		ProcessDialog.static.actions = [ {
@@ -24,59 +23,85 @@
 			} );
 
 			const dialog = this;
-			$( '#managewiki-review' ).on( 'click', () => {
+
+			$( '#managewiki-review' ).off( 'click.review' ).on( 'click.review', () => {
 				dialog.content.$element.empty();
 
 				const $inputs = $( '#managewiki-form :input[name]' )
 					.not( '#managewiki-submit-reason :input[name]' );
 
 				$inputs.each( function () {
+					const $input = $( this );
 					const name = this.name
 						.replace( 'wp', '' )
 						.replace( /-namespace|-namespacetalk|ext-|set-/, '' );
-					const label = $( this )
-						.parents( 'fieldset' )
+
+					const label = $input
+						.closest( 'fieldset' )
 						.contents()
 						.first()
 						.text()
 						.trim();
+
+					const setting = `${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`;
 
 					if (
 						this.type === 'checkbox' &&
 						this.defaultChecked !== undefined &&
 						this.defaultChecked !== this.checked
 					) {
-						const changeText = this.checked
+						const changeMsg = mw.message(
+							'managewiki-review-toggled'
+						).params( setting, this.checked
 							? mw.msg( 'managewiki-review-enabled' )
-							: mw.msg( 'managewiki-review-disabled' );
-
-						const message = mw.message(
-							'managewiki-review-toggled',
-							`${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`,
-							changeText
+							: mw.msg( 'managewiki-review-disabled' )
 						).text();
 
-						dialog.content.$element.append( $( '<li>' ).text( message ) );
+						const $li = $( '<li>' )
+							.append( changeMsg.split( '$1' )[0] )
+							.append( $( '<b>' ).text( setting ) )
+							.append( changeMsg.split( '$1' )[1].split( '$2' )[0] )
+							.append( $( '<i>' ).text(
+								this.checked
+									? mw.msg( 'managewiki-review-enabled' )
+									: mw.msg( 'managewiki-review-disabled' )
+							) )
+							.append( changeMsg.split( '$2' )[1] || '' );
+
+						dialog.content.$element.append( $li );
 					} else if (
 						this.defaultValue !== undefined &&
 						this.defaultValue !== this.value
 					) {
 						const oldVal = this.defaultValue || mw.msg( 'managewiki-review-none' );
 						const newVal = this.value || mw.msg( 'managewiki-review-none' );
+						const setting = `${ name } (${ label })`;
 
-						const message = mw.message(
-							'managewiki-review-changed',
-							`${ name } (${ label })`,
-							oldVal,
-							newVal
-						).text();
+						const changeMsg = mw.message(
+							'managewiki-review-changed'
+						).params( setting, oldVal, newVal ).text();
 
-						dialog.content.$element.append( $( '<li>' ).text( message ) );
+						const [pre1, rest1] = changeMsg.split( '$1' );
+						const [mid1, rest2] = rest1.split( '$2' );
+						const [mid2, post2] = rest2.split( '$3' );
+
+						const $li = $( '<li>' )
+							.append( pre1 )
+							.append( $( '<b>' ).text( setting ) )
+							.append( mid1 )
+							.append( $( '<i>' ).text( oldVal ) )
+							.append( mid2 )
+							.append( $( '<i>' ).text( newVal ) )
+							.append( post2 || '' );
+
+						dialog.content.$element.append( $li );
 					}
 				} );
 
 				if ( !dialog.content.$element.html() ) {
-					dialog.content.$element.append( $( '<i>' ).text( mw.msg( 'managewiki-review-nochanges' ) ) );
+					dialog.content.$element.append(
+						$( '<i>' ).text( mw.msg( 'managewiki-review-nochanges' ) )
+					);
 				}
 
 				dialog.$body.append( dialog.content.$element );
@@ -87,12 +112,9 @@
 			const dialog = this;
 			if ( action ) {
 				return new OO.ui.Process( () => {
-					dialog.close( {
-						action: action
-					} );
+					dialog.close( { action } );
 				} );
 			}
-
 			return ProcessDialog.super.prototype.getActionProcess.call( this, action );
 		};
 
