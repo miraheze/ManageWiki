@@ -24,6 +24,9 @@ class PopulateNamespaces extends Maintenance {
 		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
+		$siteName = $this->getConfig()->get( MainConfigNames::Sitename );
+		$metaNS = ucfirst( str_replace( ' ', '_', $siteName ) );
+
 		$namespaces = $this->getConfig()->get( MainConfigNames::CanonicalNamespaceNames );
 		$namespaces[NS_MAIN] = '<Main>';
 
@@ -32,6 +35,14 @@ class PopulateNamespaces extends Maintenance {
 			if ( $id < 0 ) {
 				// We don't like 'imaginary' namespaces
 				continue;
+			}
+
+			if ( $id === NS_PROJECT ) {
+				$name = $metaNS;
+			}
+
+			if ( $id === NS_PROJECT_TALK ) {
+				$name = '$1_talk';
 			}
 
 			$matchedNSKeys = array_keys( $this->getConfig()->get( MainConfigNames::NamespaceAliases ), $id, true );
