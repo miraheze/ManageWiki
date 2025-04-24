@@ -36,8 +36,7 @@ class MessageUpdater {
 
 		$page = $this->wikiPageFactory->newFromTitle( $title );
 		$deletePage = $this->deletePageFactory->newDeletePage( $page, $user );
-		// Hide from RC — we already have the ManageWiki log
-		$deletePage->setSuppress( true )->deleteUnsafe( $reason );
+		$deletePage->deleteUnsafe( $reason );
 	}
 
 	public function doMove(
@@ -68,7 +67,6 @@ class MessageUpdater {
 	public function doUpdate(
 		string $name,
 		string $content,
-		bool $shouldLog,
 		User $user
 	): void {
 		$title = $this->titleFactory->newFromText( $name, NS_MEDIAWIKI );
@@ -89,12 +87,8 @@ class MessageUpdater {
 		);
 
 		$comment = CommentStoreComment::newUnsavedComment( $summary );
-		$flags = EDIT_MINOR | EDIT_INTERNAL;
-		if ( !$shouldLog ) {
-			// Hide from RC — we may already have the ManageWiki log
-			$flags |= EDIT_SUPPRESS_RC;
-		}
-		$updater->setFlags( $flags );
+
+		$updater->setFlags( EDIT_MINOR | EDIT_INTERNAL );
 		$updater->setRcPatrolStatus( RecentChange::PRC_AUTOPATROLLED );
 		$updater->saveRevision( $comment );
 	}
