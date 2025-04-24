@@ -60,6 +60,7 @@ class MessageUpdater {
 		$summary = $this->textFormatter->format( MessageValue::new( $summary ) );
 
 		$comment = CommentStoreComment::newUnsavedComment( $summary );
+		$updater->setFlags( EDIT_SUPPRESS_RC | EDIT_INTERNAL );
 		$updater->saveRevision( $comment );
 	}
 }
