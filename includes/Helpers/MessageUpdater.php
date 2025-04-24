@@ -23,17 +23,15 @@ class MessageUpdater {
 	) {
 	}
 
-	public function doDelete(
-		string $name,
-		string $reason,
-		User $user
-	): void {
+	public function doDelete( string $name, User $user ): void {
 		$title = $this->titleFactory->newFromText( $name, NS_MEDIAWIKI );
 		if ( $title === null || !$title->exists() ) {
 			return;
 		}
 
-		$reason = $this->textFormatter->format( MessageValue::new( $reason ) );
+		$reason = $this->textFormatter->format(
+			MessageValue::new( 'managewiki-message-deleted' )
+		);
 
 		$page = $this->wikiPageFactory->newFromTitle( $title );
 		$deletePage = $this->deletePageFactory->newDeletePage( $page, $user );
@@ -44,7 +42,6 @@ class MessageUpdater {
 	public function doMove(
 		string $oldName,
 		string $newName,
-		string $reason,
 		User $user
 	): void {
 		$fromTitle = $this->titleFactory->newFromText( $oldName, NS_MEDIAWIKI );
@@ -59,7 +56,9 @@ class MessageUpdater {
 			return;
 		}
 
-		$reason = $this->textFormatter->format( MessageValue::new( $reason ) );
+		$reason = $this->textFormatter->format(
+			MessageValue::new( 'managewiki-message-moved' )
+		);
 
 		$movePage = $this->movePageFactory->newMovePage( $fromTitle, $toTitle );
 		$movePage->move( $user, $reason, createRedirect: false );
@@ -68,7 +67,6 @@ class MessageUpdater {
 	public function doUpdate(
 		string $name,
 		string $content,
-		string $summary,
 		bool $shouldLog,
 		User $user
 	): void {
@@ -85,7 +83,10 @@ class MessageUpdater {
 			$page->getContentHandler()->makeContent( $content, $title )
 		);
 
-		$summary = $this->textFormatter->format( MessageValue::new( $summary ) );
+		$summary = $this->textFormatter->format(
+			MessageValue::new( 'managewiki-message-updated' )
+		);
+
 		$comment = CommentStoreComment::newUnsavedComment( $summary );
 		$flags = EDIT_INTERNAL;
 		if ( !$shouldLog ) {
