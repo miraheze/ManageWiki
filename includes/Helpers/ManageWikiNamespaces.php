@@ -217,11 +217,6 @@ class ManageWikiNamespaces implements IConfigModule {
 
 	public function addMessageFields( int $id ): void {
 		$this->messageFields[] = $id;
-		if ( !$this->logParams || !$this->isTalk( $id ) ) {
-			$this->logParams = [
-				'5::namespace' => $this->liveNamespaces[$id]['name'],
-			];
-		}
 	}
 
 	/**
