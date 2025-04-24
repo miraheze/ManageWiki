@@ -535,14 +535,14 @@ class ManageWikiFormFactoryBuilder {
 				default => [
 					'',
 					$namespaceData['name'] ?: $create,
-				]
+				],
 			};
 
 			if ( !$namespaceData['core'] ) {
 				// Core namespaces are not set with ExtraNamespaces
 				$namespaceVar = $context->msg( 'parentheses',
 					$this->getConfigVar( MainConfigNames::ExtraNamespaces )
-				)->text(),
+				)->text();
 			}
 
 			$canEditName = !$namespaceData['core'] ||
