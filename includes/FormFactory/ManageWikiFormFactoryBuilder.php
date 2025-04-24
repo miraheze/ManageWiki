@@ -524,7 +524,9 @@ class ManageWikiFormFactoryBuilder {
 
 			if ( $id === NS_PROJECT_TALK ) {
 				$namespaceVar = ' ($wgMetaNamespaceTalk)';
-				$defaultName = $config->get( MainConfigNames::MetaNamespaceTalk );
+				$defaultName = str_replace( $config->get( MainConfigNames::MetaNamespace ),
+					'$1', $config->get( MainConfigNames::MetaNamespaceTalk )
+				);
 			}
 
 			if ( !$namespaceData['core'] ) {
@@ -1256,11 +1258,17 @@ class ManageWikiFormFactoryBuilder {
 			$namespaceName = str_replace( [ ' ', ':' ], '_', $formData["namespace-$name"] );
 
 			$additionalBuilt = [];
-
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				if ( isset( $formData["$key-$name"] ) ) {
 					$additionalBuilt[$key] = $formData["$key-$name"];
 				}
+			}
+
+			if ( $id === NS_PROJECT_TALK ) {
+				$namespaceName = str_replace( '$1',
+					$config->get( MainConfigNames::MetaNamespace ),
+					$namespaceName
+				);
 			}
 
 			$build = [
