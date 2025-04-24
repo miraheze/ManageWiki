@@ -1243,12 +1243,12 @@ class ManageWikiFormFactoryBuilder {
 				name: "namespaceinfo-description-ns{$special}",
 				reason: 'managewiki-namespaces-description-deleted',
 				user: $context->getUser()
-			)
+			);
 			$messageUpdater->doDelete(
 				name: "namespaceinfo-description-ns{$special + 1}",
 				reason: 'managewiki-namespaces-description-deleted',
 				user: $context->getUser()
-			)
+			);
 			return $mwNamespaces;
 		}
 
