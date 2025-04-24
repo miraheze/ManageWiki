@@ -165,10 +165,6 @@ class CreateWiki implements
 
 				if ( $languageCode !== 'en' ) {
 					$lcEN = $this->localisationCache->getItem( 'en', 'namespaceNames' );
-					$lcEN[NS_PROJECT_TALK] = str_replace( '$1',
-						$lcEN[NS_PROJECT] ?? $metaNamespace,
-						$lcEN[NS_PROJECT_TALK] ?? $metaNamespaceTalk
-					);
 				}
 			} catch ( Exception $e ) {
 				$this->logger->warning( 'Caught exception trying to load Localisation Cache: {exception}', [
