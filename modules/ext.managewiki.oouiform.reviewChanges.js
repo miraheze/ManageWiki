@@ -51,7 +51,7 @@
 						);
 
 						const setting = `${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`;
-						const message = mw.msg( 'managewiki-review-toggled' ).escaped()
+						const message = mw.message( 'managewiki-review-toggled' ).escaped()
 							.replace( '$1', `<b>${ mw.html.escape( setting ) }</b>` )
 							.replace( '$2', `<i>${ mw.html.escape( stateMsg ) }</i>` );
 
@@ -63,7 +63,7 @@
 						const oldVal = this.defaultValue || mw.msg( 'managewiki-review-none' );
 						const newVal = this.value || mw.msg( 'managewiki-review-none' );
 
-						const message = mw.msg( 'managewiki-review-changed' ).escaped()
+						const message = mw.message( 'managewiki-review-changed' ).escaped()
 							.replace( '$1', `<b>${ mw.html.escape( `${ name } (${ label })` ) }</b>` )
 							.replace( '$2', `<i>${ mw.html.escape( oldVal ) }</i>` )
 							.replace( '$3', `<i>${ mw.html.escape( newVal ) }</i>` );
