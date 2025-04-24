@@ -7,6 +7,7 @@
 		OO.inheritClass( ProcessDialog, OO.ui.ProcessDialog );
 
 		ProcessDialog.static.name = 'managewiki-review';
+
 		ProcessDialog.static.title = mw.msg( 'managewiki-review-title' );
 
 		ProcessDialog.static.actions = [ {
@@ -23,20 +24,17 @@
 			} );
 
 			const dialog = this;
-
-			$( '#managewiki-review' ).off( 'click.review' ).on( 'click.review', () => {
+			$( '#managewiki-review' ).on( 'click', () => {
 				dialog.content.$element.empty();
 
 				const $inputs = $( '#managewiki-form :input[name]' )
 					.not( '#managewiki-submit-reason :input[name]' );
 
 				$inputs.each( function () {
-					const $input = $( this );
 					const name = this.name
 						.replace( 'wp', '' )
 						.replace( /-namespace|-namespacetalk|ext-|set-/, '' );
-
-					const label = $input
+					const label = $( this )
 						.closest( 'fieldset' )
 						.contents()
 						.first()
@@ -112,9 +110,12 @@
 			const dialog = this;
 			if ( action ) {
 				return new OO.ui.Process( () => {
-					dialog.close( { action } );
+					dialog.close( {
+						action: action
+					} );
 				} );
 			}
+
 			return ProcessDialog.super.prototype.getActionProcess.call( this, action );
 		};
 
