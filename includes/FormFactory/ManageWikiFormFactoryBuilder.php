@@ -1298,7 +1298,6 @@ class ManageWikiFormFactoryBuilder {
 				$messageUpdater->doUpdate(
 					name: "namespaceinfo-description-ns{$id}",
 					content: $formData["description-$name"],
-					shouldLog: false,
 					user: $context->getUser()
 				);
 			}
@@ -1373,7 +1372,6 @@ class ManageWikiFormFactoryBuilder {
 			$messageUpdater->doUpdate(
 				name: "group-$group",
 				content: $formData['group-message'],
-				shouldLog: true,
 				user: $context->getUser()
 			);
 		}
@@ -1386,7 +1384,6 @@ class ManageWikiFormFactoryBuilder {
 			$messageUpdater->doUpdate(
 				name: "group-$group-member",
 				content: $formData['group-member-message'],
-				shouldLog: true,
 				user: $context->getUser()
 			);
 		}
