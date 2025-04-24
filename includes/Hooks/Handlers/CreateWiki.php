@@ -139,6 +139,7 @@ class CreateWiki implements
 					'ns_dbname' => $wiki,
 					'ns_namespace_id' => NS_PROJECT,
 				] )
+				->limit( 1 )
 				->caller( __METHOD__ )
 				->fetchField();
 
@@ -149,6 +150,7 @@ class CreateWiki implements
 					'ns_dbname' => $wiki,
 					'ns_namespace_id' => NS_PROJECT_TALK,
 				] )
+				->limit( 1 )
 				->caller( __METHOD__ )
 				->fetchField();
 
