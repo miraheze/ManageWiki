@@ -51,7 +51,7 @@
 							: mw.msg( 'managewiki-review-disabled' );
 
 						const message = mw.message(
-							'managewiki-review-was-checkbox',
+							'managewiki-review-toggled',
 							`${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`,
 							changeText
 						).text();
@@ -65,7 +65,7 @@
 						const newVal = this.value || mw.msg( 'managewiki-review-none' );
 
 						const message = mw.message(
-							'managewiki-review-changed-from',
+							'managewiki-review-changed',
 							`${ name } (${ label })`,
 							oldVal,
 							newVal
