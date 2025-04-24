@@ -1285,6 +1285,7 @@ class ManageWikiFormFactoryBuilder {
 					name: "namespaceinfo-description-ns{$id}",
 					content: $formData["description-$name"],
 					summary: 'managewiki-namespaces-description-updated',
+					shouldLog: false,
 					user: $context->getUser()
 				);
 			}
