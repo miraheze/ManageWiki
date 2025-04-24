@@ -88,7 +88,7 @@ class MessageUpdater {
 		);
 
 		$comment = CommentStoreComment::newUnsavedComment( $summary );
-		$flags = EDIT_INTERNAL;
+		$flags = EDIT_FORCE_BOT | EDIT_MINOR | EDIT_INTERNAL;
 		if ( !$shouldLog ) {
 			// Hide from RC — we may already have the ManageWiki log
 			$flags |= EDIT_SUPPRESS_RC;
