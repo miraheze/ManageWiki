@@ -535,7 +535,7 @@ class ManageWikiFormFactoryBuilder {
 				default => [
 					'',
 					$namespaceData['name'] ?: $create,
-				],
+				]
 			};
 
 			if ( !$namespaceData['core'] ) {
