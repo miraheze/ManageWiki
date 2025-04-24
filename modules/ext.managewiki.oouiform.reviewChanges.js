@@ -31,6 +31,11 @@
 					.not( '#managewiki-submit-reason :input[name]' );
 
 				$inputs.each( function () {
+					if ( this.disabled ) {
+						// Don't show disabled fields in dialog
+						return;
+					}
+
 					const name = this.name
 						.replace( 'wp', '' )
 						.replace( /-namespace|-namespacetalk|ext-|set-/, '' );
@@ -40,11 +45,6 @@
 						.first()
 						.text()
 						.trim();
-
-          if ( this.disabled ) {
-						// Don't show disabled fields in dialog
-						return;
-					}
 
 					if (
 						this.type === 'checkbox' &&
