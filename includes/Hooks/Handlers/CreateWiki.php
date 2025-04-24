@@ -135,21 +135,21 @@ class CreateWiki implements
 			$metaNamespace = null;
 			$metaNamespaceTalk = null;
 
-			foreach ( $nsRows as $row ) {
+			foreach ( $nsObjects as $ns ) {
 				if ( $metaNamespace !== null && $metaNamespaceTalk !== null ) {
 					// Both found, no need to continue
 					break;
 				}
 
-				$id = (int)$row->ns_namespace_id;
+				$id = (int)$ns->ns_namespace_id;
 
 				if ( $id === NS_PROJECT ) {
-					$metaNamespace = $row->ns_namespace_name;
+					$metaNamespace = $ns->ns_namespace_name;
 					continue;
 				}
 
 				if ( $id === NS_PROJECT_TALK ) {
-					$metaNamespaceTalk = $row->ns_namespace_name;
+					$metaNamespaceTalk = $ns->ns_namespace_name;
 				}
 			}
 
