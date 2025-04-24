@@ -976,7 +976,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn = self::submissionNamespaces( $formData, $dbname, $context, $special, $config );
 				break;
 			case 'permissions':
-				$mwReturn = self::submissionPermissions( $formData, $dbname, $special, $config );
+				$mwReturn = self::submissionPermissions( $formData, $dbname, $context, $special, $config );
 				break;
 			default:
 				throw new InvalidArgumentException( "$module not recognized" );
@@ -1326,6 +1326,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function submissionPermissions(
 		array $formData,
 		string $dbname,
+		IContextSource $context,
 		string $group,
 		Config $config
 	): ManageWikiPermissions {
@@ -1348,13 +1349,53 @@ class ManageWikiFormFactoryBuilder {
 				!in_array( $perm, $disallowed, true )
 		);
 
+		$messageUpdater = MediaWikiServices::getInstance()->get( 'ManageWikiMessageUpdater' );
+
 		$assignablePerms = array_unique( array_merge( $assignablePerms, $extraAssigned ) );
 		$isRemovable = !in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true );
 
 		// Early escape for deletion
 		if ( $isRemovable && ( $formData['delete-checkbox'] ?? false ) ) {
 			$mwPermissions->remove( $group );
+			$messageUpdater->doDelete(
+				name: "group-$group",
+				reason: 'managewiki-permissions-group-message-deleted',
+				user: $context->getUser()
+			);
+			$messageUpdater->doDelete(
+				name: "group-$group-member",
+				reason: 'managewiki-permissions-group-member-message-deleted',
+				user: $context->getUser()
+			);
 			return $mwPermissions;
+		}
+
+		$groupMsg = $context->msg( "group-$group" );
+		if ( ( $formData['group-message'] ?? false ) && (
+			!$groupMsg->exists() || $groupMsg->text() !== $formData['group-message']
+		) ) {
+			$mwPermissions->addMessageFields( $group );
+			$messageUpdater->doUpdate(
+				name: "group-$group",
+				content: $formData['group-message'],
+				summary: 'managewiki-permissions-group-message-updated',
+				shouldLog: true,
+				user: $context->getUser()
+			);
+		}
+
+		$groupMemberMsg = $context->msg( "group-$group-member" );
+		if ( ( $formData['group-member-message'] ?? false ) && (
+			!$groupMemberMsg->exists() || $groupMemberMsg->text() !== $formData['group-member-message']
+		) ) {
+			$mwPermissions->addMessageFields( $group );
+			$messageUpdater->doUpdate(
+				name: "group-$group-member",
+				content: $formData['group-member-message'],
+				summary: 'managewiki-permissions-group-member-message-updated',
+				shouldLog: true,
+				user: $context->getUser()
+			);
 		}
 
 		$permData = [];
