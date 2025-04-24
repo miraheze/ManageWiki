@@ -48,51 +48,34 @@
 						this.defaultChecked !== undefined &&
 						this.defaultChecked !== this.checked
 					) {
-						const changeMsg = mw.message(
-							'managewiki-review-toggled'
-						).params( setting, this.checked
-							? mw.msg( 'managewiki-review-enabled' )
-							: mw.msg( 'managewiki-review-disabled' )
-						).text();
+						const stateMsg = mw.msg(
+							this.checked ? 'managewiki-review-enabled' : 'managewiki-review-disabled'
+						);
 
-						const $li = $( '<li>' )
-							.append( changeMsg.split( '$1' )[0] )
-							.append( $( '<b>' ).text( setting ) )
-							.append( changeMsg.split( '$1' )[1].split( '$2' )[0] )
-							.append( $( '<i>' ).text(
-								this.checked
-									? mw.msg( 'managewiki-review-enabled' )
-									: mw.msg( 'managewiki-review-disabled' )
-							) )
-							.append( changeMsg.split( '$2' )[1] || '' );
+						const message = mw.message( 'managewiki-review-toggled' )
+							.params(
+								`<b>${ mw.html.escape( setting ) }</b>`,
+								`<i>${ mw.html.escape( stateMsg ) }</i>`
+							)
+							.parse();
 
-						dialog.content.$element.append( $li );
+						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					} else if (
 						this.defaultValue !== undefined &&
 						this.defaultValue !== this.value
 					) {
 						const oldVal = this.defaultValue || mw.msg( 'managewiki-review-none' );
 						const newVal = this.value || mw.msg( 'managewiki-review-none' );
-						const setting = `${ name } (${ label })`;
 
-						const changeMsg = mw.message(
-							'managewiki-review-changed'
-						).params( setting, oldVal, newVal ).text();
+						const message = mw.message( 'managewiki-review-changed' )
+							.params(
+								`<b>${ mw.html.escape( `${ name } (${ label })` ) }</b>`,
+								`<i>${ mw.html.escape( oldVal ) }</i>`,
+								`<i>${ mw.html.escape( newVal ) }</i>`
+							)
+							.parse();
 
-						const [pre1, rest1] = changeMsg.split( '$1' );
-						const [mid1, rest2] = rest1.split( '$2' );
-						const [mid2, post2] = rest2.split( '$3' );
-
-						const $li = $( '<li>' )
-							.append( pre1 )
-							.append( $( '<b>' ).text( setting ) )
-							.append( mid1 )
-							.append( $( '<i>' ).text( oldVal ) )
-							.append( mid2 )
-							.append( $( '<i>' ).text( newVal ) )
-							.append( post2 || '' );
-
-						dialog.content.$element.append( $li );
+						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					}
 				} );
 
