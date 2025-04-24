@@ -167,7 +167,7 @@ class CreateWiki implements
 						);
 					}
 				}
-		
+
 				$nsName = $lcName[(int)$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
 				$lcAlias = $lcEN[(int)$ns->ns_namespace_id] ?? null;
 
