@@ -8,6 +8,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
@@ -22,6 +23,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly NamespaceInfo $namespaceInfo,
 		private readonly PermissionManager $permissionManager,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
@@ -254,7 +256,8 @@ class SpecialManageWiki extends SpecialPage {
 					continue;
 				}
 
-				$options[$namespace['name']] = $id;
+				$name = $this->namespaceInfo->getCanonicalName( $id ) ?: $namespace['name'];
+				$options[$name] = $id;
 			}
 
 			$this->reusableFormDescriptor( $dbname, $module, $options );
