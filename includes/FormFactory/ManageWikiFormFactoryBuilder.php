@@ -957,7 +957,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn = self::submissionSettings( $formData, $dbname, $filtered, $context, $remoteWiki, $config );
 				break;
 			case 'namespaces':
-				$mwReturn = self::submissionNamespaces( $formData, $dbname, $special, $config );
+				$mwReturn = self::submissionNamespaces( $formData, $dbname, $context, $special, $config );
 				break;
 			case 'permissions':
 				$mwReturn = self::submissionPermissions( $formData, $dbname, $special, $config );
@@ -1228,6 +1228,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function submissionNamespaces(
 		array $formData,
 		string $dbname,
+		IContextSource $context,
 		string $special,
 		Config $config
 	): ManageWikiNamespaces {
