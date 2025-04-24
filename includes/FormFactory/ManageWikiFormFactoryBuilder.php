@@ -518,13 +518,13 @@ class ManageWikiFormFactoryBuilder {
 			[ $namespaceVar, $defaultName ] = match ( $id ) {
 				NS_PROJECT => [
 					$context->msg( 'parentheses',
-						$this->getConfigVar( MainConfigNames::MetaNamespace )
+						self::getConfigVar( MainConfigNames::MetaNamespace )
 					)->text(),
 					$config->get( MainConfigNames::MetaNamespace ),
 				],
 				NS_PROJECT_TALK => [
 					$context->msg( 'parentheses',
-						$this->getConfigVar( MainConfigNames::MetaNamespaceTalk )
+						self::getConfigVar( MainConfigNames::MetaNamespaceTalk )
 					)->text(),
 					str_replace(
 						$config->get( MainConfigNames::MetaNamespace ),
@@ -541,7 +541,7 @@ class ManageWikiFormFactoryBuilder {
 			if ( !$namespaceData['core'] ) {
 				// Core namespaces are not set with ExtraNamespaces
 				$namespaceVar = $context->msg( 'parentheses',
-					$this->getConfigVar( MainConfigNames::ExtraNamespaces )
+					self::getConfigVar( MainConfigNames::ExtraNamespaces )
 				)->text();
 			}
 
@@ -1418,7 +1418,7 @@ class ManageWikiFormFactoryBuilder {
 		return $mwPermissions;
 	}
 
-	private function getConfigVar( string $name ): string {
+	private static function getConfigVar( string $name ): string {
 		return "wg$name";
 	}
 }
