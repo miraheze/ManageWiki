@@ -154,7 +154,7 @@ class CreateWiki implements
 
 			$lcName = [];
 			$lcEN = [];
-	
+
 			try {
 				$languageCode = $cacheArray['core']['wgLanguageCode'] ?? 'en';
 				$lcName = $this->localisationCache->getItem( $languageCode, 'namespaceNames' );
