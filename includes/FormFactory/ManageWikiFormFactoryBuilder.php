@@ -1275,7 +1275,7 @@ class ManageWikiFormFactoryBuilder {
 			if ( $formData["description-$name"] && (
 				!$messageExists || $descriptionMsg->text() !== $formData["description-$name"]
 			) ) {
-				$mwNamespaces->addMessageFields( "description-$name" );
+				$mwNamespaces->addMessageFields( $id );
 				$messageUpdater->doUpdate(
 					name: "namespaceinfo-description-ns{$id}",
 					content: $formData["description-$name"],
