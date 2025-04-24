@@ -41,8 +41,6 @@
 						.text()
 						.trim();
 
-					const setting = `${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`;
-
 					if (
 						this.type === 'checkbox' &&
 						this.defaultChecked !== undefined &&
@@ -52,6 +50,7 @@
 							this.checked ? 'managewiki-review-enabled' : 'managewiki-review-disabled'
 						);
 
+						const setting = `${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`;
 						const message = mw.message( 'managewiki-review-toggled' ).escaped()
 							.replace( '$1', `<b>${ mw.html.escape( setting ) }</b>` )
 							.replace( '$2', `<i>${ mw.html.escape( stateMsg ) }</i>` );
