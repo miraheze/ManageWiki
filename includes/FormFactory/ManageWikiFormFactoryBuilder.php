@@ -539,7 +539,7 @@ class ManageWikiFormFactoryBuilder {
 				"namespace-$name" => [
 					'type' => 'text',
 					'label' => $context->msg( "namespaces-$name" )->text() . $namespaceVar,
-					'default' => str_replace( '_', ' ', $defaultName ),
+					'default' => $defaultName,
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
 					'section' => $name,
