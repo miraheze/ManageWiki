@@ -33,6 +33,10 @@ return [
 	},
 	'ManageWikiMessageUpdater' => static function ( MediaWikiServices $services ): MessageUpdater {
 		return new MessageUpdater(
+			$services->getDeletePageFactory(),
+			$services->getMessageFormatterFactory()->getTextFormatter(
+				$services->getContentLanguageCode()->toString()
+			),
 			$services->getTitleFactory(),
 			$services->getWikiPageFactory()
 		);
