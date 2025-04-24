@@ -121,6 +121,7 @@
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
 				"CreateWikiDatabaseUtils",
+				"NamespaceInfo",
 				"PermissionManager",
 				"RemoteWikiFactory"
 			]
