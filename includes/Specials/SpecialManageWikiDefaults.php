@@ -122,6 +122,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 				$createDescriptor['group'] = [
 					'type' => 'text',
 					'label-message' => 'managewiki-permissions-create',
+					// https://github.com/wikimedia/mediawiki/blob/b22ee37/sql/tables.json#L942
+					'maxlength' => 255,
 					'validation-callback' => [ $this, 'validateNewGroupName' ],
 					// Groups should typically be lowercase so we do that here.
 					// Display names can be customized using interface messages.
