@@ -343,11 +343,12 @@ class SpecialManageWiki extends SpecialPage {
 			$create['out'] = [
 				'type' => 'text',
 				'label-message' => "managewiki-$module-create",
-				'maxlength' => 255,
 				'required' => true,
 			];
 
 			if ( $module === 'permissions' ) {
+				// https://github.com/wikimedia/mediawiki/blob/b22ee37/sql/tables.json#L942
+				$create['out']['maxlength'] = 255;
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
 				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( trim( $value ) );
@@ -355,6 +356,8 @@ class SpecialManageWiki extends SpecialPage {
 			}
 
 			if ( $module === 'namespaces' ) {
+				// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_namespaces.sql#L4
+				$create['out']['maxlength'] = 128;
 				// Handle namespace validation and normalization
 				$mwNamespaces = new ManageWikiNamespaces( $dbname );
 				$create['out']['filter-callback'] = static fn ( string $value ): string =>
