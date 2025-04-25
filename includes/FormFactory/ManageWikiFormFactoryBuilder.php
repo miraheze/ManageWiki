@@ -1424,18 +1424,26 @@ class ManageWikiFormFactoryBuilder {
 	): string {
 		$requires = [];
 		$language = $context->getLanguage();
+
+		$or = $context->msg( 'managewiki-or' )->text();
+		$space = $context->msg( 'word-separator' )->text();
+
 		foreach ( $config as $require => $data ) {
 			$flat = [];
 			foreach ( (array)$data as $element ) {
 				if ( is_array( $element ) ) {
-					$flat[] = $context->msg( 'parentheses', $language->pipeList( $element ) )->text();
+					$flat[] = $context->msg( 'parentheses',
+						$space . implode(
+							$space . $language->uc( $or ) . $space, $element
+						) . $space
+					)->text();
 					continue;
 				}
 
 				$flat[] = $element;
 			}
 
-			$requires[] = $language->ucfirst( $require ) . ' - ' .
+			$requires[] = $context->msg( 'brackets', $language->ucfirst( $require ) )->text() . $space .
 				$language->commaList( $flat );
 		}
 
