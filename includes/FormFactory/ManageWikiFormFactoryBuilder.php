@@ -664,7 +664,7 @@ class ManageWikiFormFactoryBuilder {
 			);
 		}
 
-		if ( $ceMW && !$formDescriptor['namespace-namespace']['disabled'] ) {
+		if ( $ceMW && !$mwNamespaces->list( $namespaceID )['core'] ) {
 			$craftedNamespaces = [];
 			$canDelete = $mwNamespaces->exists( $namespaceID );
 
