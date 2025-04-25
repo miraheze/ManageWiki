@@ -1435,8 +1435,7 @@ class ManageWikiFormFactoryBuilder {
 				$flat[] = $element;
 			}
 
-			$requires[] = $language->ucfirst( $require ) .
-				$context->msg( 'colon-separator' )->text() .
+			$requires[] = $language->ucfirst( $require ) . ' - '  .
 				$language->commaList( $flat );
 		}
 
