@@ -88,7 +88,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			$content =
 				$this->getHeaderHtml( '' ) .
 				$this->displaySection(
-					array_keys( $this->mFlatFields ),
+					$this->mFieldTree,
 					'',
 					'mw-section-'
 				) .
