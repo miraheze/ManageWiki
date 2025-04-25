@@ -1436,7 +1436,8 @@ class ManageWikiFormFactoryBuilder {
 				if ( is_array( $element ) ) {
 					$flat[] = $context->msg( 'parentheses',
 						$space . ( !is_int( $key ) ? $key . $colon : '' ) . implode(
-							$space . $language->uc( $or ) . $space, $language->emphasize( $element )
+							$space . $language->uc( $or ) . $space,
+							array_map( [ $language, 'emphasize' ], $element )
 						) . $space
 					)->text();
 					continue;
