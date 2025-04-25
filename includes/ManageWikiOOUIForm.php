@@ -84,7 +84,6 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		$header = $this->formatFormHeader();
 
 		if ( $tabPanels === [] ) {
-			return parent::getBody();
 			// No sections: Render the entire form normally
 			$content =
 				$this->getHeaderHtml( '' ) .
@@ -96,8 +95,9 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 				$this->getFooterHtml( '' );
 
 			$form = new PanelLayout( [
-				'framed' => true,
 				'expanded' => false,
+				'padded' => true,
+				'framed' => true,
 				'classes' => [ 'managewiki-tabs-wrapper' ],
 				'content' => new FieldsetLayout( [
 					'classes' => [ 'managewiki-section-fieldset' ],
