@@ -296,17 +296,19 @@ class ManageWikiFormFactoryBuilder {
 			if ( $ext['requires'] ) {
 				$requires = [];
 				foreach ( $ext['requires'] as $require => $data ) {
-					foreach ( (array)$data as &$element ) {
+					$flat = [];
+					foreach ( (array)$data as $element ) {
 						if ( is_array( $element ) ) {
-							$element = $context->msg( 'parentheses',
+							$flat[] = $context->msg( 'parentheses',
 								$language->pipeList( $element )
 							)->text();
+							continue;
 						}
+						$flat[] = $element;
 					}
-					unset( $element );
 
 					$requires[] = $language->ucfirst( $require ) . ' — ' .
-						$language->commaList( (array)$data );
+						$language->commaList( $flat );
 				}
 
 				$help[] = $context->msg( 'managewiki-requires',
