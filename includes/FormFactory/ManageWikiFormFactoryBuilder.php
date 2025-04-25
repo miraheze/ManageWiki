@@ -553,6 +553,8 @@ class ManageWikiFormFactoryBuilder {
 					'type' => 'text',
 					'label' => trim( $context->msg( "namespaces-$name" )->text() . " $namespaceVar" ),
 					'default' => $defaultName,
+					// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_namespaces.sql#L4
+					'maxlength' => 128,
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
 					'section' => $name,
