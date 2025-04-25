@@ -278,17 +278,19 @@ class SpecialManageWiki extends SpecialPage {
 			filtered: $filtered
 		);
 
-		$this->getOutput()->addHTML( new FieldLayout(
-			new SearchInputWidget( [
-				'placeholder' => $this->msg( 'managewiki-search' )->text(),
-			] ),
-			[
-				'classes' => [ 'managewiki-search' ],
-				'label' => $this->msg( 'managewiki-search' )->text(),
-				'invisibleLabel' => true,
-				'infusable' => true,
-			]
-		) );
+		if ( $module !== 'core' ) {
+			$this->getOutput()->addHTML( new FieldLayout(
+				new SearchInputWidget( [
+					'placeholder' => $this->msg( 'managewiki-search' )->text(),
+				] ),
+				[
+					'classes' => [ 'managewiki-search' ],
+					'label' => $this->msg( 'managewiki-search' )->text(),
+					'invisibleLabel' => true,
+					'infusable' => true,
+				]
+			) );
+		}
 
 		$htmlForm->show();
 	}
