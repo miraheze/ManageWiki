@@ -1434,9 +1434,8 @@ class ManageWikiFormFactoryBuilder {
 			foreach ( (array)$data as $key => $element ) {
 				if ( is_array( $element ) ) {
 					$flat[] = $context->msg( 'parentheses',
-						$space . implode(
-							$space . $language->uc( $or ) . $space,
-							( !is_int( $key ) ? $key . $colon : '' )  . $element
+						$space . ( !is_int( $key ) ? $key . $colon : '' ) . implode(
+							$space . $language->uc( $or ) . $space, $element
 						) . $space
 					)->text();
 					continue;
