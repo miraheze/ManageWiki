@@ -1432,6 +1432,7 @@ class ManageWikiFormFactoryBuilder {
 		foreach ( $config as $require => $data ) {
 			$flat = [];
 			foreach ( (array)$data as $key => $element ) {
+				// $key/$colon can be removed here if visibility becomes its own system
 				if ( is_array( $element ) ) {
 					$flat[] = $context->msg( 'parentheses',
 						$space . ( !is_int( $key ) ? $key . $colon : '' ) . implode(
@@ -1441,7 +1442,7 @@ class ManageWikiFormFactoryBuilder {
 					continue;
 				}
 
-				$flat[] = $element;
+				$flat[] = ( !is_int( $key ) ? $key . $colon : '' ) . $element;
 			}
 
 			$requires[] = $context->msg( 'brackets', $language->ucfirst( $require ) )->text() . $space .
