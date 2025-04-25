@@ -1435,7 +1435,7 @@ class ManageWikiFormFactoryBuilder {
 				$flat[] = $element;
 			}
 
-			$requires[] = $language->ucfirst( $require ) . ' - '  .
+			$requires[] = $language->ucfirst( $require ) . ' - ' .
 				$language->commaList( $flat );
 		}
 
