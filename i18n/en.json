@@ -131,6 +131,7 @@
 	"managewiki-namespaces-select-header": "Manage existing namespaces",
 	"managewiki-namespaces-select-info": "Below is a list of all the namespaces that exist on this wiki. Use the dropdown below to select a namespace you wish to manage or view the configuration for.",
 	"managewiki-ns-invalidid": "Namespace IDs must be an even integer to edit through ManageWiki.",
+	"managewiki-or": "or",
 	"managewiki-permissions-addall": "Can add to others",
 	"managewiki-permissions-addself": "Can add to self",
 	"managewiki-permissions-assigned": "The below user rights are currently assigned to this user group.",
