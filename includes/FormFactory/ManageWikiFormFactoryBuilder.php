@@ -1445,8 +1445,7 @@ class ManageWikiFormFactoryBuilder {
 				$flat[] = ( !is_int( $key ) ? $key . $colon : '' ) . $element;
 			}
 
-			$requires[] = $context->msg( 'brackets', $language->ucfirst( $require ) )->text() . $space .
-				$language->commaList( $flat );
+			$requires[] = $language->ucfirst( $require ) . $colon . $language->commaList( $flat );
 		}
 
 		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->escaped();
