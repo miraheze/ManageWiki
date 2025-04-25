@@ -122,12 +122,14 @@ class SpecialManageWikiDefaults extends SpecialPage {
 				$createDescriptor['group'] = [
 					'type' => 'text',
 					'label-message' => 'managewiki-permissions-create',
-					// https://github.com/wikimedia/mediawiki/blob/b22ee37/sql/tables.json#L942
-					'maxlength' => 255,
 					'validation-callback' => [ $this, 'validateNewGroupName' ],
 					// Groups should typically be lowercase so we do that here.
 					// Display names can be customized using interface messages.
 					'filter-callback' => static fn ( string $value ): string => strtolower( trim( $value ) ),
+					// https://github.com/wikimedia/mediawiki/blob/b22ee37/sql/tables.json#L942
+					// We also use 235 rather than 255 to account for the max length of page titles
+					// so that you can edit group interface messages.
+					'maxlength' => 235,
 				];
 
 				$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
