@@ -109,6 +109,8 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
 				'default' => $remoteWiki->getSitename(),
+				// https://github.com/miraheze/CreateWiki/blob/20c2f47/sql/cw_wikis.sql#L3
+				'maxlength' => 128,
 				'disabled' => !$ceMW,
 				'required' => true,
 				'section' => 'main',
