@@ -347,10 +347,8 @@ class SpecialManageWiki extends SpecialPage {
 			];
 
 			if ( $module === 'permissions' ) {
-				// https://github.com/wikimedia/mediawiki/blob/b22ee37/sql/tables.json#L942
-				// We also use 235 rather than 255 to account for the max length of page titles
-				// so that you can edit group interface messages.
-				$create['out']['maxlength'] = 235;
+				// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_permissions.sql#L3
+				$create['out']['maxlength'] = 64;
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
 				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( trim( $value ) );
