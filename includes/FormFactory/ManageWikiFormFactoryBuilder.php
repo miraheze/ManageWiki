@@ -563,7 +563,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label-message' => [ "namespaces-$name", $namespaceVar ],
+					'label-message' => [ "managewiki-namespaces-$name-label", $namespaceVar ],
 					'default' => $defaultName,
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
