@@ -222,6 +222,9 @@ class ManageWikiFormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 			];
 		}
+		foreach ( $formDescriptor as $name => $config ) {
+			unset( $formDescriptor[$name]['section'] );
+		}
 
 		return $formDescriptor;
 	}
