@@ -82,6 +82,37 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			] );
 		}
 
+		$header = $this->formatFormHeader();
+
+		if ( $tabPanels === [] ) {
+			// No sections: Render the entire form normally
+			$content =
+				$this->getHeaderHtml( '' ) .
+				$this->displaySection(
+					array_keys( $this->mFlatFields ),
+					'',
+					'mw-section-'
+				) .
+				$this->getFooterHtml( '' );
+
+			$form = new PanelLayout( [
+				'framed' => true,
+				'expanded' => false,
+				'classes' => [ 'managewiki-tabs-wrapper' ],
+				'content' => new FieldsetLayout( [
+					'classes' => [ 'managewiki-section-fieldset' ],
+					'id' => 'mw-section',
+					'items' => [
+						new Widget( [
+							'content' => new HtmlSnippet( $content ),
+						] ),
+					],
+				] ),
+			] );
+
+			return $header . $form;
+		}
+
 		$indexLayout = new IndexLayout( [
 			'infusable' => true,
 			'expanded' => false,
@@ -90,8 +121,6 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 		] );
 
 		$indexLayout->addTabPanels( $tabPanels );
-
-		$header = $this->formatFormHeader();
 
 		$form = new PanelLayout( [
 			'framed' => true,
