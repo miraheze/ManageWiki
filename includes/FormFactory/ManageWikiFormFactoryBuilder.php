@@ -1427,14 +1427,16 @@ class ManageWikiFormFactoryBuilder {
 
 		$or = $context->msg( 'managewiki-or' )->text();
 		$space = $context->msg( 'word-separator' )->text();
+		$colon = $context->msg( 'colon-separator' )->text();
 
 		foreach ( $config as $require => $data ) {
 			$flat = [];
-			foreach ( (array)$data as $element ) {
+			foreach ( (array)$data as $key => $element ) {
 				if ( is_array( $element ) ) {
 					$flat[] = $context->msg( 'parentheses',
 						$space . implode(
-							$space . $language->uc( $or ) . $space, $element
+							$space . $language->uc( $or ) . $space,
+							( !is_int( $key ) ? $key . $colon : '' )  . $element
 						) . $space
 					)->text();
 					continue;
