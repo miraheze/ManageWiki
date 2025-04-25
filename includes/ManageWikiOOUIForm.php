@@ -9,7 +9,6 @@ use OOUI\FieldsetLayout;
 use OOUI\HtmlSnippet;
 use OOUI\IndexLayout;
 use OOUI\PanelLayout;
-use OOUI\TabPanelLayout;
 use OOUI\Widget;
 
 class ManageWikiOOUIForm extends OOUIHTMLForm {
