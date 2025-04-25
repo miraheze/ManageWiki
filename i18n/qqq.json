@@ -56,7 +56,7 @@
 	"managewiki": "User right to manage a wiki's settings",
 	"managewiki-changes-none": "A message that is shown when people try to save changes without actually making any change",
 	"managewiki-conflicts": "A message that is shown under a setting that conflicts with another. $1 is tbe configured conflict name.",
-	"managewiki-desc": "ManageWiki extension description",
+	"managewiki-desc": "{{desc|name=ManageWiki|url=https://github.com/miraheze/ManageWiki}}",
 	"managewiki-disabled": "Message that indicates that a feature is not yet enabled on a wiki.",
 	"managewiki-error-conflict": "A message that is shown when a setting conflicts with another",
 	"managewiki-error-disallowednamespace": "A message that is shown when someone tries to create a disallowed namespace",
@@ -101,6 +101,5 @@
 	"right-managewiki-permissions": "{{doc-right|managewiki-permissions}}",
 	"right-managewiki-restricted": "{{doc-right|managewiki-restricted}}",
 	"right-managewiki-settings": "{{doc-right|managewiki-settings}}",
-	"right-remotewiki": "{{doc-right|remotewiki}}",
 	"settings-other": "{{Identical|Other}}"
 }
