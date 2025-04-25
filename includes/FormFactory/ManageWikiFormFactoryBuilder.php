@@ -515,17 +515,47 @@ class ManageWikiFormFactoryBuilder {
 				$create .= ' talk';
 			}
 
+			[ $namespaceVar, $defaultName ] = match ( $id ) {
+				NS_PROJECT => [
+					$context->msg( 'parentheses',
+						self::getConfigVar( MainConfigNames::MetaNamespace )
+					)->text(),
+					$config->get( MainConfigNames::MetaNamespace ),
+				],
+				NS_PROJECT_TALK => [
+					$context->msg( 'parentheses',
+						self::getConfigVar( MainConfigNames::MetaNamespaceTalk )
+					)->text(),
+					str_replace(
+						$config->get( MainConfigNames::MetaNamespace ),
+						'$1',
+						$config->get( MainConfigNames::MetaNamespaceTalk )
+					),
+				],
+				default => [
+					'',
+					$namespaceData['name'] ?: $create,
+				],
+			};
+
+			if ( !$namespaceData['core'] ) {
+				// Core namespaces are not set with ExtraNamespaces
+				$namespaceVar = $context->msg( 'parentheses',
+					self::getConfigVar( MainConfigNames::ExtraNamespaces )
+				)->text();
+			}
+
+			$canEditName = !$namespaceData['core'] ||
+				$id === NS_PROJECT || $id === NS_PROJECT_TALK;
+
 			$descriptionMsg = $context->msg( "namespaceinfo-description-ns{$id}" );
 
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label' => $context->msg( "namespaces-$name" )->text() . (
-						// Core namespaces are not set with $wgExtraNamespaces
-						$namespaceData['core'] ? '' : ' ($wgExtraNamespaces)'
-					),
-					'default' => $namespaceData['name'] ?: $create,
-					'disabled' => $namespaceData['core'] || !$ceMW,
+					'label' => trim( $context->msg( "namespaces-$name" )->text() . " $namespaceVar" ),
+					'default' => $defaultName,
+					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
 					'section' => $name,
 				],
@@ -1478,5 +1508,9 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return $mwPermissions;
+	}
+
+	private static function getConfigVar( string $name ): string {
+		return "\$wg$name";
 	}
 }
