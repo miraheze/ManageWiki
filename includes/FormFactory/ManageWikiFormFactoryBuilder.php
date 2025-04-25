@@ -292,28 +292,8 @@ class ManageWikiFormFactoryBuilder {
 				)->escaped() . "\n";
 			}
 
-			$language = $context->getLanguage();
 			if ( $ext['requires'] ) {
-				$requires = [];
-				foreach ( $ext['requires'] as $require => $data ) {
-					$flat = [];
-					foreach ( (array)$data as $element ) {
-						if ( is_array( $element ) ) {
-							$flat[] = $context->msg( 'parentheses',
-								$language->pipeList( $element )
-							)->text();
-							continue;
-						}
-						$flat[] = $element;
-					}
-
-					$requires[] = $language->ucfirst( $require ) . ' — ' .
-						$language->commaList( $flat );
-				}
-
-				$help[] = $context->msg( 'managewiki-requires',
-					$language->listToText( $requires )
-				)->escaped() . "\n";
+				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
 			}
 
 			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
@@ -430,28 +410,9 @@ class ManageWikiFormFactoryBuilder {
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
 
 				$rawMessage = new RawMessage( $set['help'] );
-
-				$help = $msgHelp->exists() ? $msgHelp->parse() : $rawMessage->parse();
-				$language = $context->getLanguage();
+				$help = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
 				if ( $set['requires'] ) {
-					$requires = [];
-					foreach ( $set['requires'] as $require => $data ) {
-						foreach ( (array)$data as &$element ) {
-							if ( is_array( $element ) ) {
-								$element = $context->msg( 'parentheses',
-									$language->pipeList( $element )
-								)->text();
-							}
-						}
-						unset( $element );
-
-						$requires[] = $language->ucfirst( $require ) . ' — ' .
-							$language->commaList( (array)$data );
-					}
-
-					$help .= "\n" . $context->msg( 'managewiki-requires',
-						$language->listToText( $requires )
-					)->escaped();
+					$help .= "\n" . self::buildRequires( $context, $set['requires'] );
 				}
 
 				// Hack to prevent "implicit submission". See T275588 for more
@@ -625,6 +586,7 @@ class ManageWikiFormFactoryBuilder {
 						'right-editsemiprotected' => 'editsemiprotected',
 						'right-editprotected' => 'editprotected',
 					],
+					'options-messages-parse' => true,
 					'disabled' => !$ceMW,
 					'section' => $name,
 				],
@@ -665,28 +627,9 @@ class ManageWikiFormFactoryBuilder {
 					);
 
 					$rawMessage = new RawMessage( $a['help'] );
-
-					$help = $msgHelp->exists() ? $msgHelp->parse() : $rawMessage->parse();
-					$language = $context->getLanguage();
+					$help = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
 					if ( $a['requires'] ) {
-						$requires = [];
-						foreach ( $a['requires'] as $require => $data ) {
-							foreach ( (array)$data as &$element ) {
-								if ( is_array( $element ) ) {
-									$element = $context->msg( 'parentheses',
-										$language->pipeList( $element )
-									)->text();
-								}
-							}
-							unset( $element );
-
-							$requires[] = $language->ucfirst( $require ) . ' — ' .
-								$language->commaList( (array)$data );
-						}
-
-						$help .= "\n" . $context->msg( 'managewiki-requires',
-							$language->listToText( $requires )
-						)->escaped();
+						$help .= "\n" . self::buildRequires( $context, $a['requires'] );
 					}
 
 					$formDescriptor["$key-$name"] = [
@@ -859,9 +802,8 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
-		$language = $context->getLanguage();
 		$rowsBuilt = [];
-
+		$language = $context->getLanguage();
 		foreach ( $groupData['allGroups'] as $groupName ) {
 			$lowerCaseGroupName = $language->lc( $groupName );
 			$rowsBuilt[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
@@ -1478,6 +1420,31 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return $mwPermissions;
+	}
+
+	private static function buildRequires(
+		IContextSource $context,
+		array $config
+	): string {
+		$requires = [];
+		$language = $context->getLanguage();
+		foreach ( $config as $require => $data ) {
+			$flat = [];
+			foreach ( (array)$data as $element ) {
+				if ( is_array( $element ) ) {
+					$flat[] = $context->msg( 'parentheses', $language->pipeList( $element ) )->text();
+					continue;
+				}
+
+				$flat[] = $element;
+			}
+
+			$requires[] = $language->ucfirst( $require ) .
+				$context->msg( 'colon-separator' )->text() .
+				$language->commaList( $flat );
+		}
+
+		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->escaped();
 	}
 
 	private static function getConfigName( string $name ): string {
