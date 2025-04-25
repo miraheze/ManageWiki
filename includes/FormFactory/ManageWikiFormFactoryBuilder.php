@@ -661,7 +661,7 @@ class ManageWikiFormFactoryBuilder {
 						$namespaceData['additional'][$key] ?? null, '',
 						$a['overridedefault'], $a['type']
 					);
-					
+
 					$rawMessage = new RawMessage( $a['help'] );
 
 					$help = $msgHelp->exists() ? $msgHelp->parse() : $rawMessage->parse();
