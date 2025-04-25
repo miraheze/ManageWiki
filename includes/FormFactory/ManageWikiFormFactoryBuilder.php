@@ -561,7 +561,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 				"description-$name" => [
 					'type' => 'text',
-					'label' => $context->msg( 'namespaces-description' )->text(),
+					'label-message' => 'namespaces-description',
 					'default' => $descriptionMsg->exists() ? $descriptionMsg->text() : '',
 					'disabled' => !$ceMW,
 					'section' => $name,
