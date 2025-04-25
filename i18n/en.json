@@ -220,6 +220,5 @@
 	"right-managewiki-permissions": "Create, delete, and manage user groups on this wiki",
 	"right-managewiki-restricted": "Manage restricted wiki settings",
 	"right-managewiki-settings": "Manage advanced settings for this wiki",
-	"right-remotewiki": "Remotely manage a wiki's core settings",
 	"settings-other": "Other"
 }
