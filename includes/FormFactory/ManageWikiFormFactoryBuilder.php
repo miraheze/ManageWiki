@@ -8,6 +8,7 @@ use ManualLogEntry;
 use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Language\RawMessage;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
@@ -285,28 +286,32 @@ class ManageWikiFormFactoryBuilder {
 			) : true;
 
 			$help = [];
-			$conflictLabel = $context->msg( 'managewiki-conflicts' )->escaped();
-			$requiresLabel = $context->msg( 'managewiki-requires' )->escaped();
-
 			if ( $ext['conflicts'] ) {
-				$help[] = "$conflictLabel {$ext['conflicts']}<br />";
+				$help[] = $context->msg( 'managewiki-conflicts',
+					$ext['conflicts']
+				)->escaped() . "\n";
 			}
 
+			$language = $context->getLanguage();
 			if ( $ext['requires'] ) {
 				$requires = [];
 				foreach ( $ext['requires'] as $require => $data ) {
-					if ( is_array( $data ) ) {
-						foreach ( $data as $index => $element ) {
-							if ( is_array( $element ) ) {
-								$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
-							}
+					foreach ( (array)$data as &$element ) {
+						if ( is_array( $element ) ) {
+							$element = $context->msg( 'parentheses',
+								$language->pipeList( $element )
+							)->text();
 						}
 					}
+					unset( $element );
 
-					$requires[] = ucfirst( $require ) . ' - ' . ( is_array( $data ) ? implode( ', ', $data ) : $data );
+					$requires[] = $language->ucfirst( $require ) . ' — ' .
+						$language->commaList( (array)$data );
 				}
 
-				$help[] = "$requiresLabel: " . implode( ' & ', $requires ) . '<br />';
+				$help[] = $context->msg( 'managewiki-requires',
+					$language->listToText( $requires )
+				)->escaped() . "\n";
 			}
 
 			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
@@ -336,12 +341,13 @@ class ManageWikiFormFactoryBuilder {
 			$help[] = $extDescription ?? $descriptionFallback ?? $description;
 
 			if ( $ext['help'] ?? false ) {
-				$help[] = "<br />{$ext['help']}";
+				$rawMessage = new RawMessage( $ext['help'] );
+				$help[] = "\n" . $rawMessage->parse();
 			}
 
 			if ( $hasSettings && in_array( $name, $extList, true ) ) {
 				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
-				$help[] = '<br />' . $linkRenderer->makeExternalLink(
+				$help[] = "\n" . $linkRenderer->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "settings/$name" )->getFullURL(),
 					$context->msg( 'managewiki-extension-settings' ),
 					SpecialPage::getTitleFor( 'ManageWiki', 'settings' )
@@ -357,7 +363,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
-				'help' => implode( ' ', $help ),
+				'help' => nl2br( implode( ' ', $help ) ),
 				'section' => $ext['section'],
 			];
 		}
@@ -421,25 +427,29 @@ class ManageWikiFormFactoryBuilder {
 
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
 
-				$help = $msgHelp->exists() ? $msgHelp->escaped() : $set['help'];
+				$rawMessage = new RawMessage( $set['help'] );
+
+				$help = $msgHelp->exists() ? $msgHelp->parse() : $rawMessage->parse();
+				$language = $context->getLanguage();
 				if ( $set['requires'] ) {
 					$requires = [];
-					$requiresLabel = $context->msg( 'managewiki-requires' )->escaped();
-
 					foreach ( $set['requires'] as $require => $data ) {
-						if ( is_array( $data ) ) {
-							foreach ( $data as $index => $element ) {
-								if ( is_array( $element ) ) {
-									$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
-								}
+						foreach ( (array)$data as &$element ) {
+							if ( is_array( $element ) ) {
+								$element = $context->msg( 'parentheses',
+									$language->pipeList( $element )
+								)->text();
 							}
 						}
+						unset( $element );
 
-						$requires[] = ucfirst( $require ) . ' - ' .
-							( is_array( $data ) ? implode( ', ', $data ) : $data );
+						$requires[] = $language->ucfirst( $require ) . ' — ' .
+							$language->commaList( (array)$data );
 					}
 
-					$help .= "<br />$requiresLabel: " . implode( ' & ', $requires );
+					$help .= "\n" . $context->msg( 'managewiki-requires',
+						$language->listToText( $requires )
+					)->escaped();
 				}
 
 				// Hack to prevent "implicit submission". See T275588 for more
@@ -460,7 +470,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor["set-$name"] = [
 					'label' => ( $msgName->exists() ? $msgName->text() : $set['name'] ) . $varName,
 					'disabled' => $disabled,
-					'help' => $help,
+					'help' => nl2br( $help ),
 					'cssclass' => 'managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
@@ -551,7 +561,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
-					'label' => trim( $context->msg( "namespaces-$name" )->text() . " $namespaceVar" ),
+					'label-message' => [ "namespaces-$name", $namespaceVar ],
 					'default' => $defaultName,
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
@@ -559,27 +569,39 @@ class ManageWikiFormFactoryBuilder {
 				],
 				"content-$name" => [
 					'type' => 'check',
-					'label' => $context->msg( 'namespaces-content' )->text() . ' ($wgContentNamespaces)',
+					'label-message' => [
+						'namespaces-content',
+						self::getConfigVar( MainConfigNames::ContentNamespaces ),
+					],
 					'default' => $namespaceData['content'],
 					'disabled' => !$ceMW,
 					'section' => $name,
 				],
 				"subpages-$name" => [
 					'type' => 'check',
-					'label' => $context->msg( 'namespaces-subpages' )->text() . ' ($wgNamespacesWithSubpages)',
+					'label-message' => [
+						'namespaces-subpages',
+						self::getConfigVar( MainConfigNames::NamespacesWithSubpages ),
+					],
 					'default' => $namespaceData['subpages'],
 					'disabled' => !$ceMW,
 					'section' => $name,
 				],
 				"search-$name" => [
 					'type' => 'check',
-					'label' => $context->msg( 'namespaces-search' )->text() . ' ($wgNamespacesToBeSearchedDefault)',
+					'label-message' => [
+						'namespaces-search',
+						self::getConfigVar( MainConfigNames::NamespacesToBeSearchedDefault ),
+					],
 					'default' => $namespaceData['searchable'],
 					'disabled' => !$ceMW,
 					'section' => $name,
 				],
 				"contentmodel-$name" => [
-					'label' => $context->msg( 'namespaces-contentmodel' )->text() . ' ($wgNamespaceContentModels)',
+					'label-message' => [
+						'namespaces-contentmodel',
+						self::getConfigVar( MainConfigNames::NamespaceContentModels ),
+					],
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
@@ -589,14 +611,17 @@ class ManageWikiFormFactoryBuilder {
 				),
 				"protection-$name" => [
 					'type' => 'combobox',
-					'label' => $context->msg( 'namespaces-protection' )->text() . ' ($wgNamespaceProtection)',
+					'label-message' => [
+						'namespaces-protection',
+						self::getConfigVar( MainConfigNames::NamespaceProtection ),
+					],
 					'cssclass' => 'managewiki-infuse',
 					'default' => $namespaceData['protection'],
-					'options' => [
-						'None' => '',
-						'editinterface' => 'editinterface',
-						'editsemiprotected' => 'editsemiprotected',
-						'editprotected' => 'editprotected',
+					'options-messages' => [
+						'rightsnone' => '',
+						'right-editinterface' => 'editinterface',
+						'right-editsemiprotected' => 'editsemiprotected',
+						'right-editprotected' => 'editprotected',
 					],
 					'disabled' => !$ceMW,
 					'section' => $name,
@@ -636,31 +661,35 @@ class ManageWikiFormFactoryBuilder {
 						$namespaceData['additional'][$key] ?? null, '',
 						$a['overridedefault'], $a['type']
 					);
+					
+					$rawMessage = new RawMessage( $a['help'] );
 
-					$help = $msgHelp->exists() ? $msgHelp->escaped() : $a['help'];
+					$help = $msgHelp->exists() ? $msgHelp->parse() : $rawMessage->parse();
+					$language = $context->getLanguage();
 					if ( $a['requires'] ) {
 						$requires = [];
-						$requiresLabel = $context->msg( 'managewiki-requires' )->escaped();
-
 						foreach ( $a['requires'] as $require => $data ) {
-							if ( is_array( $data ) ) {
-								foreach ( $data as $index => $element ) {
-									if ( is_array( $element ) ) {
-										$data[$index] = '( ' . implode( ' OR ', $element ) . ' )';
-									}
+							foreach ( (array)$data as &$element ) {
+								if ( is_array( $element ) ) {
+									$element = $context->msg( 'parentheses',
+										$language->pipeList( $element )
+									)->text();
 								}
 							}
+							unset( $element );
 
-							$requires[] = ucfirst( $require ) . ' - ' .
-								( is_array( $data ) ? implode( ', ', $data ) : $data );
+							$requires[] = $language->ucfirst( $require ) . ' — ' .
+								$language->commaList( (array)$data );
 						}
 
-						$help .= "<br />{$requiresLabel}: " . implode( ' & ', $requires );
+						$help .= "\n" . $context->msg( 'managewiki-requires',
+							$language->listToText( $requires )
+						)->escaped();
 					}
 
 					$formDescriptor["$key-$name"] = [
 						'label' => ( $msgName->exists() ? $msgName->text() : $a['name'] ) . " (\${$key})",
-						'help' => $help,
+						'help' => nl2br( $help ),
 						'cssclass' => 'managewiki-infuse',
 						'disabled' => $disabled,
 						'section' => $name,
@@ -677,7 +706,10 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			$formDescriptor["aliases-$name"] = [
-				'label' => $context->msg( 'namespaces-aliases' )->text() . ' ($wgNamespaceAliases)',
+				'label-message' => [
+					'namespaces-aliases',
+					self::getConfigVar( MainConfigNames::NamespaceAliases ),
+				],
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
@@ -742,10 +774,10 @@ class ManageWikiFormFactoryBuilder {
 		$groupData = $mwPermissions->list( $group );
 
 		$matrixConstruct = [
-			'wgAddGroups' => $groupData['addgroups'],
-			'wgRemoveGroups' => $groupData['removegroups'],
-			'wgGroupsAddToSelf' => $groupData['addself'],
-			'wgGroupsRemoveFromSelf' => $groupData['removeself'],
+			self::getConfigName( MainConfigNames::AddGroups ) => $groupData['addgroups'],
+			self::getConfigName( MainConfigNames::RemoveGroups ) => $groupData['removegroups'],
+			self::getConfigName( MainConfigNames::GroupsAddToSelf ) => $groupData['addself'],
+			self::getConfigName( MainConfigNames::GroupsRemoveFromSelf ) => $groupData['removeself'],
 		];
 
 		$userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
@@ -829,17 +861,21 @@ class ManageWikiFormFactoryBuilder {
 		$rowsBuilt = [];
 
 		foreach ( $groupData['allGroups'] as $groupName ) {
-			$lowerCaseGroupName = strtolower( $groupName );
+			$lowerCaseGroupName = $language->lc( $groupName );
 			$rowsBuilt[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 		}
 
 		$formDescriptor['group-matrix'] = [
 			'type' => 'checkmatrix',
 			'columns' => [
-				$context->msg( 'managewiki-permissions-addall' )->escaped() => 'wgAddGroups',
-				$context->msg( 'managewiki-permissions-removeall' )->escaped() => 'wgRemoveGroups',
-				$context->msg( 'managewiki-permissions-addself' )->escaped() => 'wgGroupsAddToSelf',
-				$context->msg( 'managewiki-permissions-removeself' )->escaped() => 'wgGroupsRemoveFromSelf',
+				$context->msg( 'managewiki-permissions-addall' )->escaped() =>
+					self::getConfigName( MainConfigNames::AddGroups ),
+				$context->msg( 'managewiki-permissions-removeall' )->escaped() =>
+					self::getConfigName( MainConfigNames::RemoveGroups ),
+				$context->msg( 'managewiki-permissions-addself' )->escaped() =>
+					self::getConfigName( MainConfigNames::GroupsAddToSelf ),
+				$context->msg( 'managewiki-permissions-removeself' )->escaped() =>
+					self::getConfigName( MainConfigNames::GroupsRemoveFromSelf ),
 			],
 			'rows' => $rowsBuilt,
 			'section' => 'group',
@@ -1350,17 +1386,41 @@ class ManageWikiFormFactoryBuilder {
 		$newMatrix = ManageWiki::handleMatrix( $formData['group-matrix'], 'phparray' );
 
 		$matrixNew = [
-			'addgroups' => array_diff( $newMatrix['wgAddGroups'] ?? [], $groupData['addgroups'] ),
-			'removegroups' => array_diff( $newMatrix['wgRemoveGroups'] ?? [], $groupData['removegroups'] ),
-			'addself' => array_diff( $newMatrix['wgGroupsAddToSelf'] ?? [], $groupData['addself'] ),
-			'removeself' => array_diff( $newMatrix['wgGroupsRemoveFromSelf'] ?? [], $groupData['removeself'] ),
+			'addgroups' => array_diff(
+				$newMatrix[self::getConfigName( MainConfigNames::AddGroups )] ?? [],
+				$groupData['addgroups']
+			),
+			'removegroups' => array_diff(
+				$newMatrix[self::getConfigName( MainConfigNames::RemoveGroups )] ?? [],
+				$groupData['removegroups']
+			),
+			'addself' => array_diff(
+				$newMatrix[self::getConfigName( MainConfigNames::GroupsAddToSelf )] ?? [],
+				$groupData['addself']
+			),
+			'removeself' => array_diff(
+				$newMatrix[self::getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? [],
+				$groupData['removeself']
+			),
 		];
 
 		$matrixOld = [
-			'addgroups' => array_diff( $groupData['addgroups'], $newMatrix['wgAddGroups'] ?? [] ),
-			'removegroups' => array_diff( $groupData['removegroups'], $newMatrix['wgRemoveGroups'] ?? [] ),
-			'addself' => array_diff( $groupData['addself'], $newMatrix['wgGroupsAddToSelf'] ?? [] ),
-			'removeself' => array_diff( $groupData['removeself'], $newMatrix['wgGroupsRemoveFromSelf'] ?? [] ),
+			'addgroups' => array_diff(
+				$groupData['addgroups'],
+				$newMatrix[self::getConfigName( MainConfigNames::AddGroups )] ?? []
+			),
+			'removegroups' => array_diff(
+				$groupData['removegroups'],
+				$newMatrix[self::getConfigName( MainConfigNames::RemoveGroups )] ?? []
+			),
+			'addself' => array_diff(
+				$groupData['addself'],
+				$newMatrix[self::getConfigName( MainConfigNames::GroupsAddToSelf )] ?? []
+			),
+			'removeself' => array_diff(
+				$groupData['removeself'],
+				$newMatrix[self::getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? []
+			),
 		];
 
 		foreach ( $matrixNew as $type => $array ) {
@@ -1416,6 +1476,10 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return $mwPermissions;
+	}
+
+	private static function getConfigName( string $name ): string {
+		return "wg$name";
 	}
 
 	private static function getConfigVar( string $name ): string {
