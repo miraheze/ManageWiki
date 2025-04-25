@@ -46,7 +46,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 	 */
 	public function getBody() {
 		$tabPanels = [];
-		/*foreach ( $this->mFieldTree as $key => $val ) {
+		foreach ( $this->mFieldTree as $key => $val ) {
 			if ( !is_array( $val ) ) {
 				wfDebug( __METHOD__ . " encountered a field not attached to a section: '$key'" );
 				continue;
@@ -79,7 +79,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 				'expanded' => false,
 				'framed' => true,
 			] );
-		} */
+		}
 
 		$header = $this->formatFormHeader();
 
