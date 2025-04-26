@@ -296,9 +296,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			if ( $ext['conflicts'] ) {
-				$help[] = $context->msg( 'managewiki-conflicts',
-					$context->getLanguage()->emphasize( $ext['conflicts'] )
-				)->parse() . "\n";
+				$help[] = $context->msg( 'managewiki-conflicts', $ext['conflicts'] )->parse() . "\n";
 			}
 
 			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
@@ -1481,9 +1479,7 @@ class ManageWikiFormFactoryBuilder {
 			$requires[] = $language->ucfirst( $require ) . $colon . $language->commaList( $flat );
 		}
 
-		return $context->msg( 'managewiki-requires',
-			$language->emphasize( $language->listToText( $requires ) )
-		)->parse();
+		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
 	}
 
 	private static function getConfigName( string $name ): string {
