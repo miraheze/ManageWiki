@@ -161,7 +161,7 @@
 	"managewiki-permissions-select-info": "Below is a list of all the groups that exist on this wiki. Use the dropdown below to select a group you wish to manage or view the configuration for.",
 	"managewiki-permissions-unassigned": "The user rights below are currently not assigned to this user group:",
 	"managewiki-placeholder-reason": "Reason for this change...",
-	"managewiki-requires": "<strong>[Requires]</strong> <em>$1</em>",
+	"managewiki-requires": "<em><strong>[Requires]</strong> $1</em>",
 	"managewiki-requires-or": "OR",
 	"managewiki-review": "Review",
 	"managewiki-review-changed": "<strong>$1 ($2)</strong> was changed from <em>$3</em> to <em>$4</em>",
