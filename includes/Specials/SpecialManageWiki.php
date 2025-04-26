@@ -237,7 +237,7 @@ class SpecialManageWiki extends SpecialPage {
 			$groups = array_keys( $mwPermissions->list( group: null ) );
 
 			foreach ( $groups as $group ) {
-				$lowerCaseGroupName = strtolower( $group );
+				$lowerCaseGroupName = $language->lc( $group );
 				$options[$language->getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
@@ -347,10 +347,11 @@ class SpecialManageWiki extends SpecialPage {
 				'required' => true,
 			];
 
+			$language = $this->getLanguage();
 			if ( $module === 'permissions' ) {
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
-				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( trim( $value ) );
+				$create['out']['filter-callback'] = static fn ( string $value ): string => $language->lc( trim( $value ) );
 				$create['out']['validation-callback'] = [ $this, 'validateNewGroupName' ];
 			}
 
@@ -358,14 +359,14 @@ class SpecialManageWiki extends SpecialPage {
 				// Handle namespace validation and normalization
 				$mwNamespaces = new ManageWikiNamespaces( $dbname );
 				$create['out']['filter-callback'] = static fn ( string $value ): string =>
-					ucfirst( trim( trim( $value ), '_:' ) );
+					$language->ucfirst( trim( trim( $value ), '_:' ) );
 
 				$create['out']['validation-callback'] = function ( string $value ) use ( $mwNamespaces ): bool|Message {
-					$disallowed = array_map( 'strtolower',
+					$disallowed = array_map( [ $language, 'lc' ],
 						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
 					);
 
-					if ( in_array( strtolower( $value ), $disallowed, true ) ) {
+					if ( in_array( $language->lc( $value ), $disallowed, true ) ) {
 						return $this->msg( 'managewiki-error-disallowednamespace', $value );
 					}
 
