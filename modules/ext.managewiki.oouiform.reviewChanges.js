@@ -30,10 +30,6 @@
 				const $inputs = $( '#managewiki-form :input[name]' )
 					.not( '#managewiki-submit-reason :input[name]' );
 
-				const space = mw.msg( 'word-separator' );
-				const userLang = mw.config.get( 'wgUserLanguage' ) || '';
-				const isJa = userLang.startsWith( 'ja' );
-
 				$inputs.each( function () {
 					const name = this.name
 						.replace( 'wp', '' )
