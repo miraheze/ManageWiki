@@ -288,8 +288,8 @@ class ManageWikiFormFactoryBuilder {
 
 			if ( $ext['conflicts'] ) {
 				$help[] = $context->msg( 'managewiki-conflicts',
-					$ext['conflicts']
-				)->escaped() . "\n";
+					$context->getLanguage()->emphasize( $ext['conflicts'] )
+				)->parse() . "\n";
 			}
 
 			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
