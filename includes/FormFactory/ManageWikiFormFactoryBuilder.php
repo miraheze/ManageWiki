@@ -664,7 +664,7 @@ class ManageWikiFormFactoryBuilder {
 						'label-message' => [
 							'managewiki-setting-label',
 							$msgName->exists() ? $msgName->text() : $a['name'],
-							$context->msg( 'parentheses', $key ),
+							$context->msg( 'parentheses', "\$$key" ),
 						],
 						'help' => nl2br( implode( ' ', $help ) ),
 						'cssclass' => 'managewiki-infuse',
