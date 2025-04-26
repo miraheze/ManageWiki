@@ -30,6 +30,10 @@
 				const $inputs = $( '#managewiki-form :input[name]' )
 					.not( '#managewiki-submit-reason :input[name]' );
 
+				const space = mw.msg( 'word-separator' );
+				const userLang = mw.config.get( 'wgUserLanguage' ) || '';
+				const isJa = userLang.startsWith( 'ja' );
+
 				$inputs.each( function () {
 					const name = this.name
 						.replace( 'wp', '' )
@@ -50,10 +54,15 @@
 							this.checked ? 'managewiki-review-enabled' : 'managewiki-review-disabled'
 						);
 
-						const setting = `${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`;
+						const setting = name.replace( '[]', mw.msg( 'brackets', this.value ) ) +
+							space + mw.msg( 'parentheses', label );
+
 						const message = mw.message( 'managewiki-review-toggled' ).escaped()
 							.replace( '$1', `<b>${ mw.html.escape( setting ) }</b>` )
-							.replace( '$2', `<i>${ mw.html.escape( stateMsg ) }</i>` );
+							.replace( '$2', isJa
+								 ? mw.html.escape( stateMsg )
+								 : `<em>${ mw.html.escape( stateMsg ) }</em>`
+								);
 
 						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					} else if (
@@ -64,9 +73,15 @@
 						const newVal = this.value || mw.msg( 'managewiki-review-none' );
 
 						const message = mw.message( 'managewiki-review-changed' ).escaped()
-							.replace( '$1', `<b>${ mw.html.escape( `${ name } (${ label })` ) }</b>` )
-							.replace( '$2', `<i>${ mw.html.escape( oldVal ) }</i>` )
-							.replace( '$3', `<i>${ mw.html.escape( newVal ) }</i>` );
+							.replace( '$1', `<b>${ mw.html.escape( `${ name }${ space }${ mw.msg( 'parentheses', label ) }` ) }</b>` )
+							.replace( '$2', isJa
+								 ? mw.html.escape( oldVal )
+								 : `<em>${ mw.html.escape( oldVal ) }</em>`
+								)
+							.replace( '$3', isJa
+								 ? mw.html.escape( newVal )
+								 : `<em>${ mw.html.escape( newVal ) }</em>`
+								);
 
 						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					}
