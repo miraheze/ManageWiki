@@ -85,6 +85,7 @@ class ManageWikiFormFactoryBuilder {
 			'type' => 'text',
 			'default' => $dbname,
 			'disabled' => true,
+			'section' => 'main',
 		];
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
@@ -99,6 +100,7 @@ class ManageWikiFormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => "managewiki-label-{$mwAction}wiki",
 					'default' => false,
+					'section' => 'main',
 				];
 			}
 		}
@@ -110,6 +112,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $remoteWiki->getSitename(),
 				'disabled' => !$ceMW,
 				'required' => true,
+				'section' => 'main',
 			],
 			'language' => [
 				'label-message' => 'managewiki-label-language',
@@ -118,6 +121,7 @@ class ManageWikiFormFactoryBuilder {
 				'disabled' => !$ceMW,
 				'required' => true,
 				'cssclass' => 'managewiki-infuse',
+				'section' => 'main',
 			],
 		];
 
@@ -179,6 +183,7 @@ class ManageWikiFormFactoryBuilder {
 					'default' => $data['default'],
 					'disabled' => $data['access'],
 					'cssclass' => 'managewiki-infuse',
+					'section' => 'main',
 				];
 
 				if ( $data['hide-if'] ?? false ) {
@@ -199,6 +204,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $remoteWiki->getCategory(),
 				'disabled' => !$ceMW,
 				'cssclass' => 'managewiki-infuse',
+				'section' => 'main',
 			];
 		}
 
@@ -220,10 +226,8 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $remoteWiki->getDBCluster(),
 				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 				'cssclass' => 'managewiki-infuse',
+				'section' => 'main',
 			];
-		}
-		foreach ( $formDescriptor as $name => $config ) {
-			unset( $formDescriptor[$name]['section'] );
 		}
 
 		return $formDescriptor;
