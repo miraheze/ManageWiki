@@ -59,10 +59,10 @@
 
 						const message = mw.message( 'managewiki-review-toggled' ).escaped()
 							.replace( '$1', `<b>${ mw.html.escape( setting ) }</b>` )
-							.replace( '$2', isJa
-								 ? mw.html.escape( stateMsg )
-								 : `<em>${ mw.html.escape( stateMsg ) }</em>`
-								);
+							.replace( '$2', isJa ?
+								mw.html.escape( stateMsg ) :
+								`<em>${ mw.html.escape( stateMsg ) }</em>`
+							);
 
 						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					} else if (
@@ -74,14 +74,14 @@
 
 						const message = mw.message( 'managewiki-review-changed' ).escaped()
 							.replace( '$1', `<b>${ mw.html.escape( name + space + mw.msg( 'parentheses', label ) ) }</b>` )
-							.replace( '$2', isJa
-								 ? mw.html.escape( oldVal )
-								 : `<em>${ mw.html.escape( oldVal ) }</em>`
-								)
-							.replace( '$3', isJa
-								 ? mw.html.escape( newVal )
-								 : `<em>${ mw.html.escape( newVal ) }</em>`
-								);
+							.replace( '$2', isJa ?
+								mw.html.escape( oldVal ) :
+								`<em>${ mw.html.escape( oldVal ) }</em>`
+							)
+							.replace( '$3', isJa ?
+								mw.html.escape( newVal ) :
+								`<em>${ mw.html.escape( newVal ) }</em>`
+							);
 
 						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					}
