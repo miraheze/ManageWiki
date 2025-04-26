@@ -223,9 +223,7 @@
 				"managewiki-review-toggled",
 				"managewiki-save",
 				"managewiki-search-noresults",
-				"managewiki-warning-changes",
-				"parentheses",
-				"word-separator"
+				"managewiki-warning-changes"
 			],
 			"dependencies": [
 				"mediawiki.confirmCloseWindow",
