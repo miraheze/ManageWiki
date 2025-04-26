@@ -445,7 +445,7 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				$space = $context->msg( 'word-separator' )->text();
-				$varName = $space . $context->msg( 'parentheses', "\${$name}" );
+				$varName = $context->msg( 'parentheses', "\${$name}" );
 				if ( isset( $set['associativeKey'] ) ) {
 					$varName = $context->msg( 'parentheses',
 						"\${$name}['{$set['associativeKey']}']"
