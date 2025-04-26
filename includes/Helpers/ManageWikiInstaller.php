@@ -5,7 +5,6 @@ namespace Miraheze\ManageWiki\Helpers;
 use Exception;
 use JobSpecification;
 use MediaWiki\Logger\LoggerFactory;
-use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
@@ -25,9 +24,6 @@ class ManageWikiInstaller {
 			switch ( $action ) {
 				case 'sql':
 					$stepResponse['sql'] = self::sql( $dbname, $data );
-					break;
-				case 'files':
-					$stepResponse['files'] = self::files( $dbname, $data );
 					break;
 				case 'permissions':
 					$stepResponse['permissions'] = self::permissions( $dbname, $data, $install );
@@ -66,35 +62,6 @@ class ManageWikiInstaller {
 						'table' => $table,
 					] );
 
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
-
-	private static function files( string $dbname, array $data ): bool {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$baseloc = $config->get( MainConfigNames::UploadDirectory ) . $dbname;
-
-		foreach ( $data as $location => $source ) {
-			if ( str_ends_with( $location, '/' ) ) {
-				if ( $source === true ) {
-					if ( !is_dir( $baseloc . $location ) && !mkdir( $baseloc . $location ) ) {
-						return false;
-					}
-				} else {
-					$files = array_diff( scandir( $source ), [ '.', '..' ] );
-
-					foreach ( $files as $file ) {
-						if ( !copy( $source . $file, $baseloc . $location . $file ) ) {
-							return false;
-						}
-					}
-				}
-			} else {
-				if ( !copy( $source, $baseloc . $location ) ) {
 					return false;
 				}
 			}
