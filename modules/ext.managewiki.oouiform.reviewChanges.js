@@ -46,11 +46,9 @@
 						this.defaultChecked !== undefined &&
 						this.defaultChecked !== this.checked
 					) {
-						const stateMsg = mw.msg(
-							this.checked ? 'managewiki-review-enabled' : 'managewiki-review-disabled'
-						);
-
 						const setting = name.replace( '[]', mw.msg( 'brackets', this.value ) );
+						const stateMsg = mw.msg( `managewiki-review-${ this.checked ? 'enabled' : 'disabled' }` );
+
 						const message = mw.message( 'managewiki-review-toggled', setting, label, stateMsg ).parse();
 						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					} else if (
