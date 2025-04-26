@@ -47,17 +47,17 @@ class ManageWikiFormFactoryBuilder {
 				break;
 			case 'extensions':
 				$formDescriptor = self::buildDescriptorExtensions(
-					$dbname, $ceMW, $context, $remoteWiki, $config
+					$dbname, $ceMW, $context, $config
 				);
 				break;
 			case 'settings':
 				$formDescriptor = self::buildDescriptorSettings(
-					$dbname, $ceMW, $context, $remoteWiki, $config, $filtered
+					$dbname, $ceMW, $context, $config, $filtered
 				);
 				break;
 			case 'namespaces':
 				$formDescriptor = self::buildDescriptorNamespaces(
-					$dbname, $ceMW, $context, $special, $remoteWiki, $config
+					$dbname, $ceMW, $context, $special, $config
 				);
 				break;
 			case 'permissions':
@@ -243,7 +243,6 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
 		Config $config
 	): array {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
@@ -287,12 +286,10 @@ class ManageWikiFormFactoryBuilder {
 
 			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
 
-			$mwRequirements = $ext['requires'] ? ManageWikiRequirements::process(
-				$ext['requires'], $extList, false, $remoteWiki
-			) : true;
-
 			$help = [];
+			$mwRequirements = true;
 			if ( $ext['requires'] ) {
+				$mwRequirements = ManageWikiRequirements::process( $ext['requires'], $extList );
 				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
 			}
 
@@ -374,7 +371,6 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
 		Config $config,
 		string $filtered
 	): array {
@@ -406,12 +402,14 @@ class ManageWikiFormFactoryBuilder {
 				$mwRequirements = true;
 			} else {
 				$mwRequirements = $set['requires'] ?
-					ManageWikiRequirements::process( $set['requires'], $extList, false, $remoteWiki ) : true;
+					ManageWikiRequirements::process( $set['requires'], $extList ) : true;
 			}
 
-			$add = ( isset( $set['requires']['visibility'] ) ? $mwRequirements : true ) &&
-				( (bool)( $set['global'] ?? false ) || in_array( $set['from'], $extList, true ) );
+			$hasVisibilityRequirement = isset( $set['requires']['visibility'] );
+			$isGlobal = $set['global'] ?? false;
+			$isInExtList = in_array( $set['from'], $extList, true );
 
+			$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isGlobal || $isInExtList );
 			$disabled = $ceMW ? !$mwRequirements : true;
 
 			$msgName = $context->msg( "managewiki-setting-$name-name" );
@@ -472,7 +470,6 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		string $special,
-		RemoteWikiFactory $remoteWiki,
 		Config $config
 	): array {
 		$mwNamespaces = new ManageWikiNamespaces( $dbname );
@@ -617,9 +614,8 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
-				$mwRequirements = $a['requires'] ? ManageWikiRequirements::process(
-					$a['requires'], $extList, false, $remoteWiki
-				) : true;
+				$mwRequirements = $a['requires'] ?
+					ManageWikiRequirements::process( $a['requires'], $extList ) : true;
 
 				$hasVisibilityRequirement = isset( $a['requires']['visibility'] );
 				$isFromMediaWiki = $a['from'] === 'mediawiki';
@@ -979,7 +975,7 @@ class ManageWikiFormFactoryBuilder {
 				$mwReturn = self::submissionExtensions( $formData, $dbname, $config );
 				break;
 			case 'settings':
-				$mwReturn = self::submissionSettings( $formData, $dbname, $filtered, $context, $remoteWiki, $config );
+				$mwReturn = self::submissionSettings( $formData, $dbname, $filtered, $context, $config );
 				break;
 			case 'namespaces':
 				$mwReturn = self::submissionNamespaces( $formData, $dbname, $special, $config );
@@ -1135,8 +1131,8 @@ class ManageWikiFormFactoryBuilder {
 		Config $config
 	): ManageWikiExtensions {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
-		$newExtList = [];
 
+		$newExtList = [];
 		foreach ( $config->get( ConfigNames::Extensions ) as $name => $ext ) {
 			if ( $formData["ext-$name"] ) {
 				$newExtList[] = $name;
@@ -1152,7 +1148,6 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		string $filtered,
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
 		Config $config
 	): ManageWikiSettings {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
@@ -1162,7 +1157,6 @@ class ManageWikiFormFactoryBuilder {
 		$settingsList = $mwSettings->list( var: null );
 
 		$settingsArray = [];
-
 		foreach ( $config->get( ConfigNames::Settings ) as $name => $set ) {
 			// No need to do anything if setting does not 'exist'
 			if ( !isset( $formData["set-$name"] ) ) {
@@ -1175,9 +1169,8 @@ class ManageWikiFormFactoryBuilder {
 					$set['overridedefault'][ $set['associativeKey'] ];
 			}
 
-			$mwAllowed = $set['requires'] ? ManageWikiRequirements::process(
-				$set['requires'], $extList, false, $remoteWiki
-			) : true;
+			$mwAllowed = $set['requires'] ?
+				ManageWikiRequirements::process( $set['requires'], $extList ) : true;
 
 			$type = $set['type'];
 			$value = $formData["set-$name"];

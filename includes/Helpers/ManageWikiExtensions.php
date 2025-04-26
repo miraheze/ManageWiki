@@ -162,9 +162,6 @@ class ManageWikiExtensions implements IConfigModule {
 	}
 
 	public function commit(): void {
-		$remoteWikiFactory = MediaWikiServices::getInstance()->get( 'RemoteWikiFactory' );
-		$remoteWiki = $remoteWikiFactory->newInstance( $this->dbname );
-
 		// We use this to check for conflicts only for
 		// extensions we are currently enabling.
 		$enabling = array_keys(
@@ -193,16 +190,15 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			// Define a 'current' extension as one with no changes entry
-			$enabledExt = !isset( $this->changes[$name] );
 			// Now we need to check if we fulfil the requirements to enable this extension
 			$requirementsCheck = ManageWikiRequirements::process(
-				$extensionsConfig['requires'] ?? [], $this->list(),
-				$enabledExt, $remoteWiki
+				$extensionsConfig['requires'] ?? [], $this->list()
 			);
 
 			if ( $requirementsCheck ) {
 				$installResult = true;
+				// Define a 'current' extension as one with no changes entry
+				$enabledExt = !isset( $this->changes[$name] );
 				if ( isset( $extensionsConfig['install'] ) && !$enabledExt ) {
 					$installResult = ManageWikiInstaller::process(
 						$this->dbname,
