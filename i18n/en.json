@@ -63,7 +63,7 @@
 	"logentry-managewiki-unlock": "$1 {{GENDER:$2|unlocked}} the wiki \"$4\"",
 	"managewiki": "Manage a wiki",
 	"managewiki-changes-none": "No changes were made.",
-	"managewiki-conflicts": "Incompatible with $1",
+	"managewiki-conflicts": "'''Incompatible''' with $1",
 	"managewiki-core-header": "View a wiki's configuration",
 	"managewiki-core-info": "Insert the database name of the wiki you wish to view core configuration for.",
 	"managewiki-desc": "Allows users to manage their wiki's configuration with ease through a web interface.",
