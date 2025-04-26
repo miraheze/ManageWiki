@@ -1421,7 +1421,7 @@ class ManageWikiFormFactoryBuilder {
 
 		foreach ( $formData as $fullKey => $value ) {
 			// Match "key[level1][level2]" into [ "key", "level1", "level2" ]
-			preg_match_all( '/\[([^]*)\]/', $fullKey, $matches );
+			preg_match_all( '/\[([^\[]*)\]/', $fullKey, $matches );
 			$baseKey = strtok( $fullKey, '[' );
 
 			$keys = $matches[1];
