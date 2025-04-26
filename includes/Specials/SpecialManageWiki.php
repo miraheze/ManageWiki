@@ -274,7 +274,7 @@ class SpecialManageWiki extends SpecialPage {
 			remoteWiki: $remoteWiki,
 			dbname: $dbname,
 			module: $module,
-			special: strtolower( $special ),
+			special: mb_strtolower( $special ),
 			filtered: $filtered
 		);
 
