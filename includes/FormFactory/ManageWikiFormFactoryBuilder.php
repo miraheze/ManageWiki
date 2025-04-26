@@ -282,14 +282,14 @@ class ManageWikiFormFactoryBuilder {
 			) : true;
 
 			$help = [];
+			if ( $ext['requires'] ) {
+				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
+			}
+
 			if ( $ext['conflicts'] ) {
 				$help[] = $context->msg( 'managewiki-conflicts',
 					$ext['conflicts']
 				)->escaped() . "\n";
-			}
-
-			if ( $ext['requires'] ) {
-				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
 			}
 
 			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
