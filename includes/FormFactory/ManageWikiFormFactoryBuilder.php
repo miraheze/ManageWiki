@@ -320,8 +320,13 @@ class ManageWikiFormFactoryBuilder {
 				$descriptionFallback = $descriptionmsg;
 				if ( $msg->exists() ) {
 					$parsed = $msg->parse();
-					// Strip redlinks: remove <a> tags with class="new"
-					$parsed = preg_replace( '#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i', '<b>$1</b>', $parsed );
+					// Remove and only bold links that don't exist. Likely for extensions that
+					// have not been enabled. We don't want to display redlinks for them.
+					$parsed = preg_replace(
+						'#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i',
+						'<b>$1</b>', $parsed
+					);
+
 					$descriptionFallback = $parsed;
 				}
 			}
