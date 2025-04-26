@@ -28,8 +28,8 @@
 				.not( '#managewiki-submit-reason :input[name]' );
 
 			for ( i = 0; i < $fields.length; i++ ) {
-				// Don't count disabled fields
 				if ( $fields[ i ].disabled ) {
+					// Don't count disabled fields
 					continue;
 				}
 
