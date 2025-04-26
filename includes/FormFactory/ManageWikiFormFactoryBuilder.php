@@ -110,6 +110,8 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
 				'default' => $remoteWiki->getSitename(),
+				// https://github.com/miraheze/CreateWiki/blob/20c2f47/sql/cw_wikis.sql#L3
+				'maxlength' => 128,
 				'disabled' => !$ceMW,
 				'required' => true,
 				'section' => 'main',
@@ -547,6 +549,8 @@ class ManageWikiFormFactoryBuilder {
 					'type' => 'text',
 					'label-message' => [ "managewiki-namespaces-$name-label", $namespaceVar ],
 					'default' => $defaultName,
+					// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_namespaces.sql#L4
+					'maxlength' => 128,
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
 					'section' => $name,
