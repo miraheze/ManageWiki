@@ -426,11 +426,13 @@ class ManageWikiFormFactoryBuilder {
 
 				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
 
-				$rawMessage = new RawMessage( $set['help'] );
-				$help = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+				$help = [];
 				if ( $set['requires'] ) {
-					$help .= "\n" . self::buildRequires( $context, $set['requires'] );
+					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
+
+				$rawMessage = new RawMessage( $set['help'] );
+				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
@@ -457,7 +459,7 @@ class ManageWikiFormFactoryBuilder {
 						$varName,
 					],
 					'disabled' => $disabled,
-					'help' => nl2br( $help ),
+					'help' => nl2br( implode( ' ', $help ) ),
 					'cssclass' => 'managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
@@ -650,15 +652,21 @@ class ManageWikiFormFactoryBuilder {
 						$a['overridedefault'], $a['type']
 					);
 
-					$rawMessage = new RawMessage( $a['help'] );
-					$help = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+					$help = [];
 					if ( $a['requires'] ) {
-						$help .= "\n" . self::buildRequires( $context, $a['requires'] );
+						$help[] = self::buildRequires( $context, $a['requires'] ) . "\n";
 					}
 
+					$rawMessage = new RawMessage( $a['help'] );
+					$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+
 					$formDescriptor["$key-$name"] = [
-						'label' => ( $msgName->exists() ? $msgName->text() : $a['name'] ) . " (\${$key})",
-						'help' => nl2br( $help ),
+						'label-message' => [
+							'managewiki-setting-label',
+							$msgName->exists() ? $msgName->text() : $a['name'],
+							$context->msg( 'parentheses', $key ),
+						],
+						'help' => nl2br( implode( ' ', $help ) ),
 						'cssclass' => 'managewiki-infuse',
 						'disabled' => $disabled,
 						'section' => $name,
