@@ -6,7 +6,6 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SiteStats\SiteStats;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
 /**
  * Helper class for de-centralizing requirement checking
@@ -18,16 +17,9 @@ class ManageWikiRequirements {
 	 *
 	 * @param array $actions Requirements that need to be met
 	 * @param array $extList Enabled extensions on the wiki
-	 * @param bool $ignorePerms Whether a permissions check should be carried out
-	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool Whether the extension can be enabled
 	 */
-	public static function process(
-		array $actions,
-		array $extList,
-		bool $ignorePerms,
-		RemoteWikiFactory $remoteWiki
-	): bool {
+	public static function process( array $actions, array $extList ): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
@@ -36,8 +28,7 @@ class ManageWikiRequirements {
 				case 'permissions':
 					// We don't check permissions if we are in CLI mode, so that we can
 					// toggle restricted extensions in CLI.
-					$stepResponse['permissions'] = ( $ignorePerms || PHP_SAPI === 'cli' ) ?
-						true : self::permissions( $data );
+					$stepResponse['permissions'] = PHP_SAPI === 'cli' || self::permissions( $data );
 					break;
 				case 'extensions':
 					$stepResponse['extensions'] = self::extensions( $data, $extList );
@@ -58,7 +49,7 @@ class ManageWikiRequirements {
 					$stepResponse['settings'] = self::settings( $data );
 					break;
 				case 'visibility':
-					$stepResponse['visibility'] = self::visibility( $data, $remoteWiki );
+					$stepResponse['visibility'] = self::visibility( $data );
 					break;
 				default:
 					return false;
@@ -173,18 +164,15 @@ class ManageWikiRequirements {
 
 	/**
 	 * @param array $data
-	 * @param RemoteWikiFactory $remoteWiki
 	 * @return bool
 	 */
-	private static function visibility(
-		array $data,
-		RemoteWikiFactory $remoteWiki
-	): bool {
-		$ret = [];
+	private static function visibility( array $data ): bool {
+		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+		$isPrivate = !$permissionManager->isEveryoneAllowed( 'read' );
 
+		$ret = [];
 		foreach ( $data as $key => $val ) {
 			if ( $key === 'state' ) {
-				$isPrivate = $remoteWiki->isPrivate();
 				$ret['state'] = (
 					( $val === 'private' && $isPrivate ) ||
 					( $val === 'public' && !$isPrivate )

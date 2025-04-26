@@ -121,6 +121,7 @@
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
 				"CreateWikiDatabaseUtils",
+				"NamespaceInfo",
 				"PermissionManager",
 				"RemoteWikiFactory"
 			]
@@ -212,6 +213,7 @@
 				"ext.managewiki.oouiform.tabs.js"
 			],
 			"messages": [
+				"brackets",
 				"managewiki-review-changed",
 				"managewiki-review-disabled",
 				"managewiki-review-enabled",
