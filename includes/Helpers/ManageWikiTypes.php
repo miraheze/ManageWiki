@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use Collator;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
@@ -387,7 +388,7 @@ class ManageWikiTypes {
 				$language = RequestContext::getMain()->getLanguage();
 				$groups = [];
 				foreach ( $groupList as $group ) {
-					$lowerCaseGroupName = strtolower( $group );
+					$lowerCaseGroupName = $language->lc( $group );
 					$groups[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 				}
 
@@ -450,12 +451,18 @@ class ManageWikiTypes {
 			$contentHandlerFactory = MediaWikiServices::getInstance()->getContentHandlerFactory();
 
 			$models = $contentHandlerFactory->getContentModels();
+			$language = RequestContext::getMain()->getLanguage();
 			$contentModels = [];
 			foreach ( $models as $model ) {
-				$contentModels[ucfirst( ContentHandler::getLocalizedName( $model ) )] = $model;
+				$contentModels[$language->ucfirst( ContentHandler::getLocalizedName( $model ) )] = $model;
 			}
 
-			uksort( $contentModels, 'strcasecmp' );
+			// Use collator to make sure we do this in a way that works multilingual
+			$collator = new Collator( $language->getCode() );
+			uksort( $contentModels,
+				static fn ( string $a, string $b ): int =>
+					$collator->compare( $a, $b )
+			);
 
 			return [
 				'type' => 'select',
