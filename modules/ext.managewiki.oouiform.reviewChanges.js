@@ -89,7 +89,7 @@
 
 				if ( !dialog.content.$element.html() ) {
 					dialog.content.$element.append(
-						$( '<i>' ).text( mw.msg( 'managewiki-review-nochanges' ) )
+						$( `<${ isJa ? 'span' : 'em' }>` ).text( mw.msg( 'managewiki-review-nochanges' ) )
 					);
 				}
 
