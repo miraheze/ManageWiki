@@ -292,7 +292,7 @@ class ManageWikiPermissions implements IConfigModule {
 				'11::rags' => $logValue( $this->changes[$group]['addself']['remove'] ?? null ),
 				'12::args' => $logValue( $this->changes[$group]['removeself']['add'] ?? null ),
 				'13::rrgs' => $logValue( $this->changes[$group]['removeself']['remove'] ?? null ),
-				'14::ap'   => strtolower( wfMessage( $logAP )->inContentLanguage()->text() ),
+				'14::ap' => mb_strtolower( wfMessage( $logAP )->inContentLanguage()->text() ),
 			];
 		}
 
