@@ -73,7 +73,7 @@
 						const newVal = this.value || mw.msg( 'managewiki-review-none' );
 
 						const message = mw.message( 'managewiki-review-changed' ).escaped()
-							.replace( '$1', `<b>${ mw.html.escape( `${ name }${ space }${ mw.msg( 'parentheses', label ) }` ) }</b>` )
+							.replace( '$1', `<b>${ mw.html.escape( name + space + mw.msg( 'parentheses', label ) ) }</b>` )
 							.replace( '$2', isJa
 								 ? mw.html.escape( oldVal )
 								 : `<em>${ mw.html.escape( oldVal ) }</em>`
