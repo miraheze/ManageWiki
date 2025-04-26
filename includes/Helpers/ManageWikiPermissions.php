@@ -282,12 +282,12 @@ class ManageWikiPermissions implements IConfigModule {
 				$value ? implode( ', ', $value ) : $logNULL;
 
 			$this->logParams = [
-				'4::ar'   => $logValue( $this->changes[$group]['permissions']['add'] ?? null ),
-				'5::rr'   => $logValue( $this->changes[$group]['permissions']['remove'] ?? null ),
-				'6::aag'  => $logValue( $this->changes[$group]['addgroups']['add'] ?? null ),
-				'7::rag'  => $logValue( $this->changes[$group]['addgroups']['remove'] ?? null ),
-				'8::arg'  => $logValue( $this->changes[$group]['removegroups']['add'] ?? null ),
-				'9::rrg'  => $logValue( $this->changes[$group]['removegroups']['remove'] ?? null ),
+				'4::ar' => $logValue( $this->changes[$group]['permissions']['add'] ?? null ),
+				'5::rr' => $logValue( $this->changes[$group]['permissions']['remove'] ?? null ),
+				'6::aag' => $logValue( $this->changes[$group]['addgroups']['add'] ?? null ),
+				'7::rag' => $logValue( $this->changes[$group]['addgroups']['remove'] ?? null ),
+				'8::arg' => $logValue( $this->changes[$group]['removegroups']['add'] ?? null ),
+				'9::rrg' => $logValue( $this->changes[$group]['removegroups']['remove'] ?? null ),
 				'10::aags' => $logValue( $this->changes[$group]['addself']['add'] ?? null ),
 				'11::rags' => $logValue( $this->changes[$group]['addself']['remove'] ?? null ),
 				'12::args' => $logValue( $this->changes[$group]['removeself']['add'] ?? null ),
