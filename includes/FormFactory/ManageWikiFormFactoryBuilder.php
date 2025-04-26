@@ -321,7 +321,7 @@ class ManageWikiFormFactoryBuilder {
 				if ( $msg->exists() ) {
 					$parsed = $msg->parse();
 					// Strip redlinks: remove <a> tags with class="new"
-					$parsed = preg_replace( '#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i', '$1', $parsed );
+					$parsed = preg_replace( '#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i', '<b>$1</b>', $parsed );
 					$descriptionFallback = $parsed;
 				}
 			}
