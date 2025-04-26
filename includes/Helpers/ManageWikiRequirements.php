@@ -168,14 +168,14 @@ class ManageWikiRequirements {
 	 */
 	private static function visibility( array $data ): bool {
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
+		$isPublic = $permissionManager->isEveryoneAllowed( 'read' );
 
 		$ret = [];
 		foreach ( $data as $key => $val ) {
 			if ( $key === 'state' ) {
-				$isPrivate = $permissionManager->isEveryoneAllowed( 'read' );
 				$ret['state'] = (
-					( $val === 'private' && $isPrivate ) ||
-					( $val === 'public' && !$isPrivate )
+					( $val === 'private' && !$isPublic ) ||
+					( $val === 'public' && $isPublic )
 				);
 				continue;
 			}
