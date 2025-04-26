@@ -237,7 +237,7 @@ class SpecialManageWiki extends SpecialPage {
 			$groups = array_keys( $mwPermissions->list( group: null ) );
 
 			foreach ( $groups as $group ) {
-				$lowerCaseGroupName = strtolower( $group );
+				$lowerCaseGroupName = $language->lc( $group );
 				$options[$language->getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
@@ -274,7 +274,7 @@ class SpecialManageWiki extends SpecialPage {
 			remoteWiki: $remoteWiki,
 			dbname: $dbname,
 			module: $module,
-			special: strtolower( $special ),
+			special: mb_strtolower( $special ),
 			filtered: $filtered
 		);
 
@@ -350,22 +350,29 @@ class SpecialManageWiki extends SpecialPage {
 			if ( $module === 'permissions' ) {
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
-				$create['out']['filter-callback'] = static fn ( string $value ): string => strtolower( trim( $value ) );
+				$create['out']['filter-callback'] = static fn ( string $value ): string =>
+					mb_strtolower( trim( $value ) );
+
 				$create['out']['validation-callback'] = [ $this, 'validateNewGroupName' ];
 			}
 
 			if ( $module === 'namespaces' ) {
 				// Handle namespace validation and normalization
 				$mwNamespaces = new ManageWikiNamespaces( $dbname );
+				// Multibyte-safe version of ucfirst
 				$create['out']['filter-callback'] = static fn ( string $value ): string =>
-					ucfirst( trim( trim( $value ), '_:' ) );
+					preg_replace_callback(
+						'/^(\s*[_:]*)(.)(.*)$/us',
+						static fn ( array $m ): string => $m[1] . mb_strtoupper( $m[2], 'UTF-8' ) . $m[3],
+						trim( $value )
+					) ?? '';
 
 				$create['out']['validation-callback'] = function ( string $value ) use ( $mwNamespaces ): bool|Message {
-					$disallowed = array_map( 'strtolower',
+					$disallowed = array_map( 'mb_strtolower',
 						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
 					);
 
-					if ( in_array( strtolower( $value ), $disallowed, true ) ) {
+					if ( in_array( mb_strtolower( $value ), $disallowed, true ) ) {
 						return $this->msg( 'managewiki-error-disallowednamespace', $value );
 					}
 
