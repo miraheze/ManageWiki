@@ -442,9 +442,13 @@ class ManageWikiFormFactoryBuilder {
 					];
 				}
 
-				$varName = " (\${$name})";
+				
+				$space = $context->msg( 'word-separator' )->text();
+				$varName = $space . $context->msg( 'parentheses', "\${$name}" );
 				if ( isset( $set['associativeKey'] ) ) {
-					$varName = " (\${$name}['{$set['associativeKey']}'])";
+					$varName = $space . $context->msg( 'parentheses',
+						"\${$name}['{$set['associativeKey']}']"
+					);
 				}
 
 				$formDescriptor["set-$name"] = [
