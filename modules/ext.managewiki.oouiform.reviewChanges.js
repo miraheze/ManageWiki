@@ -60,7 +60,7 @@
 						const oldVal = this.defaultValue || mw.msg( 'managewiki-review-none' );
 						const newVal = this.value || mw.msg( 'managewiki-review-none' );
 
-						const message = mw.message( 'managewiki-review-changed', name, label, oldVal, newVal ).parse()
+						const message = mw.message( 'managewiki-review-changed', name, label, oldVal, newVal ).parse();
 						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					}
 				} );
