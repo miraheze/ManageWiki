@@ -1469,19 +1469,21 @@ class ManageWikiFormFactoryBuilder {
 					$flat[] = $context->msg( 'parentheses',
 						$space . ( !is_int( $key ) ? $key . $colon : '' ) . implode(
 							$space . $language->uc( $or ) . $space,
-							array_map( [ $language, 'emphasize' ], $element )
+							$element
 						) . $space
 					)->text();
 					continue;
 				}
 
-				$flat[] = ( !is_int( $key ) ? $key . $colon : '' ) . $language->emphasize( $element );
+				$flat[] = ( !is_int( $key ) ? $key . $colon : '' ) . $element;
 			}
 
 			$requires[] = $language->ucfirst( $require ) . $colon . $language->commaList( $flat );
 		}
 
-		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
+		return $context->msg( 'managewiki-requires',
+			$language->emphasize( $language->listToText( $requires ) )
+		)->parse();
 	}
 
 	private static function getConfigName( string $name ): string {
