@@ -309,7 +309,7 @@ class ManageWikiFormFactoryBuilder {
 					// to disable the field, we use disable-if for that.
 					array_diff_key( $ext['requires'], [ 'extensions' => true ] ),
 					$extList
-				)
+				);
 
 				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
 			}
