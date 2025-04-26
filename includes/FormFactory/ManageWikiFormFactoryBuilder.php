@@ -219,10 +219,16 @@ class ManageWikiFormFactoryBuilder {
 				$config->get( ConfigNames::DatabaseClustersInactive )
 			);
 
+			// Deprecated usage
+			$clusterOptions = [];
+			foreach ( $clusterList as $key => $value ) {
+				$clusterOptions[ is_int( $key ) ? $value : $key ] = $value;
+			}
+
 			$formDescriptor['dbcluster'] = [
 				'type' => 'select',
 				'label-message' => 'managewiki-label-dbcluster',
-				'options' => array_combine( $clusterList, $clusterList ),
+				'options' => $clusterOptions,
 				'default' => $remoteWiki->getDBCluster(),
 				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
 				'cssclass' => 'managewiki-infuse',
