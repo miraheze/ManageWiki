@@ -213,6 +213,7 @@
 				"ext.managewiki.oouiform.tabs.js"
 			],
 			"messages": [
+				"brackets",
 				"managewiki-review-changed",
 				"managewiki-review-disabled",
 				"managewiki-review-enabled",
