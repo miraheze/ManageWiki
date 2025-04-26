@@ -316,7 +316,7 @@ class ManageWikiFormFactoryBuilder {
 
 			$descriptionFallback = null;
 			if ( $descriptionmsg ) {
-				$msg = $context->msg( $descriptionmsg );	
+				$msg = $context->msg( $descriptionmsg );
 				$descriptionFallback = $descriptionmsg;
 				if ( $msg->exists() ) {
 					$parsed = $msg->parse();
