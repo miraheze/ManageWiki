@@ -213,6 +213,7 @@
 				"ext.managewiki.oouiform.tabs.js"
 			],
 			"messages": [
+				"brackets",
 				"managewiki-review-changed",
 				"managewiki-review-disabled",
 				"managewiki-review-enabled",
@@ -222,7 +223,9 @@
 				"managewiki-review-toggled",
 				"managewiki-save",
 				"managewiki-search-noresults",
-				"managewiki-warning-changes"
+				"managewiki-warning-changes",
+				"parentheses",
+				"word-separator"
 			],
 			"dependencies": [
 				"mediawiki.confirmCloseWindow",
