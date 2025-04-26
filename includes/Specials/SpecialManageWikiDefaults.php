@@ -87,7 +87,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			$craftedGroups = [];
 
 			foreach ( $groups as $group ) {
-				$lowerCaseGroupName = strtolower( $group );
+				$lowerCaseGroupName = $language->lc( $group );
 				$craftedGroups[$language->getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
@@ -125,7 +125,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 					'validation-callback' => [ $this, 'validateNewGroupName' ],
 					// Groups should typically be lowercase so we do that here.
 					// Display names can be customized using interface messages.
-					'filter-callback' => static fn ( string $value ): string => strtolower( trim( $value ) ),
+					'filter-callback' => static fn ( string $value ): string => mb_strtolower( trim( $value ) ),
 				];
 
 				$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
