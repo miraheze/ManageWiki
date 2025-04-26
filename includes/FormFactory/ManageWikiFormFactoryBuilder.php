@@ -1453,7 +1453,7 @@ class ManageWikiFormFactoryBuilder {
 		$requires = [];
 		$language = $context->getLanguage();
 
-		$or = $context->msg( 'managewiki-or' )->text();
+		$or = $context->msg( 'managewiki-requires-or' )->text();
 		$space = $context->msg( 'word-separator' )->text();
 		$colon = $context->msg( 'colon-separator' )->text();
 
