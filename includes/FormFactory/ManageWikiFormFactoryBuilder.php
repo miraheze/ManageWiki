@@ -458,13 +458,8 @@ class ManageWikiFormFactoryBuilder {
 					];
 				}
 
-				$varName = " (\${$name})";
-				if ( isset( $set['associativeKey'] ) ) {
-					$varName = " (\${$name}['{$set['associativeKey']}'])";
-				}
-
 				$formDescriptor["set-$name"] = [
-					'label' => ( $msgName->exists() ? $msgName->text() : $set['name'] ) . $varName,
+					'label' => ( $msgName->exists() ? $msgName->text() : $set['name'] ) . " (\${$name})",
 					'disabled' => $disabled,
 					'help' => $help,
 					'cssclass' => 'managewiki-infuse',
@@ -1165,6 +1160,8 @@ class ManageWikiFormFactoryBuilder {
 
 		$settingsArray = [];
 
+		$formData = self::expandFormData( $formData );
+
 		foreach ( $config->get( ConfigNames::Settings ) as $name => $set ) {
 			// No need to do anything if setting does not 'exist'
 			if ( !isset( $formData["set-$name"] ) ) {
@@ -1172,11 +1169,6 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$current = $settingsList[$name] ?? $set['overridedefault'];
-			if ( isset( $set['associativeKey'] ) ) {
-				$current = $settingsList[$name][ $set['associativeKey'] ] ??
-					$set['overridedefault'][ $set['associativeKey'] ];
-			}
-
 			$mwAllowed = $set['requires'] ? ManageWikiRequirements::process(
 				$set['requires'], $extList, false, $remoteWiki
 			) : true;
@@ -1422,6 +1414,36 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return $mwPermissions;
+	}
+
+	private static function expandFormData( array $formData ): array {
+		$result = [];
+
+		foreach ( $formData as $fullKey => $value ) {
+			// Match "key[level1][level2]" into [ "key", "level1", "level2" ]
+			preg_match_all( '/\[([^]*)\]/', $fullKey, $matches );
+			$baseKey = strtok( $fullKey, '[' );
+
+			$keys = $matches[1];
+			array_unshift( $keys, $baseKey );
+
+			$ref = &$result;
+			foreach ( $keys as $key ) {
+				if ( $key === '' ) {
+					$ref[] = [];
+					end( $ref );
+					$key = key( $ref );
+				}
+				if ( !isset( $ref[$key] ) || !is_array( $ref[$key] ) ) {
+					$ref[$key] = [];
+				}
+				$ref = &$ref[$key];
+			}
+			$ref = $value;
+			unset( $ref );
+		}
+
+		return $result;
 	}
 
 	private static function getConfigVar( string $name ): string {
