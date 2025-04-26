@@ -55,7 +55,7 @@
 	"logentry-managewiki-unlock": "A message that is logged when a wiki has been unlocked using ManageWiki",
 	"managewiki": "User right to manage a wiki's settings",
 	"managewiki-changes-none": "A message that is shown when people try to save changes without actually making any change",
-	"managewiki-conflicts": "A message that is shown under a setting that conflicts with another. $1 is tbe configured conflict name.",
+	"managewiki-conflicts": "A message that is shown under a setting that conflicts with another. $1 is the configured conflict name.",
 	"managewiki-desc": "{{desc|name=ManageWiki|url=https://github.com/miraheze/ManageWiki}}",
 	"managewiki-disabled": "Message that indicates that a feature is not yet enabled on a wiki.",
 	"managewiki-error-conflict": "A message that is shown when a setting conflicts with another",
