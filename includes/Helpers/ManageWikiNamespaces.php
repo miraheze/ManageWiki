@@ -68,14 +68,14 @@ class ManageWikiNamespaces implements IConfigModule {
 		return isset( $this->liveNamespaces[$id] );
 	}
 
-	public function namespaceNameExists( string $name ): bool {
+	public function namespaceNameExists( string $name, bool $checkMetaNS ): bool {
 		// Normalize
 		$name = str_replace(
 			[ ' ', ':' ], '_',
-			strtolower( trim( $name ) )
+			mb_strtolower( trim( $name ) )
 		);
 
-		if ( $this->isMetaNamespace( $name ) ) {
+		if ( $checkMetaNS && $this->isMetaNamespace( $name ) ) {
 			return true;
 		}
 
@@ -83,7 +83,7 @@ class ManageWikiNamespaces implements IConfigModule {
 			// Normalize
 			$nsName = str_replace(
 				[ ' ', ':' ], '_',
-				strtolower( trim( $ns['name'] ) )
+				mb_strtolower( trim( $ns['name'] ) )
 			);
 
 			if ( $nsName === $name ) {
@@ -93,7 +93,7 @@ class ManageWikiNamespaces implements IConfigModule {
 			$normalizedAliases = array_map(
 				static fn ( string $alias ): string => str_replace(
 					[ ' ', ':' ], '_',
-					strtolower( trim( $alias ) )
+					mb_strtolower( trim( $alias ) )
 				),
 				$ns['aliases']
 			);
@@ -107,15 +107,26 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	private function isMetaNamespace( string $name ): bool {
-		$metaNamespace = strtolower( trim(
+		$metaNamespace = mb_strtolower( trim(
 			str_replace( [ ' ', ':' ], '_', $this->config->get( MainConfigNames::MetaNamespace ) )
 		) );
 
-		$metaNamespaceTalk = strtolower( trim(
+		$metaNamespaceTalk = mb_strtolower( trim(
 			str_replace( [ ' ', ':' ], '_', $this->config->get( MainConfigNames::MetaNamespaceTalk ) )
 		) );
 
-		return $name === $metaNamespace || $name === $metaNamespaceTalk;
+		$namespaceInfo = MediaWikiServices::getInstance()->getNamespaceInfo();
+		$canonicalNameMain = mb_strtolower( trim(
+			str_replace( [ ' ', ':' ], '_', $namespaceInfo->getCanonicalName( NS_PROJECT ) )
+		) );
+
+		$canonicalNameTalk = mb_strtolower( trim(
+			str_replace( [ ' ', ':' ], '_', $namespaceInfo->getCanonicalName( NS_PROJECT_TALK ) )
+		) );
+
+		return in_array( $name, [ $metaNamespace, $metaNamespaceTalk,
+			$canonicalNameMain, $canonicalNameTalk
+		], true );
 	}
 
 	/**
@@ -152,8 +163,8 @@ class ManageWikiNamespaces implements IConfigModule {
 		array $data,
 		bool $maintainPrefix = false
 	): void {
-		$excluded = array_map( 'strtolower', $this->config->get( ConfigNames::NamespacesDisallowedNames ) );
-		if ( in_array( strtolower( $data['name'] ), $excluded, true ) ) {
+		$excluded = array_map( 'mb_strtolower', $this->config->get( ConfigNames::NamespacesDisallowedNames ) );
+		if ( in_array( mb_strtolower( $data['name'] ), $excluded, true ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
 					$data['name'],
@@ -176,7 +187,8 @@ class ManageWikiNamespaces implements IConfigModule {
 		];
 
 		if ( $data['name'] !== $nsData['name'] ) {
-			if ( $this->namespaceNameExists( $data['name'] ) ) {
+			$checkMetaNS = $id !== NS_PROJECT && $id !== NS_PROJECT_TALK;
+			if ( $this->namespaceNameExists( $data['name'], $checkMetaNS ) ) {
 				$this->errors[] = [
 					'managewiki-namespace-conflicts' => [
 						$data['name'],
@@ -191,7 +203,7 @@ class ManageWikiNamespaces implements IConfigModule {
 					continue;
 				}
 
-				if ( $this->namespaceNameExists( $alias ) ) {
+				if ( $this->namespaceNameExists( $alias, checkMetaNS: true ) ) {
 					$this->errors[] = [
 						'managewiki-namespace-conflicts' => [ $alias ],
 					];
