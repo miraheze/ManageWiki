@@ -350,7 +350,9 @@ class SpecialManageWiki extends SpecialPage {
 			if ( $module === 'permissions' ) {
 				// Groups should typically be lowercase so we do that here.
 				// Display names can be customized using interface messages.
-				$create['out']['filter-callback'] = static fn ( string $value ): string => mb_strtolower( trim( $value ) );
+				$create['out']['filter-callback'] = static fn ( string $value ): string =>
+					mb_strtolower( trim( $value ) );
+
 				$create['out']['validation-callback'] = [ $this, 'validateNewGroupName' ];
 			}
 
