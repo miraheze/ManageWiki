@@ -175,7 +175,7 @@ class ManageWikiRequirements {
 			if ( $key === 'state' ) {
 				$ret['state'] = (
 					( $val === 'private' && $isPrivate ) ||
-					( $val === 'public' &&!$isPrivate )
+					( $val === 'public' && !$isPrivate )
 				);
 				continue;
 			}
