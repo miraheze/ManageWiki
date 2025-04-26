@@ -55,11 +55,8 @@
 							this.checked ? 'managewiki-review-enabled' : 'managewiki-review-disabled'
 						);
 
-						const setting = `${ name.replace( '[]', `[${ this.value }]` ) } (${ label })`;
-						const message = mw.message( 'managewiki-review-toggled' ).escaped()
-							.replace( '$1', `<b>${ mw.html.escape( setting ) }</b>` )
-							.replace( '$2', `<i>${ mw.html.escape( stateMsg ) }</i>` );
-
+						const setting = name.replace( '[]', mw.msg( 'brackets', this.value ) );
+						const message = mw.message( 'managewiki-review-toggled', setting, label, stateMsg ).parse();
 						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					} else if (
 						this.defaultValue !== undefined &&
@@ -68,18 +65,14 @@
 						const oldVal = this.defaultValue || mw.msg( 'managewiki-review-none' );
 						const newVal = this.value || mw.msg( 'managewiki-review-none' );
 
-						const message = mw.message( 'managewiki-review-changed' ).escaped()
-							.replace( '$1', `<b>${ mw.html.escape( `${ name } (${ label })` ) }</b>` )
-							.replace( '$2', `<i>${ mw.html.escape( oldVal ) }</i>` )
-							.replace( '$3', `<i>${ mw.html.escape( newVal ) }</i>` );
-
+						const message = mw.message( 'managewiki-review-changed', name, label, oldVal, newVal ).parse();
 						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					}
 				} );
 
 				if ( !dialog.content.$element.html() ) {
 					dialog.content.$element.append(
-						$( '<i>' ).text( mw.msg( 'managewiki-review-nochanges' ) )
+						mw.message( 'managewiki-review-nochanges' ).parse()
 					);
 				}
 
