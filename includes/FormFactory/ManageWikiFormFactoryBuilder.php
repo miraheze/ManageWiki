@@ -316,8 +316,14 @@ class ManageWikiFormFactoryBuilder {
 
 			$descriptionFallback = null;
 			if ( $descriptionmsg ) {
-				$msg = $context->msg( $descriptionmsg );
-				$descriptionFallback = $msg->exists() ? $msg->parse() : $descriptionmsg;
+				$msg = $context->msg( $descriptionmsg );	
+				$descriptionFallback = $descriptionmsg;
+				if ( $msg->exists() ) {
+					$parsed = $msg->parse();
+					// Strip redlinks: remove <a> tags with class="new"
+					$parsed = preg_replace( '#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i', '$1', $parsed );
+					$descriptionFallback = $parsed;
+				}
 			}
 
 			$help[] = $extDescription ?? $descriptionFallback ?? $description;
