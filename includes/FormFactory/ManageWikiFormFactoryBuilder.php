@@ -443,7 +443,7 @@ class ManageWikiFormFactoryBuilder {
 
 				$formDescriptor["set-$name"] = [
 					'label-message' => [
-						'managewiki-setting',
+						'managewiki-setting-label',
 						$msgName->exists() ? $msgName->text() : $set['name'],
 						$varName,
 					],
