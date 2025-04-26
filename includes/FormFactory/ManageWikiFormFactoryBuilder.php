@@ -405,7 +405,6 @@ class ManageWikiFormFactoryBuilder {
 					ManageWikiRequirements::process( $set['requires'], $extList ) : true;
 			}
 
-			
 			$hasVisibilityRequirement = isset( $set['requires']['visibility'] );
 			$isGlobal = $set['global'] ?? false;
 			$isInExtList = in_array( $set['from'], $extList, true );
