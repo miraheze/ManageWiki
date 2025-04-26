@@ -174,6 +174,7 @@
 	"managewiki-save": "Save",
 	"managewiki-search": "Search ManageWiki",
 	"managewiki-search-noresults": "No results",
+	"managewiki-setting-label": "$1 $2",
 	"managewiki-sidebar-header": "Administration",
 	"managewiki-success": "Your changes have been saved.",
 	"managewiki-toggle-forcesidebar": "Force the display of ManageWiki links in the sidebar.",
