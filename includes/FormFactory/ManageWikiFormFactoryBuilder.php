@@ -441,7 +441,7 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				//$rawMessage = new RawMessage( $set['help'] );
+				// $rawMessage = new RawMessage( $set['help'] );
 				$help[] = $msgHelp->exists() ? $msgHelp : [ 'managewiki-setting-label', $set['help'] ];
 
 				// Hack to prevent "implicit submission". See T275588 for more
