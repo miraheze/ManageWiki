@@ -202,7 +202,7 @@ class ManageWikiExtensions implements IConfigModule {
 			$requirementsCheck = array_reduce(
 				ManageWikiRequirements::process( $requirements, $this->list() ),
 				'array_merge', []
-			)
+			);
 
 			if ( $requirementsCheck ) {
 				$language = RequestContext::getMain()->getLanguage();
