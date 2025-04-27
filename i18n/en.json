@@ -75,7 +75,7 @@
 	"managewiki-error-missingpermission": "Cannot remove the 'managewiki-permissions' right from this group, as no other groups have the right. Removing it would prevent access to ManageWiki.",
 	"managewiki-error-nopermission": "You may view this wiki's configuration but you do not have permission to edit it.",
 	"managewiki-error-nopermission-remote": "You are remotely viewing a wiki's configuration. If you are a wiki operator, please navigate to your wiki to modify its configuration. You may not edit it from here.",
-	"managewiki-error-requirements": "The extension \"$1\" cannot be changed because it fails to meet its requirements.",
+	"managewiki-error-requirements": "The extension \"$1\" cannot be $2 because it fails to meet its requirements: $3",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-extension-settings": "Manage available configuration options for this extension",
 	"managewiki-extensionname": "ManageWiki",
