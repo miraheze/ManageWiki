@@ -126,6 +126,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 					// Groups should typically be lowercase so we do that here.
 					// Display names can be customized using interface messages.
 					'filter-callback' => static fn ( string $value ): string => mb_strtolower( trim( $value ) ),
+					// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_permissions.sql#L3
+					'maxlength' => 64,
 				];
 
 				$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );

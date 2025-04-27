@@ -202,7 +202,8 @@ class ManageWikiExtensions implements IConfigModule {
 				if ( isset( $extensionsConfig['install'] ) && !$enabledExt ) {
 					$installResult = ManageWikiInstaller::process(
 						$this->dbname,
-						$extensionsConfig['install']
+						$extensionsConfig['install'],
+						install: true
 					);
 				}
 
@@ -232,7 +233,11 @@ class ManageWikiExtensions implements IConfigModule {
 		foreach ( $this->removedExtensions as $name => $extensionsConfig ) {
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it
 			if ( isset( $extensionsConfig['remove'] ) ) {
-				ManageWikiInstaller::process( $this->dbname, $extensionsConfig['remove'], false );
+				ManageWikiInstaller::process(
+					$this->dbname,
+					$extensionsConfig['remove'],
+					install: false
+				);
 			}
 		}
 

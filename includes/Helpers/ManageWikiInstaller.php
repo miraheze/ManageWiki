@@ -15,7 +15,7 @@ class ManageWikiInstaller {
 	public static function process(
 		string $dbname,
 		array $actions,
-		bool $install = true
+		bool $install
 	): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
