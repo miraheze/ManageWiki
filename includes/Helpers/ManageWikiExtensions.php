@@ -203,17 +203,10 @@ class ManageWikiExtensions implements IConfigModule {
 
 			if ( $requirementsCheck ) {
 				$language = RequestContext::getMain()->getLanguage();
-				$flattened = [];
-foreach ( $requirementsCheck as $subarray ) {
-	if ( is_array( $subarray ) ) {
-		$flattened = array_merge( $flattened, $subarray );
-	} else {
-		$flattened[] = $subarray;
-	}
-}
+
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
-						$language->listToText( $flattened ),
+						$language->listToText( $requirementsCheck ),
 					],
 				];
 
