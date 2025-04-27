@@ -255,7 +255,7 @@ class ManageWikiFormFactoryBuilder {
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 
 		$credits = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits-temp' ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $config, $context ): array {
 				$queue = array_fill_keys( array_merge(
@@ -441,8 +441,8 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$rawMessage = ( new RawMessage( '$1' ) )->params( $set['help'] );
-				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+				// $rawMessage = ( new RawMessage( '$1' ) )->params( $set['help'] );
+				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $set['help'];
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
