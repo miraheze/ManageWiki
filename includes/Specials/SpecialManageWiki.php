@@ -132,7 +132,7 @@ class SpecialManageWiki extends SpecialPage {
 			'settings',
 		];
 	}
-	
+
 	/** @inheritDoc */
 	public function getAssociatedNavigationLinks(): array {
 		return [
