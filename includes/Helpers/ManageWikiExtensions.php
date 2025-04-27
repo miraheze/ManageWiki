@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\Config;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Request\RequestContext;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\ConfigNames;
 use Wikimedia\Rdbms\IDatabase;
@@ -201,9 +202,11 @@ class ManageWikiExtensions implements IConfigModule {
 			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
 
 			if ( !$requirementsCheck ) {
+				$language = RequestContext::getMain()-getLanguage();
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
-						$extensionConfig['name'],
+						//$extensionConfig['name'],
+						$language->listToText( $requirements )
 					],
 				];
 
