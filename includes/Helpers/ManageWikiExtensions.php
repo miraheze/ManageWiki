@@ -205,8 +205,7 @@ class ManageWikiExtensions implements IConfigModule {
 				$language = RequestContext::getMain()->getLanguage();
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
-						//$extensionConfig['name'],
-						$language->listToText( $requirements )
+						implode( ';' $requirementsCheck ),
 					],
 				];
 
