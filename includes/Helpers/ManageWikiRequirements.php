@@ -66,7 +66,7 @@ class ManageWikiRequirements {
 	private static function permissions( array $data ): bool {
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		foreach ( $data as $perm ) {
-			if ( !$permissionManager->userHasRight( RequestContext::getMain()->getUser(), $perm . '-test' ) ) {
+			if ( !$permissionManager->userHasRight( RequestContext::getMain()->getUser(), $perm ) ) {
 				return false;
 			}
 		}
