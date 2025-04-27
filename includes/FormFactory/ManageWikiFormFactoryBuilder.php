@@ -441,8 +441,8 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				// $rawMessage = ( new RawMessage( '$1' ) )->params( $set['help'] );
-				$help[] = $msgHelp->exists() ? $msgHelp : $set['help'];
+				$rawMessage = new RawMessage( $set['help'] );
+				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
@@ -468,11 +468,7 @@ class ManageWikiFormFactoryBuilder {
 						$varName,
 					],
 					'disabled' => $disabled,
-					'help-message' => [
-						'managewiki-setting-label',
-						nl2br( implode( ' ', $help ) ),
-						'',
-					],
+					'help-messages' => $help,
 					'cssclass' => 'managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
