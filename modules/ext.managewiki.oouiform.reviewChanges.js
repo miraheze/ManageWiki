@@ -38,33 +38,37 @@
 						.parents( 'fieldset' )
 						.contents()
 						.first()
-						.text();
+						.text()
+						.trim();
 
 					if (
 						this.type === 'checkbox' &&
 						this.defaultChecked !== undefined &&
 						this.defaultChecked !== this.checked
 					) {
-						dialog.content.$element.append(
-							`<li><b>${ name.replace( '[]', `[${ this.value }]` ) } (${ label })</b> was <i>${
-								this.checked ? 'enabled' : 'disabled'
-							}</i></li>`
+						const stateMsg = mw.msg(
+							this.checked ? 'managewiki-review-enabled' : 'managewiki-review-disabled'
 						);
+
+						const setting = name.replace( '[]', mw.msg( 'brackets', this.value ) );
+						const message = mw.message( 'managewiki-review-toggled', setting, label, stateMsg ).parse();
+						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					} else if (
 						this.defaultValue !== undefined &&
 						this.defaultValue !== this.value
 					) {
-						const oldVal = this.defaultValue || '&lt;none&gt;';
-						const newVal = this.value || '&lt;none&gt;';
-						dialog.content.$element.append(
-							`<li><b>${ name } (${ label })</b> was changed from <i>${ oldVal }</i> to <i>${ newVal }</i></li>`
-						);
+						const oldVal = this.defaultValue || mw.msg( 'managewiki-review-none' );
+						const newVal = this.value || mw.msg( 'managewiki-review-none' );
+
+						const message = mw.message( 'managewiki-review-changed', name, label, oldVal, newVal ).parse();
+						dialog.content.$element.append( $( '<li>' ).html( message ) );
 					}
 				} );
 
 				if ( !dialog.content.$element.html() ) {
-					/* eslint-disable-next-line no-jquery/no-parse-html-literal */
-					dialog.content.$element.append( '<i>No changes made.</i>' );
+					dialog.content.$element.append(
+						mw.message( 'managewiki-review-nochanges' ).parse()
+					);
 				}
 
 				dialog.$body.append( dialog.content.$element );
