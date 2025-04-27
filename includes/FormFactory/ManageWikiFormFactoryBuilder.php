@@ -291,7 +291,7 @@ class ManageWikiFormFactoryBuilder {
 			$help = [];
 			$mwRequirements = true;
 			if ( $ext['requires'] ) {
-				// $mwRequirements = ManageWikiRequirements::process( $ext['requires'], $extList );
+				$mwRequirements = ManageWikiRequirements::process( $ext['requires'], $extList );
 				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
 			}
 
