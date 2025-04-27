@@ -199,14 +199,18 @@ class ManageWikiExtensions implements IConfigModule {
 			}
 
 			// Now we need to check if we fulfill the requirements to enable this extension.
-			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
+			$requirementsCheck = array_reduce(
+				ManageWikiRequirements::process( $requirements, $this->list() ),
+				'array_merge', []
+			)
 
 			if ( $requirementsCheck ) {
 				$language = RequestContext::getMain()->getLanguage();
 
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
-						$extensionConfig['name'] .$language->listToText( array_reduce( $requirementsCheck, 'array_merge', [] ) ),
+						$extensionConfig['name'],
+						$language->listToText( $requirementsCheck ),
 					],
 				];
 
