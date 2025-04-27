@@ -249,7 +249,6 @@ class ManageWikiFormFactoryBuilder {
 	): array {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
-
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
@@ -275,6 +274,28 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				$data = $processor->getExtractedInfo();
+
+				foreach ( $data['credits'] as &$credit ) {
+					if ( !empty( $credit['descriptionmsg'] ) ) {
+						$msg = wfMessage( $credit['descriptionmsg'] );
+						if ( $msg->exists() ) {
+							$parsed = $msg->parse();
+							$parsed = preg_replace(
+								'#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i',
+								'<b>$1</b>', $parsed
+							);
+							$credit['descriptionmsg-parsed'] = $parsed;
+						}
+					}
+
+					if ( !empty( $credit['namemsg'] ) ) {
+						$msg = wfMessage( $credit['namemsg'] );
+						if ( $msg->exists() ) {
+							$credit['namemsg-parsed'] = $msg->text();
+						}
+					}
+				}
+
 				return $data['credits'];
 			}
 		);
@@ -299,13 +320,11 @@ class ManageWikiFormFactoryBuilder {
 				$help[] = $context->msg( 'managewiki-conflicts', $ext['conflicts'] )->parse() . "\n";
 			}
 
-			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
-			$description = array_column( $credits, 'description', 'name' )[ $ext['name'] ] ?? null;
-
-			$namemsg = array_column( $credits, 'namemsg', 'name' )[ $ext['name'] ] ?? false;
-			$extname = array_column( $credits, 'name', 'name' )[ $ext['name'] ] ?? null;
-
+			$credit = $credits[ $ext['name'] ] ?? [];
 			$extDescription = null;
+			$descriptionFallback = $credit['descriptionmsg-parsed'] ?? null;
+			$description = $credit['description'] ?? null;
+
 			if ( !empty( $ext['description'] ) ) {
 				$msg = $context->msg( $ext['description'] );
 				$extDescription = $msg->exists() ? $msg->parse() : $ext['description'];
@@ -315,23 +334,6 @@ class ManageWikiFormFactoryBuilder {
 			if ( !empty( $ext['displayname'] ) ) {
 				$msg = $context->msg( $ext['displayname'] );
 				$extDisplayName = $msg->exists() ? $msg->parse() : $ext['displayname'];
-			}
-
-			$descriptionFallback = null;
-			if ( $descriptionmsg ) {
-				$msg = $context->msg( $descriptionmsg );
-				$descriptionFallback = $descriptionmsg;
-				if ( $msg->exists() ) {
-					$parsed = $msg->parse();
-					// Remove and only bold links that don't exist. Likely for extensions that
-					// have not been enabled. We don't want to display redlinks for them.
-					$parsed = preg_replace(
-						'#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i',
-						'<b>$1</b>', $parsed
-					);
-
-					$descriptionFallback = $parsed;
-				}
 			}
 
 			$help[] = $extDescription ?? $descriptionFallback ?? $description;
@@ -355,7 +357,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => [
 					'managewiki-extension-name',
 					$ext['linkPage'],
-					$extDisplayName ?? ( $namemsg ? $context->msg( $namemsg )->text() : $extname ) ?? $ext['name'],
+					$extDisplayName ?? ( $credit['namemsg-parsed'] ?? $credit['name'] ?? $ext['name'] ),
 				],
 				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
