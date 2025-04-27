@@ -24,8 +24,8 @@ class ManageWikiTypes {
 		array $options,
 		mixed $value,
 		string $name,
-		mixed $overrideDefault = false,
-		string $type = ''
+		mixed $overrideDefault,
+		string $type
 	): array {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {
