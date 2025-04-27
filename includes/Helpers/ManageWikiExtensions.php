@@ -210,6 +210,7 @@ class ManageWikiExtensions implements IConfigModule {
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
 						$extensionConfig['name'],
+						'enabled',
 						$language->listToText( $requirementsCheck ),
 					],
 				];
@@ -270,7 +271,9 @@ class ManageWikiExtensions implements IConfigModule {
 			if ( $requirementsCheck ) {
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
+						'disabled',
 						$extensionConfig['name'],
+						'test',
 					],
 				];
 
