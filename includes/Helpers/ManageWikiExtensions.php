@@ -197,8 +197,23 @@ class ManageWikiExtensions implements IConfigModule {
 			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
 
 			if ( !$requirementsCheck ) {
+				if ( isset( $this->changes[$name] ) ) {
+					$this->errors[] = [
+						'managewiki-error-requirements' => [ $config['name'] ],
+					];
+					continue;
+				}
+
+				foreach ( $requirements['extensions'] ?? [] as $ext ) {
+					if ( isset( $this->changes[$ext] ) ) {
+						$this->errors[] = [
+							'managewiki-error-requirements' => [ $ext ],
+						];
+					}
+				}
+
 				$this->errors[] = [
-					'managewiki-error-requirements' => [ $config['name'] ],
+					'managewiki-error-requirements2' => [ $config['name'] ],
 				];
 
 				// Requirements failed, we have nothing else to do for this extension.
