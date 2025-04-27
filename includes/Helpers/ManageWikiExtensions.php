@@ -263,7 +263,7 @@ class ManageWikiExtensions implements IConfigModule {
 				$requirementsCheck = ManageWikiRequirements::process(
 					// We only need to check for permissions when an
 					// extension is being disabled.
-					actions: [ 'permissions' => $permissionRequirements . '_test' ],
+					actions: [ 'permissions' => $permissionRequirements ],
 					// We don't need this since it's not used for permissions,
 					// which is the only thing we need to check here.
 					extList: []
