@@ -90,14 +90,14 @@ class ManageWikiRequirements {
 			if ( is_array( $extension ) ) {
 				// OR logic: at least one must exist
 				if ( !array_intersect( $extension, $extList ) ) {
-					$missing[] = implode( ' | ', $extension );
+					$missing[] = implode( ' OR ', $extension );
 				}
 			} elseif ( !in_array( $extension, $extList, true ) ) {
 				$missing[] = $extension;
 			}
 		}
 
-		return $missing;
+		return [ 'Extensions' => $missing ];
 	}
 
 	/**
