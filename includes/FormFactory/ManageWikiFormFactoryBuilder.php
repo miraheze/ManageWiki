@@ -257,7 +257,7 @@ class ManageWikiFormFactoryBuilder {
 		$credits = $cache->getWithSetCallback(
 			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
 			WANObjectCache::TTL_DAY,
-			static function () use ( $config ): array {
+			static function () use ( $config, $context ): array {
 				$queue = array_fill_keys( array_merge(
 					glob( $config->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
 					glob( $config->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
@@ -277,7 +277,7 @@ class ManageWikiFormFactoryBuilder {
 
 				foreach ( $data['credits'] as &$credit ) {
 					if ( !empty( $credit['descriptionmsg'] ) ) {
-						$msg = wfMessage( $credit['descriptionmsg'] );
+						$msg = $context->msg( $credit['descriptionmsg'] );
 						if ( $msg->exists() ) {
 							$parsed = $msg->parse();
 							$parsed = preg_replace(
@@ -289,7 +289,7 @@ class ManageWikiFormFactoryBuilder {
 					}
 
 					if ( !empty( $credit['namemsg'] ) ) {
-						$msg = wfMessage( $credit['namemsg'] );
+						$msg = $context->msg( $credit['namemsg'] );
 						if ( $msg->exists() ) {
 							$credit['namemsg-parsed'] = $msg->text();
 						}
