@@ -277,6 +277,7 @@ class ManageWikiExtensions implements IConfigModule {
 					'managewiki-error-requirements-disabled' => [ $config['name'] ],
 				];
 
+				// Requirements failed, we have nothing else to do for this extension.
 				continue;
 			}
 
