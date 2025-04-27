@@ -173,12 +173,6 @@ class ManageWikiExtensions implements IConfigModule {
 		);
 
 		foreach ( $this->liveExtensions as $name => $extensionConfig ) {
-			// If we aren't making any changes to this extension,
-			// we do nothing with it.
-			if ( !isset( $this->changes[$name] ) ) {
-				continue;
-			}
-
 			// Check if we have a conflict first
 			if ( in_array( $extensionConfig['conflicts'], $enabling, true ) ) {
 				$this->errors[] = [
@@ -192,10 +186,19 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
+			$requirements = $extensionConfig['requires'] ?? [];
+
+			// If we aren't making any changes to this extension,
+			// we don't need to check for permissions.
+			if ( !isset( $this->changes[$name] ) ) {
+				$requirements = array_diff_key(
+					$ext['requires'],
+					[ 'permissions' => true ]
+				);
+			}
+
 			// Now we need to check if we fulfill the requirements to enable this extension.
-			$requirementsCheck = ManageWikiRequirements::process(
-				$extensionConfig['requires'] ?? [], $this->list()
-			);
+			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
 
 			if ( !$requirementsCheck ) {
 				$this->errors[] = [
@@ -205,6 +208,12 @@ class ManageWikiExtensions implements IConfigModule {
 				];
 
 				// Requirements failed, we have nothing else to do for this extension.
+				continue;
+			}
+
+			// If we aren't making any changes to this extension,
+			// we are done with it.
+			if ( !isset( $this->changes[$name] ) ) {
 				continue;
 			}
 
