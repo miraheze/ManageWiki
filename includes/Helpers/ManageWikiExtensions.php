@@ -206,7 +206,7 @@ class ManageWikiExtensions implements IConfigModule {
 
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
-						$language->listToText( $requirementsCheck ),
+						$language->listToText( array_reduce( $requirementsCheck, 'array_merge', [] ) ),
 					],
 				];
 
