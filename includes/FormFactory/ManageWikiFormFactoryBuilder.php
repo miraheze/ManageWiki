@@ -422,7 +422,17 @@ class ManageWikiFormFactoryBuilder {
 						$set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
+				$configs = ManageWikiTypes::process(
+					config: $config,
+					disabled: $disabled,
+					groupList; $groupList,
+					module: 'settings',
+					options: $set,
+					value: $value,
+					name: $name,
+					overrideDefault: false,
+					type: ''
+				);
 
 				$help = [];
 				if ( $set['requires'] ) {
@@ -593,8 +603,15 @@ class ManageWikiFormFactoryBuilder {
 					'disabled' => !$ceMW,
 					'section' => $name,
 				] + ManageWikiTypes::process(
-					$config, false, [], 'namespaces', [],
-					$namespaceData['contentmodel'], '', false, 'contentmodel'
+					config; $config,
+					disabled: false,
+					groupList: [],
+					module: 'namespaces',
+					options: [],
+					value: $namespaceData['contentmodel'],
+					name: '',
+					overrideDefault: false,
+					type: 'contentmodel'
 				),
 				"protection-$name" => [
 					'type' => 'combobox',
@@ -644,9 +661,15 @@ class ManageWikiFormFactoryBuilder {
 					}
 
 					$configs = ManageWikiTypes::process(
-						$config, $disabled, [], 'namespaces', $a,
-						$namespaceData['additional'][$key] ?? null, '',
-						$a['overridedefault'], $a['type']
+						config: $config,
+						disabled: $disabled,
+						groupList: [],
+						module: 'namespaces',
+						options: $a,
+						value: $namespaceData['additional'][$key] ?? null,
+						name: '',
+						overrideDefault: $a['overridedefault'],
+						type: $a['type']
 					);
 
 					$help = [];
@@ -688,8 +711,15 @@ class ManageWikiFormFactoryBuilder {
 				'disabled' => !$ceMW,
 				'section' => $name,
 			] + ManageWikiTypes::process(
-				$config, false, [], 'namespaces', [],
-				$namespaceData['aliases'], '', [], 'texts'
+				config: $config,
+				disabled: false,
+				groupList: [],
+				module: 'namespaces',
+				options: [],
+				value: $namespaceData['aliases'],
+				name: '',
+				overrideDefault: [],
+				type: 'texts'
 			);
 		}
 
