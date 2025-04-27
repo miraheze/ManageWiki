@@ -339,7 +339,7 @@ class ManageWikiFormFactoryBuilder {
 			$help[] = $extDescription ?? $descriptionFallback ?? $description;
 
 			if ( $ext['help'] ?? false ) {
-				$rawMessage = new RawMessage( '$1' )->params( $ext['help'] );
+				$rawMessage = ( new RawMessage( '$1' ) )->params( $ext['help'] );
 				$help[] = "\n" . $rawMessage->parse();
 			}
 
@@ -441,7 +441,7 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$rawMessage = new RawMessage( '$1' )->params( $set['help'] );
+				$rawMessage = ( new RawMessage( '$1' ) )->params( $set['help'] );
 				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
 
 				// Hack to prevent "implicit submission". See T275588 for more
