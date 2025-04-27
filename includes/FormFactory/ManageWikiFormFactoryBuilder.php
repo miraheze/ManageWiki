@@ -603,7 +603,7 @@ class ManageWikiFormFactoryBuilder {
 					'disabled' => !$ceMW,
 					'section' => $name,
 				] + ManageWikiTypes::process(
-					config; $config,
+					config: $config,
 					disabled: false,
 					groupList: [],
 					module: 'namespaces',
