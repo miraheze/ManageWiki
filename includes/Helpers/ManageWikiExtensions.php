@@ -239,14 +239,16 @@ class ManageWikiExtensions implements IConfigModule {
 		}
 
 		foreach ( $this->removedExtensions as $name => $extensionConfig ) {
-			// We only need to check for permissions when an
-			// extension is being disabled.
 			$requirementsCheck = ManageWikiRequirements::process(
-				array_intersect_key(
+				// We only need to check for permissions when an
+				// extension is being disabled.
+				actions: array_intersect_key(
 					$extensionConfig['requires'] ?? [],
 					[ 'permissions' => true ]
 				),
-				array_keys( $this->removedExtensions )
+				// We don't need this since it's not used for permissions,
+				// which is the only thing we need to check here.
+				extList: []
 			);
 
 			if ( !$requirementsCheck ) {
