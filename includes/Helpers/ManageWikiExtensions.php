@@ -200,16 +200,18 @@ class ManageWikiExtensions implements IConfigModule {
 				if ( !isset( $this->changes[$name] ) ) {
 					// If we are not changing this extension but we are changing (i.e. disabling)
 					// an extension that this extension depends on.
-					foreach ( $requirements['extensions'] ?? [] as $ext ) {
-						if ( isset( $this->changes[$ext] ) ) {
-							$this->errors[] = [
-								'managewiki-error-dependency' => [
-									$this->getName( $ext ),
-									$config['name'],
-								],
-							];
-							// Continue the parent loop
-							continue 2;
+					foreach ( $requirements['extensions'] ?? [] as $exts ) {
+						foreach ( (array)$exts as $ext ) {
+							if ( isset( $this->changes[$ext] ) ) {
+								$this->errors[] = [
+									'managewiki-error-dependency' => [
+										$this->getName( $ext ),
+										$config['name'],
+									],
+								];
+								// Continue the parent loop
+								continue 3;
+							}
 						}
 					}
 				}
