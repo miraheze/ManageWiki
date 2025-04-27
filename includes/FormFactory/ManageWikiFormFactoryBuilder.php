@@ -425,7 +425,7 @@ class ManageWikiFormFactoryBuilder {
 				$configs = ManageWikiTypes::process(
 					config: $config,
 					disabled: $disabled,
-					groupList; $groupList,
+					groupList: $groupList,
 					module: 'settings',
 					options: $set,
 					value: $value,
