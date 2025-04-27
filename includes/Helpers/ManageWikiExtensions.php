@@ -203,7 +203,10 @@ class ManageWikiExtensions implements IConfigModule {
 					foreach ( $requirements['extensions'] ?? [] as $ext ) {
 						if ( isset( $this->changes[$ext] ) ) {
 							$this->errors[] = [
-								'managewiki-error-dependent' => [ $ext ],
+								'managewiki-error-dependency' => [
+									$this->getName( $ext ),
+									$config['name'],
+								],
 							];
 							// Continue the parent loop
 							continue 2;
