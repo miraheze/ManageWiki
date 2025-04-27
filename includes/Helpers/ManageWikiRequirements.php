@@ -17,18 +17,16 @@ class ManageWikiRequirements {
 	 *
 	 * @param array $actions Requirements that need to be met
 	 * @param array $extList Enabled extensions on the wiki
-	 * @return bool Whether the extension can be enabled
+	 * @return array List of requirements that failed
 	 */
-	public static function process( array $actions, array $extList ): bool {
+	public static function process( array $actions, array $extList ): array {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
 		foreach ( $actions as $action => $data ) {
 			switch ( $action ) {
 				case 'permissions':
-					// We don't check permissions if we are in CLI mode, so that we can
-					// toggle restricted extensions in CLI.
-					$stepResponse['permissions'] = PHP_SAPI === 'cli' || self::permissions( $data );
+					$stepResponse['permissions'] = self::permissions( $data );
 					break;
 				case 'extensions':
 					$stepResponse['extensions'] = self::extensions( $data, $extList );
@@ -52,140 +50,134 @@ class ManageWikiRequirements {
 					$stepResponse['visibility'] = self::visibility( $data );
 					break;
 				default:
-					return false;
+					return [];
 			}
 		}
 
-		return !in_array( false, $stepResponse, true );
+		return $stepResponse;
 	}
 
 	/**
 	 * @param array $data Array of permissions needed
-	 * @return bool Whether permissions requirements are met
+	 * @return array Missing permissions (empty array if all good)
 	 */
-	private static function permissions( array $data ): bool {
+	private static function permissions( array $data ): array {
+		if ( PHP_SAPI === 'cli' ) {
+			return [];
+		}
+
+		$missing = [];
+
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		foreach ( $data as $perm ) {
 			if ( !$permissionManager->userHasRight( RequestContext::getMain()->getUser(), $perm ) ) {
-				return false;
+				$missing[] = $perm;
 			}
 		}
 
-		return true;
+		return $missing;
 	}
 
 	/**
 	 * @param array $data Array of extensions needed
 	 * @param array $extList Extensions already enabled on the wiki
-	 * @return bool Whether extension requirements are met
+	 * @return array Missing extensions (empty array if all good)
 	 */
-	private static function extensions(
-		array $data,
-		array $extList
-	): bool {
+	private static function extensions( array $data, array $extList ): array {
+		$missing = [];
+
 		foreach ( $data as $extension ) {
 			if ( is_array( $extension ) ) {
-				$count = 0;
-				foreach ( $extension as $or ) {
-					if ( in_array( $or, $extList, true ) ) {
-						$count++;
-					}
-				}
-
-				if ( !$count ) {
-					return false;
+				// OR logic: at least one must exist
+				if ( !array_intersect( $extension, $extList ) ) {
+					$missing[] = implode( ' | ', $extension );
 				}
 			} elseif ( !in_array( $extension, $extList, true ) ) {
-				return false;
+				$missing[] = $extension;
 			}
 		}
 
-		return true;
+		return $missing;
 	}
 
 	/**
 	 * @param int $limit Cut off number
-	 * @return bool Whether limit is exceeded or not
+	 * @return array Empty array if OK, array with reason if failed
 	 */
-	private static function activeUsers( int $limit ): bool {
-		return SiteStats::activeUsers() <= $limit;
+	private static function activeUsers( int $limit ): array {
+		return SiteStats::activeUsers() <= $limit ? [] : [ "must have <= $limit active users" ];
 	}
 
 	/**
 	 * @param int $limit Cut off number
-	 * @return bool Whether limit is exceeded or not
+	 * @return array Empty array if OK, array with reason if failed
 	 */
-	private static function articles( int $limit ): bool {
-		return SiteStats::articles() <= $limit;
+	private static function articles( int $limit ): array {
+		return SiteStats::articles() <= $limit ? [] : [ "must have <= $limit articles" ];
 	}
 
 	/**
 	 * @param int $limit Cut off number
-	 * @return bool Whether limit is exceeded or not
+	 * @return array Empty array if OK, array with reason if failed
 	 */
-	private static function pages( int $limit ): bool {
-		return SiteStats::pages() <= $limit;
+	private static function pages( int $limit ): array {
+		return SiteStats::pages() <= $limit ? [] : [ "must have <= $limit pages" ];
 	}
 
 	/**
 	 * @param int $limit Cut off number
-	 * @return bool Whether limit is exceeded or not
+	 * @return array Empty array if OK, array with reason if failed
 	 */
-	private static function images( int $limit ): bool {
-		return SiteStats::images() <= $limit;
+	private static function images( int $limit ): array {
+		return SiteStats::images() <= $limit ? [] : [ "must have <= $limit images" ];
 	}
 
 	/**
 	 * @param array $data
-	 * @return bool
+	 * @return array Empty array if OK, array with reason if failed
 	 */
-	private static function settings( array $data ): bool {
+	private static function settings( array $data ): array {
 		$config = MediaWikiServices::getInstance()->getMainConfig();
-
 		$database = $data['dbname'] ?? $config->get( MainConfigNames::DBname );
 		$setting = $data['setting'];
 		$value = $data['value'];
 
 		$manageWikiSettings = new ManageWikiSettings( $database );
-
 		$wikiValue = $manageWikiSettings->list( $setting );
 
 		if ( $wikiValue !== null ) {
-			// We need to cast $wikiValue to an array
-			// to convert any values (boolean) to an array.
-			// Otherwise TypeError is thrown.
 			if ( $wikiValue === $value || in_array( $value, (array)$wikiValue, true ) ) {
-				return true;
+				return [];
 			}
 		}
 
-		return false;
+		return [ 'setting mismatch' ];
 	}
 
 	/**
 	 * @param array $data
-	 * @return bool
+	 * @return array Empty array if OK, array with reason if failed
 	 */
-	private static function visibility( array $data ): bool {
+	private static function visibility( array $data ): array {
+		$missing = [];
+
 		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
 		$isPrivate = !$permissionManager->isEveryoneAllowed( 'read' );
 
-		$ret = [];
 		foreach ( $data as $key => $val ) {
 			if ( $key === 'state' ) {
-				$ret['state'] = (
-					( $val === 'private' && $isPrivate ) ||
-					( $val === 'public' && !$isPrivate )
-				);
-				continue;
-			}
-
-			if ( $key === 'permissions' ) {
-				$ret['permissions'] = self::permissions( $val );
-				continue;
+				if ( ( $val === 'private' && !$isPrivate ) || ( $val === 'public' && $isPrivate ) ) {
+					$missing[] = "wrong state (expected $val)";
+				}
+			} elseif ( $key === 'permissions' ) {
+				foreach ( (array) $val as $perm ) {
+					if ( !$permissionManager->userHasRight( RequestContext::getMain()->getUser(), $perm ) ) {
+						$missing[] = "missing permission $perm";
+					}
+				}
 			}
 		}
 
-		return !in_array( false, $ret, true );
+		return $missing;
 	}
 }
