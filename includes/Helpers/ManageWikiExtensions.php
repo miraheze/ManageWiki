@@ -202,7 +202,7 @@ class ManageWikiExtensions implements IConfigModule {
 			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
 
 			if ( !$requirementsCheck ) {
-				$language = RequestContext::getMain()-getLanguage();
+				$language = RequestContext::getMain()->getLanguage();
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
 						//$extensionConfig['name'],
