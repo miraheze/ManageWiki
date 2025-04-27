@@ -15,7 +15,7 @@ class ManageWikiInstaller {
 	public static function process(
 		string $dbname,
 		array $actions,
-		bool $install = true
+		bool $install
 	): bool {
 		foreach ( $actions as $action => $data ) {
 			$result = match ( $action ) {

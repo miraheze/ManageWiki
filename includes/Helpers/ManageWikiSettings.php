@@ -170,7 +170,11 @@ class ManageWikiSettings implements IConfigModule {
 			->execute();
 
 		if ( $this->scripts ) {
-			ManageWikiInstaller::process( $this->dbname, [ 'mwscript' => $this->scripts ] );
+			ManageWikiInstaller::process(
+				$this->dbname,
+				[ 'mwscript' => $this->scripts ],
+				install: true
+			);
 		}
 
 		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
