@@ -133,7 +133,7 @@
 	"managewiki-namespaces-select-header": "Manage existing namespaces",
 	"managewiki-namespaces-select-info": "Below is a list of all the namespaces that exist on this wiki. Use the dropdown below to select a namespace you wish to manage or view the configuration for.",
 	"managewiki-nav-core": "Manage core settings",
-	"managewiki-nav-extensions": "Manage Extensions",
+	"managewiki-nav-extensions": "Manage extensions",
 	"managewiki-nav-namespaces": "Manage namespaces",
 	"managewiki-nav-permissions": "Manage permissions",
 	"managewiki-nav-settings": "Manage additional settings",
