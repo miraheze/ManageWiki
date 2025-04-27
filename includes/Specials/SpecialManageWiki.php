@@ -132,6 +132,35 @@ class SpecialManageWiki extends SpecialPage {
 			'settings',
 		];
 	}
+	
+	/** @inheritDoc */
+	public function getAssociatedNavigationLinks(): array {
+		return [
+			$this->getPageTitle( 'core' )->getPrefixedText(),
+			$this->getPageTitle( 'extensions' )->getPrefixedText(),
+			$this->getPageTitle( 'namespaces' )->getPrefixedText(),
+			$this->getPageTitle( 'permissions' )->getPrefixedText(),
+			$this->getPageTitle( 'settings' )->getPrefixedText(),
+		];
+	}
+
+	/** @inheritDoc */
+	public function getShortDescription( string $path = '' ): string {
+		$core = $this->getPageTitle( 'core' )->getText();
+		$extensions = $this->getPageTitle( 'extensions' )->getText();
+		$namespaces = $this->getPageTitle( 'namespaces' )->getText();
+		$permissions = $this->getPageTitle( 'permissions' )->getText();
+		$settings = $this->getPageTitle( 'settings' )->getText();
+
+		return match ( $path ) {
+			$core => $this->msg( 'managewiki-nav-core' )->text(),
+			$extensions => $this->msg( 'managewiki-nav-extensions' )->text(),
+			$namespaces => $this->msg( 'managewiki-nav-namespaces' )->text(),
+			$permissions => $this->msg( 'managewiki-nav-permissions' )->text(),
+			$settings => $this->msg( 'managewiki-nav-settings' )->text(),
+			default => '',
+		};
+	}
 
 	private function showInputBox(): void {
 		$formDescriptor = [
