@@ -339,7 +339,7 @@ class ManageWikiFormFactoryBuilder {
 			$help[] = $extDescription ?? $descriptionFallback ?? $description;
 
 			if ( $ext['help'] ?? false ) {
-				$rawMessage = new RawMessage( '$1' )->params( $ext['help'] ) );
+				$rawMessage = new RawMessage( '$1' )->params( $ext['help'] );
 				$help[] = "\n" . $rawMessage->parse();
 			}
 
