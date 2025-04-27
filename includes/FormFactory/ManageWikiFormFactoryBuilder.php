@@ -441,8 +441,8 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				// $rawMessage = new RawMessage( $set['help'] );
-				$help[] = $msgHelp->exists() ? $msgHelp : [ 'managewiki-setting-label', $set['help'] ];
+				$rawMessage = new RawMessage( $set['help'] );
+				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage;
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
@@ -468,7 +468,7 @@ class ManageWikiFormFactoryBuilder {
 						$varName,
 					],
 					'disabled' => $disabled,
-					'help-messages' => $help,
+					'help' => nl2br( implode( ' ', $help ) ),
 					'cssclass' => 'managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
@@ -1483,7 +1483,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function buildRequires(
 		IContextSource $context,
 		array $config
-	): array {
+	): string {
 		$requires = [];
 		$language = $context->getLanguage();
 
@@ -1511,7 +1511,7 @@ class ManageWikiFormFactoryBuilder {
 			$requires[] = $language->ucfirst( $require ) . $colon . $language->commaList( $flat );
 		}
 
-		return [ 'managewiki-requires', $language->listToText( $requires ) ];
+		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
 	}
 
 	private static function getConfigName( string $name ): string {
