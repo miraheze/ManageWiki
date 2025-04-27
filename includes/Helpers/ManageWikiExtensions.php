@@ -192,7 +192,7 @@ class ManageWikiExtensions implements IConfigModule {
 			// we don't need to check for permissions.
 			if ( !isset( $this->changes[$name] ) ) {
 				$requirements = array_diff_key(
-					$ext['requires'],
+					$requirements,
 					[ 'permissions' => true ]
 				);
 			}
