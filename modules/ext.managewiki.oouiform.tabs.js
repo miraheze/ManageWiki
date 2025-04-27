@@ -1,9 +1,8 @@
 ( function () {
 	$( () => {
-		let tabs, previousTab, switchingNoHash;
+		let switchingNoHash;
 
-		tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
-
+		const tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
 		tabs.$element.addClass( 'managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
@@ -16,7 +15,8 @@
 				}
 			} );
 
-			// We disable lazy infuse if there is a cloner as lazy infuse causes cloner to add two fields each time rather than one.
+			// We disable lazy infuse if there is a cloner as lazy infuse causes cloner
+			// to add two fields each time rather than one.
 			if ( !panel.$element.find( '.mw-htmlform-field-HTMLFormFieldCloner' ).length && !panel.$element.data( 'mw-section-infused' ) ) {
 				panel.$element.removeClass( 'mw-htmlform-autoinfuse-lazy' );
 				mw.hook( 'htmlform.enhance' ).fire( panel.$element );
@@ -25,17 +25,15 @@
 		}
 
 		function onTabPanelSet( panel ) {
-			let scrollTop, active;
-
 			if ( switchingNoHash ) {
 				return;
 			}
 			// Handle hash manually to prevent jumping,
 			// therefore save and restore scrollTop to prevent jumping.
-			scrollTop = $( window ).scrollTop();
+			const scrollTop = $( window ).scrollTop();
 			// Changing the hash apparently causes keyboard focus to be lost?
 			// Save and restore it. This makes no sense though.
-			active = document.activeElement;
+			const active = document.activeElement;
 			location.hash = '#' + panel.getName();
 			if ( active ) {
 				active.focus();
@@ -65,8 +63,9 @@
 		// Jump to correct section as indicated by the hash.
 		// This function is called onload and onhashchange.
 		function detectHash() {
-			let hash = location.hash,
-				matchedElement, $parentSection;
+			let matchedElement, $parentSection;
+
+			const hash = location.hash;
 			if ( hash.match( /^#mw-section-[\w-]+$/ ) ) {
 				mw.storage.session.remove( 'managewiki-prevTab' );
 				switchManageWikiTab( hash.slice( 1 ) );
@@ -94,7 +93,7 @@
 			.trigger( 'hashchange' );
 
 		// Restore the active tab after saving the settings
-		previousTab = mw.storage.session.get( 'managewiki-prevTab' );
+		const previousTab = mw.storage.session.get( 'managewiki-prevTab' );
 		if ( previousTab ) {
 			switchManageWikiTab( previousTab, true );
 			// Deleting the key, the tab states should be reset until we press Save
@@ -145,10 +144,12 @@
 					const $dropdown = $( this ).closest( '.oo-ui-dropdownInputWidget[data-ooui],.mw-widget-selectWithInputWidget[data-ooui]' );
 					if ( $dropdown.length ) {
 						const dropdown = OO.ui.infuse( $dropdown[ 0 ] );
-						const dropdownWidget = ( dropdown.dropdowninput || dropdown ).dropdownWidget;
+						const dropdownSource = dropdown.dropdowninput || dropdown;
+						const dropdownWidget = dropdownSource.dropdownWidget;
 						if ( dropdownWidget ) {
 							dropdownWidget.getMenu().getItems().forEach( ( option ) => {
-								// Highlight the dropdown handle and the matched label, for when the dropdown is opened
+								// Highlight the dropdown handle and the matched label,
+								// for when the dropdown is opened.
 								addToIndex( option.$label, dropdownWidget.$handle );
 								addToIndex( option.$label, option.$label );
 							} );
@@ -200,8 +201,6 @@
 			if ( isSearching ) {
 				val = val.toLowerCase();
 				texts.forEach( ( text ) => {
-					// TODO: Could use Intl.Collator.prototype.compare like OO.ui.mixin.LabelElement.static.highlightQuery
-					// but might be too slow.
 					if ( text.includes( val ) ) {
 						index[ text ].forEach( ( item ) => {
 							item.$highlight.addClass( 'managewiki-search-highlight' );

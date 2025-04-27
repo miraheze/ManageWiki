@@ -11,72 +11,67 @@ class PopulateGroupPermissions extends Maintenance {
 
 	public function __construct() {
 		parent::__construct();
+
+		$this->addOption( 'force', 'Force populating permissions even if ManageWiki permissions is enabled.' );
 		$this->requireExtension( 'ManageWiki' );
 	}
 
 	public function execute(): void {
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+		if ( !$this->hasOption( 'force' ) && ManageWiki::checkSetup( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
 		$excluded = $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups );
 
-		$grouparray = [];
-
+		$groupArray = [];
 		foreach ( $this->getConfig()->get( MainConfigNames::GroupPermissions ) as $group => $perm ) {
-			$permsarray = [];
-
 			if ( !in_array( $group, $excluded, true ) ) {
-				foreach ( $perm as $name => $value ) {
-					if ( $value ) {
-						$permsarray[] = $name;
-					}
-				}
-
-				$grouparray[$group]['perms'] = json_encode( $permsarray );
+				$permsArray = array_filter( $perm, static fn ( mixed $value ): bool => (bool)$value );
+				$groupArray[$group]['perms'] = $permsArray;
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::AddGroups ) as $group => $add ) {
 			if ( !in_array( $group, $excluded, true ) ) {
-				$grouparray[$group]['add'] = json_encode( $add );
+				$groupArray[$group]['add'] = $add;
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::RemoveGroups ) as $group => $remove ) {
 			if ( !in_array( $group, $excluded, true ) ) {
-				$grouparray[$group]['remove'] = json_encode( $remove );
+				$groupArray[$group]['remove'] = $remove;
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::GroupsAddToSelf ) as $group => $adds ) {
 			if ( !in_array( $group, $excluded, true ) ) {
-				$grouparray[$group]['addself'] = json_encode( $adds );
+				$groupArray[$group]['addself'] = $adds;
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::GroupsRemoveFromSelf ) as $group => $removes ) {
 			if ( !in_array( $group, $excluded, true ) ) {
-				$grouparray[$group]['removeself'] = json_encode( $removes );
+				$groupArray[$group]['removeself'] = $removes;
 			}
 		}
 
 		foreach ( $this->getConfig()->get( MainConfigNames::Autopromote ) as $group => $promo ) {
 			if ( !in_array( $group, $excluded, true ) ) {
-				$grouparray[$group]['autopromote'] = json_encode( $promo );
+				$groupArray[$group]['autopromote'] = $promo;
 			}
 		}
 
 		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
-		foreach ( $grouparray as $groupname => $groupatr ) {
+		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
+		foreach ( $groupArray as $groupName => $groupAttrs ) {
 			$check = $dbw->newSelectQueryBuilder()
 				->select( 'perm_group' )
 				->from( 'mw_permissions' )
 				->where( [
-					'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-					'perm_group' => $groupname,
+					'perm_dbname' => $dbname,
+					'perm_group' => $groupName,
 				] )
 				->caller( __METHOD__ )
 				->fetchRow();
@@ -85,14 +80,14 @@ class PopulateGroupPermissions extends Maintenance {
 				$dbw->newInsertQueryBuilder()
 					->insertInto( 'mw_permissions' )
 					->row( [
-						'perm_dbname' => $this->getConfig()->get( MainConfigNames::DBname ),
-						'perm_group' => $groupname,
-						'perm_permissions' => empty( $groupatr['perms'] ) ? json_encode( [] ) : $groupatr['perms'],
-						'perm_addgroups' => empty( $groupatr['add'] ) ? json_encode( [] ) : $groupatr['add'],
-						'perm_removegroups' => empty( $groupatr['remove'] ) ? json_encode( [] ) : $groupatr['remove'],
-						'perm_addgroupstoself' => empty( $groupatr['addself'] ) ? json_encode( [] ) : $groupatr['addself'],
-						'perm_removegroupsfromself' => empty( $groupatr['removeself'] ) ? json_encode( [] ) : $groupatr['removeself'],
-						'perm_autopromote' => empty( $groupatr['autopromote'] ) ? json_encode( [] ) : $groupatr['autopromote'],
+						'perm_dbname' => $dbname,
+						'perm_group' => $groupName,
+						'perm_permissions' => json_encode( $groupAttrs['perms'] ?? [] ),
+						'perm_addgroups' => json_encode( $groupAttrs['add'] ?? [] ),
+						'perm_removegroups' => json_encode( $groupAttrs['remove'] ?? [] ),
+						'perm_addgroupstoself' => json_encode( $groupAttrs['addself'] ?? [] ),
+						'perm_removegroupsfromself' => json_encode( $groupAttrs['removeself'] ?? [] ),
+						'perm_autopromote' => json_encode( $groupAttrs['autopromote'] ?? [] ),
 					] )
 					->caller( __METHOD__ )
 					->execute();

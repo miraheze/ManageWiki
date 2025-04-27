@@ -6,8 +6,10 @@ use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Language\RawMessage;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Permissions\PermissionManager;
+use MediaWiki\Status\Status;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ManageWikiOOUIForm;
 use UnexpectedValueException;
@@ -30,7 +32,10 @@ class ManageWikiFormFactory {
 			$context->getLanguage()->getDir()
 		);
 
-		return ManageWikiFormFactoryBuilder::buildDescriptor( $module, $dbname, $ceMW, $context, $remoteWiki, $special, $filtered, $config );
+		return ManageWikiFormFactoryBuilder::buildDescriptor(
+			$module, $dbname, $ceMW, $context, $remoteWiki,
+			$special, $filtered, $config
+		);
 	}
 
 	public function getForm(
@@ -66,7 +71,7 @@ class ManageWikiFormFactory {
 
 		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
 		$htmlForm
-			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): bool =>
+			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
 					$config,
 					$dbw,
@@ -102,9 +107,12 @@ class ManageWikiFormFactory {
 		string $special,
 		string $filtered,
 		bool $ceMW
-	): bool {
+	): Status|bool {
 		if ( !$ceMW ) {
-			throw new UnexpectedValueException( "User '{$form->getUser()->getName()}' without 'managewiki-$module' right tried to change wiki $module!" );
+			throw new UnexpectedValueException(
+				"User '{$form->getUser()->getName()}' without 'managewiki-$module' " .
+				"right tried to change wiki $module!"
+			);
 		}
 
 		// Avoid 'no field named reason' error
@@ -134,19 +142,9 @@ class ManageWikiFormFactory {
 				}
 			}
 
-			$form->getOutput()->addHTML(
-				Html::errorBox(
-					Html::rawElement(
-						'p',
-						[],
-						'The following errors occurred: <br />' . implode( '<br />', $errorOut )
-					),
-					'',
-					'mw-notify-error'
-				)
+			return Status::newFatal(
+				new RawMessage( implode( '<br />', $errorOut ) )
 			);
-
-			return false;
 		}
 
 		$form->getOutput()->addHTML(

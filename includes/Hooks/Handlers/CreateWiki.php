@@ -132,12 +132,37 @@ class CreateWiki implements
 				->caller( __METHOD__ )
 				->fetchResultSet();
 
+			$metaNamespace = null;
+			$metaNamespaceTalk = null;
+
+			foreach ( $nsObjects as $ns ) {
+				if ( $metaNamespace !== null && $metaNamespaceTalk !== null ) {
+					// Both found, no need to continue
+					break;
+				}
+
+				$id = (int)$ns->ns_namespace_id;
+
+				if ( $id === NS_PROJECT ) {
+					$metaNamespace = $ns->ns_namespace_name;
+					continue;
+				}
+
+				if ( $id === NS_PROJECT_TALK ) {
+					$metaNamespaceTalk = $ns->ns_namespace_name;
+				}
+			}
+
 			$lcName = [];
 			$lcEN = [];
 
 			try {
 				$languageCode = $cacheArray['core']['wgLanguageCode'] ?? 'en';
 				$lcName = $this->localisationCache->getItem( $languageCode, 'namespaceNames' );
+				$lcName[NS_PROJECT_TALK] = str_replace( '$1',
+					$lcName[NS_PROJECT] ?? $metaNamespace,
+					$lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk
+				);
 
 				if ( $languageCode !== 'en' ) {
 					$lcEN = $this->localisationCache->getItem( 'en', 'namespaceNames' );

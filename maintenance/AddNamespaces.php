@@ -11,7 +11,7 @@ class AddNamespaces extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 
-		$this->addOption( 'default', 'Wheather to add the namespace to the \'default\' db name (Defaults to wgDBname).' );
+		$this->addOption( 'default', 'Wheather to add the namespace to the \'default\' db name (Defaults to DBname).' );
 		$this->addOption( 'id', 'The namespace id e.g 1.', true, true );
 		$this->addOption( 'name', 'The name of the namespace e.g \'Module\'.', true, true );
 		$this->addOption( 'searchable', 'Whether the namespace is searchable.' );

@@ -54,7 +54,7 @@
 	"managewiki-permissions-create": "Наименование на новата група",
 	"managewiki-success": "Вашите промени са съхранени успешно.",
 	"managewikidefaultpermissions": "Управление на правата по подразбиране за нови уикита",
-	"managewikidefaultpermissions-resetgroups": "Връщане на всички групи в изходно състояние",
+	"managewikidefaults-resetgroups": "Връщане на всички групи в изходно състояние",
 	"managewikiextensions": "Управление на разширенията на уики",
 	"managewikinamespaces": "Управление на именните пространства на уики",
 	"managewikipermissions": "Управление на правата на уики",

@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use Collator;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
@@ -23,8 +24,8 @@ class ManageWikiTypes {
 		array $options,
 		mixed $value,
 		string $name,
-		mixed $overrideDefault = false,
-		string $type = ''
+		mixed $overrideDefault,
+		string $type
 	): array {
 		if ( $module === 'namespaces' ) {
 			if ( $overrideDefault ) {
@@ -179,7 +180,9 @@ class ManageWikiTypes {
 					'type' => 'checkmatrix',
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
-					'default' => $value !== null ? ManageWiki::handleMatrix( $value, 'php' ) : $options['overridedefault'],
+					'default' => $value !== null ?
+						ManageWiki::handleMatrix( $value, 'php' ) :
+						$options['overridedefault'],
 				];
 				break;
 			case 'preferences':
@@ -239,7 +242,10 @@ class ManageWikiTypes {
 						$excludedPrefs[] = 'enotifusertalkpages';
 					}
 
-					if ( !$config->get( MainConfigNames::EnotifUserTalk ) && !$config->get( MainConfigNames::EnotifWatchlist ) ) {
+					if (
+						!$config->get( MainConfigNames::EnotifUserTalk ) &&
+						!$config->get( MainConfigNames::EnotifWatchlist )
+					) {
 						if ( !$config->get( MainConfigNames::EnotifMinorEdits ) ) {
 							$excludedPrefs[] = 'enotifminoredits';
 						}
@@ -262,6 +268,9 @@ class ManageWikiTypes {
 
 				// Exclude downloaduserdata preference
 				$excludedPrefs[] = 'downloaduserdata';
+
+				// Exclude forcesafemode preference
+				$excludedPrefs[] = 'forcesafemode';
 
 				foreach ( $allPreferences as $pref => $val ) {
 					if ( !in_array( $pref, $excludedPrefs, true ) ) {
@@ -327,7 +336,7 @@ class ManageWikiTypes {
 
 				$configs = [
 					'type' => 'multiselect',
-					'options' => isset( $options['options'] ) ? array_merge( $enabledSkins, $options['options'] ) : $enabledSkins,
+					'options' => array_merge( $enabledSkins, $options['options'] ?? [] ),
 					'default' => $value ?? $options['overridedefault'],
 				];
 
@@ -379,7 +388,7 @@ class ManageWikiTypes {
 				$language = RequestContext::getMain()->getLanguage();
 				$groups = [];
 				foreach ( $groupList as $group ) {
-					$lowerCaseGroupName = strtolower( $group );
+					$lowerCaseGroupName = $language->lc( $group );
 					$groups[htmlspecialchars( $language->getGroupName( $lowerCaseGroupName ) )] = $lowerCaseGroupName;
 				}
 
@@ -394,10 +403,8 @@ class ManageWikiTypes {
 				}
 				break;
 			case 'userrights':
-				$rights = [];
-				foreach ( MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions() as $right ) {
-					$rights[$right] = $right;
-				}
+				$permissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
+				$rights = array_combine( $permissions, $permissions );
 
 				$configs = [
 					'type' => 'multiselect',
@@ -444,12 +451,18 @@ class ManageWikiTypes {
 			$contentHandlerFactory = MediaWikiServices::getInstance()->getContentHandlerFactory();
 
 			$models = $contentHandlerFactory->getContentModels();
+			$language = RequestContext::getMain()->getLanguage();
 			$contentModels = [];
 			foreach ( $models as $model ) {
-				$contentModels[ucfirst( ContentHandler::getLocalizedName( $model ) )] = $model;
+				$contentModels[$language->ucfirst( ContentHandler::getLocalizedName( $model ) )] = $model;
 			}
 
-			uksort( $contentModels, 'strcasecmp' );
+			// Use collator to make sure we do this in a way that works multilingual
+			$collator = new Collator( $language->getCode() );
+			uksort( $contentModels,
+				static fn ( string $a, string $b ): int =>
+					$collator->compare( $a, $b )
+			);
 
 			return [
 				'type' => 'select',

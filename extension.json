@@ -10,6 +10,7 @@
 	],
 	"url": "https://github.com/miraheze/ManageWiki",
 	"descriptionmsg": "managewiki-desc",
+	"namemsg": "managewiki-extensionname",
 	"license-name": "GPL-3.0-or-later",
 	"type": "specialpage",
 	"requires": {
@@ -127,12 +128,13 @@
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
 				"CreateWikiDatabaseUtils",
+				"NamespaceInfo",
 				"PermissionManager",
 				"RemoteWikiFactory"
 			]
 		},
-		"ManageWikiDefaultPermissions": {
-			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaultPermissions",
+		"ManageWikiDefaults": {
+			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaults",
 			"services": [
 				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
@@ -221,7 +223,14 @@
 				"ext.managewiki.oouiform.tabs.js"
 			],
 			"messages": [
+				"brackets",
+				"managewiki-review-changed",
+				"managewiki-review-disabled",
+				"managewiki-review-enabled",
+				"managewiki-review-nochanges",
+				"managewiki-review-none",
 				"managewiki-review-title",
+				"managewiki-review-toggled",
 				"managewiki-save",
 				"managewiki-search-noresults",
 				"managewiki-warning-changes"

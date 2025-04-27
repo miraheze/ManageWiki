@@ -80,11 +80,42 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	/**
+	 * Get all groups that have the specified permission
+	 *
+	 * @param string $permission The permission to look for
+	 * @return array List of group names that have the permission
+	 */
+	public function getGroupsWithPermission( string $permission ): array {
+		$groups = [];
+		foreach ( $this->livePermissions as $group => $data ) {
+			if ( in_array( $permission, $data['permissions'] ?? [], true ) ) {
+				$groups[] = $group;
+			}
+		}
+
+		return array_unique( $groups );
+	}
+
+	/**
 	 * Modify a group handler
 	 * @param string $group Group name
 	 * @param array $data Merging information about the group
 	 */
 	public function modify( string $group, array $data ): void {
+		if ( is_array( $data['permissions']['remove'] ?? null ) ) {
+			$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions' );
+			$isRemovingPermission = in_array(
+				'managewiki-permissions', $data['permissions']['remove'], true
+			);
+
+			if ( $isRemovingPermission && $groupsWithPermission === [ $group ] ) {
+				$this->errors[] = [
+					'managewiki-error-missingpermission' => [],
+				];
+				return;
+			}
+		}
+
 		// We will handle all processing in final stages
 		$permData = [
 			'permissions' => $this->livePermissions[$group]['permissions'] ?? [],
@@ -132,6 +163,14 @@ class ManageWikiPermissions implements IConfigModule {
 	 * @param string $group Group name
 	 */
 	public function remove( string $group ): void {
+		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions' );
+		if ( $groupsWithPermission === [ $group ] ) {
+			$this->errors[] = [
+				'managewiki-error-missingpermission' => [],
+			];
+			return;
+		}
+
 		// Utilize changes differently in this case
 		foreach ( $this->livePermissions[$group] as $name => $value ) {
 			$this->changes[$group][$name] = [
@@ -176,7 +215,10 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	public function commit(): void {
-		$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
+		if ( $this->getErrors() ) {
+			// Don't save anything if we have errors
+			return;
+		}
 
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( $this->isDeleting( $group ) ) {
@@ -195,7 +237,8 @@ class ManageWikiPermissions implements IConfigModule {
 				continue;
 			}
 
-			if ( empty( $this->livePermissions[$group]['permissions'] ) ) {
+			$live = $this->livePermissions[$group];
+			if ( empty( $live['permissions'] ) ) {
 				$this->errors[] = [
 					'managewiki-error-emptygroup' => [],
 				];
@@ -203,12 +246,13 @@ class ManageWikiPermissions implements IConfigModule {
 			}
 
 			$builtTable = [
-				'perm_permissions' => json_encode( $this->livePermissions[$group]['permissions'] ),
-				'perm_addgroups' => json_encode( $this->livePermissions[$group]['addgroups'] ),
-				'perm_removegroups' => json_encode( $this->livePermissions[$group]['removegroups'] ),
-				'perm_addgroupstoself' => json_encode( $this->livePermissions[$group]['addself'] ),
-				'perm_removegroupsfromself' => json_encode( $this->livePermissions[$group]['removeself'] ),
-				'perm_autopromote' => $this->livePermissions[$group]['autopromote'] === null ? null : json_encode( $this->livePermissions[$group]['autopromote'] ?? '' ),
+				'perm_permissions' => json_encode( $live['permissions'] ),
+				'perm_addgroups' => json_encode( $live['addgroups'] ),
+				'perm_removegroups' => json_encode( $live['removegroups'] ),
+				'perm_addgroupstoself' => json_encode( $live['addself'] ),
+				'perm_removegroupsfromself' => json_encode( $live['removeself'] ),
+				'perm_autopromote' => $live['autopromote'] === null
+					? null : json_encode( $live['autopromote'] ?? '' ),
 			];
 
 			$this->dbw->newInsertQueryBuilder()
@@ -227,18 +271,28 @@ class ManageWikiPermissions implements IConfigModule {
 				->execute();
 
 			$logAP = ( $this->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
+			$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
+
+			/**
+			 * Convert a list of permission/group changes into a comma-separated string.
+			 * Used for logging. Falls back to $logNULL when the list is empty.
+			 * Keeps the logic out of the main logParams block for readability and reusability.
+			 */
+			$logValue = static fn ( ?array $value ): string =>
+				$value ? implode( ', ', $value ) : $logNULL;
+
 			$this->logParams = [
-				'4::ar' => !empty( $this->changes[$group]['permissions']['add'] ) ? implode( ', ', $this->changes[$group]['permissions']['add'] ) : $logNULL,
-				'5::rr' => !empty( $this->changes[$group]['permissions']['remove'] ) ? implode( ', ', $this->changes[$group]['permissions']['remove'] ) : $logNULL,
-				'6::aag' => !empty( $this->changes[$group]['addgroups']['add'] ) ? implode( ', ', $this->changes[$group]['addgroups']['add'] ) : $logNULL,
-				'7::rag' => !empty( $this->changes[$group]['addgroups']['remove'] ) ? implode( ', ', $this->changes[$group]['addgroups']['remove'] ) : $logNULL,
-				'8::arg' => !empty( $this->changes[$group]['removegroups']['add'] ) ? implode( ', ', $this->changes[$group]['removegroups']['add'] ) : $logNULL,
-				'9::rrg' => !empty( $this->changes[$group]['removegroups']['remove'] ) ? implode( ', ', $this->changes[$group]['removegroups']['remove'] ) : $logNULL,
-				'10::aags' => !empty( $this->changes[$group]['addself']['add'] ) ? implode( ', ', $this->changes[$group]['addself']['add'] ) : $logNULL,
-				'11::rags' => !empty( $this->changes[$group]['addself']['remove'] ) ? implode( ', ', $this->changes[$group]['addself']['remove'] ) : $logNULL,
-				'12::args' => !empty( $this->changes[$group]['removeself']['add'] ) ? implode( ', ', $this->changes[$group]['removeself']['add'] ) : $logNULL,
-				'13::rrgs' => !empty( $this->changes[$group]['removeself']['remove'] ) ? implode( ', ', $this->changes[$group]['removeself']['remove'] ) : $logNULL,
-				'14::ap' => strtolower( wfMessage( $logAP )->inContentLanguage()->text() ),
+				'4::ar' => $logValue( $this->changes[$group]['permissions']['add'] ?? null ),
+				'5::rr' => $logValue( $this->changes[$group]['permissions']['remove'] ?? null ),
+				'6::aag' => $logValue( $this->changes[$group]['addgroups']['add'] ?? null ),
+				'7::rag' => $logValue( $this->changes[$group]['addgroups']['remove'] ?? null ),
+				'8::arg' => $logValue( $this->changes[$group]['removegroups']['add'] ?? null ),
+				'9::rrg' => $logValue( $this->changes[$group]['removegroups']['remove'] ?? null ),
+				'10::aags' => $logValue( $this->changes[$group]['addself']['add'] ?? null ),
+				'11::rags' => $logValue( $this->changes[$group]['addself']['remove'] ?? null ),
+				'12::args' => $logValue( $this->changes[$group]['removeself']['add'] ?? null ),
+				'13::rrgs' => $logValue( $this->changes[$group]['removeself']['remove'] ?? null ),
+				'14::ap' => mb_strtolower( wfMessage( $logAP )->inContentLanguage()->text() ),
 			];
 		}
 

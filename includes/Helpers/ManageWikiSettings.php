@@ -17,7 +17,6 @@ class ManageWikiSettings implements IConfigModule {
 	private IDatabase $dbw;
 
 	private array $changes = [];
-	private array $errors = [];
 	private array $logParams = [];
 	private array $scripts = [];
 	private array $liveSettings;
@@ -65,7 +64,11 @@ class ManageWikiSettings implements IConfigModule {
 	public function modify( array $settings, mixed $default = null ): void {
 		// We will handle all processing in final stages
 		foreach ( $settings as $var => $value ) {
-			if ( $value !== ( $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default ) ) {
+			$live = $this->liveSettings[$var] ?? null;
+			$override = $this->settingsConfig[$var]['overridedefault'] ?? null;
+			$current = $live ?? $override ?? $default;
+
+			if ( $value !== $current ) {
 				$this->changes[$var] = [
 					'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default,
 					'new' => $value,
@@ -128,7 +131,9 @@ class ManageWikiSettings implements IConfigModule {
 	}
 
 	public function getErrors(): array {
-		return $this->errors;
+		// This class doesn't produce errors, but the method
+		// may be called by consumers, so return an empty array.
+		return [];
 	}
 
 	public function hasChanges(): bool {
@@ -165,7 +170,11 @@ class ManageWikiSettings implements IConfigModule {
 			->execute();
 
 		if ( $this->scripts ) {
-			ManageWikiInstaller::process( $this->dbname, [ 'mwscript' => $this->scripts ] );
+			ManageWikiInstaller::process(
+				$this->dbname,
+				[ 'mwscript' => $this->scripts ],
+				install: true
+			);
 		}
 
 		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );

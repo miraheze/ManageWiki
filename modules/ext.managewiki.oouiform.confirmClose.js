@@ -4,35 +4,67 @@
  */
 ( function () {
 	$( () => {
-		let allowCloseWindow, saveButton;
-
 		if ( !( $( '#managewiki-submit' ).length > 0 ) ) {
 			return;
 		}
 
 		// Check if all of the form values are unchanged.
-		// (This function could be changed to infuse and check OOUI widgets, but that would only make it
-		// slower and more complicated. It works fine to treat them as HTML elements.)
+		// (This function could be changed to infuse and check OOUI widgets, but that would only
+		// make it slower and more complicated. It works fine to treat them as HTML elements.)
 		function isManageWikiChanged() {
 			let $fields, i;
 
 			$fields = $( '#managewiki-form  .mw-htmlform-cloner-ul' );
 			for ( i = 0; i < $fields.length; i++ ) {
-				if ( Number( $fields[ i ].dataset.initialFieldSize ) !== $fields[ i ].children.length ) {
+				const initialSize = Number( $fields[ i ].dataset.initialFieldSize );
+				const currentSize = $fields[ i ].children.length;
+
+				if ( initialSize !== currentSize ) {
 					return true;
 				}
 			}
 
-			$fields = $( '#managewiki-form :input[name]:not( #managewiki-submit-reason :input[name] )' );
+			$fields = $( '#managewiki-form :input[name]' )
+				.not( '#managewiki-submit-reason :input[name]' );
+
 			for ( i = 0; i < $fields.length; i++ ) {
-				if ( $fields[ i ].defaultChecked !== undefined && $fields[ i ].type === 'checkbox' && $fields[ i ].defaultChecked !== $fields[ i ].checked ) {
+				if (
+					$fields[ i ].defaultChecked !== undefined &&
+					$fields[ i ].type === 'checkbox' &&
+					$fields[ i ].defaultChecked !== $fields[ i ].checked
+				) {
 					return true;
-				} else if ( $fields[ i ].defaultValue !== undefined && $fields[ i ].defaultValue !== $fields[ i ].value ) {
+				} else if (
+					$fields[ i ].defaultValue !== undefined &&
+					$fields[ i ].defaultValue !== $fields[ i ].value
+				) {
 					return true;
 				}
 			}
 
 			return false;
+		}
+
+		// Check if a submit reason was entered
+		function hasSubmitReason() {
+			const $reason = $( '#managewiki-submit-reason' ).find( ':input[name]' );
+			for ( let i = 0; i < $reason.length; i++ ) {
+				if ( $reason[ i ].value.trim() !== '' ) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		const saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
+
+		// Determine if the save button should be enabled
+		function updateSaveButtonState() {
+			const changed = isManageWikiChanged();
+			const reasonFilled = hasSubmitReason();
+			// eslint-disable-next-line no-jquery/no-class-state
+			const isCreateNamespace = $( 'body' ).hasClass( 'ext-managewiki-create-namespace' );
+			saveButton.setDisabled( !( changed || ( isCreateNamespace && reasonFilled ) ) );
 		}
 
 		// Store the initial number of children of cloners for later use, as an equivalent of
@@ -43,11 +75,9 @@
 			}
 		} );
 
-		saveButton = OO.ui.infuse( $( '#managewiki-submit' ) );
-
 		// Disable the save button unless settings have changed
 		// Check if settings have been changed before JS has finished loading
-		saveButton.setDisabled( !isManageWikiChanged() );
+		updateSaveButtonState();
 
 		// Attach capturing event handlers to the document, to catch events inside OOUI dropdowns:
 		// * Use capture because OO.ui.SelectWidget also does, and it stops event propagation,
@@ -57,15 +87,13 @@
 		[ 'change', 'keyup', 'mouseup' ].forEach( ( eventType ) => {
 			document.addEventListener( eventType, () => {
 				// Make sure SelectWidget's event handlers run first
-				setTimeout( () => {
-					saveButton.setDisabled( !isManageWikiChanged() );
-				} );
+				setTimeout( updateSaveButtonState );
 			}, true );
 		} );
 
 		// Set up a message to notify users if they try to leave the page without
 		// saving.
-		allowCloseWindow = mw.confirmCloseWindow( {
+		const allowCloseWindow = mw.confirmCloseWindow( {
 			test: isManageWikiChanged,
 			message: mw.msg( 'managewiki-warning-changes', mw.msg( 'managewiki-save' ) )
 		} );

@@ -47,6 +47,14 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
 			'virtual-createwiki',
+			'modifyTable',
+			'mw_namespaces',
+			"$dir/patches/patch-namespace-name-alter.sql",
+			true,
+		] );
+
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
 			'addField',
 			'mw_permissions',
 			'perm_addgroupstoself',
