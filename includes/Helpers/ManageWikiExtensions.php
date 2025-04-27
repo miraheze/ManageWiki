@@ -3,9 +3,9 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\Config;
+use MediaWiki\Context\RequestContext;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
-use MediaWiki\Request\RequestContext;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\ConfigNames;
 use Wikimedia\Rdbms\IDatabase;
