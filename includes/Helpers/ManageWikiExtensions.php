@@ -197,23 +197,23 @@ class ManageWikiExtensions implements IConfigModule {
 			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
 
 			if ( !$requirementsCheck ) {
-				if ( isset( $this->changes[$name] ) ) {
-					$this->errors[] = [
-						'managewiki-error-requirements' => [ $config['name'] ],
-					];
-					continue;
-				}
-
-				foreach ( $requirements['extensions'] ?? [] as $ext ) {
-					if ( isset( $this->changes[$ext] ) ) {
-						$this->errors[] = [
-							'managewiki-error-requirements' => [ $ext ],
-						];
+				if ( !isset( $this->changes[$name] ) ) {
+					// If we are not changing this extension but we are changing (i.e. disabling)
+					// an extension that this extension depends on.
+					foreach ( $requirements['extensions'] ?? [] as $ext ) {
+						if ( isset( $this->changes[$ext] ) ) {
+							$this->errors[] = [
+								'managewiki-error-dependent' => [ $ext ],
+							];
+							// Continue the parent loop
+							continue 2;
+						}
 					}
 				}
 
+				// If we are changing this extension or there is no extension requirements.
 				$this->errors[] = [
-					'managewiki-error-requirements2' => [ $config['name'] ],
+					'managewiki-error-requirements-enabled' => [ $config['name'] ],
 				];
 
 				// Requirements failed, we have nothing else to do for this extension.
@@ -269,7 +269,7 @@ class ManageWikiExtensions implements IConfigModule {
 
 			if ( !$requirementsCheck ) {
 				$this->errors[] = [
-					'managewiki-error-requirements' => [ $config['name'] ],
+					'managewiki-error-requirements-disabled' => [ $config['name'] ],
 				];
 
 				continue;
