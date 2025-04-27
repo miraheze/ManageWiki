@@ -201,7 +201,7 @@ class ManageWikiExtensions implements IConfigModule {
 			// Now we need to check if we fulfill the requirements to enable this extension.
 			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
 
-			if ( !$requirementsCheck ) {
+			if ( $requirementsCheck ) {
 				$language = RequestContext::getMain()->getLanguage();
 				$this->errors[] = [
 					'managewiki-error-requirements' => [
