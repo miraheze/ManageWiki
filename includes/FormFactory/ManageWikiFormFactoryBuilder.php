@@ -1483,7 +1483,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function buildRequires(
 		IContextSource $context,
 		array $config
-	): string {
+	): array {
 		$requires = [];
 		$language = $context->getLanguage();
 
@@ -1511,7 +1511,7 @@ class ManageWikiFormFactoryBuilder {
 			$requires[] = $language->ucfirst( $require ) . $colon . $language->commaList( $flat );
 		}
 
-		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
+		return [ 'managewiki-requires', $language->listToText( $requires ) ];
 	}
 
 	private static function getConfigName( string $name ): string {
