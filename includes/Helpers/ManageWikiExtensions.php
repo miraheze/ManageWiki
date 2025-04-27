@@ -204,7 +204,7 @@ class ManageWikiExtensions implements IConfigModule {
 			if ( $requirementsCheck ) {
 				$language = RequestContext::getMain()->getLanguage();
 				$flattened = [];
-foreach ( $nested as $subarray ) {
+foreach ( $requirementsCheck as $subarray ) {
 	if ( is_array( $subarray ) ) {
 		$flattened = array_merge( $flattened, $subarray );
 	} else {
