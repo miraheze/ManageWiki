@@ -296,9 +296,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			if ( $ext['conflicts'] ) {
-				$help[] = $context->msg( 'managewiki-conflicts',
-					$context->getLanguage()->emphasize( $ext['conflicts'] )
-				)->parse() . "\n";
+				$help[] = $context->msg( 'managewiki-conflicts', $ext['conflicts'] )->parse() . "\n";
 			}
 
 			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
@@ -424,13 +422,25 @@ class ManageWikiFormFactoryBuilder {
 						$set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = ManageWikiTypes::process( $config, $disabled, $groupList, 'settings', $set, $value, $name );
+				$configs = ManageWikiTypes::process(
+					config: $config,
+					disabled: $disabled,
+					groupList: $groupList,
+					module: 'settings',
+					options: $set,
+					value: $value,
+					name: $name,
+					overrideDefault: false,
+					type: ''
+				);
+
+				$help = [];
+				if ( $set['requires'] ) {
+					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
+				}
 
 				$rawMessage = new RawMessage( $set['help'] );
-				$help = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
-				if ( $set['requires'] ) {
-					$help .= "\n" . self::buildRequires( $context, $set['requires'] );
-				}
+				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
@@ -442,8 +452,7 @@ class ManageWikiFormFactoryBuilder {
 					];
 				}
 
-				$space = $context->msg( 'word-separator' )->text();
-				$varName = $space . $context->msg( 'parentheses', "\${$name}" );
+				$varName = $context->msg( 'parentheses', "\${$name}" );
 				if ( isset( $set['associativeKey'] ) ) {
 					$varName = $context->msg( 'parentheses',
 						"\${$name}['{$set['associativeKey']}']"
@@ -457,7 +466,7 @@ class ManageWikiFormFactoryBuilder {
 						$varName,
 					],
 					'disabled' => $disabled,
-					'help' => nl2br( $help ),
+					'help' => nl2br( implode( ' ', $help ) ),
 					'cssclass' => 'managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
@@ -603,8 +612,15 @@ class ManageWikiFormFactoryBuilder {
 					'disabled' => !$ceMW,
 					'section' => $name,
 				] + ManageWikiTypes::process(
-					$config, false, [], 'namespaces', [],
-					$namespaceData['contentmodel'], '', false, 'contentmodel'
+					config: $config,
+					disabled: false,
+					groupList: [],
+					module: 'namespaces',
+					options: [],
+					value: $namespaceData['contentmodel'],
+					name: '',
+					overrideDefault: false,
+					type: 'contentmodel'
 				),
 				"protection-$name" => [
 					'type' => 'combobox',
@@ -654,20 +670,32 @@ class ManageWikiFormFactoryBuilder {
 					}
 
 					$configs = ManageWikiTypes::process(
-						$config, $disabled, [], 'namespaces', $a,
-						$namespaceData['additional'][$key] ?? null, '',
-						$a['overridedefault'], $a['type']
+						config: $config,
+						disabled: $disabled,
+						groupList: [],
+						module: 'namespaces',
+						options: $a,
+						value: $namespaceData['additional'][$key] ?? null,
+						name: '',
+						overrideDefault: $a['overridedefault'],
+						type: $a['type']
 					);
 
-					$rawMessage = new RawMessage( $a['help'] );
-					$help = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+					$help = [];
 					if ( $a['requires'] ) {
-						$help .= "\n" . self::buildRequires( $context, $a['requires'] );
+						$help[] = self::buildRequires( $context, $a['requires'] ) . "\n";
 					}
 
+					$rawMessage = new RawMessage( $a['help'] );
+					$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+
 					$formDescriptor["$key-$name"] = [
-						'label' => ( $msgName->exists() ? $msgName->text() : $a['name'] ) . " (\${$key})",
-						'help' => nl2br( $help ),
+						'label-message' => [
+							'managewiki-setting-label',
+							$msgName->exists() ? $msgName->text() : $a['name'],
+							$context->msg( 'parentheses', "\${$key}" ),
+						],
+						'help' => nl2br( implode( ' ', $help ) ),
 						'cssclass' => 'managewiki-infuse',
 						'disabled' => $disabled,
 						'section' => $name,
@@ -692,8 +720,15 @@ class ManageWikiFormFactoryBuilder {
 				'disabled' => !$ceMW,
 				'section' => $name,
 			] + ManageWikiTypes::process(
-				$config, false, [], 'namespaces', [],
-				$namespaceData['aliases'], '', [], 'texts'
+				config: $config,
+				disabled: false,
+				groupList: [],
+				module: 'namespaces',
+				options: [],
+				value: $namespaceData['aliases'],
+				name: '',
+				overrideDefault: [],
+				type: 'texts'
 			);
 		}
 
@@ -1554,13 +1589,13 @@ class ManageWikiFormFactoryBuilder {
 					$flat[] = $context->msg( 'parentheses',
 						$space . ( !is_int( $key ) ? $key . $colon : '' ) . implode(
 							$space . $language->uc( $or ) . $space,
-							array_map( [ $language, 'emphasize' ], $element )
+							$element
 						) . $space
 					)->text();
 					continue;
 				}
 
-				$flat[] = ( !is_int( $key ) ? $key . $colon : '' ) . $language->emphasize( $element );
+				$flat[] = ( !is_int( $key ) ? $key . $colon : '' ) . $element;
 			}
 
 			$requires[] = $language->ucfirst( $require ) . $colon . $language->commaList( $flat );
