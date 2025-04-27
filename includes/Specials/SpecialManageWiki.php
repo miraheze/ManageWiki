@@ -102,6 +102,10 @@ class SpecialManageWiki extends SpecialPage {
 
 		// ManageWiki core (on the central wiki) — remote wiki management
 		if ( $module === 'core' ) {
+			$this->getOutput()->addReturnTo(
+				SpecialPage::getTitleFor( 'ManageWiki' )
+			);
+
 			$dbname = $par[1] ?? $this->getConfig()->get( MainConfigNames::DBname );
 			$this->showWikiForm(
 				strtolower( $dbname ), $module, '', ''
@@ -228,6 +232,12 @@ class SpecialManageWiki extends SpecialPage {
 					)
 				);
 			}
+		}
+
+		if ( $special !== '' ) {
+			$this->getOutput()->addReturnTo(
+				SpecialPage::getTitleFor( 'ManageWiki', $module )
+			);
 		}
 
 		// Handle permissions module when we are not editing a specific group.
