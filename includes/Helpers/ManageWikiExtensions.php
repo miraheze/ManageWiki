@@ -164,6 +164,7 @@ class ManageWikiExtensions implements IConfigModule {
 	public function commit(): void {
 		// We use this to check for conflicts only for
 		// extensions we are currently enabling.
+		// TODO: can we just use liveExtensions for this?
 		$enabling = array_keys(
 			array_filter(
 				$this->changes,
@@ -171,17 +172,62 @@ class ManageWikiExtensions implements IConfigModule {
 			)
 		);
 
-		foreach ( $this->liveExtensions as $name => $extensionsConfig ) {
+		foreach ( $this->liveExtensions as $name => $config ) {
 			// Check if we have a conflict first
-			if ( in_array( $extensionsConfig['conflicts'], $enabling, true ) ) {
+			if ( in_array( $config['conflicts'], $enabling, true ) ) {
 				$this->errors[] = [
 					'managewiki-error-conflict' => [
-						$this->getName( $extensionsConfig['conflicts'] ),
-						$extensionsConfig['name'],
+						$this->getName( $config['conflicts'] ),
+						$config['name'],
 					],
 				];
 
 				// We have a conflict, we have nothing else to do for this extension.
+				continue;
+			}
+
+			$requirements = $config['requires'] ?? [];
+			// If we aren't making any changes to this extension,
+			// we don't need to check for permissions.
+			if ( !isset( $this->changes[$name] ) ) {
+				unset( $requirements['permissions'] );
+			}
+
+			// Now we need to check if we fulfill the requirements to enable this extension.
+			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
+
+			if ( !$requirementsCheck ) {
+				if ( !isset( $this->changes[$name] ) ) {
+					// If we are not changing this extension but we are changing (i.e. disabling)
+					// an extension that this extension depends on.
+					foreach ( $requirements['extensions'] ?? [] as $exts ) {
+						foreach ( (array)$exts as $ext ) {
+							if ( isset( $this->changes[$ext] ) ) {
+								$this->errors[] = [
+									'managewiki-error-dependency' => [
+										$this->getName( $ext ),
+										$config['name'],
+									],
+								];
+								// Continue the parent loop
+								continue 3;
+							}
+						}
+					}
+				}
+
+				// If we are changing this extension or there is no extension requirements.
+				$this->errors[] = [
+					'managewiki-error-requirements-enabled' => [ $config['name'] ],
+				];
+
+				// Requirements failed, we have nothing else to do for this extension.
+				continue;
+			}
+
+			// If we aren't making any changes to this extension,
+			// we are done with it.
+			if ( !isset( $this->changes[$name] ) ) {
 				continue;
 			}
 
@@ -190,55 +236,68 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			// Now we need to check if we fulfil the requirements to enable this extension
-			$requirementsCheck = ManageWikiRequirements::process(
-				$extensionsConfig['requires'] ?? [], $this->list()
-			);
-
-			if ( $requirementsCheck ) {
-				$installResult = true;
-				// Define a 'current' extension as one with no changes entry
-				$enabledExt = !isset( $this->changes[$name] );
-				if ( isset( $extensionsConfig['install'] ) && !$enabledExt ) {
-					$installResult = ManageWikiInstaller::process(
-						$this->dbname,
-						$extensionsConfig['install'],
-						install: true
-					);
-				}
-
-				if ( !$installResult ) {
-					$this->errors[] = [
-						'managewiki-error-install' => [
-							$extensionsConfig['name'],
-						],
-					];
-				}
-
-				continue;
+			// Requirements passed, proceed to installer
+			$installResult = true;
+			if ( isset( $config['install'] ) ) {
+				$installResult = ManageWikiInstaller::process(
+					$this->dbname, $config['install'],
+					install: true
+				);
 			}
 
-			$this->errors[] = [
-				'managewiki-error-requirements' => [
-					$extensionsConfig['name'],
-				],
-			];
+			if ( !$installResult ) {
+				$this->errors[] = [
+					'managewiki-error-install' => [ $config['name'] ],
+				];
+			}
 		}
 
+		// Early exit if we already have errors
 		if ( $this->getErrors() ) {
 			// If we have errors we don't want to save anything
 			return;
 		}
 
-		foreach ( $this->removedExtensions as $name => $extensionsConfig ) {
-			// Unlike installing, we are not too fussed about whether this fails, let us just do it
-			if ( isset( $extensionsConfig['remove'] ) ) {
+		foreach ( $this->removedExtensions as $name => $config ) {
+			$requirementsCheck = true;
+			$permissionRequirements = $config['requires']['permissions'] ?? [];
+			if ( $permissionRequirements ) {
+				$requirementsCheck = ManageWikiRequirements::process(
+					// We only need to check for permissions when an
+					// extension is being disabled.
+					actions: [ 'permissions' => $permissionRequirements ],
+					// We don't need this since it's not used for permissions,
+					// which is the only thing we need to check here.
+					extList: []
+				);
+			}
+
+			if ( !$requirementsCheck ) {
+				$this->errors[] = [
+					'managewiki-error-requirements-disabled' => [ $config['name'] ],
+				];
+
+				// Requirements failed, we have nothing else to do for this extension.
+				continue;
+			}
+
+			if ( $this->getErrors() ) {
+				// If we have errors we don't want to save anything
+				continue;
+			}
+
+			// Unlike installing, we are not too fussed about whether this fails, let us just do it.
+			if ( isset( $config['remove'] ) ) {
 				ManageWikiInstaller::process(
-					$this->dbname,
-					$extensionsConfig['remove'],
+					$this->dbname, $config['remove'],
 					install: false
 				);
 			}
+		}
+
+		if ( $this->getErrors() ) {
+			// If we have errors we don't want to save anything
+			return;
 		}
 
 		$this->dbw->newInsertQueryBuilder()
