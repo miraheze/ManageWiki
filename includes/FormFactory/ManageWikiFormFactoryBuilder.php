@@ -1116,7 +1116,7 @@ class ManageWikiFormFactoryBuilder {
 			if ( $newInactive !== $inactive ) {
 				$newInactive ? $remoteWiki->markInactive() : $remoteWiki->markActive();
 			}
-			);
+
 			if ( $context->getAuthority()->isAllowed( 'managewiki-restricted' ) ) {
 				if ( $newInactiveExempt !== $remoteWiki->isInactiveExempt() ) {
 					if ( $newInactiveExempt ) {
