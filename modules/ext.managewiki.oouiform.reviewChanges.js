@@ -28,14 +28,10 @@
 				dialog.content.$element.empty();
 
 				const $inputs = $( '#managewiki-form :input[name]' )
-					.not( '#managewiki-submit-reason :input[name]' );
+					.not( '#managewiki-submit-reason :input[name]' )
+					.not( ':disabled' );
 
 				$inputs.each( function () {
-					if ( this.disabled ) {
-						// Don't show disabled fields in dialog
-						return;
-					}
-
 					const name = this.name
 						.replace( 'wp', '' )
 						.replace( /-namespace|-namespacetalk|ext-|set-/, '' );
