@@ -63,7 +63,6 @@ class ManageWikiRequirements {
 	 * @param array $data Array of permissions needed
 	 * @return bool Whether permissions requirements are met
 	 */
-
 	private static function permissions( array $data ): bool {
 		$authority = RequestContext::getMain()->getAuthority();
 		return $authority->isAllowedAll( ...$data );
