@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Api;
 
 use MediaWiki\Api\ApiBase;
 use MediaWiki\Api\ApiMain;
-use MediaWiki\Permissions\PermissionManager;
 use Miraheze\CreateWiki\Services\CreateWikiValidator;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
@@ -17,7 +16,6 @@ class ApiModifyServer extends ApiBase {
 		ApiMain $mainModule,
 		string $moduleName,
 		private readonly CreateWikiValidator $validator,
-		private readonly PermissionManager $permissionManager,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
 		parent::__construct( $mainModule, $moduleName );
@@ -34,12 +32,11 @@ class ApiModifyServer extends ApiBase {
 			$this->dieWithError( [ 'managewiki-disabled', 'core' ] );
 		}
 
-		$params = $this->extractRequestParams();
-
-		if ( !$this->permissionManager->userHasRight( $this->getUser(), 'managewiki-restricted' ) ) {
-			return;
+		if ( !$this->getAuthority()->isAllowed( 'managewiki-restricted' ) ) {
+			$this->dieWithError( [ 'managewiki-error-nopermission' ] );
 		}
 
+		$params = $this->extractRequestParams();
 		if ( !$this->validator->databaseExists( $params['wiki'] ) ) {
 			$this->dieWithError( [ 'managewiki-invalid-wiki' ] );
 		}
@@ -49,7 +46,6 @@ class ApiModifyServer extends ApiBase {
 		}
 
 		$this->setServer( $params['wiki'], $params['server'] );
-
 		$this->getResult()->addValue( null, $this->getModuleName(), $params );
 	}
 

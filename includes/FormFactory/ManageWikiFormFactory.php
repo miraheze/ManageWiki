@@ -8,7 +8,6 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\RawMessage;
 use MediaWiki\Output\OutputPage;
-use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Status\Status;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ManageWikiOOUIForm;
@@ -42,7 +41,6 @@ class ManageWikiFormFactory {
 		Config $config,
 		IContextSource $context,
 		IDatabase $dbw,
-		PermissionManager $permissionManager,
 		RemoteWikiFactory $remoteWiki,
 		string $dbname,
 		string $module,
@@ -53,9 +51,9 @@ class ManageWikiFormFactory {
 		$ceMW = !(
 			(
 				$remoteWiki->isLocked() &&
-				!$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' )
+				!$context->getAuthority()->isAllowed( 'managewiki-restricted' )
 			) ||
-			!$permissionManager->userHasRight( $context->getUser(), "managewiki-$module" )
+			!$context->getAuthority()->isAllowed( "managewiki-$module" )
 		);
 
 		$formDescriptor = $this->getFormDescriptor(

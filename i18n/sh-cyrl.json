@@ -53,7 +53,7 @@
 	"managewiki-error-disallowednamespace": "Именски простор „$1“ није допуштен.",
 	"managewiki-error-emptygroup": "Не можете направити групу без додијељивања било којих допуштења.",
 	"managewiki-error-install": "Инсталација додатка „$1“ није успјела.",
-	"managewiki-error-requirements": "Додатак „$1“ не може се омогућити јер не испуњава своје захтјеве.",
+	"managewiki-error-requirements-enabled": "Додатак „$1“ не може се омогућити јер не испуњава своје захтјеве.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-extension-settings": "Управљање доступним опцијама конфигурације за овај додатак",
 	"managewiki-header-core": "Изаберите оно чиме бисте желели радити испод, па кликните на „Сачувај“ да би сте сачували ваше промјене.",

@@ -66,7 +66,7 @@
 	"managewiki-error-disallowednamespace": "Imenski prostor »$1« ni dovoljen.",
 	"managewiki-error-emptygroup": "Skupine ne morete ustvariti brez dodeljenih dovoljenj.",
 	"managewiki-error-install": "Namestitev razširitve »$1« ni uspela. Če se to ponavlja,",
-	"managewiki-error-requirements": "Razširitve »$1« ni mogoče omogočiti, ker ne izpolnjuje zahtev.",
+	"managewiki-error-requirements-enabled": "Razširitve »$1« ni mogoče omogočiti, ker ne izpolnjuje zahtev.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-extension-settings": "Upravljanje razpoložljivih konfiguracijskih možnosti te razširitve",
 	"managewiki-header-core": "Spodaj izberite, kaj želite upravljati, in kliknite gumb »Shrani«, da shranite svoje spremembe.",
@@ -155,7 +155,7 @@
 	"managewiki-unavailable": "Ni na voljo",
 	"managewiki-unavailable-notcentralwiki": "Ta stran v tem vikiju ni na voljo. Za uporabo te strani obiščite osrednji viki vaše farme.",
 	"managewiki-warning-changes": "V razširitvi ManageWiki ste naredili spremembe, ki še niso shranjene.\nČe zapustite to stran, ne da bi kliknili »$1«, se vaše spremembe razširitve ManageWiki ne bodo posodobile.",
-	"managewikidefaultpermissions": "Upravljanje privzetih dovoljenj za nove vikije",
+	"managewikidefaults": "Upravljanje privzetih dovoljenj za nove vikije",
 	"managewikidefaults-creategroup-info": "S spodnjim poljem ustvarite uporabniško skupino, ki se bo od zdaj samodejno ustvarila v novih vikijih.",
 	"managewikidefaults-resetcache": "Ponastavitev predpomnilnika CreateWiki",
 	"managewikidefaults-resetcache-header": "Ta možnost vam omogoča ponastavitev predpomnilnika CreateWiki tega vikija. To je uporabno v nekaterih primerih, ko se spremembe nastavitev ne razširijo pravilno.",
@@ -195,6 +195,5 @@
 	"right-managewiki-permissions": "Ustvarjanje, brisanje in upravljanje uporabniških skupin v tem vikiju",
 	"right-managewiki-restricted": "Upravljanje omejenih nastavitev vikija",
 	"right-managewiki-settings": "Upravljanje naprednih nastavitev tega vikija",
-	"right-remotewiki": "Upravljanje osnovnih nastavitev vikija na daljavo",
 	"settings-other": "Drugo"
 }

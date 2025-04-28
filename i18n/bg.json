@@ -53,7 +53,7 @@
 	"managewiki-ns-invalidid": "Идентификаторът на именното пространството трябва да бъде четно цяло число, за да може да се редактира чрез ManageWiki.",
 	"managewiki-permissions-create": "Наименование на новата група",
 	"managewiki-success": "Вашите промени са съхранени успешно.",
-	"managewikidefaultpermissions": "Управление на правата по подразбиране за нови уикита",
+	"managewikidefaults": "Управление на правата по подразбиране за нови уикита",
 	"managewikidefaults-resetgroups": "Връщане на всички групи в изходно състояние",
 	"managewikiextensions": "Управление на разширенията на уики",
 	"managewikinamespaces": "Управление на именните пространства на уики",

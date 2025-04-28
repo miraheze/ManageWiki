@@ -55,58 +55,54 @@
 	},
 	"AvailableRights": [
 		"managewiki-core",
+		"managewiki-editdefault",
 		"managewiki-extensions",
 		"managewiki-namespaces",
 		"managewiki-permissions",
-		"managewiki-settings",
-		"managewiki-editdefault",
-		"managewiki-restricted"
+		"managewiki-restricted",
+		"managewiki-settings"
 	],
 	"LogActionsHandlers": {
-		"managewiki/cache-reset": "LogFormatter",
-		"managewiki/delete": "LogFormatter",
-		"managewiki/delete-group": "LogFormatter",
-		"managewiki/lock": "LogFormatter",
-		"managewiki/namespaces": "LogFormatter",
-		"managewiki/namespaces-delete": "LogFormatter",
-		"managewiki/rename": "LogFormatter",
-		"managewiki/rights": "LogFormatter",
-		"managewiki/rights-reset": "LogFormatter",
-		"managewiki/settings": "LogFormatter",
-		"managewiki/settings-reset": "LogFormatter",
-		"managewiki/undelete": "LogFormatter",
-		"managewiki/unlock": "LogFormatter"
+		"managewiki/*": "LogFormatter"
+	},
+	"LogHeaders": {
+		"managewiki": "managewiki-log-header"
+	},
+	"LogNames": {
+		"managewiki": "managewiki-log-name"
 	},
 	"LogTypes": [
 		"managewiki"
 	],
 	"ActionFilteredLogs": {
 		"managewiki": {
-			"managewikilock": [
-				"lock"
+			"cache-reset": [
+				"cache-reset"
 			],
-			"managewikiunlock": [
-				"unlock"
+			"delete": [
+				"delete"
+			],
+			"lock": [
+				"lock"
 			],
 			"namespaces": [
 				"namespaces",
 				"namespaces-delete"
 			],
 			"permissions": [
-				"rename",
+				"delete-group",
 				"rights",
-				"rights-reset",
-				"delete-group"
+				"rights-reset"
 			],
 			"settings": [
 				"settings",
 				"settings-reset"
 			],
-			"wikidelete": [
-				"delete"
-			],
-			"wikiundelete": [
+			"undelete": [
 				"undelete"
+			],
+			"unlock": [
+				"unlock"
 			]
 		}
 	},
@@ -122,7 +118,6 @@
 			"services": [
 				"CreateWikiDatabaseUtils",
 				"NamespaceInfo",
-				"PermissionManager",
 				"RemoteWikiFactory"
 			]
 		},
@@ -132,7 +127,6 @@
 				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
 				"CreateWikiHookHandler",
-				"PermissionManager",
 				"RemoteWikiFactory"
 			]
 		}
@@ -150,7 +144,6 @@
 			"class": "Miraheze\\ManageWiki\\Api\\ApiModifyServer",
 			"services": [
 				"CreateWikiValidator",
-				"PermissionManager",
 				"RemoteWikiFactory"
 			]
 		}
@@ -200,7 +193,6 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\Main",
 			"services": [
 				"ManageWikiConfig",
-				"PermissionManager",
 				"UserOptionsLookup"
 			]
 		}
@@ -242,18 +234,8 @@
 		"remoteExtPath": "ManageWiki/modules"
 	},
 	"config": {
-		"ManageWiki": {
-			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
-			"value": {
-				"core": false,
-				"extensions": false,
-				"namespaces": false,
-				"permissions": false,
-				"settings": false
-			}
-		},
 		"ManageWikiDatabaseClustersInactive": {
-			"description": "Array. LBFactory clusters which are not considered active, which we hide in ManageWiki.",
+			"description": "Array. LBFactory clusters which are not considered active, which we show in ManageWiki. Format: <display name> => <cluster name from LBFactory>.",
 			"value": []
 		},
 		"ManageWikiExtensions": {
