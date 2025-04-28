@@ -339,7 +339,7 @@ class ManageWikiFormFactoryBuilder {
 			$help[] = $extDescription ?? $descriptionFallback ?? $description;
 
 			if ( $ext['help'] ?? false ) {
-				$rawMessage = ( new RawMessage( '$1' ) )->params( $ext['help'] );
+				$rawMessage = new RawMessage( $ext['help'] );
 				$help[] = "\n" . $rawMessage->parse();
 			}
 
@@ -442,7 +442,7 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				$rawMessage = new RawMessage( $set['help'] );
-				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage;
+				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
