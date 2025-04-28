@@ -856,12 +856,20 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $context->msg( 'managewiki-permissions-group' )->text(),
 				'section' => 'group',
 			],
-			'autopromote' => [
-				'type' => 'info',
-				'default' => $context->msg( 'managewiki-permissions-autopromote' )->text(),
-				'section' => 'autopromote',
-			],
 		];
+		
+		if (
+			$ceMW &&
+			$mwPermissions->exists( $group ) &&
+			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true )
+		) {
+			$formDescriptor['delete-checkbox'] = [
+				'type' => 'check',
+				'label-message' => 'permissions-delete-checkbox',
+				'default' => false,
+				'section' => 'advanced',
+			];
+		}
 
 		foreach ( $groupData['allPermissions'] as $perm ) {
 			$assigned = in_array( $perm, $groupData['assignedPermissions'], true );
@@ -911,12 +919,17 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		$formDescriptor += [
+			'autopromote' => [
+				'type' => 'info',
+				'default' => $context->msg( 'managewiki-permissions-autopromote' )->text(),
+				'section' => 'advanced/autopromote',
+			],
 			'enable' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-enable',
 				'default' => $aP !== null,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote',
+				'section' => 'advanced/autopromote',
 			],
 			'conds' => [
 				'type' => 'select',
@@ -929,7 +942,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => $aP === null ? '&' : $aP[0],
 				'disabled' => !$ceMW,
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'section' => 'autopromote',
+				'section' => 'advanced/autopromote',
 			],
 			'once' => [
 				'type' => 'check',
@@ -937,7 +950,7 @@ class ManageWikiFormFactoryBuilder {
 				'default' => array_search( 'once', (array)$aP, true ) !== false,
 				'disabled' => !$ceMW,
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'section' => 'autopromote',
+				'section' => 'advanced/autopromote',
 			],
 			'editcount' => [
 				'type' => 'int',
@@ -946,7 +959,7 @@ class ManageWikiFormFactoryBuilder {
 				'min' => 0,
 				'default' => $aPArray[APCOND_EDITCOUNT] ?? 0,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote',
+				'section' => 'advanced/autopromote',
 			],
 			'age' => [
 				'type' => 'int',
@@ -955,7 +968,7 @@ class ManageWikiFormFactoryBuilder {
 				'min' => 0,
 				'default' => isset( $aPArray[APCOND_AGE] ) ? $aPArray[APCOND_AGE] / 86400 : 0,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote',
+				'section' => 'advanced/autopromote',
 			],
 			'emailconfirmed' => [
 				'type' => 'check',
@@ -963,7 +976,7 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => array_search( APCOND_EMAILCONFIRMED, (array)$aP, true ) !== false,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote',
+				'section' => 'advanced/autopromote',
 			],
 			'blocked' => [
 				'type' => 'check',
@@ -971,7 +984,7 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => array_search( APCOND_BLOCKED, (array)$aP, true ) !== false,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote',
+				'section' => 'advanced/autopromote',
 			],
 			'bot' => [
 				'type' => 'check',
@@ -979,7 +992,7 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'default' => array_search( APCOND_ISBOT, (array)$aP, true ) !== false,
 				'disabled' => !$ceMW,
-				'section' => 'autopromote',
+				'section' => 'advanced/autopromote',
 			],
 			'groups' => [
 				'type' => 'multiselect',
@@ -988,22 +1001,9 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ 'OR', [ '!==', 'enable', '1' ], [ '===', 'conds', '|' ] ],
 				'default' => $aPArray[APCOND_INGROUPS] ?? [],
 				'disabled' => !$ceMW,
-				'section' => 'autopromote',
+				'section' => 'advanced/autopromote',
 			],
 		];
-
-		if (
-			$ceMW &&
-			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true )
-		) {
-			$formDescriptor['delete-checkbox'] = [
-				'type' => 'check',
-				'label-message' => 'permissions-delete-checkbox',
-				'default' => false,
-				'section' => 'delete',
-			];
-		}
 
 		return $formDescriptor;
 	}
