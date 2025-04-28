@@ -249,14 +249,15 @@ class ManageWikiFormFactoryBuilder {
 	): array {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
+
 		$manageWikiExtensions = $config->get( ConfigNames::Extensions );
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 
-		$creditsAndMessages = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits-and-messages', count( $manageWikiExtensions ) ),
+		$allMessages = $cache->getWithSetCallback(
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages', count( $manageWikiExtensions ) ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $context, $config, $manageWikiExtensions ): array {
 				$queue = array_fill_keys( array_merge(
@@ -279,7 +280,13 @@ class ManageWikiFormFactoryBuilder {
 					if ( !empty( $credit['descriptionmsg'] ) ) {
 						$msg = $context->msg( $credit['descriptionmsg'] );
 						if ( $msg->exists() ) {
-							$credit['descriptionmsg-parsed'] = $msg->parse();
+							$parsed = $msg->parse();
+							$parsed = preg_replace(
+								'#\s*class="[^"]*\bnew\b[^"]*"#i',
+								'',
+								$parsed
+							);
+							$credit['descriptionmsg-parsed'] = $parsed;
 						}
 					}
 					if ( !empty( $credit['namemsg'] ) ) {
@@ -333,15 +340,9 @@ class ManageWikiFormFactoryBuilder {
 					];
 				}
 
-				return [
-					'credits' => $credits,
-					'messages' => $messages,
-				];
+				return $messages;
 			}
 		);
-
-		$credits = $creditsAndMessages['credits'];
-		$allMessages = $creditsAndMessages['messages'];
 
 		$formDescriptor = [];
 		foreach ( $manageWikiExtensions as $name => $ext ) {
@@ -375,18 +376,12 @@ class ManageWikiFormFactoryBuilder {
 				);
 			}
 
-			$help = preg_replace(
-				'#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i',
-				'<b>$1</b>',
-				nl2br( implode( "\n", $helpParts ) )
-			);
-
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
 				'label-raw' => $allMessages[$name]['label'] ?? '',
 				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
-				'help' => $help,
+				'help' => nl2br( implode( "\n", $helpParts ) ),
 				'section' => $ext['section'],
 			];
 		}
