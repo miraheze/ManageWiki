@@ -28,7 +28,8 @@
 				dialog.content.$element.empty();
 
 				const $inputs = $( '#managewiki-form :input[name]' )
-					.not( '#managewiki-submit-reason :input[name]' );
+					.not( '#managewiki-submit-reason :input[name]' )
+					.not( ':disabled' );
 
 				$inputs.each( function () {
 					const name = this.name

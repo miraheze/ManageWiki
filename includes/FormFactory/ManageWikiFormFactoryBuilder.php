@@ -280,10 +280,31 @@ class ManageWikiFormFactoryBuilder {
 
 			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
 
+			$disableIf = [];
+			if (
+				// Don't want to disable fields for extensions already enabled
+				// otherwise it makes disabling them more complicated.
+				!in_array( $name, $extList, true ) && (
+					isset( $ext['requires']['extensions'] ) ||
+					$ext['conflicts']
+				)
+			) {
+				$disableIf = self::buildDisableIf(
+					$ext['requires']['extensions'] ?? [],
+					$ext['conflicts'] ?: ''
+				);
+			}
+
 			$help = [];
 			$mwRequirements = true;
 			if ( $ext['requires'] ) {
-				$mwRequirements = ManageWikiRequirements::process( $ext['requires'], $extList );
+				$mwRequirements = ManageWikiRequirements::process(
+					// Don't check for extension requirements as we don't want
+					// to disable the field, we use disable-if for that.
+					array_diff_key( $ext['requires'], [ 'extensions' => true ] ),
+					$extList
+				);
+
 				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
 			}
 
@@ -351,6 +372,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
+				'disable-if' => $disableIf,
 				'help' => nl2br( implode( ' ', $help ) ),
 				'section' => $ext['section'],
 			];
@@ -1501,6 +1523,40 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
+	}
+
+	private static function buildDisableIf( array $requires, string $conflict ): array {
+		$conditions = [];
+		foreach ( $requires as $entry ) {
+			if ( is_array( $entry ) ) {
+				// OR logic for this group
+				$orConditions = [];
+				foreach ( $entry as $ext ) {
+					$orConditions[] = [ '!==', "ext-$ext", '1' ];
+				}
+
+				$conditions[] = count( $orConditions ) === 1 ?
+					$orConditions[0] :
+					array_merge( [ 'AND' ], $orConditions );
+			} else {
+				// Simple AND logic
+				$conditions[] = [ '!==', "ext-$entry", '1' ];
+			}
+		}
+
+		$finalCondition = count( $conditions ) === 1 ?
+			$conditions[0] :
+			array_merge( [ 'OR' ], $conditions );
+
+		if ( $conflict ) {
+			$finalCondition = [
+				'OR',
+				$finalCondition,
+				[ '===', "ext-$conflict", '1' ]
+			];
+		}
+
+		return $finalCondition;
 	}
 
 	private static function getConfigName( string $name ): string {

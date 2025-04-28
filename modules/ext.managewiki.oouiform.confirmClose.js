@@ -25,7 +25,8 @@
 			}
 
 			$fields = $( '#managewiki-form :input[name]' )
-				.not( '#managewiki-submit-reason :input[name]' );
+				.not( '#managewiki-submit-reason :input[name]' )
+				.not( ':disabled' );
 
 			for ( i = 0; i < $fields.length; i++ ) {
 				if (
