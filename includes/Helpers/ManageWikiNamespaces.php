@@ -22,6 +22,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
+	private array $messageFields = [];
 	private array $deleteNamespaces = [];
 	private array $liveNamespaces = [];
 
@@ -226,6 +227,10 @@ class ManageWikiNamespaces implements IConfigModule {
 		$this->liveNamespaces[$id] = $nsData;
 	}
 
+	public function addMessageFields( int $id ): void {
+		$this->messageFields[] = $id;
+	}
+
 	/**
 	 * Remove a namespace
 	 * @param int $id Namespace ID
@@ -272,7 +277,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	public function hasChanges(): bool {
-		return (bool)$this->changes;
+		return $this->changes || $this->messageFields;
 	}
 
 	public function setLogAction( string $action ): void {
