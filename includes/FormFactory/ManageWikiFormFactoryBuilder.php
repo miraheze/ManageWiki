@@ -249,15 +249,14 @@ class ManageWikiFormFactoryBuilder {
 	): array {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
-
 		$manageWikiExtensions = $config->get( ConfigNames::Extensions );
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 
-		$allMessages = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages5', count( $manageWikiExtensions ) ),
+		$creditsAndMessages = $cache->getWithSetCallback(
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits-and-messages', count( $manageWikiExtensions ) ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $context, $config, $manageWikiExtensions ): array {
 				$queue = array_fill_keys( array_merge(
@@ -310,30 +309,39 @@ class ManageWikiFormFactoryBuilder {
 						$extDisplayName ?? $creditDisplayName
 					)->parse();
 
-					$help = array_filter( [
-						!empty( $ext['description'] ) ? (
-							( $msg = $context->msg( $ext['description'] ) ) && $msg->exists()
-								? $msg->parse()
-								: $ext['description']
-						) : null,
-						$credit['descriptionmsg-parsed'] ?? null,
-						$credit['description'] ?? null,
-					] )[0] ?? null;
+					$helpParts = [];
+
+					if ( !empty( $ext['description'] ) ) {
+						$msg = $context->msg( $ext['description'] );
+						$helpParts[] = $msg->exists()
+							? $msg->parse()
+							: $ext['description'];
+					} elseif ( isset( $credit['descriptionmsg-parsed'] ) ) {
+						$helpParts[] = $credit['descriptionmsg-parsed'];
+					} elseif ( isset( $credit['description'] ) ) {
+						$helpParts[] = $credit['description'];
+					}
 
 					if ( !empty( $ext['help'] ) ) {
 						$rawMessage = new RawMessage( $ext['help'] );
-						$help .= "\n" . $rawMessage->parse();
+						$helpParts[] = "\n" . $rawMessage->parse();
 					}
 
 					$messages[$name] = [
 						'label' => $label,
-						'help' => $help ?? '',
+						'help' => implode( "\n", $helpParts ),
 					];
 				}
 
-				return $messages;
+				return [
+					'credits' => $credits,
+					'messages' => $messages,
+				];
 			}
 		);
+
+		$credits = $creditsAndMessages['credits'];
+		$allMessages = $creditsAndMessages['messages'];
 
 		$formDescriptor = [];
 		foreach ( $manageWikiExtensions as $name => $ext ) {
