@@ -6,7 +6,6 @@ use MediaWiki\Config\Config;
 use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
 use MediaWiki\Content\TextContentHandler;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
-use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
@@ -20,7 +19,6 @@ class Main implements
 
 	public function __construct(
 		private readonly Config $config,
-		private readonly PermissionManager $permissionManager,
 		private readonly UserOptionsLookup $userOptionsLookup
 	) {
 	}
@@ -41,15 +39,14 @@ class Main implements
 
 	/** @inheritDoc */
 	public function onSidebarBeforeOutput( $skin, &$sidebar ): void {
-		$user = $skin->getUser();
-
+		$authority = $skin->getAuthority();
 		$hideSidebar = !$this->config->get( ConfigNames::ForceSidebarLinks ) &&
-			!$this->userOptionsLookup->getBoolOption( $user, 'managewikisidebar' );
+			!$this->userOptionsLookup->getBoolOption( $authority->getUser(), 'managewikisidebar' );
 
 		$modules = array_keys( $this->config->get( ConfigNames::ModulesEnabled ), true, true );
 		foreach ( $modules as $module ) {
 			$append = '';
-			if ( !$this->permissionManager->userHasRight( $user, "managewiki-$module" ) ) {
+			if ( !$authority->isAllowed( "managewiki-$module" ) ) {
 				if ( $hideSidebar ) {
 					continue;
 				}

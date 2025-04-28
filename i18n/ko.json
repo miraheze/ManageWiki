@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"22258",
 			"Apzp79",
 			"Bluehill",
 			"Gongsoonyee",
@@ -58,7 +59,7 @@
 	"managewiki-error-disallowednamespace": "\"$1\" 이름공간은 허용되지 않습니다.",
 	"managewiki-error-emptygroup": "권한을 부여받지 않은 채 그룹을 만들 수 없습니다.",
 	"managewiki-error-install": "\"$1\" 확장 기능을 설치하지 못했습니다. 이 문제가 계속 발생한다면",
-	"managewiki-error-requirements": "\"$1\" 확장 기능은 요구 사항을 충족하지 못하므로 활성화할 수 없습니다.",
+	"managewiki-error-requirements-enabled": "\"$1\" 확장 기능은 요구 사항을 충족하지 못하므로 활성화할 수 없습니다.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-extension-settings": "이 확장의 사용 가능한 구성 옵션 관리",
 	"managewiki-header-core": "아래에서 관리하고자 하는 항목을 선택하고 저장 버튼을 클릭하여 변경 사항을 저장합니다.",
@@ -120,13 +121,14 @@
 	"managewiki-permissions-select-header": "기존 그룹 관리",
 	"managewiki-permissions-unassigned": "아래의 사용자 권한은 현재 이 사용자 그룹에 할당되어 있지 않습니다",
 	"managewiki-requires": "요구 사항",
+	"managewiki-requires-or": "또는",
 	"managewiki-save": "저장",
 	"managewiki-search-noresults": "결과 없음",
 	"managewiki-sidebar-header": "관리",
 	"managewiki-success": "변경사항이 저장되었습니다.",
 	"managewiki-toggle-forcesidebar": "사이드바에 ManageWiki 링크를 강제로 표시.",
 	"managewiki-unavailable": "사용 불가",
-	"managewikidefaultpermissions": "새 위키의 기본 권한 관리",
+	"managewikidefaults": "새 위키의 기본 권한 관리",
 	"managewikidefaults-resetgroups": "모든 그룹을 기본값으로 재설정",
 	"managewikiextensions": "위키의 확장 기능 관리",
 	"managewikinamespaces": "위키의 이름공간 관리",

@@ -8,7 +8,6 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
-use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
@@ -25,7 +24,6 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly CreateWiki $hookHandler,
-		private readonly PermissionManager $permissionManager,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
@@ -68,7 +66,6 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			config: $this->getConfig(),
 			context: $this->getContext(),
 			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
-			permissionManager: $this->permissionManager,
 			remoteWiki: $remoteWiki,
 			dbname: 'default',
 			module: 'permissions',
@@ -203,12 +200,12 @@ class SpecialManageWikiDefaults extends SpecialPage {
 	}
 
 	private function canModify(): bool {
-		return $this->permissionManager->userHasRight( $this->getUser(), 'managewiki-editdefault' );
+		return $this->getAuthority()->isAllowed( 'managewiki-editdefault' );
 	}
 
 	public function onSubmitRedirectToPermissionsPage( array $formData ): void {
 		$this->getOutput()->redirect(
-			SpecialPage::getTitleFor( 'ManageWikiDefaults', $formData['group'] )->getFullURL()
+			$this->getPageTitle( $formData['group'] )->getFullURL()
 		);
 	}
 
@@ -228,7 +225,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getUser() );
-		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaults' ) );
+		$logEntry->setTarget( $this->getPageTitle()->getTitleValue() );
 		$logEntry->setParameters( [ '4::wiki' => $dbname ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
@@ -264,7 +261,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
 		$logEntry->setPerformer( $this->getUser() );
-		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaults' ) );
+		$logEntry->setTarget( $this->getPageTitle()->getTitleValue() );
 		$logEntry->setParameters( [ '4::wiki' => $dbname ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
@@ -290,7 +287,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'cache-reset' );
 		$logEntry->setPerformer( $this->getUser() );
-		$logEntry->setTarget( SpecialPage::getTitleValueFor( 'ManageWikiDefaults' ) );
+		$logEntry->setTarget( $this->getPageTitle()->getTitleValue() );
 		$logEntry->setParameters( [ '4::wiki' => $this->getConfig()->get( MainConfigNames::DBname ) ] );
 		$logID = $logEntry->insert();
 		$logEntry->publish( $logID );
@@ -320,6 +317,11 @@ class SpecialManageWikiDefaults extends SpecialPage {
 	/** @inheritDoc */
 	public function getDescription(): string {
 		return $this->msg( $this->canModify() ? 'managewikidefaults' : 'managewikidefaults-view' )->text();
+	}
+
+	/** @inheritDoc */
+	public function doesWrites(): bool {
+		return true;
 	}
 
 	/** @inheritDoc */
