@@ -257,7 +257,7 @@ class ManageWikiFormFactoryBuilder {
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 
 		$credits = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits', count( $manageWikiExtensions ) ),
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits2', count( $manageWikiExtensions ) ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $config, $context ): array {
 				$queue = array_fill_keys( array_merge(
@@ -281,8 +281,7 @@ class ManageWikiFormFactoryBuilder {
 					if ( !empty( $credit['descriptionmsg'] ) ) {
 						$msg = $context->msg( $credit['descriptionmsg'] );
 						if ( $msg->exists() ) {
-							$parsed = $msg->parse();
-							$credit['descriptionmsg-parsed'] = $parsed;
+							$credit['descriptionmsg-parsed'] = $msg->parse();
 						}
 					}
 
@@ -299,7 +298,7 @@ class ManageWikiFormFactoryBuilder {
 		);
 
 		$allMessages = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages2', count( $manageWikiExtensions ) ),
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages3', count( $manageWikiExtensions ) ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $context, $manageWikiExtensions, $credits ): array {
 				$results = [];
