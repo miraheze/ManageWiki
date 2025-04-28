@@ -69,7 +69,7 @@
 	"managewiki-error-disallowednamespace": "A message that is shown when someone tries to create a disallowed namespace",
 	"managewiki-error-missingpermission": "Error message shown when user attempts to remove the 'managewiki-permissions' right from the last group that has it.",
 	"managewiki-error-nopermission-remote": "\"Operator\" here is someone with the 'managewiki' right, normally a bureaucrat.",
-	"managewiki-extension-name": "{{optional}}\nUsed as a label for extension names in ManageWiki. $1 is the link to a page (like on mediawiki.org), $2 is the name of the extension, which may be the localized namemsg.",
+	"managewiki-extension-name": "{{optional}}\nUsed as a label for extension names in ManageWiki. $1 is the link to a page (like on mediawiki.org); $2 is the name of the extension, which may be the localized namemsg.",
 	"managewiki-extension-settings": "Text for a link to a filtered Special:ManageWiki/settings from Special:ManageWiki/extensions",
 	"managewiki-extensionname": "{{name}}",
 	"managewiki-header-core": "Header shown in Special:ManageWiki. \"Save\" is {{msg-mw|Managewiki-save}}.",
