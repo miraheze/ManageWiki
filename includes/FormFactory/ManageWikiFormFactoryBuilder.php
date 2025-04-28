@@ -857,7 +857,7 @@ class ManageWikiFormFactoryBuilder {
 				'section' => 'group',
 			],
 		];
-		
+
 		if (
 			$ceMW &&
 			$mwPermissions->exists( $group ) &&
