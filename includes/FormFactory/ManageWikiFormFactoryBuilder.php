@@ -373,7 +373,8 @@ class ManageWikiFormFactoryBuilder {
 				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 				$helpParts[] = $linkRenderer->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "settings/$name" )->getFullURL(),
-					$context->msg( 'managewiki-extension-settings' )->text()
+					$context->msg( 'managewiki-extension-settings' )->text(),
+					SpecialPage::getTitleFor( 'ManageWiki', 'settings' )
 				);
 			}
 
