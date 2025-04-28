@@ -256,17 +256,16 @@ class ManageWikiFormFactoryBuilder {
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 
-		$credits = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits2', count( $manageWikiExtensions ) ),
+		$allMessages = $cache->getWithSetCallback(
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages', count( $manageWikiExtensions ) ),
 			WANObjectCache::TTL_DAY,
-			static function () use ( $config, $context ): array {
+			static function () use ( $context, $config, $manageWikiExtensions ): array {
 				$queue = array_fill_keys( array_merge(
 					glob( $config->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
 					glob( $config->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
 				), true );
 
 				$processor = new ExtensionProcessor();
-
 				foreach ( $queue as $path => $_ ) {
 					$json = file_get_contents( $path );
 					$info = json_decode( $json, true );
@@ -284,7 +283,6 @@ class ManageWikiFormFactoryBuilder {
 							$credit['descriptionmsg-parsed'] = $msg->parse();
 						}
 					}
-
 					if ( !empty( $credit['namemsg'] ) ) {
 						$msg = $context->msg( $credit['namemsg'] );
 						if ( $msg->exists() ) {
@@ -293,53 +291,47 @@ class ManageWikiFormFactoryBuilder {
 					}
 				}
 
-				return $credits;
-			}
-		);
-
-		$allMessages = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages3', count( $manageWikiExtensions ) ),
-			WANObjectCache::TTL_DAY,
-			static function () use ( $context, $manageWikiExtensions, $credits ): array {
-				$results = [];
+				$messages = [];
 				foreach ( $manageWikiExtensions as $name => $ext ) {
-					$extDisplayName = null;
-					if ( !empty( $ext['displayname'] ) ) {
-						$msg = $context->msg( $ext['displayname'] );
-						$extDisplayName = $msg->exists() ? $msg->parse() : $ext['displayname'];
-					}
+					$credit = $credits[$ext['name']] ?? [];
 
-					$credit = $credits[ $ext['name'] ] ?? [];
+					$extDisplayName = !empty( $ext['displayname'] )
+						? ( ( $msg = $context->msg( $ext['displayname'] ) ) && $msg->exists()
+							? $msg->parse()
+							: $ext['displayname']
+						)
+						: null;
+
 					$creditDisplayName = $credit['namemsg-parsed'] ?? $credit['name'] ?? $ext['name'];
 
-					$label = $context->msg( 'managewiki-extension-name',
+					$label = $context->msg(
+						'managewiki-extension-name',
 						$ext['linkPage'],
 						$extDisplayName ?? $creditDisplayName
 					)->parse();
 
-					$helpParts = [];
-					if ( !empty( $ext['description'] ) ) {
-						$msg = $context->msg( $ext['description'] );
-						$extDescription = $msg->exists() ? $msg->parse() : $ext['description'];
-						$helpParts[] = $extDescription;
-					} elseif ( isset( $credit['descriptionmsg-parsed'] ) ) {
-						$helpParts[] = $credit['descriptionmsg-parsed'];
-					} elseif ( isset( $credit['description'] ) ) {
-						$helpParts[] = $credit['description'];
-					}
+					$help = array_filter([
+						!empty( $ext['description'] ) ? (
+							( $msg = $context->msg( $ext['description'] ) ) && $msg->exists()
+								? $msg->parse()
+								: $ext['description']
+						) : null,
+						$credit['descriptionmsg-parsed'] ?? null,
+						$credit['description'] ?? null,
+					])[0] ?? null;
 
 					if ( !empty( $ext['help'] ) ) {
 						$rawMessage = new RawMessage( $ext['help'] );
-						$helpParts[] = $rawMessage->parse();
+						$help .= "\n" . $rawMessage->parse();
 					}
 
-					$results[$name] = [
+					$messages[$name] = [
 						'label' => $label,
-						'help' => implode( "\n", $helpParts ),
+						'help' => $help ?? '',
 					];
 				}
 
-				return $results;
+				return $messages;
 			}
 		);
 
@@ -377,7 +369,8 @@ class ManageWikiFormFactoryBuilder {
 
 			$help = preg_replace(
 				'#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i',
-				'<b>$1</b>', nl2br( implode( "\n", $helpParts ) )
+				'<b>$1</b>',
+				nl2br( implode( "\n", $helpParts ) )
 			);
 
 			$formDescriptor["ext-$name"] = [
