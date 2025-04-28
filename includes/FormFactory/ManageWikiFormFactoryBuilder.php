@@ -452,8 +452,6 @@ class ManageWikiFormFactoryBuilder {
 			$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isGlobal || $isInExtList );
 			$disabled = $ceMW ? !$mwRequirements : true;
 
-			$msgName = $context->msg( "managewiki-setting-$name-name" );
-
 			if ( $add ) {
 				$value = $settingsList[$name] ?? null;
 				if ( isset( $set['associativeKey'] ) ) {
