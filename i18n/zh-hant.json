@@ -72,7 +72,7 @@
 	"managewiki-error-disallowednamespace": "不允許命名空間「$1」。",
 	"managewiki-error-emptygroup": "您要被分配權限才能建立群組。",
 	"managewiki-error-install": "啟用擴充功能「$1」失敗。若狀況持續發生，請",
-	"managewiki-error-requirements": "無法啓用擴充「$1」，因為未符合需求。",
+	"managewiki-error-requirements-enabled": "無法啓用擴充「$1」，因為未符合需求。",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-extension-settings": "管理此擴充功能可用的組態選項",
 	"managewiki-header-core": "您可以從此面板管理此wiki的核心設定（例如名稱和語言）。灰色選項可能只能由管理員更改。完成後，請點擊「儲存」，您的偏好設定將在幾秒內生效。  \n\n您還可以在 [[Special:ManageWiki/settings]] 管理其他設定，例如標誌等。",
@@ -161,7 +161,7 @@
 	"managewiki-unavailable": "不可用",
 	"managewiki-unavailable-notcentralwiki": "此頁面在該 wiki 上不可用。請訪問您農場的中央 wiki 以使用此頁面。",
 	"managewiki-warning-changes": "您對 ManageWiki 所做的變更尚未儲存。\n若您未點選「$1」就離開此頁面，將不會更新您的 ManageWiki 變更。",
-	"managewikidefaultpermissions": "管理新 wiki 的預設權限",
+	"managewikidefaults": "管理新 wiki 的預設權限",
 	"managewikidefaults-creategroup-info": "使用下方欄位建立一個從現在起會在新的 wiki 上自動建立的使用者群組。",
 	"managewikidefaults-resetcache": "重新設定 CreateWiki 快取",
 	"managewikidefaults-resetcache-header": "此選項能讓您重新設定此 wiki 的 CreateWiki 快取。\n這在某些設定更改未正確傳布時的情況下非常有用。",
@@ -173,7 +173,7 @@
 	"managewikidefaults-resetsettings-header": "此選項會將此 wiki 組態重新設定成預設值，並捨棄透過 [[Special:ManageWiki/settings]] 設定的所有設定。核心設定、擴充、命名空間和使用者群組不會受到影響。",
 	"managewikidefaults-resetsettings-title": "重新設定此 wiki 的設定成預設值",
 	"managewikidefaults-selectgroup-info": "以下是在新 wiki 上自動建立群組的清單。請使用下方的下拉式選單，選擇您想要管理或查看其組態的群組。",
-	"managewikidefaultpermissions-view": "查看新 wiki 的預設權限",
+	"managewikidefaults-view": "查看新 wiki 的預設權限",
 	"managewikiextensions": "管理wiki的擴充功能",
 	"managewikinamespaces": "管理 wiki 的命名空間",
 	"managewikipermissions": "管理 wiki 的權限",
@@ -202,6 +202,5 @@
 	"right-managewiki-permissions": "建立、刪除，與管理此 wiki 的使用者群組",
 	"right-managewiki-restricted": "管理限制的 wiki 設定",
 	"right-managewiki-settings": "管理此 wiki 的進階設定",
-	"right-remotewiki": "遠端管理 wiki 的核心設定",
 	"settings-other": "其它"
 }

@@ -73,7 +73,7 @@
 	"managewiki-error-disallowednamespace": "Không gian tên \"$1\" không được cho phép.",
 	"managewiki-error-emptygroup": "Bạn không thể tạo nhóm mà không được cấp bất kỳ quyền nào.",
 	"managewiki-error-install": "Tiện ích mở rộng \"$1\" không được bật. Nếu điều này tiếp tục xảy ra, xin vui lòng",
-	"managewiki-error-requirements": "Tiện ích \"$1\" không thể bật được vì nó không đáp ứng yêu cầu của nó.",
+	"managewiki-error-requirements-enabled": "Tiện ích \"$1\" không thể bật được vì nó không đáp ứng yêu cầu của nó.",
 	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-extension-settings": "Cấu hình có sẵn cho tiện ích mở rộng này",
 	"managewiki-header-core": "Bạn có thể quản lý các thiết lập chung cho wiki (như tên và ngôn ngữ) từ bảng điều khiển này. Các tùy chọn màu xám chỉ có thể được thay đổi bởi người điều hành trang trại. Sau khi hoàn tất, hãy nhấp vào 'Lưu' và các tùy chọn của bạn sẽ được lưu trong vài giây.\n\nBạn có thể quản lý các thiết lập bổ sung như logo và nhiều hơn nữa tại [[Special:ManageWiki/settings]].",
@@ -162,7 +162,7 @@
 	"managewiki-unavailable": "Không có sẵn",
 	"managewiki-unavailable-notcentralwiki": "Trang này không có trên wiki này. Vui lòng truy cập wiki trung tâm của trang trại của bạn để sử dụng trang này.",
 	"managewiki-warning-changes": "Bạn chưa lưu những thay đổi tùy chọn đã thực hiện.\nNếu bạn rời khỏi trang này mà không bấm “$1”, các tùy chọn của bạn sẽ không được cập nhật.",
-	"managewikidefaultpermissions": "Quản lý quyền mặc định cho wiki mới",
+	"managewikidefaults": "Quản lý quyền mặc định cho wiki mới",
 	"managewikidefaults-creategroup-info": "Sử dụng trường bên dưới để tạo nhóm người dùng sẽ được tạo tự động trên các wiki mới kể từ bây giờ.",
 	"managewikidefaults-resetcache": "Đặt lại bộ đệm CreateWiki",
 	"managewikidefaults-resetcache-header": "Tùy chọn này cho phép bạn đặt lại bộ đệm CreateWiki của wiki này. Điều này hữu ích trong một số trường hợp khi các thay đổi cài đặt không được truyền tải chính xác.",
@@ -174,7 +174,7 @@
 	"managewikidefaults-resetsettings-header": "Tùy chọn này đặt lại cấu hình của wiki này về mặc định, loại bỏ tất cả cài đặt được đặt qua [[Special:ManageWiki/settings]]. Cài đặt cốt lõi, tiện ích mở rộng, không gian tên và nhóm người dùng không bị ảnh hưởng.",
 	"managewikidefaults-resetsettings-title": "Đặt lại cài đặt của wiki này về mặc định",
 	"managewikidefaults-selectgroup-info": "Dưới đây là danh sách các nhóm được tạo tự động trên wiki mới. Sử dụng danh sách thả xuống bên dưới để chọn nhóm bạn muốn quản lý hoặc xem cấu hình.",
-	"managewikidefaultpermissions-view": "Quản lý quyền mặc định cho wiki mới",
+	"managewikidefaults-view": "Quản lý quyền mặc định cho wiki mới",
 	"managewikiextensions": "Cài đặt tiện ích wiki",
 	"managewikinamespaces": "Cài đặt không gian tên wiki",
 	"managewikipermissions": "Cài đặt quyền hạn wiki",
@@ -203,6 +203,5 @@
 	"right-managewiki-permissions": "Tạo, xóa và quản lý nhóm người dùng trên wiki này",
 	"right-managewiki-restricted": "Quản lý các cài đặt wiki bị khóa",
 	"right-managewiki-settings": "Quản lý cài đặt nâng cao cho wiki này",
-	"right-remotewiki": "Quản lý từ xa các cài đặt cốt lõi của wiki",
 	"settings-other": "Cài đặt nâng cao"
 }

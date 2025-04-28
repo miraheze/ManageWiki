@@ -102,7 +102,7 @@
 	"managewiki-success": "Muutoksesi on tallennettu.",
 	"managewiki-unavailable": "Ei saatavissa",
 	"managewiki-warning-changes": "Ole tehnyt ManageWikiin muutoksia, joita ei ole vielä tallennettu.\nMikäli poistut sivulta klikkaamalla \"$1\", asetuksiasi ei päivitetä.",
-	"managewikidefaultpermissions": "Hallitse wikitilan oletuskäyttöoikeuksia",
+	"managewikidefaults": "Hallitse wikitilan oletuskäyttöoikeuksia",
 	"managewikiextensions": "Hallinnoi wikin laajennuksia",
 	"managewikinamespaces": "Hallinnoi wikin nimiavaruuksia",
 	"managewikipermissions": "Hallinnoi wikin käyttöoikeuksia",

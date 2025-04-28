@@ -54,7 +54,7 @@
 	"managewiki-ns-invalidid": "ID-ovi imenskog prostora moraju da budu celi brojevi za mogućnost uređivanja preko ManageWiki-ja.",
 	"managewiki-permissions-create": "napravite novu korisničku grupu",
 	"managewiki-success": "Podešavanja su uspešno promenjena.",
-	"managewikidefaultpermissions": "Upravljanje podrazumevanim dozvolama farmi vikija",
+	"managewikidefaults": "Upravljanje podrazumevanim dozvolama farmi vikija",
 	"managewikidefaults-resetgroups": "Resetuj sve grupe na podrazumevano",
 	"managewikiextensions": "Upravljanje dodacima vikija",
 	"managewikinamespaces": "Upravljanje imenskom prostorima vikija",
