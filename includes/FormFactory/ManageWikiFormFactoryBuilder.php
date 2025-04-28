@@ -271,13 +271,13 @@ class ManageWikiFormFactoryBuilder {
 					$json = file_get_contents( $path );
 					$info = json_decode( $json, true );
 					$version = $info['manifest_version'] ?? 2;
-
 					$processor->extractInfo( $path, $info, $version );
 				}
 
 				$data = $processor->getExtractedInfo();
+				$credits = $data['credits'] ?? [];
 
-				foreach ( $data['credits'] as &$credit ) {
+				foreach ( $credits as $name => &$credit ) {
 					if ( !empty( $credit['descriptionmsg'] ) ) {
 						$msg = $context->msg( $credit['descriptionmsg'] );
 						if ( $msg->exists() ) {
@@ -298,7 +298,53 @@ class ManageWikiFormFactoryBuilder {
 					}
 				}
 
-				return $data['credits'];
+				return $credits;
+			}
+		);
+
+		$allMessages = $cache->getWithSetCallback(
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages', count( $manageWikiExtensions ) ),
+			WANObjectCache::TTL_DAY,
+			static function () use ( $context, $manageWikiExtensions, $credits ): array {
+				$results = [];
+				foreach ( $manageWikiExtensions as $name => $ext ) {
+					$extDisplayName = null;
+					if ( !empty( $ext['displayname'] ) ) {
+						$msg = $context->msg( $ext['displayname'] );
+						$extDisplayName = $msg->exists() ? $msg->parse() : $ext['displayname'];
+					}
+
+					$credit = $credits[ $ext['name'] ] ?? [];
+					$creditDisplayName = $credit['namemsg-parsed'] ?? $credit['name'] ?? $ext['name'];
+
+					$label = $context->msg( 'managewiki-extension-name',
+						$ext['linkPage'],
+						$extDisplayName ?? $creditDisplayName
+					)->parse();
+
+					$helpParts = [];
+					if ( !empty( $ext['description'] ) ) {
+						$msg = $context->msg( $ext['description'] );
+						$extDescription = $msg->exists() ? $msg->parse() : $ext['description'];
+						$helpParts[] = $extDescription;
+					} elseif ( isset( $credit['descriptionmsg-parsed'] ) ) {
+						$helpParts[] = $credit['descriptionmsg-parsed'];
+					} elseif ( isset( $credit['description'] ) ) {
+						$helpParts[] = $credit['description'];
+					}
+
+					if ( !empty( $ext['help'] ) ) {
+						$rawMessage = new RawMessage( $ext['help'] );
+						$helpParts[] = $rawMessage->parse();
+					}
+
+					$results[$name] = [
+						'label' => $label,
+						'help' => implode( "\n", $helpParts ),
+					];
+				}
+
+				return $results;
 			}
 		);
 
@@ -311,59 +357,35 @@ class ManageWikiFormFactoryBuilder {
 
 			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
 
-			$help = [];
 			$mwRequirements = true;
+			$helpParts = [];
+
 			if ( $ext['requires'] ) {
 				$mwRequirements = ManageWikiRequirements::process( $ext['requires'], $extList );
-				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
+				$helpParts[] = self::buildRequires( $context, $ext['requires'] );
 			}
 
 			if ( $ext['conflicts'] ) {
-				$help[] = $context->msg( 'managewiki-conflicts', $ext['conflicts'] )->parse() . "\n";
-			}
-
-			$credit = $credits[ $ext['name'] ] ?? [];
-			$extDescription = null;
-			$descriptionFallback = $credit['descriptionmsg-parsed'] ?? null;
-			$description = $credit['description'] ?? null;
-
-			if ( !empty( $ext['description'] ) ) {
-				$msg = $context->msg( $ext['description'] );
-				$extDescription = $msg->exists() ? $msg->parse() : $ext['description'];
-			}
-
-			$extDisplayName = null;
-			if ( !empty( $ext['displayname'] ) ) {
-				$msg = $context->msg( $ext['displayname'] );
-				$extDisplayName = $msg->exists() ? $msg->parse() : $ext['displayname'];
-			}
-
-			$help[] = $extDescription ?? $descriptionFallback ?? $description;
-
-			if ( $ext['help'] ?? false ) {
-				$rawMessage = new RawMessage( $ext['help'] );
-				$help[] = "\n" . $rawMessage->parse();
+				$helpParts[] = $context->msg( 'managewiki-conflicts', $ext['conflicts'] )->parse();
 			}
 
 			if ( $hasSettings && in_array( $name, $extList, true ) ) {
 				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
-				$help[] = "\n" . $linkRenderer->makeExternalLink(
+				$helpParts[] = $linkRenderer->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "settings/$name" )->getFullURL(),
-					$context->msg( 'managewiki-extension-settings' ),
-					SpecialPage::getTitleFor( 'ManageWiki', 'settings' )
+					$context->msg( 'managewiki-extension-settings' )->text()
 				);
 			}
 
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
-				'label-message' => [
-					'managewiki-extension-name',
-					$ext['linkPage'],
-					$extDisplayName ?? ( $credit['namemsg-parsed'] ?? $credit['name'] ?? $ext['name'] ),
-				],
+				'label' => $allMessages[$name]['label'] ?? '',
 				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
-				'help' => nl2br( implode( ' ', $help ) ),
+				'help' => nl2br( implode( "\n", array_merge(
+					[ $allMessages[$name]['help'] ?? '' ],
+					$helpParts
+				) ) ),
 				'section' => $ext['section'],
 			];
 		}
