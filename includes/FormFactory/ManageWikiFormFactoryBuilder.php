@@ -394,25 +394,27 @@ class ManageWikiFormFactoryBuilder {
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
-		$allHelp = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiSettings', 'help-messages' ),
+		$allMessages = $cache->getWithSetCallback(
+			$cache->makeGlobalKey( 'ManageWikiSettings', 'messages' ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $context, $manageWikiSettings ): array {
-				$helpArray = [];
+				$messages = [];
 
 				foreach ( $manageWikiSettings as $name => $set ) {
+					$msgName = $context->msg( "managewiki-setting-$name-name" );
 					$msgHelp = $context->msg( "managewiki-setting-$name-help" );
-					if ( $msgHelp->exists() ) {
-						$helpArray[$name] = $msgHelp->escaped();
-					} elseif ( isset( $set['help'] ) ) {
-						$rawMessage = new RawMessage( $set['help'] );
-						$helpArray[$name] = $rawMessage->parse();
-					} else {
-						$helpArray[$name] = '';
-					}
+
+					$messages[$name] = [
+						'name' => $msgName->exists() ? $msgName->text() : null,
+						'help' => $msgHelp->exists() ? $msgHelp->escaped() : (
+							isset( $set['help'] )
+								? ( new RawMessage( $set['help'] ) )->parse()
+								: ''
+						),
+					];
 				}
 
-				return $helpArray;
+				return $messages;
 			}
 		);
 
@@ -439,8 +441,6 @@ class ManageWikiFormFactoryBuilder {
 			$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isGlobal || $isInExtList );
 			$disabled = $ceMW ? !$mwRequirements : true;
 
-			$msgName = $context->msg( "managewiki-setting-$name-name" );
-
 			if ( $add ) {
 				$value = $settingsList[$name] ?? null;
 				if ( isset( $set['associativeKey'] ) ) {
@@ -465,7 +465,10 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$help[] = $allHelp[$name] ?? '';
+				// For 24 hours after new settings are added we may have
+				// some weirdly formatted messages, but we escape
+				// the fallback for security.
+				$help[] = $allMessages[$name]['help'] ?? htmlspecialchars( $set['help'] );
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
@@ -487,7 +490,7 @@ class ManageWikiFormFactoryBuilder {
 				$formDescriptor["set-$name"] = [
 					'label-message' => [
 						'managewiki-setting-label',
-						$msgName->exists() ? $msgName->text() : $set['name'],
+						$allMessages[$name]['name'] ?? $set['name'],
 						$varName,
 					],
 					'disabled' => $disabled,
