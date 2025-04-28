@@ -55,58 +55,54 @@
 	},
 	"AvailableRights": [
 		"managewiki-core",
+		"managewiki-editdefault",
 		"managewiki-extensions",
 		"managewiki-namespaces",
 		"managewiki-permissions",
-		"managewiki-settings",
-		"managewiki-editdefault",
-		"managewiki-restricted"
+		"managewiki-restricted",
+		"managewiki-settings"
 	],
 	"LogActionsHandlers": {
-		"managewiki/cache-reset": "LogFormatter",
-		"managewiki/delete": "LogFormatter",
-		"managewiki/delete-group": "LogFormatter",
-		"managewiki/lock": "LogFormatter",
-		"managewiki/namespaces": "LogFormatter",
-		"managewiki/namespaces-delete": "LogFormatter",
-		"managewiki/rename": "LogFormatter",
-		"managewiki/rights": "LogFormatter",
-		"managewiki/rights-reset": "LogFormatter",
-		"managewiki/settings": "LogFormatter",
-		"managewiki/settings-reset": "LogFormatter",
-		"managewiki/undelete": "LogFormatter",
-		"managewiki/unlock": "LogFormatter"
+		"managewiki/*": "LogFormatter"
+	},
+	"LogHeaders": {
+		"managewiki": "managewiki-log-header"
+	},
+	"LogNames": {
+		"managewiki": "managewiki-log-name"
 	},
 	"LogTypes": [
 		"managewiki"
 	],
 	"ActionFilteredLogs": {
 		"managewiki": {
-			"managewikilock": [
-				"lock"
+			"cache-reset": [
+				"cache-reset"
 			],
-			"managewikiunlock": [
-				"unlock"
+			"delete": [
+				"delete"
+			],
+			"lock": [
+				"lock"
 			],
 			"namespaces": [
 				"namespaces",
 				"namespaces-delete"
 			],
-			"permissions": [
-				"rename",
+			"permissions": [,
+				"delete-group",
 				"rights",
-				"rights-reset",
-				"delete-group"
+				"rights-reset"
 			],
 			"settings": [
 				"settings",
 				"settings-reset"
 			],
-			"wikidelete": [
-				"delete"
-			],
-			"wikiundelete": [
+			"undelete": [
 				"undelete"
+			],
+			"unlock": [
+				"unlock"
 			]
 		}
 	},
