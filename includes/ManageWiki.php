@@ -65,41 +65,6 @@ class ManageWiki {
 		return null;
 	}
 
-	public static function buildDisableIf( array $exts, string $conflict ): array {
-		$conditions = [];
-
-		foreach ( $exts as $entry ) {
-			if ( is_array( $entry ) ) {
-				// OR logic for this group
-				$orConditions = [];
-				foreach ( $entry as $ext ) {
-					$orConditions[] = [ '!==', "ext-$ext", '1' ];
-				}
-
-				$conditions[] = count( $orConditions ) === 1 ?
-					$orConditions[0] :
-					array_merge( [ 'AND' ], $orConditions );
-			} else {
-				// Simple AND logic
-				$conditions[] = [ '!==', "ext-$entry", '1' ];
-			}
-		}
-
-		$finalCondition = count( $conditions ) === 1 ?
-			$conditions[0] :
-			array_merge( [ 'OR' ], $conditions );
-
-		if ( $conflict ) {
-			$finalCondition = [
-				'OR',
-				$finalCondition,
-				[ '===', "ext-$conflict", '1' ]
-			];
-		}
-
-		return $finalCondition;
-	}
-
 	public static function namespaceID( string $dbname, string $namespace ): int {
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		$dbr = $databaseUtils->getGlobalReplicaDB();
