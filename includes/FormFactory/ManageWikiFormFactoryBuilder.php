@@ -399,16 +399,17 @@ class ManageWikiFormFactoryBuilder {
 			WANObjectCache::TTL_DAY,
 			static function () use ( $context, $manageWikiSettings ): array {
 				$helpArray = [];
-
 				foreach ( $manageWikiSettings as $name => $set ) {
 					$msgHelp = $context->msg( "managewiki-setting-$name-help" );
 					if ( $msgHelp->exists() ) {
 						$helpArray[$name] = $msgHelp->escaped();
-					} elseif ( isset( $set['help'] ) ) {
+						continue;
+					}
+
+					if ( isset( $set['help'] ) ) {
 						$rawMessage = new RawMessage( $set['help'] );
 						$helpArray[$name] = $rawMessage->parse();
-					} else {
-						$helpArray[$name] = '';
+						continue;
 					}
 				}
 
@@ -465,7 +466,7 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$help[] = $allHelp[$name] ?? '';
+				$help[] = $allHelp[$name] ?? ( new RawMessage( $set['help'] ) )->parse();
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
