@@ -396,7 +396,7 @@ class ManageWikiFormFactoryBuilder {
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 		$allHelp = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiSettings', 'help-messages' ),
+			$cache->makeGlobalKey( 'ManageWikiSettings', 'help-messages', count( $manageWikiSettings ) ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $context, $manageWikiSettings ): array {
 				$helpArray = [];
@@ -467,7 +467,7 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$help[] = $allHelp[$name] ?? ( new RawMessage( $set['help'] ) )->parse();
+				$help[] = $allHelp[$name] ?? '';
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
