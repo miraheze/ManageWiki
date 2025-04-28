@@ -369,6 +369,8 @@ class ManageWikiFormFactoryBuilder {
 				$helpParts[] = $context->msg( 'managewiki-conflicts', $ext['conflicts'] )->parse();
 			}
 
+			$helpParts[] = $allMessages[$name]['help'] ?? '';
+
 			if ( $hasSettings && in_array( $name, $extList, true ) ) {
 				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
 				$helpParts[] = $linkRenderer->makeExternalLink(
@@ -383,10 +385,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-raw' => $allMessages[$name]['label'] ?? '',
 				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
-				'help' => nl2br( implode( "\n", array_merge(
-					[ $allMessages[$name]['help'] ?? '' ],
-					$helpParts
-				) ) ),
+				'help' => nl2br( implode( "\n", $helpParts ) ),
 				'section' => $ext['section'],
 			];
 		}
