@@ -197,7 +197,6 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\Main",
 			"services": [
 				"ManageWikiConfig",
-				"PermissionManager",
 				"UserOptionsLookup"
 			]
 		}
