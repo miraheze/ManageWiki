@@ -249,6 +249,7 @@ class ManageWikiFormFactoryBuilder {
 	): array {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
+
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
@@ -391,6 +392,30 @@ class ManageWikiFormFactoryBuilder {
 			)
 		);
 
+		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
+		$cache = $objectCacheFactory->getLocalClusterInstance();
+		$allHelp = $cache->getWithSetCallback(
+			$cache->makeGlobalKey( 'ManageWikiSettings', 'help-messages' ),
+			WANObjectCache::TTL_DAY,
+			static function () use ( $context, $manageWikiSettings ): array {
+				$helpArray = [];
+
+				foreach ( $manageWikiSettings as $name => $set ) {
+					$msgHelp = $context->msg( "managewiki-setting-$name-help" );
+					if ( $msgHelp->exists() ) {
+						$helpArray[$name] = $msgHelp->escaped();
+					} elseif ( isset( $set['help'] ) ) {
+						$rawMessage = new RawMessage( $set['help'] );
+						$helpArray[$name] = $rawMessage->parse();
+					} else {
+						$helpArray[$name] = '';
+					}
+				}
+
+				return $helpArray;
+			}
+		);
+
 		$formDescriptor = [];
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
 
@@ -415,7 +440,6 @@ class ManageWikiFormFactoryBuilder {
 			$disabled = $ceMW ? !$mwRequirements : true;
 
 			$msgName = $context->msg( "managewiki-setting-$name-name" );
-			$msgHelp = $context->msg( "managewiki-setting-$name-help" );
 
 			if ( $add ) {
 				$value = $settingsList[$name] ?? null;
@@ -441,8 +465,7 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$rawMessage = new RawMessage( $set['help'] );
-				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+				$help[] = $allHelp[$name] ?? '';
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
