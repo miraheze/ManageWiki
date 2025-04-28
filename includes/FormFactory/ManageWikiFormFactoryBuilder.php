@@ -250,13 +250,14 @@ class ManageWikiFormFactoryBuilder {
 		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
 
+		$manageWikiExtensions = $config->get( ConfigNames::Extensions );
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 
 		$credits = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits-temp' ),
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits', count( $manageWikiExtensions ) ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $config, $context ): array {
 				$queue = array_fill_keys( array_merge(
@@ -302,7 +303,7 @@ class ManageWikiFormFactoryBuilder {
 		);
 
 		$formDescriptor = [];
-		foreach ( $config->get( ConfigNames::Extensions ) as $name => $ext ) {
+		foreach ( $manageWikiExtensions as $name => $ext ) {
 			$filteredList = array_filter(
 				$manageWikiSettings,
 				static fn ( array $value ): bool => $value['from'] === $name
