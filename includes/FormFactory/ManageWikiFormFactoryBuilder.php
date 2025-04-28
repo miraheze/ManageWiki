@@ -257,7 +257,7 @@ class ManageWikiFormFactoryBuilder {
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 
 		$allMessages = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages', count( $manageWikiExtensions ) ),
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages5', count( $manageWikiExtensions ) ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $context, $config, $manageWikiExtensions ): array {
 				$queue = array_fill_keys( array_merge(
