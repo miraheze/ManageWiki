@@ -26,12 +26,9 @@
 
 			$fields = $( '#managewiki-form :input[name]' )
 				.not( '#managewiki-submit-reason :input[name]' );
+				.not( ':disabled' );
 
 			for ( i = 0; i < $fields.length; i++ ) {
-				if ( $fields[ i ].disabled ) {
-					// Don't count disabled fields
-					continue;
-				}
 
 				if (
 					$fields[ i ].defaultChecked !== undefined &&
