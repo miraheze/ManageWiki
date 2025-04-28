@@ -6,7 +6,6 @@ use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
-use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
@@ -24,7 +23,6 @@ class SpecialManageWiki extends SpecialPage {
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly NamespaceInfo $namespaceInfo,
-		private readonly PermissionManager $permissionManager,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
 		parent::__construct( 'ManageWiki' );
@@ -49,7 +47,7 @@ class SpecialManageWiki extends SpecialPage {
 			$module = $par[0];
 		}
 
-		if ( !$this->getUser()->isAllowed( "managewiki-$module" ) ) {
+		if ( !$this->getAuthority()->isAllowed( "managewiki-$module" ) ) {
 			$this->getOutput()->setPageTitleMsg(
 				$this->msg( "managewiki-link-$module-view" )
 			);
@@ -102,9 +100,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		// ManageWiki core (on the central wiki) — remote wiki management
 		if ( $module === 'core' ) {
-			$this->getOutput()->addReturnTo(
-				SpecialPage::getTitleFor( 'ManageWiki' )
-			);
+			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 
 			$dbname = $par[1] ?? $this->getConfig()->get( MainConfigNames::DBname );
 			$this->showWikiForm(
@@ -186,7 +182,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function onSubmitRedirectToWikiForm( array $formData ): void {
 		$this->getOutput()->redirect(
-			SpecialPage::getTitleFor( 'ManageWiki', "core/{$formData['dbname']}" )->getFullURL()
+			$this->getPageTitle( "core/{$formData['dbname']}" )->getFullURL()
 		);
 	}
 
@@ -237,7 +233,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		// Check permissions
 		if ( $module !== 'core' ) {
-			if ( !$this->getUser()->isAllowed( "managewiki-$module" ) ) {
+			if ( !$this->getAuthority()->isAllowed( "managewiki-$module" ) ) {
 				$this->getOutput()->addHTML(
 					Html::errorBox(
 						$this->msg( 'managewiki-error-nopermission' )->escaped()
@@ -246,7 +242,7 @@ class SpecialManageWiki extends SpecialPage {
 			}
 		} else {
 			if (
-				!$this->getUser()->isAllowed( "managewiki-$module" ) &&
+				!$this->getAuthority()->isAllowed( "managewiki-$module" ) &&
 				!$this->databaseUtils->isCurrentWikiCentral()
 			) {
 				$this->getOutput()->addHTML(
@@ -254,7 +250,7 @@ class SpecialManageWiki extends SpecialPage {
 						$this->msg( 'managewiki-error-nopermission' )->escaped()
 					)
 				);
-			} elseif ( !$this->getUser()->isAllowed( "managewiki-$module" ) ) {
+			} elseif ( !$this->getAuthority()->isAllowed( "managewiki-$module" ) ) {
 				$this->getOutput()->addHTML(
 					Html::errorBox(
 						$this->msg( 'managewiki-error-nopermission-remote' )->escaped()
@@ -264,9 +260,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		if ( $special !== '' ) {
-			$this->getOutput()->addReturnTo(
-				SpecialPage::getTitleFor( 'ManageWiki', $module )
-			);
+			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle( $module ) );
 		}
 
 		// Handle permissions module when we are not editing a specific group.
@@ -309,7 +303,6 @@ class SpecialManageWiki extends SpecialPage {
 			config: $this->getConfig(),
 			context: $this->getContext(),
 			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
-			permissionManager: $this->permissionManager,
 			remoteWiki: $remoteWiki,
 			dbname: $dbname,
 			module: $module,
@@ -373,7 +366,7 @@ class SpecialManageWiki extends SpecialPage {
 			->prepareForm()
 			->show();
 
-		if ( $this->permissionManager->userHasRight( $this->getUser(), "managewiki-$module" ) ) {
+		if ( $this->getAuthority()->isAllowed( "managewiki-$module" ) ) {
 			$create['info'] = [
 				'type' => 'info',
 				'default' => $this->msg( "managewiki-$module-create-info" )->text(),
@@ -455,7 +448,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$this->getOutput()->redirect(
-			SpecialPage::getTitleFor( 'ManageWiki', "$module/$special" )->getFullURL()
+			$this->getPageTitle( "$module/$special" )->getFullURL()
 		);
 	}
 
@@ -465,6 +458,11 @@ class SpecialManageWiki extends SpecialPage {
 			return $this->msg( 'managewiki-permissions-group-disallowed' );
 		}
 
+		return true;
+	}
+
+	/** @inheritDoc */
+	public function doesWrites(): bool {
 		return true;
 	}
 

@@ -127,8 +127,6 @@ class ManageWikiFormFactoryBuilder {
 			],
 		];
 
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-
 		$addedModules = [
 			'private' => [
 				'if' => $config->get( 'CreateWikiUsePrivateWikis' ),
@@ -152,7 +150,7 @@ class ManageWikiFormFactoryBuilder {
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
 				'type' => 'check',
 				'default' => $remoteWiki->isInactiveExempt(),
-				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 			],
 			'inactive-exempt-reason' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) &&
@@ -160,20 +158,20 @@ class ManageWikiFormFactoryBuilder {
 				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
 				'type' => 'selectorother',
 				'default' => $remoteWiki->getInactiveExemptReason(),
-				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 				'options' => $config->get( ConfigNames::InactiveExemptReasonOptions ),
 			],
 			'server' => [
 				'if' => $config->get( ConfigNames::UseCustomDomains ),
 				'type' => 'text',
 				'default' => $remoteWiki->getServerName(),
-				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 			],
 			'experimental' => [
 				'if' => $config->get( 'CreateWikiUseExperimental' ),
 				'type' => 'check',
 				'default' => $remoteWiki->isExperimental(),
-				'access' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 			],
 		];
 
@@ -232,7 +230,7 @@ class ManageWikiFormFactoryBuilder {
 				'label-message' => 'managewiki-label-dbcluster',
 				'options' => $clusterOptions,
 				'default' => $remoteWiki->getDBCluster(),
-				'disabled' => !$permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ),
+				'disabled' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 				'cssclass' => 'managewiki-infuse',
 				'section' => 'main',
 			];
@@ -1119,8 +1117,7 @@ class ManageWikiFormFactoryBuilder {
 				$newInactive ? $remoteWiki->markInactive() : $remoteWiki->markActive();
 			}
 
-			$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-			if ( $permissionManager->userHasRight( $context->getUser(), 'managewiki-restricted' ) ) {
+			if ( $context->getAuthority()->isAllowed( 'managewiki-restricted' ) ) {
 				if ( $newInactiveExempt !== $remoteWiki->isInactiveExempt() ) {
 					if ( $newInactiveExempt ) {
 						$remoteWiki->markExempt();

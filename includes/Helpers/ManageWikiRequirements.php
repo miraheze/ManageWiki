@@ -64,14 +64,8 @@ class ManageWikiRequirements {
 	 * @return bool Whether permissions requirements are met
 	 */
 	private static function permissions( array $data ): bool {
-		$permissionManager = MediaWikiServices::getInstance()->getPermissionManager();
-		foreach ( $data as $perm ) {
-			if ( !$permissionManager->userHasRight( RequestContext::getMain()->getUser(), $perm ) ) {
-				return false;
-			}
-		}
-
-		return true;
+		$authority = RequestContext::getMain()->getAuthority();
+		return $authority->isAllowedAll( ...$data );
 	}
 
 	/**
