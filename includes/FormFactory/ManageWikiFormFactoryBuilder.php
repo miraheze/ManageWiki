@@ -395,26 +395,37 @@ class ManageWikiFormFactoryBuilder {
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
-		$allHelp = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiSettings', 'help-messages', count( $manageWikiSettings ) ),
+		$allMessages = $cache->getWithSetCallback(
+			$cache->makeGlobalKey( 'ManageWikiSettings', 'messages', count( $manageWikiSettings ) ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $context, $manageWikiSettings ): array {
-				$helpArray = [];
-				foreach ( $manageWikiSettings as $name => $set ) {
-					$msgHelp = $context->msg( "managewiki-setting-$name-help" );
-					if ( $msgHelp->exists() ) {
-						$helpArray[$name] = $msgHelp->escaped();
-						continue;
-					}
+				$result = [];
 
-					if ( isset( $set['help'] ) ) {
-						$rawMessage = new RawMessage( $set['help'] );
-						$helpArray[$name] = $rawMessage->parse();
-						continue;
+				foreach ( $manageWikiSettings as $name => $set ) {
+					$msgName = $context->msg( "managewiki-setting-$name-name" );
+					$msgHelp = $context->msg( "managewiki-setting-$name-help" );
+
+					$labelName = $msgName->exists() ? $msgName->text() : ( $set['name'] ?? $name );
+
+					$varName = "\${$name}";
+					if ( isset( $set['associativeKey'] ) ) {
+						$varName = "\${$name}['{$set['associativeKey']}']";
 					}
+					$varNameFormatted = $context->msg( 'parentheses', $varName )->text();
+
+					$fullLabel = $context->msg( 'managewiki-setting-label' )
+						->params( $labelName, $varNameFormatted )
+						->parse();
+
+					$result[$name] = [
+						'label' => $fullLabel,
+						'help' => $msgHelp->exists()
+							? $msgHelp->escaped()
+							: ( isset( $set['help'] ) ? ( new RawMessage( $set['help'] ) )->parse() : '' ),
+					];
 				}
 
-				return $helpArray;
+				return $result;
 			}
 		);
 
@@ -467,7 +478,7 @@ class ManageWikiFormFactoryBuilder {
 					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$help[] = $allHelp[$name] ?? '';
+				$help[] = $allMessages[$name]['help'] ?? '';
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
@@ -479,19 +490,8 @@ class ManageWikiFormFactoryBuilder {
 					];
 				}
 
-				$varName = $context->msg( 'parentheses', "\${$name}" );
-				if ( isset( $set['associativeKey'] ) ) {
-					$varName = $context->msg( 'parentheses',
-						"\${$name}['{$set['associativeKey']}']"
-					);
-				}
-
 				$formDescriptor["set-$name"] = [
-					'label-message' => [
-						'managewiki-setting-label',
-						$msgName->exists() ? $msgName->text() : $set['name'],
-						$varName,
-					],
+					'label' => $allMessages[$name]['label'],
 					'disabled' => $disabled,
 					'help' => nl2br( implode( ' ', $help ) ),
 					'cssclass' => 'managewiki-infuse',
