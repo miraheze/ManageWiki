@@ -89,7 +89,7 @@
 				"namespaces",
 				"namespaces-delete"
 			],
-			"permissions": [,
+			"permissions": [
 				"delete-group",
 				"rights",
 				"rights-reset"
