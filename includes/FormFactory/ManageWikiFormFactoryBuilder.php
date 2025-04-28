@@ -289,7 +289,7 @@ class ManageWikiFormFactoryBuilder {
 					$ext['conflicts']
 				)
 			) {
-				$disableIf = ManageWiki::buildDisableIf(
+				$disableIf = self::buildDisableIf(
 					$ext['requires']['extensions'] ?? [],
 					$ext['conflicts'] ?: ''
 				);
@@ -1523,6 +1523,40 @@ class ManageWikiFormFactoryBuilder {
 		}
 
 		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
+	}
+
+	private static function buildDisableIf( array $requires, string $conflict ): array {
+		$conditions = [];
+		foreach ( $requires as $entry ) {
+			if ( is_array( $entry ) ) {
+				// OR logic for this group
+				$orConditions = [];
+				foreach ( $entry as $ext ) {
+					$orConditions[] = [ '!==', "ext-$ext", '1' ];
+				}
+
+				$conditions[] = count( $orConditions ) === 1 ?
+					$orConditions[0] :
+					array_merge( [ 'AND' ], $orConditions );
+			} else {
+				// Simple AND logic
+				$conditions[] = [ '!==', "ext-$entry", '1' ];
+			}
+		}
+
+		$finalCondition = count( $conditions ) === 1 ?
+			$conditions[0] :
+			array_merge( [ 'OR' ], $conditions );
+
+		if ( $conflict ) {
+			$finalCondition = [
+				'OR',
+				$finalCondition,
+				[ '===', "ext-$conflict", '1' ]
+			];
+		}
+
+		return $finalCondition;
 	}
 
 	private static function getConfigName( string $name ): string {
