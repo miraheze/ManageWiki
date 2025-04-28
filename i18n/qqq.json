@@ -107,7 +107,7 @@
 	"managewikidefaults": "{{doc-special}}",
 	"managewikidefaults-view": "{{doc-special|ManageWikiDefaults}}",
 	"namespaces-delete": "{{Identical|Delete}}",
-	"permissions-delete": "{{Identical|Delete}}",
+	"permissions-advanced": "{{Identical|Advanced}}",
 	"right-managewiki-core": "{{doc-right|managewiki-core}}",
 	"right-managewiki-editdefault": "{{doc-right|managewiki-editdefault}}",
 	"right-managewiki-extensions": "{{doc-right|managewiki-extensions}}",
