@@ -310,7 +310,7 @@ class ManageWikiFormFactoryBuilder {
 						$extDisplayName ?? $creditDisplayName
 					)->parse();
 
-					$help = array_filter([
+					$help = array_filter( [
 						!empty( $ext['description'] ) ? (
 							( $msg = $context->msg( $ext['description'] ) ) && $msg->exists()
 								? $msg->parse()
@@ -318,7 +318,7 @@ class ManageWikiFormFactoryBuilder {
 						) : null,
 						$credit['descriptionmsg-parsed'] ?? null,
 						$credit['description'] ?? null,
-					])[0] ?? null;
+					] )[0] ?? null;
 
 					if ( !empty( $ext['help'] ) ) {
 						$rawMessage = new RawMessage( $ext['help'] );
