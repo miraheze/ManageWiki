@@ -381,7 +381,7 @@ class ManageWikiFormFactoryBuilder {
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
 				'label' => $allMessages[$name]['label'] ?? '',
-				'label-raw' => true,
+				'raw-label' => true,
 				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
 				'help' => nl2br( implode( "\n", array_merge(
