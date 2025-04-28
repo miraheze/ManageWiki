@@ -190,6 +190,10 @@ class ManageWikiPermissions implements IConfigModule {
 		return in_array( $group, $this->deleteGroups, true );
 	}
 
+	public function isRenaming( string $group ): bool {
+		return in_array( $group, $this->renameGroups, true );
+	}
+
 	public function getErrors(): array {
 		return $this->errors;
 	}
@@ -234,6 +238,16 @@ class ManageWikiPermissions implements IConfigModule {
 					->execute();
 
 				$this->deleteUsersFromGroup( $group );
+				continue;
+			}
+
+			if ( $this->isRenaming( $group ) ) {
+				$this->log = 'rename-group';
+				$this->logParams = [
+					'5::newname' => $newName,
+				];
+
+				$this->MoveUsersFromGroup( $group );
 				continue;
 			}
 
