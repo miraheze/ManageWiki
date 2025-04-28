@@ -282,10 +282,6 @@ class ManageWikiFormFactoryBuilder {
 						$msg = $context->msg( $credit['descriptionmsg'] );
 						if ( $msg->exists() ) {
 							$parsed = $msg->parse();
-							$parsed = preg_replace(
-								'#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i',
-								'<b>$1</b>', $parsed
-							);
 							$credit['descriptionmsg-parsed'] = $parsed;
 						}
 					}
@@ -303,7 +299,7 @@ class ManageWikiFormFactoryBuilder {
 		);
 
 		$allMessages = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages', count( $manageWikiExtensions ) ),
+			$cache->makeGlobalKey( 'ManageWikiExtensions', 'messages2', count( $manageWikiExtensions ) ),
 			WANObjectCache::TTL_DAY,
 			static function () use ( $context, $manageWikiExtensions, $credits ): array {
 				$results = [];
@@ -380,12 +376,17 @@ class ManageWikiFormFactoryBuilder {
 				);
 			}
 
+			$help = preg_replace(
+				'#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i',
+				'<b>$1</b>', nl2br( implode( "\n", $helpParts ) )
+			);
+
 			$formDescriptor["ext-$name"] = [
 				'type' => 'check',
 				'label-raw' => $allMessages[$name]['label'] ?? '',
 				'default' => in_array( $name, $extList, true ),
 				'disabled' => $ceMW ? !$mwRequirements : true,
-				'help' => nl2br( implode( "\n", $helpParts ) ),
+				'help' => $help,
 				'section' => $ext['section'],
 			];
 		}
