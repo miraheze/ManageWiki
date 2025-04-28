@@ -238,18 +238,8 @@
 		"remoteExtPath": "ManageWiki/modules"
 	},
 	"config": {
-		"ManageWiki": {
-			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
-			"value": {
-				"core": false,
-				"extensions": false,
-				"namespaces": false,
-				"permissions": false,
-				"settings": false
-			}
-		},
 		"ManageWikiDatabaseClustersInactive": {
-			"description": "Array. LBFactory clusters which are not considered active, which we hide in ManageWiki.",
+			"description": "Array. LBFactory clusters which are not considered active, which we show in ManageWiki. Format: <display name> => <cluster name from LBFactory>.",
 			"value": []
 		},
 		"ManageWikiExtensions": {

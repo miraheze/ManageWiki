@@ -214,16 +214,10 @@ class ManageWikiFormFactoryBuilder {
 		);
 
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) ) {
-			$clusterList = array_merge(
+			$clusterOptions = array_merge(
 				$config->get( 'CreateWikiDatabaseClusters' ),
 				$config->get( ConfigNames::DatabaseClustersInactive )
 			);
-
-			// Deprecated usage
-			$clusterOptions = [];
-			foreach ( $clusterList as $key => $value ) {
-				$clusterOptions[ is_int( $key ) ? $value : $key ] = $value;
-			}
 
 			$formDescriptor['dbcluster'] = [
 				'type' => 'select',
