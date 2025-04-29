@@ -8,6 +8,8 @@ use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
 class ConfigModuleFactory {
 
+	private const DEFAULT_DATABASE = 'default';
+
 	public function __construct(
 		private readonly ManageWikiExtensions $extensions,
 		private readonly ManageWikiNamespaces $namespaces,
@@ -30,8 +32,8 @@ class ConfigModuleFactory {
 
 	public function newDefault( string $module ): IConfigModule {
 		return match ( $module ) {
-			'namespaces' => $this->namespaces->newInstance( 'default' ),
-			'permissions' => $this->permissions->newInstance( 'default' ),
+			'namespaces' => $this->namespaces->newInstance( self::DEFAULT_DATABASE ),
+			'permissions' => $this->permissions->newInstance( self::DEFAULT_DATABASE ),
 			default => throw new InvalidArgumentException( "$module does not support default" ),
 		}
 	}
