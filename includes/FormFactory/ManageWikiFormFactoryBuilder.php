@@ -867,7 +867,7 @@ class ManageWikiFormFactoryBuilder {
 			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true )
 		) {
 			$formDescriptor += [
-				'delete-checkbox' = [
+				'delete-checkbox' => [
 					'type' => 'check',
 					'label-message' => 'permissions-delete-checkbox',
 					'default' => false,
@@ -879,7 +879,7 @@ class ManageWikiFormFactoryBuilder {
 					'disable-if' => [ '!==', 'delete-checkbox', '0' ],
 					'section' => 'advanced',
 				],
-				'group-name' = [
+				'group-name' => [
 					'type' => 'text',
 					'label-message' => 'permissions-delete-checkbox',
 					'required' => true,
