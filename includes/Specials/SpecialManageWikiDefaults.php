@@ -62,7 +62,6 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		$formFactory->getForm(
 			config: $this->getConfig(),
 			context: $this->getContext(),
-			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
 			// RemoteWikiFactory isn't used in the permissions module
 			// so we don't need to create a newInstance of it, just pass
 			// the factory service directly.
