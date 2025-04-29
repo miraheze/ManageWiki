@@ -26,7 +26,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ObjectCache\WANObjectCache;
-use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiFormFactoryBuilder {
 
@@ -1043,14 +1042,13 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		IDatabase $dbw,
 		Config $config,
 		string $special,
 		string $filtered
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$mwReturn = self::submissionCore( $formData, $dbname, $context, $remoteWiki, $dbw, $config );
+				$mwReturn = self::submissionCore( $formData, $dbname, $context, $remoteWiki, $config );
 				break;
 			case 'extensions':
 				$mwReturn = self::submissionExtensions( $formData, $dbname, $config );
@@ -1121,7 +1119,6 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		IContextSource $context,
 		RemoteWikiFactory $remoteWiki,
-		IDatabase $dbw,
 		Config $config
 	): RemoteWikiFactory {
 		$mwActions = [
@@ -1204,6 +1201,9 @@ class ManageWikiFormFactoryBuilder {
 			$remoteWiki->setDBCluster( $formData['dbcluster'] );
 		}
 
+		// dbw will be removed in the future
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getGlobalPrimaryDB();
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
 		$hookRunner->onManageWikiCoreFormSubmission(
 			$context, $dbw, $remoteWiki, $dbname, $formData
