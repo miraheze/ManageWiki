@@ -26,10 +26,10 @@ class ManageWikiPermissions implements IConfigModule {
 	private ?string $log = null;
 
 	public function __construct(
-		private readonly ActorStoreFactory $actorStoreFactory,
-		private readonly UserGroupManagerFactory $userGroupManagerFactory,
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly ActorStoreFactory $actorStoreFactory,
+		private readonly UserGroupManagerFactory $userGroupManagerFactory,
 		private readonly ITextFormatter $textFormatter
 	) {
 	}
