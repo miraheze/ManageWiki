@@ -1099,6 +1099,13 @@ class ManageWikiFormFactoryBuilder {
 						SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL()
 					);
 				}
+
+				if ( $module === 'permissions' && $mwReturn->isRenaming( $special ) ) {
+					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
+					$context->getOutput()->redirect(
+						SpecialPage::getTitleFor( 'ManageWiki', "$module/{$formData['group-name']}" )->getFullURL()
+					);
+				}
 			}
 		} else {
 			return $mwReturn->getErrors() ?:
