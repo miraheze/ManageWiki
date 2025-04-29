@@ -217,8 +217,8 @@ class SpecialManageWiki extends SpecialPage {
 			);
 		}
 
-		$remoteWiki = $this->moduleFactory->remoteWiki( $dbname );
-		if ( $remoteWiki->isLocked() ) {
+		$core = $this->moduleFactory->core( $dbname );
+		if ( $core->isLocked() ) {
 			$this->getOutput()->addHTML(
 				Html::errorBox(
 					$this->msg( 'managewiki-mwlocked' )->escaped()
