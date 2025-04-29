@@ -190,7 +190,10 @@
 			"services": [
 				"ManageWikiConfig",
 				"ManageWikiLogger",
-				"LocalisationCache"
+				"LocalisationCache",
+				"ManageWikiExtensions",
+				"ManageWikiNamespaces",
+				"ManageWikiPermissions"
 			]
 		},
 		"Installer": {
