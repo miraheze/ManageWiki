@@ -2,38 +2,49 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use MediaWiki\Config\Config;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\IConfigModule;
+use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
+use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler class for managing settings
  */
 class ManageWikiSettings implements IConfigModule {
 
-	private Config $config;
-	private IDatabase $dbw;
+	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::Settings,
+	];
 
 	private array $changes = [];
 	private array $logParams = [];
+	private array $liveSettings = [];
 	private array $scripts = [];
-	private array $liveSettings;
-	private array $settingsConfig;
 
 	private string $dbname;
 	private ?string $log = null;
 
-	public function __construct( string $dbname ) {
+	public function __construct(
+		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly ServiceOptions $options
+	) {
+		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
+	}
+
+	public function newInstance( string $dbname ): self {
 		$this->dbname = $dbname;
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$this->settingsConfig = $this->config->get( ConfigNames::Settings );
 
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
+		// Reset properties
+		$this->changes = [];
+		$this->logParams = [];
+		$this->liveSettings = [];
+		$this->scripts = [];
+		$this->log = null;
 
-		$settings = $this->dbw->newSelectQueryBuilder()
+		$dbr = $this->databaseUtils->getGlobalReplicaDB();
+		$settings = $dbr->newSelectQueryBuilder()
 			->select( 's_settings' )
 			->from( 'mw_settings' )
 			->where( [ 's_dbname' => $dbname ] )
@@ -41,6 +52,8 @@ class ManageWikiSettings implements IConfigModule {
 			->fetchField();
 
 		$this->liveSettings = (array)json_decode( $settings ?: '[]', true );
+
+		return $this;
 	}
 
 	/**
@@ -62,22 +75,23 @@ class ManageWikiSettings implements IConfigModule {
 	 * @param mixed $default Default to use if none can be found
 	 */
 	public function modify( array $settings, mixed $default = null ): void {
+		$config = $this->options->get( ConfigNames::Settings );
 		// We will handle all processing in final stages
 		foreach ( $settings as $var => $value ) {
 			$live = $this->liveSettings[$var] ?? null;
-			$override = $this->settingsConfig[$var]['overridedefault'] ?? null;
+			$override = $config[$var]['overridedefault'] ?? null;
 			$current = $live ?? $override ?? $default;
 
 			if ( $value !== $current ) {
 				$this->changes[$var] = [
-					'old' => $this->liveSettings[$var] ?? $this->settingsConfig[$var]['overridedefault'] ?? $default,
+					'old' => $this->liveSettings[$var] ?? $config[$var]['overridedefault'] ?? $default,
 					'new' => $value,
 				];
 
 				$this->liveSettings[$var] = $value;
 
-				if ( isset( $this->settingsConfig[$var]['script'] ) ) {
-					foreach ( $this->settingsConfig[$var]['script'] as $script => $opts ) {
+				if ( isset( $config[$var]['script'] ) ) {
+					foreach ( $config[$var]['script'] as $script => $opts ) {
 						$this->scripts[$script] = $opts;
 					}
 				}
@@ -91,7 +105,7 @@ class ManageWikiSettings implements IConfigModule {
 	 * @param mixed $default Default to use if none can be found
 	 */
 	public function remove( array $settings, mixed $default = null ): void {
-		// We allow removing of a single variable or many variables
+		$config = $this->options->get( ConfigNames::Settings );
 		// We will handle all processing in final stages
 		foreach ( $settings as $var ) {
 			if ( !isset( $this->liveSettings[$var] ) ) {
@@ -100,7 +114,7 @@ class ManageWikiSettings implements IConfigModule {
 
 			$this->changes[$var] = [
 				'old' => $this->liveSettings[$var],
-				'new' => $this->settingsConfig[$var]['overridedefault'] ?? $default,
+				'new' => $config[$var]['overridedefault'] ?? $default,
 			];
 
 			unset( $this->liveSettings[$var] );
@@ -112,13 +126,9 @@ class ManageWikiSettings implements IConfigModule {
 	 * @param array $settings Settings to change
 	 * @param bool $remove Whether to remove settings if they do not exist
 	 */
-	public function overwriteAll(
-		array $settings,
-		bool $remove = true
-	): void {
+	public function overwriteAll( array $settings, bool $remove ): void {
 		$overwrittenSettings = $this->list( var: null );
-
-		foreach ( $this->settingsConfig as $var => $setConfig ) {
+		foreach ( $this->options->get( ConfigNames::Settings ) as $var => $_ ) {
 			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) && $remove ) {
 				$this->remove( [ $var ] );
 				continue;
@@ -157,7 +167,8 @@ class ManageWikiSettings implements IConfigModule {
 	}
 
 	public function commit(): void {
-		$this->dbw->newInsertQueryBuilder()
+		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
+		$dbw->newInsertQueryBuilder()
 			->insertInto( 'mw_settings' )
 			->row( [
 				's_dbname' => $this->dbname,
@@ -177,8 +188,7 @@ class ManageWikiSettings implements IConfigModule {
 			);
 		}
 
-		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-		$data = $dataFactory->newInstance( $this->dbname );
+		$data = $this->dataFactory->newInstance( $this->dbname );
 		$data->resetWikiData( isNewChanges: true );
 
 		$this->logParams = [
