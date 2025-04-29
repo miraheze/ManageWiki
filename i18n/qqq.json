@@ -54,6 +54,7 @@
 	"logentry-managewiki-lock": "{{logentry|[[Special:Log/managewiki]]}}",
 	"logentry-managewiki-namespaces": "{{logentry|[[Special:Log/managewiki]]}}",
 	"logentry-managewiki-namespaces-delete": "{{logentry|[[Special:Log/managewiki]]}}",
+	"logentry-managewiki-rename-group": "{{logentry|[[Special:Log/managewiki]]}}",
 	"logentry-managewiki-rights": "{{logentry|[[Special:Log/managewiki]]}}",
 	"logentry-managewiki-rights-reset": "{{logentry|[[Special:Log/managewiki]]}}",
 	"logentry-managewiki-settings": "{{logentry|[[Special:Log/managewiki]]}}",
