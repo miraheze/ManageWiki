@@ -36,7 +36,7 @@ class ManageWikiExtensions implements IConfigModule {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
-	public function newInstance( string $dbname ) {
+	public function newInstance( string $dbname ): self {
 		$this->dbname = $dbname;
 
 		// Reset properties
@@ -70,6 +70,8 @@ class ManageWikiExtensions implements IConfigModule {
 
 			$this->liveExtensions[$extension] = $config[$extension];
 		}
+
+		return $this;
 	}
 
 	/**
