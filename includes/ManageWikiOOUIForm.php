@@ -2,8 +2,8 @@
 
 namespace Miraheze\ManageWiki;
 
+use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\OOUIHTMLForm;
-use MediaWiki\Xml\Xml;
 use OOUI\ButtonInputWidget;
 use OOUI\FieldsetLayout;
 use OOUI\HtmlSnippet;
@@ -22,7 +22,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 	 * @return string
 	 */
 	public function wrapForm( $html ) {
-		$html = Xml::tags( 'div', [ 'id' => 'managewiki' ], $html );
+		$html = Html::rawElement( 'div', [ 'id' => 'managewiki' ], $html );
 		return parent::wrapForm( $html );
 	}
 
@@ -132,7 +132,7 @@ class ManageWikiOOUIForm extends OOUIHTMLForm {
 			'id' => 'managewiki-review',
 		] );
 
-		$html = Xml::tags( 'div', [ 'class' => 'managewiki-submit-formfields' ], $html );
+		$html = Html::rawElement( 'div', [ 'class' => 'managewiki-submit-formfields' ], $html );
 
 		return $html;
 	}
