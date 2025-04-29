@@ -90,7 +90,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		return isset( $this->liveNamespaces[$id] );
 	}
 
-	public function namespaceNameExists( string $name, bool $checkMetaNS ): bool {
+	public function namespaceExists( string $name, bool $checkMetaNS ): bool {
 		// Normalize
 		$name = str_replace(
 			[ ' ', ':' ], '_',
