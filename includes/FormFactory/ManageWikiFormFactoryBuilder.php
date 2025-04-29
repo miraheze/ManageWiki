@@ -34,7 +34,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
+		ConfigModuleFactory $moduleFactory,
 		string $special,
 		string $filtered,
 		Config $config
@@ -42,27 +42,35 @@ class ManageWikiFormFactoryBuilder {
 		switch ( $module ) {
 			case 'core':
 				$formDescriptor = self::buildDescriptorCore(
-					$dbname, $ceMW, $context, $remoteWiki, $config
+					$dbname, $ceMW, $context,
+					$moduleFactory->core( $dbname ),
+					$config
 				);
 				break;
 			case 'extensions':
 				$formDescriptor = self::buildDescriptorExtensions(
-					$dbname, $ceMW, $context, $config
+					$dbname, $ceMW, $context,
+					$moduleFactory->extensions( $dbname ),
+					$config
 				);
 				break;
 			case 'settings':
 				$formDescriptor = self::buildDescriptorSettings(
-					$dbname, $ceMW, $context, $config, $filtered
+					$dbname, $ceMW, $context, $moduleFactory,
+					$config, $filtered
 				);
 				break;
 			case 'namespaces':
 				$formDescriptor = self::buildDescriptorNamespaces(
-					$dbname, $ceMW, $context, $special, $config
+					$dbname, $ceMW, $context, $special,
+					$moduleFactory, $config
 				);
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions(
-					$dbname, $ceMW, $context, $special, $config
+					$dbname, $ceMW, $context, $special,
+					$moduleFactory->permissions( $dbname ),
+					$config
 				);
 				break;
 			default:
@@ -237,11 +245,10 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
+		ManageWikiExtensions $mwExtensions,
 		Config $config
 	): array {
-		$mwExtensions = new ManageWikiExtensions( $dbname );
 		$extList = $mwExtensions->list();
-
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
@@ -385,14 +392,15 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
+		ConfigModuleFactory $moduleFactory,
 		Config $config,
 		string $filtered
 	): array {
-		$mwExtensions = new ManageWikiExtensions( $dbname );
+		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
-		$mwSettings = new ManageWikiSettings( $dbname );
+		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->list( var: null );
-		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$mwPermissions = $moduleFactory->permissions( $dbname );
 		$groupList = array_keys( $mwPermissions->list( group: null ) );
 
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
@@ -495,10 +503,11 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		string $special,
+		ConfigModuleFactory $moduleFactory,
 		Config $config
 	): array {
-		$mwNamespaces = new ManageWikiNamespaces( $dbname );
-		$mwExtensions = new ManageWikiExtensions( $dbname );
+		$mwNamespaces = $moduleFactory->namespaces( $dbname );
+		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
 
 		$namespaceID = (int)$special;
@@ -782,13 +791,13 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		string $group,
+		ManageWikiPermissions $mwPermissions,
 		Config $config
 	): array {
 		if ( in_array( $group, $config->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			$ceMW = false;
 		}
 
-		$mwPermissions = new ManageWikiPermissions( $dbname );
 		$groupData = $mwPermissions->list( $group );
 
 		$matrixConstruct = [
