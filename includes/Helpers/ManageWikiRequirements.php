@@ -62,7 +62,7 @@ class ManageWikiRequirements {
 	private static function permissions( array $data ): bool {
 		// We don't check permissions if we are in CLI mode, so that we can
 		// toggle restricted extensions in CLI.
-		if ( PHP_SAPI === 'cli' ) {
+		if ( MW_ENTRY_POINT === 'cli' ) {
 			return true;
 		}
 
