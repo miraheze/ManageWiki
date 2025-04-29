@@ -58,6 +58,26 @@ class ConfigModuleFactory {
 		}
 	}
 
+	public function core( string $dbname ): RemoteWikiFactory {
+		return $this->newFromDB( 'core', $dbname );
+	}
+
+	public function extensions( string $dbname ): ManageWikiExtensions {
+		return $this->newFromDB( 'extensions', $dbname );
+	}
+
+	public function namespaces( string $dbname ): ManageWikiNamespaces {
+		return $this->newFromDB( 'namespaces', $dbname );
+	}
+
+	public function permissions( string $dbname ): ManageWikiPermissions {
+		return $this->newFromDB( 'permissions', $dbname );
+	}
+
+	public function settings( string $dbname ): ManageWikiSettings {
+		return $this->newFromDB( 'settings', $dbname );
+	}
+
 	public function remoteWiki( string $dbname ): RemoteWikiFactory {
 		return $this->newFromDB( 'core', $dbname );
 	}
