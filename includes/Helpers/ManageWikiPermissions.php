@@ -2,18 +2,18 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use MediaWiki\Config\Config;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\User\ActorStoreFactory;
+use MediaWiki\User\UserGroupManagerFactory;
 use Miraheze\CreateWiki\IConfigModule;
-use Wikimedia\Rdbms\IDatabase;
+use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
+use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
+use Wikimedia\Message\ITextFormatter;
+use Wikimedia\Message\MessageValue;
 
 /**
  * Handler for interacting with Permissions
  */
 class ManageWikiPermissions implements IConfigModule {
-
-	private Config $config;
-	private IDatabase $dbw;
 
 	private array $changes = [];
 	private array $errors = [];
@@ -25,14 +25,29 @@ class ManageWikiPermissions implements IConfigModule {
 	private string $dbname;
 	private ?string $log = null;
 
-	public function __construct( string $dbname ) {
+	public function __construct(
+		private readonly ActorStoreFactory $actorStoreFactory,
+		private readonly UserGroupManagerFactory $userGroupManagerFactory,
+		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly ITextFormatter $textFormatter
+	) {
+	}
+
+	public function newInstance( string $dbname ): self {
 		$this->dbname = $dbname;
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
+		// Reset properties
+		$this->changes = [];
+		$this->errors = [];
+		$this->logParams = [];
+		$this->deleteGroups = [];
+		$this->renameGroups = [];
+		$this->livePermissions = [];
+		$this->log = null;
 
-		$perms = $this->dbw->newSelectQueryBuilder()
+		$dbr = $this->databaseUtils->getGlobalReplicaDB();
+		$perms = $dbr->newSelectQueryBuilder()
 			->select( '*' )
 			->from( 'mw_permissions' )
 			->where( [ 'perm_dbname' => $dbname ] )
@@ -49,6 +64,8 @@ class ManageWikiPermissions implements IConfigModule {
 				'autopromote' => json_decode( $perm->perm_autopromote ?? '', true ),
 			];
 		}
+
+		return $this;
 	}
 
 	/**
@@ -239,11 +256,12 @@ class ManageWikiPermissions implements IConfigModule {
 			return;
 		}
 
+		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( $this->isDeleting( $group ) ) {
 				$this->log = 'delete-group';
 
-				$this->dbw->newDeleteQueryBuilder()
+				$dbw->newDeleteQueryBuilder()
 					->deleteFrom( 'mw_permissions' )
 					->where( [
 						'perm_dbname' => $this->dbname,
@@ -263,7 +281,7 @@ class ManageWikiPermissions implements IConfigModule {
 					'6::newname' => $this->renameGroups[$group],
 				];
 
-				$this->dbw->newUpdateQueryBuilder()
+				$dbw->newUpdateQueryBuilder()
 					->update( 'mw_permissions' )
 					->set( [ 'perm_group' => $this->renameGroups[$group] ] )
 					->where( [
@@ -295,7 +313,7 @@ class ManageWikiPermissions implements IConfigModule {
 					? null : json_encode( $live['autopromote'] ?? '' ),
 			];
 
-			$this->dbw->newInsertQueryBuilder()
+			$dbw->newInsertQueryBuilder()
 				->insertInto( 'mw_permissions' )
 				->row( [
 					'perm_dbname' => $this->dbname,
@@ -311,7 +329,7 @@ class ManageWikiPermissions implements IConfigModule {
 				->execute();
 
 			$logAP = ( $this->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
-			$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
+			$logNULL = $this->textFormatter->format( MessageValue::new( 'rightsnone' ) );
 
 			/**
 			 * Convert a list of permission/group changes into a comma-separated string.
@@ -332,13 +350,12 @@ class ManageWikiPermissions implements IConfigModule {
 				'11::rags' => $logValue( $this->changes[$group]['addself']['remove'] ?? null ),
 				'12::args' => $logValue( $this->changes[$group]['removeself']['add'] ?? null ),
 				'13::rrgs' => $logValue( $this->changes[$group]['removeself']['remove'] ?? null ),
-				'14::ap' => mb_strtolower( wfMessage( $logAP )->inContentLanguage()->text() ),
+				'14::ap' => mb_strtolower( $this->textFormatter->format( MessageValue::new( $logAP ) ) ),
 			];
 		}
 
 		if ( $this->dbname !== 'default' ) {
-			$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $this->dbname );
+			$data = $this->dataFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}
@@ -349,15 +366,10 @@ class ManageWikiPermissions implements IConfigModule {
 			return;
 		}
 
-		$userGroupManagerFactory = MediaWikiServices::getInstance()->getUserGroupManagerFactory();
-		$userGroupManager = $userGroupManagerFactory->getUserGroupManager( $this->dbname );
+		$userGroupManager = $this->userGroupManagerFactory->getUserGroupManager( $this->dbname );
+		$userIdentityLookup = $this->actorStoreFactory->getUserIdentityLookup( $this->dbname );
 
-		$actorStoreFactory = MediaWikiServices::getInstance()->getActorStoreFactory();
-		$userIdentityLookup = $actorStoreFactory->getUserIdentityLookup( $this->dbname );
-
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$dbr = $databaseUtils->getRemoteWikiReplicaDB( $this->dbname );
-
+		$dbr = $this->databaseUtils->getRemoteWikiReplicaDB( $this->dbname );
 		$userIds = $dbr->newSelectQueryBuilder()
 			->select( 'ug_user' )
 			->from( 'user_groups' )
@@ -379,8 +391,7 @@ class ManageWikiPermissions implements IConfigModule {
 			return;
 		}
 
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $this->dbname );
+		$dbw = $this->databaseUtils->getRemoteWikiPrimaryDB( $this->dbname );
 
 		$dbw->newUpdateQueryBuilder()
 			->update( 'user_groups' )
