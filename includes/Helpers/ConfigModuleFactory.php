@@ -35,7 +35,7 @@ class ConfigModuleFactory {
 			'permissions' => $this->permissions->newInstance( $dbname ),
 			'settings' => $this->settings->newInstance( $dbname ),
 			default => throw new InvalidArgumentException( "$module not recognized" ),
-		}
+		};
 	}
 
 	public function newFromLocal( string $module ): IConfigModule {
@@ -47,7 +47,7 @@ class ConfigModuleFactory {
 			'permissions' => $this->permissions->newInstance( $dbname ),
 			'settings' => $this->settings->newInstance( $dbname ),
 			default => throw new InvalidArgumentException( "$module not recognized" ),
-		}
+		};
 	}
 
 	public function newDefault( string $module ): IConfigModule {
@@ -55,7 +55,7 @@ class ConfigModuleFactory {
 			'namespaces' => $this->namespaces->newInstance( self::DEFAULT_DATABASE ),
 			'permissions' => $this->permissions->newInstance( self::DEFAULT_DATABASE ),
 			default => throw new InvalidArgumentException( "$module does not support default" ),
-		}
+		};
 	}
 
 	public function core( string $dbname ): RemoteWikiFactory {
