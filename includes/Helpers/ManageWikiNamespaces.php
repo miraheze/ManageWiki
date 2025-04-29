@@ -45,7 +45,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
-	public function newInstance( string $dbname ) {
+	public function newInstance( string $dbname ): self {
 		$this->dbname = $dbname;
 
 		// Reset properties
@@ -77,6 +77,8 @@ class ManageWikiNamespaces implements IConfigModule {
 				'additional' => json_decode( $ns->ns_additional, true ),
 			];
 		}
+
+		return $this;
 	}
 
 	/**
