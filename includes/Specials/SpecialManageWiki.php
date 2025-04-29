@@ -9,7 +9,6 @@ use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
@@ -22,8 +21,7 @@ class SpecialManageWiki extends SpecialPage {
 	public function __construct(
 		private readonly ConfigModuleFactory $moduleFactory,
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
-		private readonly NamespaceInfo $namespaceInfo,
-		private readonly RemoteWikiFactory $remoteWikiFactory
+		private readonly NamespaceInfo $namespaceInfo
 	) {
 		parent::__construct( 'ManageWiki' );
 	}
@@ -219,8 +217,7 @@ class SpecialManageWiki extends SpecialPage {
 			);
 		}
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
-
+		$remoteWiki = $this->moduleFactory->remoteWiki( $dbname );
 		if ( $remoteWiki->isLocked() ) {
 			$this->getOutput()->addHTML(
 				Html::errorBox(
@@ -399,8 +396,7 @@ class SpecialManageWiki extends SpecialPage {
 						trim( $value )
 					) ?? '';
 
-				$mwNamespaces = $this->moduleFactory;
-				$create['out']['validation-callback'] = function ( string $value ) use ( $mwNamespaces ): bool|Message {
+				$create['out']['validation-callback'] = function ( string $value ): bool|Message {
 					$disallowed = array_map( 'mb_strtolower',
 						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
 					);
@@ -409,7 +405,7 @@ class SpecialManageWiki extends SpecialPage {
 						return $this->msg( 'managewiki-error-disallowednamespace', $value );
 					}
 
-					if ( $mwNamespaces->nameExists( $value, checkMetaNS: true ) ) {
+					if ( $this->moduleFactory->namespaceNameExists( $value, checkMetaNS: true ) ) {
 						return $this->msg( 'managewiki-namespace-conflicts', $value );
 					}
 
