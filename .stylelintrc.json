@@ -1,17 +1,14 @@
 {
 	"extends": [
 		"stylelint-config-idiomatic-order",
-		"stylelint-config-wikimedia"
+		"stylelint-config-wikimedia/support-modern",
+		"stylelint-config-wikimedia/mediawiki"
 	],
-	"ignoreFiles": [
-		"vendor/**"
-	],
+	"ignoreFiles": [ "vendor/**" ],
+	"reportNeedlessDisables": true,
 	"rules": {
-		"font-weight-notation": null,
-		"selector-max-id": null,
 		"no-descending-specificity": null,
-		"declaration-no-important": null,
-		"unit-disallowed-list": null,
-		"declaration-property-unit-disallowed-list": null
+		"selector-class-pattern": "^(client|ext|managewiki|mw|oo-ui|skin)-",
+		"selector-max-id": null
 	}
 }
