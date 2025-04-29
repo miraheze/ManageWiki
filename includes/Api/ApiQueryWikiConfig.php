@@ -17,6 +17,9 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 	public function __construct(
 		ApiQuery $query,
 		string $moduleName,
+		private readonly ManageWikiExtensions $mwExtensions,
+		private readonly ManageWikiPermissions $mwPermissions,
+		private readonly ManageWikiSettings $mwSettings,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
 		parent::__construct( $query, $moduleName, 'wcf' );
@@ -46,7 +49,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				'private' => $remoteWiki->isPrivate(),
 			];
 
-			$mwSettings = new ManageWikiSettings( $wiki );
+			$mwSettings = $this->mwSettings->newInstance( $wiki );
 			if ( isset( $prop['settings'] ) ) {
 				$wikiData['settings'] = $mwSettings->list( var: null );
 
@@ -57,12 +60,12 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				}
 			}
 
-			$mwExtensions = new ManageWikiExtensions( $wiki );
+			$mwExtensions = $this->mwExtensions->newInstance( $wiki );
 			if ( isset( $prop['extensions'] ) ) {
 				$wikiData['extensions'] = $mwExtensions->list();
 			}
 
-			$mwPermissions = new ManageWikiPermissions( $wiki );
+			$mwPermissions = $this->mwPermissions->newInstance( $wiki );
 			if ( isset( $prop['permissions'] ) ) {
 				foreach ( $mwPermissions->list( group: null ) as $group => $data ) {
 					$wikiData['permissions'][$group] = $data['permissions'];
