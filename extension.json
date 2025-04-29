@@ -118,6 +118,8 @@
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
 				"CreateWikiDatabaseUtils",
+				"ManageWikiNamespaces",
+				"ManageWikiPermissions",
 				"NamespaceInfo",
 				"RemoteWikiFactory"
 			]
@@ -128,6 +130,7 @@
 				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
 				"CreateWikiHookHandler",
+				"ManageWikiPermissions",
 				"RemoteWikiFactory"
 			]
 		}
