@@ -73,7 +73,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
 			$language = $this->getLanguage();
-			$mwPermissions = $this->moduleFactory->newDefault( module: 'permissions' );
+			$mwPermissions = $this->moduleFactory->permissionsDefault();
 			$groups = array_keys( $mwPermissions->list( group: null ) );
 			$craftedGroups = [];
 
@@ -212,9 +212,9 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			->caller( __METHOD__ )
 			->execute();
 
-		$remoteWiki = $this->moduleFactory->remoteWiki( $dbname );
+		$core = $this->moduleFactory->core( $dbname );
 		$this->hookHandler->onCreateWikiCreation(
-			$dbname, $remoteWiki->isPrivate()
+			$dbname, $core->isPrivate()
 		);
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
