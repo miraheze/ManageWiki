@@ -206,7 +206,7 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	public function isRenaming( string $group ): bool {
-		return in_array( $group, $this->renameGroups, true );
+		return isset( $this->renameGroups[$group] );
 	}
 
 	public function getErrors(): array {
