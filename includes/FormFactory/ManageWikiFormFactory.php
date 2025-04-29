@@ -12,7 +12,6 @@ use MediaWiki\Status\Status;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ManageWikiOOUIForm;
 use UnexpectedValueException;
-use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiFormFactory {
 
@@ -40,7 +39,6 @@ class ManageWikiFormFactory {
 	public function getForm(
 		Config $config,
 		IContextSource $context,
-		IDatabase $dbw,
 		RemoteWikiFactory $remoteWiki,
 		string $dbname,
 		string $module,
@@ -72,7 +70,6 @@ class ManageWikiFormFactory {
 			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
 					$config,
-					$dbw,
 					$form,
 					$remoteWiki,
 					$formData,
@@ -96,7 +93,6 @@ class ManageWikiFormFactory {
 
 	protected function submitForm(
 		Config $config,
-		IDatabase $dbw,
 		HTMLForm $form,
 		RemoteWikiFactory $remoteWiki,
 		array $formData,
@@ -126,7 +122,6 @@ class ManageWikiFormFactory {
 			$dbname,
 			$context,
 			$remoteWiki,
-			$dbw,
 			$config,
 			$special,
 			$filtered
