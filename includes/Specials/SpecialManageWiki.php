@@ -260,12 +260,10 @@ class SpecialManageWiki extends SpecialPage {
 			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle( $module ) );
 		}
 
-		$moduleFactory = $this->moduleFactory->newFromDB( $module, $dbname );
-
 		// Handle permissions module when we are not editing a specific group.
 		if ( $module === 'permissions' && $special === '' ) {
 			$language = $this->getLanguage();
-			$groups = array_keys( $moduleFactory->list( group: null ) );
+			$groups = array_keys( $this->moduleFactory->permissions( $dbname )->list( group: null ) );
 
 			foreach ( $groups as $group ) {
 				$lowerCaseGroupName = $language->lc( $group );
@@ -279,7 +277,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		// Handle namespaces module when we are not editing a specific namespace.
 		if ( $module === 'namespaces' && $special === '' ) {
-			$namespaces = $moduleFactory->list( id: null );
+			$namespaces = $this->moduleFactory->namespaces( $dbname )->list( id: null );
 			foreach ( $namespaces as $id => $namespace ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {
 					continue;
@@ -297,8 +295,8 @@ class SpecialManageWiki extends SpecialPage {
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm(
 			config: $this->getConfig(),
+			moduleFactory: $this->moduleFactory,
 			context: $this->getContext(),
-			moduleFactory: $moduleFactory,
 			dbname: $dbname,
 			module: $module,
 			special: mb_strtolower( $special ),
@@ -396,7 +394,7 @@ class SpecialManageWiki extends SpecialPage {
 						trim( $value )
 					) ?? '';
 
-				$create['out']['validation-callback'] = function ( string $value ): bool|Message {
+				$create['out']['validation-callback'] = function ( string $value ) use ( $dbname ): bool|Message {
 					$disallowed = array_map( 'mb_strtolower',
 						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
 					);
@@ -405,7 +403,8 @@ class SpecialManageWiki extends SpecialPage {
 						return $this->msg( 'managewiki-error-disallowednamespace', $value );
 					}
 
-					if ( $this->moduleFactory->namespaceNameExists( $value, checkMetaNS: true ) ) {
+					$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
+					if ( $mwNamespaces->nameExists( $value, checkMetaNS: true ) ) {
 						return $this->msg( 'managewiki-namespace-conflicts', $value );
 					}
 
