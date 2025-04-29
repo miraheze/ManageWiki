@@ -887,7 +887,7 @@ class ManageWikiFormFactoryBuilder {
 					'maxlength' => 64,
 					'default' => $group,
 					'section' => 'advanced',
-					'disable-if' => [ '!==', 'delete-checkbox', '0' ],
+					'disable-if' => [ '===', 'delete-checkbox', '1' ],
 					'hide-if' => [ '!==', 'rename-checkbox', '1' ],
 					'filter-callback' => static fn ( string $value ): string =>
 						mb_strtolower( trim( $value ) ),
