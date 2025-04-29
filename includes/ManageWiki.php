@@ -3,17 +3,23 @@
 namespace Miraheze\ManageWiki;
 
 use DateTimeZone;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\Config\Config;
+use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Wikimedia\Rdbms\SelectQueryBuilder;
 
-class ManageWiki {
+class Utils {
 
-	public static function checkSetup( string $module ): bool {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		return $config->get( ConfigNames::ModulesEnabled )[$module] ?? false;
+	public function __construct(
+		private readonly Config $config,
+		private readonly CreateWikiDatabaseUtils $databaseUtils
+	) {
 	}
 
-	public static function getTimezoneList(): array {
+	public function checkSetup( string $module ): bool {
+		return $this->config->get( ConfigNames::ModulesEnabled )[$module] ?? false;
+	}
+
+	public function getTimezoneList(): array {
 		$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
 		$timeZoneList = [];
 
@@ -29,7 +35,7 @@ class ManageWiki {
 		return $timeZoneList;
 	}
 
-	public static function handleMatrix(
+	public function handleMatrix(
 		array|string $conversion,
 		string $to
 	): array|string|null {
@@ -65,10 +71,8 @@ class ManageWiki {
 		return null;
 	}
 
-	public static function namespaceID( string $dbname, string $namespace ): int {
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$dbr = $databaseUtils->getGlobalReplicaDB();
-
+	public function namespaceID( string $dbname, string $namespace ): int {
+		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$nsID = $namespace === '' ? false : $dbr->newSelectQueryBuilder()
 			->select( 'ns_namespace_id' )
 			->from( 'mw_namespaces' )
