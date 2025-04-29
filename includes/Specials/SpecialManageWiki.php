@@ -304,7 +304,6 @@ class SpecialManageWiki extends SpecialPage {
 		$htmlForm = $formFactory->getForm(
 			config: $this->getConfig(),
 			context: $this->getContext(),
-			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
 			remoteWiki: $remoteWiki,
 			dbname: $dbname,
 			module: $module,
