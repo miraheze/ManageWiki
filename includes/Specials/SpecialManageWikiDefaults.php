@@ -24,6 +24,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly CreateWiki $hookHandler,
+		private readonly ManageWikiPermissions $mwPermissions,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
@@ -57,16 +58,15 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			'oojs-ui-widgets.styles',
 		] );
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance(
-			$this->databaseUtils->getCentralWikiID()
-		);
-
 		$formFactory = new ManageWikiFormFactory();
 		$formFactory->getForm(
 			config: $this->getConfig(),
 			context: $this->getContext(),
 			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
-			remoteWiki: $remoteWiki,
+			// RemoteWikiFactory isn't used in the permissions module
+			// so we don't need to create a newInstance of it, just pass
+			// the factory service directly.
+			remoteWiki: $this->remoteWikiFactory,
 			dbname: 'default',
 			module: 'permissions',
 			special: $group,
@@ -79,7 +79,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
 			$language = $this->getLanguage();
-			$mwPermissions = new ManageWikiPermissions( 'default' );
+			$mwPermissions = $this->mwPermissions->newInstance( 'default' );
 			$groups = array_keys( $mwPermissions->list( group: null ) );
 			$craftedGroups = [];
 
