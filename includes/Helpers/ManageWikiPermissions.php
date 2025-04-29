@@ -261,7 +261,7 @@ class ManageWikiPermissions implements IConfigModule {
 				$this->logParams = [
 					'5::newname' => $this->renameGroups[$group],
 				];
-				
+
 				$this->dbw->newUpdateQueryBuilder()
 					->update( 'mw_permissions' )
 					->set( [ 'perm_group' => $this->renameGroups[$group] ] )
