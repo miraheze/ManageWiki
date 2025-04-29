@@ -5,7 +5,6 @@ namespace Miraheze\ManageWiki\Helpers;
 use InvalidArgumentException;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
-use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
 class ConfigModuleFactory {
