@@ -22,6 +22,8 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly ManageWikiNamespaces $mwNamespaces,
+		private readonly ManageWikiPermissions $mwPermissions,
 		private readonly NamespaceInfo $namespaceInfo,
 		private readonly RemoteWikiFactory $remoteWikiFactory
 	) {
@@ -266,7 +268,7 @@ class SpecialManageWiki extends SpecialPage {
 		// Handle permissions module when we are not editing a specific group.
 		if ( $module === 'permissions' && $special === '' ) {
 			$language = $this->getLanguage();
-			$mwPermissions = new ManageWikiPermissions( $dbname );
+			$mwPermissions = $this->mwPermissions->newInstance( $dbname );
 			$groups = array_keys( $mwPermissions->list( group: null ) );
 
 			foreach ( $groups as $group ) {
@@ -281,7 +283,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		// Handle namespaces module when we are not editing a specific namespace.
 		if ( $module === 'namespaces' && $special === '' ) {
-			$mwNamespaces = new ManageWikiNamespaces( $dbname );
+			$mwNamespaces = $this->mwNamespaces->newInstance( $dbname );
 			$namespaces = $mwNamespaces->list( id: null );
 
 			foreach ( $namespaces as $id => $namespace ) {
@@ -390,10 +392,9 @@ class SpecialManageWiki extends SpecialPage {
 			}
 
 			if ( $module === 'namespaces' ) {
+				// Handle namespace validation and normalization
 				// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_namespaces.sql#L4
 				$create['out']['maxlength'] = 128;
-				// Handle namespace validation and normalization
-				$mwNamespaces = new ManageWikiNamespaces( $dbname );
 				// Multibyte-safe version of ucfirst
 				$create['out']['filter-callback'] = static fn ( string $value ): string =>
 					preg_replace_callback(
@@ -411,7 +412,7 @@ class SpecialManageWiki extends SpecialPage {
 						return $this->msg( 'managewiki-error-disallowednamespace', $value );
 					}
 
-					if ( $mwNamespaces->namespaceNameExists( $value, checkMetaNS: true ) ) {
+					if ( $this->mwNamespaces->namespaceNameExists( $value, checkMetaNS: true ) ) {
 						return $this->msg( 'managewiki-namespace-conflicts', $value );
 					}
 
