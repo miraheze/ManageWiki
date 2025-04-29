@@ -7,7 +7,6 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
-use Miraheze\ManageWiki\IListModule;
 
 class ConfigModuleFactory {
 
@@ -28,58 +27,51 @@ class ConfigModuleFactory {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
-	public function newFromDB( string $module, string $dbname ): IConfigModule {
-		return match ( $module ) {
-			'core' => $this->core->newInstance( $dbname ),
-			'extensions' => $this->extensions->newInstance( $dbname ),
-			'namespaces' => $this->namespaces->newInstance( $dbname ),
-			'permissions' => $this->permissions->newInstance( $dbname ),
-			'settings' => $this->settings->newInstance( $dbname ),
-			default => throw new InvalidArgumentException( "$module not recognized" ),
-		};
-	}
-
-	public function newFromLocal( string $module ): IConfigModule {
-		$dbname = $this->options->get( MainConfigNames::DBname );
-		return match ( $module ) {
-			'core' => $this->core->newInstance( $dbname ),
-			'extensions' => $this->extensions->newInstance( $dbname ),
-			'namespaces' => $this->namespaces->newInstance( $dbname ),
-			'permissions' => $this->permissions->newInstance( $dbname ),
-			'settings' => $this->settings->newInstance( $dbname ),
-			default => throw new InvalidArgumentException( "$module not recognized" ),
-		};
-	}
-
-	public function newDefault( string $module ): IListModule {
-		return match ( $module ) {
-			'namespaces' => $this->namespaces->newInstance( self::DEFAULT_DATABASE ),
-			'permissions' => $this->permissions->newInstance( self::DEFAULT_DATABASE ),
-			default => throw new InvalidArgumentException( "$module does not support default" ),
-		};
-	}
-
 	public function core( string $dbname ): RemoteWikiFactory {
-		return $this->newFromDB( 'core', $dbname );
+		return $this->core->newInstance( $dbname );
 	}
 
 	public function extensions( string $dbname ): ManageWikiExtensions {
-		return $this->newFromDB( 'extensions', $dbname );
+		return $this->extensions->newInstance( $dbname );
 	}
 
 	public function namespaces( string $dbname ): ManageWikiNamespaces {
-		return $this->newFromDB( 'namespaces', $dbname );
+		return $this->namespaces->newInstance( $dbname );
 	}
 
 	public function permissions( string $dbname ): ManageWikiPermissions {
-		return $this->newFromDB( 'permissions', $dbname );
+		return $this->permissions->newInstance( $dbname );
 	}
 
 	public function settings( string $dbname ): ManageWikiSettings {
-		return $this->newFromDB( 'settings', $dbname );
+		return $this->settings->newInstance( $dbname );
 	}
 
-	public function remoteWiki( string $dbname ): RemoteWikiFactory {
-		return $this->newFromDB( 'core', $dbname );
+	public function namespacesDefault(): ManageWikiNamespaces {
+		return $this->namespaces( self::DEFAULT_DATABASE );
+	}
+
+	public function permissionsDefault(): ManageWikiPermissions {
+		return $this->permissions( self::DEFAULT_DATABASE );
+	}
+
+	public function coreLocal(): RemoteWikiFactory {
+		return $this->core( $this->options->get( MainConfigNames::DBname ) );
+	}
+
+	public function extensionsLocal(): ManageWikiExtensions {
+	    return $this->extensions( $this->options->get( MainConfigNames::DBname ) );
+	}
+
+	public function namespacesLocal(): ManageWikiNamespaces {
+		return $this->namespaces( $this->options->get( MainConfigNames::DBname ) );
+	}
+
+	public function permissionsLocal(): ManageWikiPermissions {
+		return $this->permissions( $this->options->get( MainConfigNames::DBname ) );
+	}
+
+	public function settingsLocal(): ManageWikiSettings {
+		return $this->settings( $this->options->get( MainConfigNames::DBname ) );
 	}
 }
