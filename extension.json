@@ -91,6 +91,7 @@
 			],
 			"permissions": [
 				"delete-group",
+				"rename-group",
 				"rights",
 				"rights-reset"
 			],
