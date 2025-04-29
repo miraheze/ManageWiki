@@ -383,15 +383,15 @@ class ManageWikiPermissions implements IConfigModule {
 
 		$dbw->newUpdateQueryBuilder()
 			->update( 'user_groups' )
-			->set( [ 'ug_groups' => $this->renameGroups[$group] ] )
-			->where( [ 'ug_groups' => $group ] )
+			->set( [ 'ug_group' => $this->renameGroups[$group] ] )
+			->where( [ 'ug_group' => $group ] )
 			->caller( __METHOD__ )
 			->execute();
 
 		$dbw->newUpdateQueryBuilder()
 			->update( 'user_former_groups' )
-			->set( [ 'ufg_groups' => $this->renameGroups[$group] ] )
-			->where( [ 'ufg_groups' => $group ] )
+			->set( [ 'ufg_group' => $this->renameGroups[$group] ] )
+			->where( [ 'ufg_group' => $group ] )
 			->caller( __METHOD__ )
 			->execute();
 	}
