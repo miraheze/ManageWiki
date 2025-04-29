@@ -43,7 +43,7 @@ class FormFactory {
 			strtolower( $context->getSkin()->getSkinName() ),
 			$context->getLanguage()->getDir()
 		);
-		
+
 		$formDescriptor = $this->builder->buildDescriptor(
 			$context, $module, $dbname, $ceMW, $special, $filtered
 		);
