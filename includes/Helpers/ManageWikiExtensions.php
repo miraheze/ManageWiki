@@ -8,7 +8,6 @@ use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Psr\Log\LoggerInterface;
-use Wikimedia\Rdbms\IDatabase;
 
 /**
  * Handler for all interactions with Extension changes within ManageWiki
