@@ -19,6 +19,7 @@ class ManageWikiPermissions implements IConfigModule {
 	private array $errors = [];
 	private array $logParams = [];
 	private array $deleteGroups = [];
+	private array $renameGroups = [];
 	private array $livePermissions = [];
 
 	private string $dbname;
@@ -186,8 +187,26 @@ class ManageWikiPermissions implements IConfigModule {
 		$this->deleteGroups[] = $group;
 	}
 
+	public function rename( string $group, string $newName ): void {
+		if ( $group === $newName ) {
+			return;
+		}
+
+		$this->changes[$group] = [
+			'oldname' => $group,
+			'newname' => $newName,
+		];
+
+		// Push to a rename queue
+		$this->renameGroups[$group] = $newName;
+	}
+
 	public function isDeleting( string $group ): bool {
 		return in_array( $group, $this->deleteGroups, true );
+	}
+
+	public function isRenaming( string $group ): bool {
+		return isset( $this->renameGroups[$group] );
 	}
 
 	public function getErrors(): array {
@@ -234,6 +253,27 @@ class ManageWikiPermissions implements IConfigModule {
 					->execute();
 
 				$this->deleteUsersFromGroup( $group );
+				continue;
+			}
+
+			if ( $this->isRenaming( $group ) ) {
+				$this->log = 'rename-group';
+				$this->logParams = [
+					'5::oldname' => $group,
+					'6::newname' => $this->renameGroups[$group],
+				];
+
+				$this->dbw->newUpdateQueryBuilder()
+					->update( 'mw_permissions' )
+					->set( [ 'perm_group' => $this->renameGroups[$group] ] )
+					->where( [
+						'perm_dbname' => $this->dbname,
+						'perm_group' => $group,
+					] )
+					->caller( __METHOD__ )
+					->execute();
+
+				$this->moveUsersFromGroup( $group );
 				continue;
 			}
 
@@ -331,5 +371,29 @@ class ManageWikiPermissions implements IConfigModule {
 				$userGroupManager->removeUserFromGroup( $remoteUser, $group );
 			}
 		}
+	}
+
+	private function moveUsersFromGroup( string $group ): void {
+		if ( $this->dbname === 'default' ) {
+			// Not a valid wiki to move users from groups
+			return;
+		}
+
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $this->dbname );
+
+		$dbw->newUpdateQueryBuilder()
+			->update( 'user_groups' )
+			->set( [ 'ug_group' => $this->renameGroups[$group] ] )
+			->where( [ 'ug_group' => $group ] )
+			->caller( __METHOD__ )
+			->execute();
+
+		$dbw->newUpdateQueryBuilder()
+			->update( 'user_former_groups' )
+			->set( [ 'ufg_group' => $this->renameGroups[$group] ] )
+			->where( [ 'ufg_group' => $group ] )
+			->caller( __METHOD__ )
+			->execute();
 	}
 }

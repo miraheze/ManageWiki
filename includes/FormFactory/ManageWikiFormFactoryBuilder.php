@@ -12,6 +12,7 @@ use MediaWiki\Language\RawMessage;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Message\Message;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
@@ -858,16 +859,43 @@ class ManageWikiFormFactoryBuilder {
 			],
 		];
 
+		$disallowedGroups = $config->get( ConfigNames::PermissionsDisallowedGroups );
+
 		if (
 			$ceMW &&
 			$mwPermissions->exists( $group ) &&
 			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true )
 		) {
-			$formDescriptor['delete-checkbox'] = [
-				'type' => 'check',
-				'label-message' => 'permissions-delete-checkbox',
-				'default' => false,
-				'section' => 'advanced',
+			$formDescriptor += [
+				'delete-checkbox' => [
+					'type' => 'check',
+					'label-message' => 'permissions-delete-checkbox',
+					'default' => false,
+					'section' => 'advanced',
+				],
+				'rename-checkbox' => [
+					'type' => 'check',
+					'label-message' => 'managewiki-permissions-rename-checkbox',
+					'disable-if' => [ '===', 'delete-checkbox', '1' ],
+					'section' => 'advanced',
+				],
+				'group-name' => [
+					'type' => 'text',
+					'label-message' => 'managewiki-permissions-label-group-name',
+					'required' => true,
+					// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_permissions.sql#L3
+					'maxlength' => 64,
+					'default' => $group,
+					'section' => 'advanced',
+					'disable-if' => [ '===', 'delete-checkbox', '1' ],
+					'hide-if' => [ '!==', 'rename-checkbox', '1' ],
+					'filter-callback' => static fn ( string $value ): string =>
+						mb_strtolower( trim( $value ) ),
+					'validation-callback' => static fn ( string $value ): bool|Message =>
+						!( in_array( $value, $disallowedGroups, true ) ||
+								in_array( $value, $groupData['allGroups'], true ) ) ?:
+							$context->msg( 'managewiki-permissions-group-disallowed' ),
+				],
 			];
 		}
 
@@ -1070,6 +1098,13 @@ class ManageWikiFormFactoryBuilder {
 					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
 					$context->getOutput()->redirect(
 						SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL()
+					);
+				}
+
+				if ( $module === 'permissions' && $mwReturn->isRenaming( $special ) ) {
+					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
+					$context->getOutput()->redirect(
+						SpecialPage::getTitleFor( 'ManageWiki', "$module/{$formData['group-name']}" )->getFullURL()
 					);
 				}
 			}
@@ -1372,6 +1407,12 @@ class ManageWikiFormFactoryBuilder {
 		// Early escape for deletion
 		if ( $isRemovable && ( $formData['delete-checkbox'] ?? false ) ) {
 			$mwPermissions->remove( $group );
+			return $mwPermissions;
+		}
+
+		// Early escape for rename
+		if ( $isRemovable && !empty( $formData['group-name'] ) && $formData['group-name'] !== $group ) {
+			$mwPermissions->rename( $group, $formData['group-name'] );
 			return $mwPermissions;
 		}
 
