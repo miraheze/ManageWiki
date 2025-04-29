@@ -314,7 +314,7 @@ class ManageWikiExtensions implements IConfigModule {
 			return;
 		}
 
-		$dbw = $this->databaseUtils->getGlobalReplicaDB();
+		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$dbw->newInsertQueryBuilder()
 			->insertInto( 'mw_settings' )
 			->row( [
