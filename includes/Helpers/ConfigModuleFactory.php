@@ -7,6 +7,7 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\IListModule;
 
 class ConfigModuleFactory {
 
@@ -50,7 +51,7 @@ class ConfigModuleFactory {
 		};
 	}
 
-	public function newDefault( string $module ): IConfigModule {
+	public function newDefault( string $module ): IListModule {
 		return match ( $module ) {
 			'namespaces' => $this->namespaces->newInstance( self::DEFAULT_DATABASE ),
 			'permissions' => $this->permissions->newInstance( self::DEFAULT_DATABASE ),
