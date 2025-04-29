@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use InvalidArgumentException;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
@@ -59,7 +58,7 @@ class ConfigModuleFactory {
 	}
 
 	public function extensionsLocal(): ManageWikiExtensions {
-	    return $this->extensions( $this->options->get( MainConfigNames::DBname ) );
+		return $this->extensions( $this->options->get( MainConfigNames::DBname ) );
 	}
 
 	public function namespacesLocal(): ManageWikiNamespaces {
