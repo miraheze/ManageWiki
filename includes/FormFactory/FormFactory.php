@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
-use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
@@ -14,39 +13,23 @@ use Miraheze\ManageWiki\ManageWikiOOUIForm;
 use UnexpectedValueException;
 use Wikimedia\Rdbms\IDatabase;
 
-class ManageWikiFormFactory {
+class FormFactory {
 
-	private function getFormDescriptor(
-		Config $config,
-		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
-		string $dbname,
-		string $module,
-		string $special,
-		string $filtered,
-		bool $ceMW
-	): array {
-		OutputPage::setupOOUI(
-			strtolower( $context->getSkin()->getSkinName() ),
-			$context->getLanguage()->getDir()
-		);
-
-		return ManageWikiFormFactoryBuilder::buildDescriptor(
-			$module, $dbname, $ceMW, $context, $remoteWiki,
-			$special, $filtered, $config
-		);
+	public function __construct(
+		private readonly FormFactoryBuilder $builder,
+		private readonly RemoteWikiFactory $remoteWikiFactory
+	) {
 	}
 
 	public function getForm(
-		Config $config,
 		IContextSource $context,
 		IDatabase $dbw,
-		RemoteWikiFactory $remoteWiki,
 		string $dbname,
 		string $module,
 		string $special,
 		string $filtered
 	): ManageWikiOOUIForm {
+		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
 		// Can the user modify ManageWiki?
 		$ceMW = !(
 			(
@@ -56,25 +39,21 @@ class ManageWikiFormFactory {
 			!$context->getAuthority()->isAllowed( "managewiki-$module" )
 		);
 
-		$formDescriptor = $this->getFormDescriptor(
-			$config,
-			$context,
-			$remoteWiki,
-			$dbname,
-			$module,
-			$special,
-			$filtered,
-			$ceMW
+		OutputPage::setupOOUI(
+			strtolower( $context->getSkin()->getSkinName() ),
+			$context->getLanguage()->getDir()
+		);
+		
+		$formDescriptor = $this->builder->buildDescriptor(
+			$context, $module, $dbname, $ceMW, $special, $filtered
 		);
 
 		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
 		$htmlForm
 			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
-					$config,
 					$dbw,
 					$form,
-					$remoteWiki,
 					$formData,
 					$dbname,
 					$module,
@@ -95,10 +74,8 @@ class ManageWikiFormFactory {
 	}
 
 	protected function submitForm(
-		Config $config,
 		IDatabase $dbw,
 		HTMLForm $form,
-		RemoteWikiFactory $remoteWiki,
 		array $formData,
 		string $dbname,
 		string $module,
@@ -119,15 +96,13 @@ class ManageWikiFormFactory {
 			->loadDataFromRequest( $form->getRequest() );
 
 		$context = $form->getContext();
-		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler(
+		$mwReturn = $this->builder->submissionHandler(
+			$context,
+			$dbw,
 			$formData,
 			$form,
 			$module,
 			$dbname,
-			$context,
-			$remoteWiki,
-			$dbw,
-			$config,
 			$special,
 			$filtered
 		);
