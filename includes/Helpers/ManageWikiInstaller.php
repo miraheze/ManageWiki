@@ -75,7 +75,8 @@ class ManageWikiInstaller {
 		array $data,
 		bool $install
 	): bool {
-		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$configModuleFactory = MediaWikiServices::getInstance()->get( 'ConfigModuleFactory' );
+		$mwPermissions = $configModuleFactory->permissions( $dbname );
 		$action = $install ? 'add' : 'remove';
 
 		foreach ( $data as $group => $mod ) {
@@ -103,7 +104,8 @@ class ManageWikiInstaller {
 		array $data,
 		bool $install
 	): bool {
-		$mwNamespaces = new ManageWikiNamespaces( $dbname );
+		$configModuleFactory = MediaWikiServices::getInstance()->get( 'ConfigModuleFactory' );
+		$mwNamespaces = $configModuleFactory->namespaces( $dbname );
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
 				$id = $i['id'];
@@ -168,7 +170,8 @@ class ManageWikiInstaller {
 	}
 
 	private static function settings( string $dbname, array $data ): bool {
-		$mwSettings = new ManageWikiSettings( $dbname );
+		$configModuleFactory = MediaWikiServices::getInstance()->get( 'ConfigModuleFactory' );
+		$mwSettings = $configModuleFactory->settings( $dbname );
 		$mwSettings->modify( $data );
 		$mwSettings->commit();
 		return true;
