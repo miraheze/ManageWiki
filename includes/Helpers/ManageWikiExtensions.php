@@ -55,13 +55,12 @@ class ManageWikiExtensions implements IConfigModule {
 			->caller( __METHOD__ )
 			->fetchField();
 
-		$extensionsConfig = $this->options->get( ConfigNames::Extensions );
-
 		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
 		// populate extension lists with config associated with them.
+		$config = $this->options->get( ConfigNames::Extensions );
 		foreach ( json_decode( $extensions ?: '[]', true ) as $extension ) {
-			if ( !isset( $extensionsConfig[$extension] ) ) {
-				$this->logger->error( 'Extension/Skin {extension} not set in {config}', [
+			if ( !isset( $config[$extension] ) ) {
+				$this->logger->error( '{extension} is not set in {config}', [
 					'config' => ConfigNames::Extensions,
 					'extension' => $extension,
 				] );
@@ -69,7 +68,7 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			$this->liveExtensions[$extension] = $extensionsConfig[$extension];
+			$this->liveExtensions[$extension] = $config[$extension];
 		}
 	}
 
@@ -86,10 +85,10 @@ class ManageWikiExtensions implements IConfigModule {
 	 * @param string[] $extensions Array of extensions to enable
 	 */
 	public function add( array $extensions ): void {
-		$extensionsConfig = $this->options->get( ConfigNames::Extensions );
+		$config = $this->options->get( ConfigNames::Extensions );
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
-			$this->liveExtensions[$ext] = $extensionsConfig[$ext];
+			$this->liveExtensions[$ext] = $config[$ext];
 			$this->changes[$ext] = [
 				'old' => 0,
 				'new' => 1,
@@ -128,9 +127,8 @@ class ManageWikiExtensions implements IConfigModule {
 	 */
 	public function overwriteAll( array $extensions ): void {
 		$overwrittenExts = $this->list();
-
-		$extensionsConfig = $this->options->get( ConfigNames::Extensions );
-		foreach ( $extensionsConfig as $ext => $extensionsConfig ) {
+		foreach ( $this->options->get( ConfigNames::Extensions ) as $ext => $_ ) {
+			// TODO: do we still need this?
 			if ( !is_string( $ext ) ) {
 				continue;
 			}
