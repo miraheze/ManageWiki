@@ -29,15 +29,18 @@ class CreateWiki implements
 	public function __construct(
 		private readonly Config $config,
 		private readonly LoggerInterface $logger,
-		private readonly LocalisationCache $localisationCache
+		private readonly LocalisationCache $localisationCache,
+		private readonly ManageWikiExtensions $mwExtensions,
+		private readonly ManageWikiNamespaces $mwNamespaces,
+		private readonly ManageWikiPermissions $mwPermissions
 	) {
 	}
 
 	/** @inheritDoc */
 	public function onCreateWikiCreation( string $dbname, bool $private ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-			$mwPermissions = new ManageWikiPermissions( $dbname );
+			$mwPermissionsDefault = $this->mwPermissions->newInstance( 'default' );
+			$mwPermissions = $this->mwPermissions->newInstance( $dbname );
 			$defaultGroups = array_diff(
 				array_keys( $mwPermissionsDefault->list( group: null ) ),
 				[ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
@@ -70,16 +73,16 @@ class CreateWiki implements
 			$this->config->get( ConfigNames::Extensions ) &&
 			$this->config->get( ConfigNames::ExtensionsDefault )
 		) {
-			$mwExtensions = new ManageWikiExtensions( $dbname );
+			$mwExtensions = $this->mwExtensions->newInstance( $dbname );
 			$mwExtensions->add( $this->config->get( ConfigNames::ExtensionsDefault ) );
 			$mwExtensions->commit();
 		}
 
 		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
+			$mwNamespacesDefault = $this->mwNamespaces->newInstance( 'default' );
 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
 
-			$mwNamespaces = new ManageWikiNamespaces( $dbname );
+			$mwNamespaces = $this->mwNamespaces->newInstance( $dbname );
 			$mwNamespaces->disableNamespaceMigrationJob();
 
 			foreach ( $defaultNamespaces as $namespace ) {
@@ -321,8 +324,8 @@ class CreateWiki implements
 			return;
 		}
 
-		$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$mwPermissionsDefault = $this->mwPermissions->newInstance( 'default' );
+		$mwPermissions = $this->mwPermissions->newInstance( $dbname );
 
 		$defaultPrivate = $mwPermissionsDefault->list( $defaultPrivateGroup );
 
@@ -357,7 +360,7 @@ class CreateWiki implements
 			return;
 		}
 
-		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$mwPermissions = $this->mwPermissions->newInstance( $dbname );
 		$mwPermissions->remove( $defaultPrivateGroup );
 
 		foreach ( array_keys( $mwPermissions->list( group: null ) ) as $group ) {
