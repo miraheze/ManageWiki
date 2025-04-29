@@ -881,7 +881,7 @@ class ManageWikiFormFactoryBuilder {
 				],
 				'group-name' => [
 					'type' => 'text',
-					'label-message' => 'permissions-delete-checkbox',
+					'label-message' => 'managewiki-permissions-label-group-name',
 					'required' => true,
 					// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_permissions.sql#L3
 					'maxlength' => 64,
@@ -892,7 +892,8 @@ class ManageWikiFormFactoryBuilder {
 					'filter-callback' => static fn ( string $value ): string =>
 						mb_strtolower( trim( $value ) ),
 					'validation-callback' => static fn ( string $value ): bool|Message =>
-						!in_array( $value, $disallowedGroups, true ) ?:
+						!( in_array( $value, $disallowedGroups, true ) ||
+								in_array( $value, $groupData['allGroups'], true ) ) ?:
 							$context->msg( 'managewiki-permissions-group-disallowed' ),
 				],
 			];
