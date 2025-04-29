@@ -6,6 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -19,6 +20,19 @@ use Psr\Log\LoggerInterface;
 // @codeCoverageIgnoreStart
 
 return [
+	'ConfigModuleFactory' => static function ( MediaWikiServices $services ): ConfigModuleFactory {
+		return new ConfigModuleFactory(
+			$services->get( 'ManageWikiExtensions' ),
+			$services->get( 'ManageWikiNamespaces' ),
+			$services->get( 'ManageWikiPermissions' ),
+			$services->get( 'ManageWikiSettings' ),
+			$services->get( 'RemoteWikiFactory' ),
+			new ServiceOptions(
+				ConfigModuleFactory::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
 	'CreateWikiHookHandler' => static function ( MediaWikiServices $services ): CreateWiki {
 		return new CreateWiki(
 			$services->get( 'ManageWikiConfig' ),
