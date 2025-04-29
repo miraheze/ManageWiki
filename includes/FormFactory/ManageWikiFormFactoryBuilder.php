@@ -876,7 +876,7 @@ class ManageWikiFormFactoryBuilder {
 				'rename-checkbox' => [
 					'type' => 'check',
 					'label-message' => 'managewiki-permissions-rename-checkbox',
-					'disable-if' => [ '!==', 'delete-checkbox', '0' ],
+					'disable-if' => [ '===', 'delete-checkbox', '1' ],
 					'section' => 'advanced',
 				],
 				'group-name' => [
