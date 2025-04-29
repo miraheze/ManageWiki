@@ -5,7 +5,6 @@ namespace Miraheze\ManageWiki\Maintenance;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 
 class ModifyGroupPermission extends Maintenance {
 
@@ -41,7 +40,9 @@ class ModifyGroupPermission extends Maintenance {
 	}
 
 	public function execute(): void {
-		$mwPermissions = new ManageWikiPermissions( $this->getConfig()->get( MainConfigNames::DBname ) );
+		$mwPermissions = $this->getServiceContainer()->get( 'ManageWikiPermissions' )->newInstance(
+			$this->getConfig()->get( MainConfigNames::DBname )
+		);
 
 		$permData = [
 			'permissions' => [
