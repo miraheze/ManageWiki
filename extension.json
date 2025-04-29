@@ -117,21 +117,18 @@
 		"ManageWiki": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
+				"ConfigModuleFactory",
 				"CreateWikiDatabaseUtils",
-				"ManageWikiNamespaces",
-				"ManageWikiPermissions",
-				"NamespaceInfo",
-				"RemoteWikiFactory"
+				"NamespaceInfo"
 			]
 		},
 		"ManageWikiDefaults": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaults",
 			"services": [
+				"ConfigModuleFactory",
 				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
-				"CreateWikiHookHandler",
-				"ManageWikiPermissions",
-				"RemoteWikiFactory"
+				"CreateWikiHookHandler"
 			]
 		}
 	},
