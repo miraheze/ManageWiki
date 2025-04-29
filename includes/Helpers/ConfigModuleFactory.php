@@ -57,4 +57,8 @@ class ConfigModuleFactory {
 			default => throw new InvalidArgumentException( "$module does not support default" ),
 		}
 	}
+
+	public function remoteWiki( string $dbname ): RemoteWikiFactory {
+		return $this->newFromDB( 'core', $dbname );
+	}
 }
