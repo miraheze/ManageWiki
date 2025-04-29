@@ -90,7 +90,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		return isset( $this->liveNamespaces[$id] );
 	}
 
-	public function namespaceExists( string $name, bool $checkMetaNS ): bool {
+	public function nameExists( string $name, bool $checkMetaNS ): bool {
 		// Normalize
 		$name = str_replace(
 			[ ' ', ':' ], '_',
@@ -209,7 +209,7 @@ class ManageWikiNamespaces implements IConfigModule {
 
 		if ( $data['name'] !== $nsData['name'] ) {
 			$checkMetaNS = $id !== NS_PROJECT && $id !== NS_PROJECT_TALK;
-			if ( $this->namespaceNameExists( $data['name'], $checkMetaNS ) ) {
+			if ( $this->nameExists( $data['name'], $checkMetaNS ) ) {
 				$this->errors[] = [
 					'managewiki-namespace-conflicts' => [
 						$data['name'],
@@ -224,7 +224,7 @@ class ManageWikiNamespaces implements IConfigModule {
 					continue;
 				}
 
-				if ( $this->namespaceNameExists( $alias, checkMetaNS: true ) ) {
+				if ( $this->nameExists( $alias, checkMetaNS: true ) ) {
 					$this->errors[] = [
 						'managewiki-namespace-conflicts' => [ $alias ],
 					];
