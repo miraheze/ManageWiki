@@ -142,7 +142,8 @@ class ManageWikiRequirements {
 		$setting = $data['setting'];
 		$value = $data['value'];
 
-		$manageWikiSettings = new ManageWikiSettings( $database );
+		$configModuleFactory = MediaWikiServices::getInstance()->get( 'ConfigModuleFactory' );
+		$manageWikiSettings = $configModuleFactory->settings( $database );
 
 		$wikiValue = $manageWikiSettings->list( $setting );
 
