@@ -7,9 +7,13 @@ use MediaWiki\Config\Config;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\IConfigModule;
+use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
+use Miraheze\ManageWiki\Jobs\NamespaceRestoreJob;
 use Wikimedia\Rdbms\IDatabase;
+use Wikimedia\Rdbms\IExpression;
+use Wikimedia\Rdbms\LikeValue;
 
 /**
  * Handler for interacting with Namespace configuration
@@ -18,6 +22,8 @@ class ManageWikiNamespaces implements IConfigModule {
 
 	private Config $config;
 	private IDatabase $dbw;
+
+	private readonly CreateWikiDatabaseUtils $databaseUtils;
 
 	private array $changes = [];
 	private array $errors = [];
@@ -34,8 +40,8 @@ class ManageWikiNamespaces implements IConfigModule {
 		$this->dbname = $dbname;
 		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
 
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
+		$this->databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$this->dbw = $this->databaseUtils->getGlobalPrimaryDB();
 
 		$namespaces = $this->dbw->newSelectQueryBuilder()
 			->select( '*' )
@@ -253,6 +259,44 @@ class ManageWikiNamespaces implements IConfigModule {
 
 		// Push to a deletion queue
 		$this->deleteNamespaces[] = $id;
+	}
+
+	public function hasPagesToRestore( int $id ): bool {
+		$dbr = $this->databaseUtils->getRemoteWikiReplicaDB( $this->dbname );
+
+		$suffix = '~' . $this->liveNamespaces[$id]['name'];
+		$count = $dbr->newSelectQueryBuilder()
+			->select( '1' )
+			->from( 'page' )
+			->where( [
+				$dbr->expr( 'page_title', IExpression::LIKE,
+					new LikeValue( $dbr->anyString(), $suffix, $dbr->anyString() )
+				),
+			] )
+			->caller( __METHOD__ )
+			->fetchField();
+
+		return (bool)$count;
+	}
+
+	public function restorePagesInNamespace( int $id ): void {
+		if ( $this->dbname === 'default' ) {
+			return;
+		}
+
+		$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
+		$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
+
+		$jobQueueGroup->push(
+			new JobSpecification(
+				NamespaceRestoreJob::JOB_NAME,
+				[
+					'dbname' => $this->dbname,
+					'nsID' => $id,
+					'nsName' => $this->liveNamespaces[$id]['name'],
+				]
+			)
+		);
 	}
 
 	public function isTalk( int $id ): bool {
