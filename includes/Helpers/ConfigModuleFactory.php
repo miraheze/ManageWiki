@@ -17,7 +17,7 @@ class ConfigModuleFactory {
 	) {
 	}
 
-	public function newFromDB( string $module, string $dbname ): mixed {
+	public function newFromDB( string $module, string $dbname ): IConfigModule {
 		return match ( $module ) {
 			'core' => $this->core->newInstance( $dbname ),
 			'extensions' => $this->extensions->newInstance( $dbname ),
@@ -28,7 +28,7 @@ class ConfigModuleFactory {
 		}
 	}
 
-	public function newDefault( string $module ): mixed {
+	public function newDefault( string $module ): IConfigModule {
 		return match ( $module ) {
 			'namespaces' => $this->namespaces->newInstance( 'default' ),
 			'permissions' => $this->permissions->newInstance( 'default' ),
