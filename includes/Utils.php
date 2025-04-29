@@ -10,8 +10,8 @@ use Wikimedia\Rdbms\SelectQueryBuilder;
 class Utils {
 
 	public function __construct(
-		private readonly Config $config,
-		private readonly CreateWikiDatabaseUtils $databaseUtils
+		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly Config $config
 	) {
 	}
 
