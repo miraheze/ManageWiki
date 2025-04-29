@@ -11,21 +11,19 @@ use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
 use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 use Miraheze\ManageWiki\ManageWiki;
 
 class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function __construct(
+		private readonly ConfigModuleFactory $moduleFactory,
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
-		private readonly CreateWiki $hookHandler,
-		private readonly ManageWikiPermissions $mwPermissions,
-		private readonly RemoteWikiFactory $remoteWikiFactory
+		private readonly CreateWiki $hookHandler
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
 	}
@@ -61,11 +59,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		$formFactory = new ManageWikiFormFactory();
 		$formFactory->getForm(
 			config: $this->getConfig(),
+			moduleFactory: $this->moduleFactory,
 			context: $this->getContext(),
-			// RemoteWikiFactory isn't used in the permissions module
-			// so we don't need to create a newInstance of it, just pass
-			// the factory service directly.
-			remoteWiki: $this->remoteWikiFactory,
 			dbname: 'default',
 			module: 'permissions',
 			special: $group,
@@ -78,7 +73,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
 			$language = $this->getLanguage();
-			$mwPermissions = $this->mwPermissions->newInstance( 'default' );
+			$mwPermissions = $this->moduleFactory->newDefault( module: 'permissions' );
 			$groups = array_keys( $mwPermissions->list( group: null ) );
 			$craftedGroups = [];
 
@@ -217,7 +212,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			->caller( __METHOD__ )
 			->execute();
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
+		$remoteWiki = $this->moduleFactory->remoteWiki( $dbname );
 		$this->hookHandler->onCreateWikiCreation(
 			$dbname, $remoteWiki->isPrivate()
 		);
