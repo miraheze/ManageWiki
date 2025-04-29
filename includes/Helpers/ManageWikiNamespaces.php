@@ -56,7 +56,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		$this->liveNamespaces = [];
 		$this->log = null;
 
-		$dbr = $databaseUtils->getGlobalReplicaDB();
+		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$namespaces = $dbr->newSelectQueryBuilder()
 			->select( '*' )
 			->from( 'mw_namespaces' )
