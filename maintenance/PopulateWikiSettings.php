@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\Maintenance;
 
-use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 
 class PopulateWikiSettings extends Maintenance {
@@ -18,12 +17,9 @@ class PopulateWikiSettings extends Maintenance {
 	}
 
 	public function execute(): void {
-		$manageWikiSettings = $this->getServiceContainer()->get( 'ManageWikiSettings' );
+		$configModuleFactory = $this->getServiceContainer()->get( 'ConfigModuleFactory' );
 		if ( $this->hasOption( 'remove' ) ) {
-			$mwSettings = $manageWikiSettings->newInstance(
-				$this->getConfig()->get( MainConfigNames::DBname )
-			);
-
+			$mwSettings = $configModuleFactory->settingsLocal();
 			$mwSettings->remove( [ $this->getOption( 'wgsetting' ) ] );
 			$mwSettings->commit();
 			return;
@@ -49,7 +45,7 @@ class PopulateWikiSettings extends Maintenance {
 				$setting = false;
 			}
 
-			$mwSettings = $manageWikiSettings->newInstance( $dbname );
+			$mwSettings = $configModuleFactory->settings( $dbname );
 			$mwSettings->modify( [ $this->getOption( 'wgsetting' ) => $setting ] );
 			$mwSettings->commit();
 		}
