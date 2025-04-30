@@ -274,8 +274,7 @@ class SpecialManageWiki extends SpecialPage {
 				$options[$language->getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
-			// We don't need to pass dbname here so just pass an empty string.
-			$this->reusableFormDescriptor( '', $module, $options );
+			$this->reusableFormDescriptor( $dbname, $module, $options );
 			return;
 		}
 
@@ -334,12 +333,10 @@ class SpecialManageWiki extends SpecialPage {
 		$selector = [];
 		$create = [];
 
-		if ( $module === 'namespaces' ) {
-			$hidden['dbname'] = [
-				'type' => 'hidden',
-				'default' => $dbname,
-			];
-		}
+		$hidden['dbname'] = [
+			'type' => 'hidden',
+			'default' => $dbname,
+		];
 
 		$hidden['module'] = [
 			'type' => 'hidden',
@@ -381,10 +378,11 @@ class SpecialManageWiki extends SpecialPage {
 			if ( $module === 'permissions' ) {
 				// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_permissions.sql#L3
 				$create['out']['maxlength'] = 64;
-				// Groups should typically be lowercase so we do that here.
-				// Display names can be customized using interface messages.
-				$create['out']['filter-callback'] = static fn ( string $value ): string =>
-					mb_strtolower( trim( $value ) );
+				// Make sure this is lowercase (multi-byte safe), and has no trailing spaces,
+				// and that any remaining spaces are converted to underscores.
+				$create['out']['filter-callback'] = static fn ( string $value ): string => mb_strtolower(
+					str_replace( ' ', '_', trim( $value ) )
+				);
 
 				$create['out']['validation-callback'] = [ $this, 'validateNewGroupName' ];
 			}
@@ -452,10 +450,22 @@ class SpecialManageWiki extends SpecialPage {
 		);
 	}
 
-	public function validateNewGroupName( string $newGroup ): bool|Message {
+	public function validateNewGroupName( string $newGroup, array $alldata ): bool|Message {
 		$disallowed = $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups );
 		if ( in_array( $newGroup, $disallowed, true ) ) {
 			return $this->msg( 'managewiki-permissions-group-disallowed' );
+		}
+
+		// We just use this to check if the group is valid for a title,
+		// otherwise we can not edit it because the title will be
+		// invalid for the ManageWiki permission subpage.
+		if ( !$this->getPageTitle( "permissions/$newGroup" )->isValid() ) {
+			return $this->msg( 'managewiki-permissions-group-invalid' );
+		}
+
+		$mwPermissions = new ManageWikiPermissions( $alldata['dbname'] );
+		if ( $mwPermissions->exists( $newGroup ) ) {
+			return $this->msg( 'managewiki-permissions-group-conflict' );
 		}
 
 		return true;
