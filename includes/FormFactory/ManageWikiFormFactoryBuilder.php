@@ -218,7 +218,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
 		$hookRunner->onManageWikiCoreAddFormFields(
-			$context, $remoteWiki, $dbname, $ceMW, $formDescriptor
+			$context, $moduleFactory, $dbname, $ceMW, $formDescriptor
 		);
 
 		if ( $config->get( 'CreateWikiDatabaseClusters' ) ) {
@@ -1231,7 +1231,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
 		$hookRunner->onManageWikiCoreFormSubmission(
-			$context, $remoteWiki, $dbname, $formData
+			$context, $moduleFactory, $dbname, $formData
 		);
 
 		return $remoteWiki;
