@@ -6,7 +6,7 @@ use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiModuleFactory;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiQueryWikiConfig extends ApiQueryBase {
@@ -14,7 +14,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 	public function __construct(
 		ApiQuery $query,
 		string $moduleName,
-		private readonly ConfigModuleFactory $moduleFactory
+		private readonly ManageWikiModuleFactory $moduleFactory
 	) {
 		parent::__construct( $query, $moduleName, 'wcf' );
 	}

@@ -142,10 +142,10 @@ class ManageWikiRequirements {
 		$setting = $data['setting'];
 		$value = $data['value'];
 
-		$configModuleFactory = MediaWikiServices::getInstance()->get( 'ConfigModuleFactory' );
-		$manageWikiSettings = $configModuleFactory->settings( $database );
+		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$mwSettings = $moduleFactory->settings( $database );
 
-		$wikiValue = $manageWikiSettings->list( $setting );
+		$wikiValue = $mwSettings->list( $setting );
 
 		if ( $wikiValue !== null ) {
 			// We need to cast $wikiValue to an array

@@ -37,9 +37,9 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 			->fetchRow();
 
 		if ( !$checkRow ) {
-			$configModuleFactory = $this->getServiceContainer()->get( 'ConfigModuleFactory' );
-			$mwPermissions = $configModuleFactory->permissionsLocal();
-			$mwPermissionsDefault = $configModuleFactory->permissionsDefault();
+			$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+			$mwPermissions = $moduleFactory->permissionsLocal();
+			$mwPermissionsDefault = $moduleFactory->permissionsDefault();
 			$defaultGroups = array_diff(
 				array_keys( $mwPermissionsDefault->list( group: null ) ),
 				[ $this->getConfig()->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]

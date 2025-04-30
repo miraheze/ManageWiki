@@ -9,7 +9,7 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\RawMessage;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Status\Status;
-use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiModuleFactory;
 use Miraheze\ManageWiki\ManageWikiOOUIForm;
 use UnexpectedValueException;
 
@@ -17,7 +17,7 @@ class ManageWikiFormFactory {
 
 	private function getFormDescriptor(
 		Config $config,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		IContextSource $context,
 		string $dbname,
 		string $module,
@@ -38,7 +38,7 @@ class ManageWikiFormFactory {
 
 	public function getForm(
 		Config $config,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		IContextSource $context,
 		string $dbname,
 		string $module,
@@ -93,7 +93,7 @@ class ManageWikiFormFactory {
 
 	protected function submitForm(
 		Config $config,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		HTMLForm $form,
 		array $formData,
 		string $dbname,

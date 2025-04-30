@@ -36,9 +36,9 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 			->fetchRow();
 
 		if ( !$checkRow ) {
-			$configModuleFactory = $this->getServiceContainer()->get( 'ConfigModuleFactory' );
-			$mwNamespaces = $configModuleFactory->namespacesLocal();
-			$mwNamespacesDefault = $configModuleFactory->namespacesDefault();
+			$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+			$mwNamespaces = $moduleFactory->namespacesLocal();
+			$mwNamespacesDefault = $moduleFactory->namespacesDefault();
 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
 
 			foreach ( $defaultNamespaces as $namespace ) {

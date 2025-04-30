@@ -6,7 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
-use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiModuleFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -20,15 +20,15 @@ use Psr\Log\LoggerInterface;
 // @codeCoverageIgnoreStart
 
 return [
-	'ConfigModuleFactory' => static function ( MediaWikiServices $services ): ConfigModuleFactory {
-		return new ConfigModuleFactory(
+	'ManageWikiModuleFactory' => static function ( MediaWikiServices $services ): ManageWikiModuleFactory {
+		return new ManageWikiModuleFactory(
 			$services->get( 'ManageWikiExtensions' ),
 			$services->get( 'ManageWikiNamespaces' ),
 			$services->get( 'ManageWikiPermissions' ),
 			$services->get( 'ManageWikiSettings' ),
 			$services->get( 'RemoteWikiFactory' ),
 			new ServiceOptions(
-				ConfigModuleFactory::CONSTRUCTOR_OPTIONS,
+				ManageWikiModuleFactory::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
@@ -37,8 +37,8 @@ return [
 		return new CreateWiki(
 			$services->get( 'ManageWikiConfig' ),
 			$services->get( 'ManageWikiLogger' ),
-			$services->getLocalisationCache(),
-			$services->get( 'ConfigModuleFactory' )
+			$services->get( 'ManageWikiModuleFactory' ),
+			$services->getLocalisationCache()
 		);
 	},
 	'ManageWikiConfig' => static function ( MediaWikiServices $services ): Config {

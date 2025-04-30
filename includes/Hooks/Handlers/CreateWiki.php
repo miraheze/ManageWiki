@@ -11,7 +11,7 @@ use Miraheze\CreateWiki\Hooks\CreateWikiStatePrivateHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiStatePublicHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiTablesHook;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiModuleFactory;
 use Miraheze\ManageWiki\ManageWiki;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\IReadableDatabase;
@@ -27,8 +27,8 @@ class CreateWiki implements
 	public function __construct(
 		private readonly Config $config,
 		private readonly LoggerInterface $logger,
-		private readonly LocalisationCache $localisationCache,
-		private readonly ConfigModuleFactory $moduleFactory
+		private readonly ManageWikiModuleFactory $moduleFactory,
+		private readonly LocalisationCache $localisationCache
 	) {
 	}
 

@@ -23,8 +23,8 @@ class AddNamespaces extends Maintenance {
 	}
 
 	public function execute(): void {
-		$configModuleFactory = $this->getServiceContainer()->get( 'ConfigModuleFactory' );
-		$mwNamespaces = $configModuleFactory->namespacesLocal();
+		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+		$mwNamespaces = $moduleFactory->namespacesLocal();
 
 		$nsData = [
 			'name' => (string)$this->getOption( 'name' ),

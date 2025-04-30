@@ -13,17 +13,17 @@ use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
-use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiModuleFactory;
 use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 use Miraheze\ManageWiki\ManageWiki;
 
 class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function __construct(
-		private readonly ConfigModuleFactory $moduleFactory,
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
-		private readonly CreateWiki $hookHandler
+		private readonly CreateWiki $hookHandler,
+		private readonly ManageWikiModuleFactory $moduleFactory
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
 	}

@@ -40,8 +40,8 @@ class ModifyGroupPermission extends Maintenance {
 	}
 
 	public function execute(): void {
-		$configModuleFactory = $this->getServiceContainer()->get( 'ConfigModuleFactory' );
-		$mwPermissions = $configModuleFactory->permissionsLocal();
+		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+		$mwPermissions = $moduleFactory->permissionsLocal();
 
 		$permData = [
 			'permissions' => [

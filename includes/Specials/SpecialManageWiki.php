@@ -11,7 +11,7 @@ use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
-use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiModuleFactory;
 use Miraheze\ManageWiki\ManageWiki;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
@@ -19,8 +19,8 @@ use OOUI\SearchInputWidget;
 class SpecialManageWiki extends SpecialPage {
 
 	public function __construct(
-		private readonly ConfigModuleFactory $moduleFactory,
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly ManageWikiModuleFactory $moduleFactory,
 		private readonly NamespaceInfo $namespaceInfo
 	) {
 		parent::__construct( 'ManageWiki' );

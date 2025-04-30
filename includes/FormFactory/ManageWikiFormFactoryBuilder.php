@@ -18,7 +18,7 @@ use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiModuleFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -35,7 +35,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		string $special,
 		string $filtered,
 		Config $config
@@ -82,7 +82,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config
 	): array {
 		$formDescriptor = [];
@@ -245,7 +245,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config
 	): array {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
@@ -394,7 +394,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config,
 		string $filtered
 	): array {
@@ -505,7 +505,7 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		string $special,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config
 	): array {
 		$mwNamespaces = $moduleFactory->namespaces( $dbname );
@@ -793,7 +793,7 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		string $group,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config
 	): array {
 		if ( in_array( $group, $config->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
@@ -1053,7 +1053,7 @@ class ManageWikiFormFactoryBuilder {
 		string $module,
 		string $dbname,
 		IContextSource $context,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config,
 		string $special,
 		string $filtered
@@ -1144,7 +1144,7 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		IContextSource $context,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config
 	): IConfigModule {
 		$mwActions = [
@@ -1240,7 +1240,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function submissionExtensions(
 		array $formData,
 		string $dbname,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config
 	): ManageWikiExtensions {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
@@ -1261,7 +1261,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		string $filtered,
 		IContextSource $context,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config
 	): ManageWikiSettings {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
@@ -1361,7 +1361,7 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		string $special,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config
 	): ManageWikiNamespaces {
 		$mwNamespaces = $moduleFactory->namespaces( $dbname );
@@ -1408,7 +1408,7 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		string $group,
-		ConfigModuleFactory $moduleFactory,
+		ManageWikiModuleFactory $moduleFactory,
 		Config $config
 	): ManageWikiPermissions {
 		$mwPermissions = $moduleFactory->permissions( $dbname );
