@@ -277,7 +277,8 @@ class SpecialManageWiki extends SpecialPage {
 
 		// Handle namespaces module when we are not editing a specific namespace.
 		if ( $module === 'namespaces' && $special === '' ) {
-			$namespaces = $this->moduleFactory->namespaces( $dbname )->list( id: null );
+			$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
+			$namespaces = $mwNamespaces->list( id: null );
 			foreach ( $namespaces as $id => $namespace ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {
 					continue;
