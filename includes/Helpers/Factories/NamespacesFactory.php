@@ -5,9 +5,9 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\Title\NamespaceInfo;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 
 class NamespacesFactory {
 
