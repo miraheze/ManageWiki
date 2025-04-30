@@ -15,6 +15,7 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\Title\Title;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
@@ -889,8 +890,13 @@ class ManageWikiFormFactoryBuilder {
 					'section' => 'advanced',
 					'disable-if' => [ '===', 'delete-checkbox', '1' ],
 					'hide-if' => [ '!==', 'rename-checkbox', '1' ],
-					'filter-callback' => static fn ( string $value ): string =>
-						mb_strtolower( trim( $value ) ),
+					'filter-callback' => static fn ( string $value ): string => preg_replace(
+						'/[^' . Title::legalChars() . ']|:/',
+						'-',
+						mb_strtolower(
+							trim( str_replace( ' ', '_', $value ) )
+						)
+					),
 					'validation-callback' => static fn ( string $value ): bool|Message =>
 						!( in_array( $value, $disallowedGroups, true ) ||
 								in_array( $value, $groupData['allGroups'], true ) ) ?:
