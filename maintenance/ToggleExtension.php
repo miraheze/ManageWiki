@@ -35,9 +35,9 @@ class ToggleExtension extends Maintenance {
 			$this->fatalError( 'You must run with --confirm when running with --all-wikis.', 2 );
 		}
 
-		$manageWikiExtensions = $this->getServiceContainer()->get( 'ManageWikiExtensions' );
+		$configModuleFactory = $this->getServiceContainer()->get( 'ConfigModuleFactory' );
 		foreach ( $wikis as $wiki ) {
-			$mwExtensions = $manageWikiExtensions->newInstance( $wiki );
+			$mwExtensions = $configModuleFactory->extensions( $wiki );
 			$extList = $mwExtensions->list();
 			if ( $disable && ( in_array( $ext, $extList, true ) || $forceRemove ) ) {
 				$mwExtensions->remove( [ $ext ], $forceRemove );
