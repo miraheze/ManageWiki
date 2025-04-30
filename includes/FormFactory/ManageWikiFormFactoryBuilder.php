@@ -16,7 +16,7 @@ use MediaWiki\Message\Message;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
-use Miraheze\CreateWiki\IConfigModule;
+use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
@@ -1146,7 +1146,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		ModuleFactory $moduleFactory,
 		Config $config
-	): IConfigModule {
+	): RemoteWikiFactory {
 		$mwActions = [
 			'delete',
 			'lock',
