@@ -9,7 +9,7 @@ interface ManageWikiCoreFormSubmissionHook {
 
 	/**
 	 * @param IContextSource $context
-	 * @param ConfigModuleFactory $moduleFactory 
+	 * @param ConfigModuleFactory $moduleFactory
 	 * @param string $dbname
 	 * @param array $formData
 	 * @return void
