@@ -314,7 +314,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			return $this->msg( 'managewiki-permissions-group-invalid' );
 		}
 
-		$mwPermissions = new ManageWikiPermissions( 'default' );
+		$mwPermissions = $this->moduleFactory->permissionsDefault();
 		if ( $mwPermissions->exists( $newGroup ) ) {
 			return $this->msg( 'managewiki-permissions-group-conflict' );
 		}
