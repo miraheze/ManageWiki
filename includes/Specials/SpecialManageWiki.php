@@ -457,7 +457,7 @@ class SpecialManageWiki extends SpecialPage {
 			return $this->msg( 'managewiki-permissions-group-invalid' );
 		}
 
-		$mwPermissions = new ManageWikiPermissions( $alldata['dbname'] );
+		$mwPermissions = $this->moduleFactory->permissions( $alldata['dbname'] );
 		if ( $mwPermissions->exists( $newGroup ) ) {
 			return $this->msg( 'managewiki-permissions-group-conflict' );
 		}
