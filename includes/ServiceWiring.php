@@ -6,6 +6,10 @@ use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
+use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
+use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
+use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -31,8 +35,8 @@ return [
 	'ManageWikiConfig' => static function ( MediaWikiServices $services ): Config {
 		return $services->getConfigFactory()->makeConfig( 'ManageWiki' );
 	},
-	'ManageWikiExtensions' => static function ( MediaWikiServices $services ): ManageWikiExtensions {
-		return new ManageWikiExtensions(
+	'ManageWikiExtensions' => static function ( MediaWikiServices $services ): ExtensionsFactory {
+		return new ExtensionsFactory(
 			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiLogger' ),
@@ -48,8 +52,8 @@ return [
 	'ManageWikiLogger' => static function (): LoggerInterface {
 		return LoggerFactory::getInstance( 'ManageWiki' );
 	},
-	'ManageWikiNamespaces' => static function ( MediaWikiServices $services ): ManageWikiNamespaces {
-		return new ManageWikiNamespaces(
+	'ManageWikiNamespaces' => static function ( MediaWikiServices $services ): NamespacesFactory {
+		return new NamespacesFactory(
 			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->getJobQueueGroupFactory(),
@@ -60,8 +64,8 @@ return [
 			)
 		);
 	},
-	'ManageWikiPermissions' => static function ( MediaWikiServices $services ): ManageWikiPermissions {
-		return new ManageWikiPermissions(
+	'ManageWikiPermissions' => static function ( MediaWikiServices $services ): PermissionsFactory {
+		return new PermissionsFactory(
 			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->getActorStoreFactory(),
@@ -71,8 +75,8 @@ return [
 			),
 		);
 	},
-	'ManageWikiSettings' => static function ( MediaWikiServices $services ): ManageWikiSettings {
-		return new ManageWikiSettings(
+	'ManageWikiSettings' => static function ( MediaWikiServices $services ): SettingsFactory {
+		return new SettingsFactory(
 			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
 			new ServiceOptions(
