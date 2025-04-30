@@ -5,6 +5,10 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
+use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
+use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
+use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 
 class ModuleFactory {
 
@@ -15,10 +19,10 @@ class ModuleFactory {
 	];
 
 	public function __construct(
-		private readonly ManageWikiExtensions $extensions,
-		private readonly ManageWikiNamespaces $namespaces,
-		private readonly ManageWikiPermissions $permissions,
-		private readonly ManageWikiSettings $settings,
+		private readonly ExtensionsFactory $extensions,
+		private readonly NamespacesFactory $namespaces,
+		private readonly PermissionsFactory $permissions,
+		private readonly SettingsFactory $settings,
 		private readonly RemoteWikiFactory $core,
 		private readonly ServiceOptions $options
 	) {
