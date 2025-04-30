@@ -48,7 +48,7 @@ class ManageWikiFormFactory {
 		// Can the user modify ManageWiki?
 		$ceMW = !(
 			(
-				$moduleFactory->remoteWiki( $dbname )->isLocked() &&
+				$moduleFactory->core( $dbname )->isLocked() &&
 				!$context->getAuthority()->isAllowed( 'managewiki-restricted' )
 			) ||
 			!$context->getAuthority()->isAllowed( "managewiki-$module" )
