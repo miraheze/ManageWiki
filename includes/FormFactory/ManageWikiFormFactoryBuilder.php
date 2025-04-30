@@ -1229,12 +1229,9 @@ class ManageWikiFormFactoryBuilder {
 			$remoteWiki->setDBCluster( $formData['dbcluster'] );
 		}
 
-		// dbw will be removed in the future
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$dbw = $databaseUtils->getGlobalPrimaryDB();
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
 		$hookRunner->onManageWikiCoreFormSubmission(
-			$context, $dbw, $remoteWiki, $dbname, $formData
+			$context, $remoteWiki, $dbname, $formData
 		);
 
 		return $remoteWiki;
