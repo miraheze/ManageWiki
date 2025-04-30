@@ -274,8 +274,7 @@ class SpecialManageWiki extends SpecialPage {
 				$options[$language->getGroupName( $lowerCaseGroupName )] = $lowerCaseGroupName;
 			}
 
-			// We don't need to pass dbname here so just pass an empty string.
-			$this->reusableFormDescriptor( '', $module, $options );
+			$this->reusableFormDescriptor( $dbname, $module, $options );
 			return;
 		}
 
