@@ -19,7 +19,11 @@ use MediaWiki\User\User;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
+use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
+use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
+use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ObjectCache\WANObjectCache;
@@ -1241,7 +1245,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		ConfigModuleFactory $moduleFactory,
 		Config $config
-	): IConfigModule {
+	): ManageWikiExtensions {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
 
 		$newExtList = [];
@@ -1262,7 +1266,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		ConfigModuleFactory $moduleFactory,
 		Config $config
-	): IConfigModule {
+	): ManageWikiSettings {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
 
@@ -1362,7 +1366,7 @@ class ManageWikiFormFactoryBuilder {
 		string $special,
 		ConfigModuleFactory $moduleFactory,
 		Config $config
-	): IConfigModule {
+	): ManageWikiNamespaces {
 		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 
 		if ( $formData['delete-checkbox'] ) {
@@ -1409,7 +1413,7 @@ class ManageWikiFormFactoryBuilder {
 		string $group,
 		ConfigModuleFactory $moduleFactory,
 		Config $config
-	): IConfigModule {
+	): ManageWikiPermissions {
 		$mwPermissions = $moduleFactory->permissions( $dbname );
 		$groupData = $mwPermissions->list( $group );
 
