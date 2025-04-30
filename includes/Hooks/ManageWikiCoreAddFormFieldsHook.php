@@ -3,13 +3,13 @@
 namespace Miraheze\ManageWiki\Hooks;
 
 use MediaWiki\Context\IContextSource;
-use Miraheze\ManageWiki\Helpers\ManageWikiModuleFactory;
+use Miraheze\ManageWiki\Helpers\ModuleFactory;
 
 interface ManageWikiCoreAddFormFieldsHook {
 
 	/**
 	 * @param IContextSource $context
-	 * @param ManageWikiModuleFactory $moduleFactory
+	 * @param ModuleFactory $moduleFactory
 	 * @param string $dbname
 	 * @param bool $ceMW
 	 * @param array &$formDescriptor
@@ -17,7 +17,7 @@ interface ManageWikiCoreAddFormFieldsHook {
 	 */
 	public function onManageWikiCoreAddFormFields(
 		IContextSource $context,
-		ManageWikiModuleFactory $moduleFactory,
+		ModuleFactory $moduleFactory,
 		string $dbname,
 		bool $ceMW,
 		array &$formDescriptor

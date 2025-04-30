@@ -6,7 +6,7 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 
-class ManageWikiModuleFactory {
+class ModuleFactory {
 
 	private const DEFAULT_DATABASE = 'default';
 
