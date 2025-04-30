@@ -15,7 +15,6 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
-use MediaWiki\Title\MediaWikiTitleCodec;
 use MediaWiki\User\User;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
@@ -894,9 +893,7 @@ class ManageWikiFormFactoryBuilder {
 						trim( str_replace( ' ', '_', $value ) )
 					),
 					'validation-callback' => static fn ( string $value ): bool|Message => match ( true ) {
-						preg_match( MediaWikiTitleCodec::getTitleInvalidRegex(), $value ) === 1 =>
-							$context->msg( 'managewiki-permissions-group-invalid' ),
-						str_starts_with( $value, ':' ) =>
+						SpecialPage::getSafeTitleFor( 'ManageWiki', "permissions/$value" ) === null =>
 							$context->msg( 'managewiki-permissions-group-invalid' ),
 						in_array( $value, $disallowedGroups, true ) =>
 							$context->msg( 'managewiki-permissions-group-disallowed' ),
