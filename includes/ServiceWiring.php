@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki;
 
+use Closure;
 use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
@@ -20,36 +21,26 @@ use Psr\Log\LoggerInterface;
 // @codeCoverageIgnoreStart
 
 return [
-	'CreateWikiHookHandler' => static function ( MediaWikiServices $services ): CreateWiki {
-		return new CreateWiki(
-			$services->get( 'ManageWikiConfig' ),
-			$services->get( 'ManageWikiLogger' ),
-			$services->get( 'ManageWikiModuleFactory' ),
-			$services->getLocalisationCache()
-		);
-	},
-	'ManageWikiConfig' => static function ( MediaWikiServices $services ): Config {
-		return $services->getConfigFactory()->makeConfig( 'ManageWiki' );
-	},
-	'ManageWikiExtensions' => static function ( MediaWikiServices $services ): ManageWikiExtensions {
-		return new ManageWikiExtensions(
+	'ManageWikiLogger' => static fn (): LoggerInterface =>
+		LoggerFactory::getInstance( 'ManageWiki' ),
+
+	'ManageWikiConfig' => static fn ( MediaWikiServices $services ) =>
+		$services->getConfigFactory()->makeConfig( 'ManageWiki' ),
+
+	'ManageWikiExtensionsFactory' => static fn ( MediaWikiServices $services ): Closure =>
+		static fn ( string $dbname ): ManageWikiExtensions => new ManageWikiExtensions(
 			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiLogger' ),
 			new ServiceOptions(
 				ManageWikiExtensions::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
-			)
-		);
-	},
-	'ManageWikiHookRunner' => static function ( MediaWikiServices $services ): ManageWikiHookRunner {
-		return new ManageWikiHookRunner( $services->getHookContainer() );
-	},
-	'ManageWikiLogger' => static function (): LoggerInterface {
-		return LoggerFactory::getInstance( 'ManageWiki' );
-	},
-	'ManageWikiNamespaces' => static function ( MediaWikiServices $services ): ManageWikiNamespaces {
-		return new ManageWikiNamespaces(
+			),
+			$dbname
+		),
+
+	'ManageWikiNamespacesFactory' => static fn ( MediaWikiServices $services ): Closure =>
+		static fn ( string $dbname ): ManageWikiNamespaces => new ManageWikiNamespaces(
 			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->getJobQueueGroupFactory(),
@@ -57,11 +48,12 @@ return [
 			new ServiceOptions(
 				ManageWikiNamespaces::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
-			)
-		);
-	},
-	'ManageWikiPermissions' => static function ( MediaWikiServices $services ): ManageWikiPermissions {
-		return new ManageWikiPermissions(
+			),
+			$dbname
+		),
+
+	'ManageWikiPermissionsFactory' => static fn ( MediaWikiServices $services ): Closure =>
+		static fn ( string $dbname ): ManageWikiPermissions => new ManageWikiPermissions(
 			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->getActorStoreFactory(),
@@ -69,31 +61,42 @@ return [
 			$services->getMessageFormatterFactory()->getTextFormatter(
 				$services->getContentLanguageCode()->toString()
 			),
-		);
-	},
-	'ManageWikiSettings' => static function ( MediaWikiServices $services ): ManageWikiSettings {
-		return new ManageWikiSettings(
+			$dbname
+		),
+
+	'ManageWikiSettingsFactory' => static fn ( MediaWikiServices $services ): Closure =>
+		static fn ( string $dbname ): ManageWikiSettings => new ManageWikiSettings(
 			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
 			new ServiceOptions(
 				ManageWikiSettings::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
-			)
-		);
-	},
-	'ManageWikiModuleFactory' => static function ( MediaWikiServices $services ): ModuleFactory {
-		return new ModuleFactory(
-			$services->get( 'ManageWikiExtensions' ),
-			$services->get( 'ManageWikiNamespaces' ),
-			$services->get( 'ManageWikiPermissions' ),
-			$services->get( 'ManageWikiSettings' ),
+			),
+			$dbname
+		),
+
+	'ManageWikiModuleFactory' => static fn ( MediaWikiServices $services ): ModuleFactory =>
+		new ModuleFactory(
+			$services->get( 'ManageWikiExtensionsFactory' ),
+			$services->get( 'ManageWikiNamespacesFactory' ),
+			$services->get( 'ManageWikiPermissionsFactory' ),
+			$services->get( 'ManageWikiSettingsFactory' ),
 			$services->get( 'RemoteWikiFactory' ),
 			new ServiceOptions(
 				ModuleFactory::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
-		);
-	},
-];
+		),
 
+	'ManageWikiHookRunner' => static fn ( MediaWikiServices $services ): ManageWikiHookRunner =>
+		new ManageWikiHookRunner( $services->getHookContainer() ),
+
+	'CreateWikiHookHandler' => static fn ( MediaWikiServices $services ): CreateWiki =>
+		new CreateWiki(
+			$services->get( 'ManageWikiConfig' ),
+			$services->get( 'ManageWikiLogger' ),
+			$services->get( 'ManageWikiModuleFactory' ),
+			$services->getLocalisationCache()
+		),
+];
 // @codeCoverageIgnoreEnd
