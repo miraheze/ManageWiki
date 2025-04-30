@@ -894,10 +894,12 @@ class ManageWikiFormFactoryBuilder {
 						trim( str_replace( ' ', '_', $value ) )
 					),
 					'validation-callback' => static fn ( string $value ): bool|Message => match ( true ) {
-						preg_match( MediaWikiTitleCodec::getTitleInvalidRegex(), $value ) === 1,
+						preg_match( MediaWikiTitleCodec::getTitleInvalidRegex(), $value ) === 1 =>
+							$context->msg( 'managewiki-permissions-group-invalid' ),
 						str_starts_with( $value, ':' ) =>
 							$context->msg( 'managewiki-permissions-group-invalid' ),
-						in_array( $value, $disallowedGroups, true ),
+						in_array( $value, $disallowedGroups, true ) =>
+							$context->msg( 'managewiki-permissions-group-disallowed' ),
 						in_array( $value, $groupData['allGroups'], true ) =>
 							$context->msg( 'managewiki-permissions-group-disallowed' ),
 						default => true,
