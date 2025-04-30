@@ -321,10 +321,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		}
 
 		$mwPermissions = new ManageWikiPermissions( 'default' );
-		$groups = array_keys( $mwPermissions->list( group: null ) );
-
-		// The entered group name already exists
-		if ( in_array( $newGroup, $groups, true ) ) {
+		if ( $mwPermissions->exists( $newGroup ) ) {
 			return $this->msg( 'managewiki-permissions-group-conflict' );
 		}
 
