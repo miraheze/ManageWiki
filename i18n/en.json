@@ -161,6 +161,7 @@
 	"managewiki-permissions-create-submit": "Create group",
 	"managewiki-permissions-group": "Below you can allow how this user group can assign/unassign other user groups.",
 	"managewiki-permissions-group-disallowed": "The group you attempted to create is not allowed. Please select a different name and try again.",
+	"managewiki-permissions-group-invalid": "The group name you entered is invalid. Group names must follow valid title formatting rules.",
 	"managewiki-permissions-label-group-name": "The name for this group:",
 	"managewiki-permissions-removeall": "Can remove from others",
 	"managewiki-permissions-removeself": "Can remove from self",
