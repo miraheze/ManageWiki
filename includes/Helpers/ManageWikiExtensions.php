@@ -31,22 +31,11 @@ class ManageWikiExtensions implements IConfigModule {
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly LoggerInterface $logger,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
+		private readonly string $dbname
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
-	}
-
-	public function newInstance( string $dbname ): self {
-		$this->dbname = $dbname;
-
-		// Reset properties
-		$this->changes = [];
-		$this->errors = [];
-		$this->logParams = [];
-		$this->liveExtensions = [];
-		$this->removedExtensions = [];
-		$this->log = null;
-
+	
 		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$extensions = $dbr->newSelectQueryBuilder()
 			->select( 's_extensions' )
@@ -70,8 +59,6 @@ class ManageWikiExtensions implements IConfigModule {
 
 			$this->liveExtensions[$extension] = $config[$extension];
 		}
-
-		return $this;
 	}
 
 	/**
