@@ -465,7 +465,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$mwPermissions = new ManageWikiPermissions( $alldata['dbname'] );
-		$groups = array_keys( $mwPermissions->list( group: null ) );
+		$groups = $mwPermissions->list( group: null );
 
 		// The entered group name already exists
 		if ( in_array( $newGroup, $groups, true ) ) {
