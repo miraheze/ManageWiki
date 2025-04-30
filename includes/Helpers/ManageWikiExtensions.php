@@ -24,7 +24,6 @@ class ManageWikiExtensions implements IConfigModule {
 	private array $liveExtensions = [];
 	private array $removedExtensions = [];
 
-	private string $dbname;
 	private ?string $log = null;
 
 	public function __construct(
