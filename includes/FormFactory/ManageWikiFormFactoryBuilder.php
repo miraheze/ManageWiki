@@ -899,7 +899,7 @@ class ManageWikiFormFactoryBuilder {
 						// otherwise we can not edit it because the title will be
 						// invalid for the ManageWiki permission subpage.
 						// If this returns null, it is invalid.
-						SpecialPage::getSafeTitleFor( 'ManageWiki', "$module/$value" ) === null =>
+						SpecialPage::getSafeTitleFor( 'ManageWiki', "permissions/$value" ) === null =>
 							$context->msg( 'managewiki-permissions-group-invalid' ),
 
 						// The entered group is in the disallowed groups config
