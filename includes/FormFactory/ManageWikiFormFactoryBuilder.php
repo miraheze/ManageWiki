@@ -890,18 +890,18 @@ class ManageWikiFormFactoryBuilder {
 					'section' => 'advanced',
 					'disable-if' => [ '===', 'delete-checkbox', '1' ],
 					'hide-if' => [ '!==', 'rename-checkbox', '1' ],
-					'filter-callback' => static fn ( string $value ): string => preg_replace(
-						MediaWikiTitleCodec::getTitleInvalidRegex(),
-						'-',
-						mb_strtolower(
-							trim( str_replace( ' ', '_', $value ) )
-						)
+					'filter-callback' => static fn ( string $value ): string => mb_strtolower(
+						trim( str_replace( ' ', '_', $value ) )
 					),
-					'validation-callback' => static fn ( string $value ): bool|Message =>
-						!( in_array( $value, $disallowedGroups, true ) ||
-								in_array( $value, $groupData['allGroups'], true ) ||
-								str_starts_with( $value, ':' )
-						 ) ?: $context->msg( 'managewiki-permissions-group-disallowed' ),
+					'validation-callback' => static fn ( string $value ): bool|Message => match ( true ) {
+						preg_match( MediaWikiTitleCodec::getTitleInvalidRegex(), $value ),
+						str_starts_with( $value, ':' ) =>
+							$context->msg( 'managewiki-permissions-group-invalid' ),
+						in_array( $value, $disallowedGroups, true ),
+						in_array( $value, $groupData['allGroups'], true ) =>
+							$context->msg( 'managewiki-permissions-group-disallowed' ),
+						default => true,
+					},
 				],
 			];
 		}
