@@ -5,11 +5,8 @@ namespace Miraheze\ManageWiki\Api;
 use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
 use Miraheze\CreateWiki\Exceptions\MissingWikiError;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
-use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
+use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiQueryWikiConfig extends ApiQueryBase {
@@ -17,10 +14,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 	public function __construct(
 		ApiQuery $query,
 		string $moduleName,
-		private readonly ManageWikiExtensions $mwExtensions,
-		private readonly ManageWikiPermissions $mwPermissions,
-		private readonly ManageWikiSettings $mwSettings,
-		private readonly RemoteWikiFactory $remoteWikiFactory
+		private readonly ConfigModuleFactory $moduleFactory
 	) {
 		parent::__construct( $query, $moduleName, 'wcf' );
 	}
@@ -34,7 +28,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 		foreach ( $params['wikis'] as $wiki ) {
 			try {
-				$remoteWiki = $this->remoteWikiFactory->newInstance( $wiki );
+				$remoteWiki = $this->moduleFactory->core( $wiki );
 			} catch ( MissingWikiError $e ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
 				continue;
@@ -49,7 +43,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				'private' => $remoteWiki->isPrivate(),
 			];
 
-			$mwSettings = $this->mwSettings->newInstance( $wiki );
+			$mwSettings = $this->moduleFactory->settings( $wiki );
 			if ( isset( $prop['settings'] ) ) {
 				$wikiData['settings'] = $mwSettings->list( var: null );
 
@@ -60,12 +54,12 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				}
 			}
 
-			$mwExtensions = $this->mwExtensions->newInstance( $wiki );
+			$mwExtensions = $this->moduleFactory->extensions( $wiki );
 			if ( isset( $prop['extensions'] ) ) {
 				$wikiData['extensions'] = $mwExtensions->list();
 			}
 
-			$mwPermissions = $this->mwPermissions->newInstance( $wiki );
+			$mwPermissions = $this->moduleFactory->permissions( $wiki );
 			if ( isset( $prop['permissions'] ) ) {
 				foreach ( $mwPermissions->list( group: null ) as $group => $data ) {
 					$wikiData['permissions'][$group] = $data['permissions'];
