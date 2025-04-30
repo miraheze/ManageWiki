@@ -16,14 +16,9 @@ use MediaWiki\Message\Message;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
-use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ObjectCache\WANObjectCache;
@@ -43,15 +38,13 @@ class ManageWikiFormFactoryBuilder {
 		switch ( $module ) {
 			case 'core':
 				$formDescriptor = self::buildDescriptorCore(
-					$dbname, $ceMW, $context,
-					$moduleFactory->core( $dbname ),
+					$dbname, $ceMW, $context, $moduleFactory,
 					$config
 				);
 				break;
 			case 'extensions':
 				$formDescriptor = self::buildDescriptorExtensions(
-					$dbname, $ceMW, $context,
-					$moduleFactory->extensions( $dbname ),
+					$dbname, $ceMW, $context, $moduleFactory,
 					$config
 				);
 				break;
@@ -69,8 +62,7 @@ class ManageWikiFormFactoryBuilder {
 				break;
 			case 'permissions':
 				$formDescriptor = self::buildDescriptorPermissions(
-					$dbname, $ceMW, $context, $special,
-					$moduleFactory->permissions( $dbname ),
+					$dbname, $ceMW, $context, $special, $moduleFactory,
 					$config
 				);
 				break;
@@ -85,7 +77,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
+		ConfigModuleFactory $moduleFactory,
 		Config $config
 	): array {
 		$formDescriptor = [];
@@ -96,6 +88,8 @@ class ManageWikiFormFactoryBuilder {
 			'disabled' => true,
 			'section' => 'main',
 		];
+
+		$remoteWiki = $moduleFactory->core( $dbname );
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && !$databaseUtils->isRemoteWikiCentral( $dbname ) ) {
@@ -246,10 +240,12 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		ManageWikiExtensions $mwExtensions,
+		ConfigModuleFactory $moduleFactory,
 		Config $config
 	): array {
+		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
+
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
@@ -792,13 +788,14 @@ class ManageWikiFormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		string $group,
-		ManageWikiPermissions $mwPermissions,
+		ConfigModuleFactory $moduleFactory,
 		Config $config
 	): array {
 		if ( in_array( $group, $config->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			$ceMW = false;
 		}
 
+		$mwPermissions = $moduleFactory->permissions( $dbname );
 		$groupData = $mwPermissions->list( $group );
 
 		$matrixConstruct = [
@@ -1051,26 +1048,40 @@ class ManageWikiFormFactoryBuilder {
 		string $module,
 		string $dbname,
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
+		ConfigModuleFactory $moduleFactory,
 		Config $config,
 		string $special,
 		string $filtered
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$mwReturn = self::submissionCore( $formData, $dbname, $context, $remoteWiki, $config );
+				$mwReturn = self::submissionCore(
+					$formData, $dbname, $context, $moduleFactory,
+					$config
+				);
 				break;
 			case 'extensions':
-				$mwReturn = self::submissionExtensions( $formData, $dbname, $config );
+				$mwReturn = self::submissionExtensions(
+					$formData, $dbname, $moduleFactory, $config
+				);
 				break;
 			case 'settings':
-				$mwReturn = self::submissionSettings( $formData, $dbname, $filtered, $context, $config );
+				$mwReturn = self::submissionSettings(
+					$formData, $dbname, $filtered, $context,
+					$moduleFactory, $config
+				);
 				break;
 			case 'namespaces':
-				$mwReturn = self::submissionNamespaces( $formData, $dbname, $special, $config );
+				$mwReturn = self::submissionNamespaces(
+					$formData, $dbname, $special, $moduleFactory,
+					$config
+				);
 				break;
 			case 'permissions':
-				$mwReturn = self::submissionPermissions( $formData, $dbname, $special, $config );
+				$mwReturn = self::submissionPermissions(
+					$formData, $dbname, $special, $moduleFactory,
+					$config
+				);
 				break;
 			default:
 				throw new InvalidArgumentException( "$module not recognized" );
@@ -1128,7 +1139,7 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
+		ConfigModuleFactory $moduleFactory,
 		Config $config
 	): RemoteWikiFactory {
 		$mwActions = [
@@ -1137,6 +1148,8 @@ class ManageWikiFormFactoryBuilder {
 			'undelete',
 			'unlock',
 		];
+
+		$remoteWiki = $moduleFactory->core( $dbname );
 
 		foreach ( $mwActions as $mwAction ) {
 			if ( $formData[$mwAction] ?? false ) {
@@ -1225,9 +1238,10 @@ class ManageWikiFormFactoryBuilder {
 	private static function submissionExtensions(
 		array $formData,
 		string $dbname,
+		ConfigModuleFactory $moduleFactory,
 		Config $config
 	): ManageWikiExtensions {
-		$mwExtensions = new ManageWikiExtensions( $dbname );
+		$mwExtensions = $moduleFactory->extensions( $dbname );
 
 		$newExtList = [];
 		foreach ( $config->get( ConfigNames::Extensions ) as $name => $ext ) {
@@ -1245,12 +1259,13 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		string $filtered,
 		IContextSource $context,
+		ConfigModuleFactory $moduleFactory,
 		Config $config
 	): ManageWikiSettings {
-		$mwExtensions = new ManageWikiExtensions( $dbname );
+		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
 
-		$mwSettings = new ManageWikiSettings( $dbname );
+		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->list( var: null );
 
 		$settingsArray = [];
@@ -1344,9 +1359,10 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		string $special,
+		ConfigModuleFactory $moduleFactory,
 		Config $config
 	): ManageWikiNamespaces {
-		$mwNamespaces = new ManageWikiNamespaces( $dbname );
+		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 
 		if ( $formData['delete-checkbox'] ) {
 			$mwNamespaces->remove( (int)$special, $formData['delete-migrate-to'] );
@@ -1390,9 +1406,10 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		string $group,
+		ConfigModuleFactory $moduleFactory,
 		Config $config
 	): ManageWikiPermissions {
-		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$mwPermissions = $moduleFactory->permissions( $dbname );
 		$groupData = $mwPermissions->list( $group );
 
 		$assignedPermissions = $groupData['permissions'] ?? [];
