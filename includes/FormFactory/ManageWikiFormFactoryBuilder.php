@@ -907,7 +907,7 @@ class ManageWikiFormFactoryBuilder {
 							$context->msg( 'managewiki-permissions-group-disallowed' ),
 
 						// The entered group name already exists
-						in_array( $value, $groupData['allGroups'], true ) =>
+						$mwPermissions->exists( $value ) =>
 							$context->msg( 'managewiki-permissions-group-conflict' ),
 
 						// Everything is all good to proceed with renaming this group
