@@ -136,10 +136,7 @@
 		"wikiconfig": {
 			"class": "Miraheze\\ManageWiki\\Api\\ApiQueryWikiConfig",
 			"services": [
-				"ManageWikiExtensions",
-				"ManageWikiPermissions",
-				"ManageWikiSettings",
-				"RemoteWikiFactory"
+				"ConfigModuleFactory"
 			]
 		}
 	},
