@@ -185,9 +185,7 @@
 				"ManageWikiConfig",
 				"ManageWikiLogger",
 				"LocalisationCache",
-				"ManageWikiExtensions",
-				"ManageWikiNamespaces",
-				"ManageWikiPermissions"
+				"ConfigModuleFactory"
 			]
 		},
 		"Installer": {
