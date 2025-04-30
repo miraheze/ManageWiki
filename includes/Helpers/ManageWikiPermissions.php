@@ -22,7 +22,6 @@ class ManageWikiPermissions implements IConfigModule {
 	private array $renameGroups = [];
 	private array $livePermissions = [];
 
-	private string $dbname;
 	private ?string $log = null;
 
 	public function __construct(
@@ -30,22 +29,9 @@ class ManageWikiPermissions implements IConfigModule {
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly ActorStoreFactory $actorStoreFactory,
 		private readonly UserGroupManagerFactory $userGroupManagerFactory,
-		private readonly ITextFormatter $textFormatter
+		private readonly ITextFormatter $textFormatter,
+		private readonly string $dbname
 	) {
-	}
-
-	public function newInstance( string $dbname ): self {
-		$this->dbname = $dbname;
-
-		// Reset properties
-		$this->changes = [];
-		$this->errors = [];
-		$this->logParams = [];
-		$this->deleteGroups = [];
-		$this->renameGroups = [];
-		$this->livePermissions = [];
-		$this->log = null;
-
 		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$perms = $dbr->newSelectQueryBuilder()
 			->select( '*' )
@@ -64,8 +50,6 @@ class ManageWikiPermissions implements IConfigModule {
 				'autopromote' => json_decode( $perm->perm_autopromote ?? '', true ),
 			];
 		}
-
-		return $this;
 	}
 
 	/**
