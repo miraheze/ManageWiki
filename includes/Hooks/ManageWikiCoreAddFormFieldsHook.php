@@ -3,13 +3,13 @@
 namespace Miraheze\ManageWiki\Hooks;
 
 use MediaWiki\Context\IContextSource;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\Helpers\ConfigModuleFactory;
 
 interface ManageWikiCoreAddFormFieldsHook {
 
 	/**
 	 * @param IContextSource $context
-	 * @param RemoteWikiFactory $remoteWiki
+	 * @param ConfigModuleFactory $moduleFactory
 	 * @param string $dbname
 	 * @param bool $ceMW
 	 * @param array &$formDescriptor
@@ -17,7 +17,7 @@ interface ManageWikiCoreAddFormFieldsHook {
 	 */
 	public function onManageWikiCoreAddFormFields(
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
+		ConfigModuleFactory $moduleFactory,
 		string $dbname,
 		bool $ceMW,
 		array &$formDescriptor
