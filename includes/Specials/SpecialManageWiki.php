@@ -465,10 +465,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$mwPermissions = new ManageWikiPermissions( $alldata['dbname'] );
-		$groups = $mwPermissions->list( group: null );
-
-		// The entered group name already exists
-		if ( in_array( $newGroup, $groups, true ) ) {
+		if ( $mwPermissions->exists( $newGroup ) ) {
 			return $this->msg( 'managewiki-permissions-group-conflict' );
 		}
 
