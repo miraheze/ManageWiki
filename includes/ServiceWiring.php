@@ -37,7 +37,8 @@ return [
 		return new CreateWiki(
 			$services->get( 'ManageWikiConfig' ),
 			$services->get( 'ManageWikiLogger' ),
-			$services->getLocalisationCache()
+			$services->getLocalisationCache(),
+			$services->get( 'ConfigModuleFactory' )
 		);
 	},
 	'ManageWikiConfig' => static function ( MediaWikiServices $services ): Config {
