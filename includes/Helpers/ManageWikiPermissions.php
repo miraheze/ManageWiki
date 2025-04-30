@@ -25,6 +25,11 @@ class ManageWikiPermissions implements IConfigModule {
 	private string $dbname;
 	private ?string $log = null;
 
+	/**
+	 * Initializes the ManageWikiPermissions helper with required service dependencies.
+	 *
+	 * @internal This constructor is intended for dependency injection and should not be called directly outside of service configuration.
+	 */
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
@@ -34,6 +39,14 @@ class ManageWikiPermissions implements IConfigModule {
 	) {
 	}
 
+	/**
+	 * Initializes the instance for a specific wiki database and loads its permission groups.
+	 *
+	 * Resets internal state and populates live permission data for the given database name.
+	 *
+	 * @param string $dbname The database name of the target wiki.
+	 * @return self The initialized instance for method chaining.
+	 */
 	public function newInstance( string $dbname ): self {
 		$this->dbname = $dbname;
 
@@ -250,6 +263,11 @@ class ManageWikiPermissions implements IConfigModule {
 		return $this->logParams;
 	}
 
+	/**
+	 * Commits all tracked permission group changes to the database and updates user group memberships as needed.
+	 *
+	 * Applies additions, deletions, and renames of permission groups for the current wiki. Updates the `mw_permissions` table, removes or moves users from affected groups, and prepares log parameters describing the changes. If errors are present, no changes are committed. After committing, resets wiki data if the database is not 'default'.
+	 */
 	public function commit(): void {
 		if ( $this->getErrors() ) {
 			// Don't save anything if we have errors
@@ -360,6 +378,13 @@ class ManageWikiPermissions implements IConfigModule {
 		}
 	}
 
+	/**
+	 * Removes all users from the specified group in the current wiki database.
+	 *
+	 * Skips operation if the database is set to 'default'.
+	 *
+	 * @param string $group Name of the group from which users will be removed.
+	 */
 	private function deleteUsersFromGroup( string $group ): void {
 		if ( $this->dbname === 'default' ) {
 			// Not a valid wiki to remove users from groups
@@ -385,6 +410,13 @@ class ManageWikiPermissions implements IConfigModule {
 		}
 	}
 
+	/**
+	 * Renames a user group for all users in the specified wiki by updating group names in user membership tables.
+	 *
+	 * Updates both current and former group assignments to reflect the new group name. No action is taken if the database is 'default'.
+	 *
+	 * @param string $group The current name of the group to be renamed.
+	 */
 	private function moveUsersFromGroup( string $group ): void {
 		if ( $this->dbname === 'default' ) {
 			// Not a valid wiki to move users from groups

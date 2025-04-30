@@ -70,6 +70,16 @@ class ManageWikiInstaller {
 		return true;
 	}
 
+	/**
+	 * Modifies user group permissions for a given wiki database.
+	 *
+	 * Adds or removes permissions, addgroups, and removegroups for each specified user group based on the install flag, then commits the changes.
+	 *
+	 * @param string $dbname Name of the target wiki database.
+	 * @param array $data User group permission data to apply.
+	 * @param bool $install If true, permissions are added; if false, they are removed.
+	 * @return bool Always returns true after committing changes.
+	 */
 	private static function permissions(
 		string $dbname,
 		array $data,
@@ -99,6 +109,16 @@ class ManageWikiInstaller {
 		return true;
 	}
 
+	/**
+	 * Adds or removes custom namespaces for a given wiki database.
+	 *
+	 * When installing, creates or updates namespaces using the provided data. When uninstalling, removes namespaces and migrates their content to either the main or talk namespace based on the original namespace ID.
+	 *
+	 * @param string $dbname Name of the target wiki database.
+	 * @param array $data Associative array of namespace names to configuration data, including namespace IDs.
+	 * @param bool $install If true, namespaces are added or updated; if false, namespaces are removed and content is migrated.
+	 * @return bool Always returns true after processing all namespaces.
+	 */
 	private static function namespaces(
 		string $dbname,
 		array $data,
@@ -126,6 +146,16 @@ class ManageWikiInstaller {
 		return true;
 	}
 
+	/**
+	 * Queues jobs to execute specified MediaWiki maintenance scripts with given options for a target database.
+	 *
+	 * Throws a RuntimeException if shell execution is disabled.
+	 *
+	 * @param string $dbname Name of the target MediaWiki database.
+	 * @param array $data Associative array mapping script names to their execution options. If an options array contains a 'repeat-with' key, the script is queued a second time with those options.
+	 * @return bool Always returns true after queuing all jobs.
+	 * @throws RuntimeException If shell execution is disabled.
+	 */
 	private static function mwscript( string $dbname, array $data ): bool {
 		if ( Shell::isDisabled() ) {
 			throw new RuntimeException( 'Shell is disabled.' );
@@ -169,6 +199,15 @@ class ManageWikiInstaller {
 		return true;
 	}
 
+	/**
+	 * Applies configuration settings to the specified wiki database.
+	 *
+	 * Modifies and commits settings for the given database using the provided data.
+	 *
+	 * @param string $dbname Name of the target wiki database.
+	 * @param array $data Associative array of settings to apply.
+	 * @return bool Always returns true after successfully applying and committing the settings.
+	 */
 	private static function settings( string $dbname, array $data ): bool {
 		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
 		$mwSettings = $moduleFactory->settings( $dbname );

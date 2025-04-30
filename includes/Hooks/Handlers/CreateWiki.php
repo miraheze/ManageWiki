@@ -24,6 +24,9 @@ class CreateWiki implements
 	CreateWikiTablesHook
 {
 
+	/**
+	 * Initializes the CreateWiki handler with configuration, logging, module factory, and localisation cache dependencies.
+	 */
 	public function __construct(
 		private readonly Config $config,
 		private readonly LoggerInterface $logger,
@@ -32,7 +35,14 @@ class CreateWiki implements
 	) {
 	}
 
-	/** @inheritDoc */
+	/**
+	 * Initializes a new wiki's permissions, extensions, and namespaces based on default configurations.
+	 *
+	 * Sets up default permission groups (excluding the private group), applies default extensions, and copies default namespaces to the newly created wiki. If the wiki is private, additional private state configuration is applied.
+	 *
+	 * @param string $dbname Database name of the new wiki.
+	 * @param bool $private Whether the new wiki is private.
+	 */
 	public function onCreateWikiCreation( string $dbname, bool $private ): void {
 		if ( ManageWiki::checkSetup( 'permissions' ) ) {
 			$mwPermissionsDefault = $this->moduleFactory->permissionsDefault();
@@ -313,7 +323,13 @@ class CreateWiki implements
 		}
 	}
 
-	/** @inheritDoc */
+	/**
+	 * Configures the permissions for a newly created private wiki.
+	 *
+	 * Sets up the default private group permissions and updates the 'sysop' group to allow adding and removing the private group. Commits all permission changes for the specified wiki.
+	 *
+	 * @param string $dbname Database name of the wiki being set to private.
+	 */
 	public function onCreateWikiStatePrivate( string $dbname ): void {
 		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
 		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {
@@ -349,7 +365,13 @@ class CreateWiki implements
 		$mwPermissions->commit();
 	}
 
-	/** @inheritDoc */
+	/**
+	 * Removes the default private group and its related permissions from a wiki when it is made public.
+	 *
+	 * This method deletes the configured private group from the wiki's permissions and ensures that no user group can add or remove the private group.
+	 *
+	 * @param string $dbname Database name of the wiki being updated.
+	 */
 	public function onCreateWikiStatePublic( string $dbname ): void {
 		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
 		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {

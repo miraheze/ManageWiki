@@ -14,6 +14,12 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	/**
+	 * Populates the mw_namespaces table with default namespace values if none exist for the current wiki.
+	 *
+	 * If the 'overwrite' option is set, existing namespace entries for the current database are deleted before repopulation.
+	 * After inserting default namespaces, resets related wiki data to reflect the changes.
+	 */
 	public function execute(): void {
 		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();

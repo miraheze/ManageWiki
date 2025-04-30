@@ -18,6 +18,11 @@ use OOUI\SearchInputWidget;
 
 class SpecialManageWiki extends SpecialPage {
 
+	/**
+	 * Initializes the SpecialManageWiki page with required utilities and services.
+	 *
+	 * Sets up dependencies for database operations, module management, and namespace information.
+	 */
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly ModuleFactory $moduleFactory,
@@ -184,6 +189,16 @@ class SpecialManageWiki extends SpecialPage {
 		);
 	}
 
+	/**
+	 * Displays the management form for a specified wiki module, handling permissions, UI setup, and context-specific options.
+	 *
+	 * Depending on the module and context, this method renders the appropriate form for managing core settings, permissions, or namespaces, including selection and creation interfaces when relevant. It also displays success or error messages based on session state and user permissions.
+	 *
+	 * @param string $dbname The database name of the wiki to manage.
+	 * @param string $module The management module (e.g., 'core', 'permissions', 'namespaces').
+	 * @param string $special Optional identifier for a specific group or namespace.
+	 * @param string $filtered Optional filter parameter for the form.
+	 */
 	private function showWikiForm(
 		string $dbname,
 		string $module,
@@ -319,6 +334,15 @@ class SpecialManageWiki extends SpecialPage {
 		$htmlForm->show();
 	}
 
+	/**
+	 * Displays selector and creation forms for managing permission groups or namespaces.
+	 *
+	 * Builds and shows two forms: a selector form for choosing an existing group or namespace, and, if permitted, a creation form for adding a new group or namespace. The creation form includes validation and normalization specific to the module type.
+	 *
+	 * @param string $dbname The database name of the target wiki.
+	 * @param string $module The management module ('permissions' or 'namespaces').
+	 * @param array $options List of selectable options for the selector form.
+	 */
 	private function reusableFormDescriptor(
 		string $dbname,
 		string $module,

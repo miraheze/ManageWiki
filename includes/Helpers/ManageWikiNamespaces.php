@@ -35,6 +35,11 @@ class ManageWikiNamespaces implements IConfigModule {
 	private string $dbname;
 	private ?string $log = null;
 
+	/**
+	 * Constructs a ManageWikiNamespaces instance with required dependencies and configuration options.
+	 *
+	 * Asserts that all required configuration options are present.
+	 */
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
@@ -45,6 +50,14 @@ class ManageWikiNamespaces implements IConfigModule {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
+	/**
+	 * Initializes the instance for the specified wiki database and loads its namespace configurations.
+	 *
+	 * Resets internal state and populates the list of live namespaces from the database associated with the given database name.
+	 *
+	 * @param string $dbname The name of the wiki database to manage.
+	 * @return self The initialized instance for method chaining.
+	 */
 	public function newInstance( string $dbname ): self {
 		$this->dbname = $dbname;
 
@@ -82,14 +95,24 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	/**
-	 * Checks whether or not the specified namespace exists
-	 * @param int $id Namespace ID to check
-	 * @return bool Whether or not the namespace exists
+	 * Determines if a namespace with the given ID exists in the current wiki configuration.
+	 *
+	 * @param int $id The namespace ID to check.
+	 * @return bool True if the namespace exists; otherwise, false.
 	 */
 	public function exists( int $id ): bool {
 		return isset( $this->liveNamespaces[$id] );
 	}
 
+	/**
+	 * Determines whether a given namespace name or alias already exists among live namespaces.
+	 *
+	 * The input name is normalized before comparison. If $checkMetaNS is true, meta namespace names are also considered.
+	 *
+	 * @param string $name The namespace name or alias to check.
+	 * @param bool $checkMetaNS Whether to include meta namespaces in the check.
+	 * @return bool True if the name or alias exists; otherwise, false.
+	 */
 	public function nameExists( string $name, bool $checkMetaNS ): bool {
 		// Normalize
 		$name = str_replace(
@@ -128,6 +151,12 @@ class ManageWikiNamespaces implements IConfigModule {
 		return false;
 	}
 
+	/**
+	 * Determines if the given name matches any configured or canonical meta namespace names.
+	 *
+	 * @param string $name The namespace name to check, expected to be normalized.
+	 * @return bool True if the name is a meta namespace; otherwise, false.
+	 */
 	private function isMetaNamespace( string $name ): bool {
 		$metaNamespace = mb_strtolower( trim(
 			str_replace( [ ' ', ':' ], '_', $this->options->get( MainConfigNames::MetaNamespace ) )
@@ -174,10 +203,13 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	/**
-	 * Modify a namespace handler
-	 * @param int $id Namespace ID
-	 * @param array $data Overriding information about the namespace
-	 * @param bool $maintainPrefix
+	 * Modifies the configuration of a namespace and records any changes or conflicts.
+	 *
+	 * Checks for disallowed or conflicting namespace names and aliases, records errors if found, and updates the namespace's configuration in memory. All changes are tracked for later commit.
+	 *
+	 * @param int $id The ID of the namespace to modify.
+	 * @param array $data New configuration values for the namespace.
+	 * @param bool $maintainPrefix Whether to maintain the namespace prefix.
 	 */
 	public function modify(
 		int $id,
@@ -312,6 +344,11 @@ class ManageWikiNamespaces implements IConfigModule {
 		return $this->logParams;
 	}
 
+	/**
+	 * Commits all pending namespace changes and deletions to the database and triggers migration jobs if required.
+	 *
+	 * If there are recorded errors, no changes are saved. For each modified or deleted namespace, updates or removes the corresponding database record and, if enabled, enqueues a namespace migration job. Also resets wiki data for the affected database if changes were made.
+	 */
 	public function commit(): void {
 		if ( $this->getErrors() ) {
 			// Don't save anything if we have errors

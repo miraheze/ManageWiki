@@ -11,6 +11,13 @@ use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiQueryWikiConfig extends ApiQueryBase {
 
+	/**
+	 * Initializes the ApiQueryWikiConfig module with the given query, module name, and module factory.
+	 *
+	 * @param ApiQuery $query The API query object.
+	 * @param string $moduleName The name of the API module.
+	 * @param ModuleFactory $moduleFactory Factory for creating wiki-related modules.
+	 */
 	public function __construct(
 		ApiQuery $query,
 		string $moduleName,
@@ -19,6 +26,11 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 		parent::__construct( $query, $moduleName, 'wcf' );
 	}
 
+	/**
+	 * Executes the API query to retrieve configuration details for specified wikis.
+	 *
+	 * For each requested wiki, gathers information such as sitename, closed status, inactive status, inactive exemption, privacy, and optionally settings, extensions, and permissions based on the requested properties. If a wiki does not exist, a warning is added and it is skipped.
+	 */
 	public function execute(): void {
 		$params = $this->extractRequestParams();
 		$result = $this->getResult();

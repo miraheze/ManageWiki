@@ -19,6 +19,9 @@ use Miraheze\ManageWiki\ManageWiki;
 
 class SpecialManageWikiDefaults extends SpecialPage {
 
+	/**
+	 * Initializes the SpecialManageWikiDefaults page with required dependencies for managing default wiki settings and permissions.
+	 */
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
@@ -48,6 +51,11 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		$this->buildMainView();
 	}
 
+	/**
+	 * Displays the permissions form for a specified group using the ManageWiki form UI.
+	 *
+	 * @param string $group The name of the group whose permissions are being managed.
+	 */
 	private function buildGroupView( string $group ): void {
 		$this->getOutput()->addModules( [ 'ext.managewiki.oouiform' ] );
 		$this->getOutput()->addModuleStyles( [
@@ -68,6 +76,11 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		)->show();
 	}
 
+	/**
+	 * Displays the main interface for managing default wiki permissions and settings.
+	 *
+	 * Depending on the user's permissions and whether the current wiki is central, this method shows forms for selecting or creating permission groups, or for resetting permissions, settings, and cache. Throws an error page if the user lacks permission on a non-central wiki.
+	 */
 	private function buildMainView(): void {
 		$canModify = $this->canModify();
 
@@ -203,6 +216,13 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		);
 	}
 
+	/**
+	 * Resets all default permissions for the current wiki.
+	 *
+	 * Deletes all permission entries for the current wiki from the database, triggers the creation hook to reinitialize permissions, logs the reset action, and displays a success message.
+	 *
+	 * @return bool Always returns false to prevent further form processing.
+	 */
 	public function onSubmitPermissionsResetForm( array $formData ): bool {
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );

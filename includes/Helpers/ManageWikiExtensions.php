@@ -27,6 +27,11 @@ class ManageWikiExtensions implements IConfigModule {
 	private string $dbname;
 	private ?string $log = null;
 
+	/**
+	 * Initializes the ManageWikiExtensions instance with required dependencies.
+	 *
+	 * Asserts that all required configuration options are present.
+	 */
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
@@ -36,6 +41,12 @@ class ManageWikiExtensions implements IConfigModule {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
+	/**
+	 * Initializes the instance for a specific wiki database, loading its enabled extensions and resetting internal state.
+	 *
+	 * @param string $dbname The name of the wiki database to manage.
+	 * @return self The initialized instance for the specified database.
+	 */
 	public function newInstance( string $dbname ): self {
 		$this->dbname = $dbname;
 
@@ -83,8 +94,11 @@ class ManageWikiExtensions implements IConfigModule {
 	}
 
 	/**
-	 * Adds an extension to the 'enabled' list
-	 * @param string[] $extensions Array of extensions to enable
+	 * Marks the specified extensions to be enabled for the current wiki.
+	 *
+	 * Records each extension as enabled and tracks the change for later processing.
+	 *
+	 * @param string[] $extensions List of extension keys to enable.
 	 */
 	public function add( array $extensions ): void {
 		$config = $this->options->get( ConfigNames::Extensions );
@@ -99,9 +113,12 @@ class ManageWikiExtensions implements IConfigModule {
 	}
 
 	/**
-	 * Removes an extension from the 'enabled' list
-	 * @param string[] $extensions Array of extensions to disable
-	 * @param bool $force Force removing extension incase it is removed from config
+	 * Disables the specified extensions, removing them from the enabled list.
+	 *
+	 * If an extension is not currently enabled, it is only removed if the $force flag is set. Tracks removed extensions and records the change for later processing.
+	 *
+	 * @param string[] $extensions List of extension names to disable.
+	 * @param bool $force If true, removes extensions even if they are not currently enabled.
 	 */
 	public function remove(
 		array $extensions,
@@ -124,8 +141,9 @@ class ManageWikiExtensions implements IConfigModule {
 	}
 
 	/**
-	 * Allows multiples extensions to be either enabled or disabled
-	 * @param array $extensions Array of extensions that should be enabled, absolute
+	 * Updates the enabled extensions to match the provided list, enabling or disabling extensions as needed.
+	 *
+	 * @param array $extensions List of extension names to be enabled; all others will be disabled.
 	 */
 	public function overwriteAll( array $extensions ): void {
 		$overwrittenExts = $this->list();
@@ -146,10 +164,21 @@ class ManageWikiExtensions implements IConfigModule {
 		}
 	}
 
+	/**
+	 * Retrieves the display name of the specified extension from the configuration.
+	 *
+	 * @param string $extension The extension's key.
+	 * @return string The human-readable name of the extension, or an empty string if not found.
+	 */
 	private function getName( string $extension ): string {
 		return $this->options->get( ConfigNames::Extensions )[$extension]['name'] ?? '';
 	}
 
+	/**
+	 * Returns the list of errors encountered during extension management operations.
+	 *
+	 * @return array List of error messages.
+	 */
 	public function getErrors(): array {
 		return $this->errors;
 	}
@@ -174,6 +203,13 @@ class ManageWikiExtensions implements IConfigModule {
 		return $this->logParams;
 	}
 
+	/**
+	 * Applies all recorded extension enable/disable changes for the current wiki.
+	 *
+	 * Validates extension conflicts and requirements, processes installation or removal actions,
+	 * updates the database with the new extension state, resets wiki data, and records log parameters.
+	 * If any errors are encountered during validation or installation/removal, changes are not saved.
+	 */
 	public function commit(): void {
 		// We use this to check for conflicts only for
 		// extensions we are currently enabling.

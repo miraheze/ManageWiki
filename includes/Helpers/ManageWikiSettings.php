@@ -25,6 +25,11 @@ class ManageWikiSettings implements IConfigModule {
 	private string $dbname;
 	private ?string $log = null;
 
+	/**
+	 * Constructs a ManageWikiSettings instance with required dependencies.
+	 *
+	 * Asserts that all required configuration options are present.
+	 */
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
@@ -33,6 +38,14 @@ class ManageWikiSettings implements IConfigModule {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
+	/**
+	 * Initializes the instance for a specific wiki database and loads its current settings.
+	 *
+	 * Resets internal state and retrieves the live settings for the given database from the `mw_settings` table.
+	 *
+	 * @param string $dbname The database name of the wiki to manage.
+	 * @return self The initialized instance.
+	 */
 	public function newInstance( string $dbname ): self {
 		$this->dbname = $dbname;
 
@@ -70,9 +83,12 @@ class ManageWikiSettings implements IConfigModule {
 	}
 
 	/**
-	 * Adds or changes a setting
-	 * @param array $settings Setting to change with value
-	 * @param mixed $default Default to use if none can be found
+	 * Updates one or more wiki settings and records any changes.
+	 *
+	 * For each provided setting, updates its value if it differs from the current or default, tracks the change, and collects any associated scripts for later processing.
+	 *
+	 * @param array $settings Associative array of setting names and their new values.
+	 * @param mixed $default Value to use if no current or override default exists for a setting.
 	 */
 	public function modify( array $settings, mixed $default = null ): void {
 		$config = $this->options->get( ConfigNames::Settings );
@@ -100,9 +116,12 @@ class ManageWikiSettings implements IConfigModule {
 	}
 
 	/**
-	 * Removes a setting
-	 * @param string[] $settings Settings to remove
-	 * @param mixed $default Default to use if none can be found
+	 * Removes specified settings from the current live settings.
+	 *
+	 * For each setting in the provided list, removes it from the live settings if present and records the change with the old value and the new default or override default.
+	 *
+	 * @param string[] $settings List of setting keys to remove.
+	 * @param mixed $default Value to use as the new default if no override default is defined.
 	 */
 	public function remove( array $settings, mixed $default = null ): void {
 		$config = $this->options->get( ConfigNames::Settings );
@@ -122,9 +141,12 @@ class ManageWikiSettings implements IConfigModule {
 	}
 
 	/**
-	 * Allows multiples settings to be changed at once
-	 * @param array $settings Settings to change
-	 * @param bool $remove Whether to remove settings if they do not exist
+	 * Applies a batch update to all settings, modifying or removing them as specified.
+	 *
+	 * For each configured setting, updates its value if provided in the input array, or removes it if not present and removal is enabled.
+	 *
+	 * @param array $settings Associative array of settings to apply.
+	 * @param bool $remove If true, removes settings not present in the input array.
 	 */
 	public function overwriteAll( array $settings, bool $remove ): void {
 		$overwrittenSettings = $this->list( var: null );
@@ -162,10 +184,20 @@ class ManageWikiSettings implements IConfigModule {
 		$this->logParams[$param] = $value;
 	}
 
+	/**
+	 * Returns the current parameters set for logging actions.
+	 *
+	 * @return array Associative array of log parameters and their values.
+	 */
 	public function getLogParams(): array {
 		return $this->logParams;
 	}
 
+	/**
+	 * Commits all pending settings changes to the database for the current wiki.
+	 *
+	 * Updates the `mw_settings` table with the current settings, processes any associated scripts, resets wiki data, and updates log parameters to reflect the changes.
+	 */
 	public function commit(): void {
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$dbw->newInsertQueryBuilder()

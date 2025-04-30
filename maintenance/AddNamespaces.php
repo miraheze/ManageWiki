@@ -6,6 +6,12 @@ use MediaWiki\Maintenance\Maintenance;
 
 class AddNamespaces extends Maintenance {
 
+	/**
+	 * Initializes the AddNamespaces maintenance script with required command-line options.
+	 *
+	 * Defines options for specifying namespace properties such as ID, name, content model, protection, and other attributes.
+	 * Requires the ManageWiki extension to be loaded.
+	 */
 	public function __construct() {
 		parent::__construct();
 
@@ -22,6 +28,12 @@ class AddNamespaces extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	/**
+	 * Adds or updates a namespace in the local ManageWiki configuration using command-line options.
+	 *
+	 * Collects namespace properties from script options and applies them to the local namespaces configuration,
+	 * then commits the changes.
+	 */
 	public function execute(): void {
 		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
 		$mwNamespaces = $moduleFactory->namespacesLocal();

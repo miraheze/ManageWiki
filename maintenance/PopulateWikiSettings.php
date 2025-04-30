@@ -6,6 +6,11 @@ use MediaWiki\Maintenance\Maintenance;
 
 class PopulateWikiSettings extends Maintenance {
 
+	/**
+	 * Initializes the PopulateWikiSettings maintenance script with required options.
+	 *
+	 * Defines command-line options for specifying a MediaWiki setting to modify, an optional source file of wiki-value pairs, and a flag to remove the setting. Requires the ManageWiki extension to be loaded.
+	 */
 	public function __construct() {
 		parent::__construct();
 
@@ -16,6 +21,12 @@ class PopulateWikiSettings extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	/****
+	 * Applies or removes a specified MediaWiki setting across multiple wikis based on command-line options.
+	 *
+	 * If the `--remove` option is set, removes the specified setting from the local wiki. Otherwise, reads a source list file containing wiki database names and setting values, and applies the setting to each listed wiki.
+	 * Terminates with a fatal error if neither `--remove` nor a valid `--sourcelist` is provided.
+	 */
 	public function execute(): void {
 		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
 		if ( $this->hasOption( 'remove' ) ) {

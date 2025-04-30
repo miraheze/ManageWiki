@@ -8,6 +8,11 @@ use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 
 class ModifyGroupPermission extends Maintenance {
 
+	/**
+	 * Initializes the maintenance script with command-line options for modifying group permissions.
+	 *
+	 * Defines options for specifying target groups, permissions to add or remove, and groups to manage within addable and removable lists. Requires the ManageWiki extension to be enabled.
+	 */
 	public function __construct() {
 		parent::__construct();
 
@@ -39,6 +44,11 @@ class ModifyGroupPermission extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	/**
+	 * Applies permission modifications to user groups based on command-line options.
+	 *
+	 * Modifies group permissions, addable groups, and removable groups for either a specified group or all groups, depending on the provided options. If neither a group nor the all-groups flag is specified, the operation terminates with an error.
+	 */
 	public function execute(): void {
 		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
 		$mwPermissions = $moduleFactory->permissionsLocal();

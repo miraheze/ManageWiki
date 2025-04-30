@@ -20,6 +20,11 @@ class ToggleExtension extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	/**
+	 * Enables or disables a specified MediaWiki extension on one or multiple wikis.
+	 *
+	 * Determines the target wikis based on command-line options and either adds or removes the given extension accordingly. Requires confirmation when operating on all wikis. Outputs a summary or per-wiki status unless suppressed.
+	 */
 	public function execute(): void {
 		$forceRemove = $this->hasOption( 'force-remove' );
 		$noList = $this->hasOption( 'no-list' );

@@ -15,6 +15,13 @@ use UnexpectedValueException;
 
 class ManageWikiFormFactory {
 
+	/**
+	 * Generates and returns the form descriptor array for a ManageWiki module.
+	 *
+	 * Prepares the OOUI environment for the current skin and language direction, then builds the form descriptor using the provided context, module, and configuration.
+	 *
+	 * @return array Form descriptor suitable for OOUI form construction.
+	 */
 	private function getFormDescriptor(
 		Config $config,
 		ModuleFactory $moduleFactory,
@@ -36,6 +43,19 @@ class ManageWikiFormFactory {
 		);
 	}
 
+	/**
+	 * Creates and configures a ManageWiki form for a specific module and wiki.
+	 *
+	 * Determines user permissions, builds the form descriptor, and returns a ManageWikiOOUIForm instance
+	 * with appropriate submit handling and UI configuration. The form's submit button is suppressed if the
+	 * user lacks permission to edit the module.
+	 *
+	 * @param string $dbname Database name of the target wiki.
+	 * @param string $module Name of the ManageWiki module.
+	 * @param string $special Identifier for the special page context.
+	 * @param string $filtered Filtered string for form customization.
+	 * @return ManageWikiOOUIForm Configured form instance for the specified module and wiki.
+	 */
 	public function getForm(
 		Config $config,
 		ModuleFactory $moduleFactory,
@@ -91,6 +111,20 @@ class ManageWikiFormFactory {
 		return $htmlForm;
 	}
 
+	/**
+	 * Processes the submission of a ManageWiki form, handling validation, permission checks, and feedback.
+	 *
+	 * Throws an UnexpectedValueException if the user lacks permission to edit the specified module. On validation errors, returns a fatal Status with formatted error messages. On success, displays a success message and returns false to keep the form visible after submission.
+	 *
+	 * @param array $formData Submitted form data.
+	 * @param string $dbname Database name of the target wiki.
+	 * @param string $module Name of the ManageWiki module being modified.
+	 * @param string $special Identifier for the special page context.
+	 * @param string $filtered Filtered string for form context.
+	 * @param bool $ceMW Whether the user has permission to edit ManageWiki.
+	 * @return Status|bool Fatal Status on error, or false on success to keep the form displayed.
+	 * @throws UnexpectedValueException If the user does not have permission to edit the module.
+	 */
 	protected function submitForm(
 		Config $config,
 		ModuleFactory $moduleFactory,

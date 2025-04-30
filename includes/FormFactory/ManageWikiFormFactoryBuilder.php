@@ -30,6 +30,25 @@ use Wikimedia\ObjectCache\WANObjectCache;
 
 class ManageWikiFormFactoryBuilder {
 
+	/**
+	 * Builds and returns a form descriptor array for the specified ManageWiki module.
+	 *
+	 * Dispatches to the appropriate module-specific descriptor builder based on the given module name.
+	 * Supported modules include: 'core', 'extensions', 'settings', 'namespaces', and 'permissions'.
+	 * Throws an InvalidArgumentException if the module is unrecognized.
+	 *
+	 * @param string $module The module for which to build the form descriptor.
+	 * @param string $dbname The database name of the target wiki.
+	 * @param bool $ceMW Indicates if Centralized Extensions Management is enabled.
+	 * @param IContextSource $context The request context.
+	 * @param ModuleFactory $moduleFactory Factory for obtaining module instances.
+	 * @param string $special Additional identifier for namespaces or permissions modules.
+	 * @param string $filtered Filter string for settings module.
+	 * @param Config $config Site configuration.
+	 * @return array The form descriptor array for the requested module.
+	 *
+	 * @throws InvalidArgumentException If the module is not recognized.
+	 */
 	public static function buildDescriptor(
 		string $module,
 		string $dbname,
@@ -78,6 +97,15 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * Builds the form descriptor array for editing core wiki settings.
+	 *
+	 * Generates form fields for core properties such as database name, sitename, language, privacy, closure, inactivity, experimental status, server, category, and database cluster. Includes conditional fields and actions (delete, lock, undelete, unlock) based on configuration and user permissions. Allows extensions to add additional fields via hook.
+	 *
+	 * @param string $dbname Database name of the wiki.
+	 * @param bool $ceMW Whether the current environment is CentralManageWiki.
+	 * @return array Form descriptor array for core wiki settings.
+	 */
 	private static function buildDescriptorCore(
 		string $dbname,
 		bool $ceMW,
@@ -241,6 +269,18 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * Builds the form descriptor array for managing extension enablement on a wiki.
+	 *
+	 * For each configured extension, generates a checkbox field with contextual help text, requirements, and conflict information. Fields are conditionally disabled based on extension requirements and conflicts. Includes links to extension-specific settings if available.
+	 *
+	 * @param string $dbname Database name of the target wiki.
+	 * @param bool $ceMW Whether the current environment allows editing.
+	 * @param IContextSource $context Context for localization and messages.
+	 * @param ModuleFactory $moduleFactory Factory for obtaining extension modules.
+	 * @param Config $config Global configuration object.
+	 * @return array Form descriptor array for extension management.
+	 */
 	private static function buildDescriptorExtensions(
 		string $dbname,
 		bool $ceMW,
@@ -390,6 +430,19 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * Builds the form descriptor array for wiki settings, filtering and configuring fields based on extension availability, requirements, and visibility.
+	 *
+	 * Only settings relevant to the selected filter and enabled extensions are included. Fields are conditionally disabled if requirements are not met. Help text and field types are dynamically generated based on configuration.
+	 *
+	 * @param string $dbname Database name of the target wiki.
+	 * @param bool $ceMW Whether Centralized Extensions Management is enabled.
+	 * @param IContextSource $context Context for localization and messages.
+	 * @param ModuleFactory $moduleFactory Factory for obtaining module instances.
+	 * @param Config $config Global configuration object.
+	 * @param string $filtered Filter key to select a subset of settings.
+	 * @return array Form descriptor array for use with HTMLForm.
+	 */
 	private static function buildDescriptorSettings(
 		string $dbname,
 		bool $ceMW,
@@ -500,6 +553,20 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * Builds the form descriptor array for editing or creating a namespace and its associated talk namespace.
+	 *
+	 * The descriptor includes fields for namespace name, content flag, subpages, searchability, content model, protection level, aliases, and any additional configured namespace options. For non-core namespaces, delete and migration options are provided if enabled. Fields are conditionally enabled or disabled based on namespace type, requirements, and configuration.
+	 *
+	 * @param string $dbname Database name of the target wiki.
+	 * @param bool $ceMW Whether configuration editing is enabled.
+	 * @param IContextSource $context MediaWiki context source.
+	 * @param string $special Namespace ID as a string.
+	 * @param ModuleFactory $moduleFactory Factory for obtaining module instances.
+	 * @param Config $config Site configuration.
+	 * @return array Form descriptor for the namespace management form.
+	 * @throws ErrorPageError If the namespace ID is invalid or refers to a talk namespace.
+	 */
 	private static function buildDescriptorNamespaces(
 		string $dbname,
 		bool $ceMW,
@@ -788,6 +855,19 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * Builds the form descriptor array for managing permissions of a specific user group.
+	 *
+	 * Generates form fields for assigning and unassigning permissions, managing group membership, and configuring autopromotion conditions for the given group. Includes options for deleting or renaming the group if allowed, and disables editing for disallowed or permanent groups.
+	 *
+	 * @param string $dbname Database name of the target wiki.
+	 * @param bool $ceMW Whether configuration editing is enabled.
+	 * @param IContextSource $context Context for localization and messages.
+	 * @param string $group The user group to manage.
+	 * @param ModuleFactory $moduleFactory Factory for obtaining permission modules.
+	 * @param Config $config Site configuration.
+	 * @return array Form descriptor for the permissions management interface.
+	 */
 	private static function buildDescriptorPermissions(
 		string $dbname,
 		bool $ceMW,
@@ -1047,6 +1127,22 @@ class ManageWikiFormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * Handles form submission for a ManageWiki module and processes changes.
+	 *
+	 * Dispatches the submitted form data to the appropriate module-specific handler based on the module type (core, extensions, settings, namespaces, or permissions). Commits changes if any, logs the action, and handles redirects for certain operations such as namespace deletion or permission group renaming. Returns an array of errors if encountered, or a message indicating no changes were made.
+	 *
+	 * @param array $formData Submitted form data.
+	 * @param HTMLForm $form The HTMLForm instance representing the submitted form.
+	 * @param string $module The module being managed (e.g., 'core', 'extensions', 'settings', 'namespaces', 'permissions').
+	 * @param string $dbname The database name of the target wiki.
+	 * @param IContextSource $context The request context.
+	 * @param ModuleFactory $moduleFactory Factory for obtaining module handlers.
+	 * @param Config $config Site configuration.
+	 * @param string $special Additional identifier for the module (e.g., namespace ID or group name).
+	 * @param string $filtered Filter parameter for settings modules.
+	 * @return array List of errors, or a message indicating no changes were made.
+	 */
 	public static function submissionHandler(
 		array $formData,
 		HTMLForm $form,
@@ -1140,6 +1236,18 @@ class ManageWikiFormFactoryBuilder {
 		return $mwReturn->getErrors();
 	}
 
+	/**
+	 * Processes the submission of core wiki settings and applies changes to the core configuration module.
+	 *
+	 * Handles actions such as deleting, locking, undeleting, and unlocking the wiki, as well as updating core properties including privacy, experimental status, closed/inactive flags, category, server name, sitename, language, and database cluster. Invokes the ManageWiki core form submission hook after applying changes.
+	 *
+	 * @param array $formData Submitted form data for core settings.
+	 * @param string $dbname Database name of the target wiki.
+	 * @param IContextSource $context Request context for permission checks and localization.
+	 * @param ModuleFactory $moduleFactory Factory for obtaining configuration modules.
+	 * @param Config $config Site configuration for feature toggles and options.
+	 * @return IConfigModule The updated core configuration module instance.
+	 */
 	private static function submissionCore(
 		array $formData,
 		string $dbname,
@@ -1237,6 +1345,13 @@ class ManageWikiFormFactoryBuilder {
 		return $remoteWiki;
 	}
 
+	/**
+	 * Updates the list of enabled extensions for a wiki based on submitted form data.
+	 *
+	 * Iterates through all configured extensions and enables those selected in the form, overwriting the current extension list for the specified wiki.
+	 *
+	 * @return ManageWikiExtensions The updated extensions module instance.
+	 */
 	private static function submissionExtensions(
 		array $formData,
 		string $dbname,
@@ -1256,6 +1371,19 @@ class ManageWikiFormFactoryBuilder {
 		return $mwExtensions;
 	}
 
+	/**
+	 * Processes and applies submitted settings changes for a wiki.
+	 *
+	 * Converts and validates submitted form data for settings, ensuring requirements are met and types are correct. Updates all settings for the specified wiki, preserving current values if requirements are not satisfied.
+	 *
+	 * @param array $formData Submitted form data for settings.
+	 * @param string $dbname Database name of the target wiki.
+	 * @param string $filtered Filter identifier for settings grouping.
+	 * @param IContextSource $context Context source for localization and permissions.
+	 * @param ModuleFactory $moduleFactory Factory for obtaining settings and extensions modules.
+	 * @param Config $config Global configuration object.
+	 * @return ManageWikiSettings Updated settings module instance for the wiki.
+	 */
 	private static function submissionSettings(
 		array $formData,
 		string $dbname,
@@ -1357,6 +1485,19 @@ class ManageWikiFormFactoryBuilder {
 		return $mwSettings;
 	}
 
+	/**
+	 * Processes form submission data to update or delete a namespace and its associated talk namespace.
+	 *
+	 * If the delete checkbox is set, removes the specified namespace and its talk namespace, migrating pages if requested.
+	 * Otherwise, updates properties such as name, searchability, subpages, protection, content flag, content model, aliases, and any additional configured options for both the namespace and its talk namespace.
+	 *
+	 * @param array $formData Submitted form data for the namespace.
+	 * @param string $dbname Database name of the target wiki.
+	 * @param string $special Namespace ID being edited.
+	 * @param ModuleFactory $moduleFactory Factory for obtaining namespace management modules.
+	 * @param Config $config Site configuration.
+	 * @return ManageWikiNamespaces Updated namespace management module instance.
+	 */
 	private static function submissionNamespaces(
 		array $formData,
 		string $dbname,
@@ -1404,6 +1545,16 @@ class ManageWikiFormFactoryBuilder {
 		return $mwNamespaces;
 	}
 
+	/**
+	 * Processes form submissions for managing permissions of a user group.
+	 *
+	 * Handles group deletion, renaming, permission assignment and removal, group membership matrix updates, and autopromotion conditions. If all permissions are removed from a removable group, the group is deleted; otherwise, changes are applied to the group's configuration.
+	 *
+	 * @param array $formData Submitted form data for the permissions module.
+	 * @param string $dbname Database name of the target wiki.
+	 * @param string $group Name of the user group being managed.
+	 * @return ManageWikiPermissions Updated permissions module instance reflecting the changes.
+	 */
 	private static function submissionPermissions(
 		array $formData,
 		string $dbname,

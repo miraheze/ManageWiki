@@ -15,6 +15,11 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	/**
+	 * Populates the current wiki's group permissions with default values if none exist, optionally overwriting existing permissions.
+	 *
+	 * If the 'overwrite' option is set, existing permissions for the current database are deleted before applying defaults. After populating permissions, the wiki data is reset to reflect the changes.
+	 */
 	public function execute(): void {
 		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();

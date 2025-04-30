@@ -7,12 +7,15 @@ use Miraheze\ManageWiki\Helpers\ModuleFactory;
 
 interface ManageWikiCoreFormSubmissionHook {
 
-	/**
-	 * @param IContextSource $context
-	 * @param ModuleFactory $moduleFactory
-	 * @param string $dbname
-	 * @param array $formData
-	 * @return void
+	/****
+	 * Handles actions to be performed after a ManageWiki core form is submitted.
+	 *
+	 * Implement this method to process form submission data for a specific wiki, using the provided context and module factory.
+	 *
+	 * @param IContextSource $context The request context for the form submission.
+	 * @param ModuleFactory $moduleFactory Factory for accessing ManageWiki modules.
+	 * @param string $dbname Database name of the target wiki.
+	 * @param array $formData Data submitted from the ManageWiki core form.
 	 */
 	public function onManageWikiCoreFormSubmission(
 		IContextSource $context,

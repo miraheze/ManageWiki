@@ -132,8 +132,12 @@ class ManageWikiRequirements {
 	}
 
 	/**
-	 * @param array $data
-	 * @return bool
+	 * Checks if a specific wiki setting matches the expected value for a given database.
+	 *
+	 * Returns true if the setting for the specified database equals the provided value, or if the value is present in the setting (if the setting is an array). If the setting does not match or is not found, returns false.
+	 *
+	 * @param array $data Associative array with keys: 'setting' (string), 'value' (mixed), and optionally 'dbname' (string) to specify the target database.
+	 * @return bool True if the setting matches the expected value; otherwise, false.
 	 */
 	private static function settings( array $data ): bool {
 		$config = MediaWikiServices::getInstance()->getMainConfig();
