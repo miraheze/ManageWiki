@@ -893,12 +893,12 @@ class ManageWikiFormFactoryBuilder {
 						trim( str_replace( ' ', '_', $value ) )
 					),
 					'validation-callback' => static fn ( string $value ): bool|Message => match ( true ) {
-						SpecialPage::getSafeTitleFor( 'ManageWiki', "permissions/$value" ) === null =>
+						SpecialPage::getSafeTitleFor( 'ManageWiki', "$module/$value" ) === null =>
 							$context->msg( 'managewiki-permissions-group-invalid' ),
 						in_array( $value, $disallowedGroups, true ) =>
 							$context->msg( 'managewiki-permissions-group-disallowed' ),
 						in_array( $value, $groupData['allGroups'], true ) =>
-							$context->msg( 'managewiki-permissions-group-disallowed' ),
+							$context->msg( 'managewiki-permissions-group-conflict' ),
 						default => true,
 					},
 				],
