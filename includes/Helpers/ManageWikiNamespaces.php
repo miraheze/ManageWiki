@@ -32,7 +32,6 @@ class ManageWikiNamespaces implements IConfigModule {
 
 	private bool $runNamespaceMigrationJob = true;
 
-	private string $dbname;
 	private ?string $log = null;
 
 	public function __construct(
@@ -40,21 +39,10 @@ class ManageWikiNamespaces implements IConfigModule {
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly NamespaceInfo $namespaceInfo,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
+		private readonly string $dbname
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
-	}
-
-	public function newInstance( string $dbname ): self {
-		$this->dbname = $dbname;
-
-		// Reset properties
-		$this->changes = [];
-		$this->errors = [];
-		$this->logParams = [];
-		$this->deleteNamespaces = [];
-		$this->liveNamespaces = [];
-		$this->log = null;
 
 		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$namespaces = $dbr->newSelectQueryBuilder()
@@ -77,8 +65,6 @@ class ManageWikiNamespaces implements IConfigModule {
 				'additional' => json_decode( $ns->ns_additional, true ),
 			];
 		}
-
-		return $this;
 	}
 
 	/**
