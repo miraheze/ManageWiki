@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Hooks;
 
 use MediaWiki\Context\IContextSource;
 use MediaWiki\HookContainer\HookContainer;
-use Miraheze\ManageWiki\Helpers\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 
 class ManageWikiHookRunner implements
 	ManageWikiCoreAddFormFieldsHook,

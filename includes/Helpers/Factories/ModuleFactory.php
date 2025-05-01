@@ -1,10 +1,14 @@
 <?php
 
-namespace Miraheze\ManageWiki\Helpers;
+namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
+use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
+use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 
 class ModuleFactory {
 
@@ -15,11 +19,11 @@ class ModuleFactory {
 	];
 
 	public function __construct(
-		private readonly ManageWikiExtensions $extensions,
-		private readonly ManageWikiNamespaces $namespaces,
-		private readonly ManageWikiPermissions $permissions,
-		private readonly ManageWikiSettings $settings,
-		private readonly RemoteWikiFactory $core,
+		private readonly CoreFactory $core,
+		private readonly ExtensionsFactory $extensions,
+		private readonly NamespacesFactory $namespaces,
+		private readonly PermissionsFactory $permissions,
+		private readonly SettingsFactory $settings,
 		private readonly ServiceOptions $options
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );

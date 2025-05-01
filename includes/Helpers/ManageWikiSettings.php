@@ -22,26 +22,15 @@ class ManageWikiSettings implements IConfigModule {
 	private array $liveSettings = [];
 	private array $scripts = [];
 
-	private string $dbname;
 	private ?string $log = null;
 
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
+		private readonly string $dbname
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
-	}
-
-	public function newInstance( string $dbname ): self {
-		$this->dbname = $dbname;
-
-		// Reset properties
-		$this->changes = [];
-		$this->logParams = [];
-		$this->liveSettings = [];
-		$this->scripts = [];
-		$this->log = null;
 
 		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$settings = $dbr->newSelectQueryBuilder()
@@ -52,8 +41,6 @@ class ManageWikiSettings implements IConfigModule {
 			->fetchField();
 
 		$this->liveSettings = (array)json_decode( $settings ?: '[]', true );
-
-		return $this;
 	}
 
 	/**
