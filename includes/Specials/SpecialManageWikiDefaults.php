@@ -11,12 +11,10 @@ use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
-use Miraheze\ManageWiki\ManageWiki;
 
 class SpecialManageWikiDefaults extends SpecialPage {
 
@@ -24,7 +22,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly CreateWiki $hookHandler,
-		private readonly RemoteWikiFactory $remoteWikiFactory
+		private readonly ModuleFactory $moduleFactory
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
 	}
@@ -34,7 +32,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 	 */
 	public function execute( $par ): void {
 		$this->setHeaders();
-		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
+		if ( !$this->moduleFactory->isEnabled( 'permissions' ) ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ 'permissions' ] );
 		}
 
@@ -57,16 +55,11 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			'oojs-ui-widgets.styles',
 		] );
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance(
-			$this->databaseUtils->getCentralWikiID()
-		);
-
 		$formFactory = new ManageWikiFormFactory();
 		$formFactory->getForm(
 			config: $this->getConfig(),
+			moduleFactory: $this->moduleFactory,
 			context: $this->getContext(),
-			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
-			remoteWiki: $remoteWiki,
 			dbname: 'default',
 			module: 'permissions',
 			special: $group,
@@ -79,7 +72,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
 			$language = $this->getLanguage();
-			$mwPermissions = new ManageWikiPermissions( 'default' );
+			$mwPermissions = $this->moduleFactory->permissionsDefault();
 			$groups = array_keys( $mwPermissions->list( group: null ) );
 			$craftedGroups = [];
 
@@ -220,9 +213,9 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			->caller( __METHOD__ )
 			->execute();
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
+		$mwCore = $this->moduleFactory->core( $dbname );
 		$this->hookHandler->onCreateWikiCreation(
-			$dbname, $remoteWiki->isPrivate()
+			$dbname, $mwCore->isPrivate()
 		);
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
@@ -320,7 +313,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			return $this->msg( 'managewiki-permissions-group-invalid' );
 		}
 
-		$mwPermissions = new ManageWikiPermissions( 'default' );
+		$mwPermissions = $this->moduleFactory->permissionsDefault();
 		if ( $mwPermissions->exists( $newGroup ) ) {
 			return $this->msg( 'managewiki-permissions-group-conflict' );
 		}

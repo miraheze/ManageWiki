@@ -11,10 +11,7 @@ use Miraheze\CreateWiki\Hooks\CreateWikiStatePrivateHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiStatePublicHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiTablesHook;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
-use Miraheze\ManageWiki\ManageWiki;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\IReadableDatabase;
 
@@ -29,15 +26,16 @@ class CreateWiki implements
 	public function __construct(
 		private readonly Config $config,
 		private readonly LoggerInterface $logger,
+		private readonly ModuleFactory $moduleFactory,
 		private readonly LocalisationCache $localisationCache
 	) {
 	}
 
 	/** @inheritDoc */
 	public function onCreateWikiCreation( string $dbname, bool $private ): void {
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
-			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-			$mwPermissions = new ManageWikiPermissions( $dbname );
+		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
+			$mwPermissionsDefault = $this->moduleFactory->permissionsDefault();
+			$mwPermissions = $this->moduleFactory->permissions( $dbname );
 			$defaultGroups = array_diff(
 				array_keys( $mwPermissionsDefault->list( group: null ) ),
 				[ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
@@ -70,20 +68,24 @@ class CreateWiki implements
 			$this->config->get( ConfigNames::Extensions ) &&
 			$this->config->get( ConfigNames::ExtensionsDefault )
 		) {
-			$mwExtensions = new ManageWikiExtensions( $dbname );
+			$mwExtensions = $this->moduleFactory->extensions( $dbname );
 			$mwExtensions->add( $this->config->get( ConfigNames::ExtensionsDefault ) );
 			$mwExtensions->commit();
 		}
 
-		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
-			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
+		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
+			$mwNamespacesDefault = $this->moduleFactory->namespacesDefault();
 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
 
-			$mwNamespaces = new ManageWikiNamespaces( $dbname );
+			$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
 			$mwNamespaces->disableNamespaceMigrationJob();
 
 			foreach ( $defaultNamespaces as $namespace ) {
-				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
+				$mwNamespaces->modify(
+					$namespace,
+					$mwNamespacesDefault->list( $namespace ),
+					maintainPrefix: false
+				);
 				$mwNamespaces->commit();
 			}
 		}
@@ -103,12 +105,12 @@ class CreateWiki implements
 			->fetchRow();
 
 		// Don't need to manipulate this much
-		if ( $setObject !== false && ManageWiki::checkSetup( 'settings' ) ) {
+		if ( $setObject !== false && $this->moduleFactory->isEnabled( 'settings' ) ) {
 			$cacheArray['settings'] = json_decode( $setObject->s_settings ?? '[]', true );
 		}
 
 		// Let's create an array of variables so we can easily loop these to enable
-		if ( $setObject !== false && ManageWiki::checkSetup( 'extensions' ) ) {
+		if ( $setObject !== false && $this->moduleFactory->isEnabled( 'extensions' ) ) {
 			$manageWikiExtensions = $this->config->get( ConfigNames::Extensions );
 			foreach ( json_decode( $setObject->s_extensions ?? '[]', true ) as $ext ) {
 				if ( isset( $manageWikiExtensions[$ext] ) ) {
@@ -124,7 +126,7 @@ class CreateWiki implements
 		}
 
 		// Collate NS entries and decode their entries for the array
-		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$nsObjects = $dbr->newSelectQueryBuilder()
 				->select( '*' )
 				->from( 'mw_namespaces' )
@@ -243,7 +245,7 @@ class CreateWiki implements
 		}
 
 		// Same as NS above but for permissions
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
 			$permObjects = $dbr->newSelectQueryBuilder()
 				->select( '*' )
 				->from( 'mw_permissions' )
@@ -317,12 +319,12 @@ class CreateWiki implements
 	/** @inheritDoc */
 	public function onCreateWikiStatePrivate( string $dbname ): void {
 		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
-		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {
+		if ( !$this->moduleFactory->isEnabled( 'permissions' ) || !$defaultPrivateGroup ) {
 			return;
 		}
 
-		$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
-		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$mwPermissionsDefault = $this->moduleFactory->permissionsDefault();
+		$mwPermissions = $this->moduleFactory->permissions( $dbname );
 
 		$defaultPrivate = $mwPermissionsDefault->list( $defaultPrivateGroup );
 
@@ -353,11 +355,11 @@ class CreateWiki implements
 	/** @inheritDoc */
 	public function onCreateWikiStatePublic( string $dbname ): void {
 		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
-		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {
+		if ( !$this->moduleFactory->isEnabled( 'permissions' ) || !$defaultPrivateGroup ) {
 			return;
 		}
 
-		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$mwPermissions = $this->moduleFactory->permissions( $dbname );
 		$mwPermissions->remove( $defaultPrivateGroup );
 
 		foreach ( array_keys( $mwPermissions->list( group: null ) ) as $group ) {
@@ -376,15 +378,15 @@ class CreateWiki implements
 
 	/** @inheritDoc */
 	public function onCreateWikiTables( array &$tables ): void {
-		if ( ManageWiki::checkSetup( 'extensions' ) || ManageWiki::checkSetup( 'settings' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'extensions' ) || $this->moduleFactory->isEnabled( 'settings' ) ) {
 			$tables['mw_settings'] = 's_dbname';
 		}
 
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
 			$tables['mw_permissions'] = 'perm_dbname';
 		}
 
-		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$tables['mw_namespaces'] = 'ns_dbname';
 		}
 	}
