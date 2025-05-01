@@ -49,7 +49,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 
 		$this->dbr = $this->databaseUtils->getGlobalReplicaDB();
-		$namespaces = $dbr->newSelectQueryBuilder()
+		$namespaces = $this->dbr->newSelectQueryBuilder()
 			->select( '*' )
 			->from( 'mw_namespaces' )
 			->where( [ 'ns_dbname' => $dbname ] )
