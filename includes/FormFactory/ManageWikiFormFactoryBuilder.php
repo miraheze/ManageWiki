@@ -25,7 +25,6 @@ use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
-use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ObjectCache\WANObjectCache;
 
 class ManageWikiFormFactoryBuilder {
@@ -848,7 +847,7 @@ class ManageWikiFormFactoryBuilder {
 				$config->get( ConfigNames::PermissionsDisallowedGroups ),
 				$userGroupManager->listAllImplicitGroups()
 			),
-			'groupMatrix' => ManageWiki::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
+			'groupMatrix' => ManageWikiTypes::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $groupData['autopromote'] ?? null,
 		];
 
@@ -1331,8 +1330,8 @@ class ManageWikiFormFactoryBuilder {
 					$value = array_map( 'intval', $value );
 					break;
 				case 'matrix':
-					$current = ManageWiki::handleMatrix( $current, 'php' );
-					$value = ManageWiki::handleMatrix( $value, 'phparray' );
+					$current = ManageWikiTypes::handleMatrix( $current, 'php' );
+					$value = ManageWikiTypes::handleMatrix( $value, 'phparray' );
 					break;
 				case 'text':
 					if ( !$value ) {
@@ -1484,7 +1483,7 @@ class ManageWikiFormFactoryBuilder {
 			'remove' => $removedPerms,
 		];
 
-		$newMatrix = ManageWiki::handleMatrix( $formData['group-matrix'], 'phparray' );
+		$newMatrix = ManageWikiTypes::handleMatrix( $formData['group-matrix'], 'phparray' );
 
 		$matrixNew = [
 			'addgroups' => array_diff(
