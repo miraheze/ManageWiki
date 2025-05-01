@@ -12,7 +12,6 @@ use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
-use Miraheze\ManageWiki\ManageWiki;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
 
@@ -424,14 +423,16 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
+		$module = $formData['module'];
 		$isCreateNamespace = $form->getSubmitText() ===
 			$this->msg( 'managewiki-namespaces-create-submit' )->text();
-		$createNamespace = $isCreateNamespace ? '' : $formData['out'];
+		$createNamespace = $isCreateNamespace ? null : (int)$formData['out'];
 
-		$module = $formData['module'];
-		$special = $module === 'namespaces' ?
-			ManageWiki::namespaceID( $formData['dbname'], $createNamespace ) :
-			$formData['out'];
+		$special = $formData['out'];
+		if ( $module === 'namespaces' ) {
+			$mwNamespaces = $this->moduleFactory->namespaces( $formData['dbname'] );
+			$special = $mwNamespaces->getNewId( $createNamespace );
+		}
 
 		if ( $module === 'namespaces' ) {
 			// Save the name of the namespace we are creating to the current session so that
