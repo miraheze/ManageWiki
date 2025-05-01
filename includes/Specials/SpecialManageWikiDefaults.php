@@ -15,7 +15,6 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
-use Miraheze\ManageWiki\ManageWiki;
 
 class SpecialManageWikiDefaults extends SpecialPage {
 
@@ -33,7 +32,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 	 */
 	public function execute( $par ): void {
 		$this->setHeaders();
-		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
+		if ( !$this->moduleFactory->isEnabled( 'permissions' ) ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ 'permissions' ] );
 		}
 
