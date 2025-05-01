@@ -87,12 +87,9 @@ class ManageWikiExtensions implements IConfigModule {
 	/**
 	 * Removes an extension from the 'enabled' list
 	 * @param string[] $extensions Array of extensions to disable
-	 * @param bool $force Force removing extension incase it is removed from config
+	 * @param bool $force Force removing extension in the event it is removed from config
 	 */
-	public function remove(
-		array $extensions,
-		bool $force = false
-	): void {
+	public function remove( array $extensions, bool $force ): void {
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
 			if ( !isset( $this->liveExtensions[$ext] ) && !$force ) {
@@ -127,7 +124,7 @@ class ManageWikiExtensions implements IConfigModule {
 			}
 
 			if ( !in_array( $ext, $extensions, true ) && in_array( $ext, $overwrittenExts, true ) ) {
-				$this->remove( [ $ext ] );
+				$this->remove( [ $ext ], force: false );
 			}
 		}
 	}
