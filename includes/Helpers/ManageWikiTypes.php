@@ -365,15 +365,13 @@ class ManageWikiTypes {
 				break;
 			case 'timezone':
 				$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
-				$timezones = [];
-				foreach ( $identifiers as $identifier ) {
-					$parts = explode( '/', $identifier, 2 );
-					if ( count( $parts ) !== 2 && $parts[0] !== 'UTC' ) {
-						continue;
-					}
+				$timezones = array_filter(
+					$identifiers,
+					static fn ( string $id ): bool => 
+						str_contains( $id, '/' ) || $id === 'UTC'
+				);
 
-					$timezones[$identifier] = $identifier;
-				}
+				$timezones = array_combine( $timezones, $timezones );
 
 				$configs = [
 					'type' => 'select',
