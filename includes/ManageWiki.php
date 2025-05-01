@@ -8,11 +8,6 @@ use Wikimedia\Rdbms\SelectQueryBuilder;
 
 class ManageWiki {
 
-	public static function checkSetup( string $module ): bool {
-		$config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		return $config->get( ConfigNames::ModulesEnabled )[$module] ?? false;
-	}
-
 	public static function getTimezoneList(): array {
 		$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
 		$timeZoneList = [];
