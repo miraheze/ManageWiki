@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\CreateWiki\Helpers\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -29,7 +29,7 @@ class ModuleFactory {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
-	public function core( string $dbname ): RemoteWikiFactory {
+	public function core( string $dbname ): RemoteWiki {
 		return $this->core->newInstance( $dbname );
 	}
 
