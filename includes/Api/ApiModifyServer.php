@@ -49,8 +49,8 @@ class ApiModifyServer extends ApiBase {
 		$this->getResult()->addValue( null, $this->getModuleName(), $params );
 	}
 
-	private function setServer( string $wiki, string $server ): void {
-		$mwCore = $this->moduleFactory->core( $wiki );
+	private function setServer( string $dbname, string $server ): void {
+		$mwCore = $this->moduleFactory->core( $dbname );
 		$mwCore->setServerName( $server );
 		$mwCore->commit();
 	}
