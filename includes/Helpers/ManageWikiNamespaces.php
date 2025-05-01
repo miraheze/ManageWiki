@@ -71,8 +71,8 @@ class ManageWikiNamespaces implements IConfigModule {
 		}
 	}
 
-	public function getNewId( int $id ): int {
-		$nsID = $id === 0 ? false : $this->dbr->newSelectQueryBuilder()
+	public function getNewId( ?int $id ): int {
+		$nsID = $id === null ? false : $this->dbr->newSelectQueryBuilder()
 			->select( 'ns_namespace_id' )
 			->from( 'mw_namespaces' )
 			->where( [
