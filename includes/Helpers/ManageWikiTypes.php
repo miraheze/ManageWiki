@@ -367,7 +367,7 @@ class ManageWikiTypes {
 				$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
 				$timezones = array_filter(
 					$identifiers,
-					static fn ( string $id ): bool => 
+					static fn ( string $id ): bool =>
 						str_contains( $id, '/' ) || $id === 'UTC'
 				);
 
