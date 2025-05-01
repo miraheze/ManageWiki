@@ -12,6 +12,8 @@ use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
+use Wikimedia\Rdbms\IReadableDatabase;
+use Wikimedia\Rdbms\SelectQueryBuilder;
 
 /**
  * Handler for interacting with Namespace configuration
@@ -23,6 +25,8 @@ class ManageWikiNamespaces implements IConfigModule {
 		MainConfigNames::MetaNamespace,
 		MainConfigNames::MetaNamespaceTalk,
 	];
+
+	private readonly IReadableDatabase $dbr;
 
 	private array $changes = [];
 	private array $errors = [];
@@ -44,7 +48,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 
-		$dbr = $this->databaseUtils->getGlobalReplicaDB();
+		$this->dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$namespaces = $dbr->newSelectQueryBuilder()
 			->select( '*' )
 			->from( 'mw_namespaces' )
@@ -65,6 +69,35 @@ class ManageWikiNamespaces implements IConfigModule {
 				'additional' => json_decode( $ns->ns_additional, true ),
 			];
 		}
+	}
+
+	public function getNewId( int $id ): int {
+		$nsID = $id === 0 ? false : $this->dbr->newSelectQueryBuilder()
+			->select( 'ns_namespace_id' )
+			->from( 'mw_namespaces' )
+			->where( [
+				'ns_dbname' => $this->dbname,
+				'ns_namespace_id' => $id,
+			] )
+			->caller( __METHOD__ )
+			->fetchField();
+
+		if ( $nsID === false ) {
+			$lastID = $this->dbr->newSelectQueryBuilder()
+				->select( 'ns_namespace_id' )
+				->from( 'mw_namespaces' )
+				->where( [
+					'ns_dbname' => $this->dbname,
+					$this->dbr->expr( 'ns_namespace_id', '>=', 3000 ),
+				] )
+				->orderBy( 'ns_namespace_id', SelectQueryBuilder::SORT_DESC )
+				->caller( __METHOD__ )
+				->fetchField();
+
+			$nsID = $lastID !== false ? $lastID + 1 : 3000;
+		}
+
+		return $nsID;
 	}
 
 	/**
