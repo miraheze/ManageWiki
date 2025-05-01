@@ -7,7 +7,6 @@ use MediaWiki\Api\ApiMain;
 use Miraheze\CreateWiki\Services\CreateWikiValidator;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
-use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiModifyServer extends ApiBase {
@@ -28,7 +27,7 @@ class ApiModifyServer extends ApiBase {
 			$this->dieWithError( [ 'managewiki-custom-domains-disabled' ] );
 		}
 
-		if ( !ManageWiki::checkSetup( 'core' ) ) {
+		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
 			$this->dieWithError( [ 'managewiki-disabled', 'core' ] );
 		}
 
