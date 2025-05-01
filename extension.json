@@ -118,8 +118,8 @@
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
 				"CreateWikiDatabaseUtils",
-				"NamespaceInfo",
-				"RemoteWikiFactory"
+				"ManageWikiModuleFactory",
+				"NamespaceInfo"
 			]
 		},
 		"ManageWikiDefaults": {
@@ -128,7 +128,7 @@
 				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
 				"CreateWikiHookHandler",
-				"RemoteWikiFactory"
+				"ManageWikiModuleFactory"
 			]
 		}
 	},
@@ -136,7 +136,7 @@
 		"wikiconfig": {
 			"class": "Miraheze\\ManageWiki\\Api\\ApiQueryWikiConfig",
 			"services": [
-				"RemoteWikiFactory"
+				"ManageWikiModuleFactory"
 			]
 		}
 	},
@@ -145,7 +145,7 @@
 			"class": "Miraheze\\ManageWiki\\Api\\ApiModifyServer",
 			"services": [
 				"CreateWikiValidator",
-				"RemoteWikiFactory"
+				"ManageWikiModuleFactory"
 			]
 		}
 	},
@@ -184,6 +184,7 @@
 			"services": [
 				"ManageWikiConfig",
 				"ManageWikiLogger",
+				"ManageWikiModuleFactory",
 				"LocalisationCache"
 			]
 		},

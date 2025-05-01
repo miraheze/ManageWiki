@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 
 class PopulateNamespacesWithDefaults extends Maintenance {
 
@@ -37,12 +36,17 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 			->fetchRow();
 
 		if ( !$checkRow ) {
-			$mwNamespaces = new ManageWikiNamespaces( $dbname );
-			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
+			$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+			$mwNamespaces = $moduleFactory->namespacesLocal();
+			$mwNamespacesDefault = $moduleFactory->namespacesDefault();
 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
 
 			foreach ( $defaultNamespaces as $namespace ) {
-				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
+				$mwNamespaces->modify(
+					$namespace,
+					$mwNamespacesDefault->list( $namespace ),
+					maintainPrefix: false
+				);
 				$mwNamespaces->commit();
 			}
 

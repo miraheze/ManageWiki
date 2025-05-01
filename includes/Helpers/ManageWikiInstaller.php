@@ -75,7 +75,8 @@ class ManageWikiInstaller {
 		array $data,
 		bool $install
 	): bool {
-		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$mwPermissions = $moduleFactory->permissions( $dbname );
 		$action = $install ? 'add' : 'remove';
 
 		foreach ( $data as $group => $mod ) {
@@ -103,21 +104,22 @@ class ManageWikiInstaller {
 		array $data,
 		bool $install
 	): bool {
-		$mwNamespaces = new ManageWikiNamespaces( $dbname );
+		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
 				$id = $i['id'];
 				unset( $i['id'] );
 				$i['name'] = $name;
 
-				$mwNamespaces->modify( $id, $i, true );
+				$mwNamespaces->modify( $id, $i, maintainPrefix: true );
 				continue;
 			}
 
 			// We migrate to either NS_MAIN (0) or NS_TALK (1),
 			// depending on if this is a talk namespace or not.
 			$newNamespace = $i['id'] % 2;
-			$mwNamespaces->remove( $i['id'], $newNamespace, true );
+			$mwNamespaces->remove( $i['id'], $newNamespace, maintainPrefix: true );
 		}
 
 		$mwNamespaces->commit();
@@ -168,7 +170,8 @@ class ManageWikiInstaller {
 	}
 
 	private static function settings( string $dbname, array $data ): bool {
-		$mwSettings = new ManageWikiSettings( $dbname );
+		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$mwSettings = $moduleFactory->settings( $dbname );
 		$mwSettings->modify( $data );
 		$mwSettings->commit();
 		return true;

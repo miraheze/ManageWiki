@@ -5,9 +5,8 @@ namespace Miraheze\ManageWiki\Api;
 use MediaWiki\Api\ApiBase;
 use MediaWiki\Api\ApiMain;
 use Miraheze\CreateWiki\Services\CreateWikiValidator;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\ManageWiki;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiModifyServer extends ApiBase {
@@ -16,7 +15,7 @@ class ApiModifyServer extends ApiBase {
 		ApiMain $mainModule,
 		string $moduleName,
 		private readonly CreateWikiValidator $validator,
-		private readonly RemoteWikiFactory $remoteWikiFactory
+		private readonly ModuleFactory $moduleFactory
 	) {
 		parent::__construct( $mainModule, $moduleName );
 	}
@@ -28,7 +27,7 @@ class ApiModifyServer extends ApiBase {
 			$this->dieWithError( [ 'managewiki-custom-domains-disabled' ] );
 		}
 
-		if ( !ManageWiki::checkSetup( 'core' ) ) {
+		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
 			$this->dieWithError( [ 'managewiki-disabled', 'core' ] );
 		}
 
@@ -49,10 +48,10 @@ class ApiModifyServer extends ApiBase {
 		$this->getResult()->addValue( null, $this->getModuleName(), $params );
 	}
 
-	private function setServer( string $wiki, string $server ): void {
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $wiki );
-		$remoteWiki->setServerName( $server );
-		$remoteWiki->commit();
+	private function setServer( string $dbname, string $server ): void {
+		$mwCore = $this->moduleFactory->core( $dbname );
+		$mwCore->setServerName( $server );
+		$mwCore->commit();
 	}
 
 	/** @inheritDoc */

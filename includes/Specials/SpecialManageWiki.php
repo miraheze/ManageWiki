@@ -9,12 +9,9 @@ use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
-use Miraheze\ManageWiki\ManageWiki;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
 
@@ -22,8 +19,8 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function __construct(
 		private readonly CreateWikiDatabaseUtils $databaseUtils,
-		private readonly NamespaceInfo $namespaceInfo,
-		private readonly RemoteWikiFactory $remoteWikiFactory
+		private readonly ModuleFactory $moduleFactory,
+		private readonly NamespaceInfo $namespaceInfo
 	) {
 		parent::__construct( 'ManageWiki' );
 	}
@@ -68,7 +65,7 @@ class SpecialManageWiki extends SpecialPage {
 		$additional = $par[1] ?? '';
 		$filtered = $par[2] ?? $par[1] ?? '';
 
-		if ( !ManageWiki::checkSetup( $module ) ) {
+		if ( !$this->moduleFactory->isEnabled( $module ) ) {
 			$this->getOutput()->addWikiMsg( 'managewiki-disabled', $module );
 			return;
 		}
@@ -219,9 +216,8 @@ class SpecialManageWiki extends SpecialPage {
 			);
 		}
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
-
-		if ( $remoteWiki->isLocked() ) {
+		$mwCore = $this->moduleFactory->core( $dbname );
+		if ( $mwCore->isLocked() ) {
 			$this->getOutput()->addHTML(
 				Html::errorBox(
 					$this->msg( 'managewiki-mwlocked' )->escaped()
@@ -266,8 +262,7 @@ class SpecialManageWiki extends SpecialPage {
 		// Handle permissions module when we are not editing a specific group.
 		if ( $module === 'permissions' && $special === '' ) {
 			$language = $this->getLanguage();
-			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$groups = array_keys( $mwPermissions->list( group: null ) );
+			$groups = array_keys( $this->moduleFactory->permissions( $dbname )->list( group: null ) );
 
 			foreach ( $groups as $group ) {
 				$lowerCaseGroupName = $language->lc( $group );
@@ -280,9 +275,8 @@ class SpecialManageWiki extends SpecialPage {
 
 		// Handle namespaces module when we are not editing a specific namespace.
 		if ( $module === 'namespaces' && $special === '' ) {
-			$mwNamespaces = new ManageWikiNamespaces( $dbname );
+			$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
 			$namespaces = $mwNamespaces->list( id: null );
-
 			foreach ( $namespaces as $id => $namespace ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {
 					continue;
@@ -300,9 +294,8 @@ class SpecialManageWiki extends SpecialPage {
 		$formFactory = new ManageWikiFormFactory();
 		$htmlForm = $formFactory->getForm(
 			config: $this->getConfig(),
+			moduleFactory: $this->moduleFactory,
 			context: $this->getContext(),
-			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
-			remoteWiki: $remoteWiki,
 			dbname: $dbname,
 			module: $module,
 			special: mb_strtolower( $special ),
@@ -388,10 +381,9 @@ class SpecialManageWiki extends SpecialPage {
 			}
 
 			if ( $module === 'namespaces' ) {
+				// Handle namespace validation and normalization
 				// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_namespaces.sql#L4
 				$create['out']['maxlength'] = 128;
-				// Handle namespace validation and normalization
-				$mwNamespaces = new ManageWikiNamespaces( $dbname );
 				// Multibyte-safe version of ucfirst
 				$create['out']['filter-callback'] = static fn ( string $value ): string =>
 					preg_replace_callback(
@@ -400,7 +392,7 @@ class SpecialManageWiki extends SpecialPage {
 						trim( $value )
 					) ?? '';
 
-				$create['out']['validation-callback'] = function ( string $value ) use ( $mwNamespaces ): bool|Message {
+				$create['out']['validation-callback'] = function ( string $value ) use ( $dbname ): bool|Message {
 					$disallowed = array_map( 'mb_strtolower',
 						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
 					);
@@ -409,7 +401,8 @@ class SpecialManageWiki extends SpecialPage {
 						return $this->msg( 'managewiki-error-disallowednamespace', $value );
 					}
 
-					if ( $mwNamespaces->namespaceNameExists( $value, checkMetaNS: true ) ) {
+					$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
+					if ( $mwNamespaces->nameExists( $value, checkMetaNS: true ) ) {
 						return $this->msg( 'managewiki-namespace-conflicts', $value );
 					}
 
@@ -430,14 +423,16 @@ class SpecialManageWiki extends SpecialPage {
 	}
 
 	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
+		$module = $formData['module'];
 		$isCreateNamespace = $form->getSubmitText() ===
 			$this->msg( 'managewiki-namespaces-create-submit' )->text();
-		$createNamespace = $isCreateNamespace ? '' : $formData['out'];
+		$createNamespace = $isCreateNamespace ? null : (int)$formData['out'];
 
-		$module = $formData['module'];
-		$special = $module === 'namespaces' ?
-			ManageWiki::namespaceID( $formData['dbname'], $createNamespace ) :
-			$formData['out'];
+		$special = $formData['out'];
+		if ( $module === 'namespaces' ) {
+			$mwNamespaces = $this->moduleFactory->namespaces( $formData['dbname'] );
+			$special = $mwNamespaces->getNewId( $createNamespace );
+		}
 
 		if ( $module === 'namespaces' ) {
 			// Save the name of the namespace we are creating to the current session so that
@@ -463,7 +458,7 @@ class SpecialManageWiki extends SpecialPage {
 			return $this->msg( 'managewiki-permissions-group-invalid' );
 		}
 
-		$mwPermissions = new ManageWikiPermissions( $alldata['dbname'] );
+		$mwPermissions = $this->moduleFactory->permissions( $alldata['dbname'] );
 		if ( $mwPermissions->exists( $newGroup ) ) {
 			return $this->msg( 'managewiki-permissions-group-conflict' );
 		}
