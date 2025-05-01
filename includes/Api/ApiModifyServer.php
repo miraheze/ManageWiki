@@ -5,8 +5,8 @@ namespace Miraheze\ManageWiki\Api;
 use MediaWiki\Api\ApiBase;
 use MediaWiki\Api\ApiMain;
 use Miraheze\CreateWiki\Services\CreateWikiValidator;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\ParamValidator\ParamValidator;
 
@@ -16,7 +16,7 @@ class ApiModifyServer extends ApiBase {
 		ApiMain $mainModule,
 		string $moduleName,
 		private readonly CreateWikiValidator $validator,
-		private readonly RemoteWikiFactory $remoteWikiFactory
+		private readonly ModuleFactory $moduleFactory
 	) {
 		parent::__construct( $mainModule, $moduleName );
 	}
@@ -50,9 +50,9 @@ class ApiModifyServer extends ApiBase {
 	}
 
 	private function setServer( string $wiki, string $server ): void {
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $wiki );
-		$remoteWiki->setServerName( $server );
-		$remoteWiki->commit();
+		$mwCore = $this->moduleFactory->core( $wiki );
+		$mwCore->setServerName( $server );
+		$mwCore->commit();
 	}
 
 	/** @inheritDoc */

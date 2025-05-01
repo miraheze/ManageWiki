@@ -145,7 +145,7 @@
 			"class": "Miraheze\\ManageWiki\\Api\\ApiModifyServer",
 			"services": [
 				"CreateWikiValidator",
-				"RemoteWikiFactory"
+				"ManageWikiModuleFactory"
 			]
 		}
 	},

@@ -94,13 +94,13 @@ class ManageWikiFormFactoryBuilder {
 			'section' => 'main',
 		];
 
-		$remoteWiki = $moduleFactory->core( $dbname );
+		$mwCore = $moduleFactory->core( $dbname );
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
 		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && !$databaseUtils->isRemoteWikiCentral( $dbname ) ) {
 			$mwActions = [
-				$remoteWiki->isDeleted() ? 'undelete' : 'delete',
-				$remoteWiki->isLocked() ? 'unlock' : 'lock',
+				$mwCore->isDeleted() ? 'undelete' : 'delete',
+				$mwCore->isLocked() ? 'unlock' : 'lock',
 			];
 
 			foreach ( $mwActions as $mwAction ) {
@@ -117,7 +117,7 @@ class ManageWikiFormFactoryBuilder {
 			'sitename' => [
 				'label-message' => 'managewiki-label-sitename',
 				'type' => 'text',
-				'default' => $remoteWiki->getSitename(),
+				'default' => $mwCore->getSitename(),
 				// https://github.com/miraheze/CreateWiki/blob/20c2f47/sql/cw_wikis.sql#L3
 				'maxlength' => 128,
 				'disabled' => !$ceMW,
@@ -127,7 +127,7 @@ class ManageWikiFormFactoryBuilder {
 			'language' => [
 				'label-message' => 'managewiki-label-language',
 				'type' => 'language',
-				'default' => $remoteWiki->getLanguage(),
+				'default' => $mwCore->getLanguage(),
 				'disabled' => !$ceMW,
 				'required' => true,
 				'cssclass' => 'managewiki-infuse',
@@ -139,25 +139,25 @@ class ManageWikiFormFactoryBuilder {
 			'private' => [
 				'if' => $config->get( 'CreateWikiUsePrivateWikis' ),
 				'type' => 'check',
-				'default' => $remoteWiki->isPrivate(),
+				'default' => $mwCore->isPrivate(),
 				'access' => !$ceMW,
 			],
 			'closed' => [
 				'if' => $config->get( 'CreateWikiUseClosedWikis' ),
 				'type' => 'check',
-				'default' => $remoteWiki->isClosed(),
+				'default' => $mwCore->isClosed(),
 				'access' => !$ceMW,
 			],
 			'inactive' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
 				'type' => 'check',
-				'default' => $remoteWiki->isInactive(),
+				'default' => $mwCore->isInactive(),
 				'access' => !$ceMW,
 			],
 			'inactive-exempt' => [
 				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
 				'type' => 'check',
-				'default' => $remoteWiki->isInactiveExempt(),
+				'default' => $mwCore->isInactiveExempt(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 			],
 			'inactive-exempt-reason' => [
@@ -165,20 +165,20 @@ class ManageWikiFormFactoryBuilder {
 					$config->get( ConfigNames::InactiveExemptReasonOptions ),
 				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
 				'type' => 'selectorother',
-				'default' => $remoteWiki->getInactiveExemptReason(),
+				'default' => $mwCore->getInactiveExemptReason(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 				'options' => $config->get( ConfigNames::InactiveExemptReasonOptions ),
 			],
 			'server' => [
 				'if' => $config->get( ConfigNames::UseCustomDomains ),
 				'type' => 'text',
-				'default' => $remoteWiki->getServerName(),
+				'default' => $mwCore->getServerName(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 			],
 			'experimental' => [
 				'if' => $config->get( 'CreateWikiUseExperimental' ),
 				'type' => 'check',
-				'default' => $remoteWiki->isExperimental(),
+				'default' => $mwCore->isExperimental(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 			],
 		];
@@ -209,7 +209,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'select',
 				'label-message' => 'managewiki-label-category',
 				'options' => $config->get( 'CreateWikiCategories' ),
-				'default' => $remoteWiki->getCategory(),
+				'default' => $mwCore->getCategory(),
 				'disabled' => !$ceMW,
 				'cssclass' => 'managewiki-infuse',
 				'section' => 'main',
@@ -231,7 +231,7 @@ class ManageWikiFormFactoryBuilder {
 				'type' => 'select',
 				'label-message' => 'managewiki-label-dbcluster',
 				'options' => $clusterOptions,
-				'default' => $remoteWiki->getDBCluster(),
+				'default' => $mwCore->getDBCluster(),
 				'disabled' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 				'cssclass' => 'managewiki-infuse',
 				'section' => 'main',
@@ -1172,79 +1172,79 @@ class ManageWikiFormFactoryBuilder {
 			'unlock',
 		];
 
-		$remoteWiki = $moduleFactory->core( $dbname );
+		$mwCore = $moduleFactory->core( $dbname );
 
 		foreach ( $mwActions as $mwAction ) {
 			if ( $formData[$mwAction] ?? false ) {
-				$remoteWiki->$mwAction();
-				return $remoteWiki;
+				$mwCore->$mwAction();
+				return $mwCore;
 			}
 		}
 
-		if ( $config->get( 'CreateWikiUsePrivateWikis' ) && $remoteWiki->isPrivate() !== $formData['private'] ) {
-			$formData['private'] ? $remoteWiki->markPrivate() : $remoteWiki->markPublic();
+		if ( $config->get( 'CreateWikiUsePrivateWikis' ) && $mwCore->isPrivate() !== $formData['private'] ) {
+			$formData['private'] ? $mwCore->markPrivate() : $mwCore->markPublic();
 		}
 
 		if ( $config->get( 'CreateWikiUseExperimental' ) &&
-			$remoteWiki->isExperimental() !== $formData['experimental']
+			$mwCore->isExperimental() !== $formData['experimental']
 		   ) {
-			$formData['experimental'] ? $remoteWiki->markExperimental() : $remoteWiki->unMarkExperimental();
+			$formData['experimental'] ? $mwCore->markExperimental() : $mwCore->unMarkExperimental();
 		}
 
 		if ( $config->get( 'CreateWikiUseClosedWikis' ) ) {
-			$closed = $remoteWiki->isClosed();
+			$closed = $mwCore->isClosed();
 			$newClosed = $formData['closed'];
 
 			if ( $newClosed && $closed !== $newClosed ) {
-				$remoteWiki->markClosed();
+				$mwCore->markClosed();
 			} elseif ( !$newClosed && $closed !== $newClosed ) {
-				$remoteWiki->markActive();
+				$mwCore->markActive();
 			}
 		}
 
 		if ( $config->get( 'CreateWikiUseInactiveWikis' ) ) {
 			$newInactive = $formData['inactive'];
-			$inactive = $remoteWiki->isInactive();
+			$inactive = $mwCore->isInactive();
 			$newInactiveExempt = $formData['inactive-exempt'];
 
 			if ( $newInactive !== $inactive ) {
-				$newInactive ? $remoteWiki->markInactive() : $remoteWiki->markActive();
+				$newInactive ? $mwCore->markInactive() : $mwCore->markActive();
 			}
 
 			if ( $context->getAuthority()->isAllowed( 'managewiki-restricted' ) ) {
-				if ( $newInactiveExempt !== $remoteWiki->isInactiveExempt() ) {
+				if ( $newInactiveExempt !== $mwCore->isInactiveExempt() ) {
 					if ( $newInactiveExempt ) {
-						$remoteWiki->markExempt();
+						$mwCore->markExempt();
 					} else {
-						$remoteWiki->unExempt();
+						$mwCore->unExempt();
 					}
 				}
 
 				$newInactiveExemptReason = $formData['inactive-exempt-reason'] ?? false;
-				if ( $newInactiveExemptReason && $newInactiveExemptReason !== $remoteWiki->getInactiveExemptReason() ) {
-					$remoteWiki->setInactiveExemptReason( $formData['inactive-exempt-reason'] );
+				if ( $newInactiveExemptReason && $newInactiveExemptReason !== $mwCore->getInactiveExemptReason() ) {
+					$mwCore->setInactiveExemptReason( $formData['inactive-exempt-reason'] );
 				}
 			}
 		}
 
-		if ( $config->get( 'CreateWikiCategories' ) && $formData['category'] !== $remoteWiki->getCategory() ) {
-			$remoteWiki->setCategory( $formData['category'] );
+		if ( $config->get( 'CreateWikiCategories' ) && $formData['category'] !== $mwCore->getCategory() ) {
+			$mwCore->setCategory( $formData['category'] );
 		}
 
-		if ( $config->get( ConfigNames::UseCustomDomains ) && $formData['server'] !== $remoteWiki->getServerName() ) {
-			$remoteWiki->setServerName( $formData['server'] );
+		if ( $config->get( ConfigNames::UseCustomDomains ) && $formData['server'] !== $mwCore->getServerName() ) {
+			$mwCore->setServerName( $formData['server'] );
 		}
 
-		if ( $formData['sitename'] !== $remoteWiki->getSitename() ) {
-			$remoteWiki->setSitename( $formData['sitename'] );
+		if ( $formData['sitename'] !== $mwCore->getSitename() ) {
+			$mwCore->setSitename( $formData['sitename'] );
 		}
 
-		if ( $formData['language'] !== $remoteWiki->getLanguage() ) {
-			$remoteWiki->setLanguage( $formData['language'] );
+		if ( $formData['language'] !== $mwCore->getLanguage() ) {
+			$mwCore->setLanguage( $formData['language'] );
 		}
 
-		if ( $config->get( 'CreateWikiDatabaseClusters' ) && $formData['dbcluster'] !== $remoteWiki->getDBCluster() ) {
-			$remoteWiki->setDBCluster( $formData['dbcluster'] );
+		if ( $config->get( 'CreateWikiDatabaseClusters' ) && $formData['dbcluster'] !== $mwCore->getDBCluster() ) {
+			$mwCore->setDBCluster( $formData['dbcluster'] );
 		}
 
 		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
@@ -1252,7 +1252,7 @@ class ManageWikiFormFactoryBuilder {
 			$context, $moduleFactory, $dbname, $formData
 		);
 
-		return $remoteWiki;
+		return $mwCore;
 	}
 
 	private static function submissionExtensions(
