@@ -3,8 +3,6 @@
 namespace Miraheze\ManageWiki;
 
 use DateTimeZone;
-use MediaWiki\MediaWikiServices;
-use Wikimedia\Rdbms\SelectQueryBuilder;
 
 class ManageWiki {
 
@@ -58,37 +56,5 @@ class ManageWiki {
 		}
 
 		return null;
-	}
-
-	public static function namespaceID( string $dbname, string $namespace ): int {
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$dbr = $databaseUtils->getGlobalReplicaDB();
-
-		$nsID = $namespace === '' ? false : $dbr->newSelectQueryBuilder()
-			->select( 'ns_namespace_id' )
-			->from( 'mw_namespaces' )
-			->where( [
-				'ns_dbname' => $dbname,
-				'ns_namespace_id' => $namespace,
-			] )
-			->caller( __METHOD__ )
-			->fetchField();
-
-		if ( $nsID === false ) {
-			$lastID = $dbr->newSelectQueryBuilder()
-				->select( 'ns_namespace_id' )
-				->from( 'mw_namespaces' )
-				->where( [
-					'ns_dbname' => $dbname,
-					$dbr->expr( 'ns_namespace_id', '>=', 3000 ),
-				] )
-				->orderBy( 'ns_namespace_id', SelectQueryBuilder::SORT_DESC )
-				->caller( __METHOD__ )
-				->fetchField();
-
-			$nsID = $lastID !== false ? $lastID + 1 : 3000;
-		}
-
-		return $nsID;
 	}
 }
