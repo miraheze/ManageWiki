@@ -6,7 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\CreateWiki\Helpers\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
@@ -43,7 +43,7 @@ return [
 			$services->get( 'CreateWikiHookRunner' ),
 			$services->getJobQueueGroupFactory(),
 			new ServiceOptions(
-				RemoteWikiFactory::CONSTRUCTOR_OPTIONS,
+				RemoteWiki::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
