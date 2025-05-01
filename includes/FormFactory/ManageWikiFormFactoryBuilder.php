@@ -1384,8 +1384,16 @@ class ManageWikiFormFactoryBuilder {
 		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 
 		if ( $formData['delete-checkbox'] ) {
-			$mwNamespaces->remove( (int)$special, $formData['delete-migrate-to'] );
-			$mwNamespaces->remove( (int)$special + 1, $formData['delete-migrate-to'] + 1 );
+			$mwNamespaces->remove(
+				(int)$special,
+				$formData['delete-migrate-to'],
+				maintainPrefix: false
+			);
+			$mwNamespaces->remove(
+				(int)$special + 1,
+				$formData['delete-migrate-to'] + 1,
+				maintainPrefix: false
+			);
 			return $mwNamespaces;
 		}
 
@@ -1415,7 +1423,7 @@ class ManageWikiFormFactoryBuilder {
 				'additional' => $additionalBuilt,
 			];
 
-			$mwNamespaces->modify( $id, $build );
+			$mwNamespaces->modify( $id, $build, maintainPrefix: false );
 		}
 
 		return $mwNamespaces;

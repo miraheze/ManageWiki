@@ -201,7 +201,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	public function modify(
 		int $id,
 		array $data,
-		bool $maintainPrefix = false
+		bool $maintainPrefix
 	): void {
 		$excluded = array_map( 'mb_strtolower', $this->options->get( ConfigNames::NamespacesDisallowedNames ) );
 		if ( in_array( mb_strtolower( $data['name'] ), $excluded, true ) ) {
@@ -275,7 +275,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	public function remove(
 		int $id,
 		int $newNamespace,
-		bool $maintainPrefix = false
+		bool $maintainPrefix
 	): void {
 		// Utilize changes differently in this case
 		$this->changes[$id] = [
@@ -303,8 +303,8 @@ class ManageWikiNamespaces implements IConfigModule {
 		$this->runNamespaceMigrationJob = false;
 	}
 
-	public function isDeleting( int|string $namespace ): bool {
-		return in_array( (int)$namespace, $this->deleteNamespaces, true );
+	public function isDeleting( int|string $id ): bool {
+		return in_array( (int)$id, $this->deleteNamespaces, true );
 	}
 
 	public function getErrors(): array {

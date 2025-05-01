@@ -81,7 +81,11 @@ class CreateWiki implements
 			$mwNamespaces->disableNamespaceMigrationJob();
 
 			foreach ( $defaultNamespaces as $namespace ) {
-				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
+				$mwNamespaces->modify(
+					$namespace,
+					$mwNamespacesDefault->list( $namespace ),
+					maintainPrefix: false
+				);
 				$mwNamespaces->commit();
 			}
 		}

@@ -112,14 +112,14 @@ class ManageWikiInstaller {
 				unset( $i['id'] );
 				$i['name'] = $name;
 
-				$mwNamespaces->modify( $id, $i, true );
+				$mwNamespaces->modify( $id, $i, maintainPrefix: true );
 				continue;
 			}
 
 			// We migrate to either NS_MAIN (0) or NS_TALK (1),
 			// depending on if this is a talk namespace or not.
 			$newNamespace = $i['id'] % 2;
-			$mwNamespaces->remove( $i['id'], $newNamespace, true );
+			$mwNamespaces->remove( $i['id'], $newNamespace, maintainPrefix: true );
 		}
 
 		$mwNamespaces->commit();

@@ -36,7 +36,7 @@ class AddNamespaces extends Maintenance {
 			'core' => (int)$this->getOption( 'core' ),
 		];
 
-		$mwNamespaces->modify( (int)$this->getOption( 'id' ), $nsData );
+		$mwNamespaces->modify( (int)$this->getOption( 'id' ), $nsData, maintainPrefix: false );
 		$mwNamespaces->commit();
 	}
 }
