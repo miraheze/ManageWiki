@@ -97,5 +97,19 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			"$dir/patches/patch-permissions-add-indexes.sql",
 			true,
 		] );
+
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'applyPatch',
+			"$dir/defaults/mw_namespaces.sql",
+			true,
+		] );
+
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-createwiki',
+			'applyPatch',
+			"$dir/defaults/mw_permissions.sql",
+			true,
+		] );
 	}
 }
