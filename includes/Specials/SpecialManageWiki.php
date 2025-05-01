@@ -66,7 +66,7 @@ class SpecialManageWiki extends SpecialPage {
 		$additional = $par[1] ?? '';
 		$filtered = $par[2] ?? $par[1] ?? '';
 
-		if ( !ManageWiki::checkSetup( $module ) ) {
+		if ( !$this->moduleFactory->isEnabled( $module ) ) {
 			$this->getOutput()->addWikiMsg( 'managewiki-disabled', $module );
 			return;
 		}
