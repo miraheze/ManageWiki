@@ -2,25 +2,7 @@
 
 namespace Miraheze\ManageWiki;
 
-use DateTimeZone;
-
 class ManageWiki {
-
-	public static function getTimezoneList(): array {
-		$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
-		$timeZoneList = [];
-
-		foreach ( $identifiers as $identifier ) {
-			$parts = explode( '/', $identifier, 2 );
-			if ( count( $parts ) !== 2 && $parts[0] !== 'UTC' ) {
-				continue;
-			}
-
-			$timeZoneList[$identifier] = $identifier;
-		}
-
-		return $timeZoneList;
-	}
 
 	public static function handleMatrix(
 		array|string $conversion,
