@@ -1,15 +1,14 @@
 <?php
 
-namespace Miraheze\ManageWiki\Helpers;
+namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\Services\RemoteWikiFactory;
-use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
-use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
-use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
-use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
-use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
+use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
+use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
 
 class ModuleFactory {
 

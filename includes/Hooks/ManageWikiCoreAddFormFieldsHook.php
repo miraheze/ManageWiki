@@ -3,7 +3,7 @@
 namespace Miraheze\ManageWiki\Hooks;
 
 use MediaWiki\Context\IContextSource;
-use Miraheze\ManageWiki\Helpers\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 
 interface ManageWikiCoreAddFormFieldsHook {
 
