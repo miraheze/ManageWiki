@@ -43,8 +43,8 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				'private' => $mwCore->isPrivate(),
 			];
 
-			$mwSettings = $this->moduleFactory->settings( $wiki );
 			if ( isset( $prop['settings'] ) ) {
+				$mwSettings = $this->moduleFactory->settings( $wiki );
 				$wikiData['settings'] = $mwSettings->list( var: null );
 
 				foreach ( $this->getConfig()->get( ConfigNames::Settings ) as $setting => $options ) {
@@ -54,13 +54,13 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				}
 			}
 
-			$mwExtensions = $this->moduleFactory->extensions( $wiki );
 			if ( isset( $prop['extensions'] ) ) {
+				$mwExtensions = $this->moduleFactory->extensions( $wiki );
 				$wikiData['extensions'] = $mwExtensions->list();
 			}
 
-			$mwPermissions = $this->moduleFactory->permissions( $wiki );
 			if ( isset( $prop['permissions'] ) ) {
+				$mwPermissions = $this->moduleFactory->permissions( $wiki );
 				foreach ( $mwPermissions->list( group: null ) as $group => $data ) {
 					$wikiData['permissions'][$group] = $data['permissions'];
 				}
