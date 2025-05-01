@@ -12,7 +12,6 @@ use Miraheze\CreateWiki\Hooks\CreateWikiStatePublicHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiTablesHook;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
-use Miraheze\ManageWiki\ManageWiki;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\IReadableDatabase;
 
@@ -34,7 +33,7 @@ class CreateWiki implements
 
 	/** @inheritDoc */
 	public function onCreateWikiCreation( string $dbname, bool $private ): void {
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
 			$mwPermissionsDefault = $this->moduleFactory->permissionsDefault();
 			$mwPermissions = $this->moduleFactory->permissions( $dbname );
 			$defaultGroups = array_diff(
@@ -74,7 +73,7 @@ class CreateWiki implements
 			$mwExtensions->commit();
 		}
 
-		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$mwNamespacesDefault = $this->moduleFactory->namespacesDefault();
 			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
 
@@ -102,12 +101,12 @@ class CreateWiki implements
 			->fetchRow();
 
 		// Don't need to manipulate this much
-		if ( $setObject !== false && ManageWiki::checkSetup( 'settings' ) ) {
+		if ( $setObject !== false && $this->moduleFactory->isEnabled( 'settings' ) ) {
 			$cacheArray['settings'] = json_decode( $setObject->s_settings ?? '[]', true );
 		}
 
 		// Let's create an array of variables so we can easily loop these to enable
-		if ( $setObject !== false && ManageWiki::checkSetup( 'extensions' ) ) {
+		if ( $setObject !== false && $this->moduleFactory->isEnabled( 'extensions' ) ) {
 			$manageWikiExtensions = $this->config->get( ConfigNames::Extensions );
 			foreach ( json_decode( $setObject->s_extensions ?? '[]', true ) as $ext ) {
 				if ( isset( $manageWikiExtensions[$ext] ) ) {
@@ -123,7 +122,7 @@ class CreateWiki implements
 		}
 
 		// Collate NS entries and decode their entries for the array
-		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$nsObjects = $dbr->newSelectQueryBuilder()
 				->select( '*' )
 				->from( 'mw_namespaces' )
@@ -242,7 +241,7 @@ class CreateWiki implements
 		}
 
 		// Same as NS above but for permissions
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
 			$permObjects = $dbr->newSelectQueryBuilder()
 				->select( '*' )
 				->from( 'mw_permissions' )
@@ -316,7 +315,7 @@ class CreateWiki implements
 	/** @inheritDoc */
 	public function onCreateWikiStatePrivate( string $dbname ): void {
 		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
-		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {
+		if ( !$this->moduleFactory->isEnabled( 'permissions' ) || !$defaultPrivateGroup ) {
 			return;
 		}
 
@@ -352,7 +351,7 @@ class CreateWiki implements
 	/** @inheritDoc */
 	public function onCreateWikiStatePublic( string $dbname ): void {
 		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
-		if ( !ManageWiki::checkSetup( 'permissions' ) || !$defaultPrivateGroup ) {
+		if ( !$this->moduleFactory->isEnabled( 'permissions' ) || !$defaultPrivateGroup ) {
 			return;
 		}
 
@@ -375,15 +374,15 @@ class CreateWiki implements
 
 	/** @inheritDoc */
 	public function onCreateWikiTables( array &$tables ): void {
-		if ( ManageWiki::checkSetup( 'extensions' ) || ManageWiki::checkSetup( 'settings' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'extensions' ) || $this->moduleFactory->isEnabled( 'settings' ) ) {
 			$tables['mw_settings'] = 's_dbname';
 		}
 
-		if ( ManageWiki::checkSetup( 'permissions' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
 			$tables['mw_permissions'] = 'perm_dbname';
 		}
 
-		if ( ManageWiki::checkSetup( 'namespaces' ) ) {
+		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$tables['mw_namespaces'] = 'ns_dbname';
 		}
 	}
