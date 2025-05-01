@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\Helpers\RemoteWiki;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
 use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
@@ -15,6 +16,7 @@ class ModuleFactory {
 	private const DEFAULT_DATABASE = 'default';
 
 	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::ModulesEnabled,
 		MainConfigNames::DBname,
 	];
 
@@ -29,6 +31,11 @@ class ModuleFactory {
 		private readonly ServiceOptions $options
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
+	}
+
+	public function isEnabled( string $module ): bool {
+		$modulesEnabled = $this->options->get( ConfigNames::ModulesEnabled );
+		return $modulesEnabled[$module] ?? false;
 	}
 
 	public function core( string $dbname ): RemoteWiki {
