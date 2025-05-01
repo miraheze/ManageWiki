@@ -18,7 +18,7 @@ class ModuleFactory {
 		MainConfigNames::DBname,
 	];
 
-	private ?RemoteWiki $coreInstance = null;
+	private array $coreInstances = [];
 
 	public function __construct(
 		private readonly CoreFactory $core,
@@ -32,11 +32,8 @@ class ModuleFactory {
 	}
 
 	public function core( string $dbname ): RemoteWiki {
-		if ( $this->coreInstance === null || $this->coreInstance->getDBname() !== $dbname ) {
-			$this->coreInstance = $this->core->newInstance( $dbname );
-		}
-
-		return $this->coreInstance;
+		return $this->coreInstances[$dbname]
+			??= $this->core->newInstance( $dbname );
 	}
 
 	public function extensions( string $dbname ): ManageWikiExtensions {
