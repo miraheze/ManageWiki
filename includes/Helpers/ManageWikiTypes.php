@@ -494,35 +494,37 @@ class ManageWikiTypes {
 		array|string $conversion,
 		string $to
 	): array|string|null {
-		if ( $to === 'php' ) {
-			// $to is php, therefore $conversion must be json
-			$phpin = json_decode( $conversion, true );
-
-			$phpout = [];
-
-			foreach ( $phpin as $key => $value ) {
-				// We may have an array, may not - let's make it one
-				foreach ( (array)$value as $val ) {
-					$phpout[] = "$key-$val";
+		return match ( $to ) {
+			'php' => ( static function ( string $json ): array {
+				$decoded = json_decode( $json, true );
+				if ( !is_array( $decoded ) ) {
+					return [];
 				}
-			}
 
-			return $phpout;
-		} elseif ( $to === 'phparray' ) {
-			// $to is phparray therefore $conversion must be php as json will be already phparray'd
-			$phparrayout = [];
+				$result = [];
+				foreach ( $decoded as $key => $values ) {
+					foreach ( (array)$values as $val ) {
+						$result[] = "$key-$val";
+					}
+				}
+				return $result;
+			} )( $conversion ),
 
-			foreach ( (array)$conversion as $phparray ) {
-				$element = explode( '-', $phparray, 2 );
-				$phparrayout[$element[0]][] = $element[1];
-			}
+			'phparray' => ( static function ( array $flat ): array {
+				$result = [];
+				foreach ( $flat as $item ) {
+					$parts = explode( '-', $item, 2 );
+					if ( count( $parts ) === 2 ) {
+						[ $row, $col ] = $parts;
+						$result[$row][] = $col;
+					}
+				}
+				return $result;
+			} )( (array)$conversion ),
 
-			return $phparrayout;
-		} elseif ( $to === 'json' ) {
-			// $to is json, therefore $conversion must be php
-			return json_encode( $conversion ) ?: null;
-		}
+			'json' => json_encode( $conversion ) ?: null,
 
-		return null;
+			default => null,
+		};
 	}
 }
