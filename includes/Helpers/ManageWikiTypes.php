@@ -13,7 +13,6 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
 use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
-use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
 
@@ -182,7 +181,7 @@ class ManageWikiTypes {
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
 					'default' => $value !== null ?
-						ManageWiki::handleMatrix( $value, 'php' ) :
+						self::handleMatrix( $value, 'php' ) :
 						$options['overridedefault'],
 				];
 				break;
@@ -366,19 +365,19 @@ class ManageWikiTypes {
 				break;
 			case 'timezone':
 				$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
-				$options = [];
+				$timezones = [];
 				foreach ( $identifiers as $identifier ) {
 					$parts = explode( '/', $identifier, 2 );
 					if ( count( $parts ) !== 2 && $parts[0] !== 'UTC' ) {
 						continue;
 					}
 
-					$options[$identifier] = $identifier;
+					$timezones[$identifier] = $identifier;
 				}
 
 				$configs = [
 					'type' => 'select',
-					'options' => $options,
+					'options' => $timezones,
 					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
@@ -491,5 +490,41 @@ class ManageWikiTypes {
 		}
 
 		return [];
+	}
+
+	public static function handleMatrix(
+		array|string $conversion,
+		string $to
+	): array|string|null {
+		if ( $to === 'php' ) {
+			// $to is php, therefore $conversion must be json
+			$phpin = json_decode( $conversion, true );
+
+			$phpout = [];
+
+			foreach ( $phpin as $key => $value ) {
+				// We may have an array, may not - let's make it one
+				foreach ( (array)$value as $val ) {
+					$phpout[] = "$key-$val";
+				}
+			}
+
+			return $phpout;
+		} elseif ( $to === 'phparray' ) {
+			// $to is phparray therefore $conversion must be php as json will be already phparray'd
+			$phparrayout = [];
+
+			foreach ( (array)$conversion as $phparray ) {
+				$element = explode( '-', $phparray, 2 );
+				$phparrayout[$element[0]][] = $element[1];
+			}
+
+			return $phparrayout;
+		} elseif ( $to === 'json' ) {
+			// $to is json, therefore $conversion must be php
+			return json_encode( $conversion ) ?: null;
+		}
+
+		return null;
 	}
 }
