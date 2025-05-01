@@ -32,8 +32,10 @@ class ModuleFactory {
 	}
 
 	public function core( string $dbname ): RemoteWiki {
-		return $this->coreInstances[$dbname]
-			??= $this->core->newInstance( $dbname );
+		$this->coreInstances[$dbname] ??=
+			$this->core->newInstance( $dbname );
+
+		return $this->coreInstances[$dbname];
 	}
 
 	public function extensions( string $dbname ): ManageWikiExtensions {
