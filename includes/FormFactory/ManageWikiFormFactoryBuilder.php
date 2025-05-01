@@ -889,12 +889,30 @@ class ManageWikiFormFactoryBuilder {
 					'section' => 'advanced',
 					'disable-if' => [ '===', 'delete-checkbox', '1' ],
 					'hide-if' => [ '!==', 'rename-checkbox', '1' ],
-					'filter-callback' => static fn ( string $value ): string =>
-						mb_strtolower( trim( $value ) ),
-					'validation-callback' => static fn ( string $value ): bool|Message =>
-						!( in_array( $value, $disallowedGroups, true ) ||
-								in_array( $value, $groupData['allGroups'], true ) ) ?:
+					// Make sure this is lowercase (multi-byte safe), and has no trailing spaces,
+					// and that any remaining spaces are converted to underscores.
+					'filter-callback' => static fn ( string $value ): string => mb_strtolower(
+						str_replace( ' ', '_', trim( $value ) )
+					),
+					'validation-callback' => static fn ( string $value ): bool|Message => match ( true ) {
+						// We just use this to check if the group is valid for a title,
+						// otherwise we can not edit it because the title will be
+						// invalid for the ManageWiki permission subpage.
+						// If this returns null, it is invalid.
+						SpecialPage::getSafeTitleFor( 'ManageWiki', "permissions/$value" ) === null =>
+							$context->msg( 'managewiki-permissions-group-invalid' ),
+
+						// The entered group is in the disallowed groups config
+						in_array( $value, $disallowedGroups, true ) =>
 							$context->msg( 'managewiki-permissions-group-disallowed' ),
+
+						// The entered group name already exists
+						$mwPermissions->exists( $value ) =>
+							$context->msg( 'managewiki-permissions-group-conflict' ),
+
+						// Everything is all good to proceed with renaming this group
+						default => true,
+					},
 				],
 			];
 		}
