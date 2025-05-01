@@ -1,4 +1,4 @@
-INSERT INTO mw_permissions (perm_dbname, perm_group, perm_permissions, perm_addgroups, perm_removegroups, perm_addgroupstoself, perm_removegroupsfromself, perm_autopromote)
+INSERT IGNORE INTO mw_permissions (perm_dbname, perm_group, perm_permissions, perm_addgroups, perm_removegroups, perm_addgroupstoself, perm_removegroupsfromself, perm_autopromote)
 VALUES
 ('default', '*', '["autocreateaccount","createaccount","edit","createpage","createtalk","viewmywatchlist","editmywatchlist","viewmyprivateinfo","editmyprivateinfo","editmyoptions","abusefilter-log","abusefilter-log-detail","abusefilter-view","autocreateaccount","centralauth-merge","oathauth-enable"]', '[]', '[]', '[]', '[]', NULL),
 ('default', 'autoconfirmed', '["autoconfirmed","editsemiprotected","mwoauthproposeconsumer","mwoauthupdateownconsumer","skipcaptcha","createaccount"]', '[]', '[]', '[]', '[]', '["&",[1,10],[2,345600]]'),
