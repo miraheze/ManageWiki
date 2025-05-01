@@ -1,4 +1,4 @@
-INSERT INTO mw_namespaces (ns_dbname, ns_namespace_id, ns_namespace_name, ns_searchable, ns_subpages, ns_content, ns_content_model, ns_protection, ns_aliases, ns_core, ns_additional)
+INSERT IGNORE INTO mw_namespaces (ns_dbname, ns_namespace_id, ns_namespace_name, ns_searchable, ns_subpages, ns_content, ns_content_model, ns_protection, ns_aliases, ns_core, ns_additional)
 VALUES 
 ('default', 0, '<Main>', 1, 1, 1, 'wikitext', '', '[]', 0, '[]'),
 ('default', 1, 'Talk', 0, 1, 0, 'wikitext', '', '[]', 0, '[]'),
