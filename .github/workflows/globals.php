@@ -1,5 +1,7 @@
 <?php
 
+$wgManageWikiPermissionsDefaultPrivateGroup = 'member';
+
 $wgManageWikiModulesEnabled = [
 	'core' => true,
 	'extensions' => true,
