@@ -61,7 +61,7 @@ class ManageWikiSettings implements IConfigModule {
 	 * @param array $settings Setting to change with value
 	 * @param mixed $default Default to use if none can be found
 	 */
-	public function modify( array $settings, mixed $default = null ): void {
+	public function modify( array $settings, mixed $default ): void {
 		$config = $this->options->get( ConfigNames::Settings );
 		// We will handle all processing in final stages
 		foreach ( $settings as $var => $value ) {
@@ -91,7 +91,7 @@ class ManageWikiSettings implements IConfigModule {
 	 * @param string[] $settings Settings to remove
 	 * @param mixed $default Default to use if none can be found
 	 */
-	public function remove( array $settings, mixed $default = null ): void {
+	public function remove( array $settings, mixed $default ): void {
 		$config = $this->options->get( ConfigNames::Settings );
 		// We will handle all processing in final stages
 		foreach ( $settings as $var ) {
@@ -117,12 +117,12 @@ class ManageWikiSettings implements IConfigModule {
 		$overwrittenSettings = $this->list( var: null );
 		foreach ( $this->options->get( ConfigNames::Settings ) as $var => $_ ) {
 			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) && $remove ) {
-				$this->remove( [ $var ] );
+				$this->remove( [ $var ], default: null );
 				continue;
 			}
 
 			if ( ( $settings[$var] ?? null ) !== null ) {
-				$this->modify( [ $var => $settings[$var] ] );
+				$this->modify( [ $var => $settings[$var] ], default: null );
 			}
 		}
 	}
