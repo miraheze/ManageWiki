@@ -34,7 +34,7 @@ class ManageWikiExtensions implements IConfigModule {
 		private readonly string $dbname
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
-	
+
 		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$extensions = $dbr->newSelectQueryBuilder()
 			->select( 's_extensions' )
