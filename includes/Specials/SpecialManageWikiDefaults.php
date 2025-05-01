@@ -119,12 +119,14 @@ class SpecialManageWikiDefaults extends SpecialPage {
 				$createDescriptor['group'] = [
 					'type' => 'text',
 					'label-message' => 'managewiki-permissions-create',
-					'validation-callback' => [ $this, 'validateNewGroupName' ],
-					// Groups should typically be lowercase so we do that here.
-					// Display names can be customized using interface messages.
-					'filter-callback' => static fn ( string $value ): string => mb_strtolower( trim( $value ) ),
 					// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_permissions.sql#L3
 					'maxlength' => 64,
+					// Make sure this is lowercase (multi-byte safe), and has no trailing spaces,
+					// and that any remaining spaces are converted to underscores.
+					'filter-callback' => static fn ( string $value ): string => mb_strtolower(
+						str_replace( ' ', '_', trim( $value ) )
+					),
+					'validation-callback' => [ $this, 'validateNewGroupName' ],
 				];
 
 				$createForm = HTMLForm::factory( 'ooui', $createDescriptor, $this->getContext() );
@@ -309,6 +311,18 @@ class SpecialManageWikiDefaults extends SpecialPage {
 	public function validateNewGroupName( string $newGroup ): bool|Message {
 		if ( in_array( $newGroup, $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			return $this->msg( 'managewiki-permissions-group-disallowed' );
+		}
+
+		// We just use this to check if the group is valid for a title,
+		// otherwise we can not edit it because the title will be
+		// invalid for the ManageWiki permission subpage.
+		if ( !$this->getPageTitle( $newGroup )->isValid() ) {
+			return $this->msg( 'managewiki-permissions-group-invalid' );
+		}
+
+		$mwPermissions = new ManageWikiPermissions( 'default' );
+		if ( $mwPermissions->exists( $newGroup ) ) {
+			return $this->msg( 'managewiki-permissions-group-conflict' );
 		}
 
 		return true;
