@@ -28,7 +28,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 		foreach ( $params['wikis'] as $wiki ) {
 			try {
-				$remoteWiki = $this->moduleFactory->core( $wiki );
+				$mwCore = $this->moduleFactory->core( $wiki );
 			} catch ( MissingWikiError $e ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
 				continue;
@@ -36,11 +36,11 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 			$wikiData = [
 				'name' => $wiki,
-				'sitename' => $remoteWiki->getSitename(),
-				'closed' => $remoteWiki->isClosed(),
-				'inactive' => $remoteWiki->isInactive(),
-				'inactive-exempt' => $remoteWiki->isInactiveExempt(),
-				'private' => $remoteWiki->isPrivate(),
+				'sitename' => $mwCore->getSitename(),
+				'closed' => $mwCore->isClosed(),
+				'inactive' => $mwCore->isInactive(),
+				'inactive-exempt' => $mwCore->isInactiveExempt(),
+				'private' => $mwCore->isPrivate(),
 			];
 
 			$mwSettings = $this->moduleFactory->settings( $wiki );

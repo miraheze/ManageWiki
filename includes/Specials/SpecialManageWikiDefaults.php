@@ -214,9 +214,9 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			->caller( __METHOD__ )
 			->execute();
 
-		$core = $this->moduleFactory->core( $dbname );
+		$mwCore = $this->moduleFactory->core( $dbname );
 		$this->hookHandler->onCreateWikiCreation(
-			$dbname, $core->isPrivate()
+			$dbname, $mwCore->isPrivate()
 		);
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );

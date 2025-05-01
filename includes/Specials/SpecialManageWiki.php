@@ -217,8 +217,8 @@ class SpecialManageWiki extends SpecialPage {
 			);
 		}
 
-		$core = $this->moduleFactory->core( $dbname );
-		if ( $core->isLocked() ) {
+		$mwCore = $this->moduleFactory->core( $dbname );
+		if ( $mwCore->isLocked() ) {
 			$this->getOutput()->addHTML(
 				Html::errorBox(
 					$this->msg( 'managewiki-mwlocked' )->escaped()
