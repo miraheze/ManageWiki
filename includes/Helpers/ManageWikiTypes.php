@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Collator;
+use DateTimeZone;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
@@ -364,9 +365,20 @@ class ManageWikiTypes {
 				];
 				break;
 			case 'timezone':
+				$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
+				$options = [];
+				foreach ( $identifiers as $identifier ) {
+					$parts = explode( '/', $identifier, 2 );
+					if ( count( $parts ) !== 2 && $parts[0] !== 'UTC' ) {
+						continue;
+					}
+
+					$options[$identifier] = $identifier;
+				}
+
 				$configs = [
 					'type' => 'select',
-					'options' => ManageWiki::getTimezoneList(),
+					'options' => $options,
 					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
