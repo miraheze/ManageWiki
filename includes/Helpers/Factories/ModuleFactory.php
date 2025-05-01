@@ -57,7 +57,7 @@ class ModuleFactory {
 		return $this->permissions( self::DEFAULT_DATABASE );
 	}
 
-	public function coreLocal(): RemoteWikiFactory {
+	public function coreLocal(): RemoteWiki {
 		return $this->core( $this->options->get( MainConfigNames::DBname ) );
 	}
 
