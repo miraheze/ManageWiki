@@ -3,7 +3,7 @@
 namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
-use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
+use Miraheze\ManageWiki\DatabaseUtils;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;
@@ -26,7 +26,7 @@ class NamespaceMigrationJob extends Job {
 
 	public function __construct(
 		array $params,
-		private readonly CreateWikiDatabaseUtils $databaseUtils
+		private readonly DatabaseUtils $databaseUtils
 	) {
 		parent::__construct( self::JOB_NAME, $params );
 
