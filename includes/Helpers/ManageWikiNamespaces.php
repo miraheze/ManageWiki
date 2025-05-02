@@ -71,33 +71,19 @@ class ManageWikiNamespaces implements IConfigModule {
 		}
 	}
 
-	public function getNewId( ?int $id ): int {
-		$nsID = $id === null ? false : $this->dbr->newSelectQueryBuilder()
+	public function getNewId(): int {
+		$lastID = $this->dbr->newSelectQueryBuilder()
 			->select( 'ns_namespace_id' )
 			->from( 'mw_namespaces' )
 			->where( [
 				'ns_dbname' => $this->dbname,
-				'ns_namespace_id' => $id,
+				$this->dbr->expr( 'ns_namespace_id', '>=', 3000 ),
 			] )
+			->orderBy( 'ns_namespace_id', SelectQueryBuilder::SORT_DESC )
 			->caller( __METHOD__ )
 			->fetchField();
 
-		if ( $nsID === false ) {
-			$lastID = $this->dbr->newSelectQueryBuilder()
-				->select( 'ns_namespace_id' )
-				->from( 'mw_namespaces' )
-				->where( [
-					'ns_dbname' => $this->dbname,
-					$this->dbr->expr( 'ns_namespace_id', '>=', 3000 ),
-				] )
-				->orderBy( 'ns_namespace_id', SelectQueryBuilder::SORT_DESC )
-				->caller( __METHOD__ )
-				->fetchField();
-
-			$nsID = $lastID !== false ? $lastID + 1 : 3000;
-		}
-
-		return $nsID;
+		return $lastID !== false ? $lastID + 1 : 3000;
 	}
 
 	/**
