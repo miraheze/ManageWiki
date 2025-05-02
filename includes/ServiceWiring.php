@@ -48,10 +48,13 @@ return [
 			)
 		);
 	},
+	'ManageWikiDatabaseUtils' => static function ( MediaWikiServices $services ): DatabaseUtils {
+		return new DatabaseUtils( $services->getConnectionProvider() );
+	},
 	'ManageWikiExtensionsFactory' => static function ( MediaWikiServices $services ): ExtensionsFactory {
 		return new ExtensionsFactory(
-			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
+			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiLogger' ),
 			new ServiceOptions(
 				ManageWikiExtensions::CONSTRUCTOR_OPTIONS,
@@ -67,8 +70,8 @@ return [
 	},
 	'ManageWikiNamespacesFactory' => static function ( MediaWikiServices $services ): NamespacesFactory {
 		return new NamespacesFactory(
-			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
+			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->getJobQueueGroupFactory(),
 			$services->getNamespaceInfo(),
 			new ServiceOptions(
@@ -79,8 +82,8 @@ return [
 	},
 	'ManageWikiPermissionsFactory' => static function ( MediaWikiServices $services ): PermissionsFactory {
 		return new PermissionsFactory(
-			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
+			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->getActorStoreFactory(),
 			$services->getUserGroupManagerFactory(),
 			$services->getMessageFormatterFactory()->getTextFormatter(
@@ -90,8 +93,8 @@ return [
 	},
 	'ManageWikiSettingsFactory' => static function ( MediaWikiServices $services ): SettingsFactory {
 		return new SettingsFactory(
-			$services->get( 'CreateWikiDatabaseUtils' ),
 			$services->get( 'CreateWikiDataFactory' ),
+			$services->get( 'ManageWikiDatabaseUtils' ),
 			new ServiceOptions(
 				ManageWikiSettings::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
