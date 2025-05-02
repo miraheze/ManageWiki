@@ -428,7 +428,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		// If it's an integer then we are selecting an existing namespace,
 		// not creating a new one.
-		if ( $module === 'namespaces' && !is_int( $special ) ) {
+		if ( $module === 'namespaces' && !is_numeric( $special ) ) {
 			$mwNamespaces = $this->moduleFactory->namespaces( $formData['dbname'] );
 			$special = $mwNamespaces->getNewId();
 
