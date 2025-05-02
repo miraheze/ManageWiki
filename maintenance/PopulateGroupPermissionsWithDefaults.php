@@ -16,7 +16,7 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 	}
 
 	public function execute(): void {
-		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );

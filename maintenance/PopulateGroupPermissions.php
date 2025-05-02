@@ -61,7 +61,7 @@ class PopulateGroupPermissions extends Maintenance {
 			}
 		}
 
-		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
