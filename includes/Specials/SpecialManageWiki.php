@@ -424,14 +424,10 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
 		$module = $formData['module'];
-		$isCreateNamespace = $form->getSubmitText() ===
-			$this->msg( 'managewiki-namespaces-create-submit' )->text();
-		$createNamespace = $isCreateNamespace ? null : (int)$formData['out'];
-
 		$special = $formData['out'];
 		if ( $module === 'namespaces' ) {
 			$mwNamespaces = $this->moduleFactory->namespaces( $formData['dbname'] );
-			$special = $mwNamespaces->getNewId( $createNamespace );
+			$special = $mwNamespaces->getNewId();
 
 			// Save the name of the namespace we are creating to the current session so that
 			// we can autofill the input boxes for the namespace in the next form.
