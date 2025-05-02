@@ -11,6 +11,7 @@ use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
+use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
@@ -342,7 +343,7 @@ class SpecialManageWiki extends SpecialPage {
 		];
 
 		$selector['out'] = [
-			'type' => 'select',
+			'class' => HTMLTypedSelectField::class,
 			'label-message' => "managewiki-$module-select",
 			'options' => $options,
 		];
@@ -428,7 +429,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		// If it's an integer then we are selecting an existing namespace,
 		// not creating a new one.
-		if ( $module === 'namespaces' && !is_numeric( $special ) ) {
+		if ( $module === 'namespaces' && !is_int( $special ) ) {
 			$mwNamespaces = $this->moduleFactory->namespaces( $formData['dbname'] );
 			$special = $mwNamespaces->getNewId();
 
