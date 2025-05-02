@@ -95,7 +95,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$mwCore = $moduleFactory->core( $dbname );
 
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
 		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && !$databaseUtils->isRemoteWikiCentral( $dbname ) ) {
 			$mwActions = [
 				$mwCore->isDeleted() ? 'undelete' : 'delete',
