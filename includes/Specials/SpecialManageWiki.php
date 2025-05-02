@@ -39,7 +39,7 @@ class SpecialManageWiki extends SpecialPage {
 			);
 		}
 
-		$module = 'core';
+		$module = ModuleFactory::CORE;
 		if ( array_key_exists( $par[0], $this->getConfig()->get( ConfigNames::ModulesEnabled ) ) ) {
 			$module = $par[0];
 		}
@@ -49,7 +49,7 @@ class SpecialManageWiki extends SpecialPage {
 				$this->msg( "managewiki-link-$module-view" )
 			);
 
-			if ( $module !== 'permissions' && $module !== 'namespaces' ) {
+			if ( $module !== ModuleFactory::PERMISSIONS && $module !== ModuleFactory::NAMESPACES ) {
 				$this->getOutput()->addWikiMsg( "managewiki-header-$module-view" );
 			}
 		} else {
@@ -57,7 +57,7 @@ class SpecialManageWiki extends SpecialPage {
 				$this->msg( "managewiki-link-$module" )
 			);
 
-			if ( $module !== 'permissions' && $module !== 'namespaces' ) {
+			if ( $module !== ModuleFactory::PERMISSIONS && $module !== ModuleFactory::NAMESPACES ) {
 				$this->getOutput()->addWikiMsg( "managewiki-header-$module" );
 			}
 		}
@@ -70,7 +70,7 @@ class SpecialManageWiki extends SpecialPage {
 			return;
 		}
 
-		if ( $module === 'permissions' && $additional ) {
+		if ( $module === ModuleFactory::PERMISSIONS && $additional ) {
 			$this->getOutput()->addSubtitle(
 				$this->msg( 'editing', $additional )
 			);
@@ -96,7 +96,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// ManageWiki core (on the central wiki) — remote wiki management
-		if ( $module === 'core' ) {
+		if ( $module === ModuleFactory::CORE ) {
 			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 
 			$dbname = $par[1] ?? $this->getConfig()->get( MainConfigNames::DBname );
@@ -129,21 +129,21 @@ class SpecialManageWiki extends SpecialPage {
 	/** @inheritDoc */
 	public function getAssociatedNavigationLinks(): array {
 		return [
-			$this->getPageTitle( 'core' )->getPrefixedText(),
-			$this->getPageTitle( 'extensions' )->getPrefixedText(),
-			$this->getPageTitle( 'namespaces' )->getPrefixedText(),
-			$this->getPageTitle( 'permissions' )->getPrefixedText(),
-			$this->getPageTitle( 'settings' )->getPrefixedText(),
+			$this->getPageTitle( ModuleFactory::CORE )->getPrefixedText(),
+			$this->getPageTitle( ModuleFactory::EXTENSIONS )->getPrefixedText(),
+			$this->getPageTitle( ModuleFactory::NAMESPACES )->getPrefixedText(),
+			$this->getPageTitle( ModuleFactory::PERMISSIONS )->getPrefixedText(),
+			$this->getPageTitle( ModuleFactory::SETTINGS )->getPrefixedText(),
 		];
 	}
 
 	/** @inheritDoc */
 	public function getShortDescription( string $path = '' ): string {
-		$core = $this->getPageTitle( 'core' )->getText();
-		$extensions = $this->getPageTitle( 'extensions' )->getText();
-		$namespaces = $this->getPageTitle( 'namespaces' )->getText();
-		$permissions = $this->getPageTitle( 'permissions' )->getText();
-		$settings = $this->getPageTitle( 'settings' )->getText();
+		$core = $this->getPageTitle( ModuleFactory::CORE )->getText();
+		$extensions = $this->getPageTitle( ModuleFactory::EXTENSIONS )->getText();
+		$namespaces = $this->getPageTitle( ModuleFactory::NAMESPACES )->getText();
+		$permissions = $this->getPageTitle( ModuleFactory::PERMISSIONS )->getText();
+		$settings = $this->getPageTitle( ModuleFactory::SETTINGS )->getText();
 
 		return match ( $path ) {
 			$core => $this->msg( 'managewiki-nav-core' )->text(),
@@ -228,7 +228,7 @@ class SpecialManageWiki extends SpecialPage {
 		$options = [];
 
 		// Check permissions
-		if ( $module !== 'core' ) {
+		if ( $module !== ModuleFactory::CORE ) {
 			if ( !$this->getAuthority()->isAllowed( "managewiki-$module" ) ) {
 				$this->getOutput()->addHTML(
 					Html::errorBox(
@@ -260,7 +260,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// Handle permissions module when we are not editing a specific group.
-		if ( $module === 'permissions' && $special === '' ) {
+		if ( $module === ModuleFactory::PERMISSIONS && $special === '' ) {
 			$language = $this->getLanguage();
 			$groups = array_keys( $this->moduleFactory->permissions( $dbname )->list( group: null ) );
 
@@ -274,7 +274,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// Handle namespaces module when we are not editing a specific namespace.
-		if ( $module === 'namespaces' && $special === '' ) {
+		if ( $module === ModuleFactory::NAMESPACES && $special === '' ) {
 			$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
 			$namespaces = $mwNamespaces->list( id: null );
 			foreach ( $namespaces as $id => $namespace ) {
@@ -368,7 +368,7 @@ class SpecialManageWiki extends SpecialPage {
 				'required' => true,
 			];
 
-			if ( $module === 'permissions' ) {
+			if ( $module === ModuleFactory::PERMISSIONS ) {
 				// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_permissions.sql#L3
 				$create['out']['maxlength'] = 64;
 				// Make sure this is lowercase (multi-byte safe), and has no trailing spaces,
@@ -380,7 +380,7 @@ class SpecialManageWiki extends SpecialPage {
 				$create['out']['validation-callback'] = [ $this, 'validateNewGroupName' ];
 			}
 
-			if ( $module === 'namespaces' ) {
+			if ( $module === ModuleFactory::NAMESPACES ) {
 				// Handle namespace validation and normalization
 				// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_namespaces.sql#L4
 				$create['out']['maxlength'] = 128;
@@ -429,12 +429,10 @@ class SpecialManageWiki extends SpecialPage {
 		$createNamespace = $isCreateNamespace ? null : (int)$formData['out'];
 
 		$special = $formData['out'];
-		if ( $module === 'namespaces' ) {
+		if ( $module === ModuleFactory::NAMESPACES ) {
 			$mwNamespaces = $this->moduleFactory->namespaces( $formData['dbname'] );
 			$special = $mwNamespaces->getNewId( $createNamespace );
-		}
-
-		if ( $module === 'namespaces' ) {
+		
 			// Save the name of the namespace we are creating to the current session so that
 			// we can autofill the input boxes for the namespace in the next form.
 			$form->getRequest()->getSession()->set( 'create', $formData['out'] );
@@ -454,7 +452,7 @@ class SpecialManageWiki extends SpecialPage {
 		// We just use this to check if the group is valid for a title,
 		// otherwise we can not edit it because the title will be
 		// invalid for the ManageWiki permission subpage.
-		if ( !$this->getPageTitle( "permissions/$newGroup" )->isValid() ) {
+		if ( !$this->getPageTitle( ModuleFactory::PERMISSIONS . "/$newGroup" )->isValid() ) {
 			return $this->msg( 'managewiki-permissions-group-invalid' );
 		}
 
