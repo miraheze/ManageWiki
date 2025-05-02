@@ -20,6 +20,12 @@ class ModuleFactory {
 		MainConfigNames::DBname,
 	];
 
+	public const CORE = 'core';
+	public const EXTENSIONS = 'extensions';
+	public const NAMESPACES = 'namespaces';
+	public const PERMISSIONS = 'permissions';
+	public const SETTINGS = 'settings';
+
 	private array $coreInstances = [];
 
 	public function __construct(
