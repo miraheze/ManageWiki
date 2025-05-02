@@ -11,6 +11,7 @@ use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
+use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
@@ -342,7 +343,7 @@ class SpecialManageWiki extends SpecialPage {
 		];
 
 		$selector['out'] = [
-			'type' => 'select',
+			'class' => HTMLTypedSelectField::class,
 			'label-message' => "managewiki-$module-select",
 			'options' => $options,
 		];
@@ -424,14 +425,13 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
 		$module = $formData['module'];
-		$isCreateNamespace = $form->getSubmitText() ===
-			$this->msg( 'managewiki-namespaces-create-submit' )->text();
-		$createNamespace = $isCreateNamespace ? null : (int)$formData['out'];
-
 		$special = $formData['out'];
-		if ( $module === 'namespaces' ) {
+
+		// If it's an integer then we are selecting an existing namespace,
+		// not creating a new one.
+		if ( $module === 'namespaces' && !is_int( $special ) ) {
 			$mwNamespaces = $this->moduleFactory->namespaces( $formData['dbname'] );
-			$special = $mwNamespaces->getNewId( $createNamespace );
+			$special = $mwNamespaces->getNewId();
 
 			// Save the name of the namespace we are creating to the current session so that
 			// we can autofill the input boxes for the namespace in the next form.
