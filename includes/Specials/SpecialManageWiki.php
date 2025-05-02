@@ -425,7 +425,10 @@ class SpecialManageWiki extends SpecialPage {
 	public function reusableFormSubmission( array $formData, HTMLForm $form ): void {
 		$module = $formData['module'];
 		$special = $formData['out'];
-		if ( $module === 'namespaces' ) {
+
+		// If it's an integer then we are selecting an existing namespace,
+		// not creating a new one.
+		if ( $module === 'namespaces' && !is_int( $special ) ) {
 			$mwNamespaces = $this->moduleFactory->namespaces( $formData['dbname'] );
 			$special = $mwNamespaces->getNewId();
 
