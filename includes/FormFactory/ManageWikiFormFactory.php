@@ -65,7 +65,7 @@ class ManageWikiFormFactory {
 			$ceMW
 		);
 
-		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
+		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, "managewiki-$module-section" );
 		$htmlForm
 			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
