@@ -9,9 +9,9 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
@@ -19,9 +19,9 @@ use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function __construct(
-		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly CreateWiki $hookHandler,
+		private readonly DatabaseUtils $databaseUtils,
 		private readonly ModuleFactory $moduleFactory
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
