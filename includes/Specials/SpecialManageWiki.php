@@ -432,9 +432,7 @@ class SpecialManageWiki extends SpecialPage {
 		if ( $module === 'namespaces' ) {
 			$mwNamespaces = $this->moduleFactory->namespaces( $formData['dbname'] );
 			$special = $mwNamespaces->getNewId( $createNamespace );
-		}
 
-		if ( $module === 'namespaces' ) {
 			// Save the name of the namespace we are creating to the current session so that
 			// we can autofill the input boxes for the namespace in the next form.
 			$form->getRequest()->getSession()->set( 'create', $formData['out'] );
