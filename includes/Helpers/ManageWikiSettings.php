@@ -4,9 +4,9 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\IConfigModule;
-use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\DatabaseUtils;
 
 /**
  * Handler class for managing settings
@@ -25,8 +25,8 @@ class ManageWikiSettings implements IConfigModule {
 	private ?string $log = null;
 
 	public function __construct(
-		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly DatabaseUtils $databaseUtils,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
 	) {
