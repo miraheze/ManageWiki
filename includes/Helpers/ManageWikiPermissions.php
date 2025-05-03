@@ -4,16 +4,16 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
-use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\IModule;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
 
 /**
  * Handler for interacting with Permissions
  */
-class ManageWikiPermissions implements IConfigModule {
+class ManageWikiPermissions implements IModule {
 
 	private array $changes = [];
 	private array $errors = [];

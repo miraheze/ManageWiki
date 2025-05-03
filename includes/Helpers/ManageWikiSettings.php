@@ -3,15 +3,15 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\ServiceOptions;
-use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\IModule;
 
 /**
  * Handler class for managing settings
  */
-class ManageWikiSettings implements IConfigModule {
+class ManageWikiSettings implements IModule {
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Settings,
