@@ -9,10 +9,7 @@ use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Psr\Log\LoggerInterface;
 
-/**
- * Handler for all interactions with Extension changes within ManageWiki
- */
-class ManageWikiExtensions implements IModule {
+class ExtensionsModule implements IModule {
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
