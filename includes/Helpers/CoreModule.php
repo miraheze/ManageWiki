@@ -55,12 +55,10 @@ class CoreModule implements ICoreModule {
 
 	public function markInactive(): void {
 		// Not implemented
-		return;
 	}
 
 	public function markActive(): void {
 		// Not implemented
-		return;
 	}
 
 	public function isInactiveExempt(): bool {
@@ -70,36 +68,32 @@ class CoreModule implements ICoreModule {
 
 	public function markExempt(): void {
 		// Not implemented
-		return;
 	}
 
 	public function unExempt(): void {
 		// Not implemented
-		return;
 	}
 
 	public function setInactiveExemptReason( string $reason ): void {
 		// Not implemented
-		return;
 	}
 
 	public function getInactiveExemptReason(): ?string {
+		// Not implemented
 		return null;
 	}
 
 	public function isPrivate(): bool {
 		// Not implemented
-		return false;
+		return false
 	}
 
 	public function markPrivate(): void {
 		// Not implemented
-		return;
 	}
 
 	public function markPublic(): void {
 		// Not implemented
-		return;
 	}
 
 	public function isClosed(): bool {
@@ -109,7 +103,6 @@ class CoreModule implements ICoreModule {
 
 	public function markClosed(): void {
 		// Not implemented
-		return;
 	}
 
 	public function isDeleted(): bool {
@@ -119,12 +112,10 @@ class CoreModule implements ICoreModule {
 
 	public function delete(): void {
 		// Not implemented
-		return;
 	}
 
 	public function undelete(): void {
 		// Not implemented
-		return;
 	}
 
 	public function isLocked(): bool {
@@ -134,12 +125,10 @@ class CoreModule implements ICoreModule {
 
 	public function lock(): void {
 		// Not implemented
-		return;
 	}
 
 	public function unlock(): void {
 		// Not implemented
-		return;
 	}
 
 	public function getCategory(): string {
@@ -149,7 +138,6 @@ class CoreModule implements ICoreModule {
 
 	public function setCategory( string $category ): void {
 		// Not implemented
-		return;
 	}
 
 	public function getServerName(): string {
@@ -171,7 +159,6 @@ class CoreModule implements ICoreModule {
 
 	public function setDBCluster( string $dbcluster ): void {
 		// Not implemented
-		return;
 	}
 
 	public function isExperimental(): bool {
@@ -181,12 +168,10 @@ class CoreModule implements ICoreModule {
 
 	public function markExperimental(): void {
 		// Not implemented
-		return;
 	}
 
 	public function unMarkExperimental(): void {
 		// Not implemented
-		return;
 	}
 
 	public function getExtraFieldData( string $field, mixed $default ): mixed {
@@ -196,7 +181,6 @@ class CoreModule implements ICoreModule {
 
 	public function setExtraFieldData( string $field, mixed $value, mixed $default ): void {
 		// Not implemented
-		return;
 	}
 
 	public function trackChange( string $field, mixed $oldValue, mixed $newValue ): void {
@@ -226,8 +210,7 @@ class CoreModule implements ICoreModule {
 	}
 
 	public function getErrors(): array {
-		// This class doesn't produce errors, but the method
-		// may be called by consumers, so return an empty array.
+		// Not implemented
 		return [];
 	}
 
