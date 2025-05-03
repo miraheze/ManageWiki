@@ -29,6 +29,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 		foreach ( $params['wikis'] as $wiki ) {
 			try {
 				$mwCore = $this->moduleFactory->core( $wiki );
+				$mwSettings = null;
 				if ( $mwCore === null ) {
 					$mwSettings = $this->moduleFactory->settings( $wiki );
 				}
@@ -39,7 +40,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 			$wikiData = [
 				'name' => $wiki,
-				'sitename' => $mwCore?->getSitename() ?? $mwSettings->list( 'wgSitename' ),
+				'sitename' => $mwCore?->getSitename() ?? $mwSettings?->list( 'wgSitename' ),
 				'closed' => $mwCore?->isClosed(),
 				'inactive' => $mwCore?->isInactive(),
 				'inactive-exempt' => $mwCore?->isInactiveExempt(),
