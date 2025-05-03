@@ -5,12 +5,14 @@ namespace Miraheze\ManageWiki\Hooks;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\HookContainer\HookContainer;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\ICoreModule;
 use Skin;
 
 class ManageWikiHookRunner implements
 	ManageWikiAfterSidebarLinksHook,
 	ManageWikiCoreAddFormFieldsHook,
-	ManageWikiCoreFormSubmissionHook
+	ManageWikiCoreFormSubmissionHook,
+	ManageWikiCoreProviderHook
 {
 
 	public function __construct(
@@ -52,6 +54,15 @@ class ManageWikiHookRunner implements
 		$this->container->run(
 			'ManageWikiCoreFormSubmission',
 			[ $context, $moduleFactory, $dbname, $formData ],
+			[ 'abortable' => false ]
+		);
+	}
+
+	/** @inheritDoc */
+	public function onManageWikiCoreProvider( ?ICoreModule &$provider, string $dbname ): void {
+		$this->container->run(
+			'ManageWikiCoreProvider',
+			[ &$provider, $dbname ],
 			[ 'abortable' => false ]
 		);
 	}

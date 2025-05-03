@@ -3,31 +3,24 @@
 namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
-use MediaWiki\JobQueue\JobQueueGroupFactory;
-use Miraheze\CreateWiki\Helpers\RemoteWiki;
-use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
-use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
-use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
+use Miraheze\ManageWiki\Helpers\CoreModule;
+use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
+use Miraheze\ManageWiki\ICoreModule;
 
 class CoreFactory {
 
 	public function __construct(
-		private readonly CreateWikiDatabaseUtils $databaseUtils,
-		private readonly CreateWikiDataFactory $dataFactory,
-		private readonly CreateWikiHookRunner $hookRunner,
-		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
+		private readonly ManageWikiHookRunner $hookRunner,
+		private readonly SettingsFactory $settingsFactory,
 		private readonly ServiceOptions $options
 	) {
 	}
 
-	public function newInstance( string $dbname ): RemoteWiki {
-		// Temporary, we will eventually allow extensions to register
-		// the provider that we use for ManageWiki core.
-		return new RemoteWiki(
-			$this->databaseUtils,
-			$this->dataFactory,
-			$this->hookRunner,
-			$this->jobQueueGroupFactory,
+	public function newInstance( string $dbname ): ICoreModule {
+		$provider = null;
+		$this->hookRunner->onManageWikiCoreProvider( $provider, $dbname );
+		return $provider ?? new CoreModule(
+			$this->settingsFactory,
 			$this->options,
 			$dbname
 		);
