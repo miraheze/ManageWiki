@@ -5,8 +5,10 @@ namespace Miraheze\ManageWiki\Hooks;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\HookContainer\HookContainer;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Skin;
 
 class ManageWikiHookRunner implements
+	ManageWikiAfterSidebarLinksHook,
 	ManageWikiCoreAddFormFieldsHook,
 	ManageWikiCoreFormSubmissionHook
 {
@@ -14,6 +16,15 @@ class ManageWikiHookRunner implements
 	public function __construct(
 		private readonly HookContainer $container
 	) {
+	}
+
+	/** @inheritDoc */
+	public function onManageWikiAfterSidebarLinks( Skin $skin, array &$sidebar ): void {
+		$this->container->run(
+			'ManageWikiAfterSidebarLinks',
+			[ $skin, &$sidebar ],
+			[ 'abortable' => false ]
+		);
 	}
 
 	/** @inheritDoc */
