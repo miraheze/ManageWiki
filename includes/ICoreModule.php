@@ -80,7 +80,7 @@ interface ICoreModule extends IModule {
 	/**
 	 * Used by providers to control some form displays
 	 */
-	public function isEnabled( string $field ): bool;
+	public function isEnabled( string $feature ): bool;
 
 	public function getCategoryOptions(): array;
 
