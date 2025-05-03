@@ -195,7 +195,7 @@ class ManageWikiFormFactoryBuilder {
 				}
 
 				if ( $data['maxlength'] ?? false ) {
-					$formDescriptor[$name]['maxlength'] = $data['maxlength'];
+					$formDescriptor[$name]['maxlength'] = $data['maxlength'] ?? 0;
 				}
 
 				if ( $data['hide-if'] ?? false ) {
