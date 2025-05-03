@@ -140,15 +140,6 @@
 			]
 		}
 	},
-	"APIModules": {
-		"modifyserver": {
-			"class": "Miraheze\\ManageWiki\\Api\\ApiModifyServer",
-			"services": [
-				"CreateWikiValidator",
-				"ManageWikiModuleFactory"
-			]
-		}
-	},
 	"Hooks": {
 		"ContentHandlerForModelID": {
 			"handler": "Main"
