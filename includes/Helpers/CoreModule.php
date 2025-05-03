@@ -13,6 +13,8 @@ class CoreModule implements ICoreModule {
 		ConfigNames::UseCustomDomains,
 	];
 
+	private array $changes = [];
+
 	public function __construct(
 		private readonly SettingsFactory $settingsFactory,
 		private readonly ServiceOptions $options,
@@ -27,6 +29,7 @@ class CoreModule implements ICoreModule {
 	}
 
 	public function setSitename( string $sitename ): void {
+		$this->trackChange( 'sitename', $this->getSitename(), $sitename );
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		$mwSettings->modify( [ 'wgSitename' => $sitename ], default: '' );
 	}
@@ -37,6 +40,7 @@ class CoreModule implements ICoreModule {
 	}
 
 	public function setLanguage( string $lang ): void {
+		$this->trackChange( 'language', $this->getLanguage(), $lang );
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		$mwSettings->modify( [ 'wgLanguageCode' => $lang ], default: 'en' );
 	}
@@ -151,8 +155,10 @@ class CoreModule implements ICoreModule {
 	}
 
 	public function setServerName( string $server ): void {
+		$server = $server === '' ? false : $server;
+		$this->trackChange( 'servername', $this->getServerName(), $server );
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
-		$mwSettings->modify( [ 'wgServer' => $server ], default: '' );
+		$mwSettings->modify( [ 'wgServer' => $server ], default: false );
 	}
 
 	public function getDBCluster(): string {
@@ -191,8 +197,10 @@ class CoreModule implements ICoreModule {
 	}
 
 	public function trackChange( string $field, mixed $oldValue, mixed $newValue ): void {
-		// Not implemented
-		return;
+		$this->changes[$field] = [
+			'old' => $oldValue,
+			'new' => $newValue,
+		];
 	}
 
 	public function isEnabled( string $feature ): bool {
@@ -212,5 +220,40 @@ class CoreModule implements ICoreModule {
 	public function getDatabaseClusters(): array {
 		// Not implemented
 		return [];
+	}
+
+	public function getErrors(): array {
+		// This class doesn't produce errors, but the method
+		// may be called by consumers, so return an empty array.
+		return [];
+	}
+
+	public function hasChanges(): bool {
+		return (bool)$this->changes;
+	}
+
+	public function setLogAction( string $action ): void {
+		$this->log = $action;
+	}
+
+	public function getLogAction(): string {
+		return $this->log ?? 'settings';
+	}
+
+	public function addLogParam( string $param, mixed $value ): void {
+		$this->logParams[$param] = $value;
+	}
+
+	public function getLogParams(): array {
+		return $this->logParams;
+	}
+
+	public function commit(): void {
+		if ( !$this->hasChanges() ) {
+			return;
+		}
+
+		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
+		$mwSettings->commit();
 	}
 }
