@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\FormFactory;
 
 use ErrorPageError;
+use FatalError;
 use InvalidArgumentException;
 use ManualLogEntry;
 use MediaWiki\Config\Config;
@@ -16,7 +17,6 @@ use MediaWiki\Message\Message;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
-use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
@@ -25,6 +25,7 @@ use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
+use Miraheze\ManageWiki\ICoreModule;
 use Wikimedia\ObjectCache\WANObjectCache;
 
 class ManageWikiFormFactoryBuilder {
@@ -94,6 +95,9 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		$mwCore = $moduleFactory->core( $dbname );
+		if ( $mwCore === null ) {
+			throw new FatalError( 'No extension creates any provider for ManageWiki core.' );
+		}
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
 		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && !$databaseUtils->isRemoteWikiCentral( $dbname ) ) {
@@ -1163,7 +1167,7 @@ class ManageWikiFormFactoryBuilder {
 		IContextSource $context,
 		ModuleFactory $moduleFactory,
 		Config $config
-	): IConfigModule {
+	): ICoreModule {
 		$mwActions = [
 			'delete',
 			'lock',
@@ -1172,6 +1176,9 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		$mwCore = $moduleFactory->core( $dbname );
+		if ( $mwCore === null ) {
+			throw new FatalError( 'No extension creates any provider for ManageWiki core.' );
+		}
 
 		foreach ( $mwActions as $mwAction ) {
 			if ( $formData[$mwAction] ?? false ) {
