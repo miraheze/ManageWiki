@@ -64,7 +64,8 @@ class Main implements
 		}
 
 		if ( isset( $sidebar['managewiki-sidebar-header'] ) ) {
-			$this->hookRunner->onManageWikiAfterSidebarLinks( $skin, $sidebar );
+			$sidebarLinks = $sidebar['managewiki-sidebar-header'];
+			$this->hookRunner->onManageWikiAfterSidebarLinks( $skin, $sidebarLinks );
 		}
 	}
 }
