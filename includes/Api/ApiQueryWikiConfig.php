@@ -29,6 +29,9 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 		foreach ( $params['wikis'] as $wiki ) {
 			try {
 				$mwCore = $this->moduleFactory->core( $wiki );
+				if ( $mwCore === null ) {
+					$mwSettings = $this->moduleFactory->settings( $wiki );
+				}
 			} catch ( MissingWikiError $e ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
 				continue;
@@ -36,15 +39,15 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 			$wikiData = [
 				'name' => $wiki,
-				'sitename' => $mwCore->getSitename(),
-				'closed' => $mwCore->isClosed(),
-				'inactive' => $mwCore->isInactive(),
-				'inactive-exempt' => $mwCore->isInactiveExempt(),
-				'private' => $mwCore->isPrivate(),
+				'sitename' => $mwCore?->getSitename() ?? $mwSettings->list( 'wgSitename' ),
+				'closed' => $mwCore?->isClosed(),
+				'inactive' => $mwCore?->isInactive(),
+				'inactive-exempt' => $mwCore?->isInactiveExempt(),
+				'private' => $mwCore?->isPrivate(),
 			];
 
 			if ( isset( $prop['settings'] ) ) {
-				$mwSettings = $this->moduleFactory->settings( $wiki );
+				$mwSettings ??= $this->moduleFactory->settings( $wiki );
 				$wikiData['settings'] = $mwSettings->list( var: null );
 
 				foreach ( $this->getConfig()->get( ConfigNames::Settings ) as $setting => $options ) {
