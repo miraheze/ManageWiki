@@ -6,7 +6,7 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
+use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 
 class NamespacesFactory {
@@ -20,8 +20,8 @@ class NamespacesFactory {
 	) {
 	}
 
-	public function newInstance( string $dbname ): ManageWikiNamespaces {
-		return new ManageWikiNamespaces(
+	public function newInstance( string $dbname ): NamespacesModule {
+		return new NamespacesModule(
 			$this->dataFactory,
 			$this->databaseUtils,
 			$this->jobQueueGroupFactory,
