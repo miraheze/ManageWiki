@@ -6,7 +6,6 @@ use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
-use Miraheze\CreateWiki\Helpers\RemoteWiki;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
@@ -39,14 +38,7 @@ return [
 	},
 	'ManageWikiCoreFactory' => static function ( MediaWikiServices $services ): CoreFactory {
 		return new CoreFactory(
-			$services->get( 'CreateWikiDatabaseUtils' ),
-			$services->get( 'CreateWikiDataFactory' ),
-			$services->get( 'CreateWikiHookRunner' ),
-			$services->getJobQueueGroupFactory(),
-			new ServiceOptions(
-				RemoteWiki::CONSTRUCTOR_OPTIONS,
-				$services->get( 'ManageWikiConfig' )
-			)
+			$services->get( 'ManageWikiHookRunner' )
 		);
 	},
 	'ManageWikiDatabaseUtils' => static function ( MediaWikiServices $services ): DatabaseUtils {
