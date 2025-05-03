@@ -3,7 +3,6 @@
 namespace Miraheze\ManageWiki\FormFactory;
 
 use ErrorPageError;
-use FatalError;
 use InvalidArgumentException;
 use ManualLogEntry;
 use MediaWiki\Config\Config;
@@ -95,10 +94,6 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		$mwCore = $moduleFactory->core( $dbname );
-		if ( $mwCore === null ) {
-			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ 'core' ] );
-		}
-
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
 		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && !$databaseUtils->isRemoteWikiCentral( $dbname ) ) {
 			$mwActions = [
@@ -107,6 +102,10 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach ( $mwActions as $mwAction ) {
+				if ( !$mwCore->isEnabled( "action-$mwAction" ) ) {
+					continue;
+				}
+
 				$formDescriptor[$mwAction] = [
 					'type' => 'check',
 					'label-message' => "managewiki-label-{$mwAction}wiki",
@@ -140,31 +139,31 @@ class ManageWikiFormFactoryBuilder {
 
 		$addedModules = [
 			'private' => [
-				'if' => $config->get( 'CreateWikiUsePrivateWikis' ),
+				'if' => $mwCore->isEnabled( 'private-wikis' ),
 				'type' => 'check',
 				'default' => $mwCore->isPrivate(),
 				'access' => !$ceMW,
 			],
 			'closed' => [
-				'if' => $config->get( 'CreateWikiUseClosedWikis' ),
+				'if' => $mwCore->isEnabled( 'closed-wikis' ),
 				'type' => 'check',
 				'default' => $mwCore->isClosed(),
 				'access' => !$ceMW,
 			],
 			'inactive' => [
-				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
+				'if' => $mwCore->isEnabled( 'inactive-wikis' ),
 				'type' => 'check',
 				'default' => $mwCore->isInactive(),
 				'access' => !$ceMW,
 			],
 			'inactive-exempt' => [
-				'if' => $config->get( 'CreateWikiUseInactiveWikis' ),
+				'if' => $mwCore->isEnabled( 'inactive-wikis' ),
 				'type' => 'check',
 				'default' => $mwCore->isInactiveExempt(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 			],
 			'inactive-exempt-reason' => [
-				'if' => $config->get( 'CreateWikiUseInactiveWikis' ) &&
+				'if' => $mwCore->isEnabled( 'inactive-wikis' ) &&
 					$config->get( ConfigNames::InactiveExemptReasonOptions ),
 				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
 				'type' => 'selectorother',
@@ -179,7 +178,7 @@ class ManageWikiFormFactoryBuilder {
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 			],
 			'experimental' => [
-				'if' => $config->get( 'CreateWikiUseExperimental' ),
+				'if' => $mwCore->isEnabled( 'experimental-wikis' ),
 				'type' => 'check',
 				'default' => $mwCore->isExperimental(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
@@ -207,11 +206,11 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		if ( $config->get( 'CreateWikiCategories' ) ) {
+		if ( $mwCore->getCategoryOptions() ) {
 			$formDescriptor['category'] = [
 				'type' => 'select',
 				'label-message' => 'managewiki-label-category',
-				'options' => $config->get( 'CreateWikiCategories' ),
+				'options' => $mwCore->getCategoryOptions(),
 				'default' => $mwCore->getCategory(),
 				'disabled' => !$ceMW,
 				'cssclass' => 'managewiki-infuse',
@@ -224,9 +223,9 @@ class ManageWikiFormFactoryBuilder {
 			$context, $moduleFactory, $dbname, $ceMW, $formDescriptor
 		);
 
-		if ( $config->get( 'CreateWikiDatabaseClusters' ) ) {
+		if ( $mwCore->getDatabaseClusters() ) {
 			$clusterOptions = array_merge(
-				$config->get( 'CreateWikiDatabaseClusters' ),
+				$mwCore->getDatabaseClusters(),
 				$config->get( ConfigNames::DatabaseClustersInactive )
 			);
 
@@ -1176,28 +1175,28 @@ class ManageWikiFormFactoryBuilder {
 		];
 
 		$mwCore = $moduleFactory->core( $dbname );
-		if ( $mwCore === null ) {
-			throw new FatalError( 'No extension creates any provider for ManageWiki core.' );
-		}
-
 		foreach ( $mwActions as $mwAction ) {
+			if ( !$mwCore->isEnabled( "action-$mwAction" ) ) {
+				continue;
+			}
+
 			if ( $formData[$mwAction] ?? false ) {
 				$mwCore->$mwAction();
 				return $mwCore;
 			}
 		}
 
-		if ( $config->get( 'CreateWikiUsePrivateWikis' ) && $mwCore->isPrivate() !== $formData['private'] ) {
+		if ( $mwCore->isEnabled( 'private-wikis' ) && $mwCore->isPrivate() !== $formData['private'] ) {
 			$formData['private'] ? $mwCore->markPrivate() : $mwCore->markPublic();
 		}
 
-		if ( $config->get( 'CreateWikiUseExperimental' ) &&
+		if ( $mwCore->isEnabled( 'experimental-wikis' ) &&
 			$mwCore->isExperimental() !== $formData['experimental']
 		   ) {
 			$formData['experimental'] ? $mwCore->markExperimental() : $mwCore->unMarkExperimental();
 		}
 
-		if ( $config->get( 'CreateWikiUseClosedWikis' ) ) {
+		if ( $mwCore->isEnabled( 'closed-wikis' ) ) {
 			$closed = $mwCore->isClosed();
 			$newClosed = $formData['closed'];
 
@@ -1208,7 +1207,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		if ( $config->get( 'CreateWikiUseInactiveWikis' ) ) {
+		if ( $mwCore->isEnabled( 'inactive-wikis' ) ) {
 			$newInactive = $formData['inactive'];
 			$inactive = $mwCore->isInactive();
 			$newInactiveExempt = $formData['inactive-exempt'];
@@ -1233,7 +1232,7 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		if ( $config->get( 'CreateWikiCategories' ) && $formData['category'] !== $mwCore->getCategory() ) {
+		if ( $mwCore->getCategoryOptions() && $formData['category'] !== $mwCore->getCategory() ) {
 			$mwCore->setCategory( $formData['category'] );
 		}
 
@@ -1249,7 +1248,7 @@ class ManageWikiFormFactoryBuilder {
 			$mwCore->setLanguage( $formData['language'] );
 		}
 
-		if ( $config->get( 'CreateWikiDatabaseClusters' ) && $formData['dbcluster'] !== $mwCore->getDBCluster() ) {
+		if ( $mwCore->getDatabaseClusters() && $formData['dbcluster'] !== $mwCore->getDBCluster() ) {
 			$mwCore->setDBCluster( $formData['dbcluster'] );
 		}
 
