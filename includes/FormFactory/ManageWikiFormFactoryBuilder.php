@@ -96,7 +96,7 @@ class ManageWikiFormFactoryBuilder {
 
 		$mwCore = $moduleFactory->core( $dbname );
 		if ( $mwCore === null ) {
-			throw new FatalError( 'No extension creates any provider for ManageWiki core.' );
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ 'core' ] );
 		}
 
 		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
