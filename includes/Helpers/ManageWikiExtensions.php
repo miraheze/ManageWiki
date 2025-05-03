@@ -3,16 +3,16 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\ServiceOptions;
-use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\DatabaseUtils;
+use Miraheze\ManageWiki\IModule;
 use Psr\Log\LoggerInterface;
 
 /**
  * Handler for all interactions with Extension changes within ManageWiki
  */
-class ManageWikiExtensions implements IConfigModule {
+class ManageWikiExtensions implements IModule {
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
