@@ -19,7 +19,7 @@ class ExtensionsFactory {
 	}
 
 	public function newInstance( string $dbname ): ExtensionsModule {
-		return new ManageWikiExtensions(
+		return new ExtensionsModule(
 			$this->dataFactory,
 			$this->databaseUtils,
 			$this->logger,
