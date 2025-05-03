@@ -22,22 +22,22 @@ class CoreModule implements ICoreModule {
 	}
 
 	public function getSitename(): string {
-		$mwSettings = $this->settingsFactory->newInstance( $this->dbname );
+		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		return $mwSettings->list( 'wgSitename' ) ?? '';
 	}
 
 	public function setSitename( string $sitename ): void {
-		$mwSettings = $this->settingsFactory->newInstance( $this->dbname );
+		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		$mwSettings->modify( [ 'wgSitename' => $sitename ], default: '' );
 	}
 
 	public function getLanguage(): string {
-		$mwSettings = $this->settingsFactory->newInstance( $this->dbname );
+		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		return $mwSettings->list( 'wgLanguageCode' ) ?? 'en';
 	}
 
 	public function setLanguage( string $lang ): void {
-		$mwSettings = $this->settingsFactory->newInstance( $this->dbname );
+		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		$mwSettings->modify( [ 'wgLanguageCode' => $lang ], default: 'en' );
 	}
 
@@ -146,12 +146,12 @@ class CoreModule implements ICoreModule {
 	}
 
 	public function getServerName(): string {
-		$mwSettings = $this->settingsFactory->newInstance( $this->dbname );
+		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		return $mwSettings->list( 'wgServer' ) ?? '';
 	}
 
 	public function setServerName( string $server ): void {
-		$mwSettings = $this->settingsFactory->newInstance( $this->dbname );
+		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		$mwSettings->modify( [ 'wgServer' => $server ], default: '' );
 	}
 
