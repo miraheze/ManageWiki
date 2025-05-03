@@ -85,7 +85,7 @@ class CoreModule implements ICoreModule {
 
 	public function isPrivate(): bool {
 		// Not implemented
-		return false
+		return false;
 	}
 
 	public function markPrivate(): void {
