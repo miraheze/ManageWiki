@@ -9,6 +9,8 @@ use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 
 class SettingsFactory {
 
+	private array $instances = [];
+
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
@@ -23,5 +25,10 @@ class SettingsFactory {
 			$this->options,
 			$dbname
 		);
+	}
+
+	public function getInstance( string $dbname ): SettingsModule {
+		$this->instances[$dbname] ??= $this->newInstance( $dbname );
+		return $this->instances[$dbname];
 	}
 }

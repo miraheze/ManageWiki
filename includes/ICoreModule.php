@@ -76,4 +76,13 @@ interface ICoreModule extends IModule {
 	public function setExtraFieldData( string $field, mixed $value, mixed $default ): void;
 
 	public function trackChange( string $field, mixed $oldValue, mixed $newValue ): void;
+
+	/**
+	 * Used by providers to control some form displays
+	 */
+	public function isEnabled( string $feature ): bool;
+
+	public function getCategoryOptions(): array;
+
+	public function getDatabaseClusters(): array;
 }

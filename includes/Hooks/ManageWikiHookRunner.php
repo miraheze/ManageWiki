@@ -59,7 +59,7 @@ class ManageWikiHookRunner implements
 	}
 
 	/** @inheritDoc */
-	public function onManageWikiCoreProvider( ?ICoreModule &$provider, string $dbname ): void {
+	public function onManageWikiCoreProvider( ICoreModule &$provider, string $dbname ): void {
 		$this->container->run(
 			'ManageWikiCoreProvider',
 			[ &$provider, $dbname ],
