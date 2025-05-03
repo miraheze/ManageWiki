@@ -10,10 +10,7 @@ use Miraheze\ManageWiki\IModule;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
 
-/**
- * Handler for interacting with Permissions
- */
-class ManageWikiPermissions implements IModule {
+class PermissionsModule implements IModule {
 
 	private array $changes = [];
 	private array $errors = [];
