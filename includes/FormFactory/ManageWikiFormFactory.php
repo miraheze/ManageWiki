@@ -46,10 +46,9 @@ class ManageWikiFormFactory {
 		string $filtered
 	): ManageWikiOOUIForm {
 		// Can the user modify ManageWiki?
-		$mwCore = $moduleFactory->core( $dbname );
 		$ceMW = !(
 			(
-				( $mwCore !== null && $mwCore->isLocked() ) &&
+				$moduleFactory->core( $dbname )?->isLocked() &&
 				!$context->getAuthority()->isAllowed( 'managewiki-restricted' )
 			) ||
 			!$context->getAuthority()->isAllowed( "managewiki-$module" )
