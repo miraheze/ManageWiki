@@ -8,8 +8,8 @@ interface ManageWikiAfterSidebarLinksHook {
 
 	/**
 	 * @param Skin $skin
-	 * @param array &$sidebar
+	 * @param array &$sidebarLinks
 	 * @return void
 	 */
-	public function onManageWikiAfterSidebarLinks( Skin $skin, array &$sidebar ): void;
+	public function onManageWikiAfterSidebarLinks( Skin $skin, array &$sidebarLinks ): void;
 }
