@@ -8,8 +8,8 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\NamespaceInfo;
-use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
@@ -19,7 +19,7 @@ use OOUI\SearchInputWidget;
 class SpecialManageWiki extends SpecialPage {
 
 	public function __construct(
-		private readonly CreateWikiDatabaseUtils $databaseUtils,
+		private readonly DatabaseUtils $databaseUtils,
 		private readonly ModuleFactory $moduleFactory,
 		private readonly NamespaceInfo $namespaceInfo
 	) {

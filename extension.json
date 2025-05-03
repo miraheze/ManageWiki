@@ -48,7 +48,7 @@
 		"NamespaceMigrationJob": {
 			"class": "Miraheze\\ManageWiki\\Jobs\\NamespaceMigrationJob",
 			"services": [
-				"CreateWikiDatabaseUtils"
+				"ManageWikiDatabaseUtils"
 			],
 			"needsPage": false
 		}
@@ -111,13 +111,13 @@
 		"DeletedWikis": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialDeletedWikis",
 			"services": [
-				"CreateWikiDatabaseUtils"
+				"ManageWikiDatabaseUtils"
 			]
 		},
 		"ManageWiki": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
-				"CreateWikiDatabaseUtils",
+				"ManageWikiDatabaseUtils",
 				"ManageWikiModuleFactory",
 				"NamespaceInfo"
 			]
@@ -125,9 +125,9 @@
 		"ManageWikiDefaults": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaults",
 			"services": [
-				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
 				"CreateWikiHookHandler",
+				"ManageWikiDatabaseUtils",
 				"ManageWikiModuleFactory"
 			]
 		}
@@ -341,6 +341,10 @@
 	},
 	"ServiceWiringFiles": [
 		"includes/ServiceWiring.php"
+	],
+	"DatabaseVirtualDomains": [
+		"virtual-managewiki",
+		"virtual-managewiki-central"
 	],
 	"manifest_version": 2
 }

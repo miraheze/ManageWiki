@@ -5,8 +5,8 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
 use Miraheze\CreateWiki\IConfigModule;
-use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
+use Miraheze\ManageWiki\DatabaseUtils;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
 
@@ -25,8 +25,8 @@ class ManageWikiPermissions implements IConfigModule {
 	private ?string $log = null;
 
 	public function __construct(
-		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly DatabaseUtils $databaseUtils,
 		private readonly ActorStoreFactory $actorStoreFactory,
 		private readonly UserGroupManagerFactory $userGroupManagerFactory,
 		private readonly ITextFormatter $textFormatter,

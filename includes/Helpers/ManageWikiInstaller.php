@@ -46,7 +46,7 @@ class ManageWikiInstaller {
 	}
 
 	private static function sql( string $dbname, array $data ): bool {
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $dbname );
 
 		foreach ( $data as $table => $sql ) {

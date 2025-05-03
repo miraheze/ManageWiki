@@ -21,7 +21,7 @@ class PopulateNamespaces extends Maintenance {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
 
-		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$siteName = $this->getConfig()->get( MainConfigNames::Sitename );

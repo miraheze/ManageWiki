@@ -8,9 +8,9 @@ use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\IConfigModule;
-use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\SelectQueryBuilder;
@@ -39,8 +39,8 @@ class ManageWikiNamespaces implements IConfigModule {
 	private ?string $log = null;
 
 	public function __construct(
-		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly DatabaseUtils $databaseUtils,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly NamespaceInfo $namespaceInfo,
 		private readonly ServiceOptions $options,
