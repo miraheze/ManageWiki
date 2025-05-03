@@ -195,6 +195,7 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\Main",
 			"services": [
 				"ManageWikiConfig",
+				"ManageWikiHookRunner",
 				"UserOptionsLookup"
 			]
 		}
