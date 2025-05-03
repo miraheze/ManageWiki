@@ -7,18 +7,18 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Title\NamespaceInfo;
-use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
+use Miraheze\ManageWiki\IModule;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\SelectQueryBuilder;
 
 /**
  * Handler for interacting with Namespace configuration
  */
-class ManageWikiNamespaces implements IConfigModule {
+class ManageWikiNamespaces implements IModule {
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::NamespacesDisallowedNames,
