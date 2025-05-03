@@ -5,8 +5,8 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Wikimedia\Message\ITextFormatter;
 
 class PermissionsFactory {
