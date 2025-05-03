@@ -19,10 +19,10 @@ class ManageWikiHookRunner implements
 	}
 
 	/** @inheritDoc */
-	public function onManageWikiAfterSidebarLinks( Skin $skin, array &$sidebar ): void {
+	public function onManageWikiAfterSidebarLinks( Skin $skin, array &$sidebarLinks ): void {
 		$this->container->run(
 			'ManageWikiAfterSidebarLinks',
-			[ $skin, &$sidebar ],
+			[ $skin, &$sidebarLinks ],
 			[ 'abortable' => false ]
 		);
 	}
