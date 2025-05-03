@@ -4,12 +4,12 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
-use Miraheze\CreateWiki\Helpers\RemoteWiki;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
+use Miraheze\ManageWiki\ICoreModule;
 
 class ModuleFactory {
 
@@ -38,7 +38,7 @@ class ModuleFactory {
 		return $modulesEnabled[$module] ?? false;
 	}
 
-	public function core( string $dbname ): RemoteWiki {
+	public function core( string $dbname ): ?ICoreModule {
 		$this->coreInstances[$dbname] ??=
 			$this->core->newInstance( $dbname );
 		return $this->coreInstances[$dbname];
@@ -68,7 +68,7 @@ class ModuleFactory {
 		return $this->permissions( self::DEFAULT_DATABASE );
 	}
 
-	public function coreLocal(): RemoteWiki {
+	public function coreLocal(): ?ICoreModule {
 		return $this->core( $this->options->get( MainConfigNames::DBname ) );
 	}
 
