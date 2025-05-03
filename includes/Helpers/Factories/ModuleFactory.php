@@ -38,7 +38,7 @@ class ModuleFactory {
 		return $modulesEnabled[$module] ?? false;
 	}
 
-	public function core( string $dbname ): ?ICoreModule {
+	public function core( string $dbname ): ICoreModule {
 		$this->coreInstances[$dbname] ??=
 			$this->core->newInstance( $dbname );
 		return $this->coreInstances[$dbname];
@@ -68,7 +68,7 @@ class ModuleFactory {
 		return $this->permissions( self::DEFAULT_DATABASE );
 	}
 
-	public function coreLocal(): ?ICoreModule {
+	public function coreLocal(): ICoreModule {
 		return $this->core( $this->options->get( MainConfigNames::DBname ) );
 	}
 
