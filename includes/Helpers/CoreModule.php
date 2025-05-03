@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\SettingsFactory;
+use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\ICoreModule;
 
 class CoreModule implements ICoreModule {
