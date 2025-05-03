@@ -14,7 +14,7 @@ class CoreFactory {
 
 	public function newInstance( string $dbname ): ?ICoreModule {
 		$provider = null;
-		$this->hookRunner->onManageWikiCoreProvider( $provider );
+		$this->hookRunner->onManageWikiCoreProvider( $provider, $dbname );
 		return $provider;
 	}
 }
