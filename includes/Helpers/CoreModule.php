@@ -14,6 +14,9 @@ class CoreModule implements ICoreModule {
 	];
 
 	private array $changes = [];
+	private array $logParams = [];
+
+	private ?string $log = null;
 
 	public function __construct(
 		private readonly SettingsFactory $settingsFactory,
@@ -251,6 +254,13 @@ class CoreModule implements ICoreModule {
 	public function commit(): void {
 		if ( !$this->hasChanges() ) {
 			return;
+		}
+
+		if ( $this->log === null ) {
+			$this->log = 'settings';
+			$this->logParams = [
+				'5::changes' => implode( ', ', array_keys( $this->changes ) ),
+			];
 		}
 
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
