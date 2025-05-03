@@ -7,15 +7,15 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Miraheze\CreateWiki\Helpers\RemoteWiki;
+use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
-use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
+use Miraheze\ManageWiki\Helpers\NamespacesModule;
+use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
@@ -58,7 +58,7 @@ return [
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiLogger' ),
 			new ServiceOptions(
-				ManageWikiExtensions::CONSTRUCTOR_OPTIONS,
+				ExtensionsModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
@@ -76,7 +76,7 @@ return [
 			$services->getJobQueueGroupFactory(),
 			$services->getNamespaceInfo(),
 			new ServiceOptions(
-				ManageWikiNamespaces::CONSTRUCTOR_OPTIONS,
+				NamespacesModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
@@ -97,7 +97,7 @@ return [
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			new ServiceOptions(
-				ManageWikiSettings::CONSTRUCTOR_OPTIONS,
+				SettingsModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);

@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
+use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Psr\Log\LoggerInterface;
 
@@ -18,8 +18,8 @@ class ExtensionsFactory {
 	) {
 	}
 
-	public function newInstance( string $dbname ): ManageWikiExtensions {
-		return new ManageWikiExtensions(
+	public function newInstance( string $dbname ): ExtensionsModule {
+		return new ExtensionsModule(
 			$this->dataFactory,
 			$this->databaseUtils,
 			$this->logger,

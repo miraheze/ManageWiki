@@ -8,10 +8,7 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 
-/**
- * Handler class for managing settings
- */
-class ManageWikiSettings implements IModule {
+class SettingsModule implements IModule {
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Settings,

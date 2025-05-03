@@ -6,10 +6,10 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\CreateWiki\Helpers\RemoteWiki;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
-use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
+use Miraheze\ManageWiki\Helpers\ExtensionsModule;
+use Miraheze\ManageWiki\Helpers\NamespacesModule;
+use Miraheze\ManageWiki\Helpers\PermissionsModule;
+use Miraheze\ManageWiki\Helpers\SettingsModule;
 
 class ModuleFactory {
 
@@ -44,27 +44,27 @@ class ModuleFactory {
 		return $this->coreInstances[$dbname];
 	}
 
-	public function extensions( string $dbname ): ManageWikiExtensions {
+	public function extensions( string $dbname ): ExtensionsModule {
 		return $this->extensions->newInstance( $dbname );
 	}
 
-	public function namespaces( string $dbname ): ManageWikiNamespaces {
+	public function namespaces( string $dbname ): NamespacesModule {
 		return $this->namespaces->newInstance( $dbname );
 	}
 
-	public function permissions( string $dbname ): ManageWikiPermissions {
+	public function permissions( string $dbname ): PermissionsModule {
 		return $this->permissions->newInstance( $dbname );
 	}
 
-	public function settings( string $dbname ): ManageWikiSettings {
+	public function settings( string $dbname ): SettingsModule {
 		return $this->settings->newInstance( $dbname );
 	}
 
-	public function namespacesDefault(): ManageWikiNamespaces {
+	public function namespacesDefault(): NamespacesModule {
 		return $this->namespaces( self::DEFAULT_DATABASE );
 	}
 
-	public function permissionsDefault(): ManageWikiPermissions {
+	public function permissionsDefault(): PermissionsModule {
 		return $this->permissions( self::DEFAULT_DATABASE );
 	}
 
@@ -72,19 +72,19 @@ class ModuleFactory {
 		return $this->core( $this->options->get( MainConfigNames::DBname ) );
 	}
 
-	public function extensionsLocal(): ManageWikiExtensions {
+	public function extensionsLocal(): ExtensionsModule {
 		return $this->extensions( $this->options->get( MainConfigNames::DBname ) );
 	}
 
-	public function namespacesLocal(): ManageWikiNamespaces {
+	public function namespacesLocal(): NamespacesModule {
 		return $this->namespaces( $this->options->get( MainConfigNames::DBname ) );
 	}
 
-	public function permissionsLocal(): ManageWikiPermissions {
+	public function permissionsLocal(): PermissionsModule {
 		return $this->permissions( $this->options->get( MainConfigNames::DBname ) );
 	}
 
-	public function settingsLocal(): ManageWikiSettings {
+	public function settingsLocal(): SettingsModule {
 		return $this->settings( $this->options->get( MainConfigNames::DBname ) );
 	}
 }

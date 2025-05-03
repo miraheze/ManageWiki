@@ -15,10 +15,7 @@ use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\SelectQueryBuilder;
 
-/**
- * Handler for interacting with Namespace configuration
- */
-class ManageWikiNamespaces implements IModule {
+class NamespacesModule implements IModule {
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::NamespacesDisallowedNames,
