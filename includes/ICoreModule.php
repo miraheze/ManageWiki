@@ -71,7 +71,6 @@ interface ICoreModule extends IModule {
 	/**
 	 * Needed for hooks
 	 */
-
 	public function getExtraFieldData( string $field, mixed $default ): mixed;
 
 	public function setExtraFieldData( string $field, mixed $value, mixed $default ): void;
