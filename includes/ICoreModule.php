@@ -14,7 +14,6 @@ interface ICoreModule extends IModule {
 	public function markInactive(): void;
 	public function markActive(): void;
 
-	public function getInactiveTimestamp(): ?string;
 	public function isInactiveExempt(): bool;
 	public function markExempt(): void;
 	public function unExempt(): void;
