@@ -48,5 +48,8 @@ interface ICoreModule extends IModule {
 	public function markExperimental(): void;
 	public function unMarkExperimental(): void;
 
+	public function getExtraFieldData( string $field, mixed $default ): mixed;
+	public function setExtraFieldData( string $field, mixed $value, mixed $default ): void;
+
 	public function trackChange( string $field, mixed $oldValue, mixed $newValue ): void;
 }
