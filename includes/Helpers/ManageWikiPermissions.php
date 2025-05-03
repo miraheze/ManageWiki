@@ -6,7 +6,7 @@ use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
 use Miraheze\CreateWiki\IConfigModule;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\ManageWiki\DatabaseUtils;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
 

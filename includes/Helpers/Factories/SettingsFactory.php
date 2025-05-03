@@ -4,8 +4,8 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 
 class SettingsFactory {
 

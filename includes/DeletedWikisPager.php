@@ -6,6 +6,7 @@ use MediaWiki\Context\IContextSource;
 use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Pager\TablePager;
 use MediaWiki\SpecialPage\SpecialPage;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 
 class DeletedWikisPager extends TablePager {
 

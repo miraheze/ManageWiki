@@ -1,6 +1,6 @@
 <?php
 
-namespace Miraheze\ManageWiki;
+namespace Miraheze\ManageWiki\Helpers\Utils;
 
 use MediaWiki\WikiMap\WikiMap;
 use Wikimedia\Rdbms\IConnectionProvider;
