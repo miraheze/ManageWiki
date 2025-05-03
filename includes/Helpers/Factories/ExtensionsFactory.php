@@ -4,8 +4,8 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Psr\Log\LoggerInterface;
 
 class ExtensionsFactory {

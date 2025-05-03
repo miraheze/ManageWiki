@@ -11,9 +11,9 @@ use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 
 class SpecialManageWikiDefaults extends SpecialPage {

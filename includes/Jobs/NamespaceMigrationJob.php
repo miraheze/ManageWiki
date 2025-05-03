@@ -3,7 +3,7 @@
 namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
-use Miraheze\ManageWiki\DatabaseUtils;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;

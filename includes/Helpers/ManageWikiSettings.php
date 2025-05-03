@@ -5,7 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\DatabaseUtils;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 
 /**

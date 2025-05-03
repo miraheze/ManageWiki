@@ -9,10 +9,10 @@ use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
 

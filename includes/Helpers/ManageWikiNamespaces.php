@@ -9,7 +9,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\DatabaseUtils;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
 use Wikimedia\Rdbms\IReadableDatabase;

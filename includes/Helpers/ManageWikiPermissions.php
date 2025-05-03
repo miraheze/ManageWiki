@@ -5,7 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\ManageWiki\DatabaseUtils;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;

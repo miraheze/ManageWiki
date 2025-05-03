@@ -3,8 +3,8 @@
 namespace Miraheze\ManageWiki\Specials;
 
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\ManageWiki\DatabaseUtils;
 use Miraheze\ManageWiki\DeletedWikisPager;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 
 class SpecialDeletedWikis extends SpecialPage {
 
