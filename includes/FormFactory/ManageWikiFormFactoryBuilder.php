@@ -115,29 +115,23 @@ class ManageWikiFormFactoryBuilder {
 			}
 		}
 
-		$formDescriptor += [
+		$addedModules = [
 			'sitename' => [
-				'label-message' => 'managewiki-label-sitename',
+				'if' => $mwCore->isEnabled( 'sitename' ),
 				'type' => 'text',
 				'default' => $mwCore->getSitename(),
 				// https://github.com/miraheze/CreateWiki/blob/20c2f47/sql/cw_wikis.sql#L3
 				'maxlength' => 128,
-				'disabled' => !$ceMW,
 				'required' => true,
-				'section' => 'main',
+				'access' => !$ceMW,
 			],
 			'language' => [
-				'label-message' => 'managewiki-label-language',
+				'if' => $mwCore->isEnabled( 'language' ),
 				'type' => 'language',
 				'default' => $mwCore->getLanguage(),
-				'disabled' => !$ceMW,
 				'required' => true,
-				'cssclass' => 'managewiki-infuse',
-				'section' => 'main',
+				'access' => !$ceMW,
 			],
-		];
-
-		$addedModules = [
 			'private' => [
 				'if' => $mwCore->isEnabled( 'private-wikis' ),
 				'type' => 'check',
@@ -172,7 +166,7 @@ class ManageWikiFormFactoryBuilder {
 				'options' => $config->get( ConfigNames::InactiveExemptReasonOptions ),
 			],
 			'server' => [
-				'if' => $config->get( ConfigNames::UseCustomDomains ),
+				'if' => $mwCore->isEnabled( 'server' ),
 				'type' => 'text',
 				'default' => $mwCore->getServerName(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
@@ -196,6 +190,14 @@ class ManageWikiFormFactoryBuilder {
 					'section' => 'main',
 				];
 
+				if ( $data['required'] ?? false ) {
+					$formDescriptor[$name]['required'] = true;
+				}
+
+				if ( $data['maxlength'] ?? false ) {
+					$formDescriptor[$name]['maxlength'] = $data['maxlength'];
+				}
+
 				if ( $data['hide-if'] ?? false ) {
 					$formDescriptor[$name]['hide-if'] = $data['hide-if'] ?? [];
 				}
@@ -218,10 +220,12 @@ class ManageWikiFormFactoryBuilder {
 			];
 		}
 
-		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-		$hookRunner->onManageWikiCoreAddFormFields(
-			$context, $moduleFactory, $dbname, $ceMW, $formDescriptor
-		);
+		if ( $mwCore->isEnabled( 'hooks' ) ) {
+			$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
+			$hookRunner->onManageWikiCoreAddFormFields(
+				$context, $moduleFactory, $dbname, $ceMW, $formDescriptor
+			);
+		}
 
 		if ( $mwCore->getDatabaseClusters() ) {
 			$clusterOptions = array_merge(
@@ -1236,15 +1240,15 @@ class ManageWikiFormFactoryBuilder {
 			$mwCore->setCategory( $formData['category'] );
 		}
 
-		if ( $config->get( ConfigNames::UseCustomDomains ) && $formData['server'] !== $mwCore->getServerName() ) {
+		if ( $mwCore->isEnabled( 'server' ) && $formData['server'] !== $mwCore->getServerName() ) {
 			$mwCore->setServerName( $formData['server'] );
 		}
 
-		if ( $formData['sitename'] !== $mwCore->getSitename() ) {
+		if ( $mwCore->isEnabled( 'sitename' ) && $formData['sitename'] !== $mwCore->getSitename() ) {
 			$mwCore->setSitename( $formData['sitename'] );
 		}
 
-		if ( $formData['language'] !== $mwCore->getLanguage() ) {
+		if ( $mwCore->isEnabled( 'language' ) && $formData['language'] !== $mwCore->getLanguage() ) {
 			$mwCore->setLanguage( $formData['language'] );
 		}
 
@@ -1252,10 +1256,12 @@ class ManageWikiFormFactoryBuilder {
 			$mwCore->setDBCluster( $formData['dbcluster'] );
 		}
 
-		$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-		$hookRunner->onManageWikiCoreFormSubmission(
-			$context, $moduleFactory, $dbname, $formData
-		);
+		if ( $mwCore->isEnabled( 'hooks' ) ) {
+			$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
+			$hookRunner->onManageWikiCoreFormSubmission(
+				$context, $moduleFactory, $dbname, $formData
+			);
+		}
 
 		return $mwCore;
 	}
