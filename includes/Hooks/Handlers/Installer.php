@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Installer\Hook\LoadExtensionSchemaUpdatesHook;
+use Miraheze\ManageWiki\Maintenance\PopulateDefaults;
 
 class Installer implements LoadExtensionSchemaUpdatesHook {
 
@@ -98,18 +99,6 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			true,
 		] );
 
-		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-managewiki',
-			'applyPatch',
-			"$dir/defaults/mw_namespaces.sql",
-			true,
-		] );
-
-		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-managewiki',
-			'applyPatch',
-			"$dir/defaults/mw_permissions.sql",
-			true,
-		] );
+		$updater->addPostDatabaseUpdateMaintenance( PopulateDefaults::class );
 	}
 }
