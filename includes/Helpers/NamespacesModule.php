@@ -158,8 +158,9 @@ class NamespacesModule implements IModule {
 	 * @return array Namespace configuration
 	 */
 	public function list( ?int $id ): array {
+		// Deprecated usage
 		if ( $id === null ) {
-			return $this->liveNamespaces;
+			return $this->listAll();
 		}
 
 		return $this->liveNamespaces[$id] ?? [
@@ -173,6 +174,10 @@ class NamespacesModule implements IModule {
 			'core' => 0,
 			'additional' => [],
 		];
+	}
+
+	public function listAll(): array {
+		return $this->liveNamespaces;
 	}
 
 	/**
