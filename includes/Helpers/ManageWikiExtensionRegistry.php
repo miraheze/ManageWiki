@@ -27,6 +27,6 @@ class ManageWikiExtensionRegistry extends ExtensionRegistry {
 			$path = str_replace( 'WikibaseRepo/extension.json', 'Wikibase/extension-repo.json', $path );
 		}
 
-		parent::queue( $path . 'test' );
+		parent::queue( $path );
 	}
 }
