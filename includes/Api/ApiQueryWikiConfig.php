@@ -4,8 +4,8 @@ namespace Miraheze\ManageWiki\Api;
 
 use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
-use Miraheze\CreateWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Wikimedia\ParamValidator\ParamValidator;
 
