@@ -253,11 +253,11 @@
 		"ManageWikiModulesEnabled": {
 			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
 			"value": {
-				"core": false,
-				"extensions": false,
-				"namespaces": false,
-				"permissions": false,
-				"settings": false
+				"core": true,
+				"extensions": true,
+				"namespaces": true,
+				"permissions": true,
+				"settings": true
 			}
 		},
 		"ManageWikiNamespacesAdditional": {
@@ -293,7 +293,7 @@
 		},
 		"ManageWikiPermissionsDefaultPrivateGroup": {
 			"description": "String. Name of a group to add to private wikis. Setting to an empty string disables this function.",
-			"value": ""
+			"value": "member"
 		},
 		"ManageWikiPermissionsDisallowedGroups": {
 			"description": "Array. An array of usergroups which ManageWiki can't manage. Will prevent users creating same named groups as well.",
