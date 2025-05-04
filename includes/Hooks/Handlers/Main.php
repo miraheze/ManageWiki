@@ -3,8 +3,15 @@
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Config\Config;
+use MediaWiki\Hook\MediaWikiServicesHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
+use MediaWiki\MainConfigNames;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
+use MediaWiki\Registration\ExtensionRegistry;
+use MediaWiki\Settings\Config\GlobalConfigBuilder;
+use MediaWiki\Settings\Config\PhpIniSink;
+use MediaWiki\Settings\SettingsBuilder;
+use MediaWiki\Settings\Source\PhpSettingsSource;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\ConfigNames;
@@ -12,6 +19,7 @@ use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
 
 class Main implements
 	GetPreferencesHook,
+	MediaWikiServicesHook,
 	SidebarBeforeOutputHook
 {
 
@@ -31,20 +39,22 @@ class Main implements
 		];
 	}
 
-	public function onMediaWikiServices( MediaWikiServices $services ) {
+	public function onMediaWikiServices( $services ) {
+		$dbname = $this->config->get( MainConfigNames::DBname );
 		// If we don't have a cache file, let us exit here
-		if ( !file_exists( '/srv/mediawiki/cache' . '/' . 'metawikibeta' . '.php' ) ) {
+		if ( !file_exists( "/srv/mediawiki/cache/$dbname.php" ) ) {
 			return;
 		}
 
-		$currentDatabaseFile = '/srv/mediawiki/cache' . '/' . 'metawikibeta' . '.php';
-		$settings = new MediaWiki\Settings\SettingsBuilder(
-				MW_INSTALL_PATH,
-				ExtensionRegistry::getInstance(),
-				new MediaWiki\Settings\Config\GlobalConfigBuilder( '' ),
-				new MediaWiki\Settings\Config\PhpIniSink()
+		$currentDatabaseFile = "/srv/mediawiki/cache/$dbname.php";
+		$settings = new SettingsBuilder(
+			MW_INSTALL_PATH,
+			ExtensionRegistry::getInstance(),
+			new GlobalConfigBuilder( '' ),
+			new PhpIniSink()
 		);
-		$settings->load( new MediaWiki\Settings\Source\PhpSettingsSource( $currentDatabaseFile ) );
+
+		$settings->load( new PhpSettingsSource( $currentDatabaseFile ) );
 		$settings->apply();
 	}
 
