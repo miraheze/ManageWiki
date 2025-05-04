@@ -21,6 +21,8 @@ class PopulateDefaults extends LoggedUpdateMaintenance {
 
 		$dbw->sourceFile( __DIR__ . '/../sql/defaults/mw_namespaces.sql' );
 		$dbw->sourceFile( __DIR__ . '/../sql/defaults/mw_permissions.sql' );
+
+		$this->output( "Populated defaults for global database '{$dbw->getDomainID()}'\n" );
 		return true;
 	}
 }
