@@ -47,12 +47,9 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 					$mwNamespacesDefault->list( $namespace ),
 					maintainPrefix: false
 				);
-				$mwNamespaces->commit();
 			}
 
-			$dataFactory = $this->getServiceContainer()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $dbname );
-			$data->resetWikiData( isNewChanges: true );
+			$mwNamespaces->commit();
 		}
 	}
 }
