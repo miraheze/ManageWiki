@@ -142,9 +142,6 @@
 		}
 	},
 	"Hooks": {
-		"ContentHandlerForModelID": {
-			"handler": "Main"
-		},
 		"CreateWikiCreation": {
 			"handler": "CreateWiki"
 		},
