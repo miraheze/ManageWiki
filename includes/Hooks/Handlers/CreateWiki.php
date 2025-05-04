@@ -294,7 +294,7 @@ class CreateWiki implements
 				];
 			}
 		}
-		
+
 		$cacheArray['config-overrides'] = $this->getManageWikiConfigCache( $cacheArray );
 
 		unset(
