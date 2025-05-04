@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Installer\Hook\LoadExtensionSchemaUpdatesHook;
+use Miraheze\ManageWiki\Maintenance\PopulateDefaults;
 
 class Installer implements LoadExtensionSchemaUpdatesHook {
 
@@ -97,5 +98,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			"$dir/patches/patch-permissions-add-indexes.sql",
 			true,
 		] );
+
+		$updater->addPostDatabaseUpdateMaintenance( PopulateDefaults::class );
 	}
 }
