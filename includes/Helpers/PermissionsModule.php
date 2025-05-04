@@ -95,7 +95,7 @@ class PermissionsModule implements IModule {
 	 */
 	public function getGroupsWithPermission( string $permission ): array {
 		$groups = [];
-		foreach ( $this->livePermissions as $group => $data ) {
+		foreach ( $this->listAll() as $group => $data ) {
 			if ( in_array( $permission, $data['permissions'] ?? [], true ) ) {
 				$groups[] = $group;
 			}
