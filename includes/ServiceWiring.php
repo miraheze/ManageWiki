@@ -88,7 +88,7 @@ return [
 			$services->getUserGroupManagerFactory(),
 			$services->getMessageFormatterFactory()->getTextFormatter(
 				$services->getContentLanguageCode()->toString()
-			),
+			)
 		);
 	},
 	'ManageWikiSettingsFactory' => static function ( MediaWikiServices $services ): SettingsFactory {
