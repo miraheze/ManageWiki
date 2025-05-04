@@ -46,11 +46,16 @@ class SettingsModule implements IModule {
 	 * @return mixed Value or all settings, null if no value
 	 */
 	public function list( ?string $var ): mixed {
+		// Deprecated usage
 		if ( $var === null ) {
-			return $this->liveSettings;
+			return $this->listAll();
 		}
 
 		return $this->liveSettings[$var] ?? null;
+	}
+
+	public function listAll(): array {
+		return $this->liveSettings;
 	}
 
 	/**
