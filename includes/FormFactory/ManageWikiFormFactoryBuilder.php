@@ -1297,7 +1297,7 @@ class ManageWikiFormFactoryBuilder {
 		$extList = $mwExtensions->list();
 
 		$mwSettings = $moduleFactory->settings( $dbname );
-		$settingsList = $mwSettings->list( var: null );
+		$settingsList = $mwSettings->listAll();
 
 		$settingsArray = [];
 		foreach ( $config->get( ConfigNames::Settings ) as $name => $set ) {
