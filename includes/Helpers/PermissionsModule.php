@@ -59,7 +59,7 @@ class PermissionsModule implements IModule {
 	}
 
 	/**
-	 * Lists either all groups or a specific one
+	 * Retrieves data for a specific group
 	 * @param string $group Group wanted
 	 * @return array Group configuration
 	 */

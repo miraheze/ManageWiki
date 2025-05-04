@@ -153,7 +153,7 @@ class NamespacesModule implements IModule {
 	}
 
 	/**
-	 * Lists either all namespaces or a specific one
+	 * Retrieves data for a specific namespace
 	 * @param int $id Namespace ID wanted
 	 * @return array Namespace configuration
 	 */
