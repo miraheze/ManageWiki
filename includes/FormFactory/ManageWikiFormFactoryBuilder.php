@@ -407,9 +407,9 @@ class ManageWikiFormFactoryBuilder {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
 		$mwSettings = $moduleFactory->settings( $dbname );
-		$settingsList = $mwSettings->list( var: null );
+		$settingsList = $mwSettings->listAll();
 		$mwPermissions = $moduleFactory->permissions( $dbname );
-		$groupList = array_keys( $mwPermissions->list( group: null ) );
+		$groupList = $mwPermissions->listGroups();
 
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
@@ -758,7 +758,7 @@ class ManageWikiFormFactoryBuilder {
 			$craftedNamespaces = [];
 			$canDelete = $mwNamespaces->exists( $namespaceID );
 
-			foreach ( $mwNamespaces->list( id: null ) as $id => $config ) {
+			foreach ( $mwNamespaces->listAll() as $id => $config ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {
 					continue;
 				}
@@ -850,7 +850,7 @@ class ManageWikiFormFactoryBuilder {
 			'allPermissions' => $allPermissions,
 			'assignedPermissions' => $assignedPermissions,
 			'allGroups' => array_diff(
-				array_keys( $mwPermissions->list( group: null ) ),
+				$mwPermissions->listGroups(),
 				$config->get( ConfigNames::PermissionsDisallowedGroups ),
 				$userGroupManager->listAllImplicitGroups()
 			),
