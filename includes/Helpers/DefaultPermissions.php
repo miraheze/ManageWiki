@@ -6,7 +6,7 @@ use MediaWiki\Config\ServiceOptions;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 
-class PermissionsModuleDefaults {
+class DefaultPermissions {
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::PermissionsDefaultPrivateGroup,
