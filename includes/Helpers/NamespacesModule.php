@@ -175,6 +175,10 @@ class NamespacesModule implements IModule {
 		return $this->liveNamespaces;
 	}
 
+	public function listIds(): array {
+		return array_keys( $this->listAll() );
+	}
+
 	/**
 	 * Modify a namespace handler
 	 * @param int $id Namespace ID
