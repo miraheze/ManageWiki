@@ -132,12 +132,6 @@ class ManageWikiInstaller {
 		}
 
 		foreach ( $data as $script => $options ) {
-			$repeatWith = [];
-			if ( isset( $options['repeat-with'] ) ) {
-				$repeatWith = $options['repeat-with'];
-				unset( $options['repeat-with'] );
-			}
-
 			$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
 			$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
 
@@ -151,19 +145,6 @@ class ManageWikiInstaller {
 					]
 				)
 			);
-
-			if ( $repeatWith ) {
-				$jobQueueGroup->push(
-					new JobSpecification(
-						MWScriptJob::JOB_NAME,
-						[
-							'dbname' => $dbname,
-							'script' => $script,
-							'options' => $repeatWith,
-						]
-					)
-				);
-			}
 		}
 
 		return true;
