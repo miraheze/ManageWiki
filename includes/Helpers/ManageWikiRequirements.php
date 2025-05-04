@@ -75,10 +75,7 @@ class ManageWikiRequirements {
 	 * @param array $extList Extensions already enabled on the wiki
 	 * @return bool Whether extension requirements are met
 	 */
-	private static function extensions(
-		array $data,
-		array $extList
-	): bool {
+	private static function extensions( array $data, array $extList ): bool {
 		foreach ( $data as $extension ) {
 			if ( is_array( $extension ) ) {
 				$count = 0;
