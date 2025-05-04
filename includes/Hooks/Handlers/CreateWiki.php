@@ -360,6 +360,7 @@ class CreateWiki implements
 		}
 
 		$mwPermissions = $this->moduleFactory->permissions( $dbname );
+		var_dump( $mwPermissions->listGroups() );
 		$mwPermissions->remove( $defaultPrivateGroup );
 
 		foreach ( $mwPermissions->listGroups() as $group ) {
