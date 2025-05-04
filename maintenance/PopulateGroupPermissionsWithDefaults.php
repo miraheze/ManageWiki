@@ -62,10 +62,6 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 			}
 
 			$mwPermissions->commit();
-
-			$dataFactory = $this->getServiceContainer()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $dbname );
-			$data->resetWikiData( isNewChanges: true );
 		}
 	}
 }
