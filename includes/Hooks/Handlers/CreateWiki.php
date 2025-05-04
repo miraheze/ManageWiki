@@ -37,7 +37,7 @@ class CreateWiki implements
 			$mwPermissionsDefault = $this->moduleFactory->permissionsDefault();
 			$mwPermissions = $this->moduleFactory->permissions( $dbname );
 			$defaultGroups = array_diff(
-				array_keys( $mwPermissionsDefault->list( group: null ) ),
+				$mwPermissionsDefault->listGroups(),
 				[ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
 			);
 
@@ -75,7 +75,7 @@ class CreateWiki implements
 
 		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$mwNamespacesDefault = $this->moduleFactory->namespacesDefault();
-			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
+			$defaultNamespaces = $mwNamespacesDefault->listAll();
 
 			$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
 			$mwNamespaces->disableNamespaceMigrationJob();
@@ -362,7 +362,7 @@ class CreateWiki implements
 		$mwPermissions = $this->moduleFactory->permissions( $dbname );
 		$mwPermissions->remove( $defaultPrivateGroup );
 
-		foreach ( array_keys( $mwPermissions->list( group: null ) ) as $group ) {
+		foreach ( $mwPermissions->listGroups() as $group ) {
 			$mwPermissions->modify( $group, [
 				'addgroups' => [
 					'remove' => [ $defaultPrivateGroup ],
