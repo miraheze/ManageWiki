@@ -163,7 +163,7 @@
 		"LoadExtensionSchemaUpdates": {
 			"handler": "Installer"
 		},
-		"MediaWikiServices": {
+		"SetupAfterCache": {
 			"handler": "Main"
 		},
 		"SidebarBeforeOutput": {
