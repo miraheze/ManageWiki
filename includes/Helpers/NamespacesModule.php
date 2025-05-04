@@ -154,15 +154,10 @@ class NamespacesModule implements IModule {
 
 	/**
 	 * Lists either all namespaces or a specific one
-	 * @param ?int $id Namespace ID wanted (null for all)
+	 * @param int $id Namespace ID wanted
 	 * @return array Namespace configuration
 	 */
-	public function list( ?int $id ): array {
-		// Deprecated usage
-		if ( $id === null ) {
-			return $this->listAll();
-		}
-
+	public function list( int $id ): array {
 		return $this->liveNamespaces[$id] ?? [
 			'name' => null,
 			'searchable' => 0,
