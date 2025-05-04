@@ -18,7 +18,6 @@ use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
-use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
 use Psr\Log\LoggerInterface;
 
