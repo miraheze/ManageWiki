@@ -6,13 +6,15 @@ use MediaWiki\Config\Config;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\Hook\UserGetReservedNamesHook;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
 
 class Main implements
 	GetPreferencesHook,
-	SidebarBeforeOutputHook
+	SidebarBeforeOutputHook,
+	UserGetReservedNamesHook
 {
 
 	public function __construct(
@@ -60,5 +62,10 @@ class Main implements
 			$this->hookRunner->onManageWikiAfterSidebarLinks( $skin, $sidebarLinks );
 			$sidebar['managewiki-sidebar-header'] = $sidebarLinks;
 		}
+	}
+
+	/** @inheritDoc */
+	public function onUserGetReservedNames( &$reservedUsernames ) {
+		$reservedUsernames[] = 'ManageWiki';
 	}
 }
