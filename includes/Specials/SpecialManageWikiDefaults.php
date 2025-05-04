@@ -73,7 +73,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
 			$language = $this->getLanguage();
 			$mwPermissions = $this->moduleFactory->permissionsDefault();
-			$groups = array_keys( $mwPermissions->list( group: null ) );
+			$groups = $mwPermissions->listGroups();
 			$craftedGroups = [];
 
 			foreach ( $groups as $group ) {
