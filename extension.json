@@ -163,6 +163,9 @@
 		"LoadExtensionSchemaUpdates": {
 			"handler": "Installer"
 		},
+		"MediaWikiServices": {
+			"handler": "Main"
+		},
 		"SidebarBeforeOutput": {
 			"handler": "Main"
 		}
