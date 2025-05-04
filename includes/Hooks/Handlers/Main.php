@@ -31,6 +31,23 @@ class Main implements
 		];
 	}
 
+	public function onMediaWikiServices( MediaWikiServices $services ) {
+		// If we don't have a cache file, let us exit here
+		if ( !file_exists( '/srv/mediawiki/cache' . '/' . 'metawikibeta' . '.php' ) ) {
+			return;
+		}
+
+		$currentDatabaseFile = '/srv/mediawiki/cache' . '/' . 'metawikibeta' . '.php';
+		$settings = new MediaWiki\Settings\SettingsBuilder(
+        		MW_INSTALL_PATH,
+        		ExtensionRegistry::getInstance(),
+        		new MediaWiki\Settings\Config\GlobalConfigBuilder( '' ),
+        		new MediaWiki\Settings\Config\PhpIniSink()
+		);
+		$settings->load( new MediaWiki\Settings\Source\PhpSettingsSource( $currentDatabaseFile ) );
+		$settings->apply();
+	}
+
 	/** @inheritDoc */
 	public function onSidebarBeforeOutput( $skin, &$sidebar ): void {
 		$authority = $skin->getAuthority();
