@@ -60,14 +60,10 @@ class PermissionsModule implements IModule {
 
 	/**
 	 * Lists either all groups or a specific one
-	 * @param ?string $group Group wanted (null for all)
+	 * @param string $group Group wanted
 	 * @return array Group configuration
 	 */
-	public function list( ?string $group ): array {
-		if ( $group === null ) {
-			return $this->livePermissions;
-		}
-
+	public function list( string $group ): array {
 		return $this->livePermissions[$group] ?? [
 			'permissions' => [],
 			'addgroups' => [],
@@ -78,6 +74,14 @@ class PermissionsModule implements IModule {
 		];
 	}
 
+	public function listAll(): array {
+		return $this->livePermissions;
+	}
+
+	public function listGroups(): array {
+		return array_keys( $this->listAll() );
+	}
+
 	/**
 	 * Get all groups that have the specified permission
 	 *
@@ -86,7 +90,7 @@ class PermissionsModule implements IModule {
 	 */
 	public function getGroupsWithPermission( string $permission ): array {
 		$groups = [];
-		foreach ( $this->livePermissions as $group => $data ) {
+		foreach ( $this->listAll() as $group => $data ) {
 			if ( in_array( $permission, $data['permissions'] ?? [], true ) ) {
 				$groups[] = $group;
 			}

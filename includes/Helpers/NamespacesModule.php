@@ -154,14 +154,10 @@ class NamespacesModule implements IModule {
 
 	/**
 	 * Lists either all namespaces or a specific one
-	 * @param ?int $id Namespace ID wanted (null for all)
+	 * @param int $id Namespace ID wanted
 	 * @return array Namespace configuration
 	 */
-	public function list( ?int $id ): array {
-		if ( $id === null ) {
-			return $this->liveNamespaces;
-		}
-
+	public function list( int $id ): array {
 		return $this->liveNamespaces[$id] ?? [
 			'name' => null,
 			'searchable' => 0,
@@ -173,6 +169,14 @@ class NamespacesModule implements IModule {
 			'core' => 0,
 			'additional' => [],
 		];
+	}
+
+	public function listAll(): array {
+		return $this->liveNamespaces;
+	}
+
+	public function listIds(): array {
+		return array_keys( $this->listAll() );
 	}
 
 	/**

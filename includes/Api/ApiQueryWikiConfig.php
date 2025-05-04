@@ -45,7 +45,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 			if ( isset( $prop['settings'] ) ) {
 				$mwSettings = $this->moduleFactory->settings( $wiki );
-				$wikiData['settings'] = $mwSettings->list( var: null );
+				$wikiData['settings'] = $mwSettings->listAll();
 
 				foreach ( $this->getConfig()->get( ConfigNames::Settings ) as $setting => $options ) {
 					if ( isset( $options['requires']['visibility']['permissions'] ) ) {
@@ -61,7 +61,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 			if ( isset( $prop['permissions'] ) ) {
 				$mwPermissions = $this->moduleFactory->permissions( $wiki );
-				foreach ( $mwPermissions->list( group: null ) as $group => $data ) {
+				foreach ( $mwPermissions->listAll() as $group => $data ) {
 					$wikiData['permissions'][$group] = $data['permissions'];
 				}
 			}

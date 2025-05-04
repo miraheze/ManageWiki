@@ -41,7 +41,7 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 			$mwPermissions = $moduleFactory->permissionsLocal();
 			$mwPermissionsDefault = $moduleFactory->permissionsDefault();
 			$defaultGroups = array_diff(
-				array_keys( $mwPermissionsDefault->list( group: null ) ),
+				$mwPermissionsDefault->listGroups(),
 				[ $this->getConfig()->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
 			);
 

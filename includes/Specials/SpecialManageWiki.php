@@ -263,7 +263,7 @@ class SpecialManageWiki extends SpecialPage {
 		// Handle permissions module when we are not editing a specific group.
 		if ( $module === 'permissions' && $special === '' ) {
 			$language = $this->getLanguage();
-			$groups = array_keys( $this->moduleFactory->permissions( $dbname )->list( group: null ) );
+			$groups = $this->moduleFactory->permissions( $dbname )->listGroups();
 
 			foreach ( $groups as $group ) {
 				$lowerCaseGroupName = $language->lc( $group );
@@ -277,7 +277,7 @@ class SpecialManageWiki extends SpecialPage {
 		// Handle namespaces module when we are not editing a specific namespace.
 		if ( $module === 'namespaces' && $special === '' ) {
 			$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
-			$namespaces = $mwNamespaces->list( id: null );
+			$namespaces = $mwNamespaces->listAll();
 			foreach ( $namespaces as $id => $namespace ) {
 				if ( $mwNamespaces->isTalk( $id ) ) {
 					continue;

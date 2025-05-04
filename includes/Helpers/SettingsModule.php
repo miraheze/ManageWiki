@@ -41,16 +41,16 @@ class SettingsModule implements IModule {
 	}
 
 	/**
-	 * Lists either all settings or the value of a specific one
-	 * @param ?string $var Setting variable to retrieve value of
-	 * @return mixed Value or all settings, null if no value
+	 * Retrieves the value of a specific setting
+	 * @param string $var Setting variable to retrieve value of
+	 * @return mixed Value, null if no value
 	 */
-	public function list( ?string $var ): mixed {
-		if ( $var === null ) {
-			return $this->liveSettings;
-		}
-
+	public function list( string $var ): mixed {
 		return $this->liveSettings[$var] ?? null;
+	}
+
+	public function listAll(): array {
+		return $this->liveSettings;
 	}
 
 	/**
@@ -111,7 +111,7 @@ class SettingsModule implements IModule {
 	 * @param bool $remove Whether to remove settings if they do not exist
 	 */
 	public function overwriteAll( array $settings, bool $remove ): void {
-		$overwrittenSettings = $this->list( var: null );
+		$overwrittenSettings = $this->listAll();
 		foreach ( $this->options->get( ConfigNames::Settings ) as $var => $_ ) {
 			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) && $remove ) {
 				$this->remove( [ $var ], default: null );
@@ -156,11 +156,11 @@ class SettingsModule implements IModule {
 			->insertInto( 'mw_settings' )
 			->row( [
 				's_dbname' => $this->dbname,
-				's_settings' => json_encode( $this->liveSettings ),
+				's_settings' => json_encode( $this->listAll() ),
 			] )
 			->onDuplicateKeyUpdate()
 			->uniqueIndexFields( [ 's_dbname' ] )
-			->set( [ 's_settings' => json_encode( $this->liveSettings ) ] )
+			->set( [ 's_settings' => json_encode( $this->listAll() ) ] )
 			->caller( __METHOD__ )
 			->execute();
 
