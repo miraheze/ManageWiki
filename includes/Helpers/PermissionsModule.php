@@ -60,15 +60,10 @@ class PermissionsModule implements IModule {
 
 	/**
 	 * Lists either all groups or a specific one
-	 * @param ?string $group Group wanted (null for all)
+	 * @param string $group Group wanted
 	 * @return array Group configuration
 	 */
-	public function list( ?string $group ): array {
-		// Deprecated usage
-		if ( $group === null ) {
-			return $this->listAll();
-		}
-
+	public function list( string $group ): array {
 		return $this->livePermissions[$group] ?? [
 			'permissions' => [],
 			'addgroups' => [],
