@@ -161,11 +161,11 @@ class SettingsModule implements IModule {
 			->insertInto( 'mw_settings' )
 			->row( [
 				's_dbname' => $this->dbname,
-				's_settings' => json_encode( $this->liveSettings ),
+				's_settings' => json_encode( $this->listAll() ),
 			] )
 			->onDuplicateKeyUpdate()
 			->uniqueIndexFields( [ 's_dbname' ] )
-			->set( [ 's_settings' => json_encode( $this->liveSettings ) ] )
+			->set( [ 's_settings' => json_encode( $this->listAll() ) ] )
 			->caller( __METHOD__ )
 			->execute();
 
