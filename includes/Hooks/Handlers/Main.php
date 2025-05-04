@@ -39,10 +39,10 @@ class Main implements
 
 		$currentDatabaseFile = '/srv/mediawiki/cache' . '/' . 'metawikibeta' . '.php';
 		$settings = new MediaWiki\Settings\SettingsBuilder(
-        		MW_INSTALL_PATH,
-        		ExtensionRegistry::getInstance(),
-        		new MediaWiki\Settings\Config\GlobalConfigBuilder( '' ),
-        		new MediaWiki\Settings\Config\PhpIniSink()
+				MW_INSTALL_PATH,
+				ExtensionRegistry::getInstance(),
+				new MediaWiki\Settings\Config\GlobalConfigBuilder( '' ),
+				new MediaWiki\Settings\Config\PhpIniSink()
 		);
 		$settings->load( new MediaWiki\Settings\Source\PhpSettingsSource( $currentDatabaseFile ) );
 		$settings->apply();
