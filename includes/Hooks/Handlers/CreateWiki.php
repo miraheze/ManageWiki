@@ -163,7 +163,7 @@ class CreateWiki implements
 				$lcName = $this->localisationCache->getItem( $languageCode, 'namespaceNames' );
 				$lcName[NS_PROJECT_TALK] = str_replace( '$1',
 					$lcName[NS_PROJECT] ?? $metaNamespace,
-					$lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk
+					$lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk ?? '$1_talk'
 				);
 
 				if ( $languageCode !== 'en' ) {
