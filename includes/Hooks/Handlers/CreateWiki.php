@@ -75,7 +75,7 @@ class CreateWiki implements
 
 		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$mwNamespacesDefault = $this->moduleFactory->namespacesDefault();
-			$defaultNamespaces = $mwNamespacesDefault->listAll();
+			$defaultNamespaces = $mwNamespacesDefault->listIds();
 
 			$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
 			$mwNamespaces->disableNamespaceMigrationJob();
