@@ -42,10 +42,10 @@ class SettingsModule implements IModule {
 
 	/**
 	 * Lists either all settings or the value of a specific one
-	 * @param ?string $var Setting variable to retrieve value of
+	 * @param string $var Setting variable to retrieve value of
 	 * @return mixed Value or all settings, null if no value
 	 */
-	public function list( ?string $var ): mixed {
+	public function list( string $var ): mixed {
 		// Deprecated usage
 		if ( $var === null ) {
 			return $this->listAll();
@@ -116,7 +116,7 @@ class SettingsModule implements IModule {
 	 * @param bool $remove Whether to remove settings if they do not exist
 	 */
 	public function overwriteAll( array $settings, bool $remove ): void {
-		$overwrittenSettings = $this->list( var: null );
+		$overwrittenSettings = $this->listAll();
 		foreach ( $this->options->get( ConfigNames::Settings ) as $var => $_ ) {
 			if ( !array_key_exists( $var, $settings ) && array_key_exists( $var, $overwrittenSettings ) && $remove ) {
 				$this->remove( [ $var ], default: null );
