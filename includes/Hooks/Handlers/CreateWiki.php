@@ -11,6 +11,7 @@ use Miraheze\CreateWiki\Hooks\CreateWikiStatePrivateHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiStatePublicHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiTablesHook;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\IReadableDatabase;
@@ -25,6 +26,7 @@ class CreateWiki implements
 
 	public function __construct(
 		private readonly Config $config,
+		private readonly DefaultPermissions $defaultPermissions,
 		private readonly LoggerInterface $logger,
 		private readonly ModuleFactory $moduleFactory,
 		private readonly LocalisationCache $localisationCache
@@ -34,34 +36,7 @@ class CreateWiki implements
 	/** @inheritDoc */
 	public function onCreateWikiCreation( string $dbname, bool $private ): void {
 		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
-			$mwPermissionsDefault = $this->moduleFactory->permissionsDefault();
-			$mwPermissions = $this->moduleFactory->permissions( $dbname );
-			$defaultGroups = array_diff(
-				$mwPermissionsDefault->listGroups(),
-				[ $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
-			);
-
-			foreach ( $defaultGroups as $newGroup ) {
-				$groupData = $mwPermissionsDefault->list( $newGroup );
-				$groupArray = [];
-
-				foreach ( $groupData as $name => $value ) {
-					if ( $name === 'autopromote' ) {
-						$groupArray[$name] = $value;
-						continue;
-					}
-
-					$groupArray[$name]['add'] = $value;
-				}
-
-				$mwPermissions->modify( $newGroup, $groupArray );
-			}
-
-			$mwPermissions->commit();
-
-			if ( $private ) {
-				$this->onCreateWikiStatePrivate( $dbname );
-			}
+			$this->defaultPermissions->populatePermissions( $dbname, $private );
 		}
 
 		if (
@@ -318,38 +293,11 @@ class CreateWiki implements
 
 	/** @inheritDoc */
 	public function onCreateWikiStatePrivate( string $dbname ): void {
-		$defaultPrivateGroup = $this->config->get( ConfigNames::PermissionsDefaultPrivateGroup );
-		if ( !$this->moduleFactory->isEnabled( 'permissions' ) || !$defaultPrivateGroup ) {
+		if ( !$this->moduleFactory->isEnabled( 'permissions' ) ) {
 			return;
 		}
 
-		$mwPermissionsDefault = $this->moduleFactory->permissionsDefault();
-		$mwPermissions = $this->moduleFactory->permissions( $dbname );
-
-		$defaultPrivate = $mwPermissionsDefault->list( $defaultPrivateGroup );
-
-		$privateArray = [];
-		foreach ( $defaultPrivate as $name => $value ) {
-			if ( $name === 'autopromote' ) {
-				$privateArray[$name] = $value;
-				continue;
-			}
-
-			$privateArray[$name]['add'] = $value;
-		}
-
-		$mwPermissions->modify( $defaultPrivateGroup, $privateArray );
-
-		$mwPermissions->modify( 'sysop', [
-			'addgroups' => [
-				'add' => [ $defaultPrivateGroup ],
-			],
-			'removegroups' => [
-				'add' => [ $defaultPrivateGroup ],
-			],
-		] );
-
-		$mwPermissions->commit();
+		$this->defaultPermissions->populatePrivatePermissons( $dbname );
 	}
 
 	/** @inheritDoc */
