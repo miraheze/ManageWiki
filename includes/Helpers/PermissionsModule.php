@@ -64,8 +64,9 @@ class PermissionsModule implements IModule {
 	 * @return array Group configuration
 	 */
 	public function list( ?string $group ): array {
+		// Deprecated usage
 		if ( $group === null ) {
-			return $this->livePermissions;
+			return $this->listAll();
 		}
 
 		return $this->livePermissions[$group] ?? [
@@ -76,6 +77,14 @@ class PermissionsModule implements IModule {
 			'removeself' => [],
 			'autopromote' => null,
 		];
+	}
+
+	public function listAll(): array {
+		return $this->livePermissions;
+	}
+
+	public function listGroups(): array {
+		return array_keys( $this->listAll() );
 	}
 
 	/**
