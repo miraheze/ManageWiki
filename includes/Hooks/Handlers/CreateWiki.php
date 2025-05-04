@@ -162,7 +162,7 @@ class CreateWiki implements
 				$languageCode = $cacheArray['core']['wgLanguageCode'] ?? 'en';
 				$lcName = $this->localisationCache->getItem( $languageCode, 'namespaceNames' );
 				$lcName[NS_PROJECT_TALK] = str_replace( '$1',
-					$lcName[NS_PROJECT] ?? $metaNamespace,
+					$lcName[NS_PROJECT] ?? $metaNamespace ?? 'Project',
 					$lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk ?? '$1_talk'
 				);
 
