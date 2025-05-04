@@ -3,7 +3,7 @@
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Config\Config;
-use MediaWiki\Hook\MediaWikiServicesHook;
+use MediaWiki\Hook\SetupAfterCacheHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
@@ -19,7 +19,7 @@ use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
 
 class Main implements
 	GetPreferencesHook,
-	MediaWikiServicesHook,
+	SetupAfterCacheHook,
 	SidebarBeforeOutputHook
 {
 
@@ -39,7 +39,7 @@ class Main implements
 		];
 	}
 
-	public function onMediaWikiServices( $services ) {
+	public function onSetupAfterCache() {
 		$dbname = $this->config->get( MainConfigNames::DBname );
 		// If we don't have a cache file, let us exit here
 		if ( !file_exists( "/srv/mediawiki/cache/$dbname.php" ) ) {
