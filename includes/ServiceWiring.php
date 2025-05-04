@@ -7,6 +7,7 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\Helpers\CoreModule;
+use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
@@ -17,7 +18,6 @@ use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
-use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
 use Psr\Log\LoggerInterface;
 
@@ -26,14 +26,6 @@ use Psr\Log\LoggerInterface;
 // @codeCoverageIgnoreStart
 
 return [
-	'CreateWikiHookHandler' => static function ( MediaWikiServices $services ): CreateWiki {
-		return new CreateWiki(
-			$services->get( 'ManageWikiConfig' ),
-			$services->get( 'ManageWikiLogger' ),
-			$services->get( 'ManageWikiModuleFactory' ),
-			$services->getLocalisationCache()
-		);
-	},
 	'ManageWikiConfig' => static function ( MediaWikiServices $services ): Config {
 		return $services->getConfigFactory()->makeConfig( 'ManageWiki' );
 	},
@@ -49,6 +41,15 @@ return [
 	},
 	'ManageWikiDatabaseUtils' => static function ( MediaWikiServices $services ): DatabaseUtils {
 		return new DatabaseUtils( $services->getConnectionProvider() );
+	},
+	'ManageWikiDefaultPermissions' => static function ( MediaWikiServices $services ): DefaultPermissions {
+		return new DefaultPermissions(
+			$services->get( 'ManageWikiModuleFactory' ),
+			new ServiceOptions(
+				DefaultPermissions::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
 	},
 	'ManageWikiExtensionsFactory' => static function ( MediaWikiServices $services ): ExtensionsFactory {
 		return new ExtensionsFactory(

@@ -12,16 +12,16 @@ use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
+use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
-use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
 
 class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
-		private readonly CreateWiki $hookHandler,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly DefaultPermissions $defaultPermissions,
 		private readonly ModuleFactory $moduleFactory
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
@@ -214,9 +214,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			->execute();
 
 		$mwCore = $this->moduleFactory->core( $dbname );
-		$this->hookHandler->onCreateWikiCreation(
-			$dbname, $mwCore->isPrivate()
-		);
+		$this->defaultPermissions->populatePermissions( $dbname, $mwCore->isPrivate() );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getUser() );
