@@ -7,7 +7,6 @@ use MediaWiki\Hook\SetupAfterCacheHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
-use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\Settings\Config\GlobalConfigBuilder;
 use MediaWiki\Settings\Config\PhpIniSink;
 use MediaWiki\Settings\SettingsBuilder;
@@ -15,6 +14,7 @@ use MediaWiki\Settings\Source\PhpSettingsSource;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\ManageWikiExtensionRegistry;
 use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
 
 class Main implements
@@ -49,7 +49,7 @@ class Main implements
 		$currentDatabaseFile = "/srv/mediawiki/cache/$dbname.php";
 		$settings = new SettingsBuilder(
 			MW_INSTALL_PATH,
-			ExtensionRegistry::getInstance(),
+			ManageWikiExtensionRegistry::getInstance(),
 			new GlobalConfigBuilder( '' ),
 			new PhpIniSink()
 		);
