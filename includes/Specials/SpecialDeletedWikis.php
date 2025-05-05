@@ -30,4 +30,9 @@ class SpecialDeletedWikis extends SpecialPage {
 		$table = $pager->getFullOutput();
 		$this->getOutput()->addParserOutputContent( $table );
 	}
+
+	/** @inheritDoc */
+	protected function getGroupName(): string {
+		return 'wiki';
+	}
 }
