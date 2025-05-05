@@ -331,7 +331,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 	/** @inheritDoc */
 	protected function getGroupName(): string {
-		return 'wikimanage';
+		return 'wiki';
 	}
 
 	/** @inheritDoc */
