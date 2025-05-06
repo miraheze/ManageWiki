@@ -20,6 +20,14 @@ jobs:
             coverage: true
             experimental: false
 
+          # Latest MediaWiki beta - PHP 8.1
+          - mw: 'REL1_44'
+            php: 8.1
+            php-docker: 81
+            composer-test: false
+            coverage: false
+            experimental: true
+
           # Latest MediaWiki master - PHP 8.1
           - mw: 'master'
             php: 8.1
