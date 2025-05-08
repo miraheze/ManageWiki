@@ -68,14 +68,14 @@ class CreateWiki implements
 
 	/** @inheritDoc */
 	public function onCreateWikiDataFactoryBuilder(
-		string $wiki,
+		string $dbname,
 		IReadableDatabase $dbr,
 		array &$cacheArray
 	): void {
 		$setObject = $dbr->newSelectQueryBuilder()
 			->select( '*' )
 			->from( 'mw_settings' )
-			->where( [ 's_dbname' => $wiki ] )
+			->where( [ 's_dbname' => $dbname ] )
 			->caller( __METHOD__ )
 			->fetchRow();
 
@@ -105,7 +105,7 @@ class CreateWiki implements
 			$nsObjects = $dbr->newSelectQueryBuilder()
 				->select( '*' )
 				->from( 'mw_namespaces' )
-				->where( [ 'ns_dbname' => $wiki ] )
+				->where( [ 'ns_dbname' => $dbname ] )
 				->caller( __METHOD__ )
 				->fetchResultSet();
 
@@ -224,7 +224,7 @@ class CreateWiki implements
 			$permObjects = $dbr->newSelectQueryBuilder()
 				->select( '*' )
 				->from( 'mw_permissions' )
-				->where( [ 'perm_dbname' => $wiki ] )
+				->where( [ 'perm_dbname' => $dbname ] )
 				->caller( __METHOD__ )
 				->fetchResultSet();
 

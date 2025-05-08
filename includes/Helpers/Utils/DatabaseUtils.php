@@ -34,19 +34,19 @@ class DatabaseUtils {
 		return $this->connectionProvider->getReplicaDatabase( 'virtual-managewiki' );
 	}
 
-	public function getRemoteWikiPrimaryDB( string $wiki ): IDatabase {
-		return $this->connectionProvider->getPrimaryDatabase( $wiki );
+	public function getRemoteWikiPrimaryDB( string $dbname ): IDatabase {
+		return $this->connectionProvider->getPrimaryDatabase( $dbname );
 	}
 
-	public function getRemoteWikiReplicaDB( string $wiki ): IReadableDatabase {
-		return $this->connectionProvider->getReplicaDatabase( $wiki );
+	public function getRemoteWikiReplicaDB( string $dbname ): IReadableDatabase {
+		return $this->connectionProvider->getReplicaDatabase( $dbname );
 	}
 
 	public function isCurrentWikiCentral(): bool {
 		return WikiMap::isCurrentWikiDbDomain( $this->getCentralWikiID() );
 	}
 
-	public function isRemoteWikiCentral( string $wiki ): bool {
-		return $wiki === $this->getCentralWikiID();
+	public function isRemoteWikiCentral( string $dbname ): bool {
+		return $dbname === $this->getCentralWikiID();
 	}
 }
