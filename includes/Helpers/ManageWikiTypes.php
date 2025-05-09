@@ -493,7 +493,7 @@ class ManageWikiTypes {
 	public static function handleMatrix(
 		array|string $conversion,
 		string $to
-	): array|string|null {
+	): array {
 		return match ( $to ) {
 			'php' => ( static function ( string $json ): array {
 				$decoded = json_decode( $json, true );
@@ -522,9 +522,7 @@ class ManageWikiTypes {
 				return $result;
 			} )( (array)$conversion ),
 
-			'json' => json_encode( $conversion ) ?: null,
-
-			default => null,
+			default => [],
 		};
 	}
 }
