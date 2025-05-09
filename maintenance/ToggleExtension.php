@@ -43,7 +43,7 @@ class ToggleExtension extends Maintenance {
 				$mwExtensions->remove( [ $name ], $forceRemove );
 				$mwExtensions->commit();
 				if ( !$noList ) {
-					$this->output( "Removed $name from $wiki\n" );
+					$this->output( "Disabled $name on $wiki\n" );
 				}
 
 				continue;
@@ -60,7 +60,7 @@ class ToggleExtension extends Maintenance {
 
 		if ( $noList && count( $wikis ) > 1 ) {
 			if ( $disable ) {
-				$this->output( "Removed $name from all wikis in that it was enabled on.\n" );
+				$this->output( "Disabled $name on all wikis that it was enabled on.\n" );
 				return;
 			}
 
