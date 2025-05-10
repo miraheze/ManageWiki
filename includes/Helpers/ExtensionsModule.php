@@ -65,6 +65,14 @@ class ExtensionsModule implements IModule {
 		return array_keys( $this->liveExtensions );
 	}
 
+	public function listNames(): array {
+		$config = $this->options->get( ConfigNames::Extensions );
+		return array_values( array_intersect_key(
+			array_column( $config, 'name' ),
+			array_flip( $this->liveExtensions )
+		) );
+	}
+
 	/**
 	 * Adds an extension to the 'enabled' list
 	 * @param string[] $extensions Array of extensions to enable
