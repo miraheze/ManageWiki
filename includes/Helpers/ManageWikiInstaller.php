@@ -50,7 +50,7 @@ class ManageWikiInstaller {
 		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $dbname );
 
 		foreach ( $data as $table => $sql ) {
-			if ( !$dbw->tableExists( $table ) ) {
+			if ( !$dbw->tableExists( $table, __METHOD__ ) ) {
 				try {
 					$dbw->sourceFile( $sql );
 				} catch ( Exception $e ) {
