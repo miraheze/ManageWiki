@@ -59,18 +59,20 @@ class ExtensionsModule implements IModule {
 
 	/**
 	 * Lists an array of all extensions currently 'enabled'
+	 *
 	 * @return array 1D array of extensions enabled
 	 */
 	public function list(): array {
 		return array_keys( $this->liveExtensions );
 	}
 
+	/**
+	 * Lists names of all currently enabled extensions.
+	 *
+	 * @return array<string> List of ExtensionRegistry names
+	 */
 	public function listNames(): array {
-		$config = $this->options->get( ConfigNames::Extensions );
-		return array_values( array_intersect_key(
-			array_column( $config, 'name' ),
-			array_flip( $this->liveExtensions )
-		) );
+		return array_column( $this->liveExtensions, 'name' );
 	}
 
 	/**
