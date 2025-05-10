@@ -86,17 +86,18 @@ class CreateWiki implements
 
 		// Let's create an array of variables so we can easily loop these to enable
 		if ( $setObject !== false && $this->moduleFactory->isEnabled( 'extensions' ) ) {
-			$manageWikiExtensions = $this->config->get( ConfigNames::Extensions );
-			foreach ( json_decode( $setObject->s_extensions ?? '[]', true ) as $ext ) {
-				if ( isset( $manageWikiExtensions[$ext] ) ) {
-					$cacheArray['extensions'][] = $manageWikiExtensions[$ext]['name'];
+			$extensionsConfig = $this->config->get( ConfigNames::Extensions );
+			foreach ( json_decode( $setObject->s_extensions ?? '[]', true ) as $extension ) {
+				if ( !isset( $extensionsConfig[$extension] ) ) {
+					$this->logger->error( '{extension} is not set in {config}', [
+						'config' => ConfigNames::Extensions,
+						'extension' => $extension,
+					] );
+
 					continue;
 				}
 
-				$this->logger->error( 'Extension/Skin {ext} not set in {config}', [
-					'config' => ConfigNames::Extensions,
-					'ext' => $ext,
-				] );
+				$cacheArray['extensions'][] = $extensionsConfig[$extension]['name'];
 			}
 		}
 
