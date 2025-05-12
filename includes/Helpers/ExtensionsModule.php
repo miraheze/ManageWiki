@@ -239,7 +239,8 @@ class ExtensionsModule implements IModule {
 				}
 
 				$installResult = ManageWikiInstaller::process(
-					$this->dbname, $config['install'],
+					dbname: $this->dbname,
+					actions: $config['install'],
 					install: true
 				);
 			}
@@ -288,7 +289,8 @@ class ExtensionsModule implements IModule {
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it.
 			if ( isset( $config['remove'] ) ) {
 				ManageWikiInstaller::process(
-					$this->dbname, $config['remove'],
+					dbname: $this->dbname,
+					actions: $config['remove'],
 					install: false
 				);
 			}
@@ -317,7 +319,7 @@ class ExtensionsModule implements IModule {
 
 		// We need to run mwscript steps after the extension is already loaded
 		if ( $this->scripts ) {
-			$installResult = ManageWikiInstaller::process(
+			ManageWikiInstaller::process(
 				dbname: $this->dbname,
 				actions: [ 'mwscript' => $this->scripts ],
 				install: true
