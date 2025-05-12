@@ -57,8 +57,9 @@ class MWScriptJob extends Job {
 			->getExitCode();
 
 		// An execute code higher then 0 indicates failure.
-		if ( $result ) {
+		if ( $result !== 0 ) {
 			$this->logger->error( 'MWScriptJob failure. Status {result} running {script}', [
+				'arguments' => json_encode( $arguments ),
 				'result' => $result,
 				'script' => $this->script,
 			] );
