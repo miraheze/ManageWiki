@@ -110,11 +110,11 @@ class CreateWiki implements
 				->caller( __METHOD__ )
 				->fetchResultSet();
 
-			$metaNamespace = null;
-			$metaNamespaceTalk = null;
+			$metaNamespace = '';
+			$metaNamespaceTalk = '';
 
 			foreach ( $nsObjects as $ns ) {
-				if ( $metaNamespace !== null && $metaNamespaceTalk !== null ) {
+				if ( $metaNamespace !== '' && $metaNamespaceTalk !== '' ) {
 					// Both found, no need to continue
 					break;
 				}
