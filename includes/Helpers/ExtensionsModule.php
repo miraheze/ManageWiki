@@ -20,6 +20,7 @@ class ExtensionsModule implements IModule {
 	private array $logParams = [];
 	private array $liveExtensions = [];
 	private array $removedExtensions = [];
+	private array $scripts = [];
 
 	private ?string $log = null;
 
@@ -232,6 +233,11 @@ class ExtensionsModule implements IModule {
 			// Requirements passed, proceed to installer
 			$installResult = true;
 			if ( isset( $config['install'] ) ) {
+				if ( isset( $config['install']['mwscript'] ) ) {
+					$this->scripts[] = $config['install']['mwscript'];
+					unset( $config['install']['mwscript'] );
+				}
+
 				$installResult = ManageWikiInstaller::process(
 					$this->dbname, $config['install'],
 					install: true
@@ -308,6 +314,15 @@ class ExtensionsModule implements IModule {
 
 		$data = $this->dataFactory->newInstance( $this->dbname );
 		$data->resetWikiData( isNewChanges: true );
+
+		// We need to run mwscript steps after the extension is already loaded
+		if ( $this->scripts ) {
+			$installResult = ManageWikiInstaller::process(
+				dbname: $this->dbname,
+				actions: [ 'mwscript' => $this->scripts ],
+				install: true
+			);
+		}
 
 		$this->logParams = [
 			'5::changes' => implode( ', ', array_keys( $this->changes ) ),
