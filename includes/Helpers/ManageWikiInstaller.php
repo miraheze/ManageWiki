@@ -131,21 +131,18 @@ class ManageWikiInstaller {
 			throw new RuntimeException( 'Shell is disabled.' );
 		}
 
-		foreach ( $data as $script => $options ) {
-			$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
-			$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
+		$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
+		$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
 
-			$jobQueueGroup->push(
-				new JobSpecification(
-					MWScriptJob::JOB_NAME,
-					[
-						'dbname' => $dbname,
-						'script' => $script,
-						'options' => $options,
-					]
-				)
-			);
-		}
+		$jobQueueGroup->push(
+			new JobSpecification(
+				MWScriptJob::JOB_NAME,
+				[
+					'data' => $data,
+					'dbname' => $dbname,
+				]
+			)
+		);
 
 		return true;
 	}
