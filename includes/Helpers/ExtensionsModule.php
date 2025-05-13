@@ -234,7 +234,11 @@ class ExtensionsModule implements IModule {
 			$installResult = true;
 			if ( isset( $config['install'] ) ) {
 				if ( isset( $config['install']['mwscript'] ) ) {
-					$this->scripts[] = $config['install']['mwscript'];
+					$this->scripts = array_merge(
+						$this->scripts,
+						$config['install']['mwscript']
+					);
+
 					unset( $config['install']['mwscript'] );
 				}
 
