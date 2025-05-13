@@ -13,7 +13,7 @@ class ToggleExtension extends Maintenance {
 		$this->addOption( 'name', 'The ManageWiki name of the extension.', true, true );
 		$this->addOption( 'disable', 'Disable the extension. If not given, enabling is assumed.' );
 		$this->addOption( 'all-wikis', 'Run on all wikis present in $wgLocalDatabases.' );
-		$this->addOption( 'confirm', 'Confirm execution. Required if using --all-wikis' );
+		$this->addOption( 'execute', 'Confirm execution. Required if using --all-wikis' );
 		$this->addOption( 'no-list', 'Don\'t list on which wikis this script has ran. This may speed up execution.' );
 		$this->addOption( 'force-remove', 'Force removal of extension when not in config.' );
 
@@ -31,8 +31,8 @@ class ToggleExtension extends Maintenance {
 		$name = $this->getOption( 'name' );
 		$disable = $this->hasOption( 'disable' );
 
-		if ( $allWikis && !$this->hasOption( 'confirm' ) ) {
-			$this->fatalError( 'You must run with --confirm when running with --all-wikis.', 2 );
+		if ( $allWikis && !$this->hasOption( 'execute' ) ) {
+			$this->fatalError( 'You must run with --execute when running with --all-wikis.', 2 );
 		}
 
 		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
