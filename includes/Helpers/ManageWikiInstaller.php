@@ -8,6 +8,7 @@ use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\Shell\Shell;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
+use Miraheze\ManageWiki\ManageWikiServices;
 use RuntimeException;
 
 class ManageWikiInstaller {
@@ -104,7 +105,7 @@ class ManageWikiInstaller {
 		array $data,
 		bool $install
 	): bool {
-		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$moduleFactory = ManageWikiServices::wrap( MediaWikiServices::getInstance() )->getModuleFactory();
 		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
@@ -148,7 +149,7 @@ class ManageWikiInstaller {
 	}
 
 	private static function settings( string $dbname, array $data ): bool {
-		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$moduleFactory = ManageWikiServices::wrap( MediaWikiServices::getInstance() )->getModuleFactory();
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$mwSettings->modify( $data );
 		$mwSettings->commit();
