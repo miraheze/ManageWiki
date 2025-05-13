@@ -151,7 +151,7 @@ class ManageWikiInstaller {
 	private static function settings( string $dbname, array $data ): bool {
 		$moduleFactory = ManageWikiServices::wrap( MediaWikiServices::getInstance() )->getModuleFactory();
 		$mwSettings = $moduleFactory->settings( $dbname );
-		$mwSettings->modify( $data );
+		$mwSettings->modify( $data, default: null );
 		$mwSettings->commit();
 		return true;
 	}
