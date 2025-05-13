@@ -4,8 +4,8 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use Wikimedia\Rdbms\IDatabase;
 use Miraheze\ManageWiki\ManageWikiServices;
+use Wikimedia\Rdbms\IDatabase;
 
 class PopulateNamespaces extends Maintenance {
 
