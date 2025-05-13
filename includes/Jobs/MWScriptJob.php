@@ -6,6 +6,7 @@ use Job;
 use JobSpecification;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\Shell\Shell;
+use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Psr\Log\LoggerInterface;
 
 class MWScriptJob extends Job {
@@ -17,6 +18,7 @@ class MWScriptJob extends Job {
 
 	public function __construct(
 		array $params,
+		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LoggerInterface $logger
 	) {
@@ -30,6 +32,10 @@ class MWScriptJob extends Job {
 	 * @return bool
 	 */
 	public function run(): bool {
+		// Make sure cache is up-to-date before running scripts
+		$data = $this->dataFactory->newInstance( $this->dbname );
+		$data->resetWikiData( isNewChanges: true );
+
 		$limits = [ 'memory' => 0, 'filesize' => 0 ];
 		foreach ( $this->data as $script => $options ) {
 			$arguments = [ '--wiki', $this->dbname ];
