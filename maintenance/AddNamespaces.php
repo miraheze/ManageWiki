@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\ManageWikiServices;
 
 class AddNamespaces extends Maintenance {
 
@@ -23,7 +24,7 @@ class AddNamespaces extends Maintenance {
 	}
 
 	public function execute(): void {
-		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+		$moduleFactory = ManageWikiServices::wrap( $this->getServiceContainer() )->getModuleFactory();
 		$mwNamespaces = $moduleFactory->namespacesLocal();
 
 		$nsData = [

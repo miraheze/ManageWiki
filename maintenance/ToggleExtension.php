@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\ManageWikiServices;
 
 class ToggleExtension extends Maintenance {
 
@@ -35,7 +36,7 @@ class ToggleExtension extends Maintenance {
 			$this->fatalError( 'You must run with --confirm when running with --all-wikis.', 2 );
 		}
 
-		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+		$moduleFactory = ManageWikiServices::wrap( $this->getServiceContainer() )->getModuleFactory();
 		foreach ( $wikis as $wiki ) {
 			$mwExtensions = $moduleFactory->extensions( $wiki );
 			$extList = $mwExtensions->list();

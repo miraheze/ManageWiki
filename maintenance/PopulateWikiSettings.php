@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\ManageWikiServices;
 
 class PopulateWikiSettings extends Maintenance {
 
@@ -17,7 +18,7 @@ class PopulateWikiSettings extends Maintenance {
 	}
 
 	public function execute(): void {
-		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+		$moduleFactory = ManageWikiServices::wrap( $this->getServiceContainer() )->getModuleFactory();
 		if ( $this->hasOption( 'remove' ) ) {
 			$mwSettings = $moduleFactory->settingsLocal();
 			$mwSettings->remove( [ $this->getOption( 'wgsetting' ) ] );
