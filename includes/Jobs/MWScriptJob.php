@@ -73,8 +73,8 @@ class MWScriptJob extends Job {
 					)
 				);
 			}
-
-			return true;
 		}
+
+		return true;
 	}
 }
