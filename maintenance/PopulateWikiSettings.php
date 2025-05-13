@@ -20,7 +20,7 @@ class PopulateWikiSettings extends Maintenance {
 		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
 		if ( $this->hasOption( 'remove' ) ) {
 			$mwSettings = $moduleFactory->settingsLocal();
-			$mwSettings->remove( [ $this->getOption( 'wgsetting' ) ] );
+			$mwSettings->remove( [ $this->getOption( 'wgsetting' ) ], default: null );
 			$mwSettings->commit();
 			return;
 		}
@@ -46,7 +46,7 @@ class PopulateWikiSettings extends Maintenance {
 			}
 
 			$mwSettings = $moduleFactory->settings( $dbname );
-			$mwSettings->modify( [ $this->getOption( 'wgsetting' ) => $setting ] );
+			$mwSettings->modify( [ $this->getOption( 'wgsetting' ) => $setting ], default: null );
 			$mwSettings->commit();
 		}
 	}
