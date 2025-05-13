@@ -38,77 +38,77 @@ class ManageWikiServices {
 	/**
 	 * @return Config ManageWiki configuration
 	 */
-	public function getManageWikiConfig(): Config {
+	public function getConfig(): Config {
 		return $this->coreServices->get( 'ManageWikiConfig' );
 	}
 
 	/**
 	 * @return CoreFactory Factory for core ManageWiki module
 	 */
-	public function getManageWikiCoreFactory(): CoreFactory {
+	public function getCoreFactory(): CoreFactory {
 		return $this->coreServices->get( 'ManageWikiCoreFactory' );
 	}
 
 	/**
 	 * @return DatabaseUtils Database utility methods
 	 */
-	public function getManageWikiDatabaseUtils(): DatabaseUtils {
+	public function getDatabaseUtils(): DatabaseUtils {
 		return $this->coreServices->get( 'ManageWikiDatabaseUtils' );
 	}
 
 	/**
 	 * @return DefaultPermissions Default permissions manager
 	 */
-	public function getManageWikiDefaultPermissions(): DefaultPermissions {
+	public function getDefaultPermissions(): DefaultPermissions {
 		return $this->coreServices->get( 'ManageWikiDefaultPermissions' );
 	}
 
 	/**
 	 * @return ExtensionsFactory Factory for the ManageWiki extensions module
 	 */
-	public function getManageWikiExtensionsFactory(): ExtensionsFactory {
+	public function getExtensionsFactory(): ExtensionsFactory {
 		return $this->coreServices->get( 'ManageWikiExtensionsFactory' );
 	}
 
 	/**
 	 * @return ManageWikiHookRunner Hook runner for ManageWiki hooks
 	 */
-	public function getManageWikiHookRunner(): ManageWikiHookRunner {
+	public function getHookRunner(): ManageWikiHookRunner {
 		return $this->coreServices->get( 'ManageWikiHookRunner' );
 	}
 
 	/**
 	 * @return LoggerInterface Logger for ManageWiki
 	 */
-	public function getManageWikiLogger(): LoggerInterface {
+	public function getLogger(): LoggerInterface {
 		return $this->coreServices->get( 'ManageWikiLogger' );
 	}
 
 	/**
 	 * @return NamespacesFactory Factory for namespace configuration module
 	 */
-	public function getManageWikiNamespacesFactory(): NamespacesFactory {
+	public function getNamespacesFactory(): NamespacesFactory {
 		return $this->coreServices->get( 'ManageWikiNamespacesFactory' );
 	}
 
 	/**
 	 * @return PermissionsFactory Factory for permissions module
 	 */
-	public function getManageWikiPermissionsFactory(): PermissionsFactory {
+	public function getPermissionsFactory(): PermissionsFactory {
 		return $this->coreServices->get( 'ManageWikiPermissionsFactory' );
 	}
 
 	/**
 	 * @return SettingsFactory Factory for settings module
 	 */
-	public function getManageWikiSettingsFactory(): SettingsFactory {
+	public function getSettingsFactory(): SettingsFactory {
 		return $this->coreServices->get( 'ManageWikiSettingsFactory' );
 	}
 
 	/**
 	 * @return ModuleFactory Factory for managing all modules (core, extensions, etc.)
 	 */
-	public function getManageWikiModuleFactory(): ModuleFactory {
+	public function getModuleFactory(): ModuleFactory {
 		return $this->coreServices->get( 'ManageWikiModuleFactory' );
 	}
 }
