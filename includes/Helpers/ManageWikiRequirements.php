@@ -6,6 +6,7 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\MainConfigNames;
 use MediaWiki\MediaWikiServices;
 use MediaWiki\SiteStats\SiteStats;
+use Miraheze\ManageWiki\ManageWikiServices;
 
 /**
  * Helper class for de-centralizing requirement checking
@@ -139,7 +140,7 @@ class ManageWikiRequirements {
 		$setting = $data['setting'];
 		$value = $data['value'];
 
-		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$moduleFactory = ManageWikiServices::wrap( MediaWikiServices::getInstance() )->getModuleFactory();
 		$mwSettings = $moduleFactory->settings( $database );
 
 		$wikiValue = $mwSettings->list( $setting );
