@@ -47,7 +47,7 @@ class ManageWikiInstaller {
 	}
 
 	private static function sql( string $dbname, array $data ): bool {
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
+		$databaseUtils = ManageWikiServices::wrap( MediaWikiServices::getInstance() )->getDatabaseUtils();
 		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $dbname );
 
 		foreach ( $data as $table => $sql ) {
@@ -76,7 +76,7 @@ class ManageWikiInstaller {
 		array $data,
 		bool $install
 	): bool {
-		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$moduleFactory = ManageWikiServices::wrap( MediaWikiServices::getInstance() )->getModuleFactory();
 		$mwPermissions = $moduleFactory->permissions( $dbname );
 		$action = $install ? 'add' : 'remove';
 
