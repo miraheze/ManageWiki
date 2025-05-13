@@ -4,9 +4,7 @@ namespace Miraheze\ManageWiki;
 
 use MediaWiki\Config\Config;
 use MediaWiki\MediaWikiServices;
-use Miraheze\ManageWiki\Helpers\CoreModule;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
-use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
