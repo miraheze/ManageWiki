@@ -31,8 +31,8 @@ class MWScriptJob extends Job {
 	 */
 	public function run(): bool {
 		$limits = [ 'memory' => 0, 'filesize' => 0 ];
-		$arguments = [ '--wiki', $this->dbname ];
 		foreach ( $this->data as $script => $options ) {
+			$arguments = [ '--wiki', $this->dbname ];
 			$repeatWith = [];
 			if ( isset( $options['repeat-with'] ) ) {
 				$repeatWith = $options['repeat-with'];
