@@ -2,37 +2,36 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use MediaWiki\Config\Config;
-use MediaWiki\MediaWikiServices;
-use Miraheze\CreateWiki\IConfigModule;
-use Wikimedia\Rdbms\IDatabase;
+use MediaWiki\User\ActorStoreFactory;
+use MediaWiki\User\UserGroupManagerFactory;
+use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\IModule;
+use Wikimedia\Message\ITextFormatter;
+use Wikimedia\Message\MessageValue;
 
-/**
- * Handler for interacting with Permissions
- */
-class ManageWikiPermissions implements IConfigModule {
-
-	private Config $config;
-	private IDatabase $dbw;
+class PermissionsModule implements IModule {
 
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
-	private array $messageFields = [];
 	private array $deleteGroups = [];
+	private array $renameGroups = [];
 	private array $livePermissions = [];
+	private array $messageFields = [];
 
-	private string $dbname;
 	private ?string $log = null;
 
-	public function __construct( string $dbname ) {
-		$this->dbname = $dbname;
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
-
-		$perms = $this->dbw->newSelectQueryBuilder()
+	public function __construct(
+		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly DatabaseUtils $databaseUtils,
+		private readonly ActorStoreFactory $actorStoreFactory,
+		private readonly UserGroupManagerFactory $userGroupManagerFactory,
+		private readonly ITextFormatter $textFormatter,
+		private readonly string $dbname
+	) {
+		$dbr = $this->databaseUtils->getGlobalReplicaDB();
+		$perms = $dbr->newSelectQueryBuilder()
 			->select( '*' )
 			->from( 'mw_permissions' )
 			->where( [ 'perm_dbname' => $dbname ] )
@@ -61,15 +60,11 @@ class ManageWikiPermissions implements IConfigModule {
 	}
 
 	/**
-	 * Lists either all groups or a specific one
-	 * @param ?string $group Group wanted (null for all)
+	 * Retrieves data for a specific group
+	 * @param string $group Group wanted
 	 * @return array Group configuration
 	 */
-	public function list( ?string $group ): array {
-		if ( $group === null ) {
-			return $this->livePermissions;
-		}
-
+	public function list( string $group ): array {
 		return $this->livePermissions[$group] ?? [
 			'permissions' => [],
 			'addgroups' => [],
@@ -80,6 +75,14 @@ class ManageWikiPermissions implements IConfigModule {
 		];
 	}
 
+	public function listAll(): array {
+		return $this->livePermissions;
+	}
+
+	public function listGroups(): array {
+		return array_keys( $this->listAll() );
+	}
+
 	/**
 	 * Get all groups that have the specified permission
 	 *
@@ -88,7 +91,7 @@ class ManageWikiPermissions implements IConfigModule {
 	 */
 	public function getGroupsWithPermission( string $permission ): array {
 		$groups = [];
-		foreach ( $this->livePermissions as $group => $data ) {
+		foreach ( $this->listAll() as $group => $data ) {
 			if ( in_array( $permission, $data['permissions'] ?? [], true ) ) {
 				$groups[] = $group;
 			}
@@ -191,8 +194,26 @@ class ManageWikiPermissions implements IConfigModule {
 		$this->deleteGroups[] = $group;
 	}
 
+	public function rename( string $group, string $newName ): void {
+		if ( $group === $newName ) {
+			return;
+		}
+
+		$this->changes[$group] = [
+			'oldname' => $group,
+			'newname' => $newName,
+		];
+
+		// Push to a rename queue
+		$this->renameGroups[$group] = $newName;
+	}
+
 	public function isDeleting( string $group ): bool {
 		return in_array( $group, $this->deleteGroups, true );
+	}
+
+	public function isRenaming( string $group ): bool {
+		return isset( $this->renameGroups[$group] );
 	}
 
 	public function getErrors(): array {
@@ -225,11 +246,12 @@ class ManageWikiPermissions implements IConfigModule {
 			return;
 		}
 
+		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( $this->isDeleting( $group ) ) {
 				$this->log = 'delete-group';
 
-				$this->dbw->newDeleteQueryBuilder()
+				$dbw->newDeleteQueryBuilder()
 					->deleteFrom( 'mw_permissions' )
 					->where( [
 						'perm_dbname' => $this->dbname,
@@ -239,6 +261,27 @@ class ManageWikiPermissions implements IConfigModule {
 					->execute();
 
 				$this->deleteUsersFromGroup( $group );
+				continue;
+			}
+
+			if ( $this->isRenaming( $group ) ) {
+				$this->log = 'rename-group';
+				$this->logParams = [
+					'5::oldname' => $group,
+					'6::newname' => $this->renameGroups[$group],
+				];
+
+				$dbw->newUpdateQueryBuilder()
+					->update( 'mw_permissions' )
+					->set( [ 'perm_group' => $this->renameGroups[$group] ] )
+					->where( [
+						'perm_dbname' => $this->dbname,
+						'perm_group' => $group,
+					] )
+					->caller( __METHOD__ )
+					->execute();
+
+				$this->moveUsersFromGroup( $group );
 				continue;
 			}
 
@@ -260,7 +303,7 @@ class ManageWikiPermissions implements IConfigModule {
 					? null : json_encode( $live['autopromote'] ?? '' ),
 			];
 
-			$this->dbw->newInsertQueryBuilder()
+			$dbw->newInsertQueryBuilder()
 				->insertInto( 'mw_permissions' )
 				->row( [
 					'perm_dbname' => $this->dbname,
@@ -276,7 +319,7 @@ class ManageWikiPermissions implements IConfigModule {
 				->execute();
 
 			$logAP = ( $this->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
-			$logNULL = wfMessage( 'rightsnone' )->inContentLanguage()->text();
+			$logNULL = $this->textFormatter->format( MessageValue::new( 'rightsnone' ) );
 
 			/**
 			 * Convert a list of permission/group changes into a comma-separated string.
@@ -297,13 +340,12 @@ class ManageWikiPermissions implements IConfigModule {
 				'11::rags' => $logValue( $this->changes[$group]['addself']['remove'] ?? null ),
 				'12::args' => $logValue( $this->changes[$group]['removeself']['add'] ?? null ),
 				'13::rrgs' => $logValue( $this->changes[$group]['removeself']['remove'] ?? null ),
-				'14::ap' => mb_strtolower( wfMessage( $logAP )->inContentLanguage()->text() ),
+				'14::ap' => mb_strtolower( $this->textFormatter->format( MessageValue::new( $logAP ) ) ),
 			];
 		}
 
 		if ( $this->dbname !== 'default' ) {
-			$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $this->dbname );
+			$data = $this->dataFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}
@@ -314,15 +356,10 @@ class ManageWikiPermissions implements IConfigModule {
 			return;
 		}
 
-		$userGroupManagerFactory = MediaWikiServices::getInstance()->getUserGroupManagerFactory();
-		$userGroupManager = $userGroupManagerFactory->getUserGroupManager( $this->dbname );
+		$userGroupManager = $this->userGroupManagerFactory->getUserGroupManager( $this->dbname );
+		$userIdentityLookup = $this->actorStoreFactory->getUserIdentityLookup( $this->dbname );
 
-		$actorStoreFactory = MediaWikiServices::getInstance()->getActorStoreFactory();
-		$userIdentityLookup = $actorStoreFactory->getUserIdentityLookup( $this->dbname );
-
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$dbr = $databaseUtils->getRemoteWikiReplicaDB( $this->dbname );
-
+		$dbr = $this->databaseUtils->getRemoteWikiReplicaDB( $this->dbname );
 		$userIds = $dbr->newSelectQueryBuilder()
 			->select( 'ug_user' )
 			->from( 'user_groups' )
@@ -336,5 +373,28 @@ class ManageWikiPermissions implements IConfigModule {
 				$userGroupManager->removeUserFromGroup( $remoteUser, $group );
 			}
 		}
+	}
+
+	private function moveUsersFromGroup( string $group ): void {
+		if ( $this->dbname === 'default' ) {
+			// Not a valid wiki to move users from groups
+			return;
+		}
+
+		$dbw = $this->databaseUtils->getRemoteWikiPrimaryDB( $this->dbname );
+
+		$dbw->newUpdateQueryBuilder()
+			->update( 'user_groups' )
+			->set( [ 'ug_group' => $this->renameGroups[$group] ] )
+			->where( [ 'ug_group' => $group ] )
+			->caller( __METHOD__ )
+			->execute();
+
+		$dbw->newUpdateQueryBuilder()
+			->update( 'user_former_groups' )
+			->set( [ 'ufg_group' => $this->renameGroups[$group] ] )
+			->where( [ 'ufg_group' => $group ] )
+			->caller( __METHOD__ )
+			->execute();
 	}
 }
