@@ -18,6 +18,7 @@ class PermissionsModule implements IModule {
 	private array $deleteGroups = [];
 	private array $renameGroups = [];
 	private array $livePermissions = [];
+	private array $messageFields = [];
 
 	private ?string $log = null;
 
@@ -161,6 +162,10 @@ class PermissionsModule implements IModule {
 		$this->livePermissions[$group] = $permData;
 	}
 
+	public function addMessageFields( string $group ): void {
+		$this->messageFields[] = $group;
+	}
+
 	/**
 	 * Remove a group
 	 * @param string $group Group name
@@ -216,7 +221,7 @@ class PermissionsModule implements IModule {
 	}
 
 	public function hasChanges(): bool {
-		return (bool)$this->changes;
+		return $this->changes || $this->messageFields;
 	}
 
 	public function setLogAction( string $action ): void {

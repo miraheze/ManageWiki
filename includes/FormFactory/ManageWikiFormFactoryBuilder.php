@@ -584,6 +584,8 @@ class ManageWikiFormFactoryBuilder {
 			$canEditName = !$namespaceData['core'] ||
 				$id === NS_PROJECT || $id === NS_PROJECT_TALK;
 
+			$descriptionMsg = $context->msg( "namespaceinfo-description-ns{$id}" );
+
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
@@ -593,6 +595,13 @@ class ManageWikiFormFactoryBuilder {
 					'maxlength' => 128,
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
+					'section' => $name,
+				],
+				"description-$name" => [
+					'type' => 'text',
+					'label-message' => 'namespaces-description',
+					'default' => $descriptionMsg->exists() ? $descriptionMsg->text() : '',
+					'disabled' => !$ceMW,
 					'section' => $name,
 				],
 				"content-$name" => [
@@ -876,18 +885,31 @@ class ManageWikiFormFactoryBuilder {
 			],
 		];
 
-		$disallowedGroups = $config->get( ConfigNames::PermissionsDisallowedGroups );
-
-		if (
-			$ceMW &&
-			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true )
-		) {
-			$formDescriptor += [
-				'delete-checkbox' => [
+		if ( $ceMW && $mwPermissions->exists( $group ) ) {
+			$disallowedGroups = $config->get( ConfigNames::PermissionsDisallowedGroups );
+			$permanentGroups = $config->get( ConfigNames::PermissionsPermanentGroups );
+			if ( !in_array( $group, $permanentGroups, true ) ) {
+				$formDescriptor['delete-checkbox'] = [
 					'type' => 'check',
 					'label-message' => 'permissions-delete-checkbox',
 					'default' => false,
+					'section' => 'advanced',
+				];
+			}
+
+			$groupMsg = $context->msg( "group-$group" );
+			$groupMemberMsg = $context->msg( "group-$group-member" );
+			$formDescriptor += [
+				'group-message' => [
+					'type' => 'text',
+					'label-message' => 'permissions-group-message',
+					'default' => $groupMsg->exists() ? $groupMsg->text() : '',
+					'section' => 'advanced',
+				],
+				'group-member-message' => [
+					'type' => 'text',
+					'label-message' => 'permissions-group-member-message',
+					'default' => $groupMemberMsg->exists() ? $groupMemberMsg->text() : '',
 					'section' => 'advanced',
 				],
 				'rename-checkbox' => [
@@ -1102,14 +1124,14 @@ class ManageWikiFormFactoryBuilder {
 				break;
 			case 'namespaces':
 				$mwReturn = self::submissionNamespaces(
-					$formData, $dbname, $special, $moduleFactory,
-					$config
+					$formData, $dbname, $context, $special,
+					$moduleFactory, $config
 				);
 				break;
 			case 'permissions':
 				$mwReturn = self::submissionPermissions(
-					$formData, $dbname, $special, $moduleFactory,
-					$config
+					$formData, $dbname, $context, $special,
+					$moduleFactory, $config
 				);
 				break;
 			default:
@@ -1127,6 +1149,11 @@ class ManageWikiFormFactoryBuilder {
 			$mwReturn->commit();
 			if ( $mwReturn->getErrors() ) {
 				return $mwReturn->getErrors();
+			}
+
+			// If we have no logParams, we don't want unformatted logs
+			if ( !$mwReturn->getLogParams() ) {
+				return [];
 			}
 
 			if ( $module !== 'permissions' ) {
@@ -1389,29 +1416,43 @@ class ManageWikiFormFactoryBuilder {
 	private static function submissionNamespaces(
 		array $formData,
 		string $dbname,
+		IContextSource $context,
 		string $special,
 		ModuleFactory $moduleFactory,
 		Config $config
 	): NamespacesModule {
 		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 
+		$messageUpdater = MediaWikiServices::getInstance()->get( 'ManageWikiMessageUpdater' );
+
+		$namespaceID = (int)$special;
+		$namespaceTalkID = $namespaceID + 1;
+
 		if ( $formData['delete-checkbox'] ) {
 			$mwNamespaces->remove(
-				(int)$special,
+				$namespaceID,
 				$formData['delete-migrate-to'],
 				maintainPrefix: false
 			);
 			$mwNamespaces->remove(
-				(int)$special + 1,
+				$namespaceTalkID,
 				$formData['delete-migrate-to'] + 1,
 				maintainPrefix: false
+			);
+			$messageUpdater->doDelete(
+				name: "namespaceinfo-description-ns{$namespaceID}",
+				user: $context->getUser()
+			);
+			$messageUpdater->doDelete(
+				name: "namespaceinfo-description-ns{$namespaceTalkID}",
+				user: $context->getUser()
 			);
 			return $mwNamespaces;
 		}
 
 		$nsID = [
-			'namespace' => (int)$special,
-			'namespacetalk' => (int)$special + 1,
+			'namespace' => $namespaceID,
+			'namespacetalk' => $namespaceTalkID,
 		];
 
 		foreach ( $nsID as $name => $id ) {
@@ -1422,6 +1463,19 @@ class ManageWikiFormFactoryBuilder {
 				if ( isset( $formData["$key-$name"] ) ) {
 					$additionalBuilt[$key] = $formData["$key-$name"];
 				}
+			}
+
+			$descriptionMsg = $context->msg( "namespaceinfo-description-ns{$id}" );
+			$messageExists = $descriptionMsg->exists();
+			if ( $formData["description-$name"] && (
+				!$messageExists || $descriptionMsg->text() !== $formData["description-$name"]
+			) ) {
+				$mwNamespaces->addMessageFields( $id );
+				$messageUpdater->doUpdate(
+					name: "namespaceinfo-description-ns{$id}",
+					content: $formData["description-$name"],
+					user: $context->getUser()
+				);
 			}
 
 			$build = [
@@ -1444,6 +1498,7 @@ class ManageWikiFormFactoryBuilder {
 	private static function submissionPermissions(
 		array $formData,
 		string $dbname,
+		IContextSource $context,
 		string $group,
 		ModuleFactory $moduleFactory,
 		Config $config
@@ -1467,13 +1522,47 @@ class ManageWikiFormFactoryBuilder {
 				!in_array( $perm, $disallowed, true )
 		);
 
+		$messageUpdater = MediaWikiServices::getInstance()->get( 'ManageWikiMessageUpdater' );
+
 		$assignablePerms = array_unique( array_merge( $assignablePerms, $extraAssigned ) );
 		$isRemovable = !in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true );
 
 		// Early escape for deletion
 		if ( $isRemovable && ( $formData['delete-checkbox'] ?? false ) ) {
 			$mwPermissions->remove( $group );
+			$messageUpdater->doDelete(
+				name: "group-$group",
+				user: $context->getUser()
+			);
+			$messageUpdater->doDelete(
+				name: "group-$group-member",
+				user: $context->getUser()
+			);
 			return $mwPermissions;
+		}
+
+		$groupMsg = $context->msg( "group-$group" );
+		if ( ( $formData['group-message'] ?? false ) && (
+			!$groupMsg->exists() || $groupMsg->text() !== $formData['group-message']
+		) ) {
+			$mwPermissions->addMessageFields( $group );
+			$messageUpdater->doUpdate(
+				name: "group-$group",
+				content: $formData['group-message'],
+				user: $context->getUser()
+			);
+		}
+
+		$groupMemberMsg = $context->msg( "group-$group-member" );
+		if ( ( $formData['group-member-message'] ?? false ) && (
+			!$groupMemberMsg->exists() || $groupMemberMsg->text() !== $formData['group-member-message']
+		) ) {
+			$mwPermissions->addMessageFields( $group );
+			$messageUpdater->doUpdate(
+				name: "group-$group-member",
+				content: $formData['group-member-message'],
+				user: $context->getUser()
+			);
 		}
 
 		// Early escape for rename

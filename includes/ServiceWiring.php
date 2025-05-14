@@ -15,6 +15,7 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
+use Miraheze\ManageWiki\Helpers\MessageUpdater;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -67,6 +68,17 @@ return [
 	},
 	'ManageWikiLogger' => static function (): LoggerInterface {
 		return LoggerFactory::getInstance( 'ManageWiki' );
+	},
+	'ManageWikiMessageUpdater' => static function ( MediaWikiServices $services ): MessageUpdater {
+		return new MessageUpdater(
+			$services->getDeletePageFactory(),
+			$services->getMessageFormatterFactory()->getTextFormatter(
+				$services->getContentLanguageCode()->toString()
+			),
+			$services->getMovePageFactory(),
+			$services->getTitleFactory(),
+			$services->getWikiPageFactory()
+		);
 	},
 	'ManageWikiNamespacesFactory' => static function ( MediaWikiServices $services ): NamespacesFactory {
 		return new NamespacesFactory(
