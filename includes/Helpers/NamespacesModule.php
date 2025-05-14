@@ -3,42 +3,51 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use JobSpecification;
-use MediaWiki\Config\Config;
+use MediaWiki\Config\ServiceOptions;
+use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\MainConfigNames;
-use MediaWiki\MediaWikiServices;
-use Miraheze\CreateWiki\IConfigModule;
+use MediaWiki\Title\NamespaceInfo;
+use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\IModule;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
-use Wikimedia\Rdbms\IDatabase;
+use Wikimedia\Rdbms\IReadableDatabase;
+use Wikimedia\Rdbms\SelectQueryBuilder;
 
-/**
- * Handler for interacting with Namespace configuration
- */
-class ManageWikiNamespaces implements IConfigModule {
+class NamespacesModule implements IModule {
 
-	private Config $config;
-	private IDatabase $dbw;
+	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::NamespacesDisallowedNames,
+		MainConfigNames::MetaNamespace,
+		MainConfigNames::MetaNamespaceTalk,
+	];
+
+	private readonly IReadableDatabase $dbr;
 
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
-	private array $messageFields = [];
 	private array $deleteNamespaces = [];
 	private array $liveNamespaces = [];
+	private array $messageFields = [];
 
 	private bool $runNamespaceMigrationJob = true;
 
-	private string $dbname;
 	private ?string $log = null;
 
-	public function __construct( string $dbname ) {
-		$this->dbname = $dbname;
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
+	public function __construct(
+		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly DatabaseUtils $databaseUtils,
+		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
+		private readonly NamespaceInfo $namespaceInfo,
+		private readonly ServiceOptions $options,
+		private readonly string $dbname
+	) {
+		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
-
-		$namespaces = $this->dbw->newSelectQueryBuilder()
+		$this->dbr = $this->databaseUtils->getGlobalReplicaDB();
+		$namespaces = $this->dbr->newSelectQueryBuilder()
 			->select( '*' )
 			->from( 'mw_namespaces' )
 			->where( [ 'ns_dbname' => $dbname ] )
@@ -60,6 +69,21 @@ class ManageWikiNamespaces implements IConfigModule {
 		}
 	}
 
+	public function getNewId(): int {
+		$lastID = $this->dbr->newSelectQueryBuilder()
+			->select( 'ns_namespace_id' )
+			->from( 'mw_namespaces' )
+			->where( [
+				'ns_dbname' => $this->dbname,
+				$this->dbr->expr( 'ns_namespace_id', '>=', 3000 ),
+			] )
+			->orderBy( 'ns_namespace_id', SelectQueryBuilder::SORT_DESC )
+			->caller( __METHOD__ )
+			->fetchField();
+
+		return $lastID !== false ? $lastID + 1 : 3000;
+	}
+
 	/**
 	 * Checks whether or not the specified namespace exists
 	 * @param int $id Namespace ID to check
@@ -69,7 +93,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		return isset( $this->liveNamespaces[$id] );
 	}
 
-	public function namespaceNameExists( string $name, bool $checkMetaNS ): bool {
+	public function nameExists( string $name, bool $checkMetaNS ): bool {
 		// Normalize
 		$name = str_replace(
 			[ ' ', ':' ], '_',
@@ -109,20 +133,19 @@ class ManageWikiNamespaces implements IConfigModule {
 
 	private function isMetaNamespace( string $name ): bool {
 		$metaNamespace = mb_strtolower( trim(
-			str_replace( [ ' ', ':' ], '_', $this->config->get( MainConfigNames::MetaNamespace ) )
+			str_replace( [ ' ', ':' ], '_', $this->options->get( MainConfigNames::MetaNamespace ) )
 		) );
 
 		$metaNamespaceTalk = mb_strtolower( trim(
-			str_replace( [ ' ', ':' ], '_', $this->config->get( MainConfigNames::MetaNamespaceTalk ) )
+			str_replace( [ ' ', ':' ], '_', $this->options->get( MainConfigNames::MetaNamespaceTalk ) )
 		) );
 
-		$namespaceInfo = MediaWikiServices::getInstance()->getNamespaceInfo();
 		$canonicalNameMain = mb_strtolower( trim(
-			str_replace( [ ' ', ':' ], '_', $namespaceInfo->getCanonicalName( NS_PROJECT ) )
+			str_replace( [ ' ', ':' ], '_', $this->namespaceInfo->getCanonicalName( NS_PROJECT ) )
 		) );
 
 		$canonicalNameTalk = mb_strtolower( trim(
-			str_replace( [ ' ', ':' ], '_', $namespaceInfo->getCanonicalName( NS_PROJECT_TALK ) )
+			str_replace( [ ' ', ':' ], '_', $this->namespaceInfo->getCanonicalName( NS_PROJECT_TALK ) )
 		) );
 
 		return in_array( $name, [ $metaNamespace, $metaNamespaceTalk,
@@ -131,15 +154,11 @@ class ManageWikiNamespaces implements IConfigModule {
 	}
 
 	/**
-	 * Lists either all namespaces or a specific one
-	 * @param ?int $id Namespace ID wanted (null for all)
+	 * Retrieves data for a specific namespace
+	 * @param int $id Namespace ID wanted
 	 * @return array Namespace configuration
 	 */
-	public function list( ?int $id ): array {
-		if ( $id === null ) {
-			return $this->liveNamespaces;
-		}
-
+	public function list( int $id ): array {
 		return $this->liveNamespaces[$id] ?? [
 			'name' => null,
 			'searchable' => 0,
@@ -153,6 +172,14 @@ class ManageWikiNamespaces implements IConfigModule {
 		];
 	}
 
+	public function listAll(): array {
+		return $this->liveNamespaces;
+	}
+
+	public function listIds(): array {
+		return array_keys( $this->listAll() );
+	}
+
 	/**
 	 * Modify a namespace handler
 	 * @param int $id Namespace ID
@@ -162,9 +189,9 @@ class ManageWikiNamespaces implements IConfigModule {
 	public function modify(
 		int $id,
 		array $data,
-		bool $maintainPrefix = false
+		bool $maintainPrefix
 	): void {
-		$excluded = array_map( 'mb_strtolower', $this->config->get( ConfigNames::NamespacesDisallowedNames ) );
+		$excluded = array_map( 'mb_strtolower', $this->options->get( ConfigNames::NamespacesDisallowedNames ) );
 		if ( in_array( mb_strtolower( $data['name'] ), $excluded, true ) ) {
 			$this->errors[] = [
 				'managewiki-error-disallowednamespace' => [
@@ -189,7 +216,7 @@ class ManageWikiNamespaces implements IConfigModule {
 
 		if ( $data['name'] !== $nsData['name'] ) {
 			$checkMetaNS = $id !== NS_PROJECT && $id !== NS_PROJECT_TALK;
-			if ( $this->namespaceNameExists( $data['name'], $checkMetaNS ) ) {
+			if ( $this->nameExists( $data['name'], $checkMetaNS ) ) {
 				$this->errors[] = [
 					'managewiki-namespace-conflicts' => [
 						$data['name'],
@@ -204,7 +231,7 @@ class ManageWikiNamespaces implements IConfigModule {
 					continue;
 				}
 
-				if ( $this->namespaceNameExists( $alias, checkMetaNS: true ) ) {
+				if ( $this->nameExists( $alias, checkMetaNS: true ) ) {
 					$this->errors[] = [
 						'managewiki-namespace-conflicts' => [ $alias ],
 					];
@@ -240,7 +267,7 @@ class ManageWikiNamespaces implements IConfigModule {
 	public function remove(
 		int $id,
 		int $newNamespace,
-		bool $maintainPrefix = false
+		bool $maintainPrefix
 	): void {
 		// Utilize changes differently in this case
 		$this->changes[$id] = [
@@ -268,8 +295,8 @@ class ManageWikiNamespaces implements IConfigModule {
 		$this->runNamespaceMigrationJob = false;
 	}
 
-	public function isDeleting( int|string $namespace ): bool {
-		return in_array( (int)$namespace, $this->deleteNamespaces, true );
+	public function isDeleting( int|string $id ): bool {
+		return in_array( (int)$id, $this->deleteNamespaces, true );
 	}
 
 	public function getErrors(): array {
@@ -302,6 +329,7 @@ class ManageWikiNamespaces implements IConfigModule {
 			return;
 		}
 
+		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( $this->isDeleting( $id ) ) {
 				$this->log = 'namespaces-delete';
@@ -312,7 +340,7 @@ class ManageWikiNamespaces implements IConfigModule {
 					];
 				}
 
-				$this->dbw->newDeleteQueryBuilder()
+				$dbw->newDeleteQueryBuilder()
 					->deleteFrom( 'mw_namespaces' )
 					->where( [
 						'ns_dbname' => $this->dbname,
@@ -351,7 +379,7 @@ class ManageWikiNamespaces implements IConfigModule {
 					'maintainPrefix' => $this->liveNamespaces[$id]['maintainprefix'] ?? false,
 				];
 
-				$this->dbw->newInsertQueryBuilder()
+				$dbw->newInsertQueryBuilder()
 					->insertInto( 'mw_namespaces' )
 					->row( [
 						'ns_dbname' => $this->dbname,
@@ -374,9 +402,7 @@ class ManageWikiNamespaces implements IConfigModule {
 			}
 
 			if ( $this->dbname !== 'default' && $this->runNamespaceMigrationJob ) {
-				$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
-				$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
-
+				$jobQueueGroup = $this->jobQueueGroupFactory->makeJobQueueGroup();
 				$jobQueueGroup->push(
 					new JobSpecification(
 						NamespaceMigrationJob::JOB_NAME,
@@ -387,8 +413,7 @@ class ManageWikiNamespaces implements IConfigModule {
 		}
 
 		if ( $this->dbname !== 'default' ) {
-			$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $this->dbname );
+			$data = $this->dataFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}
