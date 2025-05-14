@@ -46,11 +46,11 @@ class ManageWikiInstaller {
 	}
 
 	private static function sql( string $dbname, array $data ): bool {
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $dbname );
 
 		foreach ( $data as $table => $sql ) {
-			if ( !$dbw->tableExists( $table ) ) {
+			if ( !$dbw->tableExists( $table, __METHOD__ ) ) {
 				try {
 					$dbw->sourceFile( $sql );
 				} catch ( Exception $e ) {
@@ -75,7 +75,8 @@ class ManageWikiInstaller {
 		array $data,
 		bool $install
 	): bool {
-		$mwPermissions = new ManageWikiPermissions( $dbname );
+		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$mwPermissions = $moduleFactory->permissions( $dbname );
 		$action = $install ? 'add' : 'remove';
 
 		foreach ( $data as $group => $mod ) {
@@ -103,21 +104,22 @@ class ManageWikiInstaller {
 		array $data,
 		bool $install
 	): bool {
-		$mwNamespaces = new ManageWikiNamespaces( $dbname );
+		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
 				$id = $i['id'];
 				unset( $i['id'] );
 				$i['name'] = $name;
 
-				$mwNamespaces->modify( $id, $i, true );
+				$mwNamespaces->modify( $id, $i, maintainPrefix: true );
 				continue;
 			}
 
 			// We migrate to either NS_MAIN (0) or NS_TALK (1),
 			// depending on if this is a talk namespace or not.
 			$newNamespace = $i['id'] % 2;
-			$mwNamespaces->remove( $i['id'], $newNamespace, true );
+			$mwNamespaces->remove( $i['id'], $newNamespace, maintainPrefix: true );
 		}
 
 		$mwNamespaces->commit();
@@ -129,47 +131,26 @@ class ManageWikiInstaller {
 			throw new RuntimeException( 'Shell is disabled.' );
 		}
 
-		foreach ( $data as $script => $options ) {
-			$repeatWith = [];
-			if ( isset( $options['repeat-with'] ) ) {
-				$repeatWith = $options['repeat-with'];
-				unset( $options['repeat-with'] );
-			}
+		$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
+		$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
 
-			$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
-			$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
-
-			$jobQueueGroup->push(
-				new JobSpecification(
-					MWScriptJob::JOB_NAME,
-					[
-						'dbname' => $dbname,
-						'script' => $script,
-						'options' => $options,
-					]
-				)
-			);
-
-			if ( $repeatWith ) {
-				$jobQueueGroup->push(
-					new JobSpecification(
-						MWScriptJob::JOB_NAME,
-						[
-							'dbname' => $dbname,
-							'script' => $script,
-							'options' => $repeatWith,
-						]
-					)
-				);
-			}
-		}
+		$jobQueueGroup->push(
+			new JobSpecification(
+				MWScriptJob::JOB_NAME,
+				[
+					'data' => $data,
+					'dbname' => $dbname,
+				]
+			)
+		);
 
 		return true;
 	}
 
 	private static function settings( string $dbname, array $data ): bool {
-		$mwSettings = new ManageWikiSettings( $dbname );
-		$mwSettings->modify( $data );
+		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$mwSettings = $moduleFactory->settings( $dbname );
+		$mwSettings->modify( $data, default: null );
 		$mwSettings->commit();
 		return true;
 	}

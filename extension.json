@@ -41,6 +41,7 @@
 		"MWScriptJob": {
 			"class": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
 			"services": [
+				"JobQueueGroupFactory",
 				"ManageWikiLogger"
 			],
 			"needsPage": false
@@ -48,7 +49,7 @@
 		"NamespaceMigrationJob": {
 			"class": "Miraheze\\ManageWiki\\Jobs\\NamespaceMigrationJob",
 			"services": [
-				"CreateWikiDatabaseUtils"
+				"ManageWikiDatabaseUtils"
 			],
 			"needsPage": false
 		}
@@ -91,6 +92,7 @@
 			],
 			"permissions": [
 				"delete-group",
+				"rename-group",
 				"rights",
 				"rights-reset"
 			],
@@ -110,24 +112,24 @@
 		"DeletedWikis": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialDeletedWikis",
 			"services": [
-				"CreateWikiDatabaseUtils"
+				"ManageWikiDatabaseUtils"
 			]
 		},
 		"ManageWiki": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
-				"CreateWikiDatabaseUtils",
-				"NamespaceInfo",
-				"RemoteWikiFactory"
+				"ManageWikiDatabaseUtils",
+				"ManageWikiModuleFactory",
+				"NamespaceInfo"
 			]
 		},
 		"ManageWikiDefaults": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaults",
 			"services": [
-				"CreateWikiDatabaseUtils",
 				"CreateWikiDataFactory",
-				"CreateWikiHookHandler",
-				"RemoteWikiFactory"
+				"ManageWikiDatabaseUtils",
+				"ManageWikiDefaultPermissions",
+				"ManageWikiModuleFactory"
 			]
 		}
 	},
@@ -135,23 +137,11 @@
 		"wikiconfig": {
 			"class": "Miraheze\\ManageWiki\\Api\\ApiQueryWikiConfig",
 			"services": [
-				"RemoteWikiFactory"
-			]
-		}
-	},
-	"APIModules": {
-		"modifyserver": {
-			"class": "Miraheze\\ManageWiki\\Api\\ApiModifyServer",
-			"services": [
-				"CreateWikiValidator",
-				"RemoteWikiFactory"
+				"ManageWikiModuleFactory"
 			]
 		}
 	},
 	"Hooks": {
-		"ContentHandlerForModelID": {
-			"handler": "Main"
-		},
 		"CreateWikiCreation": {
 			"handler": "CreateWiki"
 		},
@@ -182,7 +172,9 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\CreateWiki",
 			"services": [
 				"ManageWikiConfig",
+				"ManageWikiDefaultPermissions",
 				"ManageWikiLogger",
+				"ManageWikiModuleFactory",
 				"LocalisationCache"
 			]
 		},
@@ -193,6 +185,7 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\Main",
 			"services": [
 				"ManageWikiConfig",
+				"ManageWikiHookRunner",
 				"UserOptionsLookup"
 			]
 		}
@@ -339,6 +332,10 @@
 	},
 	"ServiceWiringFiles": [
 		"includes/ServiceWiring.php"
+	],
+	"DatabaseVirtualDomains": [
+		"virtual-managewiki",
+		"virtual-managewiki-central"
 	],
 	"manifest_version": 2
 }

@@ -9,17 +9,16 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\RawMessage;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Status\Status;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\ManageWikiOOUIForm;
 use UnexpectedValueException;
-use Wikimedia\Rdbms\IDatabase;
 
 class ManageWikiFormFactory {
 
 	private function getFormDescriptor(
 		Config $config,
+		ModuleFactory $moduleFactory,
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
 		string $dbname,
 		string $module,
 		string $special,
@@ -32,16 +31,15 @@ class ManageWikiFormFactory {
 		);
 
 		return ManageWikiFormFactoryBuilder::buildDescriptor(
-			$module, $dbname, $ceMW, $context, $remoteWiki,
+			$module, $dbname, $ceMW, $context, $moduleFactory,
 			$special, $filtered, $config
 		);
 	}
 
 	public function getForm(
 		Config $config,
+		ModuleFactory $moduleFactory,
 		IContextSource $context,
-		IDatabase $dbw,
-		RemoteWikiFactory $remoteWiki,
 		string $dbname,
 		string $module,
 		string $special,
@@ -50,7 +48,7 @@ class ManageWikiFormFactory {
 		// Can the user modify ManageWiki?
 		$ceMW = !(
 			(
-				$remoteWiki->isLocked() &&
+				$moduleFactory->core( $dbname )->isLocked() &&
 				!$context->getAuthority()->isAllowed( 'managewiki-restricted' )
 			) ||
 			!$context->getAuthority()->isAllowed( "managewiki-$module" )
@@ -58,8 +56,8 @@ class ManageWikiFormFactory {
 
 		$formDescriptor = $this->getFormDescriptor(
 			$config,
+			$moduleFactory,
 			$context,
-			$remoteWiki,
 			$dbname,
 			$module,
 			$special,
@@ -72,9 +70,8 @@ class ManageWikiFormFactory {
 			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
 					$config,
-					$dbw,
+					$moduleFactory,
 					$form,
-					$remoteWiki,
 					$formData,
 					$dbname,
 					$module,
@@ -96,9 +93,8 @@ class ManageWikiFormFactory {
 
 	protected function submitForm(
 		Config $config,
-		IDatabase $dbw,
+		ModuleFactory $moduleFactory,
 		HTMLForm $form,
-		RemoteWikiFactory $remoteWiki,
 		array $formData,
 		string $dbname,
 		string $module,
@@ -125,8 +121,7 @@ class ManageWikiFormFactory {
 			$module,
 			$dbname,
 			$context,
-			$remoteWiki,
-			$dbw,
+			$moduleFactory,
 			$config,
 			$special,
 			$filtered

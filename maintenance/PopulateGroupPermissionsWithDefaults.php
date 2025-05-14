@@ -5,7 +5,6 @@ namespace Miraheze\ManageWiki\Maintenance;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
 
 class PopulateGroupPermissionsWithDefaults extends Maintenance {
 
@@ -17,7 +16,7 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 	}
 
 	public function execute(): void {
-		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
@@ -38,10 +37,11 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 			->fetchRow();
 
 		if ( !$checkRow ) {
-			$mwPermissions = new ManageWikiPermissions( $dbname );
-			$mwPermissionsDefault = new ManageWikiPermissions( 'default' );
+			$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+			$mwPermissions = $moduleFactory->permissionsLocal();
+			$mwPermissionsDefault = $moduleFactory->permissionsDefault();
 			$defaultGroups = array_diff(
-				array_keys( $mwPermissionsDefault->list( group: null ) ),
+				$mwPermissionsDefault->listGroups(),
 				[ $this->getConfig()->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
 			);
 
@@ -62,10 +62,6 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 			}
 
 			$mwPermissions->commit();
-
-			$dataFactory = $this->getServiceContainer()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $dbname );
-			$data->resetWikiData( isNewChanges: true );
 		}
 	}
 }

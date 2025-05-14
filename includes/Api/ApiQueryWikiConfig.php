@@ -4,12 +4,9 @@ namespace Miraheze\ManageWiki\Api;
 
 use MediaWiki\Api\ApiQuery;
 use MediaWiki\Api\ApiQueryBase;
-use Miraheze\CreateWiki\Exceptions\MissingWikiError;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
-use Miraheze\ManageWiki\Helpers\ManageWikiSettings;
+use Miraheze\ManageWiki\Exceptions\MissingWikiError;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Wikimedia\ParamValidator\ParamValidator;
 
 class ApiQueryWikiConfig extends ApiQueryBase {
@@ -17,7 +14,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 	public function __construct(
 		ApiQuery $query,
 		string $moduleName,
-		private readonly RemoteWikiFactory $remoteWikiFactory
+		private readonly ModuleFactory $moduleFactory
 	) {
 		parent::__construct( $query, $moduleName, 'wcf' );
 	}
@@ -31,7 +28,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 		foreach ( $params['wikis'] as $wiki ) {
 			try {
-				$remoteWiki = $this->remoteWikiFactory->newInstance( $wiki );
+				$mwCore = $this->moduleFactory->core( $wiki );
 			} catch ( MissingWikiError $e ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
 				continue;
@@ -39,16 +36,16 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 
 			$wikiData = [
 				'name' => $wiki,
-				'sitename' => $remoteWiki->getSitename(),
-				'closed' => $remoteWiki->isClosed(),
-				'inactive' => $remoteWiki->isInactive(),
-				'inactive-exempt' => $remoteWiki->isInactiveExempt(),
-				'private' => $remoteWiki->isPrivate(),
+				'sitename' => $mwCore->getSitename(),
+				'closed' => $mwCore->isClosed(),
+				'inactive' => $mwCore->isInactive(),
+				'inactive-exempt' => $mwCore->isInactiveExempt(),
+				'private' => $mwCore->isPrivate(),
 			];
 
-			$mwSettings = new ManageWikiSettings( $wiki );
 			if ( isset( $prop['settings'] ) ) {
-				$wikiData['settings'] = $mwSettings->list( var: null );
+				$mwSettings = $this->moduleFactory->settings( $wiki );
+				$wikiData['settings'] = $mwSettings->listAll();
 
 				foreach ( $this->getConfig()->get( ConfigNames::Settings ) as $setting => $options ) {
 					if ( isset( $options['requires']['visibility']['permissions'] ) ) {
@@ -57,14 +54,14 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 				}
 			}
 
-			$mwExtensions = new ManageWikiExtensions( $wiki );
 			if ( isset( $prop['extensions'] ) ) {
+				$mwExtensions = $this->moduleFactory->extensions( $wiki );
 				$wikiData['extensions'] = $mwExtensions->list();
 			}
 
-			$mwPermissions = new ManageWikiPermissions( $wiki );
 			if ( isset( $prop['permissions'] ) ) {
-				foreach ( $mwPermissions->list( group: null ) as $group => $data ) {
+				$mwPermissions = $this->moduleFactory->permissions( $wiki );
+				foreach ( $mwPermissions->listAll() as $group => $data ) {
 					$wikiData['permissions'][$group] = $data['permissions'];
 				}
 			}

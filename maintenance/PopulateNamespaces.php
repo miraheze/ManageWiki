@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use Miraheze\ManageWiki\ManageWiki;
 use Wikimedia\Rdbms\IDatabase;
 
 class PopulateNamespaces extends Maintenance {
@@ -17,11 +16,12 @@ class PopulateNamespaces extends Maintenance {
 	}
 
 	public function execute(): void {
-		if ( !$this->hasOption( 'force' ) && ManageWiki::checkSetup( 'namespaces' ) ) {
+		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+		if ( !$this->hasOption( 'force' ) && $moduleFactory->isEnabled( 'namespaces' ) ) {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
 
-		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$siteName = $this->getConfig()->get( MainConfigNames::Sitename );

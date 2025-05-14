@@ -4,12 +4,15 @@ namespace Miraheze\ManageWiki\Hooks;
 
 use MediaWiki\Context\IContextSource;
 use MediaWiki\HookContainer\HookContainer;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
-use Wikimedia\Rdbms\IDatabase;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\ICoreModule;
+use Skin;
 
 class ManageWikiHookRunner implements
+	ManageWikiAfterSidebarLinksHook,
 	ManageWikiCoreAddFormFieldsHook,
-	ManageWikiCoreFormSubmissionHook
+	ManageWikiCoreFormSubmissionHook,
+	ManageWikiCoreProviderHook
 {
 
 	public function __construct(
@@ -18,16 +21,25 @@ class ManageWikiHookRunner implements
 	}
 
 	/** @inheritDoc */
+	public function onManageWikiAfterSidebarLinks( Skin $skin, array &$sidebarLinks ): void {
+		$this->container->run(
+			'ManageWikiAfterSidebarLinks',
+			[ $skin, &$sidebarLinks ],
+			[ 'abortable' => false ]
+		);
+	}
+
+	/** @inheritDoc */
 	public function onManageWikiCoreAddFormFields(
 		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
+		ModuleFactory $moduleFactory,
 		string $dbname,
 		bool $ceMW,
 		array &$formDescriptor
 	): void {
 		$this->container->run(
 			'ManageWikiCoreAddFormFields',
-			[ $context, $remoteWiki, $dbname, $ceMW, &$formDescriptor ],
+			[ $context, $moduleFactory, $dbname, $ceMW, &$formDescriptor ],
 			[ 'abortable' => false ]
 		);
 	}
@@ -35,14 +47,22 @@ class ManageWikiHookRunner implements
 	/** @inheritDoc */
 	public function onManageWikiCoreFormSubmission(
 		IContextSource $context,
-		IDatabase $dbw,
-		RemoteWikiFactory $remoteWiki,
+		ModuleFactory $moduleFactory,
 		string $dbname,
 		array $formData
 	): void {
 		$this->container->run(
 			'ManageWikiCoreFormSubmission',
-			[ $context, $dbw, $remoteWiki, $dbname, $formData ],
+			[ $context, $moduleFactory, $dbname, $formData ],
+			[ 'abortable' => false ]
+		);
+	}
+
+	/** @inheritDoc */
+	public function onManageWikiCoreProvider( ?ICoreModule &$provider, string $dbname ): void {
+		$this->container->run(
+			'ManageWikiCoreProvider',
+			[ &$provider, $dbname ],
 			[ 'abortable' => false ]
 		);
 	}

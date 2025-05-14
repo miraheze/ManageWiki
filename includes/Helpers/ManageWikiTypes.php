@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Collator;
+use DateTimeZone;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
@@ -12,7 +13,6 @@ use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
 use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
-use Miraheze\ManageWiki\ManageWiki;
 
 class ManageWikiTypes {
 
@@ -181,7 +181,7 @@ class ManageWikiTypes {
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
 					'default' => $value !== null ?
-						ManageWiki::handleMatrix( $value, 'php' ) :
+						self::handleMatrix( $value, 'php' ) :
 						$options['overridedefault'],
 				];
 				break;
@@ -364,9 +364,18 @@ class ManageWikiTypes {
 				];
 				break;
 			case 'timezone':
+				$identifiers = DateTimeZone::listIdentifiers( DateTimeZone::ALL );
+				$timezones = array_filter(
+					$identifiers,
+					static fn ( string $id ): bool =>
+						str_contains( $id, '/' ) || $id === 'UTC'
+				);
+
+				$timezones = array_combine( $timezones, $timezones );
+
 				$configs = [
 					'type' => 'select',
-					'options' => ManageWiki::getTimezoneList(),
+					'options' => $timezones,
 					'default' => $value ?? $options['overridedefault'],
 				];
 				break;
@@ -479,5 +488,41 @@ class ManageWikiTypes {
 		}
 
 		return [];
+	}
+
+	public static function handleMatrix(
+		array|string $conversion,
+		string $to
+	): array {
+		return match ( $to ) {
+			'php' => ( static function ( string $json ): array {
+				$decoded = json_decode( $json, true );
+				if ( !is_array( $decoded ) ) {
+					return [];
+				}
+
+				$result = [];
+				foreach ( $decoded as $key => $values ) {
+					foreach ( (array)$values as $val ) {
+						$result[] = "$key-$val";
+					}
+				}
+				return $result;
+			} )( $conversion ),
+
+			'phparray' => ( static function ( array $flat ): array {
+				$result = [];
+				foreach ( $flat as $item ) {
+					$parts = explode( '-', $item, 2 );
+					if ( count( $parts ) === 2 ) {
+						[ $row, $col ] = $parts;
+						$result[$row][] = $col;
+					}
+				}
+				return $result;
+			} )( (array)$conversion ),
+
+			default => [],
+		};
 	}
 }

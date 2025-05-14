@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Installer\Hook\LoadExtensionSchemaUpdatesHook;
+use Miraheze\ManageWiki\Maintenance\PopulateDefaults;
 
 class Installer implements LoadExtensionSchemaUpdatesHook {
 
@@ -14,7 +15,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		$dir = __DIR__ . '/../../../sql';
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'addTable',
 			'mw_namespaces',
 			"$dir/mw_namespaces.sql",
@@ -22,7 +23,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		] );
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'addTable',
 			'mw_permissions',
 			"$dir/mw_permissions.sql",
@@ -30,7 +31,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		] );
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'addTable',
 			'mw_settings',
 			"$dir/mw_settings.sql",
@@ -38,7 +39,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		] );
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'modifyTable',
 			'mw_namespaces',
 			"$dir/patches/patch-namespace-core-alter.sql",
@@ -46,7 +47,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		] );
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'modifyTable',
 			'mw_namespaces',
 			"$dir/patches/patch-namespace-name-alter.sql",
@@ -54,7 +55,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		] );
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'addField',
 			'mw_permissions',
 			'perm_addgroupstoself',
@@ -63,7 +64,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		] );
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'addField',
 			'mw_permissions',
 			'perm_autopromote',
@@ -72,7 +73,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		] );
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'addField',
 			'mw_namespaces',
 			'ns_additional',
@@ -81,7 +82,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		] );
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'addIndex',
 			'mw_namespaces',
 			'ns_dbname',
@@ -90,12 +91,14 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 		] );
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
-			'virtual-createwiki',
+			'virtual-managewiki',
 			'addIndex',
 			'mw_permissions',
 			'perm_dbname',
 			"$dir/patches/patch-permissions-add-indexes.sql",
 			true,
 		] );
+
+		$updater->addPostDatabaseUpdateMaintenance( PopulateDefaults::class );
 	}
 }

@@ -2,53 +2,51 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use MediaWiki\Config\Config;
-use MediaWiki\Logger\LoggerFactory;
-use MediaWiki\MediaWikiServices;
-use Miraheze\CreateWiki\IConfigModule;
+use MediaWiki\Config\ServiceOptions;
+use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Wikimedia\Rdbms\IDatabase;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\IModule;
+use Psr\Log\LoggerInterface;
 
-/**
- * Handler for all interactions with Extension changes within ManageWiki
- */
-class ManageWikiExtensions implements IConfigModule {
+class ExtensionsModule implements IModule {
 
-	private Config $config;
-	private IDatabase $dbw;
+	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::Extensions,
+	];
 
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
 	private array $liveExtensions = [];
 	private array $removedExtensions = [];
-	private array $extensionsConfig;
+	private array $scripts = [];
 
-	private string $dbname;
 	private ?string $log = null;
 
-	public function __construct( string $dbname ) {
-		$this->dbname = $dbname;
-		$this->config = MediaWikiServices::getInstance()->getConfigFactory()->makeConfig( 'ManageWiki' );
-		$this->extensionsConfig = $this->config->get( ConfigNames::Extensions );
+	public function __construct(
+		private readonly CreateWikiDataFactory $dataFactory,
+		private readonly DatabaseUtils $databaseUtils,
+		private readonly LoggerInterface $logger,
+		private readonly ServiceOptions $options,
+		private readonly string $dbname
+	) {
+		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'CreateWikiDatabaseUtils' );
-		$this->dbw = $databaseUtils->getGlobalPrimaryDB();
-
-		$extensions = $this->dbw->newSelectQueryBuilder()
+		$dbr = $this->databaseUtils->getGlobalReplicaDB();
+		$extensions = $dbr->newSelectQueryBuilder()
 			->select( 's_extensions' )
 			->from( 'mw_settings' )
 			->where( [ 's_dbname' => $dbname ] )
 			->caller( __METHOD__ )
 			->fetchField();
 
-		$logger = LoggerFactory::getInstance( 'ManageWiki' );
-
 		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
 		// populate extension lists with config associated with them.
+		$config = $this->options->get( ConfigNames::Extensions );
 		foreach ( json_decode( $extensions ?: '[]', true ) as $extension ) {
-			if ( !isset( $this->extensionsConfig[$extension] ) ) {
-				$logger->error( 'Extension/Skin {extension} not set in {config}', [
+			if ( !isset( $config[$extension] ) ) {
+				$this->logger->error( '{extension} is not set in {config}', [
 					'config' => ConfigNames::Extensions,
 					'extension' => $extension,
 				] );
@@ -56,16 +54,26 @@ class ManageWikiExtensions implements IConfigModule {
 				continue;
 			}
 
-			$this->liveExtensions[$extension] = $this->extensionsConfig[$extension];
+			$this->liveExtensions[$extension] = $config[$extension];
 		}
 	}
 
 	/**
 	 * Lists an array of all extensions currently 'enabled'
-	 * @return array 1D array of extensions enabled
+	 *
+	 * @return string[] Array of extensions enabled
 	 */
 	public function list(): array {
 		return array_keys( $this->liveExtensions );
+	}
+
+	/**
+	 * Lists names of all currently enabled extensions.
+	 *
+	 * @return string[] Array of ExtensionRegistry names
+	 */
+	public function listNames(): array {
+		return array_column( $this->liveExtensions, 'name' );
 	}
 
 	/**
@@ -73,10 +81,10 @@ class ManageWikiExtensions implements IConfigModule {
 	 * @param string[] $extensions Array of extensions to enable
 	 */
 	public function add( array $extensions ): void {
-		// We allow adding either one extension (string) or many (array)
+		$config = $this->options->get( ConfigNames::Extensions );
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
-			$this->liveExtensions[$ext] = $this->extensionsConfig[$ext];
+			$this->liveExtensions[$ext] = $config[$ext];
 			$this->changes[$ext] = [
 				'old' => 0,
 				'new' => 1,
@@ -87,13 +95,9 @@ class ManageWikiExtensions implements IConfigModule {
 	/**
 	 * Removes an extension from the 'enabled' list
 	 * @param string[] $extensions Array of extensions to disable
-	 * @param bool $force Force removing extension incase it is removed from config
+	 * @param bool $force Force removing extension in the event it is removed from config
 	 */
-	public function remove(
-		array $extensions,
-		bool $force = false
-	): void {
-		// We allow remove either one extension (string) or many (array)
+	public function remove( array $extensions, bool $force ): void {
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
 			if ( !isset( $this->liveExtensions[$ext] ) && !$force ) {
@@ -116,8 +120,8 @@ class ManageWikiExtensions implements IConfigModule {
 	 */
 	public function overwriteAll( array $extensions ): void {
 		$overwrittenExts = $this->list();
-
-		foreach ( $this->extensionsConfig as $ext => $extensionsConfig ) {
+		foreach ( $this->options->get( ConfigNames::Extensions ) as $ext => $_ ) {
+			// TODO: do we still need this?
 			if ( !is_string( $ext ) ) {
 				continue;
 			}
@@ -128,13 +132,13 @@ class ManageWikiExtensions implements IConfigModule {
 			}
 
 			if ( !in_array( $ext, $extensions, true ) && in_array( $ext, $overwrittenExts, true ) ) {
-				$this->remove( [ $ext ] );
+				$this->remove( [ $ext ], force: false );
 			}
 		}
 	}
 
 	private function getName( string $extension ): string {
-		return $this->extensionsConfig[$extension]['name'] ?? '';
+		return $this->options->get( ConfigNames::Extensions )[$extension]['name'] ?? '';
 	}
 
 	public function getErrors(): array {
@@ -239,8 +243,18 @@ class ManageWikiExtensions implements IConfigModule {
 			// Requirements passed, proceed to installer
 			$installResult = true;
 			if ( isset( $config['install'] ) ) {
+				if ( isset( $config['install']['mwscript'] ) ) {
+					$this->scripts = array_merge(
+						$this->scripts,
+						$config['install']['mwscript']
+					);
+
+					unset( $config['install']['mwscript'] );
+				}
+
 				$installResult = ManageWikiInstaller::process(
-					$this->dbname, $config['install'],
+					dbname: $this->dbname,
+					actions: $config['install'],
 					install: true
 				);
 			}
@@ -289,7 +303,8 @@ class ManageWikiExtensions implements IConfigModule {
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it.
 			if ( isset( $config['remove'] ) ) {
 				ManageWikiInstaller::process(
-					$this->dbname, $config['remove'],
+					dbname: $this->dbname,
+					actions: $config['remove'],
 					install: false
 				);
 			}
@@ -300,7 +315,8 @@ class ManageWikiExtensions implements IConfigModule {
 			return;
 		}
 
-		$this->dbw->newInsertQueryBuilder()
+		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
+		$dbw->newInsertQueryBuilder()
 			->insertInto( 'mw_settings' )
 			->row( [
 				's_dbname' => $this->dbname,
@@ -312,9 +328,17 @@ class ManageWikiExtensions implements IConfigModule {
 			->caller( __METHOD__ )
 			->execute();
 
-		$dataFactory = MediaWikiServices::getInstance()->get( 'CreateWikiDataFactory' );
-		$data = $dataFactory->newInstance( $this->dbname );
+		$data = $this->dataFactory->newInstance( $this->dbname );
 		$data->resetWikiData( isNewChanges: true );
+
+		// We need to run mwscript steps after the extension is already loaded
+		if ( $this->scripts ) {
+			ManageWikiInstaller::process(
+				dbname: $this->dbname,
+				actions: [ 'mwscript' => $this->scripts ],
+				install: true
+			);
+		}
 
 		$this->logParams = [
 			'5::changes' => implode( ', ', array_keys( $this->changes ) ),

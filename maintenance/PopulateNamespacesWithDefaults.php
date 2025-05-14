@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
 
 class PopulateNamespacesWithDefaults extends Maintenance {
 
@@ -16,7 +15,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 	}
 
 	public function execute(): void {
-		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
@@ -37,18 +36,20 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 			->fetchRow();
 
 		if ( !$checkRow ) {
-			$mwNamespaces = new ManageWikiNamespaces( $dbname );
-			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
-			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
+			$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+			$mwNamespaces = $moduleFactory->namespacesLocal();
+			$mwNamespacesDefault = $moduleFactory->namespacesDefault();
+			$defaultNamespaces = $mwNamespacesDefault->listIds();
 
 			foreach ( $defaultNamespaces as $namespace ) {
-				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
-				$mwNamespaces->commit();
+				$mwNamespaces->modify(
+					$namespace,
+					$mwNamespacesDefault->list( $namespace ),
+					maintainPrefix: false
+				);
 			}
 
-			$dataFactory = $this->getServiceContainer()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $dbname );
-			$data->resetWikiData( isNewChanges: true );
+			$mwNamespaces->commit();
 		}
 	}
 }

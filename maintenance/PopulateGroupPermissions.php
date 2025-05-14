@@ -5,7 +5,6 @@ namespace Miraheze\ManageWiki\Maintenance;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\ManageWiki;
 
 class PopulateGroupPermissions extends Maintenance {
 
@@ -17,7 +16,8 @@ class PopulateGroupPermissions extends Maintenance {
 	}
 
 	public function execute(): void {
-		if ( !$this->hasOption( 'force' ) && ManageWiki::checkSetup( 'permissions' ) ) {
+		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+		if ( !$this->hasOption( 'force' ) && $moduleFactory->isEnabled( 'permissions' ) ) {
 			$this->fatalError( 'Disable ManageWiki Permissions on this wiki.' );
 		}
 
@@ -61,7 +61,7 @@ class PopulateGroupPermissions extends Maintenance {
 			}
 		}
 
-		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
+		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
 		$dbw = $databaseUtils->getGlobalPrimaryDB();
 
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );

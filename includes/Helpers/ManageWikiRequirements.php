@@ -20,15 +20,11 @@ class ManageWikiRequirements {
 	 * @return bool Whether the extension can be enabled
 	 */
 	public static function process( array $actions, array $extList ): bool {
-		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
-
 		foreach ( $actions as $action => $data ) {
 			switch ( $action ) {
 				case 'permissions':
-					// We don't check permissions if we are in CLI mode, so that we can
-					// toggle restricted extensions in CLI.
-					$stepResponse['permissions'] = PHP_SAPI === 'cli' || self::permissions( $data );
+					$stepResponse['permissions'] = self::permissions( $data );
 					break;
 				case 'extensions':
 					$stepResponse['extensions'] = self::extensions( $data, $extList );
@@ -64,6 +60,12 @@ class ManageWikiRequirements {
 	 * @return bool Whether permissions requirements are met
 	 */
 	private static function permissions( array $data ): bool {
+		// We don't check permissions if we are in CLI mode, so that we can
+		// toggle restricted extensions in CLI.
+		if ( MW_ENTRY_POINT === 'cli' ) {
+			return true;
+		}
+
 		$authority = RequestContext::getMain()->getAuthority();
 		return $authority->isAllowedAll( ...$data );
 	}
@@ -73,10 +75,7 @@ class ManageWikiRequirements {
 	 * @param array $extList Extensions already enabled on the wiki
 	 * @return bool Whether extension requirements are met
 	 */
-	private static function extensions(
-		array $data,
-		array $extList
-	): bool {
+	private static function extensions( array $data, array $extList ): bool {
 		foreach ( $data as $extension ) {
 			if ( is_array( $extension ) ) {
 				$count = 0;
@@ -140,9 +139,10 @@ class ManageWikiRequirements {
 		$setting = $data['setting'];
 		$value = $data['value'];
 
-		$manageWikiSettings = new ManageWikiSettings( $database );
+		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
+		$mwSettings = $moduleFactory->settings( $database );
 
-		$wikiValue = $manageWikiSettings->list( $setting );
+		$wikiValue = $mwSettings->list( $setting );
 
 		if ( $wikiValue !== null ) {
 			// We need to cast $wikiValue to an array

@@ -1,6 +1,8 @@
 #managewiki {
 	filter: brightness( 1 );
 
+	/* Flexbox gap not supported by all browsers */
+	/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
 	.managewiki-submit-formfields {
 		position: -webkit-sticky;
 		position: sticky;
@@ -74,9 +76,9 @@
 
 // Highlight could be in an overlay
 .managewiki-search-highlight {
-	border-radius: 0 !important;
-	background: #eaf3ff !important;
-	outline: 3px solid #eaf3ff !important;
+	border-radius: 0 !important; /* stylelint-disable-line declaration-no-important */
+	background: #eaf3ff !important; /* stylelint-disable-line declaration-no-important */
+	outline: 3px solid #eaf3ff !important; /* stylelint-disable-line declaration-no-important */
 }
 
 .managewiki-search-noresults {
