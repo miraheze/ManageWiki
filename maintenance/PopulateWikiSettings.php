@@ -10,7 +10,7 @@ class PopulateWikiSettings extends Maintenance {
 		parent::__construct();
 
 		$this->addOption( 'setting', 'The setting variable minus the $.', true, true );
-		$this->addOption( 'sourcelist', 'File in format of "wikidb|value" for the setting variable above.', false, true );
+		$this->addOption( 'sourcelist', 'File in format of "wikidb|value" for the setting above.', false, true );
 		$this->addOption( 'remove', 'Removes setting listed with --setting.' );
 
 		$this->requireExtension( 'ManageWiki' );
