@@ -18,7 +18,7 @@ class InstallerFactory {
 	) {
 	}
 
-	public function newInstance( string $dbname ): Installer {
+	public function getInstaller( string $dbname ): Installer {
 		return new Installer(
 			$this->dbLoadBalancerFactory,
 			$this->jobQueueGroupFactory,

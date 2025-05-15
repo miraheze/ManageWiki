@@ -178,7 +178,7 @@ class ExtensionsModule implements IModule {
 			)
 		);
 
-		$installer = $this->installerFactory->newInstance( $this->dbname );
+		$installer = $this->installerFactory->getInstaller( $this->dbname );
 
 		foreach ( $this->liveExtensions as $name => $config ) {
 			// Check if we have a conflict first
