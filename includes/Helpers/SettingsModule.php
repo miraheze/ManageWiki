@@ -24,6 +24,7 @@ class SettingsModule implements IModule {
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly ManageWikiInstaller $installer,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
 	) {
@@ -165,7 +166,7 @@ class SettingsModule implements IModule {
 			->execute();
 
 		if ( $this->scripts ) {
-			ManageWikiInstaller::process(
+			$this->installer->process(
 				$this->dbname,
 				[ 'mwscript' => $this->scripts ],
 				install: true
