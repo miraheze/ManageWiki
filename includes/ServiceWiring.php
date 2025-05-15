@@ -72,7 +72,8 @@ return [
 			$services->getDBLoadBalancerFactory(),
 			$services->getJobQueueGroupFactory(),
 			$services->get( 'ManageWikiLogger' ),
-			$services->get( 'ManageWikiModuleFactory' )
+			// Use a closure for these to avoid circular dependency
+			static fn () => $services->get( 'ManageWikiModuleFactory' )
 		);
 	},
 	'ManageWikiLogger' => static function (): LoggerInterface {
