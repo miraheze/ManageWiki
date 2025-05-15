@@ -14,41 +14,35 @@ use Wikimedia\Rdbms\ILBFactory;
 
 class Installer {
 
-	private ModuleFactory $moduleFactory;
-
 	public function __construct(
 		private readonly ILBFactory $dbLoadBalancerFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LoggerInterface $logger,
-		private readonly callable $moduleFactoryCallable
+		private readonly ModuleFactory $moduleFactory,
+		private readonly string $dbname
 	) {
 	}
 
-	public function process(
-		string $dbname,
-		array $actions,
-		bool $install
-	): bool {
-		$this->moduleFactory = ( $this->moduleFactoryCallable )();
+	public function process( array $actions, bool $install ): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
 		foreach ( $actions as $action => $data ) {
 			switch ( $action ) {
 				case 'sql':
-					$stepResponse['sql'] = $this->sql( $dbname, $data );
+					$stepResponse['sql'] = $this->sql( $data );
 					break;
 				case 'permissions':
-					$stepResponse['permissions'] = $this->permissions( $dbname, $data, $install );
+					$stepResponse['permissions'] = $this->permissions( $data, $install );
 					break;
 				case 'namespaces':
-					$stepResponse['namespaces'] = $this->namespaces( $dbname, $data, $install );
+					$stepResponse['namespaces'] = $this->namespaces( $data, $install );
 					break;
 				case 'mwscript':
-					$stepResponse['mwscript'] = $this->mwscript( $dbname, $data );
+					$stepResponse['mwscript'] = $this->mwscript( $data );
 					break;
 				case 'settings':
-					$stepResponse['settings'] = $this->settings( $dbname, $data );
+					$stepResponse['settings'] = $this->settings( $data );
 					break;
 				default:
 					return false;
@@ -58,9 +52,9 @@ class Installer {
 		return !in_array( false, $stepResponse, true );
 	}
 
-	private function sql( string $dbname, array $data ): bool {
-		$lb = $this->dbLoadBalancerFactory->getMainLB( $dbname );
-		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $dbname );
+	private function sql( array $data ): bool {
+		$lb = $this->dbLoadBalancerFactory->getMainLB( $this->dbname );
+		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->dbname );
 		foreach ( $data as $table => $sql ) {
 			if ( !$dbw->tableExists( $table, __METHOD__ ) ) {
 				try {
@@ -69,7 +63,7 @@ class Installer {
 					$this->logger->error(
 						'Caught exception trying to load {path} for {table} on {dbname}: {exception}',
 						[
-							'dbname' => $dbname,
+							'dbname' => $this->dbname,
 							'exception' => $e,
 							'path' => $sql,
 							'table' => $table,
@@ -84,12 +78,8 @@ class Installer {
 		return true;
 	}
 
-	private function permissions(
-		string $dbname,
-		array $data,
-		bool $install
-	): bool {
-		$mwPermissions = $this->moduleFactory->permissions( $dbname );
+	private function permissions( array $data, bool $install ): bool {
+		$mwPermissions = $this->moduleFactory->permissions( $this->dbname );
 		$action = $install ? 'add' : 'remove';
 
 		foreach ( $data as $group => $mod ) {
@@ -112,12 +102,8 @@ class Installer {
 		return true;
 	}
 
-	private function namespaces(
-		string $dbname,
-		array $data,
-		bool $install
-	): bool {
-		$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
+	private function namespaces( array $data, bool $install ): bool {
+		$mwNamespaces = $this->moduleFactory->namespaces( $this->dbname );
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
 				$id = $i['id'];
@@ -138,7 +124,7 @@ class Installer {
 		return true;
 	}
 
-	private function mwscript( string $dbname, array $data ): bool {
+	private function mwscript( array $data ): bool {
 		if ( Shell::isDisabled() ) {
 			throw new RuntimeException( 'Shell is disabled.' );
 		}
@@ -149,7 +135,7 @@ class Installer {
 				MWScriptJob::JOB_NAME,
 				[
 					'data' => $data,
-					'dbname' => $dbname,
+					'dbname' => $this->dbname,
 				]
 			)
 		);
@@ -157,8 +143,8 @@ class Installer {
 		return true;
 	}
 
-	private function settings( string $dbname, array $data ): bool {
-		$mwSettings = $this->moduleFactory->settings( $dbname );
+	private function settings( array $data ): bool {
+		$mwSettings = $this->moduleFactory->settings( $this->dbname );
 		$mwSettings->modify( $data, default: null );
 		$mwSettings->commit();
 		return true;
