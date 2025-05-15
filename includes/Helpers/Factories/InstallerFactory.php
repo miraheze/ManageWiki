@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers\Factories;
 
+use Closure;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use Miraheze\ManageWiki\Helpers\Installer;
 use Psr\Log\LoggerInterface;
@@ -13,7 +14,7 @@ class InstallerFactory {
 		private readonly ILBFactory $dbLoadBalancerFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LoggerInterface $logger,
-		private readonly callable $moduleFactoryClosure
+		private readonly Closure $moduleFactoryClosure
 	) {
 	}
 
