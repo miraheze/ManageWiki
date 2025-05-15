@@ -73,7 +73,7 @@ return [
 			$services->getJobQueueGroupFactory(),
 			$services->get( 'ManageWikiLogger' ),
 			// Use a closure for these to avoid circular dependency
-			static fn () => $services->get( 'ManageWikiModuleFactory' )
+			static fn (): ModuleFactory => $services->get( 'ManageWikiModuleFactory' )
 		);
 	},
 	'ManageWikiLogger' => static function (): LoggerInterface {
