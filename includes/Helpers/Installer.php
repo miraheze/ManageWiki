@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Wikimedia\Rdbms\ILBFactory;
 
-class ManageWikiInstaller {
+class Installer {
 
 	public function __construct(
 		private readonly ILBFactory $dbLoadBalancerFactory,
@@ -63,12 +63,15 @@ class ManageWikiInstaller {
 				try {
 					$dbw->sourceFile( $sql );
 				} catch ( Exception $e ) {
-					$this->logger->error( 'Caught exception trying to load {path} for {table} on {dbname}: {exception}', [
-						'dbname' => $dbname,
-						'exception' => $e,
-						'path' => $sql,
-						'table' => $table,
-					] );
+					$this->logger->error(
+						'Caught exception trying to load {path} for {table} on {dbname}: {exception}',
+						[
+							'dbname' => $dbname,
+							'exception' => $e,
+							'path' => $sql,
+							'table' => $table,
+						]
+					);
 
 					return false;
 				}

@@ -24,7 +24,7 @@ class SettingsModule implements IModule {
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly ManageWikiInstaller $installer,
+		private readonly Installer $installer,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
 	) {

@@ -15,7 +15,7 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiInstaller;
+use Miraheze\ManageWiki\Helpers\Installer;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -67,8 +67,8 @@ return [
 	'ManageWikiHookRunner' => static function ( MediaWikiServices $services ): ManageWikiHookRunner {
 		return new ManageWikiHookRunner( $services->getHookContainer() );
 	},
-	'ManageWikiInstaller' => static function ( MediaWikiServices $services ): ManageWikiInstaller {
-		return new ManageWikiInstaller(
+	'ManageWikiInstaller' => static function ( MediaWikiServices $services ): Installer {
+		return new Installer(
 			$services->getDBLoadBalancerFactory(),
 			$services->getJobQueueGroupFactory(),
 			$services->get( 'ManageWikiLogger' ),
