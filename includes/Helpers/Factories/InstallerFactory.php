@@ -21,7 +21,7 @@ class InstallerFactory {
 		return new Installer(
 			$this->dbLoadBalancerFactory,
 			$this->jobQueueGroupFactory,
-			$this->loggerInterface,
+			$this->logger,
 			( $this->moduleFactoryClosure )(),
 			$dbname
 		);
