@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiInstaller;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 
@@ -14,6 +15,7 @@ class SettingsFactory {
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly ManageWikiInstaller $installer,
 		private readonly ServiceOptions $options
 	) {
 	}
@@ -22,6 +24,7 @@ class SettingsFactory {
 		return new SettingsModule(
 			$this->dataFactory,
 			$this->databaseUtils,
+			$this->installer,
 			$this->options,
 			$dbname
 		);
