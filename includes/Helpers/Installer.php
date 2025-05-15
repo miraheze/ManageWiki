@@ -14,11 +14,13 @@ use Wikimedia\Rdbms\ILBFactory;
 
 class Installer {
 
+	private ModuleFactory $moduleFactory;
+
 	public function __construct(
 		private readonly ILBFactory $dbLoadBalancerFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LoggerInterface $logger,
-		private readonly ModuleFactory $moduleFactory
+		private readonly callable $moduleFactoryCallable
 	) {
 	}
 
@@ -27,6 +29,7 @@ class Installer {
 		array $actions,
 		bool $install
 	): bool {
+		$this->moduleFactory = ( $this->moduleFactoryCallable )();
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
