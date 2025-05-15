@@ -27,6 +27,7 @@ class ExtensionsModule implements IModule {
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly ManageWikiInstaller $installer,
 		private readonly LoggerInterface $logger,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
@@ -252,7 +253,7 @@ class ExtensionsModule implements IModule {
 					unset( $config['install']['mwscript'] );
 				}
 
-				$installResult = ManageWikiInstaller::process(
+				$installResult = $this->installer->process(
 					dbname: $this->dbname,
 					actions: $config['install'],
 					install: true
@@ -302,7 +303,7 @@ class ExtensionsModule implements IModule {
 
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it.
 			if ( isset( $config['remove'] ) ) {
-				ManageWikiInstaller::process(
+				$this->installer->process(
 					dbname: $this->dbname,
 					actions: $config['remove'],
 					install: false
@@ -333,7 +334,7 @@ class ExtensionsModule implements IModule {
 
 		// We need to run mwscript steps after the extension is already loaded
 		if ( $this->scripts ) {
-			ManageWikiInstaller::process(
+			$this->installer->process(
 				dbname: $this->dbname,
 				actions: [ 'mwscript' => $this->scripts ],
 				install: true
