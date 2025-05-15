@@ -15,6 +15,7 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
+use Miraheze\ManageWiki\Helpers\ManageWikiInstaller;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -55,6 +56,7 @@ return [
 		return new ExtensionsFactory(
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiInstaller' ),
 			$services->get( 'ManageWikiLogger' ),
 			new ServiceOptions(
 				ExtensionsModule::CONSTRUCTOR_OPTIONS,
@@ -64,6 +66,14 @@ return [
 	},
 	'ManageWikiHookRunner' => static function ( MediaWikiServices $services ): ManageWikiHookRunner {
 		return new ManageWikiHookRunner( $services->getHookContainer() );
+	},
+	'ManageWikiInstaller' => static function ( MediaWikiServices $services ): ManageWikiInstaller {
+		return new ManageWikiInstaller(
+			$services->getDBLoadBalancerFactory(),
+			$services->getJobQueueGroupFactory(),
+			$services->get( 'ManageWikiLogger' ),
+			$services->get( 'ManageWikiModuleFactory' )
+		);
 	},
 	'ManageWikiLogger' => static function (): LoggerInterface {
 		return LoggerFactory::getInstance( 'ManageWiki' );
@@ -95,6 +105,7 @@ return [
 		return new SettingsFactory(
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiInstaller' ),
 			new ServiceOptions(
 				SettingsModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
