@@ -256,7 +256,7 @@ class ExtensionsModule implements IModule {
 					unset( $config['install']['mwscript'] );
 				}
 
-				$installResult = $installer->process(
+				$installResult = $installer->execute(
 					actions: $config['install'],
 					install: true
 				);
@@ -305,7 +305,7 @@ class ExtensionsModule implements IModule {
 
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it.
 			if ( isset( $config['remove'] ) ) {
-				$installer->process(
+				$installer->execute(
 					actions: $config['remove'],
 					install: false
 				);
@@ -335,7 +335,7 @@ class ExtensionsModule implements IModule {
 
 		// We need to run mwscript steps after the extension is already loaded
 		if ( $this->scripts ) {
-			$installer->process(
+			$installer->execute(
 				actions: [ 'mwscript' => $this->scripts ],
 				install: true
 			);

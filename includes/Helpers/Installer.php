@@ -23,7 +23,7 @@ class Installer {
 	) {
 	}
 
-	public function process( array $actions, bool $install ): bool {
+	public function execute( array $actions, bool $install ): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 

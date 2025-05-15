@@ -171,7 +171,7 @@ class SettingsModule implements IModule {
 
 		if ( $this->scripts ) {
 			$installer = $this->installerFactory->getInstaller( $this->dbname );
-			$installer->process(
+			$installer->execute(
 				actions: [ 'mwscript' => $this->scripts ],
 				install: true
 			);
