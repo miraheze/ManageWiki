@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 
@@ -24,7 +25,7 @@ class SettingsModule implements IModule {
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly Installer $installer,
+		private readonly InstallerFactory $installerFactory,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
 	) {
@@ -165,16 +166,16 @@ class SettingsModule implements IModule {
 			->caller( __METHOD__ )
 			->execute();
 
+		$data = $this->dataFactory->newInstance( $this->dbname );
+		$data->resetWikiData( isNewChanges: true );
+
 		if ( $this->scripts ) {
-			$this->installer->process(
-				$this->dbname,
-				[ 'mwscript' => $this->scripts ],
+			$installer = $this->installerFactory->newInstance( $this->dbname );
+			$installer->process(
+				actions: [ 'mwscript' => $this->scripts ],
 				install: true
 			);
 		}
-
-		$data = $this->dataFactory->newInstance( $this->dbname );
-		$data->resetWikiData( isNewChanges: true );
 
 		$this->logParams = [
 			'5::changes' => implode( ', ', array_keys( $this->changes ) ),
