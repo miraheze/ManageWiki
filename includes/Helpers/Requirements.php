@@ -59,7 +59,7 @@ class Requirements {
 		return !in_array( false, $stepResponse, true );
 	}
 
-	private static function permissions( array $data ): bool {
+	private function permissions( array $data ): bool {
 		// We don't check permissions if we are in CLI mode, so that we can
 		// toggle restricted extensions in CLI.
 		if ( MW_ENTRY_POINT === 'cli' ) {
