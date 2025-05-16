@@ -41,10 +41,7 @@ class ManageWikiFormFactoryBuilder {
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$formDescriptor = self::buildDescriptorCore(
-					$dbname, $ceMW, $context, $moduleFactory,
-					$config
-				);
+				$formDescriptor = self::buildDescriptorCore( $dbname, $ceMW, $context, $moduleFactory );
 				break;
 			case 'extensions':
 				$formDescriptor = self::buildDescriptorExtensions(
@@ -81,8 +78,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): array {
 		$formDescriptor = [];
 		$formDescriptor['dbname'] = [
@@ -1084,10 +1080,7 @@ class ManageWikiFormFactoryBuilder {
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$mwReturn = self::submissionCore(
-					$formData, $dbname, $context, $moduleFactory,
-					$config
-				);
+				$mwReturn = self::submissionCore( $formData, $dbname, $context, $moduleFactory );
 				break;
 			case 'extensions':
 				$mwReturn = self::submissionExtensions(
@@ -1168,8 +1161,7 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		IContextSource $context,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): ICoreModule {
 		$mwActions = [
 			'delete',
