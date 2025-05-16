@@ -256,10 +256,7 @@ class ExtensionsModule implements IModule {
 					unset( $config['install']['mwscript'] );
 				}
 
-				$installResult = $installer->execute(
-					actions: $config['install'],
-					install: true
-				);
+				$installResult = $installer->execute( $config['install'] );
 			}
 
 			if ( !$installResult ) {
@@ -275,6 +272,7 @@ class ExtensionsModule implements IModule {
 			return;
 		}
 
+		$uninstaller = $this->installerFactory->getUninstaller( $this->dbname );
 		foreach ( $this->removedExtensions as $name => $config ) {
 			$requirementsCheck = true;
 			$permissionRequirements = $config['requires']['permissions'] ?? [];
@@ -305,10 +303,7 @@ class ExtensionsModule implements IModule {
 
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it.
 			if ( isset( $config['remove'] ) ) {
-				$installer->execute(
-					actions: $config['remove'],
-					install: false
-				);
+				$uninstaller->execute( $config['remove'] );
 			}
 		}
 
@@ -335,10 +330,7 @@ class ExtensionsModule implements IModule {
 
 		// We need to run mwscript steps after the extension is already loaded
 		if ( $this->scripts ) {
-			$installer->execute(
-				actions: [ 'mwscript' => $this->scripts ],
-				install: true
-			);
+			$installer->execute( [ 'mwscript' => $this->scripts ] );
 		}
 
 		$this->logParams = [
