@@ -209,7 +209,7 @@ class CoreModule implements ICoreModule {
 		return [];
 	}
 
-	public function getInactiveDatabaseClusters(): array {
+	public function getDatabaseClustersInactive(): array {
 		// Not implemented
 		return [];
 	}

@@ -230,7 +230,7 @@ class ManageWikiFormFactoryBuilder {
 		if ( $mwCore->getDatabaseClusters() ) {
 			$clusterOptions = array_merge(
 				$mwCore->getDatabaseClusters(),
-				$mwCore->getInactiveDatabaseClusters()
+				$mwCore->getDatabaseClustersInactive()
 			);
 
 			$formDescriptor['dbcluster'] = [
