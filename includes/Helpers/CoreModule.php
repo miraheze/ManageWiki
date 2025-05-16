@@ -209,12 +209,12 @@ class CoreModule implements ICoreModule {
 		return [];
 	}
 
-	public function getInactiveExemptReasonOptions(): array {
+	public function getInactiveDatabaseClusters(): array {
 		// Not implemented
 		return [];
 	}
 
-	public function getInactiveDatabaseClusters(): array {
+	public function getInactiveExemptReasonOptions(): array {
 		// Not implemented
 		return [];
 	}
