@@ -85,4 +85,8 @@ interface ICoreModule extends IModule {
 	public function getCategoryOptions(): array;
 
 	public function getDatabaseClusters(): array;
+
+	public function getDatabaseClustersInactive(): array;
+
+	public function getInactiveExemptReasonOptions(): array;
 }
