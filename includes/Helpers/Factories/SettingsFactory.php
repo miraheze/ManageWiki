@@ -14,6 +14,7 @@ class SettingsFactory {
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly InstallerFactory $installerFactory,
 		private readonly ServiceOptions $options
 	) {
 	}
@@ -22,6 +23,7 @@ class SettingsFactory {
 		return new SettingsModule(
 			$this->dataFactory,
 			$this->databaseUtils,
+			$this->installerFactory,
 			$this->options,
 			$dbname
 		);

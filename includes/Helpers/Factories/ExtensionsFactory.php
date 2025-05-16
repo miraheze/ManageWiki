@@ -13,6 +13,7 @@ class ExtensionsFactory {
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
 		private readonly ServiceOptions $options
 	) {
@@ -22,6 +23,7 @@ class ExtensionsFactory {
 		return new ExtensionsModule(
 			$this->dataFactory,
 			$this->databaseUtils,
+			$this->installerFactory,
 			$this->logger,
 			$this->options,
 			$dbname
