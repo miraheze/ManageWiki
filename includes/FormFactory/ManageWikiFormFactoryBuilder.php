@@ -158,12 +158,12 @@ class ManageWikiFormFactoryBuilder {
 			],
 			'inactive-exempt-reason' => [
 				'if' => $mwCore->isEnabled( 'inactive-wikis' ) &&
-					$config->get( ConfigNames::InactiveExemptReasonOptions ),
+					$mwCore->getInactiveExemptReasonOptions(),
 				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
 				'type' => 'selectorother',
 				'default' => $mwCore->getInactiveExemptReason(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
-				'options' => $config->get( ConfigNames::InactiveExemptReasonOptions ),
+				'options' => $mwCore->getInactiveExemptReasonOptions(),
 			],
 			'server' => [
 				'if' => $mwCore->isEnabled( 'server' ),
@@ -230,7 +230,7 @@ class ManageWikiFormFactoryBuilder {
 		if ( $mwCore->getDatabaseClusters() ) {
 			$clusterOptions = array_merge(
 				$mwCore->getDatabaseClusters(),
-				$config->get( ConfigNames::DatabaseClustersInactive )
+				$mwCore->getDatabaseClustersInactive()
 			);
 
 			$formDescriptor['dbcluster'] = [
