@@ -19,11 +19,12 @@ class Installer {
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LoggerInterface $logger,
 		private readonly ModuleFactory $moduleFactory,
-		private readonly string $dbname
+		private readonly string $dbname,
+		private readonly bool $remove
 	) {
 	}
 
-	public function execute( array $actions, bool $install ): bool {
+	public function execute( array $actions ): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
@@ -33,10 +34,10 @@ class Installer {
 					$stepResponse['sql'] = $this->sql( $data );
 					break;
 				case 'permissions':
-					$stepResponse['permissions'] = $this->permissions( $data, $install );
+					$stepResponse['permissions'] = $this->permissions( $data );
 					break;
 				case 'namespaces':
-					$stepResponse['namespaces'] = $this->namespaces( $data, $install );
+					$stepResponse['namespaces'] = $this->namespaces( $data );
 					break;
 				case 'mwscript':
 					$stepResponse['mwscript'] = $this->mwscript( $data );
@@ -78,9 +79,9 @@ class Installer {
 		return true;
 	}
 
-	private function permissions( array $data, bool $install ): bool {
+	private function permissions( array $data ): bool {
 		$mwPermissions = $this->moduleFactory->permissions( $this->dbname );
-		$action = $install ? 'add' : 'remove';
+		$action = $this->remove ? 'remove' : 'add';
 
 		foreach ( $data as $group => $mod ) {
 			$groupData = [
@@ -102,22 +103,22 @@ class Installer {
 		return true;
 	}
 
-	private function namespaces( array $data, bool $install ): bool {
+	private function namespaces( array $data ): bool {
 		$mwNamespaces = $this->moduleFactory->namespaces( $this->dbname );
 		foreach ( $data as $name => $i ) {
-			if ( $install ) {
-				$id = $i['id'];
-				unset( $i['id'] );
-				$i['name'] = $name;
-
-				$mwNamespaces->modify( $id, $i, maintainPrefix: true );
+			if ( $this->remove ) {
+				// We migrate to either NS_MAIN (0) or NS_TALK (1),
+				// depending on if this is a talk namespace or not.
+				$newNamespace = $i['id'] % 2;
+				$mwNamespaces->remove( $i['id'], $newNamespace, maintainPrefix: true );
 				continue;
 			}
 
-			// We migrate to either NS_MAIN (0) or NS_TALK (1),
-			// depending on if this is a talk namespace or not.
-			$newNamespace = $i['id'] % 2;
-			$mwNamespaces->remove( $i['id'], $newNamespace, maintainPrefix: true );
+			$id = $i['id'];
+			unset( $i['id'] );
+			$i['name'] = $name;
+
+			$mwNamespaces->modify( $id, $i, maintainPrefix: true );
 		}
 
 		$mwNamespaces->commit();
