@@ -20,7 +20,7 @@ class Installer {
 		private readonly LoggerInterface $logger,
 		private readonly ModuleFactory $moduleFactory,
 		private readonly string $dbname,
-		private readonly bool $remove
+		private readonly bool $uninstall
 	) {
 	}
 
@@ -81,7 +81,7 @@ class Installer {
 
 	private function permissions( array $data ): bool {
 		$mwPermissions = $this->moduleFactory->permissions( $this->dbname );
-		$action = $this->remove ? 'remove' : 'add';
+		$action = $this->uninstall ? 'remove' : 'add';
 
 		foreach ( $data as $group => $mod ) {
 			$groupData = [
@@ -106,7 +106,7 @@ class Installer {
 	private function namespaces( array $data ): bool {
 		$mwNamespaces = $this->moduleFactory->namespaces( $this->dbname );
 		foreach ( $data as $name => $i ) {
-			if ( $this->remove ) {
+			if ( $this->uninstall ) {
 				// We migrate to either NS_MAIN (0) or NS_TALK (1),
 				// depending on if this is a talk namespace or not.
 				$newNamespace = $i['id'] % 2;
