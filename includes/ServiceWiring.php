@@ -17,6 +17,7 @@ use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
+use Miraheze\ManageWiki\Helpers\Requirements;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
@@ -58,6 +59,7 @@ return [
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiInstallerFactory' ),
 			$services->get( 'ManageWikiLogger' ),
+			$services->get( 'ManageWikiRequirements' ),
 			new ServiceOptions(
 				ExtensionsModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
@@ -99,6 +101,16 @@ return [
 			$services->getUserGroupManagerFactory(),
 			$services->getMessageFormatterFactory()->getTextFormatter(
 				$services->getContentLanguageCode()->toString()
+			)
+		);
+	},
+	'ManageWikiRequirements' => static function ( MediaWikiServices $services ): Requirements {
+		return new Requirements(
+			$services->get( 'ManageWikiModuleFactory' ),
+			$services->getPermissionManager(),
+			new ServiceOptions(
+				Requirements::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
 			)
 		);
 	},
