@@ -72,33 +72,12 @@ class CreateWiki implements
 		IReadableDatabase $dbr,
 		array &$cacheArray
 	): void {
-		$setObject = $dbr->newSelectQueryBuilder()
-			->select( '*' )
-			->from( 'mw_settings' )
-			->where( [ 's_dbname' => $dbname ] )
-			->caller( __METHOD__ )
-			->fetchRow();
-
-		// Don't need to manipulate this much
-		if ( $setObject !== false && $this->moduleFactory->isEnabled( 'settings' ) ) {
-			$cacheArray['settings'] = json_decode( $setObject->s_settings ?? '[]', true );
+		if ( $this->moduleFactory->isEnabled( 'settings' ) ) {
+			$cacheArray['settings'] = $this->moduleFactory->settings( $dbname )->listAll();
 		}
 
-		// Let's create an array of variables so we can easily loop these to enable
-		if ( $setObject !== false && $this->moduleFactory->isEnabled( 'extensions' ) ) {
-			$extensionsConfig = $this->config->get( ConfigNames::Extensions );
-			foreach ( json_decode( $setObject->s_extensions ?? '[]', true ) as $extension ) {
-				if ( !isset( $extensionsConfig[$extension] ) ) {
-					$this->logger->error( '{extension} is not set in {config}', [
-						'config' => ConfigNames::Extensions,
-						'extension' => $extension,
-					] );
-
-					continue;
-				}
-
-				$cacheArray['extensions'][] = $extensionsConfig[$extension]['name'];
-			}
+		if ( $this->moduleFactory->isEnabled( 'extensions' ) ) {
+			$cacheArray['extensions'] = $this->moduleFactory->extensions( $dbname )->listNames();
 		}
 
 		// Collate NS entries and decode their entries for the array
