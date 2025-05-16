@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Psr\Log\LoggerInterface;
@@ -27,6 +28,7 @@ class ExtensionsModule implements IModule {
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
@@ -176,6 +178,8 @@ class ExtensionsModule implements IModule {
 			)
 		);
 
+		$installer = $this->installerFactory->getInstaller( $this->dbname );
+
 		foreach ( $this->liveExtensions as $name => $config ) {
 			// Check if we have a conflict first
 			if ( in_array( $config['conflicts'], $enabling, true ) ) {
@@ -252,8 +256,7 @@ class ExtensionsModule implements IModule {
 					unset( $config['install']['mwscript'] );
 				}
 
-				$installResult = ManageWikiInstaller::process(
-					dbname: $this->dbname,
+				$installResult = $installer->execute(
 					actions: $config['install'],
 					install: true
 				);
@@ -302,8 +305,7 @@ class ExtensionsModule implements IModule {
 
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it.
 			if ( isset( $config['remove'] ) ) {
-				ManageWikiInstaller::process(
-					dbname: $this->dbname,
+				$installer->execute(
 					actions: $config['remove'],
 					install: false
 				);
@@ -333,8 +335,7 @@ class ExtensionsModule implements IModule {
 
 		// We need to run mwscript steps after the extension is already loaded
 		if ( $this->scripts ) {
-			ManageWikiInstaller::process(
-				dbname: $this->dbname,
+			$installer->execute(
 				actions: [ 'mwscript' => $this->scripts ],
 				install: true
 			);
