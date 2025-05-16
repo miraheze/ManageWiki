@@ -24,7 +24,17 @@ class InstallerFactory {
 			$this->jobQueueGroupFactory,
 			$this->logger,
 			( $this->moduleFactoryClosure )(),
-			$dbname
+			$dbname, forUninstall: false
+		);
+	}
+
+	public function getUninstaller( string $dbname ): Installer {
+		return new Installer(
+			$this->dbLoadBalancerFactory,
+			$this->jobQueueGroupFactory,
+			$this->logger,
+			( $this->moduleFactoryClosure )(),
+			$dbname, forUninstall: true
 		);
 	}
 }
