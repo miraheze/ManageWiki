@@ -30,6 +30,7 @@ class ExtensionsModule implements IModule {
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
+		private readonly Requirements $requirements,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
 	) {
@@ -202,7 +203,7 @@ class ExtensionsModule implements IModule {
 			}
 
 			// Now we need to check if we fulfill the requirements to enable this extension.
-			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
+			$requirementsCheck = $this->requirements->check( $requirements );
 
 			if ( !$requirementsCheck ) {
 				if ( !isset( $this->changes[$name] ) ) {
@@ -279,13 +280,10 @@ class ExtensionsModule implements IModule {
 			$requirementsCheck = true;
 			$permissionRequirements = $config['requires']['permissions'] ?? [];
 			if ( $permissionRequirements ) {
-				$requirementsCheck = ManageWikiRequirements::process(
+				$requirementsCheck = $this->requirements->check(
 					// We only need to check for permissions when an
 					// extension is being disabled.
-					actions: [ 'permissions' => $permissionRequirements ],
-					// We don't need this since it's not used for permissions,
-					// which is the only thing we need to check here.
-					extList: []
+					[ 'permissions' => $permissionRequirements ]
 				);
 			}
 
