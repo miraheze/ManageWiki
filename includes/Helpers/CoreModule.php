@@ -209,6 +209,16 @@ class CoreModule implements ICoreModule {
 		return [];
 	}
 
+	public function getInactiveExemptReasonOptions(): array {
+		// Not implemented
+		return [];
+	}
+
+	public function getInactiveDatabaseClusters(): array {
+		// Not implemented
+		return [];
+	}
+
 	public function getErrors(): array {
 		// Not implemented
 		return [];
