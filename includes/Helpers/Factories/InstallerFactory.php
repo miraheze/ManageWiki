@@ -24,7 +24,7 @@ class InstallerFactory {
 			$this->jobQueueGroupFactory,
 			$this->logger,
 			( $this->moduleFactoryClosure )(),
-			$dbname, remove: false
+			$dbname, uninstall: false
 		);
 	}
 
@@ -34,7 +34,7 @@ class InstallerFactory {
 			$this->jobQueueGroupFactory,
 			$this->logger,
 			( $this->moduleFactoryClosure )(),
-			$dbname, remove: true
+			$dbname, uninstall: true
 		);
 	}
 }
