@@ -58,7 +58,7 @@ class Installer {
 		foreach ( $data as $table => $sql ) {
 			if ( !$dbw->tableExists( $table, __METHOD__ ) ) {
 				try {
-					$dbw->sourceFile( $sql );
+					$dbw->sourceFile( $sql, fname: __METHOD__ );
 				} catch ( Exception $e ) {
 					$this->logger->error(
 						'Caught exception trying to load {path} for {table} on {dbname}: {exception}',
