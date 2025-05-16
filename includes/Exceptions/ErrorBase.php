@@ -10,9 +10,11 @@ use MWExceptionRenderer;
 abstract class ErrorBase extends ErrorPageError {
 
 	protected function __construct( string $msg, array $params ) {
-		$errorBody = new RawMessage( Html::errorBox( wfMessage( $msg, $params )->parse() ) );
+		$this->msg = $msg;
+		$this->params = $params;
+		$errorBody = new RawMessage( Html::errorBox( $this->getMessageObject()->parse() ) );
 		if ( self::isCommandLine() ) {
-			$fallback = wfMessage( $msg, $params )->inContentLanguage()->text();
+			$fallback = $this->getMessageObject()->inContentLanguage()->text();
 			$errorBody = new RawMessage( MWExceptionRenderer::msg( $msg, $fallback, $params ) );
 		}
 
