@@ -99,6 +99,10 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			true,
 		] );
 
-		$updater->addPostDatabaseUpdateMaintenance( PopulateDefaults::class );
+		$updater->addExtensionUpdateOnVirtualDomain( [
+			'virtual-managewiki',
+			'runMaintenance',
+			PopulateDefaults::class,
+		] );
 	}
 }
