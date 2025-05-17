@@ -15,4 +15,4 @@ VALUES
 ('default', 12, 'Help', 0, 1, 0, 'wikitext', '', '[]', 0, '[]'),
 ('default', 13, 'Help_talk', 0, 1, 0, 'wikitext', '', '[]', 1, '[]'),
 ('default', 14, 'Category', 0, 0, 0, 'wikitext', '', '[]', 1, '[]'),
-('default', 15, 'Category_talk', 0, 1, 0, 'wikitext', '', '[]', 1, '[]')
+('default', 15, 'Category_talk', 0, 1, 0, 'wikitext', '', '[]', 1, '[]');
