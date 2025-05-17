@@ -13,6 +13,7 @@ use Miraheze\CreateWiki\Hooks\CreateWikiTablesHook;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\IReadableDatabase;
 
@@ -26,6 +27,7 @@ class CreateWiki implements
 
 	public function __construct(
 		private readonly Config $config,
+		private readonly DatabaseUtils $databaseUtils,
 		private readonly DefaultPermissions $defaultPermissions,
 		private readonly LoggerInterface $logger,
 		private readonly ModuleFactory $moduleFactory,
@@ -222,7 +224,8 @@ class CreateWiki implements
 
 		// Same as NS above but for permissions
 		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
-			$permObjects = $dbr->newSelectQueryBuilder()
+			$db = $this->databaseUtils->getGlobalReplicaDB(),
+			$permObjects = $db->newSelectQueryBuilder()
 				->select( '*' )
 				->from( 'mw_permissions' )
 				->where( [ 'perm_dbname' => $dbname ] )
