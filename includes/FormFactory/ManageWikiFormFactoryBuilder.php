@@ -438,7 +438,7 @@ class ManageWikiFormFactoryBuilder {
 			$isGlobal = $set['global'] ?? false;
 			$isInExtList = in_array( $set['from'], $extList, true );
 
-			$add = ( $hasVisibilityRequirement ? $requirementsCheck : true ) && ( $isGlobal || $isInExtList );
+			$add = ( !$hasVisibilityRequirement || $requirementsCheck ) && ( $isGlobal || $isInExtList );
 			$disabled = $ceMW ? !$requirementsCheck : true;
 
 			$msgName = $context->msg( "managewiki-setting-$name-name" );
@@ -672,7 +672,7 @@ class ManageWikiFormFactoryBuilder {
 				$isFromMediaWiki = $a['from'] === 'mediawiki';
 				$isInExtList = in_array( $a['from'], $extList, true );
 
-				$add = ( $hasVisibilityRequirement ? $requirementsCheck : true ) && ( $isFromMediaWiki || $isInExtList );
+				$add = ( !$hasVisibilityRequirement || $requirementsCheck ) && ( $isFromMediaWiki || $isInExtList );
 				$disabled = $ceMW ? !$requirementsCheck : true;
 
 				$msgName = $context->msg( "managewiki-namespaces-$key-name" );
