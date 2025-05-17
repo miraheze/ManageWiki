@@ -132,7 +132,7 @@ class Requirements {
 			$this->options->get( MainConfigNames::DBname )
 		);
 
-		$isPrivate = !isset( $mwPermissions->getGroupsWithPermission( 'read' )['*'] );
+		$isPrivate = !isset( $mwPermissions->getGroupsWithPermission( 'read', true )['*'] );
 
 		$ret = [];
 		foreach ( $data as $key => $val ) {
