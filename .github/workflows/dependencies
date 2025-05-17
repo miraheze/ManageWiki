@@ -1,3 +1,6 @@
+AntiSpoof:
+  branch: auto
+  repo: auto
 CentralAuth:
   branch: auto
   repo: auto
