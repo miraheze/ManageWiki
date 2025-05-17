@@ -10,7 +10,7 @@ use MediaWiki\Language\RawMessage;
 use MediaWiki\Output\OutputPage;
 use MediaWiki\Status\Status;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
-use Miraheze\ManageWiki\ManageWikiOOUIForm;
+use Miraheze\ManageWiki\OOUIHTMLFormTabs;
 use UnexpectedValueException;
 
 class ManageWikiFormFactory {
@@ -44,7 +44,7 @@ class ManageWikiFormFactory {
 		string $module,
 		string $special,
 		string $filtered
-	): ManageWikiOOUIForm {
+	): OOUIHTMLFormTabs {
 		// Can the user modify ManageWiki?
 		$ceMW = !(
 			(
@@ -65,7 +65,7 @@ class ManageWikiFormFactory {
 			$ceMW
 		);
 
-		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
+		$htmlForm = new OOUIHTMLFormTabs( $formDescriptor, $context, $module );
 		$htmlForm
 			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
