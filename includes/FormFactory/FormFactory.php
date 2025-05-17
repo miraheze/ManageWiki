@@ -13,7 +13,7 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\ManageWikiOOUIForm;
 use UnexpectedValueException;
 
-class ManageWikiFormFactory {
+class FormFactory {
 
 	private function getFormDescriptor(
 		Config $config,
@@ -30,7 +30,7 @@ class ManageWikiFormFactory {
 			$context->getLanguage()->getDir()
 		);
 
-		return ManageWikiFormFactoryBuilder::buildDescriptor(
+		return FormFactoryBuilder::buildDescriptor(
 			$module, $dbname, $ceMW, $context, $moduleFactory,
 			$special, $filtered, $config
 		);
@@ -115,7 +115,7 @@ class ManageWikiFormFactory {
 			->loadDataFromRequest( $form->getRequest() );
 
 		$context = $form->getContext();
-		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler(
+		$mwReturn = FormFactoryBuilder::submissionHandler(
 			$formData,
 			$form,
 			$module,
