@@ -248,7 +248,7 @@
 			"value": {
 				"core": true,
 				"extensions": true,
-				"namespaces": false,
+				"namespaces": true,
 				"permissions": false,
 				"settings": true
 			}
