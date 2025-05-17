@@ -249,7 +249,7 @@
 				"core": false,
 				"extensions": false,
 				"namespaces": false,
-				"permissions": false,
+				"permissions": true,
 				"settings": false
 			}
 		},
