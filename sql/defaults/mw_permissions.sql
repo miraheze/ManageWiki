@@ -2,7 +2,7 @@ INSERT INTO mw_permissions (perm_dbname, perm_group, perm_permissions, perm_addg
 VALUES
 ('default', '*', '["autocreateaccount","createaccount","edit","createpage","createtalk","viewmywatchlist","editmywatchlist","viewmyprivateinfo","editmyprivateinfo","editmyoptions","autocreateaccount"]', '[]', '[]', '[]', '[]', NULL),
 ('default', 'autoconfirmed', '["autoconfirmed","editsemiprotected","createaccount"]', '[]', '[]', '[]', '[]', '["&",[1,10],[2,345600]]'),
-('default', 'autopatrolled', '["autopatrol","patrol","skipcaptcha","patrolmarks"]', '[]', '[]', '[]', '[]', NULL),
+('default', 'autopatrolled', '["autopatrol","patrol","patrolmarks"]', '[]', '[]', '[]', '[]', NULL),
 ('default', 'bot', '["bot","autoconfirmed","editsemiprotected","nominornewtalk","autopatrol","suppressredirect","apihighlimits"]', '[]', '[]', '[]', '[]', NULL),
 ('default', 'bureaucrat', '["noratelimit","managewiki-core","managewiki-settings","managewiki-permissions","managewiki-namespaces"]', '["bot","bureaucrat","sysop","interface-admin"]', '["bot","sysop","interface-admin"]', '[]', '[]', NULL),
 ('default', 'confirmed', '["editsemiprotected","autoconfirmed"]', '[]', '[]', '[]', '[]', NULL),
