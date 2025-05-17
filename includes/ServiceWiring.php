@@ -106,7 +106,7 @@ return [
 	},
 	'ManageWikiRequirements' => static function ( MediaWikiServices $services ): Requirements {
 		return new Requirements(
-			$services->getPermissionManager(),
+			$services->get( 'ManageWikiPermissionsFactory' ),
 			$services->get( 'ManageWikiSettingsFactory' ),
 			new ServiceOptions(
 				Requirements::CONSTRUCTOR_OPTIONS,
