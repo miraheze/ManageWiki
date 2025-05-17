@@ -130,7 +130,7 @@ class Requirements {
 	}
 
 	private function visibility( array $data ): bool {
-		$defaultPrivateGroup = $this->options->get( ConfigNames:::PermissionsDefaultPrivateGroup );
+		$defaultPrivateGroup = $this->options->get( ConfigNames::PermissionsDefaultPrivateGroup );
 		$mwPermissions = $this->permissionsFactory->newInstance(
 			$this->options->get( MainConfigNames::DBname )
 		);
