@@ -166,6 +166,10 @@ class PermissionsModule implements IModule {
 	 * @param string $group Group name
 	 */
 	public function remove( string $group ): void {
+		if ( !$this->exists( $group ) ) {
+			return;
+		}
+
 		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions' );
 		if ( $groupsWithPermission === [ $group ] ) {
 			$this->errors[] = [
