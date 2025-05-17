@@ -26,7 +26,7 @@ use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\ICoreModule;
 use Wikimedia\ObjectCache\WANObjectCache;
 
-class ManageWikiFormFactoryBuilder {
+class FormFactoryBuilder {
 
 	public static function buildDescriptor(
 		string $module,

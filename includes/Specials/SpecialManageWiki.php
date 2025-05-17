@@ -9,7 +9,7 @@ use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
+use Miraheze\ManageWiki\FormFactory\FormFactory;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -292,7 +292,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// Handle all other modules or when we are editing specific namespaces/groups.
-		$formFactory = new ManageWikiFormFactory();
+		$formFactory = new FormFactory();
 		$htmlForm = $formFactory->getForm(
 			config: $this->getConfig(),
 			moduleFactory: $this->moduleFactory,
