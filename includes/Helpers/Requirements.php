@@ -7,7 +7,7 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SiteStats\SiteStats;
-use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 
 class Requirements {
 
@@ -16,14 +16,14 @@ class Requirements {
 	];
 
 	public function __construct(
-		private readonly ModuleFactory $moduleFactory,
 		private readonly PermissionManager $permissionManager,
+		private readonly SettingsFactory $settingsFactory,
 		private readonly ServiceOptions $options
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
-	public function check( array $actions ): bool {
+	public function check( array $actions, array $extList ): bool {
 		$stepResponse = [];
 		foreach ( $actions as $action => $data ) {
 			switch ( $action ) {
@@ -31,7 +31,7 @@ class Requirements {
 					$stepResponse['permissions'] = $this->permissions( $data );
 					break;
 				case 'extensions':
-					$stepResponse['extensions'] = $this->extensions( $data );
+					$stepResponse['extensions'] = $this->extensions( $data, $extList );
 					break;
 				case 'activeusers':
 					$stepResponse['activeusers'] = $this->activeUsers( $data );
@@ -70,9 +70,7 @@ class Requirements {
 		return $authority->isAllowedAll( ...$data );
 	}
 
-	private function extensions( array $data ): bool {
-		$mwExtensions = $this->moduleFactory->extensionsLocal();
-		$extList = $mwExtensions->list();
+	private function extensions( array $data, array $extList ): bool {
 		foreach ( $data as $extension ) {
 			if ( is_array( $extension ) ) {
 				$count = 0;
@@ -114,7 +112,7 @@ class Requirements {
 		$setting = $data['setting'];
 		$value = $data['value'];
 
-		$mwSettings = $this->moduleFactory->settings( $dbname );
+		$mwSettings = $this->settingsFactory->newInstance( $dbname );
 		$wikiValue = $mwSettings->list( $setting );
 
 		if ( $wikiValue !== null ) {
