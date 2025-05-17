@@ -15,12 +15,15 @@ class Requirements {
 		MainConfigNames::DBname,
 	];
 
+	private readonly PermissionManager $permissionManager;
+
 	public function __construct(
-		private readonly PermissionManager $permissionManager,
+		callable $permissionManagerClosure,
 		private readonly SettingsFactory $settingsFactory,
 		private readonly ServiceOptions $options
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
+		$this->permissionManager = ( $permissionManagerClosure )();
 	}
 
 	public function check( array $actions, array $extList ): bool {
