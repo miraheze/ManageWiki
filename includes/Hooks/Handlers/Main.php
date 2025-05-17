@@ -8,7 +8,7 @@ use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
+use Miraheze\ManageWiki\Hooks\HookRunner;
 
 class Main implements
 	GetPreferencesHook,
@@ -17,7 +17,7 @@ class Main implements
 
 	public function __construct(
 		private readonly Config $config,
-		private readonly ManageWikiHookRunner $hookRunner,
+		private readonly HookRunner $hookRunner,
 		private readonly UserOptionsLookup $userOptionsLookup
 	) {
 	}
