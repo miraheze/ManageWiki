@@ -37,18 +37,23 @@ class PopulateWikiSettings extends Maintenance {
 
 			$this->output( "Setting $settingValue for $dbname\n" );
 
-			$setting = str_replace( "\n", '', $settingValue );
+			$value = str_replace( "\n", '', $settingValue );
 
-			if ( $setting === 'true' ) {
-				$setting = true;
+			if ( $value === 'true' ) {
+				$value = true;
 			}
 
-			if ( $setting === 'false' ) {
-				$setting = false;
+			if ( $value === 'false' ) {
+				$value = false;
+			}
+
+			if ( is_numeric( $value ) ) {
+				// Handle setting float and integer values
+				$setting = strpos( $value, '.' ) !== false ? (float)$value : (int)$value;
 			}
 
 			$mwSettings = $moduleFactory->settings( $dbname );
-			$mwSettings->modify( [ $this->getOption( 'setting' ) => $setting ], default: null );
+			$mwSettings->modify( [ $this->getOption( 'setting' ) => $value ], default: null );
 			$mwSettings->commit();
 		}
 	}

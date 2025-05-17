@@ -11,12 +11,14 @@ use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
+use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\MessageUpdater;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
+use Miraheze\ManageWiki\Helpers\Requirements;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
@@ -56,7 +58,10 @@ return [
 		return new ExtensionsFactory(
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiInstallerFactory' ),
 			$services->get( 'ManageWikiLogger' ),
+			// Use a closure to avoid circular dependency
+			static fn (): Requirements => $services->get( 'ManageWikiRequirements' ),
 			new ServiceOptions(
 				ExtensionsModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
@@ -65,6 +70,15 @@ return [
 	},
 	'ManageWikiHookRunner' => static function ( MediaWikiServices $services ): ManageWikiHookRunner {
 		return new ManageWikiHookRunner( $services->getHookContainer() );
+	},
+	'ManageWikiInstallerFactory' => static function ( MediaWikiServices $services ): InstallerFactory {
+		return new InstallerFactory(
+			$services->getDBLoadBalancerFactory(),
+			$services->getJobQueueGroupFactory(),
+			$services->get( 'ManageWikiLogger' ),
+			// Use a closure to avoid circular dependency
+			static fn (): ModuleFactory => $services->get( 'ManageWikiModuleFactory' )
+		);
 	},
 	'ManageWikiLogger' => static function (): LoggerInterface {
 		return LoggerFactory::getInstance( 'ManageWiki' );
@@ -103,10 +117,21 @@ return [
 			)
 		);
 	},
+	'ManageWikiRequirements' => static function ( MediaWikiServices $services ): Requirements {
+		return new Requirements(
+			$services->getPermissionManager(),
+			$services->get( 'ManageWikiSettingsFactory' ),
+			new ServiceOptions(
+				Requirements::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
 	'ManageWikiSettingsFactory' => static function ( MediaWikiServices $services ): SettingsFactory {
 		return new SettingsFactory(
 			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiInstallerFactory' ),
 			new ServiceOptions(
 				SettingsModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )

@@ -4,38 +4,45 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
 use JobSpecification;
-use MediaWiki\Logger\LoggerFactory;
-use MediaWiki\MediaWikiServices;
+use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\Shell\Shell;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Wikimedia\Rdbms\ILBFactory;
 
-class ManageWikiInstaller {
+class Installer {
 
-	public static function process(
-		string $dbname,
-		array $actions,
-		bool $install
-	): bool {
+	public function __construct(
+		private readonly ILBFactory $dbLoadBalancerFactory,
+		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
+		private readonly LoggerInterface $logger,
+		private readonly ModuleFactory $moduleFactory,
+		private readonly string $dbname
+	) {
+	}
+
+	public function execute( array $actions, bool $install ): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
 
 		foreach ( $actions as $action => $data ) {
 			switch ( $action ) {
 				case 'sql':
-					$stepResponse['sql'] = self::sql( $dbname, $data );
+					$stepResponse['sql'] = $this->sql( $data );
 					break;
 				case 'permissions':
-					$stepResponse['permissions'] = self::permissions( $dbname, $data, $install );
+					$stepResponse['permissions'] = $this->permissions( $data, $install );
 					break;
 				case 'namespaces':
-					$stepResponse['namespaces'] = self::namespaces( $dbname, $data, $install );
+					$stepResponse['namespaces'] = $this->namespaces( $data, $install );
 					break;
 				case 'mwscript':
-					$stepResponse['mwscript'] = self::mwscript( $dbname, $data );
+					$stepResponse['mwscript'] = $this->mwscript( $data );
 					break;
 				case 'settings':
-					$stepResponse['settings'] = self::settings( $dbname, $data );
+					$stepResponse['settings'] = $this->settings( $data );
 					break;
 				default:
 					return false;
@@ -45,22 +52,23 @@ class ManageWikiInstaller {
 		return !in_array( false, $stepResponse, true );
 	}
 
-	private static function sql( string $dbname, array $data ): bool {
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
-		$dbw = $databaseUtils->getRemoteWikiPrimaryDB( $dbname );
-
+	private function sql( array $data ): bool {
+		$lb = $this->dbLoadBalancerFactory->getMainLB( $this->dbname );
+		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->dbname );
 		foreach ( $data as $table => $sql ) {
 			if ( !$dbw->tableExists( $table, __METHOD__ ) ) {
 				try {
-					$dbw->sourceFile( $sql );
+					$dbw->sourceFile( $sql, fname: __METHOD__ );
 				} catch ( Exception $e ) {
-					$logger = LoggerFactory::getInstance( 'ManageWiki' );
-					$logger->error( 'Caught exception trying to load {path} for {table} on {dbname}: {exception}', [
-						'dbname' => $dbname,
-						'exception' => $e,
-						'path' => $sql,
-						'table' => $table,
-					] );
+					$this->logger->error(
+						'Caught exception trying to load {path} for {table} on {dbname}: {exception}',
+						[
+							'dbname' => $this->dbname,
+							'exception' => $e,
+							'path' => $sql,
+							'table' => $table,
+						]
+					);
 
 					return false;
 				}
@@ -70,13 +78,8 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function permissions(
-		string $dbname,
-		array $data,
-		bool $install
-	): bool {
-		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
-		$mwPermissions = $moduleFactory->permissions( $dbname );
+	private function permissions( array $data, bool $install ): bool {
+		$mwPermissions = $this->moduleFactory->permissions( $this->dbname );
 		$action = $install ? 'add' : 'remove';
 
 		foreach ( $data as $group => $mod ) {
@@ -99,13 +102,8 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function namespaces(
-		string $dbname,
-		array $data,
-		bool $install
-	): bool {
-		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
-		$mwNamespaces = $moduleFactory->namespaces( $dbname );
+	private function namespaces( array $data, bool $install ): bool {
+		$mwNamespaces = $this->moduleFactory->namespaces( $this->dbname );
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
 				$id = $i['id'];
@@ -126,20 +124,18 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function mwscript( string $dbname, array $data ): bool {
+	private function mwscript( array $data ): bool {
 		if ( Shell::isDisabled() ) {
 			throw new RuntimeException( 'Shell is disabled.' );
 		}
 
-		$jobQueueGroupFactory = MediaWikiServices::getInstance()->getJobQueueGroupFactory();
-		$jobQueueGroup = $jobQueueGroupFactory->makeJobQueueGroup();
-
+		$jobQueueGroup = $this->jobQueueGroupFactory->makeJobQueueGroup();
 		$jobQueueGroup->push(
 			new JobSpecification(
 				MWScriptJob::JOB_NAME,
 				[
 					'data' => $data,
-					'dbname' => $dbname,
+					'dbname' => $this->dbname,
 				]
 			)
 		);
@@ -147,9 +143,8 @@ class ManageWikiInstaller {
 		return true;
 	}
 
-	private static function settings( string $dbname, array $data ): bool {
-		$moduleFactory = MediaWikiServices::getInstance()->get( 'ManageWikiModuleFactory' );
-		$mwSettings = $moduleFactory->settings( $dbname );
+	private function settings( array $data ): bool {
+		$mwSettings = $this->moduleFactory->settings( $this->dbname );
 		$mwSettings->modify( $data, default: null );
 		$mwSettings->commit();
 		return true;

@@ -9,8 +9,6 @@ namespace Miraheze\ManageWiki;
  */
 class ConfigNames {
 
-	public const DatabaseClustersInactive = 'ManageWikiDatabaseClustersInactive';
-
 	public const Extensions = 'ManageWikiExtensions';
 
 	public const ExtensionsDefault = 'ManageWikiExtensionsDefault';
@@ -18,8 +16,6 @@ class ConfigNames {
 	public const ForceSidebarLinks = 'ManageWikiForceSidebarLinks';
 
 	public const HelpUrl = 'ManageWikiHelpUrl';
-
-	public const InactiveExemptReasonOptions = 'ManageWikiInactiveExemptReasonOptions';
 
 	public const ModulesEnabled = 'ManageWikiModulesEnabled';
 

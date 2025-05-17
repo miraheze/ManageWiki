@@ -227,10 +227,6 @@
 		"remoteExtPath": "ManageWiki/modules"
 	},
 	"config": {
-		"ManageWikiDatabaseClustersInactive": {
-			"description": "Array. LBFactory clusters which are not considered active, which we show in ManageWiki. Format: <display name> => <cluster name from LBFactory>.",
-			"value": []
-		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"value": []
@@ -246,10 +242,6 @@
 		"ManageWikiHelpUrl": {
 			"description": "String. URL of a help page for ManageWiki on the local wiki farm.",
 			"value": ""
-		},
-		"ManageWikiInactiveExemptReasonOptions": {
-			"description": "Array. Possible options for marking a wiki as exempt from inactivity.",
-			"value": []
 		},
 		"ManageWikiModulesEnabled": {
 			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",

@@ -19,11 +19,10 @@ use MediaWiki\User\User;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
-use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
+use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\ICoreModule;
 use Wikimedia\ObjectCache\WANObjectCache;
 
@@ -41,10 +40,7 @@ class ManageWikiFormFactoryBuilder {
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$formDescriptor = self::buildDescriptorCore(
-					$dbname, $ceMW, $context, $moduleFactory,
-					$config
-				);
+				$formDescriptor = self::buildDescriptorCore( $dbname, $ceMW, $context, $moduleFactory );
 				break;
 			case 'extensions':
 				$formDescriptor = self::buildDescriptorExtensions(
@@ -81,8 +77,7 @@ class ManageWikiFormFactoryBuilder {
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): array {
 		$formDescriptor = [];
 		$formDescriptor['dbname'] = [
@@ -158,12 +153,12 @@ class ManageWikiFormFactoryBuilder {
 			],
 			'inactive-exempt-reason' => [
 				'if' => $mwCore->isEnabled( 'inactive-wikis' ) &&
-					$config->get( ConfigNames::InactiveExemptReasonOptions ),
+					$mwCore->getInactiveExemptReasonOptions(),
 				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
 				'type' => 'selectorother',
 				'default' => $mwCore->getInactiveExemptReason(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
-				'options' => $config->get( ConfigNames::InactiveExemptReasonOptions ),
+				'options' => $mwCore->getInactiveExemptReasonOptions(),
 			],
 			'server' => [
 				'if' => $mwCore->isEnabled( 'server' ),
@@ -230,7 +225,7 @@ class ManageWikiFormFactoryBuilder {
 		if ( $mwCore->getDatabaseClusters() ) {
 			$clusterOptions = array_merge(
 				$mwCore->getDatabaseClusters(),
-				$config->get( ConfigNames::DatabaseClustersInactive )
+				$mwCore->getDatabaseClustersInactive()
 			);
 
 			$formDescriptor['dbcluster'] = [
@@ -261,6 +256,8 @@ class ManageWikiFormFactoryBuilder {
 
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
+
+		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
 
 		$credits = $cache->getWithSetCallback(
 			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
@@ -311,9 +308,9 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$help = [];
-			$mwRequirements = true;
+			$requirementsCheck = true;
 			if ( $ext['requires'] ) {
-				$mwRequirements = ManageWikiRequirements::process(
+				$requirementsCheck = $mwRequirements->check(
 					// Don't check for extension requirements as we don't want
 					// to disable the field, we use disable-if for that.
 					array_diff_key( $ext['requires'], [ 'extensions' => true ] ),
@@ -386,7 +383,7 @@ class ManageWikiFormFactoryBuilder {
 					$extDisplayName ?? ( $namemsg ? $context->msg( $namemsg )->text() : $extname ) ?? $ext['name'],
 				],
 				'default' => in_array( $name, $extList, true ),
-				'disabled' => $ceMW ? !$mwRequirements : true,
+				'disabled' => $ceMW ? !$requirementsCheck : true,
 				'disable-if' => $disableIf,
 				'help' => nl2br( implode( ' ', $help ) ),
 				'section' => $ext['section'],
@@ -419,6 +416,8 @@ class ManageWikiFormFactoryBuilder {
 			)
 		);
 
+		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
+
 		$formDescriptor = [];
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
 
@@ -429,18 +428,18 @@ class ManageWikiFormFactoryBuilder {
 					'config' => ConfigNames::Settings,
 					'var' => $name,
 				] );
-				$mwRequirements = true;
+				$requirementsCheck = true;
 			} else {
-				$mwRequirements = $set['requires'] ?
-					ManageWikiRequirements::process( $set['requires'], $extList ) : true;
+				$requirementsCheck = $set['requires'] ?
+					$mwRequirements->check( $set['requires'], $extList ) : true;
 			}
 
 			$hasVisibilityRequirement = isset( $set['requires']['visibility'] );
 			$isGlobal = $set['global'] ?? false;
 			$isInExtList = in_array( $set['from'], $extList, true );
 
-			$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isGlobal || $isInExtList );
-			$disabled = $ceMW ? !$mwRequirements : true;
+			$add = ( !$hasVisibilityRequirement || $requirementsCheck ) && ( $isGlobal || $isInExtList );
+			$disabled = $ceMW ? !$requirementsCheck : true;
 
 			$msgName = $context->msg( "managewiki-setting-$name-name" );
 			$msgHelp = $context->msg( "managewiki-setting-$name-help" );
@@ -452,7 +451,7 @@ class ManageWikiFormFactoryBuilder {
 						$set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = ManageWikiTypes::process(
+				$configs = TypesBuilder::process(
 					config: $config,
 					disabled: $disabled,
 					groupList: $groupList,
@@ -541,6 +540,7 @@ class ManageWikiFormFactoryBuilder {
 			$nsID['namespacetalk'] = $namespaceID + 1;
 		}
 
+		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
@@ -642,7 +642,7 @@ class ManageWikiFormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
-				] + ManageWikiTypes::process(
+				] + TypesBuilder::process(
 					config: $config,
 					disabled: false,
 					groupList: [],
@@ -674,15 +674,15 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
-				$mwRequirements = $a['requires'] ?
-					ManageWikiRequirements::process( $a['requires'], $extList ) : true;
+				$requirementsCheck = $a['requires'] ?
+					$mwRequirements->check( $a['requires'], $extList ) : true;
 
 				$hasVisibilityRequirement = isset( $a['requires']['visibility'] );
 				$isFromMediaWiki = $a['from'] === 'mediawiki';
 				$isInExtList = in_array( $a['from'], $extList, true );
 
-				$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isFromMediaWiki || $isInExtList );
-				$disabled = $ceMW ? !$mwRequirements : true;
+				$add = ( !$hasVisibilityRequirement || $requirementsCheck ) && ( $isFromMediaWiki || $isInExtList );
+				$disabled = $ceMW ? !$requirementsCheck : true;
 
 				$msgName = $context->msg( "managewiki-namespaces-$key-name" );
 				$msgHelp = $context->msg( "managewiki-namespaces-$key-help" );
@@ -700,7 +700,7 @@ class ManageWikiFormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = ManageWikiTypes::process(
+					$configs = TypesBuilder::process(
 						config: $config,
 						disabled: $disabled,
 						groupList: [],
@@ -750,7 +750,7 @@ class ManageWikiFormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
-			] + ManageWikiTypes::process(
+			] + TypesBuilder::process(
 				config: $config,
 				disabled: false,
 				groupList: [],
@@ -863,7 +863,7 @@ class ManageWikiFormFactoryBuilder {
 				$config->get( ConfigNames::PermissionsDisallowedGroups ),
 				$userGroupManager->listAllImplicitGroups()
 			),
-			'groupMatrix' => ManageWikiTypes::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
+			'groupMatrix' => TypesBuilder::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $groupData['autopromote'] ?? null,
 		];
 
@@ -1106,10 +1106,7 @@ class ManageWikiFormFactoryBuilder {
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$mwReturn = self::submissionCore(
-					$formData, $dbname, $context, $moduleFactory,
-					$config
-				);
+				$mwReturn = self::submissionCore( $formData, $dbname, $context, $moduleFactory );
 				break;
 			case 'extensions':
 				$mwReturn = self::submissionExtensions(
@@ -1195,8 +1192,7 @@ class ManageWikiFormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		IContextSource $context,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): ICoreModule {
 		$mwActions = [
 			'delete',
@@ -1326,6 +1322,8 @@ class ManageWikiFormFactoryBuilder {
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->listAll();
 
+		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
+
 		$settingsArray = [];
 		foreach ( $config->get( ConfigNames::Settings ) as $name => $set ) {
 			// No need to do anything if setting does not 'exist'
@@ -1339,8 +1337,8 @@ class ManageWikiFormFactoryBuilder {
 					$set['overridedefault'][ $set['associativeKey'] ];
 			}
 
-			$mwAllowed = $set['requires'] ?
-				ManageWikiRequirements::process( $set['requires'], $extList ) : true;
+			$requirementsCheck = $set['requires'] ?
+				$mwRequirements->check( $set['requires'], $extList ) : true;
 
 			$type = $set['type'];
 			$value = $formData["set-$name"];
@@ -1369,8 +1367,8 @@ class ManageWikiFormFactoryBuilder {
 					$value = array_map( 'intval', $value );
 					break;
 				case 'matrix':
-					$current = ManageWikiTypes::handleMatrix( $current, 'php' );
-					$value = ManageWikiTypes::handleMatrix( $value, 'phparray' );
+					$current = TypesBuilder::handleMatrix( $current, 'php' );
+					$value = TypesBuilder::handleMatrix( $value, 'phparray' );
 					break;
 				case 'text':
 					if ( !$value ) {
@@ -1387,7 +1385,7 @@ class ManageWikiFormFactoryBuilder {
 					break;
 			}
 
-			if ( !$mwAllowed ) {
+			if ( !$requirementsCheck ) {
 				$value = $current;
 			}
 
@@ -1592,7 +1590,7 @@ class ManageWikiFormFactoryBuilder {
 			'remove' => $removedPerms,
 		];
 
-		$newMatrix = ManageWikiTypes::handleMatrix( $formData['group-matrix'], 'phparray' );
+		$newMatrix = TypesBuilder::handleMatrix( $formData['group-matrix'], 'phparray' );
 
 		$matrixNew = [
 			'addgroups' => array_diff(

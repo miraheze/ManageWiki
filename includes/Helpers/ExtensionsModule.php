@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Psr\Log\LoggerInterface;
@@ -27,7 +28,9 @@ class ExtensionsModule implements IModule {
 	public function __construct(
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
+		private readonly Requirements $requirements,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
 	) {
@@ -176,6 +179,8 @@ class ExtensionsModule implements IModule {
 			)
 		);
 
+		$installer = $this->installerFactory->getInstaller( $this->dbname );
+
 		foreach ( $this->liveExtensions as $name => $config ) {
 			// Check if we have a conflict first
 			if ( in_array( $config['conflicts'], $enabling, true ) ) {
@@ -198,7 +203,7 @@ class ExtensionsModule implements IModule {
 			}
 
 			// Now we need to check if we fulfill the requirements to enable this extension.
-			$requirementsCheck = ManageWikiRequirements::process( $requirements, $this->list() );
+			$requirementsCheck = $this->requirements->check( $requirements, $this->list() );
 
 			if ( !$requirementsCheck ) {
 				if ( !isset( $this->changes[$name] ) ) {
@@ -252,8 +257,7 @@ class ExtensionsModule implements IModule {
 					unset( $config['install']['mwscript'] );
 				}
 
-				$installResult = ManageWikiInstaller::process(
-					dbname: $this->dbname,
+				$installResult = $installer->execute(
 					actions: $config['install'],
 					install: true
 				);
@@ -276,7 +280,7 @@ class ExtensionsModule implements IModule {
 			$requirementsCheck = true;
 			$permissionRequirements = $config['requires']['permissions'] ?? [];
 			if ( $permissionRequirements ) {
-				$requirementsCheck = ManageWikiRequirements::process(
+				$requirementsCheck = $this->requirements->check(
 					// We only need to check for permissions when an
 					// extension is being disabled.
 					actions: [ 'permissions' => $permissionRequirements ],
@@ -302,8 +306,7 @@ class ExtensionsModule implements IModule {
 
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it.
 			if ( isset( $config['remove'] ) ) {
-				ManageWikiInstaller::process(
-					dbname: $this->dbname,
+				$installer->execute(
 					actions: $config['remove'],
 					install: false
 				);
@@ -333,8 +336,7 @@ class ExtensionsModule implements IModule {
 
 		// We need to run mwscript steps after the extension is already loaded
 		if ( $this->scripts ) {
-			ManageWikiInstaller::process(
-				dbname: $this->dbname,
+			$installer->execute(
 				actions: [ 'mwscript' => $this->scripts ],
 				install: true
 			);
