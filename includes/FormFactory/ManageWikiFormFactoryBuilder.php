@@ -19,7 +19,6 @@ use MediaWiki\User\User;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiRequirements;
 use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
@@ -258,6 +257,8 @@ class ManageWikiFormFactoryBuilder {
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 
+		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
+
 		$credits = $cache->getWithSetCallback(
 			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
 			WANObjectCache::TTL_DAY,
@@ -307,9 +308,9 @@ class ManageWikiFormFactoryBuilder {
 			}
 
 			$help = [];
-			$mwRequirements = true;
+			$requirementsCheck = true;
 			if ( $ext['requires'] ) {
-				$mwRequirements = ManageWikiRequirements::process(
+				$requirementsCheck = $mwRequirements->check(
 					// Don't check for extension requirements as we don't want
 					// to disable the field, we use disable-if for that.
 					array_diff_key( $ext['requires'], [ 'extensions' => true ] ),
@@ -382,7 +383,7 @@ class ManageWikiFormFactoryBuilder {
 					$extDisplayName ?? ( $namemsg ? $context->msg( $namemsg )->text() : $extname ) ?? $ext['name'],
 				],
 				'default' => in_array( $name, $extList, true ),
-				'disabled' => $ceMW ? !$mwRequirements : true,
+				'disabled' => $ceMW ? !$requirementsCheck : true,
 				'disable-if' => $disableIf,
 				'help' => nl2br( implode( ' ', $help ) ),
 				'section' => $ext['section'],
@@ -415,6 +416,8 @@ class ManageWikiFormFactoryBuilder {
 			)
 		);
 
+		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
+
 		$formDescriptor = [];
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
 
@@ -425,18 +428,18 @@ class ManageWikiFormFactoryBuilder {
 					'config' => ConfigNames::Settings,
 					'var' => $name,
 				] );
-				$mwRequirements = true;
+				$requirementsCheck = true;
 			} else {
-				$mwRequirements = $set['requires'] ?
-					ManageWikiRequirements::process( $set['requires'], $extList ) : true;
+				$requirementsCheck = $set['requires'] ?
+					$mwRequirements->check( $set['requires'], $extList ) : true;
 			}
 
 			$hasVisibilityRequirement = isset( $set['requires']['visibility'] );
 			$isGlobal = $set['global'] ?? false;
 			$isInExtList = in_array( $set['from'], $extList, true );
 
-			$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isGlobal || $isInExtList );
-			$disabled = $ceMW ? !$mwRequirements : true;
+			$add = ( $hasVisibilityRequirement ? $requirementsCheck : true ) && ( $isGlobal || $isInExtList );
+			$disabled = $ceMW ? !$requirementsCheck : true;
 
 			$msgName = $context->msg( "managewiki-setting-$name-name" );
 			$msgHelp = $context->msg( "managewiki-setting-$name-help" );
@@ -537,6 +540,7 @@ class ManageWikiFormFactoryBuilder {
 			$nsID['namespacetalk'] = $namespaceID + 1;
 		}
 
+		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
@@ -661,15 +665,15 @@ class ManageWikiFormFactoryBuilder {
 			];
 
 			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
-				$mwRequirements = $a['requires'] ?
-					ManageWikiRequirements::process( $a['requires'], $extList ) : true;
+				$requirementsCheck = $a['requires'] ?
+					$mwRequirements->check( $a['requires'], $extList ) : true;
 
 				$hasVisibilityRequirement = isset( $a['requires']['visibility'] );
 				$isFromMediaWiki = $a['from'] === 'mediawiki';
 				$isInExtList = in_array( $a['from'], $extList, true );
 
-				$add = ( $hasVisibilityRequirement ? $mwRequirements : true ) && ( $isFromMediaWiki || $isInExtList );
-				$disabled = $ceMW ? !$mwRequirements : true;
+				$add = ( $hasVisibilityRequirement ? $requirementsCheck : true ) && ( $isFromMediaWiki || $isInExtList );
+				$disabled = $ceMW ? !$requirementsCheck : true;
 
 				$msgName = $context->msg( "managewiki-namespaces-$key-name" );
 				$msgHelp = $context->msg( "managewiki-namespaces-$key-help" );
@@ -1291,6 +1295,8 @@ class ManageWikiFormFactoryBuilder {
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->listAll();
 
+		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
+
 		$settingsArray = [];
 		foreach ( $config->get( ConfigNames::Settings ) as $name => $set ) {
 			// No need to do anything if setting does not 'exist'
@@ -1304,8 +1310,8 @@ class ManageWikiFormFactoryBuilder {
 					$set['overridedefault'][ $set['associativeKey'] ];
 			}
 
-			$mwAllowed = $set['requires'] ?
-				ManageWikiRequirements::process( $set['requires'], $extList ) : true;
+			$requirementsCheck = $set['requires'] ?
+				$mwRequirements->check( $set['requires'], $extList ) : true;
 
 			$type = $set['type'];
 			$value = $formData["set-$name"];
@@ -1352,7 +1358,7 @@ class ManageWikiFormFactoryBuilder {
 					break;
 			}
 
-			if ( !$mwAllowed ) {
+			if ( !$requirementsCheck ) {
 				$value = $current;
 			}
 
