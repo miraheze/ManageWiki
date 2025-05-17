@@ -5,8 +5,8 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MainConfigNames;
-use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\SiteStats\SiteStats;
+use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 
 class Requirements {
@@ -16,7 +16,7 @@ class Requirements {
 	];
 
 	public function __construct(
-		private readonly PermissionManager $permissionManager,
+		private readonly PermissionsFactory $permissionsFactory,
 		private readonly SettingsFactory $settingsFactory,
 		private readonly ServiceOptions $options
 	) {
@@ -128,7 +128,11 @@ class Requirements {
 	}
 
 	private function visibility( array $data ): bool {
-		$isPrivate = !$this->permissionManager->isEveryoneAllowed( 'read' );
+		$mwPermissions = $this->permissionsFactory->newInstance(
+			$this->options->get( MainConfigNames::DBname )
+		);
+
+		$isPrivate = !isset( $mwPermissions->getGroupsWithPermission( 'read' )['*'] );
 
 		$ret = [];
 		foreach ( $data as $key => $val ) {
