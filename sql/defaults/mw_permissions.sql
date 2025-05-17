@@ -1,6 +1,6 @@
 INSERT INTO mw_permissions (perm_dbname, perm_group, perm_permissions, perm_addgroups, perm_removegroups, perm_addgroupstoself, perm_removegroupsfromself, perm_autopromote)
 VALUES
-('default', '*', '["autocreateaccount","createaccount","edit","createpage","createtalk","viewmywatchlist","editmywatchlist","viewmyprivateinfo","editmyprivateinfo","editmyoptions","autocreateaccount"]', '[]', '[]', '[]', '[]', NULL),
+('default', '*', '["read","autocreateaccount","createaccount","edit","createpage","createtalk","viewmywatchlist","editmywatchlist","viewmyprivateinfo","editmyprivateinfo","editmyoptions","autocreateaccount"]', '[]', '[]', '[]', '[]', NULL),
 ('default', 'autoconfirmed', '["autoconfirmed","editsemiprotected","createaccount"]', '[]', '[]', '[]', '[]', '["&",[1,10],[2,345600]]'),
 ('default', 'autopatrolled', '["autopatrol","patrol","patrolmarks"]', '[]', '[]', '[]', '[]', NULL),
 ('default', 'bot', '["bot","autoconfirmed","editsemiprotected","nominornewtalk","autopatrol","suppressredirect","apihighlimits"]', '[]', '[]', '[]', '[]', NULL),
