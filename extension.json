@@ -172,6 +172,7 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\CreateWiki",
 			"services": [
 				"ManageWikiConfig",
+				"ManageWikiDatabaseUtils",
 				"ManageWikiDefaultPermissions",
 				"ManageWikiLogger",
 				"ManageWikiModuleFactory",
