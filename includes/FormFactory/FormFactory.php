@@ -13,7 +13,7 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\OOUIHTMLFormTabs;
 use UnexpectedValueException;
 
-class ManageWikiFormFactory {
+class FormFactory {
 
 	private function getFormDescriptor(
 		Config $config,
