@@ -59,7 +59,8 @@ return [
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiInstallerFactory' ),
 			$services->get( 'ManageWikiLogger' ),
-			$services->get( 'ManageWikiRequirements' ),
+			// Use a closure to avoid circular dependency
+			static fn (): Requirements => $services->get( 'ManageWikiRequirements' ),
 			new ServiceOptions(
 				ExtensionsModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
