@@ -246,11 +246,11 @@
 		"ManageWikiModulesEnabled": {
 			"description": "Array of Booleans. Which modules of ManageWiki should be enabled on the wiki.",
 			"value": {
-				"core": false,
-				"extensions": false,
+				"core": true,
+				"extensions": true,
 				"namespaces": false,
 				"permissions": false,
-				"settings": false
+				"settings": true
 			}
 		},
 		"ManageWikiNamespacesAdditional": {
