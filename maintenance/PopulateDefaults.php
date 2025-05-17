@@ -25,10 +25,10 @@ class PopulateDefaults extends LoggedUpdateMaintenance {
 		$this->output( "Populated defaults for global database '{$dbw->getDomainID()}'\n" );
 
 		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
-		$mwPermissionsDefault = $this->getServiceContainer()->get( 'ManageWikiDefaultPermissions' );
+		$defaultPermissions = $this->getServiceContainer()->get( 'ManageWikiDefaultPermissions' );
 
 		$centralWiki = $databaseUtils->getCentralWikiID();
-		$mwPermissionsDefault->populatePermissions(
+		$defaultPermissions->populatePermissions(
 			$centralWiki,
 			$moduleFactory->core( $centralWiki )->isPrivate()
 		);
