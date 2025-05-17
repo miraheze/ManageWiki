@@ -11,7 +11,7 @@ use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
+use Miraheze\ManageWiki\FormFactory\FormFactory;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -55,7 +55,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			'oojs-ui-widgets.styles',
 		] );
 
-		$formFactory = new ManageWikiFormFactory();
+		$formFactory = new FormFactory();
 		$formFactory->getForm(
 			config: $this->getConfig(),
 			moduleFactory: $this->moduleFactory,
