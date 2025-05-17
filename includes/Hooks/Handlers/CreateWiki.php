@@ -125,7 +125,7 @@ class CreateWiki implements
 					$lcEN = $this->localisationCache->getItem( 'en', 'namespaceNames' );
 				}
 			} catch ( Exception $e ) {
-				$this->logger->warning( 'Caught exception trying to load Localisation Cache: {exception}', [
+				$this->logger->error( 'Caught exception trying to load Localisation Cache: {exception}', [
 					'exception' => $e,
 				] );
 			}
