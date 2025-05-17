@@ -16,7 +16,7 @@ class PopulateDefaults extends LoggedUpdateMaintenance {
 	}
 
 	protected function doDBUpdates(): bool {
-		$dbw = $this->getPrimaryDB();
+		$dbw = $this->getDB( DB_PRIMARY );
 
 		$dbw->sourceFile( __DIR__ . '/../sql/defaults/mw_namespaces.sql' );
 		$dbw->sourceFile( __DIR__ . '/../sql/defaults/mw_permissions.sql' );
