@@ -6,6 +6,7 @@ use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Permissions\PermissionManager;
 use Miraheze\ManageWiki\Helpers\CoreModule;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
@@ -106,7 +107,8 @@ return [
 	},
 	'ManageWikiRequirements' => static function ( MediaWikiServices $services ): Requirements {
 		return new Requirements(
-			$services->getPermissionManager(),
+			// Use a closure to avoid circular dependency
+			static fn (): PermissionManager => $services->getPermissionManager(),
 			$services->get( 'ManageWikiSettingsFactory' ),
 			new ServiceOptions(
 				Requirements::CONSTRUCTOR_OPTIONS,
