@@ -15,6 +15,7 @@ use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Psr\Log\LoggerInterface;
+use Throwable;
 use Wikimedia\Rdbms\IReadableDatabase;
 
 class CreateWiki implements
@@ -37,34 +38,38 @@ class CreateWiki implements
 
 	/** @inheritDoc */
 	public function onCreateWikiCreation( string $dbname, bool $private ): void {
-		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
-			$this->defaultPermissions->populatePermissions( $dbname, $private );
-		}
-
-		if (
-			$this->config->get( ConfigNames::Extensions ) &&
-			$this->config->get( ConfigNames::ExtensionsDefault )
-		) {
-			$mwExtensions = $this->moduleFactory->extensions( $dbname );
-			$mwExtensions->add( $this->config->get( ConfigNames::ExtensionsDefault ) );
-			$mwExtensions->commit();
-		}
-
-		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
-			$mwNamespacesDefault = $this->moduleFactory->namespacesDefault();
-			$defaultNamespaces = $mwNamespacesDefault->listIds();
-
-			$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
-			$mwNamespaces->disableNamespaceMigrationJob();
-
-			foreach ( $defaultNamespaces as $namespace ) {
-				$mwNamespaces->modify(
-					$namespace,
-					$mwNamespacesDefault->list( $namespace ),
-					maintainPrefix: false
-				);
-				$mwNamespaces->commit();
+		try {
+			if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
+				$this->defaultPermissions->populatePermissions( $dbname, $private );
 			}
+
+			if (
+				$this->config->get( ConfigNames::Extensions ) &&
+				$this->config->get( ConfigNames::ExtensionsDefault )
+			) {
+				$mwExtensions = $this->moduleFactory->extensions( $dbname );
+				$mwExtensions->add( $this->config->get( ConfigNames::ExtensionsDefault ) );
+				$mwExtensions->commit();
+			}
+
+			if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
+				$mwNamespacesDefault = $this->moduleFactory->namespacesDefault();
+				$defaultNamespaces = $mwNamespacesDefault->listIds();
+
+				$mwNamespaces = $this->moduleFactory->namespaces( $dbname );
+				$mwNamespaces->disableNamespaceMigrationJob();
+
+				foreach ( $defaultNamespaces as $namespace ) {
+					$mwNamespaces->modify(
+						$namespace,
+						$mwNamespacesDefault->list( $namespace ),
+						maintainPrefix: false
+					);
+					$mwNamespaces->commit();
+				}
+			}
+		} catch ( Throwable $t ) {
+			var_dump( $t->getMessage() );
 		}
 	}
 
