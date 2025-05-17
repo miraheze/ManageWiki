@@ -17,7 +17,6 @@ use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
-use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\Requirements;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -102,10 +101,6 @@ return [
 			$services->getUserGroupManagerFactory(),
 			$services->getMessageFormatterFactory()->getTextFormatter(
 				$services->getContentLanguageCode()->toString()
-			),
-			new ServiceOptions(
-				PermissionsModule::CONSTRUCTOR_OPTIONS,
-				$services->get( 'ManageWikiConfig' )
 			)
 		);
 	},

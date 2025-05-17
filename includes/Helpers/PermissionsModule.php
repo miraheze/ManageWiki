@@ -2,21 +2,15 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use MediaWiki\Config\ServiceOptions;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
 
 class PermissionsModule implements IModule {
-
-	public const CONSTRUCTOR_OPTIONS = [
-		ConfigNames::PermissionsAdditionalRights,
-	];
 
 	private array $changes = [];
 	private array $errors = [];
@@ -33,11 +27,8 @@ class PermissionsModule implements IModule {
 		private readonly ActorStoreFactory $actorStoreFactory,
 		private readonly UserGroupManagerFactory $userGroupManagerFactory,
 		private readonly ITextFormatter $textFormatter,
-		private readonly ServiceOptions $options,
 		private readonly string $dbname
 	) {
-		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
-
 		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$perms = $dbr->newSelectQueryBuilder()
 			->select( '*' )
@@ -97,26 +88,11 @@ class PermissionsModule implements IModule {
 	 * @param string $permission The permission to look for
 	 * @return array List of group names that have the permission
 	 */
-	public function getGroupsWithPermission( string $permission, bool $checkAdditional ): array {
-		$additionalRights = $this->options->get( ConfigNames::PermissionsAdditionalRights );
+	public function getGroupsWithPermission( string $permission ): array {
 		$groups = [];
 		foreach ( $this->listAll() as $group => $data ) {
 			if ( in_array( $permission, $data['permissions'] ?? [], true ) ) {
 				$groups[] = $group;
-			}
-
-			if ( !$checkAdditional ) {
-				continue;
-			}
-
-			foreach ( $additionalRights[$group] ?? [] as $right => $bool ) {
-				if ( $right !== $permission ) {
-					continue;
-				}
-
-				if ( $bool ) {
-					$groups[] = $group;
-				}
 			}
 		}
 
@@ -130,7 +106,7 @@ class PermissionsModule implements IModule {
 	 */
 	public function modify( string $group, array $data ): void {
 		if ( is_array( $data['permissions']['remove'] ?? null ) ) {
-			$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions', false );
+			$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions' );
 			$isRemovingPermission = in_array(
 				'managewiki-permissions', $data['permissions']['remove'], true
 			);
@@ -190,7 +166,7 @@ class PermissionsModule implements IModule {
 	 * @param string $group Group name
 	 */
 	public function remove( string $group ): void {
-		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions', false );
+		$groupsWithPermission = $this->getGroupsWithPermission( 'managewiki-permissions' );
 		if ( $groupsWithPermission === [ $group ] ) {
 			$this->errors[] = [
 				'managewiki-error-missingpermission' => [],

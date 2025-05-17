@@ -6,12 +6,14 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\MainConfigNames;
 use MediaWiki\SiteStats\SiteStats;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 
 class Requirements {
 
 	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::PermissionsDefaultPrivateGroup,
 		MainConfigNames::DBname,
 	];
 
@@ -128,11 +130,12 @@ class Requirements {
 	}
 
 	private function visibility( array $data ): bool {
+		$defaultPrivateGroup = $this->options->get( ConfigNames:::PermissionsDefaultPrivateGroup );
 		$mwPermissions = $this->permissionsFactory->newInstance(
 			$this->options->get( MainConfigNames::DBname )
 		);
 
-		$isPrivate = !isset( $mwPermissions->getGroupsWithPermission( 'read', true )['*'] );
+		$isPrivate = in_array( $defaultPrivateGroup, $mwPermissions->getGroupsWithPermission( 'read' ), true );
 
 		$ret = [];
 		foreach ( $data as $key => $val ) {
