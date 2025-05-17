@@ -203,7 +203,7 @@ class ExtensionsModule implements IModule {
 			}
 
 			// Now we need to check if we fulfill the requirements to enable this extension.
-			$requirementsCheck = $this->requirements->check( $requirements );
+			$requirementsCheck = $this->requirements->check( $requirements, $this->list() );
 
 			if ( !$requirementsCheck ) {
 				if ( !isset( $this->changes[$name] ) ) {
@@ -283,7 +283,10 @@ class ExtensionsModule implements IModule {
 				$requirementsCheck = $this->requirements->check(
 					// We only need to check for permissions when an
 					// extension is being disabled.
-					[ 'permissions' => $permissionRequirements ]
+					actions: [ 'permissions' => $permissionRequirements ],
+					// We don't need this since it's not used for permissions,
+					// which is the only thing we need to check here.
+					extList: []
 				);
 			}
 
