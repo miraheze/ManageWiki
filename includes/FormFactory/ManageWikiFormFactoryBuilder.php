@@ -19,10 +19,10 @@ use MediaWiki\User\User;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiTypes;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
+use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\ICoreModule;
 use Wikimedia\ObjectCache\WANObjectCache;
 
@@ -451,7 +451,7 @@ class ManageWikiFormFactoryBuilder {
 						$set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = ManageWikiTypes::process(
+				$configs = TypesBuilder::process(
 					config: $config,
 					disabled: $disabled,
 					groupList: $groupList,
@@ -633,7 +633,7 @@ class ManageWikiFormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
-				] + ManageWikiTypes::process(
+				] + TypesBuilder::process(
 					config: $config,
 					disabled: false,
 					groupList: [],
@@ -691,7 +691,7 @@ class ManageWikiFormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = ManageWikiTypes::process(
+					$configs = TypesBuilder::process(
 						config: $config,
 						disabled: $disabled,
 						groupList: [],
@@ -741,7 +741,7 @@ class ManageWikiFormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
-			] + ManageWikiTypes::process(
+			] + TypesBuilder::process(
 				config: $config,
 				disabled: false,
 				groupList: [],
@@ -854,7 +854,7 @@ class ManageWikiFormFactoryBuilder {
 				$config->get( ConfigNames::PermissionsDisallowedGroups ),
 				$userGroupManager->listAllImplicitGroups()
 			),
-			'groupMatrix' => ManageWikiTypes::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
+			'groupMatrix' => TypesBuilder::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $groupData['autopromote'] ?? null,
 		];
 
@@ -1340,8 +1340,8 @@ class ManageWikiFormFactoryBuilder {
 					$value = array_map( 'intval', $value );
 					break;
 				case 'matrix':
-					$current = ManageWikiTypes::handleMatrix( $current, 'php' );
-					$value = ManageWikiTypes::handleMatrix( $value, 'phparray' );
+					$current = TypesBuilder::handleMatrix( $current, 'php' );
+					$value = TypesBuilder::handleMatrix( $value, 'phparray' );
 					break;
 				case 'text':
 					if ( !$value ) {
@@ -1501,7 +1501,7 @@ class ManageWikiFormFactoryBuilder {
 			'remove' => $removedPerms,
 		];
 
-		$newMatrix = ManageWikiTypes::handleMatrix( $formData['group-matrix'], 'phparray' );
+		$newMatrix = TypesBuilder::handleMatrix( $formData['group-matrix'], 'phparray' );
 
 		$matrixNew = [
 			'addgroups' => array_diff(

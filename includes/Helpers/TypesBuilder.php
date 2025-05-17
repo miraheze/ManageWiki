@@ -14,7 +14,7 @@ use MediaWiki\Message\Message;
 use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 
-class ManageWikiTypes {
+class TypesBuilder {
 
 	public static function process(
 		Config $config,
