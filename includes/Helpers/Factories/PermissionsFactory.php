@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\Helpers\Factories;
 
-use MediaWiki\Config\ServiceOptions;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
@@ -17,8 +16,7 @@ class PermissionsFactory {
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly ActorStoreFactory $actorStoreFactory,
 		private readonly UserGroupManagerFactory $userGroupManagerFactory,
-		private readonly ITextFormatter $textFormatter,
-		private readonly ServiceOptions $options
+		private readonly ITextFormatter $textFormatter
 	) {
 	}
 
@@ -29,7 +27,6 @@ class PermissionsFactory {
 			$this->actorStoreFactory,
 			$this->userGroupManagerFactory,
 			$this->textFormatter,
-			$this->options,
 			$dbname
 		);
 	}
