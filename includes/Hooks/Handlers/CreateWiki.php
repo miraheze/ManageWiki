@@ -224,7 +224,7 @@ class CreateWiki implements
 
 		// Same as NS above but for permissions
 		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
-			$db = $this->databaseUtils->getGlobalReplicaDB(),
+			$db = $this->databaseUtils->getGlobalReplicaDB();
 			$permObjects = $db->newSelectQueryBuilder()
 				->select( '*' )
 				->from( 'mw_permissions' )
