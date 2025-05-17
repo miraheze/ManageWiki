@@ -16,8 +16,7 @@ class PopulateDefaults extends LoggedUpdateMaintenance {
 	}
 
 	protected function doDBUpdates(): bool {
-		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
-		$dbw = $databaseUtils->getGlobalPrimaryDB();
+		$dbw = $this->getPrimaryDB();
 
 		$dbw->sourceFile( __DIR__ . '/../sql/defaults/mw_namespaces.sql' );
 		$dbw->sourceFile( __DIR__ . '/../sql/defaults/mw_permissions.sql' );
