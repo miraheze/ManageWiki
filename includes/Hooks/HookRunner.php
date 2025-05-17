@@ -8,7 +8,7 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\ICoreModule;
 use Skin;
 
-class ManageWikiHookRunner implements
+class HookRunner implements
 	ManageWikiAfterSidebarLinksHook,
 	ManageWikiCoreAddFormFieldsHook,
 	ManageWikiCoreFormSubmissionHook,

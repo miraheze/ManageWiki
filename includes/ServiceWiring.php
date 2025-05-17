@@ -21,7 +21,7 @@ use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\Requirements;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
-use Miraheze\ManageWiki\Hooks\ManageWikiHookRunner;
+use Miraheze\ManageWiki\Hooks\HookRunner;
 use Psr\Log\LoggerInterface;
 
 // PHPUnit does not understand coverage for this file.
@@ -68,8 +68,8 @@ return [
 			)
 		);
 	},
-	'ManageWikiHookRunner' => static function ( MediaWikiServices $services ): ManageWikiHookRunner {
-		return new ManageWikiHookRunner( $services->getHookContainer() );
+	'ManageWikiHookRunner' => static function ( MediaWikiServices $services ): HookRunner {
+		return new HookRunner( $services->getHookContainer() );
 	},
 	'ManageWikiInstallerFactory' => static function ( MediaWikiServices $services ): InstallerFactory {
 		return new InstallerFactory(
