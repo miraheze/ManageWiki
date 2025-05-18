@@ -6,20 +6,16 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\SiteStats\SiteStatsInit;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
-use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 
 class Requirements {
-
-	private readonly SiteStatsInit $siteStats;
 
 	public function __construct(
 		DatabaseUtils $databaseUtils,
 		private readonly CoreFactory $coreFactory,
 		private readonly SettingsFactory $settingsFactory,
+		private readonly SiteStatsInit $siteStatsInit,
 		private readonly string $dbname
 	) {
-		$dbr = $databaseUtils->getRemoteWikiReplicaDB( $dbname );
-		$this->siteStats = new SiteStatsInit( $dbr );
 	}
 
 	public function check( array $actions, array $extList ): bool {
@@ -91,19 +87,19 @@ class Requirements {
 	}
 
 	private function articles( int $limit ): bool {
-		return $this->siteStats->articles() <= $limit;
+		return $this->siteStatsInit->articles() <= $limit;
 	}
 
 	private function files( int $limit ): bool {
-		return $this->siteStats->files() <= $limit;
+		return $this->siteStatsInit->files() <= $limit;
 	}
 
 	private function pages( int $limit ): bool {
-		return $this->siteStats->pages() <= $limit;
+		return $this->siteStatsInit->pages() <= $limit;
 	}
 
 	private function users( int $limit ): bool {
-		return $this->siteStats->users() <= $limit;
+		return $this->siteStatsInit->users() <= $limit;
 	}
 
 	private function settings( array $data ): bool {
