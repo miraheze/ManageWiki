@@ -10,7 +10,6 @@ use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 class Requirements {
 
 	public function __construct(
-		DatabaseUtils $databaseUtils,
 		private readonly CoreFactory $coreFactory,
 		private readonly SettingsFactory $settingsFactory,
 		private readonly SiteStatsInit $siteStatsInit,
