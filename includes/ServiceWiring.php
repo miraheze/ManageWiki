@@ -106,8 +106,8 @@ return [
 	},
 	'ManageWikiRequirementsFactory' => static function ( MediaWikiServices $services ): RequirementsFactory {
 		return new RequirementsFactory(
-			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiCoreFactory' ),
+			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiSettingsFactory' )
 		);
 	},
