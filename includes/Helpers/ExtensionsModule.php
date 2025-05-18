@@ -6,6 +6,7 @@ use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
+use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Psr\Log\LoggerInterface;
@@ -30,7 +31,7 @@ class ExtensionsModule implements IModule {
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
-		private readonly Requirements $requirements,
+		private readonly RequirementsFactory $requirementsFactory,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
 	) {
@@ -179,7 +180,8 @@ class ExtensionsModule implements IModule {
 			)
 		);
 
-		$installer = $this->installerFactory->getInstaller( $this->dbname );
+		$mwInstaller = $this->installerFactory->getInstaller( $this->dbname );
+		$mwRequirements = $this->requirementsFactory->getRequirements( $this->dbname );
 
 		foreach ( $this->liveExtensions as $name => $config ) {
 			// Check if we have a conflict first
@@ -203,7 +205,7 @@ class ExtensionsModule implements IModule {
 			}
 
 			// Now we need to check if we fulfill the requirements to enable this extension.
-			$requirementsCheck = $this->requirements->check( $requirements, $this->list() );
+			$requirementsCheck = $mwRequirements->check( $requirements, $this->list() );
 
 			if ( !$requirementsCheck ) {
 				if ( !isset( $this->changes[$name] ) ) {
@@ -257,7 +259,7 @@ class ExtensionsModule implements IModule {
 					unset( $config['install']['mwscript'] );
 				}
 
-				$installResult = $installer->execute(
+				$installResult = $mwInstaller->execute(
 					actions: $config['install'],
 					install: true
 				);
@@ -280,7 +282,7 @@ class ExtensionsModule implements IModule {
 			$requirementsCheck = true;
 			$permissionRequirements = $config['requires']['permissions'] ?? [];
 			if ( $permissionRequirements ) {
-				$requirementsCheck = $this->requirements->check(
+				$requirementsCheck = $mwRequirements->check(
 					// We only need to check for permissions when an
 					// extension is being disabled.
 					actions: [ 'permissions' => $permissionRequirements ],
@@ -306,7 +308,7 @@ class ExtensionsModule implements IModule {
 
 			// Unlike installing, we are not too fussed about whether this fails, let us just do it.
 			if ( isset( $config['remove'] ) ) {
-				$installer->execute(
+				$mwInstaller->execute(
 					actions: $config['remove'],
 					install: false
 				);
@@ -336,7 +338,7 @@ class ExtensionsModule implements IModule {
 
 		// We need to run mwscript steps after the extension is already loaded
 		if ( $this->scripts ) {
-			$installer->execute(
+			$mwInstaller->execute(
 				actions: [ 'mwscript' => $this->scripts ],
 				install: true
 			);

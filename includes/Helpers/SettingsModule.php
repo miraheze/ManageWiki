@@ -170,8 +170,8 @@ class SettingsModule implements IModule {
 		$data->resetWikiData( isNewChanges: true );
 
 		if ( $this->scripts ) {
-			$installer = $this->installerFactory->getInstaller( $this->dbname );
-			$installer->execute(
+			$mwInstaller = $this->installerFactory->getInstaller( $this->dbname );
+			$mwInstaller->execute(
 				actions: [ 'mwscript' => $this->scripts ],
 				install: true
 			);

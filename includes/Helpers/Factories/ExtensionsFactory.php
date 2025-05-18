@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\Helpers\Factories;
 
-use Closure;
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
@@ -16,7 +15,7 @@ class ExtensionsFactory {
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
-		private readonly Closure $requirementsClosure,
+		private readonly RequirementsFactory $requirementsFactory,
 		private readonly ServiceOptions $options
 	) {
 	}
@@ -27,7 +26,7 @@ class ExtensionsFactory {
 			$this->databaseUtils,
 			$this->installerFactory,
 			$this->logger,
-			( $this->requirementsClosure )(),
+			$this->requirementsFactory,
 			$this->options,
 			$dbname
 		);

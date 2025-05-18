@@ -2,25 +2,19 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Context\RequestContext;
-use MediaWiki\MainConfigNames;
-use MediaWiki\Permissions\PermissionManager;
-use MediaWiki\SiteStats\SiteStats;
+use MediaWiki\SiteStats\SiteStatsInit;
+use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 
 class Requirements {
 
-	public const CONSTRUCTOR_OPTIONS = [
-		MainConfigNames::DBname,
-	];
-
 	public function __construct(
-		private readonly PermissionManager $permissionManager,
+		private readonly CoreFactory $coreFactory,
 		private readonly SettingsFactory $settingsFactory,
-		private readonly ServiceOptions $options
+		private readonly SiteStatsInit $siteStatsInit,
+		private readonly string $dbname
 	) {
-		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
 	public function check( array $actions, array $extList ): bool {
@@ -33,17 +27,17 @@ class Requirements {
 				case 'extensions':
 					$stepResponse['extensions'] = $this->extensions( $data, $extList );
 					break;
-				case 'activeusers':
-					$stepResponse['activeusers'] = $this->activeUsers( $data );
-					break;
 				case 'articles':
 					$stepResponse['articles'] = $this->articles( $data );
+					break;
+				case 'files':
+					$stepResponse['files'] = $this->files( $data );
 					break;
 				case 'pages':
 					$stepResponse['pages'] = $this->pages( $data );
 					break;
-				case 'images':
-					$stepResponse['images'] = $this->images( $data );
+				case 'users':
+					$stepResponse['users'] = $this->users( $data );
 					break;
 				case 'settings':
 					$stepResponse['settings'] = $this->settings( $data );
@@ -91,24 +85,24 @@ class Requirements {
 		return true;
 	}
 
-	private function activeUsers( int $limit ): bool {
-		return SiteStats::activeUsers() <= $limit;
+	private function articles( int $limit ): bool {
+		return $this->siteStatsInit->articles() <= $limit;
 	}
 
-	private function articles( int $limit ): bool {
-		return SiteStats::articles() <= $limit;
+	private function files( int $limit ): bool {
+		return $this->siteStatsInit->files() <= $limit;
 	}
 
 	private function pages( int $limit ): bool {
-		return SiteStats::pages() <= $limit;
+		return $this->siteStatsInit->pages() <= $limit;
 	}
 
-	private function images( int $limit ): bool {
-		return SiteStats::images() <= $limit;
+	private function users( int $limit ): bool {
+		return $this->siteStatsInit->users() <= $limit;
 	}
 
 	private function settings( array $data ): bool {
-		$dbname = $data['dbname'] ?? $this->options->get( MainConfigNames::DBname );
+		$dbname = $data['dbname'] ?? $this->dbname;
 		$setting = $data['setting'];
 		$value = $data['value'];
 
@@ -128,7 +122,8 @@ class Requirements {
 	}
 
 	private function visibility( array $data ): bool {
-		$isPrivate = !$this->permissionManager->isEveryoneAllowed( 'read' );
+		$mwCore = $this->coreFactory->newInstance( $this->dbname );
+		$isPrivate = $mwCore->isPrivate();
 
 		$ret = [];
 		foreach ( $data as $key => $val ) {

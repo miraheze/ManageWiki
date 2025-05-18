@@ -15,9 +15,9 @@ use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
+use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
-use Miraheze\ManageWiki\Helpers\Requirements;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
@@ -59,8 +59,7 @@ return [
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiInstallerFactory' ),
 			$services->get( 'ManageWikiLogger' ),
-			// Use a closure to avoid circular dependency
-			static fn (): Requirements => $services->get( 'ManageWikiRequirements' ),
+			$services->get( 'ManageWikiRequirementsFactory' ),
 			new ServiceOptions(
 				ExtensionsModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
@@ -105,14 +104,11 @@ return [
 			)
 		);
 	},
-	'ManageWikiRequirements' => static function ( MediaWikiServices $services ): Requirements {
-		return new Requirements(
-			$services->getPermissionManager(),
-			$services->get( 'ManageWikiSettingsFactory' ),
-			new ServiceOptions(
-				Requirements::CONSTRUCTOR_OPTIONS,
-				$services->get( 'ManageWikiConfig' )
-			)
+	'ManageWikiRequirementsFactory' => static function ( MediaWikiServices $services ): RequirementsFactory {
+		return new RequirementsFactory(
+			$services->get( 'ManageWikiCoreFactory' ),
+			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiSettingsFactory' )
 		);
 	},
 	'ManageWikiSettingsFactory' => static function ( MediaWikiServices $services ): SettingsFactory {
