@@ -182,6 +182,23 @@ class PermissionsModule implements IModule {
 			];
 		}
 
+		foreach ( $this->listGroups() as $name ) {
+			$this->modify( $name, [
+				'addgroups' => [
+					'remove' => [ $group ],
+				],
+				'removegroups' => [
+					'remove' => [ $group ],
+				],
+				'addself' => [
+					'remove' => [ $group ],
+				],
+				'removeself' => [
+					'remove' => [ $group ],
+				],
+			] );
+		}
+
 		// We will handle all processing in final stages
 		unset( $this->livePermissions[$group] );
 
@@ -198,6 +215,44 @@ class PermissionsModule implements IModule {
 			'oldname' => $group,
 			'newname' => $newName,
 		];
+
+		foreach ( $this->listGroups() as $name ) {
+			if ( in_array( $group, $this->list( $name )['addgroups'] ?? [], true ) ) {
+				$this->modify( $name, [
+					'addgroups' => [
+						'add' => [ $newName ],
+						'remove' => [ $group ],
+					],
+				] );
+			}
+
+			if ( in_array( $group, $this->list( $name )['removegroups'] ?? [], true ) ) {
+				$this->modify( $name, [
+					'removegroups' => [
+						'add' => [ $newName ],
+						'remove' => [ $group ],
+					],
+				] );
+			}
+
+			if ( in_array( $group, $this->list( $name )['addself'] ?? [], true ) ) {
+				$this->modify( $name, [
+					'addself' => [
+						'add' => [ $newName ],
+						'remove' => [ $group ],
+					],
+				] );
+			}
+
+			if ( in_array( $group, $this->list( $name )['removeself'] ?? [], true ) ) {
+				$this->modify( $name, [
+					'removeself' => [
+						'add' => [ $newName ],
+						'remove' => [ $group ],
+					],
+				] );
+			}
+		}
 
 		// Push to a rename queue
 		$this->renameGroups[$group] = $newName;
@@ -288,12 +343,16 @@ class PermissionsModule implements IModule {
 				continue;
 			}
 
+			// Just use this as a helper to not repeat logic
+			$unique = static fn ( array $value ): array =>
+				array_values( array_unique( $value ) );
+
 			$builtTable = [
-				'perm_permissions' => json_encode( $live['permissions'] ),
-				'perm_addgroups' => json_encode( $live['addgroups'] ),
-				'perm_removegroups' => json_encode( $live['removegroups'] ),
-				'perm_addgroupstoself' => json_encode( $live['addself'] ),
-				'perm_removegroupsfromself' => json_encode( $live['removeself'] ),
+				'perm_permissions' => json_encode( $unique( $live['permissions'] ) ),
+				'perm_addgroups' => json_encode( $unique( $live['addgroups'] ) ),
+				'perm_removegroups' => json_encode( $unique( $live['removegroups'] ) ),
+				'perm_addgroupstoself' => json_encode( $unique( $live['addself'] ) ),
+				'perm_removegroupsfromself' => json_encode( $unique( $live['removeself'] ) ),
 				'perm_autopromote' => $live['autopromote'] === null
 					? null : json_encode( $live['autopromote'] ?? '' ),
 			];
@@ -312,6 +371,11 @@ class PermissionsModule implements IModule {
 				->set( $builtTable )
 				->caller( __METHOD__ )
 				->execute();
+
+			if ( $this->log !== null ) {
+				// If we already have a log type we don't need to change it
+				continue;
+			}
 
 			$logAP = ( $this->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
 			$logNULL = $this->textFormatter->format( MessageValue::new( 'rightsnone' ) );
