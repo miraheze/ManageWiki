@@ -217,7 +217,8 @@ class PermissionsModule implements IModule {
 		];
 
 		foreach ( $this->listGroups() as $name ) {
-			if ( in_array( $group, $this->list( $name )['addgroups'] ?? [], true ) ) {
+			$data = $this->list( $name );
+			if ( in_array( $group, $data['addgroups'] ?? [], true ) ) {
 				$this->modify( $name, [
 					'addgroups' => [
 						'add' => [ $newName ],
@@ -226,7 +227,7 @@ class PermissionsModule implements IModule {
 				] );
 			}
 
-			if ( in_array( $group, $this->list( $name )['removegroups'] ?? [], true ) ) {
+			if ( in_array( $group, $data['removegroups'] ?? [], true ) ) {
 				$this->modify( $name, [
 					'removegroups' => [
 						'add' => [ $newName ],
@@ -235,7 +236,7 @@ class PermissionsModule implements IModule {
 				] );
 			}
 
-			if ( in_array( $group, $this->list( $name )['addself'] ?? [], true ) ) {
+			if ( in_array( $group, $data['addself'] ?? [], true ) ) {
 				$this->modify( $name, [
 					'addself' => [
 						'add' => [ $newName ],
@@ -244,7 +245,7 @@ class PermissionsModule implements IModule {
 				] );
 			}
 
-			if ( in_array( $group, $this->list( $name )['removeself'] ?? [], true ) ) {
+			if ( in_array( $group, $data['removeself'] ?? [], true ) ) {
 				$this->modify( $name, [
 					'removeself' => [
 						'add' => [ $newName ],
