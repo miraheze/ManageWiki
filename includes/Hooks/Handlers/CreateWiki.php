@@ -294,17 +294,6 @@ class CreateWiki implements
 		}
 
 		$mwPermissions->remove( $defaultPrivateGroup );
-		foreach ( $mwPermissions->listGroups() as $group ) {
-			$mwPermissions->modify( $group, [
-				'addgroups' => [
-					'remove' => [ $defaultPrivateGroup ],
-				],
-				'removegroups' => [
-					'remove' => [ $defaultPrivateGroup ],
-				],
-			] );
-		}
-
 		$mwPermissions->commit();
 	}
 
