@@ -288,6 +288,11 @@ class CreateWiki implements
 		}
 
 		$mwPermissions = $this->moduleFactory->permissions( $dbname );
+		// We don't need to continue if it doesn't exist
+		if ( !$mwPermissions->exists( $defaultPrivateGroup ) ) {
+			return;
+		}
+
 		$mwPermissions->remove( $defaultPrivateGroup );
 		$mwPermissions->commit();
 	}
