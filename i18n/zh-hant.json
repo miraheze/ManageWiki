@@ -201,9 +201,9 @@
 	"right-managewiki-core": "管理此 wiki 的核心設定",
 	"right-managewiki-editdefault": "管理整個 wiki 農場預設群組權限",
 	"right-managewiki-extensions": "啟用與停用此 wiki 的擴充功能",
-	"right-managewiki-namespaces": "建立、刪除，與管理此 wiki 的命名空間",
-	"right-managewiki-permissions": "建立、刪除，與管理此 wiki 的使用者群組",
+	"right-managewiki-namespaces": "建立、刪除與管理此 wiki 的命名空間",
+	"right-managewiki-permissions": "建立、刪除與管理此 wiki 的使用者群組",
 	"right-managewiki-restricted": "管理限制的 wiki 設定",
 	"right-managewiki-settings": "管理此 wiki 的進階設定",
-	"settings-other": "其它"
+	"settings-other": "其他"
 }

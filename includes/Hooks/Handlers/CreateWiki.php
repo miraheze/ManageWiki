@@ -288,19 +288,12 @@ class CreateWiki implements
 		}
 
 		$mwPermissions = $this->moduleFactory->permissions( $dbname );
-		$mwPermissions->remove( $defaultPrivateGroup );
-
-		foreach ( $mwPermissions->listGroups() as $group ) {
-			$mwPermissions->modify( $group, [
-				'addgroups' => [
-					'remove' => [ $defaultPrivateGroup ],
-				],
-				'removegroups' => [
-					'remove' => [ $defaultPrivateGroup ],
-				],
-			] );
+		// We don't need to continue if it doesn't exist
+		if ( !$mwPermissions->exists( $defaultPrivateGroup ) ) {
+			return;
 		}
 
+		$mwPermissions->remove( $defaultPrivateGroup );
 		$mwPermissions->commit();
 	}
 

@@ -141,7 +141,7 @@ class PermissionsModule implements IModule {
 
 					// Make sure it is ordered properly to ensure we can compare
 					// the values and check for changes properly.
-					$new = array_values( $new );
+					$new = array_values( array_unique( $new ) );
 					sort( $original );
 					sort( $new );
 
@@ -187,6 +187,23 @@ class PermissionsModule implements IModule {
 			];
 		}
 
+		foreach ( $this->listGroups() as $name ) {
+			$this->modify( $name, [
+				'addgroups' => [
+					'remove' => [ $group ],
+				],
+				'removegroups' => [
+					'remove' => [ $group ],
+				],
+				'addself' => [
+					'remove' => [ $group ],
+				],
+				'removeself' => [
+					'remove' => [ $group ],
+				],
+			] );
+		}
+
 		// We will handle all processing in final stages
 		unset( $this->livePermissions[$group] );
 
@@ -203,6 +220,44 @@ class PermissionsModule implements IModule {
 			'oldname' => $group,
 			'newname' => $newName,
 		];
+
+		foreach ( $this->listGroups() as $name ) {
+			if ( in_array( $group, $this->list( $name )['addgroups'] ?? [], true ) ) {
+				$this->modify( $name, [
+					'addgroups' => [
+						'add' => [ $newName ],
+						'remove' => [ $group ],
+					],
+				] );
+			}
+
+			if ( in_array( $group, $this->list( $name )['removegroups'] ?? [], true ) ) {
+				$this->modify( $name, [
+					'removegroups' => [
+						'add' => [ $newName ],
+						'remove' => [ $group ],
+					],
+				] );
+			}
+
+			if ( in_array( $group, $this->list( $name )['addself'] ?? [], true ) ) {
+				$this->modify( $name, [
+					'addself' => [
+						'add' => [ $newName ],
+						'remove' => [ $group ],
+					],
+				] );
+			}
+
+			if ( in_array( $group, $this->list( $name )['removeself'] ?? [], true ) ) {
+				$this->modify( $name, [
+					'removeself' => [
+						'add' => [ $newName ],
+						'remove' => [ $group ],
+					],
+				] );
+			}
+		}
 
 		// Push to a rename queue
 		$this->renameGroups[$group] = $newName;
@@ -317,6 +372,11 @@ class PermissionsModule implements IModule {
 				->set( $builtTable )
 				->caller( __METHOD__ )
 				->execute();
+
+			if ( $this->log !== null ) {
+				// If we already have a log type we don't need to change it
+				continue;
+			}
 
 			$logAP = ( $this->changes[$group]['autopromote'] ?? false ) ? 'htmlform-yes' : 'htmlform-no';
 			$logNULL = $this->textFormatter->format( MessageValue::new( 'rightsnone' ) );

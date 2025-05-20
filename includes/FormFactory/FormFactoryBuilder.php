@@ -257,7 +257,8 @@ class FormFactoryBuilder {
 		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
 		$cache = $objectCacheFactory->getLocalClusterInstance();
 
-		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
+		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
+		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
 
 		$credits = $cache->getWithSetCallback(
 			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
@@ -416,7 +417,8 @@ class FormFactoryBuilder {
 			)
 		);
 
-		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
+		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
+		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
 
 		$formDescriptor = [];
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
@@ -540,7 +542,9 @@ class FormFactoryBuilder {
 			$nsID['namespacetalk'] = $namespaceID + 1;
 		}
 
-		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
+		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
+		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
+
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
@@ -1322,7 +1326,8 @@ class FormFactoryBuilder {
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->listAll();
 
-		$mwRequirements = MediaWikiServices::getInstance()->get( 'ManageWikiRequirements' );
+		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
+		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
 
 		$settingsArray = [];
 		foreach ( $config->get( ConfigNames::Settings ) as $name => $set ) {
