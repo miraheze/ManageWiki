@@ -140,7 +140,7 @@ class PermissionsModule implements IModule {
 
 					// Make sure it is ordered properly to ensure we can compare
 					// the values and check for changes properly.
-					$new = array_values( $new );
+					$new = array_values( array_unique( $new ) );
 					sort( $original );
 					sort( $new );
 
@@ -343,16 +343,12 @@ class PermissionsModule implements IModule {
 				continue;
 			}
 
-			// Just use this as a helper to not repeat logic
-			$unique = static fn ( array $value ): array =>
-				array_values( array_unique( $value ) );
-
 			$builtTable = [
-				'perm_permissions' => json_encode( $unique( $live['permissions'] ) ),
-				'perm_addgroups' => json_encode( $unique( $live['addgroups'] ) ),
-				'perm_removegroups' => json_encode( $unique( $live['removegroups'] ) ),
-				'perm_addgroupstoself' => json_encode( $unique( $live['addself'] ) ),
-				'perm_removegroupsfromself' => json_encode( $unique( $live['removeself'] ) ),
+				'perm_permissions' => json_encode( $live['permissions'] ),
+				'perm_addgroups' => json_encode( $live['addgroups'] ),
+				'perm_removegroups' => json_encode( $live['removegroups'] ),
+				'perm_addgroupstoself' => json_encode( $live['addself'] ),
+				'perm_removegroupsfromself' => json_encode( $live['removeself'] ),
 				'perm_autopromote' => $live['autopromote'] === null
 					? null : json_encode( $live['autopromote'] ?? '' ),
 			];
