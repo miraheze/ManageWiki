@@ -6,10 +6,10 @@ use Exception;
 use JobSpecification;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\Shell\Shell;
+use MediaWiki\ShellDisabledError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
 use Psr\Log\LoggerInterface;
-use ShellDisabledError;
 use Wikimedia\Rdbms\ILBFactory;
 
 class Installer {
