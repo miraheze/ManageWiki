@@ -9,7 +9,7 @@ use MediaWiki\Shell\Shell;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
+use ShellDisabledError;
 use Wikimedia\Rdbms\ILBFactory;
 
 class Installer {
@@ -126,7 +126,7 @@ class Installer {
 
 	private function mwscript( array $data ): bool {
 		if ( Shell::isDisabled() ) {
-			throw new RuntimeException( 'Shell is disabled.' );
+			throw new ShellDisabledError();
 		}
 
 		$jobQueueGroup = $this->jobQueueGroupFactory->makeJobQueueGroup();
