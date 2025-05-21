@@ -3,8 +3,8 @@
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Config\Config;
+use MediaWiki\Content\FallbackContentHandler;
 use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
-use MediaWiki\Content\TextContentHandler;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -28,7 +28,7 @@ class Main implements
 	/** @inheritDoc */
 	public function onContentHandlerForModelID( $modelName, &$handler ) {
 		if ( in_array( $modelName, $this->config->get( ConfigNames::HandledUnknownContentModels ), true ) ) {
-			$handler = new TextContentHandler( $modelName );
+			$handler = new FallbackContentHandler( $modelName );
 		}
 	}
 
