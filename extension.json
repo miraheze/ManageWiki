@@ -142,6 +142,9 @@
 		}
 	},
 	"Hooks": {
+		"ContentHandlerForModelID": {
+			"handler": "Main"
+		},
 		"CreateWikiCreation": {
 			"handler": "CreateWiki"
 		},
@@ -238,6 +241,10 @@
 		"ManageWikiForceSidebarLinks": {
 			"description": "Boolean. Whether to show the ManageWiki links in the sidebar to all users. Will show a different message to unprivileged users.",
 			"value": false
+		},
+		"ManageWikiHandledUnknownContentModels": {
+			"description": "Array. List of content model names to handle if they are unknown and default them to use the fallback content handler.",
+			"value": []
 		},
 		"ManageWikiHelpUrl": {
 			"description": "String. URL of a help page for ManageWiki on the local wiki farm.",
