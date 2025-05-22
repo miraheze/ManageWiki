@@ -18,8 +18,8 @@ jobs:
             php-docker: 81
             composer-test: true
             coverage: true
-            experimental: false
             experimental-phan: false
+            experimental-phpunit: false
 
           # Latest MediaWiki beta - PHP 8.1
           - mw: 'REL1_44'
@@ -27,8 +27,8 @@ jobs:
             php-docker: 81
             composer-test: false
             coverage: false
-            experimental: false
             experimental-phan: true
+            experimental-phpunit: false
 
           # Latest MediaWiki master - PHP 8.1
           - mw: 'master'
@@ -36,15 +36,15 @@ jobs:
             php-docker: 81
             composer-test: false
             coverage: false
-            experimental: true
             experimental-phan: true
+            experimental-phpunit: true
 
     with:
       mw: ${{ matrix.mw }}
       php: ${{ matrix.php }}
       php-docker: ${{ matrix.php-docker }}
-      experimental: ${{ matrix.experimental }}
       experimental-phan: ${{ matrix.experimental-phan }}
+      experimental-phpunit: ${{ matrix.experimental-phpunit }}
       composer-test: ${{ matrix.composer-test }}
       coverage: ${{ matrix.coverage }}
 
