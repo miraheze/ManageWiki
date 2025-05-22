@@ -37,7 +37,7 @@
 	"managewiki-error-conflict": "D'Erweiderung „$1“ kann net aktivéiert ginn, well se am Konflikt mat $2 steet.",
 	"managewiki-error-dependency": "D'Erweiderung „$1“ kann net desaktivéiert ginn, well „$2“ vun hir ofhänkt.",
 	"managewiki-error-disallowednamespace": "Den Nummraum „$1“ ass net erlaabt.",
-	"managewiki-error-install": "D'Erweiderung „$1“ konnt net aktivéiert ginn. Wann dat nach weider virkënnt, wgl.",
+	"managewiki-error-install": "Beim Versuch d'Erweiderung „$1“ z'aktivéieren ass e Feeler geschitt.",
 	"managewiki-error-missingwiki": "D'Wiki „$1“ gëtt et net.",
 	"managewiki-error-requirements-disabled": "D'Erweiderung „$1“ kann net desaktivéiert ginn, well Dir net déi néideg Berechtegungen hutt.",
 	"managewiki-label-category": "Kategorie",
