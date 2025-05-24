@@ -3,8 +3,11 @@
 namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 
 class AddNamespaces extends Maintenance {
+
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
@@ -22,9 +25,14 @@ class AddNamespaces extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
+
 	public function execute(): void {
-		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
-		$mwNamespaces = $moduleFactory->namespacesLocal();
+		$this->initServices();
+		$mwNamespaces = $this->moduleFactory->namespacesLocal();
 
 		$nsData = [
 			'name' => (string)$this->getOption( 'name' ),
