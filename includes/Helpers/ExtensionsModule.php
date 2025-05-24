@@ -55,6 +55,7 @@ class ExtensionsModule implements IModule {
 					'extension' => $extension,
 				] );
 
+				$this->liveExtensions[$extension] = [];
 				continue;
 			}
 
@@ -99,16 +100,15 @@ class ExtensionsModule implements IModule {
 	/**
 	 * Removes an extension from the 'enabled' list
 	 * @param string[] $extensions Array of extensions to disable
-	 * @param bool $force Force removing extension in the event it is removed from config
 	 */
-	public function remove( array $extensions, bool $force ): void {
+	public function remove( array $extensions ): void {
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
-			if ( !isset( $this->liveExtensions[$ext] ) && !$force ) {
+			if ( !isset( $this->liveExtensions[$ext] ) ) {
 				continue;
 			}
 
-			$this->removedExtensions[$ext] = $this->liveExtensions[$ext] ?? [];
+			$this->removedExtensions[$ext] = $this->liveExtensions[$ext];
 			unset( $this->liveExtensions[$ext] );
 
 			$this->changes[$ext] = [
@@ -136,7 +136,7 @@ class ExtensionsModule implements IModule {
 			}
 
 			if ( !in_array( $ext, $extensions, true ) && in_array( $ext, $overwrittenExts, true ) ) {
-				$this->remove( [ $ext ], force: false );
+				$this->remove( [ $ext ] );
 			}
 		}
 	}
