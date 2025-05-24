@@ -9,6 +9,7 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
@@ -329,7 +330,6 @@ class NamespacesModule implements IModule {
 		foreach ( array_keys( $this->changes ) as $id ) {
 			if ( $this->isDeleting( $id ) ) {
 				$this->log = 'namespaces-delete';
-
 				if ( !$this->isTalk( $id ) ) {
 					$this->logParams = [
 						'5::namespace' => $this->changes[$id]['old']['name'],
@@ -397,7 +397,7 @@ class NamespacesModule implements IModule {
 				}
 			}
 
-			if ( $this->dbname !== 'default' && $this->runNamespaceMigrationJob ) {
+			if ( $this->dbname !== ModuleFactory::DEFAULT_DBNAME && $this->runNamespaceMigrationJob ) {
 				$jobQueueGroup = $this->jobQueueGroupFactory->makeJobQueueGroup();
 				$jobQueueGroup->push(
 					new JobSpecification(
@@ -408,7 +408,7 @@ class NamespacesModule implements IModule {
 			}
 		}
 
-		if ( $this->dbname !== 'default' ) {
+		if ( $this->dbname !== ModuleFactory::DEFAULT_DBNAME ) {
 			$data = $this->dataFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
