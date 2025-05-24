@@ -49,7 +49,7 @@ class ToggleExtension extends Maintenance {
 			if ( $disable && in_array( $name, $extList, true ) ) {
 				// We use force: true so that it can remove even
 				// if it's already been removed from the config.
-				$mwExtensions->remove( [ $name ], force: true );
+				$mwExtensions->remove( [ $name ] );
 				$mwExtensions->commit();
 				if ( !$noList ) {
 					$this->output( "Disabled $name on $dbname.\n" );
