@@ -47,8 +47,6 @@ class ToggleExtension extends Maintenance {
 			$mwExtensions = $this->moduleFactory->extensions( $dbname );
 			$extList = $mwExtensions->list();
 			if ( $disable && in_array( $name, $extList, true ) ) {
-				// We use force: true so that it can remove even
-				// if it's already been removed from the config.
 				$mwExtensions->remove( [ $name ] );
 				$mwExtensions->commit();
 				if ( !$noList ) {
