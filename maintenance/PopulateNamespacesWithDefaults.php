@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
+use Wikimedia\Rdbms\Platform\ISQLPlatform;
 
 class PopulateNamespacesWithDefaults extends Maintenance {
 
@@ -29,7 +30,7 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		}
 
 		$checkRow = $dbw->newSelectQueryBuilder()
-			->select( '*' )
+			->select( ISQLPlatform::ALL_ROWS )
 			->from( 'mw_namespaces' )
 			->where( [ 'ns_dbname' => $dbname ] )
 			->caller( __METHOD__ )

@@ -9,6 +9,7 @@ use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
+use Wikimedia\Rdbms\Platform\ISQLPlatform;
 
 class PermissionsModule implements IModule {
 
@@ -31,7 +32,7 @@ class PermissionsModule implements IModule {
 	) {
 		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$perms = $dbr->newSelectQueryBuilder()
-			->select( '*' )
+			->select( ISQLPlatform::ALL_ROWS )
 			->from( 'mw_permissions' )
 			->where( [ 'perm_dbname' => $dbname ] )
 			->caller( __METHOD__ )

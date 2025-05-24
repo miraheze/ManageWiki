@@ -15,6 +15,7 @@ use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\IReadableDatabase;
+use Wikimedia\Rdbms\Platform\ISQLPlatform;
 
 class CreateWiki implements
 	CreateWikiCreationHook,
@@ -83,7 +84,7 @@ class CreateWiki implements
 		// Collate NS entries and decode their entries for the array
 		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$nsObjects = $dbr->newSelectQueryBuilder()
-				->select( '*' )
+				->select( ISQLPlatform::ALL_ROWS )
 				->from( 'mw_namespaces' )
 				->where( [ 'ns_dbname' => $dbname ] )
 				->caller( __METHOD__ )
@@ -202,7 +203,7 @@ class CreateWiki implements
 		// Same as NS above but for permissions
 		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
 			$permObjects = $dbr->newSelectQueryBuilder()
-				->select( '*' )
+				->select( ISQLPlatform::ALL_ROWS )
 				->from( 'mw_permissions' )
 				->where( [ 'perm_dbname' => $dbname ] )
 				->caller( __METHOD__ )
