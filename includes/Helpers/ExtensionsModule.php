@@ -45,21 +45,19 @@ class ExtensionsModule implements IModule {
 			->caller( __METHOD__ )
 			->fetchField();
 
-		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
-		// populate extension lists with config associated with them.
+		// Populate extension list with associated config to simplify cleanup
 		$config = $this->options->get( ConfigNames::Extensions );
 		foreach ( json_decode( $extensions ?: '[]', true ) as $extension ) {
-			if ( !isset( $config[$extension] ) ) {
+			// Use config if available; otherwise, default to empty array
+			$this->liveExtensions[$extension] = $config[$extension] ?? [];
+
+			// Skip logging in CLI to avoid excessive noise from scripts like ToggleExtension
+			if ( !isset( $config[$extension] ) && MW_ENTRY_POINT !== 'cli' ) {
 				$this->logger->error( '{extension} is not set in {config}', [
 					'config' => ConfigNames::Extensions,
 					'extension' => $extension,
 				] );
-
-				$this->liveExtensions[$extension] = [];
-				continue;
 			}
-
-			$this->liveExtensions[$extension] = $config[$extension];
 		}
 	}
 
