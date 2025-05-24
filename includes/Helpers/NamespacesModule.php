@@ -13,6 +13,7 @@ use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
 use Wikimedia\Rdbms\IReadableDatabase;
+use Wikimedia\Rdbms\Platform\ISQLPlatform;
 use Wikimedia\Rdbms\SelectQueryBuilder;
 
 class NamespacesModule implements IModule {
@@ -47,7 +48,7 @@ class NamespacesModule implements IModule {
 
 		$this->dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$namespaces = $this->dbr->newSelectQueryBuilder()
-			->select( '*' )
+			->select( ISQLPlatform::ALL_ROWS )
 			->from( 'mw_namespaces' )
 			->where( [ 'ns_dbname' => $dbname ] )
 			->caller( __METHOD__ )
