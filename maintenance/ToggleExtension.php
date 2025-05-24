@@ -4,8 +4,11 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 
 class ToggleExtension extends Maintenance {
+
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
@@ -20,7 +23,14 @@ class ToggleExtension extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
+
 	public function execute(): void {
+		$this->initServices();
+
 		$forceRemove = $this->hasOption( 'force-remove' );
 		$noList = $this->hasOption( 'no-list' );
 		$allWikis = $this->hasOption( 'all-wikis' );
@@ -35,9 +45,8 @@ class ToggleExtension extends Maintenance {
 			$this->fatalError( 'You must run with --execute when running with --all-wikis.', 2 );
 		}
 
-		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
 		foreach ( $wikis as $wiki ) {
-			$mwExtensions = $moduleFactory->extensions( $wiki );
+			$mwExtensions = $this->moduleFactory->extensions( $wiki );
 			$extList = $mwExtensions->list();
 			if ( $disable && ( in_array( $name, $extList, true ) || $forceRemove ) ) {
 				$mwExtensions->remove( [ $name ], $forceRemove );

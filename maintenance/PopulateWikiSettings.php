@@ -3,8 +3,11 @@
 namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 
 class PopulateWikiSettings extends Maintenance {
+
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
@@ -16,10 +19,15 @@ class PopulateWikiSettings extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
+
 	public function execute(): void {
-		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
+		$this->initServices();
 		if ( $this->hasOption( 'remove' ) ) {
-			$mwSettings = $moduleFactory->settingsLocal();
+			$mwSettings = $this->moduleFactory->settingsLocal();
 			$mwSettings->remove( [ $this->getOption( 'setting' ) ], default: null );
 			$mwSettings->commit();
 			return;
@@ -52,7 +60,7 @@ class PopulateWikiSettings extends Maintenance {
 				$setting = strpos( $value, '.' ) !== false ? (float)$value : (int)$value;
 			}
 
-			$mwSettings = $moduleFactory->settings( $dbname );
+			$mwSettings = $this->moduleFactory->settings( $dbname );
 			$mwSettings->modify( [ $this->getOption( 'setting' ) => $value ], default: null );
 			$mwSettings->commit();
 		}

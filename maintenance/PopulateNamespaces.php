@@ -4,9 +4,14 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Wikimedia\Rdbms\IDatabase;
 
 class PopulateNamespaces extends Maintenance {
+
+	private DatabaseUtils $databaseUtils;
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
@@ -15,14 +20,19 @@ class PopulateNamespaces extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->databaseUtils = $services->get( 'ManageWikiDatabaseUtils' );
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
+
 	public function execute(): void {
-		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
-		if ( !$this->hasOption( 'force' ) && $moduleFactory->isEnabled( 'namespaces' ) ) {
+		$this->initServices();
+		if ( !$this->hasOption( 'force' ) && $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$this->fatalError( 'Disable ManageWiki Namespaces on this wiki.' );
 		}
 
-		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
-		$dbw = $databaseUtils->getGlobalPrimaryDB();
+		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 
 		$siteName = $this->getConfig()->get( MainConfigNames::Sitename );
 		$metaNS = ucfirst( str_replace( ' ', '_', $siteName ) );
