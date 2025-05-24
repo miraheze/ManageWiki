@@ -17,7 +17,7 @@ class ToggleExtension extends Maintenance {
 		$this->addOption( 'disable', 'Disable the extension. If not given, enabling is assumed.' );
 		$this->addOption( 'all-wikis', 'Enable/disable the extension on all wikis.' );
 		$this->addOption( 'execute', 'Confirm execution. Required if using --all-wikis.' );
-		$this->addOption( 'no-list', 'Don\'t list on which wikis this script has ran if using --all-wikis. This may speed up execution.' );
+		$this->addOption( 'no-list', 'Don\'t list on which wikis this script has ran. This may speed up execution.' );
 
 		$this->requireExtension( 'ManageWiki' );
 	}
