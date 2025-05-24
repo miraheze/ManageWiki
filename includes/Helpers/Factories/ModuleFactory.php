@@ -13,12 +13,12 @@ use Miraheze\ManageWiki\ICoreModule;
 
 class ModuleFactory {
 
-	private const DEFAULT_DATABASE = 'default';
-
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::ModulesEnabled,
 		MainConfigNames::DBname,
 	];
+
+	public const DEFAULT_DBNAME = 'default';
 
 	private array $coreInstances = [];
 
@@ -61,11 +61,11 @@ class ModuleFactory {
 	}
 
 	public function namespacesDefault(): NamespacesModule {
-		return $this->namespaces( self::DEFAULT_DATABASE );
+		return $this->namespaces( self::DEFAULT_DBNAME );
 	}
 
 	public function permissionsDefault(): PermissionsModule {
-		return $this->permissions( self::DEFAULT_DATABASE );
+		return $this->permissions( self::DEFAULT_DBNAME );
 	}
 
 	public function coreLocal(): ICoreModule {
