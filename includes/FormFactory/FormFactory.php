@@ -115,7 +115,6 @@ class FormFactory {
 		$formData['reason'] = $form->getField( 'reason' )
 			->loadDataFromRequest( $form->getRequest() );
 
-		$context = $form->getContext();
 		$mwReturn = FormFactoryBuilder::submissionHandler(
 			$formData,
 			$form,
