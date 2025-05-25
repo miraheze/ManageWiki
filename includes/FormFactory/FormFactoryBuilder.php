@@ -403,7 +403,7 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	private  function buildDescriptorSettings(
+	private function buildDescriptorSettings(
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
