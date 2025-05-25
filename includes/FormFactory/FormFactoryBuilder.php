@@ -36,7 +36,7 @@ class FormFactoryBuilder {
 		private readonly RequirementsFactory $requirementsFactory,
 		private readonly LinkRenderer $linkRenderer,
 		private readonly ObjectCacheFactory $objectCacheFactory,
-		private readonly PermissionManager $permissionManager, 
+		private readonly PermissionManager $permissionManager,
 		private readonly UserGroupManager $userGroupManager,
 		private readonly ServiceOptions $options
 	) {
