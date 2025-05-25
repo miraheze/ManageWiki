@@ -11,7 +11,7 @@ use MediaWiki\Output\OutputPage;
 use MediaWiki\Status\Status;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\OOUIHTMLFormTabs;
-use UnexpectedValueException;
+use PermissionsError;
 
 class FormFactory {
 
@@ -76,8 +76,7 @@ class FormFactory {
 					$dbname,
 					$module,
 					$special,
-					$filtered,
-					$ceMW
+					$filtered
 				)
 			)
 			->setId( 'managewiki-form' )
@@ -99,14 +98,16 @@ class FormFactory {
 		string $dbname,
 		string $module,
 		string $special,
-		string $filtered,
-		bool $ceMW
+		string $filtered
 	): Status|bool {
-		if ( !$ceMW ) {
-			throw new UnexpectedValueException(
-				"User '{$form->getUser()->getName()}' without 'managewiki-$module' " .
-				"right tried to change wiki $module!"
-			);
+		$context = $form->getContext();
+		if ( !$context->getAuthority()->isAllowed( "managewiki-$module" ) ) {
+			throw new PermissionsError( "managewiki-$module" );
+		}
+
+		$isLocked = $moduleFactory->core( $dbname )->isLocked();
+		if ( $isLocked && !$context->getAuthority()->isAllowed( 'managewiki-restricted' ) ) {
+			throw new PermissionsError( 'managewiki-restricted' );
 		}
 
 		// Avoid 'no field named reason' error
