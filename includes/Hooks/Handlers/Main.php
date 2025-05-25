@@ -8,6 +8,7 @@ use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\Hook\UserGetReservedNamesHook;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Hooks\HookRunner;
@@ -15,7 +16,8 @@ use Miraheze\ManageWiki\Hooks\HookRunner;
 class Main implements
 	ContentHandlerForModelIDHook,
 	GetPreferencesHook,
-	SidebarBeforeOutputHook
+	SidebarBeforeOutputHook,
+	UserGetReservedNamesHook
 {
 
 	public function __construct(
@@ -70,5 +72,10 @@ class Main implements
 			$this->hookRunner->onManageWikiAfterSidebarLinks( $skin, $sidebarLinks );
 			$sidebar['managewiki-sidebar-header'] = $sidebarLinks;
 		}
+	}
+
+	/** @inheritDoc */
+	public function onUserGetReservedNames( &$reservedUsernames ) {
+		$reservedUsernames[] = 'ManageWiki';
 	}
 }
