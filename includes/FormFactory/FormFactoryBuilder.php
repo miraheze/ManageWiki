@@ -28,40 +28,54 @@ use Wikimedia\ObjectCache\WANObjectCache;
 
 class FormFactoryBuilder {
 
-	public static function buildDescriptor(
+	public const CONSTRUCTOR_OPTIONS = [];
+
+	public function __construct(
+		private readonly DatabaseUtils $databaseUtils,
+		private readonly HookRunner $hookRunner,
+		private readonly RequirementsFactory $requirementsFactory,
+		private readonly LinkRenderer $linkRenderer,
+		private readonly ObjectCacheFactory $objectCacheFactory,
+		private readonly PermissionManager $permissionManager, 
+		private readonly UserGroupManager $userGroupManager,
+		private readonly ServiceOptions $options
+	) {
+		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
+	}
+
+	public function buildDescriptor(
 		string $module,
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
 		ModuleFactory $moduleFactory,
 		string $special,
-		string $filtered,
-		Config $config
+		string $filtered
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$formDescriptor = self::buildDescriptorCore( $dbname, $ceMW, $context, $moduleFactory );
+				$formDescriptor = $this->buildDescriptorCore( $dbname, $ceMW, $context, $moduleFactory );
 				break;
 			case 'extensions':
-				$formDescriptor = self::buildDescriptorExtensions(
+				$formDescriptor = $this->buildDescriptorExtensions(
 					$dbname, $ceMW, $context, $moduleFactory,
 					$config
 				);
 				break;
 			case 'settings':
-				$formDescriptor = self::buildDescriptorSettings(
+				$formDescriptor = $this->buildDescriptorSettings(
 					$dbname, $ceMW, $context, $moduleFactory,
 					$config, $filtered
 				);
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces(
+				$formDescriptor = $this->buildDescriptorNamespaces(
 					$dbname, $ceMW, $context, $special,
 					$moduleFactory, $config
 				);
 				break;
 			case 'permissions':
-				$formDescriptor = self::buildDescriptorPermissions(
+				$formDescriptor = $this->buildDescriptorPermissions(
 					$dbname, $ceMW, $context, $special, $moduleFactory,
 					$config
 				);
@@ -73,7 +87,7 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	private static function buildDescriptorCore(
+	private function buildDescriptorCore(
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
@@ -89,8 +103,7 @@ class FormFactoryBuilder {
 		];
 
 		$mwCore = $moduleFactory->core( $dbname );
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
-		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && !$databaseUtils->isRemoteWikiCentral( $dbname ) ) {
+		if ( $ceMW && $this->databaseUtils->isCurrentWikiCentral() && !$this->databaseUtils->isRemoteWikiCentral( $dbname ) ) {
 			$mwActions = [
 				$mwCore->isDeleted() ? 'undelete' : 'delete',
 				$mwCore->isLocked() ? 'unlock' : 'lock',
@@ -216,8 +229,7 @@ class FormFactoryBuilder {
 		}
 
 		if ( $mwCore->isEnabled( 'hooks' ) ) {
-			$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-			$hookRunner->onManageWikiCoreAddFormFields(
+			$this->hookRunner->onManageWikiCoreAddFormFields(
 				$context, $moduleFactory, $dbname, $ceMW, $formDescriptor
 			);
 		}
@@ -242,7 +254,7 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	private static function buildDescriptorExtensions(
+	private function buildDescriptorExtensions(
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
@@ -254,11 +266,8 @@ class FormFactoryBuilder {
 
 		$manageWikiSettings = $config->get( ConfigNames::Settings );
 
-		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
-		$cache = $objectCacheFactory->getLocalClusterInstance();
-
-		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
-		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
+		$cache = $this->objectCacheFactory->getLocalClusterInstance();
+		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$credits = $cache->getWithSetCallback(
 			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
@@ -394,7 +403,7 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	private static function buildDescriptorSettings(
+	private  function buildDescriptorSettings(
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
@@ -417,8 +426,7 @@ class FormFactoryBuilder {
 			)
 		);
 
-		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
-		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
+		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$formDescriptor = [];
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
