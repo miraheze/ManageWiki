@@ -4,7 +4,6 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use Collator;
 use DateTimeZone;
-use MediaWiki\Config\Config;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
@@ -17,7 +16,6 @@ use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 class TypesBuilder {
 
 	public static function process(
-		Config $config,
 		bool $disabled,
 		array $groupList,
 		string $module,
@@ -37,20 +35,20 @@ class TypesBuilder {
 			}
 
 			return self::namespaces( $overrideDefault, $type, $value ) ?:
-				self::common( $config, $disabled, $groupList, $name, $options, $value );
+				self::common( $disabled, $groupList, $name, $options, $value );
 		}
 
-		return self::common( $config, $disabled, $groupList, $name, $options, $value );
+		return self::common( $disabled, $groupList, $name, $options, $value );
 	}
 
 	private static function common(
-		Config $config,
 		bool $disabled,
 		array $groupList,
 		string $name,
 		array $options,
 		mixed $value
 	): array {
+		$config = MediaWikiServices::getInstance()->getMainConfig();
 		switch ( $options['type'] ) {
 			case 'database':
 				$configs = [
