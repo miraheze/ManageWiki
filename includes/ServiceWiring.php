@@ -88,6 +88,7 @@ return [
 			$services->getMessageFormatterFactory()->getTextFormatter(
 				$services->getContentLanguageCode()->toString()
 			),
+			$services->get( 'ManageWikiLogger' ),
 			$services->getMovePageFactory(),
 			$services->getTitleFactory(),
 			$services->getWikiPageFactory()
