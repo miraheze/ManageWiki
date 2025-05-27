@@ -191,7 +191,6 @@ class SpecialManageWiki extends SpecialPage {
 		string $special,
 		string $filtered
 	): void {
-		$this->getOutput()->enableOOUI();
 		$this->getOutput()->addModules( [
 			'ext.managewiki.oouiform',
 			'mediawiki.special.userrights',
@@ -199,8 +198,7 @@ class SpecialManageWiki extends SpecialPage {
 
 		$this->getOutput()->addModuleStyles( [
 			'ext.managewiki.oouiform.styles',
-			// 'mediawiki.widgets.TagMultiselectWidget.styles',
-			// 'oojs-ui-widgets.styles',
+			'oojs-ui-widgets.styles',
 		] );
 
 		$session = $this->getRequest()->getSession();
