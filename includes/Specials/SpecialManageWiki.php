@@ -20,6 +20,7 @@ class SpecialManageWiki extends SpecialPage {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly FormFactory $formFactory,
 		private readonly ModuleFactory $moduleFactory,
 		private readonly NamespaceInfo $namespaceInfo
 	) {
@@ -197,7 +198,6 @@ class SpecialManageWiki extends SpecialPage {
 
 		$this->getOutput()->addModuleStyles( [
 			'ext.managewiki.oouiform.styles',
-			'mediawiki.widgets.TagMultiselectWidget.styles',
 			'oojs-ui-widgets.styles',
 		] );
 
@@ -292,9 +292,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		// Handle all other modules or when we are editing specific namespaces/groups.
-		$formFactory = new FormFactory();
-		$htmlForm = $formFactory->getForm(
-			config: $this->getConfig(),
+		$htmlForm = $this->formFactory->getForm(
 			moduleFactory: $this->moduleFactory,
 			context: $this->getContext(),
 			dbname: $dbname,

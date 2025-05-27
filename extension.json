@@ -119,6 +119,7 @@
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWiki",
 			"services": [
 				"ManageWikiDatabaseUtils",
+				"ManageWikiFormFactory",
 				"ManageWikiModuleFactory",
 				"NamespaceInfo"
 			]
@@ -129,6 +130,7 @@
 				"CreateWikiDataFactory",
 				"ManageWikiDatabaseUtils",
 				"ManageWikiDefaultPermissions",
+				"ManageWikiFormFactory",
 				"ManageWikiModuleFactory"
 			]
 		}
