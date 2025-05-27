@@ -1470,15 +1470,22 @@ class FormFactoryBuilder {
 
 			$descriptionMsg = $context->msg( "namespaceinfo-description-ns{$id}" );
 			$messageExists = $descriptionMsg->exists();
-			if ( $formData["description-$name"] && (
+			if ( isset( $formData["description-$name"] ) && (
 				!$messageExists || $descriptionMsg->text() !== $formData["description-$name"]
 			) ) {
 				$mwNamespaces->addMessageFields( $id );
-				$messageUpdater->doUpdate(
-					name: "namespaceinfo-description-ns{$id}",
-					content: $formData["description-$name"],
-					user: $context->getUser()
-				);
+				if ( $formData["description-$name"] === '' ) {
+					$messageUpdater->doDelete(
+						name: "namespaceinfo-description-ns{$id}",
+						user: $context->getUser()
+					);
+				} else {
+					$messageUpdater->doUpdate(
+						name: "namespaceinfo-description-ns{$id}",
+						content: $formData["description-$name"],
+						user: $context->getUser()
+					);
+				}
 			}
 
 			$build = [
