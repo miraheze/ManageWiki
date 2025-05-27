@@ -88,7 +88,7 @@ class MessageUpdater {
 
 		$comment = CommentStoreComment::newUnsavedComment( $summary );
 
-		$updater->setFlags( EDIT_MINOR | EDIT_INTERNAL );
+		$updater->setFlags( EDIT_MINOR | EDIT_SUPPRESS_RC );
 		$updater->setRcPatrolStatus( RecentChange::PRC_AUTOPATROLLED );
 		$updater->saveRevision( $comment );
 	}
