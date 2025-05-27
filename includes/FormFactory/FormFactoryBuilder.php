@@ -62,13 +62,13 @@ class FormFactoryBuilder {
 	}
 
 	public function buildDescriptor(
-		string $module,
-		string $dbname,
-		bool $ceMW,
-		IContextSource $context,
 		ModuleFactory $moduleFactory,
+		IContextSource $context,
+		string $dbname,
+		string $module,
 		string $special,
-		string $filtered
+		string $filtered,
+		bool $ceMW
 	): array {
 		switch ( $module ) {
 			case 'core':
