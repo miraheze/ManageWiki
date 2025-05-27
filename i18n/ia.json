@@ -65,7 +65,7 @@
 	"managewiki-error-dependency": "Le extension “$1” non pote esser disactivate perque “$2” depende de illo.",
 	"managewiki-error-disallowednamespace": "Le spatio de nomines “$1” non es permittite.",
 	"managewiki-error-emptygroup": "Tu non pote crear un gruppo sin permissiones assignate.",
-	"managewiki-error-install": "Le activation del extension “$1” ha fallite. Si isto continua a occurrer, per favor",
+	"managewiki-error-install": "Un error ha occurrite durante le tentativa de activar le extension “$1”.",
 	"managewiki-error-missingpermission": "Non es possibile remover le derecto ‘managewiki-permissions’ de iste gruppo, perque necun altere gruppo ha iste derecto. Remover lo impedirea le accesso a ManageWiki.",
 	"managewiki-error-missingwiki": "Le wiki ‘$1’ non existe.",
 	"managewiki-error-nopermission": "Tu pote vider le configuration de iste wiki ma tu non ha le permission de modificar lo.",

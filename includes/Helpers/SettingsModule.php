@@ -48,7 +48,8 @@ class SettingsModule implements IModule {
 	 * @return mixed Value, null if no value
 	 */
 	public function list( string $var ): mixed {
-		return $this->liveSettings[$var] ?? null;
+		$config = $this->options->get( ConfigNames::Settings );
+		return $this->liveSettings[$var] ?? $config[$var]['overridedefault'] ?? null;
 	}
 
 	public function listAll(): array {
