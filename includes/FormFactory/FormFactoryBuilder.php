@@ -904,6 +904,7 @@ class FormFactoryBuilder {
 		if ( $ceMW && $mwPermissions->exists( $group ) ) {
 			$disallowedGroups = $this->options->get( ConfigNames::PermissionsDisallowedGroups );
 			$permanentGroups = $this->options->get( ConfigNames::PermissionsPermanentGroups );
+			$disableIf = [];
 			if ( !in_array( $group, $permanentGroups, true ) ) {
 				$formDescriptor['delete-checkbox'] = [
 					'type' => 'check',
@@ -911,6 +912,7 @@ class FormFactoryBuilder {
 					'default' => false,
 					'section' => 'advanced',
 				];
+				$disableIf = [ '===', 'delete-checkbox', '1' ];
 			}
 
 			$groupMsg = $context->msg( "group-$group" );
@@ -919,7 +921,7 @@ class FormFactoryBuilder {
 				'rename-checkbox' => [
 					'type' => 'check',
 					'label-message' => 'managewiki-permissions-rename-checkbox',
-					'disable-if' => [ '===', 'delete-checkbox', '1' ],
+					'disable-if' => $disableIf,
 					'section' => 'advanced',
 				],
 				'group-name' => [
@@ -930,7 +932,7 @@ class FormFactoryBuilder {
 					'maxlength' => 64,
 					'default' => $group,
 					'section' => 'advanced',
-					'disable-if' => [ '===', 'delete-checkbox', '1' ],
+					'disable-if' => $disableIf,
 					'hide-if' => [ '!==', 'rename-checkbox', '1' ],
 					// Make sure this is lowercase (multi-byte safe), and has no trailing spaces,
 					// and that any remaining spaces are converted to underscores.
