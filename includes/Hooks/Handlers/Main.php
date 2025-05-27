@@ -3,6 +3,8 @@
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Config\Config;
+use MediaWiki\Content\FallbackContentHandler;
+use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -11,6 +13,7 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 
 class Main implements
+	ContentHandlerForModelIDHook,
 	GetPreferencesHook,
 	SidebarBeforeOutputHook
 {
@@ -20,6 +23,13 @@ class Main implements
 		private readonly HookRunner $hookRunner,
 		private readonly UserOptionsLookup $userOptionsLookup
 	) {
+	}
+
+	/** @inheritDoc */
+	public function onContentHandlerForModelID( $modelName, &$handler ) {
+		if ( in_array( $modelName, $this->config->get( ConfigNames::HandledUnknownContentModels ), true ) ) {
+			$handler = new FallbackContentHandler( $modelName );
+		}
 	}
 
 	/** @inheritDoc */

@@ -4,9 +4,12 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
 
 class ModifyGroupPermission extends Maintenance {
+
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
@@ -39,9 +42,14 @@ class ModifyGroupPermission extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
+
 	public function execute(): void {
-		$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
-		$mwPermissions = $moduleFactory->permissionsLocal();
+		$this->initServices();
+		$mwPermissions = $this->moduleFactory->permissionsLocal();
 
 		$permData = [
 			'permissions' => [

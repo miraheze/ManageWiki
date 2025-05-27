@@ -5,10 +5,12 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
+use Wikimedia\Rdbms\Platform\ISQLPlatform;
 
 class PermissionsModule implements IModule {
 
@@ -32,7 +34,7 @@ class PermissionsModule implements IModule {
 	) {
 		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$perms = $dbr->newSelectQueryBuilder()
-			->select( '*' )
+			->select( ISQLPlatform::ALL_ROWS )
 			->from( 'mw_permissions' )
 			->where( [ 'perm_dbname' => $dbname ] )
 			->caller( __METHOD__ )
@@ -222,7 +224,8 @@ class PermissionsModule implements IModule {
 		];
 
 		foreach ( $this->listGroups() as $name ) {
-			if ( in_array( $group, $this->list( $name )['addgroups'] ?? [], true ) ) {
+			$data = $this->list( $name );
+			if ( in_array( $group, $data['addgroups'] ?? [], true ) ) {
 				$this->modify( $name, [
 					'addgroups' => [
 						'add' => [ $newName ],
@@ -231,7 +234,7 @@ class PermissionsModule implements IModule {
 				] );
 			}
 
-			if ( in_array( $group, $this->list( $name )['removegroups'] ?? [], true ) ) {
+			if ( in_array( $group, $data['removegroups'] ?? [], true ) ) {
 				$this->modify( $name, [
 					'removegroups' => [
 						'add' => [ $newName ],
@@ -240,7 +243,7 @@ class PermissionsModule implements IModule {
 				] );
 			}
 
-			if ( in_array( $group, $this->list( $name )['addself'] ?? [], true ) ) {
+			if ( in_array( $group, $data['addself'] ?? [], true ) ) {
 				$this->modify( $name, [
 					'addself' => [
 						'add' => [ $newName ],
@@ -249,7 +252,7 @@ class PermissionsModule implements IModule {
 				] );
 			}
 
-			if ( in_array( $group, $this->list( $name )['removeself'] ?? [], true ) ) {
+			if ( in_array( $group, $data['removeself'] ?? [], true ) ) {
 				$this->modify( $name, [
 					'removeself' => [
 						'add' => [ $newName ],
@@ -305,7 +308,6 @@ class PermissionsModule implements IModule {
 		foreach ( array_keys( $this->changes ) as $group ) {
 			if ( $this->isDeleting( $group ) ) {
 				$this->log = 'delete-group';
-
 				$dbw->newDeleteQueryBuilder()
 					->deleteFrom( 'mw_permissions' )
 					->where( [
@@ -404,15 +406,15 @@ class PermissionsModule implements IModule {
 			];
 		}
 
-		if ( $this->dbname !== 'default' ) {
+		if ( $this->dbname !== ModuleFactory::DEFAULT_DBNAME ) {
 			$data = $this->dataFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}
 
 	private function deleteUsersFromGroup( string $group ): void {
-		if ( $this->dbname === 'default' ) {
-			// Not a valid wiki to remove users from groups
+		if ( $this->dbname === ModuleFactory::DEFAULT_DBNAME ) {
+			// Not a valid database to remove users from groups
 			return;
 		}
 
@@ -436,8 +438,8 @@ class PermissionsModule implements IModule {
 	}
 
 	private function moveUsersFromGroup( string $group ): void {
-		if ( $this->dbname === 'default' ) {
-			// Not a valid wiki to move users from groups
+		if ( $this->dbname === ModuleFactory::DEFAULT_DBNAME ) {
+			// Not a valid database to move users from groups
 			return;
 		}
 

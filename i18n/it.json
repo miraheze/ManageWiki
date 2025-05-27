@@ -49,7 +49,7 @@
 	"managewiki-error-dependency": "L'estensione \"$1\" non può essere disabilitata perché è una dipendenza di \"$2\".",
 	"managewiki-error-disallowednamespace": "Il namespace \"$1\" non è consentito.",
 	"managewiki-error-emptygroup": "Non puoi creare un gruppo senza alcuna autorizzazione assegnata.",
-	"managewiki-error-install": "L'estensione \"$1\" non è stata abilitata. Se continua a verificarsi,",
+	"managewiki-error-install": "Si è verificato un errore durante il tentativo di abilitare l'estensione \"$1\".",
 	"managewiki-error-missingwiki": "Il wiki '$1' non esiste.",
 	"managewiki-error-requirements-disabled": "L'estensione \"$1\" non può essere disabilitata perché non hai le autorizzazioni richieste.",
 	"managewiki-error-requirements-enabled": "L'estensione \"$1\" non può essere attivata poiché non sono soddisfatti i suoi requisiti.",

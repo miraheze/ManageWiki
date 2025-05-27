@@ -15,6 +15,8 @@ class ConfigNames {
 
 	public const ForceSidebarLinks = 'ManageWikiForceSidebarLinks';
 
+	public const HandledUnknownContentModels = 'ManageWikiHandledUnknownContentModels';
+
 	public const HelpUrl = 'ManageWikiHelpUrl';
 
 	public const ModulesEnabled = 'ManageWikiModulesEnabled';

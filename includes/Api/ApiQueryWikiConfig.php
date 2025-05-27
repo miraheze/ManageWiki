@@ -25,17 +25,16 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 		$prop = array_flip( $params['prop'] );
 
 		$data = [];
-
-		foreach ( $params['wikis'] as $wiki ) {
+		foreach ( $params['wikis'] as $dbname ) {
 			try {
-				$mwCore = $this->moduleFactory->core( $wiki );
+				$mwCore = $this->moduleFactory->core( $dbname );
 			} catch ( MissingWikiError $e ) {
-				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $wiki ] );
+				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $dbname ] );
 				continue;
 			}
 
 			$wikiData = [
-				'name' => $wiki,
+				'name' => $dbname,
 				'sitename' => $mwCore->getSitename(),
 				'closed' => $mwCore->isClosed(),
 				'inactive' => $mwCore->isInactive(),
@@ -44,7 +43,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 			];
 
 			if ( isset( $prop['settings'] ) ) {
-				$mwSettings = $this->moduleFactory->settings( $wiki );
+				$mwSettings = $this->moduleFactory->settings( $dbname );
 				$wikiData['settings'] = $mwSettings->listAll();
 
 				foreach ( $this->getConfig()->get( ConfigNames::Settings ) as $setting => $options ) {
@@ -55,12 +54,12 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 			}
 
 			if ( isset( $prop['extensions'] ) ) {
-				$mwExtensions = $this->moduleFactory->extensions( $wiki );
+				$mwExtensions = $this->moduleFactory->extensions( $dbname );
 				$wikiData['extensions'] = $mwExtensions->list();
 			}
 
 			if ( isset( $prop['permissions'] ) ) {
-				$mwPermissions = $this->moduleFactory->permissions( $wiki );
+				$mwPermissions = $this->moduleFactory->permissions( $dbname );
 				foreach ( $mwPermissions->listAll() as $group => $data ) {
 					$wikiData['permissions'][$group] = $data['permissions'];
 				}

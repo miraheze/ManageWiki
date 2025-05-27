@@ -13,9 +13,7 @@ use MediaWikiIntegrationTestCase;
  */
 class ServiceWiringTest extends MediaWikiIntegrationTestCase {
 
-	/**
-	 * @dataProvider provideService
-	 */
+	/** @dataProvider provideService */
 	public function testService( string $name ): void {
 		$this->getServiceContainer()->get( $name );
 		$this->addToAssertionCount( 1 );

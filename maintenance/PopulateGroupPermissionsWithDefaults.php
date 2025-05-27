@@ -5,8 +5,14 @@ namespace Miraheze\ManageWiki\Maintenance;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Wikimedia\Rdbms\Platform\ISQLPlatform;
 
 class PopulateGroupPermissionsWithDefaults extends Maintenance {
+
+	private DatabaseUtils $databaseUtils;
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
@@ -15,10 +21,16 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute(): void {
-		$databaseUtils = $this->getServiceContainer()->get( 'ManageWikiDatabaseUtils' );
-		$dbw = $databaseUtils->getGlobalPrimaryDB();
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->databaseUtils = $services->get( 'ManageWikiDatabaseUtils' );
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
 
+	public function execute(): void {
+		$this->initServices();
+
+		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
 
 		if ( $this->hasOption( 'overwrite' ) ) {
@@ -30,16 +42,15 @@ class PopulateGroupPermissionsWithDefaults extends Maintenance {
 		}
 
 		$checkRow = $dbw->newSelectQueryBuilder()
-			->select( '*' )
+			->select( ISQLPlatform::ALL_ROWS )
 			->from( 'mw_permissions' )
 			->where( [ 'perm_dbname' => $dbname ] )
 			->caller( __METHOD__ )
 			->fetchRow();
 
 		if ( !$checkRow ) {
-			$moduleFactory = $this->getServiceContainer()->get( 'ManageWikiModuleFactory' );
-			$mwPermissions = $moduleFactory->permissionsLocal();
-			$mwPermissionsDefault = $moduleFactory->permissionsDefault();
+			$mwPermissions = $this->moduleFactory->permissionsLocal();
+			$mwPermissionsDefault = $this->moduleFactory->permissionsDefault();
 			$defaultGroups = array_diff(
 				$mwPermissionsDefault->listGroups(),
 				[ $this->getConfig()->get( ConfigNames::PermissionsDefaultPrivateGroup ) ]
