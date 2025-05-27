@@ -115,7 +115,10 @@ class FormFactoryBuilder {
 		];
 
 		$mwCore = $moduleFactory->core( $dbname );
-		if ( $ceMW && $this->databaseUtils->isCurrentWikiCentral() && !$this->databaseUtils->isRemoteWikiCentral( $dbname ) ) {
+		if ( $ceMW &&
+			$this->databaseUtils->isCurrentWikiCentral() &&
+			!$this->databaseUtils->isRemoteWikiCentral( $dbname )
+		) {
 			$mwActions = [
 				$mwCore->isDeleted() ? 'undelete' : 'delete',
 				$mwCore->isLocked() ? 'unlock' : 'lock',
