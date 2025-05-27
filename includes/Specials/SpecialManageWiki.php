@@ -191,6 +191,7 @@ class SpecialManageWiki extends SpecialPage {
 		string $special,
 		string $filtered
 	): void {
+		$this->getOutput()->enableOOUI();
 		$this->getOutput()->addModules( [
 			'ext.managewiki.oouiform',
 			'mediawiki.special.userrights',
