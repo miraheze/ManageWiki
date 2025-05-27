@@ -77,6 +77,7 @@ return [
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiHookRunner' ),
 			$services->get( 'ManageWikiLogger' ),
+			$services->get( 'ManageWikiMessageUpdater' ),
 			$services->get( 'ManageWikiRequirementsFactory' ),
 			$services->getLinkRenderer(),
 			$services->getObjectCacheFactory(),
