@@ -198,8 +198,8 @@ class SpecialManageWiki extends SpecialPage {
 
 		$this->getOutput()->addModuleStyles( [
 			'ext.managewiki.oouiform.styles',
-			'mediawiki.widgets.TagMultiselectWidget.styles',
-			'oojs-ui-widgets.styles',
+			// 'mediawiki.widgets.TagMultiselectWidget.styles',
+			// 'oojs-ui-widgets.styles',
 		] );
 
 		$session = $this->getRequest()->getSession();
