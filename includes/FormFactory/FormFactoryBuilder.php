@@ -34,7 +34,18 @@ use Wikimedia\ObjectCache\WANObjectCache;
 
 class FormFactoryBuilder {
 
-	public const CONSTRUCTOR_OPTIONS = [];
+	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::Extensions,
+		ConfigNames::NamespacesAdditional,
+		ConfigNames::PermissionsDisallowedGroups,
+		ConfigNames::PermissionsDisallowedRights,
+		ConfigNames::PermissionsPermanentGroups,
+		ConfigNames::Settings,
+		MainConfigNames::ExtensionDirectory,
+		MainConfigNames::MetaNamespace,
+		MainConfigNames::MetaNamespaceTalk,
+		MainConfigNames::StyleDirectory,
+	];
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
