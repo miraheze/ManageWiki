@@ -904,18 +904,6 @@ class FormFactoryBuilder {
 			$groupMsg = $context->msg( "group-$group" );
 			$groupMemberMsg = $context->msg( "group-$group-member" );
 			$formDescriptor += [
-				'group-message' => [
-					'type' => 'text',
-					'label-message' => 'permissions-group-message',
-					'default' => $groupMsg->exists() ? $groupMsg->text() : '',
-					'section' => 'advanced',
-				],
-				'group-member-message' => [
-					'type' => 'text',
-					'label-message' => 'permissions-group-member-message',
-					'default' => $groupMemberMsg->exists() ? $groupMemberMsg->text() : '',
-					'section' => 'advanced',
-				],
 				'rename-checkbox' => [
 					'type' => 'check',
 					'label-message' => 'managewiki-permissions-rename-checkbox',
@@ -956,6 +944,18 @@ class FormFactoryBuilder {
 						// Everything is all good to proceed with renaming this group
 						default => true,
 					},
+				],
+				'group-message' => [
+					'type' => 'text',
+					'label-message' => 'permissions-group-message',
+					'default' => $groupMsg->exists() ? $groupMsg->text() : '',
+					'section' => 'advanced',
+				],
+				'group-member-message' => [
+					'type' => 'text',
+					'label-message' => 'permissions-group-member-message',
+					'default' => $groupMemberMsg->exists() ? $groupMemberMsg->text() : '',
+					'section' => 'advanced',
 				],
 			];
 		}
@@ -1544,34 +1544,59 @@ class FormFactoryBuilder {
 			return $mwPermissions;
 		}
 
+		// Early escape for rename
+		if ( $isRemovable && !empty( $formData['group-name'] ) && $formData['group-name'] !== $group ) {
+			$newGroupName = $formData['group-name'];
+			$mwPermissions->rename( $group, $newGroupName );
+			$messageUpdater->doMove(
+				newName: "group-$newGroupName",
+				oldName: "group-$group",
+				user: $context->getUser()
+			);
+			$messageUpdater->doMove(
+				newName: "group-$newGroupName-member",
+				oldName: "group-$group-member",
+				user: $context->getUser()
+			);
+			return $mwPermissions;
+		}
+
 		$groupMsg = $context->msg( "group-$group" );
-		if ( ( $formData['group-message'] ?? false ) && (
+		if ( isset( $formData['group-message'] ) && (
 			!$groupMsg->exists() || $groupMsg->text() !== $formData['group-message']
 		) ) {
 			$mwPermissions->addMessageFields( $group );
-			$messageUpdater->doUpdate(
-				name: "group-$group",
-				content: $formData['group-message'],
-				user: $context->getUser()
-			);
+			if ( $formData['group-message'] === '' ) {
+				$messageUpdater->doDelete(
+					name: "group-$group",
+					user: $context->getUser()
+				);
+			} else {
+				$messageUpdater->doUpdate(
+					name: "group-$group",
+					content: $formData['group-message'],
+					user: $context->getUser()
+				);
+			}
 		}
 
 		$groupMemberMsg = $context->msg( "group-$group-member" );
-		if ( ( $formData['group-member-message'] ?? false ) && (
+		if ( isset( $formData['group-member-message'] ) && (
 			!$groupMemberMsg->exists() || $groupMemberMsg->text() !== $formData['group-member-message']
 		) ) {
 			$mwPermissions->addMessageFields( $group );
-			$messageUpdater->doUpdate(
-				name: "group-$group-member",
-				content: $formData['group-member-message'],
-				user: $context->getUser()
-			);
-		}
-
-		// Early escape for rename
-		if ( $isRemovable && !empty( $formData['group-name'] ) && $formData['group-name'] !== $group ) {
-			$mwPermissions->rename( $group, $formData['group-name'] );
-			return $mwPermissions;
+			if ( $formData['group-member-message'] === '' ) {
+				$messageUpdater->doDelete(
+					name: "group-$group-member",
+					user: $context->getUser()
+				);
+			} else {
+				$messageUpdater->doUpdate(
+					name: "group-$group-member",
+					content: $formData['group-member-message'],
+					user: $context->getUser()
+				);
+			}
 		}
 
 		$permData = [];
