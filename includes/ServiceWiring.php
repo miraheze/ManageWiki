@@ -6,6 +6,8 @@ use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use Miraheze\ManageWiki\FormFactory\FormFactory;
+use Miraheze\ManageWiki\FormFactory\FormFactoryBuilder;
 use Miraheze\ManageWiki\Helpers\CoreModule;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
@@ -63,6 +65,25 @@ return [
 			$services->get( 'ManageWikiRequirementsFactory' ),
 			new ServiceOptions(
 				ExtensionsModule::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
+	'ManageWikiFormFactory' => static function ( MediaWikiServices $services ): FormFactory {
+		return new FormFactory( $services->get( 'ManageWikiFormFactoryBuilder' ) );
+	},
+	'ManageWikiFormFactoryBuilder' => static function ( MediaWikiServices $services ): FormFactoryBuilder {
+		return new FormFactoryBuilder(
+			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiHookRunner' ),
+			$services->get( 'ManageWikiLogger' ),
+			$services->get( 'ManageWikiRequirementsFactory' ),
+			$services->getLinkRenderer(),
+			$services->getObjectCacheFactory(),
+			$services->getPermissionManager(),
+			$services->getUserGroupManager(),
+			new ServiceOptions(
+				FormFactoryBuilder::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
