@@ -1132,12 +1132,12 @@ class FormFactoryBuilder {
 				);
 				break;
 			case 'namespaces':
-				$mwReturn = self::submissionNamespaces(
+				$mwReturn = $this->submissionNamespaces(
 					$formData, $dbname, $context, $special, $moduleFactory
 				);
 				break;
 			case 'permissions':
-				$mwReturn = self::submissionPermissions(
+				$mwReturn = $this->submissionPermissions(
 					$formData, $dbname, $context, $special, $moduleFactory
 				);
 				break;
