@@ -325,7 +325,7 @@ class FormFactoryBuilder {
 					$ext['conflicts']
 				)
 			) {
-				$disableIf = self::buildDisableIf(
+				$disableIf = $this->buildDisableIf(
 					$ext['requires']['extensions'] ?? [],
 					$ext['conflicts'] ?: ''
 				);
@@ -341,7 +341,7 @@ class FormFactoryBuilder {
 					$extList
 				);
 
-				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
+				$help[] = $this->buildRequires( $context, $ext['requires'] ) . "\n";
 			}
 
 			if ( $ext['conflicts'] ) {
@@ -485,7 +485,7 @@ class FormFactoryBuilder {
 
 				$help = [];
 				if ( $set['requires'] ) {
-					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
+					$help[] = $this->buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
 				$rawMessage = new RawMessage( $set['help'] );
@@ -573,13 +573,13 @@ class FormFactoryBuilder {
 			[ $namespaceVar, $defaultName ] = match ( $id ) {
 				NS_PROJECT => [
 					$context->msg( 'parentheses',
-						self::getConfigVar( MainConfigNames::MetaNamespace )
+						$this->getConfigVar( MainConfigNames::MetaNamespace )
 					)->text(),
 					$this->options->get( MainConfigNames::MetaNamespace ),
 				],
 				NS_PROJECT_TALK => [
 					$context->msg( 'parentheses',
-						self::getConfigVar( MainConfigNames::MetaNamespaceTalk )
+						$this->getConfigVar( MainConfigNames::MetaNamespaceTalk )
 					)->text(),
 					str_replace(
 						$this->options->get( MainConfigNames::MetaNamespace ),
@@ -596,7 +596,7 @@ class FormFactoryBuilder {
 			if ( !$namespaceData['core'] ) {
 				// Core namespaces are not set with ExtraNamespaces
 				$namespaceVar = $context->msg( 'parentheses',
-					self::getConfigVar( MainConfigNames::ExtraNamespaces )
+					$this->getConfigVar( MainConfigNames::ExtraNamespaces )
 				)->text();
 			}
 
@@ -618,7 +618,7 @@ class FormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => [
 						'namespaces-content',
-						self::getConfigVar( MainConfigNames::ContentNamespaces ),
+						$this->getConfigVar( MainConfigNames::ContentNamespaces ),
 					],
 					'default' => $namespaceData['content'],
 					'disabled' => !$ceMW,
@@ -628,7 +628,7 @@ class FormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => [
 						'namespaces-subpages',
-						self::getConfigVar( MainConfigNames::NamespacesWithSubpages ),
+						$this->getConfigVar( MainConfigNames::NamespacesWithSubpages ),
 					],
 					'default' => $namespaceData['subpages'],
 					'disabled' => !$ceMW,
@@ -638,7 +638,7 @@ class FormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => [
 						'namespaces-search',
-						self::getConfigVar( MainConfigNames::NamespacesToBeSearchedDefault ),
+						$this->getConfigVar( MainConfigNames::NamespacesToBeSearchedDefault ),
 					],
 					'default' => $namespaceData['searchable'],
 					'disabled' => !$ceMW,
@@ -647,7 +647,7 @@ class FormFactoryBuilder {
 				"contentmodel-$name" => [
 					'label-message' => [
 						'namespaces-contentmodel',
-						self::getConfigVar( MainConfigNames::NamespaceContentModels ),
+						$this->getConfigVar( MainConfigNames::NamespaceContentModels ),
 					],
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
@@ -666,7 +666,7 @@ class FormFactoryBuilder {
 					'type' => 'combobox',
 					'label-message' => [
 						'namespaces-protection',
-						self::getConfigVar( MainConfigNames::NamespaceProtection ),
+						$this->getConfigVar( MainConfigNames::NamespaceProtection ),
 					],
 					'cssclass' => 'managewiki-infuse',
 					'default' => $namespaceData['protection'],
@@ -722,7 +722,7 @@ class FormFactoryBuilder {
 
 					$help = [];
 					if ( $a['requires'] ) {
-						$help[] = self::buildRequires( $context, $a['requires'] ) . "\n";
+						$help[] = $this->buildRequires( $context, $a['requires'] ) . "\n";
 					}
 
 					$rawMessage = new RawMessage( $a['help'] );
@@ -753,7 +753,7 @@ class FormFactoryBuilder {
 			$formDescriptor["aliases-$name"] = [
 				'label-message' => [
 					'namespaces-aliases',
-					self::getConfigVar( MainConfigNames::NamespaceAliases ),
+					$this->getConfigVar( MainConfigNames::NamespaceAliases ),
 				],
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
@@ -825,10 +825,10 @@ class FormFactoryBuilder {
 		$groupData = $mwPermissions->list( $group );
 
 		$matrixConstruct = [
-			self::getConfigName( MainConfigNames::AddGroups ) => $groupData['addgroups'],
-			self::getConfigName( MainConfigNames::RemoveGroups ) => $groupData['removegroups'],
-			self::getConfigName( MainConfigNames::GroupsAddToSelf ) => $groupData['addself'],
-			self::getConfigName( MainConfigNames::GroupsRemoveFromSelf ) => $groupData['removeself'],
+			$this->getConfigName( MainConfigNames::AddGroups ) => $groupData['addgroups'],
+			$this->getConfigName( MainConfigNames::RemoveGroups ) => $groupData['removegroups'],
+			$this->getConfigName( MainConfigNames::GroupsAddToSelf ) => $groupData['addself'],
+			$this->getConfigName( MainConfigNames::GroupsRemoveFromSelf ) => $groupData['removeself'],
 		];
 
 		$assignedPermissions = $groupData['permissions'] ?? [];
@@ -971,13 +971,13 @@ class FormFactoryBuilder {
 			'type' => 'checkmatrix',
 			'columns' => [
 				$context->msg( 'managewiki-permissions-addall' )->escaped() =>
-					self::getConfigName( MainConfigNames::AddGroups ),
+					$this->getConfigName( MainConfigNames::AddGroups ),
 				$context->msg( 'managewiki-permissions-removeall' )->escaped() =>
-					self::getConfigName( MainConfigNames::RemoveGroups ),
+					$this->getConfigName( MainConfigNames::RemoveGroups ),
 				$context->msg( 'managewiki-permissions-addself' )->escaped() =>
-					self::getConfigName( MainConfigNames::GroupsAddToSelf ),
+					$this->getConfigName( MainConfigNames::GroupsAddToSelf ),
 				$context->msg( 'managewiki-permissions-removeself' )->escaped() =>
-					self::getConfigName( MainConfigNames::GroupsRemoveFromSelf ),
+					$this->getConfigName( MainConfigNames::GroupsRemoveFromSelf ),
 			],
 			'rows' => $rowsBuilt,
 			'section' => 'group',
@@ -1504,19 +1504,19 @@ class FormFactoryBuilder {
 
 		$matrixNew = [
 			'addgroups' => array_diff(
-				$newMatrix[self::getConfigName( MainConfigNames::AddGroups )] ?? [],
+				$newMatrix[$this->getConfigName( MainConfigNames::AddGroups )] ?? [],
 				$groupData['addgroups']
 			),
 			'removegroups' => array_diff(
-				$newMatrix[self::getConfigName( MainConfigNames::RemoveGroups )] ?? [],
+				$newMatrix[$this->getConfigName( MainConfigNames::RemoveGroups )] ?? [],
 				$groupData['removegroups']
 			),
 			'addself' => array_diff(
-				$newMatrix[self::getConfigName( MainConfigNames::GroupsAddToSelf )] ?? [],
+				$newMatrix[$this->getConfigName( MainConfigNames::GroupsAddToSelf )] ?? [],
 				$groupData['addself']
 			),
 			'removeself' => array_diff(
-				$newMatrix[self::getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? [],
+				$newMatrix[$this->getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? [],
 				$groupData['removeself']
 			),
 		];
@@ -1524,19 +1524,19 @@ class FormFactoryBuilder {
 		$matrixOld = [
 			'addgroups' => array_diff(
 				$groupData['addgroups'],
-				$newMatrix[self::getConfigName( MainConfigNames::AddGroups )] ?? []
+				$newMatrix[$this->getConfigName( MainConfigNames::AddGroups )] ?? []
 			),
 			'removegroups' => array_diff(
 				$groupData['removegroups'],
-				$newMatrix[self::getConfigName( MainConfigNames::RemoveGroups )] ?? []
+				$newMatrix[$this->getConfigName( MainConfigNames::RemoveGroups )] ?? []
 			),
 			'addself' => array_diff(
 				$groupData['addself'],
-				$newMatrix[self::getConfigName( MainConfigNames::GroupsAddToSelf )] ?? []
+				$newMatrix[$this->getConfigName( MainConfigNames::GroupsAddToSelf )] ?? []
 			),
 			'removeself' => array_diff(
 				$groupData['removeself'],
-				$newMatrix[self::getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? []
+				$newMatrix[$this->getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? []
 			),
 		];
 
@@ -1595,7 +1595,7 @@ class FormFactoryBuilder {
 		return $mwPermissions;
 	}
 
-	private static function buildRequires(
+	private function buildRequires(
 		IContextSource $context,
 		array $config
 	): string {
@@ -1629,7 +1629,7 @@ class FormFactoryBuilder {
 		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
 	}
 
-	private static function buildDisableIf( array $requires, string $conflict ): array {
+	private function buildDisableIf( array $requires, string $conflict ): array {
 		$conditions = [];
 		foreach ( $requires as $entry ) {
 			if ( is_array( $entry ) ) {
@@ -1663,11 +1663,11 @@ class FormFactoryBuilder {
 		return $finalCondition;
 	}
 
-	private static function getConfigName( string $name ): string {
+	private function getConfigName( string $name ): string {
 		return "wg$name";
 	}
 
-	private static function getConfigVar( string $name ): string {
+	private function getConfigVar( string $name ): string {
 		return "\$wg$name";
 	}
 }
