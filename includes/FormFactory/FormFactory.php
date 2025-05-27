@@ -13,7 +13,7 @@ use PermissionsError;
 
 class FormFactory {
 
-	public function  __construct(
+	public function __construct(
 		private readonly FormFactoryBuilder $formFactoryBuilder
 	) {
 	}
