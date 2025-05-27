@@ -52,7 +52,6 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		$this->getOutput()->addModules( [ 'ext.managewiki.oouiform' ] );
 		$this->getOutput()->addModuleStyles( [
 			'ext.managewiki.oouiform.styles',
-			'mediawiki.widgets.TagMultiselectWidget.styles',
 			'oojs-ui-widgets.styles',
 		] );
 
