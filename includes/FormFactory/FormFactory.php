@@ -2,12 +2,10 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
-use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\RawMessage;
-use MediaWiki\Output\OutputPage;
 use MediaWiki\Status\Status;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\OOUIHTMLFormTabs;
@@ -15,29 +13,12 @@ use PermissionsError;
 
 class FormFactory {
 
-	private function getFormDescriptor(
-		Config $config,
-		ModuleFactory $moduleFactory,
-		IContextSource $context,
-		string $dbname,
-		string $module,
-		string $special,
-		string $filtered,
-		bool $ceMW
-	): array {
-		OutputPage::setupOOUI(
-			strtolower( $context->getSkin()->getSkinName() ),
-			$context->getLanguage()->getDir()
-		);
-
-		return FormFactoryBuilder::buildDescriptor(
-			$module, $dbname, $ceMW, $context, $moduleFactory,
-			$special, $filtered, $config
-		);
+	public function  __construct(
+		private readonly FormFactoryBuilder $formFactoryBuilder
+	) {
 	}
 
 	public function getForm(
-		Config $config,
 		ModuleFactory $moduleFactory,
 		IContextSource $context,
 		string $dbname,
@@ -45,6 +26,7 @@ class FormFactory {
 		string $special,
 		string $filtered
 	): OOUIHTMLFormTabs {
+		$context->getOutput()->enableOOUI();
 		// Can the user modify ManageWiki?
 		$ceMW = !(
 			(
@@ -54,22 +36,15 @@ class FormFactory {
 			!$context->getAuthority()->isAllowed( "managewiki-$module" )
 		);
 
-		$formDescriptor = $this->getFormDescriptor(
-			$config,
-			$moduleFactory,
-			$context,
-			$dbname,
-			$module,
-			$special,
-			$filtered,
-			$ceMW
+		$formDescriptor = $this->formFactoryBuilder->buildDescriptor(
+			$moduleFactory, $context, $dbname, $module,
+			$special, $filtered, $ceMW
 		);
 
 		$htmlForm = new OOUIHTMLFormTabs( $formDescriptor, $context, $module );
 		$htmlForm
 			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
-					$config,
 					$moduleFactory,
 					$form,
 					$formData,
@@ -91,7 +66,6 @@ class FormFactory {
 	}
 
 	protected function submitForm(
-		Config $config,
 		ModuleFactory $moduleFactory,
 		HTMLForm $form,
 		array $formData,
@@ -115,16 +89,9 @@ class FormFactory {
 		$formData['reason'] = $form->getField( 'reason' )
 			->loadDataFromRequest( $form->getRequest() );
 
-		$mwReturn = FormFactoryBuilder::submissionHandler(
-			$formData,
-			$form,
-			$module,
-			$dbname,
-			$context,
-			$moduleFactory,
-			$config,
-			$special,
-			$filtered
+		$mwReturn = $this->formFactoryBuilder->submissionHandler(
+			$formData, $form, $module, $dbname, $context,
+			$moduleFactory, $special, $filtered
 		);
 
 		if ( $mwReturn ) {
