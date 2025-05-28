@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Traits;
 
 trait MatrixHandlerTrait {
 
-	protected function handleMatrix(
+	private function handleMatrix(
 		array|string $conversion,
 		string $to
 	): array {
