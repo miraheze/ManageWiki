@@ -44,10 +44,10 @@ class TypesBuilder {
 	];
 
 	public function __construct(
+		private readonly PermissionsFactory $permissionsFactory,
 		private readonly IContentHandlerFactory $contentHandlerFactory,
 		private readonly InterwikiLookup $interwikiLookup,
 		private readonly PermissionManager $permissionManager,
-		private readonly PermissionsFactory $permissionsFactory,
 		private readonly SkinFactory $skinFactory,
 		private readonly UserOptionsLookup $userOptionsLookup,
 		private readonly ServiceOptions $options
