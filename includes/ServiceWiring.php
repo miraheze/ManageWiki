@@ -19,7 +19,6 @@ use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
-use Miraheze\ManageWiki\Helpers\Factories\TypesBuilderFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\TypesBuilder;
@@ -79,7 +78,7 @@ return [
 			$services->get( 'ManageWikiHookRunner' ),
 			$services->get( 'ManageWikiLogger' ),
 			$services->get( 'ManageWikiRequirementsFactory' ),
-			$services->get( 'ManageWikiTypesBuilderFactory' ),
+			$services->get( 'ManageWikiTypesBuilder' ),
 			$services->getLinkRenderer(),
 			$services->getObjectCacheFactory(),
 			$services->getPermissionManager(),
@@ -159,8 +158,8 @@ return [
 			)
 		);
 	},
-	'ManageWikiTypesBuilderFactory' => static function ( MediaWikiServices $services ): TypesBuilderFactory {
-		return new TypesBuilderFactory(
+	'ManageWikiTypesBuilder' => static function ( MediaWikiServices $services ): TypesBuilder {
+		return new TypesBuilder(
 			$services->get( 'ManageWikiPermissionsFactory' ),
 			$services->getContentHandlerFactory(),
 			$services->getInterwikiLookup(),
