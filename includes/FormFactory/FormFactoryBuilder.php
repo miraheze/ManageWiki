@@ -1375,9 +1375,8 @@ class FormFactoryBuilder {
 			)
 		);
 
-		$remove = !( count( $filteredList ) > 0 );
-
-		$mwSettings->overwriteAll( $settingsArray, $remove );
+		// Don't remove those not present in form if we are currently filtering.
+		$mwSettings->overwriteAll( $settingsArray, remove: !$filteredList );
 		return $mwSettings;
 	}
 
