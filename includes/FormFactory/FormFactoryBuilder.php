@@ -21,18 +21,21 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
+use Miraheze\ManageWiki\Helpers\Factories\TypesBuilderFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
-use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Miraheze\ManageWiki\ICoreModule;
+use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
 use ObjectCacheFactory;
 use Psr\Log\LoggerInterface;
 use Wikimedia\ObjectCache\WANObjectCache;
 
 class FormFactoryBuilder {
+
+	use MatrixHandlerTrait;
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
@@ -52,6 +55,7 @@ class FormFactoryBuilder {
 		private readonly HookRunner $hookRunner,
 		private readonly LoggerInterface $logger,
 		private readonly RequirementsFactory $requirementsFactory,
+		private readonly TypesBuilderFactory $typesBuilderFactory,
 		private readonly LinkRenderer $linkRenderer,
 		private readonly ObjectCacheFactory $objectCacheFactory,
 		private readonly PermissionManager $permissionManager,
@@ -427,8 +431,6 @@ class FormFactoryBuilder {
 		$extList = $mwExtensions->list();
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->listAll();
-		$mwPermissions = $moduleFactory->permissions( $dbname );
-		$groupList = $mwPermissions->listGroups();
 
 		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
@@ -439,6 +441,7 @@ class FormFactoryBuilder {
 		);
 
 		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
+		$mwTypesBuilder = $this->typesBuilderFactory->getBuilder( $dbname );
 
 		$formDescriptor = [];
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
@@ -472,15 +475,11 @@ class FormFactoryBuilder {
 						$set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = TypesBuilder::process(
+				$configs = $mwTypesBuilder->build(
 					disabled: $disabled,
-					groupList: $groupList,
-					module: 'settings',
 					options: $set,
 					value: $value,
-					name: $name,
-					overrideDefault: false,
-					type: ''
+					name: $name
 				);
 
 				$help = [];
@@ -560,6 +559,8 @@ class FormFactoryBuilder {
 		}
 
 		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
+		$mwTypesBuilder = $this->typesBuilderFactory->getBuilder( $dbname );
+
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
@@ -652,15 +653,14 @@ class FormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
-				] + TypesBuilder::process(
+				] + $mwTypesBuilder->build(
 					disabled: false,
-					groupList: [],
-					module: 'namespaces',
-					options: [],
 					value: $namespaceData['contentmodel'],
 					name: '',
-					overrideDefault: false,
-					type: 'contentmodel'
+					options: [
+						'overridedefault' => false,
+						'type' => 'contentmodel',
+					]
 				),
 				"protection-$name" => [
 					'type' => 'combobox',
@@ -709,15 +709,11 @@ class FormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = TypesBuilder::process(
+					$configs = $mwTypesBuilder->build(
 						disabled: $disabled,
-						groupList: [],
-						module: 'namespaces',
 						options: $a,
 						value: $namespaceData['additional'][$key] ?? null,
-						name: '',
-						overrideDefault: $a['overridedefault'],
-						type: $a['type']
+						name: ''
 					);
 
 					$help = [];
@@ -758,15 +754,14 @@ class FormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
-			] + TypesBuilder::process(
+			] + $mwTypesBuilder->build(
 				disabled: false,
-				groupList: [],
-				module: 'namespaces',
-				options: [],
 				value: $namespaceData['aliases'],
 				name: '',
-				overrideDefault: [],
-				type: 'texts'
+				options: [
+					'overridedefault' => [],
+					'type' => 'texts',
+				]
 			);
 		}
 
@@ -868,7 +863,7 @@ class FormFactoryBuilder {
 				$this->options->get( ConfigNames::PermissionsDisallowedGroups ),
 				$this->userGroupManager->listAllImplicitGroups()
 			),
-			'groupMatrix' => TypesBuilder::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
+			'groupMatrix' => $this->handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $groupData['autopromote'] ?? null,
 		];
 
@@ -1341,8 +1336,8 @@ class FormFactoryBuilder {
 					$value = array_map( 'intval', $value );
 					break;
 				case 'matrix':
-					$current = TypesBuilder::handleMatrix( $current, 'php' );
-					$value = TypesBuilder::handleMatrix( $value, 'phparray' );
+					$current = $this->handleMatrix( $current, 'php' );
+					$value = $this->handleMatrix( $value, 'phparray' );
 					break;
 				case 'text':
 					if ( !$value ) {
@@ -1500,7 +1495,7 @@ class FormFactoryBuilder {
 			'remove' => $removedPerms,
 		];
 
-		$newMatrix = TypesBuilder::handleMatrix( $formData['group-matrix'], 'phparray' );
+		$newMatrix = $this->handleMatrix( $formData['group-matrix'], 'phparray' );
 
 		$matrixNew = [
 			'addgroups' => array_diff(
