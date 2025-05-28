@@ -276,12 +276,12 @@ class TypesBuilder {
 				}
 
 				// Exclude searchNs* preferences
-				foreach ( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
+				foreach ( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $_ ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
 				// Exclude echo-subscriptions-* preferences
-				foreach ( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $val ) {
+				foreach ( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $_ ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
@@ -291,7 +291,7 @@ class TypesBuilder {
 				// Exclude forcesafemode preference
 				$excludedPrefs[] = 'forcesafemode';
 
-				foreach ( $allPreferences as $pref => $val ) {
+				foreach ( $allPreferences as $pref => $_ ) {
 					if ( !in_array( $pref, $excludedPrefs, true ) ) {
 						$preferences[$pref] = $pref;
 					}
