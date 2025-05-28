@@ -65,6 +65,13 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$additional = $par[1] ?? '';
+		// If the first part is a database name then the second part is the actual
+		// additional data we provide to the module.
+		$databases = $this->getConfig()->get( MainConfigNames::LocalDatabases );
+		if ( isset( $par[2] ) && $additional && in_array( $additional, $databases, true ) ) {
+			$additional = $par[2];
+		}
+
 		if ( !$this->moduleFactory->isEnabled( $module ) ) {
 			$this->getOutput()->addWikiMsg( 'managewiki-disabled', $module );
 			return;
