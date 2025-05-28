@@ -75,7 +75,6 @@ class FormFactoryBuilder {
 		string $dbname,
 		string $module,
 		string $special,
-		string $filtered,
 		bool $ceMW
 	): array {
 		switch ( $module ) {
@@ -87,7 +86,7 @@ class FormFactoryBuilder {
 				break;
 			case 'settings':
 				$formDescriptor = $this->buildDescriptorSettings(
-					$dbname, $ceMW, $context, $moduleFactory, $filtered
+					$dbname, $ceMW, $context, $moduleFactory, $special
 				);
 				break;
 			case 'namespaces':
@@ -151,7 +150,9 @@ class FormFactoryBuilder {
 				'if' => $mwCore->isEnabled( 'sitename' ),
 				'type' => 'text',
 				'default' => $mwCore->getSitename(),
-				// https://github.com/miraheze/CreateWiki/blob/20c2f47/sql/cw_wikis.sql#L3
+				// Needs to be the same as the maxlength for the namespace name in mw_namespaces
+				// due to MetaNamespace (NS_PROJECT) which will often use the sitename.
+				// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_namespaces.sql#L4
 				'maxlength' => 128,
 				'required' => true,
 				'access' => !$ceMW,
@@ -317,12 +318,10 @@ class FormFactoryBuilder {
 
 		$formDescriptor = [];
 		foreach ( $this->options->get( ConfigNames::Extensions ) as $name => $ext ) {
-			$filteredList = array_filter(
+			$hasSettings = count( array_filter(
 				$manageWikiSettings,
 				static fn ( array $value ): bool => $value['from'] === $name
-			);
-
-			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
+			) ) > 0;
 
 			$disableIf = [];
 			if (
@@ -429,27 +428,26 @@ class FormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		ModuleFactory $moduleFactory,
-		string $filtered
+		string $special
 	): array {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->listAll();
 
+		// If we have filtered settings, use them, otherwise use all settings
 		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
-			$value['from'] === strtolower( $filtered ) && (
+			$value['from'] === $special && (
 				in_array( $value['from'], $extList, true ) ||
 				( $value['global'] ?? false )
 			)
-		);
+		) ?: $manageWikiSettings;
 
 		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$formDescriptor = [];
-		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
-
-		foreach ( $filteredSettings as $name => $set ) {
+		foreach ( $filteredList as $name => $set ) {
 			if ( !isset( $set['requires'] ) ) {
 				$this->logger->error( '\'requires\' is not set in {config} for {var}', [
 					'config' => ConfigNames::Settings,
@@ -1116,8 +1114,7 @@ class FormFactoryBuilder {
 		string $dbname,
 		IContextSource $context,
 		ModuleFactory $moduleFactory,
-		string $special,
-		string $filtered
+		string $special
 	): array {
 		switch ( $module ) {
 			case 'core':
@@ -1128,7 +1125,7 @@ class FormFactoryBuilder {
 				break;
 			case 'settings':
 				$mwReturn = $this->submissionSettings(
-					$formData, $dbname, $filtered, $context, $moduleFactory
+					$formData, $dbname, $special, $context, $moduleFactory
 				);
 				break;
 			case 'namespaces':
@@ -1319,7 +1316,7 @@ class FormFactoryBuilder {
 	private function submissionSettings(
 		array $formData,
 		string $dbname,
-		string $filtered,
+		string $special,
 		IContextSource $context,
 		ModuleFactory $moduleFactory
 	): SettingsModule {
@@ -1406,15 +1403,14 @@ class FormFactoryBuilder {
 
 		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
-			$value['from'] === strtolower( $filtered ) && (
+			$value['from'] === $special && (
 				in_array( $value['from'], $extList, true ) ||
 				( $value['global'] ?? false )
 			)
 		);
 
-		$remove = !( count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0 );
-
-		$mwSettings->overwriteAll( $settingsArray, $remove );
+		// Don't remove those not present in form if we are currently filtering.
+		$mwSettings->overwriteAll( $settingsArray, remove: !$filteredList );
 		return $mwSettings;
 	}
 
