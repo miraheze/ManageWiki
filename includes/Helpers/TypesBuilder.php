@@ -40,7 +40,7 @@ class TypesBuilder {
 		MainConfigNames::RCWatchCategoryMembership,
 		MainConfigNames::SearchMatchRedirectPreference,
 		MainConfigNames::SecureLogin,
-		MainConfigNames::SkipSkins
+		MainConfigNames::SkipSkins,
 	];
 
 	public function __construct(
