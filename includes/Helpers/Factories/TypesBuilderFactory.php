@@ -3,7 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
-use MediaWiki\Content\ContentHandlerFactory;
+use MediaWiki\Content\IContentHandlerFactory;
 use MediaWiki\Interwiki\InterwikiLookup;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\User\Options\UserOptionsLookup;
@@ -14,7 +14,7 @@ class TypesBuilderFactory {
 
 	public function __construct(
 		private readonly PermissionsFactory $permissionsFactory,
-		private readonly ContentHandlerFactory $contentHandlerFactory,
+		private readonly IContentHandlerFactory $contentHandlerFactory,
 		private readonly InterwikiLookup $interwikiLookup,
 		private readonly PermissionManager $permissionManager,
 		private readonly SkinFactory $skinFactory,
