@@ -36,7 +36,8 @@ use Wikimedia\ObjectCache\WANObjectCache;
 
 class FormFactoryBuilder {
 
-	use FormHelperTrait, MatrixHandlerTrait;
+	use FormHelperTrait;
+	use MatrixHandlerTrait;
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
