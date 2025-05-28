@@ -315,12 +315,10 @@ class FormFactoryBuilder {
 
 		$formDescriptor = [];
 		foreach ( $this->options->get( ConfigNames::Extensions ) as $name => $ext ) {
-			$filteredList = array_filter(
+			$hasSettings = count( array_filter(
 				$manageWikiSettings,
 				static fn ( array $value ): bool => $value['from'] === $name
-			);
-
-			$hasSettings = count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0;
+			) ) > 0;
 
 			$disableIf = [];
 			if (
@@ -445,7 +443,7 @@ class FormFactoryBuilder {
 		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$formDescriptor = [];
-		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
+		$filteredSettings = $filteredList ?: $manageWikiSettings;
 
 		foreach ( $filteredSettings as $name => $set ) {
 			if ( !isset( $set['requires'] ) ) {
@@ -1377,7 +1375,7 @@ class FormFactoryBuilder {
 			)
 		);
 
-		$remove = !( count( array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ) > 0 );
+		$remove = !( count( $filteredList ) > 0 );
 
 		$mwSettings->overwriteAll( $settingsArray, $remove );
 		return $mwSettings;
