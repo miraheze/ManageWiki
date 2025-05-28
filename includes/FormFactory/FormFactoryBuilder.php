@@ -73,7 +73,6 @@ class FormFactoryBuilder {
 		string $dbname,
 		string $module,
 		string $special,
-		string $filtered,
 		bool $ceMW
 	): array {
 		switch ( $module ) {
@@ -85,7 +84,7 @@ class FormFactoryBuilder {
 				break;
 			case 'settings':
 				$formDescriptor = $this->buildDescriptorSettings(
-					$dbname, $ceMW, $context, $moduleFactory, $filtered
+					$dbname, $ceMW, $context, $moduleFactory, $special
 				);
 				break;
 			case 'namespaces':
@@ -427,7 +426,7 @@ class FormFactoryBuilder {
 		bool $ceMW,
 		IContextSource $context,
 		ModuleFactory $moduleFactory,
-		string $filtered
+		string $special
 	): array {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
@@ -437,7 +436,7 @@ class FormFactoryBuilder {
 		// If we have filtered settings, use them, otherwise use all settings
 		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
-			$value['from'] === strtolower( $filtered ) && (
+			$value['from'] === $special && (
 				in_array( $value['from'], $extList, true ) ||
 				( $value['global'] ?? false )
 			)
@@ -1089,8 +1088,7 @@ class FormFactoryBuilder {
 		string $dbname,
 		IContextSource $context,
 		ModuleFactory $moduleFactory,
-		string $special,
-		string $filtered
+		string $special
 	): array {
 		switch ( $module ) {
 			case 'core':
@@ -1101,7 +1099,7 @@ class FormFactoryBuilder {
 				break;
 			case 'settings':
 				$mwReturn = $this->submissionSettings(
-					$formData, $dbname, $filtered, $context, $moduleFactory
+					$formData, $dbname, $special, $context, $moduleFactory
 				);
 				break;
 			case 'namespaces':
@@ -1283,7 +1281,7 @@ class FormFactoryBuilder {
 	private function submissionSettings(
 		array $formData,
 		string $dbname,
-		string $filtered,
+		string $special,
 		IContextSource $context,
 		ModuleFactory $moduleFactory
 	): SettingsModule {
@@ -1370,7 +1368,7 @@ class FormFactoryBuilder {
 
 		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
-			$value['from'] === strtolower( $filtered ) && (
+			$value['from'] === $special && (
 				in_array( $value['from'], $extList, true ) ||
 				( $value['global'] ?? false )
 			)
