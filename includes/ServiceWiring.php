@@ -19,8 +19,10 @@ use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
+use Miraheze\ManageWiki\Helpers\Factories\TypesBuilderFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
+use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Psr\Log\LoggerInterface;
@@ -77,6 +79,7 @@ return [
 			$services->get( 'ManageWikiHookRunner' ),
 			$services->get( 'ManageWikiLogger' ),
 			$services->get( 'ManageWikiRequirementsFactory' ),
+			$services->get( 'ManageWikiTypesBuilderFactory' ),
 			$services->getLinkRenderer(),
 			$services->getObjectCacheFactory(),
 			$services->getPermissionManager(),
@@ -152,6 +155,20 @@ return [
 			$services->get( 'ManageWikiSettingsFactory' ),
 			new ServiceOptions(
 				ModuleFactory::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
+	'ManageWikiTypesBuilderFactory' => static function ( MediaWikiServices $services ): TypesBuilderFactory {
+		return new TypesBuilderFactory(
+			$services->get( 'ManageWikiPermissionsFactory' ),
+			$services->getContentHandlerFactory(),
+			$services->getInterwikiLookup(),
+			$services->getPermissionManager(),
+			$services->getSkinFactory(),
+			$services->getUserOptionsLookup(),
+			new ServiceOptions(
+				TypesBuilder::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
