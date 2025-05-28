@@ -2,12 +2,14 @@
 
 namespace Miraheze\ManageWiki\Maintenance;
 
-use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\PermissionsModule;
 
 class ModifyGroupPermission extends Maintenance {
+
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
@@ -40,8 +42,14 @@ class ModifyGroupPermission extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
+
 	public function execute(): void {
-		$mwPermissions = new ManageWikiPermissions( $this->getConfig()->get( MainConfigNames::DBname ) );
+		$this->initServices();
+		$mwPermissions = $this->moduleFactory->permissionsLocal();
 
 		$permData = [
 			'permissions' => [
@@ -59,7 +67,7 @@ class ModifyGroupPermission extends Maintenance {
 		];
 
 		if ( $this->hasOption( 'all' ) ) {
-			$groups = array_keys( $mwPermissions->list( group: null ) );
+			$groups = $mwPermissions->listGroups();
 
 			foreach ( $groups as $group ) {
 				$this->changeGroup( $group, $permData, $mwPermissions );
@@ -79,7 +87,7 @@ class ModifyGroupPermission extends Maintenance {
 	private function changeGroup(
 		string $group,
 		array $permData,
-		ManageWikiPermissions $mwPermissions
+		PermissionsModule $mwPermissions
 	): void {
 		$groupData = $mwPermissions->list( $group );
 

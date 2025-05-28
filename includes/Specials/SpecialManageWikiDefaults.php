@@ -9,22 +9,21 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\FormFactory\ManageWikiFormFactory;
-use Miraheze\ManageWiki\Helpers\ManageWikiPermissions;
-use Miraheze\ManageWiki\Hooks\Handlers\CreateWiki;
-use Miraheze\ManageWiki\ManageWiki;
+use Miraheze\ManageWiki\FormFactory\FormFactory;
+use Miraheze\ManageWiki\Helpers\DefaultPermissions;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 
 class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function __construct(
-		private readonly CreateWikiDatabaseUtils $databaseUtils,
 		private readonly CreateWikiDataFactory $dataFactory,
-		private readonly CreateWiki $hookHandler,
-		private readonly RemoteWikiFactory $remoteWikiFactory
+		private readonly DatabaseUtils $databaseUtils,
+		private readonly DefaultPermissions $defaultPermissions,
+		private readonly FormFactory $formFactory,
+		private readonly ModuleFactory $moduleFactory
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
 	}
@@ -34,7 +33,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 	 */
 	public function execute( $par ): void {
 		$this->setHeaders();
-		if ( !ManageWiki::checkSetup( 'permissions' ) ) {
+		if ( !$this->moduleFactory->isEnabled( 'permissions' ) ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ 'permissions' ] );
 		}
 
@@ -53,21 +52,13 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		$this->getOutput()->addModules( [ 'ext.managewiki.oouiform' ] );
 		$this->getOutput()->addModuleStyles( [
 			'ext.managewiki.oouiform.styles',
-			'mediawiki.widgets.TagMultiselectWidget.styles',
 			'oojs-ui-widgets.styles',
 		] );
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance(
-			$this->databaseUtils->getCentralWikiID()
-		);
-
-		$formFactory = new ManageWikiFormFactory();
-		$formFactory->getForm(
-			config: $this->getConfig(),
+		$this->formFactory->getForm(
+			moduleFactory: $this->moduleFactory,
 			context: $this->getContext(),
-			dbw: $this->databaseUtils->getGlobalPrimaryDB(),
-			remoteWiki: $remoteWiki,
-			dbname: 'default',
+			dbname: ModuleFactory::DEFAULT_DBNAME,
 			module: 'permissions',
 			special: $group,
 			filtered: ''
@@ -79,8 +70,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 		if ( $this->databaseUtils->isCurrentWikiCentral() ) {
 			$language = $this->getLanguage();
-			$mwPermissions = new ManageWikiPermissions( 'default' );
-			$groups = array_keys( $mwPermissions->list( group: null ) );
+			$mwPermissions = $this->moduleFactory->permissionsDefault();
+			$groups = $mwPermissions->listGroups();
 			$craftedGroups = [];
 
 			foreach ( $groups as $group ) {
@@ -220,10 +211,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			->caller( __METHOD__ )
 			->execute();
 
-		$remoteWiki = $this->remoteWikiFactory->newInstance( $dbname );
-		$this->hookHandler->onCreateWikiCreation(
-			$dbname, $remoteWiki->isPrivate()
-		);
+		$mwCore = $this->moduleFactory->core( $dbname );
+		$this->defaultPermissions->populatePermissions( $dbname, $mwCore->isPrivate() );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'rights-reset' );
 		$logEntry->setPerformer( $this->getUser() );
@@ -320,7 +309,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			return $this->msg( 'managewiki-permissions-group-invalid' );
 		}
 
-		$mwPermissions = new ManageWikiPermissions( 'default' );
+		$mwPermissions = $this->moduleFactory->permissionsDefault();
 		if ( $mwPermissions->exists( $newGroup ) ) {
 			return $this->msg( 'managewiki-permissions-group-conflict' );
 		}
@@ -340,7 +329,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 	/** @inheritDoc */
 	protected function getGroupName(): string {
-		return 'wikimanage';
+		return 'wiki';
 	}
 
 	/** @inheritDoc */

@@ -4,9 +4,14 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Wikimedia\Rdbms\Platform\ISQLPlatform;
 
 class PopulateNamespacesWithDefaults extends Maintenance {
+
+	private DatabaseUtils $databaseUtils;
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
@@ -15,10 +20,16 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
-	public function execute(): void {
-		$databaseUtils = $this->getServiceContainer()->get( 'CreateWikiDatabaseUtils' );
-		$dbw = $databaseUtils->getGlobalPrimaryDB();
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->databaseUtils = $services->get( 'ManageWikiDatabaseUtils' );
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
 
+	public function execute(): void {
+		$this->initServices();
+
+		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
 
 		if ( $this->hasOption( 'overwrite' ) ) {
@@ -30,25 +41,26 @@ class PopulateNamespacesWithDefaults extends Maintenance {
 		}
 
 		$checkRow = $dbw->newSelectQueryBuilder()
-			->select( '*' )
+			->select( ISQLPlatform::ALL_ROWS )
 			->from( 'mw_namespaces' )
 			->where( [ 'ns_dbname' => $dbname ] )
 			->caller( __METHOD__ )
 			->fetchRow();
 
 		if ( !$checkRow ) {
-			$mwNamespaces = new ManageWikiNamespaces( $dbname );
-			$mwNamespacesDefault = new ManageWikiNamespaces( 'default' );
-			$defaultNamespaces = array_keys( $mwNamespacesDefault->list( id: null ) );
+			$mwNamespaces = $this->moduleFactory->namespacesLocal();
+			$mwNamespacesDefault = $this->moduleFactory->namespacesDefault();
+			$defaultNamespaces = $mwNamespacesDefault->listIds();
 
 			foreach ( $defaultNamespaces as $namespace ) {
-				$mwNamespaces->modify( $namespace, $mwNamespacesDefault->list( $namespace ) );
-				$mwNamespaces->commit();
+				$mwNamespaces->modify(
+					$namespace,
+					$mwNamespacesDefault->list( $namespace ),
+					maintainPrefix: false
+				);
 			}
 
-			$dataFactory = $this->getServiceContainer()->get( 'CreateWikiDataFactory' );
-			$data = $dataFactory->newInstance( $dbname );
-			$data->resetWikiData( isNewChanges: true );
+			$mwNamespaces->commit();
 		}
 	}
 }

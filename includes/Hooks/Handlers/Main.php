@@ -3,13 +3,14 @@
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Config\Config;
+use MediaWiki\Content\FallbackContentHandler;
 use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
-use MediaWiki\Content\TextContentHandler;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Hooks\HookRunner;
 
 class Main implements
 	ContentHandlerForModelIDHook,
@@ -19,13 +20,16 @@ class Main implements
 
 	public function __construct(
 		private readonly Config $config,
+		private readonly HookRunner $hookRunner,
 		private readonly UserOptionsLookup $userOptionsLookup
 	) {
 	}
 
 	/** @inheritDoc */
 	public function onContentHandlerForModelID( $modelName, &$handler ) {
-		$handler = new TextContentHandler( $modelName );
+		if ( in_array( $modelName, $this->config->get( ConfigNames::HandledUnknownContentModels ), true ) ) {
+			$handler = new FallbackContentHandler( $modelName );
+		}
 	}
 
 	/** @inheritDoc */
@@ -59,6 +63,12 @@ class Main implements
 				'id' => "managewiki{$module}link",
 				'href' => htmlspecialchars( SpecialPage::getTitleFor( 'ManageWiki', $module )->getFullURL() ),
 			];
+		}
+
+		if ( isset( $sidebar['managewiki-sidebar-header'] ) ) {
+			$sidebarLinks = $sidebar['managewiki-sidebar-header'];
+			$this->hookRunner->onManageWikiAfterSidebarLinks( $skin, $sidebarLinks );
+			$sidebar['managewiki-sidebar-header'] = $sidebarLinks;
 		}
 	}
 }

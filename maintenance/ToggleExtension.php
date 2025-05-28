@@ -4,67 +4,74 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use Miraheze\ManageWiki\Helpers\ManageWikiExtensions;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 
 class ToggleExtension extends Maintenance {
+
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
 
-		$this->addOption( 'ext', 'The ManageWiki name of the extension.', true, true );
+		$this->addOption( 'name', 'The ManageWiki name of the extension.', true, true );
 		$this->addOption( 'disable', 'Disable the extension. If not given, enabling is assumed.' );
-		$this->addOption( 'all-wikis', 'Run on all wikis present in $wgLocalDatabases.' );
-		$this->addOption( 'confirm', 'Confirm execution. Required if using --all-wikis' );
+		$this->addOption( 'all-wikis', 'Enable/disable the extension on all wikis.' );
+		$this->addOption( 'execute', 'Confirm execution. Required if using --all-wikis.' );
 		$this->addOption( 'no-list', 'Don\'t list on which wikis this script has ran. This may speed up execution.' );
-		$this->addOption( 'force-remove', 'Force removal of extension when not in config.' );
 
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
+
 	public function execute(): void {
-		$forceRemove = $this->hasOption( 'force-remove' );
+		$this->initServices();
+
 		$noList = $this->hasOption( 'no-list' );
 		$allWikis = $this->hasOption( 'all-wikis' );
-		$wikis = $allWikis ?
+		$dbnames = $allWikis ?
 			$this->getConfig()->get( MainConfigNames::LocalDatabases ) :
 			[ $this->getConfig()->get( MainConfigNames::DBname ) ];
 
-		$ext = $this->getOption( 'ext' );
+		$name = $this->getOption( 'name' );
 		$disable = $this->hasOption( 'disable' );
 
-		if ( $allWikis && !$this->hasOption( 'confirm' ) ) {
-			$this->fatalError( 'You must run with --confirm when running with --all-wikis.', 2 );
+		if ( $allWikis && !$this->hasOption( 'execute' ) ) {
+			$this->fatalError( 'You must run with --execute when running with --all-wikis.', 2 );
 		}
 
-		foreach ( $wikis as $wiki ) {
-			$mwExtensions = new ManageWikiExtensions( $wiki );
+		foreach ( $dbnames as $dbname ) {
+			$mwExtensions = $this->moduleFactory->extensions( $dbname );
 			$extList = $mwExtensions->list();
-			if ( $disable && ( in_array( $ext, $extList, true ) || $forceRemove ) ) {
-				$mwExtensions->remove( [ $ext ], $forceRemove );
+			if ( $disable && in_array( $name, $extList, true ) ) {
+				$mwExtensions->remove( [ $name ] );
 				$mwExtensions->commit();
 				if ( !$noList ) {
-					$this->output( "Removed $ext from $wiki\n" );
+					$this->output( "Disabled $name on $dbname.\n" );
 				}
 
 				continue;
 			}
 
-			if ( !in_array( $ext, $extList, true ) && !$disable ) {
-				$mwExtensions->add( [ $ext ] );
+			if ( !in_array( $name, $extList, true ) && !$disable ) {
+				$mwExtensions->add( [ $name ] );
 				$mwExtensions->commit();
 				if ( !$noList ) {
-					$this->output( "Enabled $ext on $wiki\n" );
+					$this->output( "Enabled $name on $dbname.\n" );
 				}
 			}
 		}
 
-		if ( $noList && count( $wikis ) > 1 ) {
+		if ( $noList && count( $dbnames ) > 1 ) {
 			if ( $disable ) {
-				$this->output( "Removed $ext from all wikis in that it was enabled on.\n" );
+				$this->output( "Disabled $name on all wikis that it was enabled on.\n" );
 				return;
 			}
 
-			$this->output( "Enabled $ext on all wikis in \$wgLocalDatabases.\n" );
+			$this->output( "Enabled $name on all wikis.\n" );
 		}
 	}
 }

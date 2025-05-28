@@ -3,13 +3,13 @@
 namespace Miraheze\ManageWiki\Specials;
 
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\CreateWiki\Services\CreateWikiDatabaseUtils;
 use Miraheze\ManageWiki\DeletedWikisPager;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 
 class SpecialDeletedWikis extends SpecialPage {
 
 	public function __construct(
-		private readonly CreateWikiDatabaseUtils $databaseUtils
+		private readonly DatabaseUtils $databaseUtils
 	) {
 		parent::__construct( 'DeletedWikis' );
 	}
@@ -29,5 +29,10 @@ class SpecialDeletedWikis extends SpecialPage {
 
 		$table = $pager->getFullOutput();
 		$this->getOutput()->addParserOutputContent( $table );
+	}
+
+	/** @inheritDoc */
+	protected function getGroupName(): string {
+		return 'wiki';
 	}
 }

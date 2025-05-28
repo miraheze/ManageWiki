@@ -2,11 +2,12 @@
 
 namespace Miraheze\ManageWiki\Maintenance;
 
-use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use Miraheze\ManageWiki\Helpers\ManageWikiNamespaces;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 
 class AddNamespaces extends Maintenance {
+
+	private ModuleFactory $moduleFactory;
 
 	public function __construct() {
 		parent::__construct();
@@ -24,8 +25,14 @@ class AddNamespaces extends Maintenance {
 		$this->requireExtension( 'ManageWiki' );
 	}
 
+	private function initServices(): void {
+		$services = $this->getServiceContainer();
+		$this->moduleFactory = $services->get( 'ManageWikiModuleFactory' );
+	}
+
 	public function execute(): void {
-		$mwNamespaces = new ManageWikiNamespaces( $this->getConfig()->get( MainConfigNames::DBname ) );
+		$this->initServices();
+		$mwNamespaces = $this->moduleFactory->namespacesLocal();
 
 		$nsData = [
 			'name' => (string)$this->getOption( 'name' ),
@@ -37,7 +44,7 @@ class AddNamespaces extends Maintenance {
 			'core' => (int)$this->getOption( 'core' ),
 		];
 
-		$mwNamespaces->modify( (int)$this->getOption( 'id' ), $nsData );
+		$mwNamespaces->modify( (int)$this->getOption( 'id' ), $nsData, maintainPrefix: false );
 		$mwNamespaces->commit();
 	}
 }

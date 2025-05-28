@@ -26,7 +26,6 @@
 	"managewiki": "Alministrar una wiki",
 	"managewiki-desc": "Permite que les persones alministren wikis per una interfaz web.",
 	"managewiki-disabled": "Esta función ($1) inda nun s'activó nesta wiki.",
-	"managewiki-extension-name": "[$1 $2]",
 	"managewiki-header-extensions": "Estes estensiones son les que tán instalaes anguaño, pero siempre pues <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features pidir]</span> que s'añada otra. <br> Cuando teas preparáu, pulsia la llingüeta «unviar» pa guardar los cambeos.",
 	"managewiki-header-settings": "Esta páxina s'usa p'alministrar la configuración de la wiki <b>'$1'</b>. Si una opción que desees inda nun ta disponible equí, usa <span class=\"plainlinks\">[https://meta.miraheze.org/wiki/Request_features Phorge]</span> pa pidila.<br> Cuando teas preparáu, pulsia la llingüeta «unviar» pa guardar los cambeos.",
 	"managewiki-label-category": "Categoría",
@@ -37,6 +36,5 @@
 	"managewiki-label-private": "Priváu",
 	"managewiki-label-sitename": "Nome del sitiu",
 	"managewiki-success": "La configuración cambióse correutamente.",
-	"managewikiextensions": "Alministrar les estensiones d'una wiki",
-	"permissions-delete": "Desaniciar"
+	"managewikiextensions": "Alministrar les estensiones d'una wiki"
 }

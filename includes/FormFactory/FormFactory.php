@@ -2,85 +2,56 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
-use MediaWiki\Config\Config;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\RawMessage;
-use MediaWiki\Output\OutputPage;
 use MediaWiki\Status\Status;
-use Miraheze\CreateWiki\Services\RemoteWikiFactory;
-use Miraheze\ManageWiki\ManageWikiOOUIForm;
-use UnexpectedValueException;
-use Wikimedia\Rdbms\IDatabase;
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\OOUIHTMLFormTabs;
+use PermissionsError;
 
-class ManageWikiFormFactory {
+class FormFactory {
 
-	private function getFormDescriptor(
-		Config $config,
-		IContextSource $context,
-		RemoteWikiFactory $remoteWiki,
-		string $dbname,
-		string $module,
-		string $special,
-		string $filtered,
-		bool $ceMW
-	): array {
-		OutputPage::setupOOUI(
-			strtolower( $context->getSkin()->getSkinName() ),
-			$context->getLanguage()->getDir()
-		);
-
-		return ManageWikiFormFactoryBuilder::buildDescriptor(
-			$module, $dbname, $ceMW, $context, $remoteWiki,
-			$special, $filtered, $config
-		);
+	public function __construct(
+		private readonly FormFactoryBuilder $formFactoryBuilder
+	) {
 	}
 
 	public function getForm(
-		Config $config,
+		ModuleFactory $moduleFactory,
 		IContextSource $context,
-		IDatabase $dbw,
-		RemoteWikiFactory $remoteWiki,
 		string $dbname,
 		string $module,
 		string $special,
 		string $filtered
-	): ManageWikiOOUIForm {
+	): OOUIHTMLFormTabs {
+		$context->getOutput()->enableOOUI();
 		// Can the user modify ManageWiki?
 		$ceMW = !(
 			(
-				$remoteWiki->isLocked() &&
+				$moduleFactory->core( $dbname )->isLocked() &&
 				!$context->getAuthority()->isAllowed( 'managewiki-restricted' )
 			) ||
 			!$context->getAuthority()->isAllowed( "managewiki-$module" )
 		);
 
-		$formDescriptor = $this->getFormDescriptor(
-			$config,
-			$context,
-			$remoteWiki,
-			$dbname,
-			$module,
-			$special,
-			$filtered,
-			$ceMW
+		$formDescriptor = $this->formFactoryBuilder->buildDescriptor(
+			$moduleFactory, $context, $dbname, $module,
+			$special, $filtered, $ceMW
 		);
 
-		$htmlForm = new ManageWikiOOUIForm( $formDescriptor, $context, $module );
+		$htmlForm = new OOUIHTMLFormTabs( $formDescriptor, $context, $module );
 		$htmlForm
 			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
-					$config,
-					$dbw,
+					$moduleFactory,
 					$form,
-					$remoteWiki,
 					$formData,
 					$dbname,
 					$module,
 					$special,
-					$filtered,
-					$ceMW
+					$filtered
 				)
 			)
 			->setId( 'managewiki-form' )
@@ -95,22 +66,22 @@ class ManageWikiFormFactory {
 	}
 
 	protected function submitForm(
-		Config $config,
-		IDatabase $dbw,
+		ModuleFactory $moduleFactory,
 		HTMLForm $form,
-		RemoteWikiFactory $remoteWiki,
 		array $formData,
 		string $dbname,
 		string $module,
 		string $special,
-		string $filtered,
-		bool $ceMW
+		string $filtered
 	): Status|bool {
-		if ( !$ceMW ) {
-			throw new UnexpectedValueException(
-				"User '{$form->getUser()->getName()}' without 'managewiki-$module' " .
-				"right tried to change wiki $module!"
-			);
+		$context = $form->getContext();
+		if ( !$context->getAuthority()->isAllowed( "managewiki-$module" ) ) {
+			throw new PermissionsError( "managewiki-$module" );
+		}
+
+		$isLocked = $moduleFactory->core( $dbname )->isLocked();
+		if ( $isLocked && !$context->getAuthority()->isAllowed( 'managewiki-restricted' ) ) {
+			throw new PermissionsError( 'managewiki-restricted' );
 		}
 
 		// Avoid 'no field named reason' error
@@ -118,18 +89,9 @@ class ManageWikiFormFactory {
 		$formData['reason'] = $form->getField( 'reason' )
 			->loadDataFromRequest( $form->getRequest() );
 
-		$context = $form->getContext();
-		$mwReturn = ManageWikiFormFactoryBuilder::submissionHandler(
-			$formData,
-			$form,
-			$module,
-			$dbname,
-			$context,
-			$remoteWiki,
-			$dbw,
-			$config,
-			$special,
-			$filtered
+		$mwReturn = $this->formFactoryBuilder->submissionHandler(
+			$formData, $form, $module, $dbname, $context,
+			$moduleFactory, $special, $filtered
 		);
 
 		if ( $mwReturn ) {

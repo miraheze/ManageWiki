@@ -12,7 +12,7 @@ use OOUI\PanelLayout;
 use OOUI\TabPanelLayout;
 use OOUI\Widget;
 
-class ManageWikiOOUIForm extends OOUIHTMLForm {
+class OOUIHTMLFormTabs extends OOUIHTMLForm {
 
 	/** @var bool Override default value from HTMLForm */
 	protected $mSubSectionBeforeFields = false;
