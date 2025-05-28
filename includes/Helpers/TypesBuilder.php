@@ -413,7 +413,7 @@ class TypesBuilder {
 				];
 				break;
 			case 'usergroups':
-				$mwPermissions = $this->permissionsFactory->newInstance( $this->dbname );
+				$mwPermissions = $this->permissionsFactory->newInstance( $dbname );
 				$groupList = $mwPermissions->listGroups();
 
 				$language = RequestContext::getMain()->getLanguage();
