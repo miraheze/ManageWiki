@@ -16,6 +16,7 @@ use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
+use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use SkinFactory;
 
 class TypesBuilder {
@@ -26,10 +27,11 @@ class TypesBuilder {
 		private readonly ContentHandlerFactory $contentHandlerFactory,
 		private readonly InterwikiLookup $interwikiLookup,
 		private readonly PermissionManager $permissionManager,
+		private readonly PermissionsFactory $permissionsFactory,
 		private readonly SkinFactory $skinFactory,
 		private readonly UserOptionsLookup $userOptionsLookup,
 		private readonly ServiceOptions $options,
-		private readonly PermissionsModule $mwPermissions,
+		private readonly string $dbname,
 		private readonly string $type
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
@@ -388,8 +390,10 @@ class TypesBuilder {
 				];
 				break;
 			case 'usergroups':
+				$mwPermissions = $this->permissionsFactory->newInstance( $this->dbname );
+				$groupList = $mwPermissions->listGroups();
+
 				$language = RequestContext::getMain()->getLanguage();
-				$groupList = $this->mwPermissions->listGroups();
 				$groups = [];
 				foreach ( $groupList as $group ) {
 					$lowerCaseGroupName = $language->lc( $group );
