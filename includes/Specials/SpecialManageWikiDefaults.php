@@ -22,6 +22,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly DefaultPermissions $defaultPermissions,
+		private readonly FormFactory $formFactory,
 		private readonly ModuleFactory $moduleFactory
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
@@ -51,13 +52,10 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		$this->getOutput()->addModules( [ 'ext.managewiki.oouiform' ] );
 		$this->getOutput()->addModuleStyles( [
 			'ext.managewiki.oouiform.styles',
-			'mediawiki.widgets.TagMultiselectWidget.styles',
 			'oojs-ui-widgets.styles',
 		] );
 
-		$formFactory = new FormFactory();
-		$formFactory->getForm(
-			config: $this->getConfig(),
+		$this->formFactory->getForm(
 			moduleFactory: $this->moduleFactory,
 			context: $this->getContext(),
 			dbname: ModuleFactory::DEFAULT_DBNAME,

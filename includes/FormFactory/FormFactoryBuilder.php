@@ -5,65 +5,97 @@ namespace Miraheze\ManageWiki\FormFactory;
 use ErrorPageError;
 use InvalidArgumentException;
 use ManualLogEntry;
-use MediaWiki\Config\Config;
+use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\RawMessage;
-use MediaWiki\Logger\LoggerFactory;
+use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\MainConfigNames;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
+use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\User;
+use MediaWiki\User\UserGroupManager;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\TypesBuilder;
+use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\Hooks\HookRunner;
 use Miraheze\ManageWiki\ICoreModule;
+use Miraheze\ManageWiki\Traits\FormHelperTrait;
+use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
+use ObjectCacheFactory;
+use Psr\Log\LoggerInterface;
 use Wikimedia\ObjectCache\WANObjectCache;
 
 class FormFactoryBuilder {
 
-	public static function buildDescriptor(
-		string $module,
-		string $dbname,
-		bool $ceMW,
-		IContextSource $context,
+	use FormHelperTrait;
+	use MatrixHandlerTrait;
+
+	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::Extensions,
+		ConfigNames::NamespacesAdditional,
+		ConfigNames::PermissionsDisallowedGroups,
+		ConfigNames::PermissionsDisallowedRights,
+		ConfigNames::PermissionsPermanentGroups,
+		ConfigNames::Settings,
+		MainConfigNames::ExtensionDirectory,
+		MainConfigNames::MetaNamespace,
+		MainConfigNames::MetaNamespaceTalk,
+		MainConfigNames::StyleDirectory,
+	];
+
+	public function __construct(
+		private readonly DatabaseUtils $databaseUtils,
+		private readonly HookRunner $hookRunner,
+		private readonly LoggerInterface $logger,
+		private readonly RequirementsFactory $requirementsFactory,
+		private readonly TypesBuilder $typesBuilder,
+		private readonly LinkRenderer $linkRenderer,
+		private readonly ObjectCacheFactory $objectCacheFactory,
+		private readonly PermissionManager $permissionManager,
+		private readonly UserGroupManager $userGroupManager,
+		private readonly ServiceOptions $options
+	) {
+		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
+	}
+
+	public function buildDescriptor(
 		ModuleFactory $moduleFactory,
+		IContextSource $context,
+		string $dbname,
+		string $module,
 		string $special,
 		string $filtered,
-		Config $config
+		bool $ceMW
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$formDescriptor = self::buildDescriptorCore( $dbname, $ceMW, $context, $moduleFactory );
+				$formDescriptor = $this->buildDescriptorCore( $dbname, $ceMW, $context, $moduleFactory );
 				break;
 			case 'extensions':
-				$formDescriptor = self::buildDescriptorExtensions(
-					$dbname, $ceMW, $context, $moduleFactory,
-					$config
-				);
+				$formDescriptor = $this->buildDescriptorExtensions( $dbname, $ceMW, $context, $moduleFactory );
 				break;
 			case 'settings':
-				$formDescriptor = self::buildDescriptorSettings(
-					$dbname, $ceMW, $context, $moduleFactory,
-					$config, $filtered
+				$formDescriptor = $this->buildDescriptorSettings(
+					$dbname, $ceMW, $context, $moduleFactory, $filtered
 				);
 				break;
 			case 'namespaces':
-				$formDescriptor = self::buildDescriptorNamespaces(
-					$dbname, $ceMW, $context, $special,
-					$moduleFactory, $config
+				$formDescriptor = $this->buildDescriptorNamespaces(
+					$dbname, $ceMW, $context, $special, $moduleFactory
 				);
 				break;
 			case 'permissions':
-				$formDescriptor = self::buildDescriptorPermissions(
-					$dbname, $ceMW, $context, $special, $moduleFactory,
-					$config
+				$formDescriptor = $this->buildDescriptorPermissions(
+					$dbname, $ceMW, $context, $special, $moduleFactory
 				);
 				break;
 			default:
@@ -73,7 +105,7 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	private static function buildDescriptorCore(
+	private function buildDescriptorCore(
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
@@ -89,8 +121,10 @@ class FormFactoryBuilder {
 		];
 
 		$mwCore = $moduleFactory->core( $dbname );
-		$databaseUtils = MediaWikiServices::getInstance()->get( 'ManageWikiDatabaseUtils' );
-		if ( $ceMW && $databaseUtils->isCurrentWikiCentral() && !$databaseUtils->isRemoteWikiCentral( $dbname ) ) {
+		if ( $ceMW &&
+			$this->databaseUtils->isCurrentWikiCentral() &&
+			!$this->databaseUtils->isRemoteWikiCentral( $dbname )
+		) {
 			$mwActions = [
 				$mwCore->isDeleted() ? 'undelete' : 'delete',
 				$mwCore->isLocked() ? 'unlock' : 'lock',
@@ -216,8 +250,7 @@ class FormFactoryBuilder {
 		}
 
 		if ( $mwCore->isEnabled( 'hooks' ) ) {
-			$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-			$hookRunner->onManageWikiCoreAddFormFields(
+			$this->hookRunner->onManageWikiCoreAddFormFields(
 				$context, $moduleFactory, $dbname, $ceMW, $formDescriptor
 			);
 		}
@@ -242,31 +275,27 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	private static function buildDescriptorExtensions(
+	private function buildDescriptorExtensions(
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): array {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
 
-		$manageWikiSettings = $config->get( ConfigNames::Settings );
+		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 
-		$objectCacheFactory = MediaWikiServices::getInstance()->getObjectCacheFactory();
-		$cache = $objectCacheFactory->getLocalClusterInstance();
-
-		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
-		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
+		$cache = $this->objectCacheFactory->getLocalClusterInstance();
+		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$credits = $cache->getWithSetCallback(
 			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
 			WANObjectCache::TTL_DAY,
-			static function () use ( $config ): array {
+			function (): array {
 				$queue = array_fill_keys( array_merge(
-					glob( $config->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
-					glob( $config->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
+					glob( $this->options->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
+					glob( $this->options->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
 				), true );
 
 				$processor = new ExtensionProcessor();
@@ -285,7 +314,7 @@ class FormFactoryBuilder {
 		);
 
 		$formDescriptor = [];
-		foreach ( $config->get( ConfigNames::Extensions ) as $name => $ext ) {
+		foreach ( $this->options->get( ConfigNames::Extensions ) as $name => $ext ) {
 			$filteredList = array_filter(
 				$manageWikiSettings,
 				static fn ( array $value ): bool => $value['from'] === $name
@@ -302,7 +331,7 @@ class FormFactoryBuilder {
 					$ext['conflicts']
 				)
 			) {
-				$disableIf = self::buildDisableIf(
+				$disableIf = $this->buildDisableIf(
 					$ext['requires']['extensions'] ?? [],
 					$ext['conflicts'] ?: ''
 				);
@@ -318,7 +347,7 @@ class FormFactoryBuilder {
 					$extList
 				);
 
-				$help[] = self::buildRequires( $context, $ext['requires'] ) . "\n";
+				$help[] = $this->buildRequires( $context, $ext['requires'] ) . "\n";
 			}
 
 			if ( $ext['conflicts'] ) {
@@ -368,8 +397,7 @@ class FormFactoryBuilder {
 			}
 
 			if ( $hasSettings && in_array( $name, $extList, true ) ) {
-				$linkRenderer = MediaWikiServices::getInstance()->getLinkRenderer();
-				$help[] = "\n" . $linkRenderer->makeExternalLink(
+				$help[] = "\n" . $this->linkRenderer->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "settings/$name" )->getFullURL(),
 					$context->msg( 'managewiki-extension-settings' ),
 					SpecialPage::getTitleFor( 'ManageWiki', 'settings' )
@@ -394,22 +422,19 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	private static function buildDescriptorSettings(
+	private function buildDescriptorSettings(
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
 		ModuleFactory $moduleFactory,
-		Config $config,
 		string $filtered
 	): array {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->listAll();
-		$mwPermissions = $moduleFactory->permissions( $dbname );
-		$groupList = $mwPermissions->listGroups();
 
-		$manageWikiSettings = $config->get( ConfigNames::Settings );
+		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
 			$value['from'] === strtolower( $filtered ) && (
 				in_array( $value['from'], $extList, true ) ||
@@ -417,16 +442,14 @@ class FormFactoryBuilder {
 			)
 		);
 
-		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
-		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
+		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$formDescriptor = [];
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
 
 		foreach ( $filteredSettings as $name => $set ) {
 			if ( !isset( $set['requires'] ) ) {
-				$logger = LoggerFactory::getInstance( 'ManageWiki' );
-				$logger->error( '\'requires\' is not set in {config} for {var}', [
+				$this->logger->error( '\'requires\' is not set in {config} for {var}', [
 					'config' => ConfigNames::Settings,
 					'var' => $name,
 				] );
@@ -453,21 +476,17 @@ class FormFactoryBuilder {
 						$set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = TypesBuilder::process(
-					config: $config,
+				$configs = $this->typesBuilder->build(
+					dbname: $dbname,
 					disabled: $disabled,
-					groupList: $groupList,
-					module: 'settings',
 					options: $set,
 					value: $value,
-					name: $name,
-					overrideDefault: false,
-					type: ''
+					name: $name
 				);
 
 				$help = [];
 				if ( $set['requires'] ) {
-					$help[] = self::buildRequires( $context, $set['requires'] ) . "\n";
+					$help[] = $this->buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
 				$rawMessage = new RawMessage( $set['help'] );
@@ -507,13 +526,12 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	private static function buildDescriptorNamespaces(
+	private function buildDescriptorNamespaces(
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
 		string $special,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): array {
 		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 		$mwExtensions = $moduleFactory->extensions( $dbname );
@@ -542,9 +560,7 @@ class FormFactoryBuilder {
 			$nsID['namespacetalk'] = $namespaceID + 1;
 		}
 
-		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
-		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
-
+		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
@@ -558,18 +574,18 @@ class FormFactoryBuilder {
 			[ $namespaceVar, $defaultName ] = match ( $id ) {
 				NS_PROJECT => [
 					$context->msg( 'parentheses',
-						self::getConfigVar( MainConfigNames::MetaNamespace )
+						$this->getConfigVar( MainConfigNames::MetaNamespace )
 					)->text(),
-					$config->get( MainConfigNames::MetaNamespace ),
+					$this->options->get( MainConfigNames::MetaNamespace ),
 				],
 				NS_PROJECT_TALK => [
 					$context->msg( 'parentheses',
-						self::getConfigVar( MainConfigNames::MetaNamespaceTalk )
+						$this->getConfigVar( MainConfigNames::MetaNamespaceTalk )
 					)->text(),
 					str_replace(
-						$config->get( MainConfigNames::MetaNamespace ),
+						$this->options->get( MainConfigNames::MetaNamespace ),
 						'$1',
-						$config->get( MainConfigNames::MetaNamespaceTalk )
+						$this->options->get( MainConfigNames::MetaNamespaceTalk )
 					),
 				],
 				default => [
@@ -581,7 +597,7 @@ class FormFactoryBuilder {
 			if ( !$namespaceData['core'] ) {
 				// Core namespaces are not set with ExtraNamespaces
 				$namespaceVar = $context->msg( 'parentheses',
-					self::getConfigVar( MainConfigNames::ExtraNamespaces )
+					$this->getConfigVar( MainConfigNames::ExtraNamespaces )
 				)->text();
 			}
 
@@ -603,7 +619,7 @@ class FormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => [
 						'namespaces-content',
-						self::getConfigVar( MainConfigNames::ContentNamespaces ),
+						$this->getConfigVar( MainConfigNames::ContentNamespaces ),
 					],
 					'default' => $namespaceData['content'],
 					'disabled' => !$ceMW,
@@ -613,7 +629,7 @@ class FormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => [
 						'namespaces-subpages',
-						self::getConfigVar( MainConfigNames::NamespacesWithSubpages ),
+						$this->getConfigVar( MainConfigNames::NamespacesWithSubpages ),
 					],
 					'default' => $namespaceData['subpages'],
 					'disabled' => !$ceMW,
@@ -623,7 +639,7 @@ class FormFactoryBuilder {
 					'type' => 'check',
 					'label-message' => [
 						'namespaces-search',
-						self::getConfigVar( MainConfigNames::NamespacesToBeSearchedDefault ),
+						$this->getConfigVar( MainConfigNames::NamespacesToBeSearchedDefault ),
 					],
 					'default' => $namespaceData['searchable'],
 					'disabled' => !$ceMW,
@@ -632,27 +648,26 @@ class FormFactoryBuilder {
 				"contentmodel-$name" => [
 					'label-message' => [
 						'namespaces-contentmodel',
-						self::getConfigVar( MainConfigNames::NamespaceContentModels ),
+						$this->getConfigVar( MainConfigNames::NamespaceContentModels ),
 					],
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
-				] + TypesBuilder::process(
-					config: $config,
+				] + $this->typesBuilder->build(
+					dbname: $dbname,
 					disabled: false,
-					groupList: [],
-					module: 'namespaces',
-					options: [],
 					value: $namespaceData['contentmodel'],
 					name: '',
-					overrideDefault: false,
-					type: 'contentmodel'
+					options: [
+						'overridedefault' => false,
+						'type' => 'contentmodel',
+					]
 				),
 				"protection-$name" => [
 					'type' => 'combobox',
 					'label-message' => [
 						'namespaces-protection',
-						self::getConfigVar( MainConfigNames::NamespaceProtection ),
+						$this->getConfigVar( MainConfigNames::NamespaceProtection ),
 					],
 					'cssclass' => 'managewiki-infuse',
 					'default' => $namespaceData['protection'],
@@ -668,7 +683,7 @@ class FormFactoryBuilder {
 				],
 			];
 
-			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
+			foreach ( $this->options->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
 				$requirementsCheck = $a['requires'] ?
 					$mwRequirements->check( $a['requires'], $extList ) : true;
 
@@ -695,21 +710,17 @@ class FormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = TypesBuilder::process(
-						config: $config,
+					$configs = $this->typesBuilder->build(
+						dbname: $dbname,
 						disabled: $disabled,
-						groupList: [],
-						module: 'namespaces',
 						options: $a,
 						value: $namespaceData['additional'][$key] ?? null,
-						name: '',
-						overrideDefault: $a['overridedefault'],
-						type: $a['type']
+						name: ''
 					);
 
 					$help = [];
 					if ( $a['requires'] ) {
-						$help[] = self::buildRequires( $context, $a['requires'] ) . "\n";
+						$help[] = $this->buildRequires( $context, $a['requires'] ) . "\n";
 					}
 
 					$rawMessage = new RawMessage( $a['help'] );
@@ -740,21 +751,20 @@ class FormFactoryBuilder {
 			$formDescriptor["aliases-$name"] = [
 				'label-message' => [
 					'namespaces-aliases',
-					self::getConfigVar( MainConfigNames::NamespaceAliases ),
+					$this->getConfigVar( MainConfigNames::NamespaceAliases ),
 				],
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
-			] + TypesBuilder::process(
-				config: $config,
+			] + $this->typesBuilder->build(
+				dbname: $dbname,
 				disabled: false,
-				groupList: [],
-				module: 'namespaces',
-				options: [],
 				value: $namespaceData['aliases'],
 				name: '',
-				overrideDefault: [],
-				type: 'texts'
+				options: [
+					'overridedefault' => [],
+					'type' => 'texts',
+				]
 			);
 		}
 
@@ -798,15 +808,14 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	private static function buildDescriptorPermissions(
+	private function buildDescriptorPermissions(
 		string $dbname,
 		bool $ceMW,
 		IContextSource $context,
 		string $group,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): array {
-		if ( in_array( $group, $config->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
+		if ( in_array( $group, $this->options->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			$ceMW = false;
 		}
 
@@ -814,21 +823,20 @@ class FormFactoryBuilder {
 		$groupData = $mwPermissions->list( $group );
 
 		$matrixConstruct = [
-			self::getConfigName( MainConfigNames::AddGroups ) => $groupData['addgroups'],
-			self::getConfigName( MainConfigNames::RemoveGroups ) => $groupData['removegroups'],
-			self::getConfigName( MainConfigNames::GroupsAddToSelf ) => $groupData['addself'],
-			self::getConfigName( MainConfigNames::GroupsRemoveFromSelf ) => $groupData['removeself'],
+			$this->getConfigName( MainConfigNames::AddGroups ) => $groupData['addgroups'],
+			$this->getConfigName( MainConfigNames::RemoveGroups ) => $groupData['removegroups'],
+			$this->getConfigName( MainConfigNames::GroupsAddToSelf ) => $groupData['addself'],
+			$this->getConfigName( MainConfigNames::GroupsRemoveFromSelf ) => $groupData['removeself'],
 		];
 
-		$userGroupManager = MediaWikiServices::getInstance()->getUserGroupManager();
 		$assignedPermissions = $groupData['permissions'] ?? [];
 
 		$disallowed = array_merge(
-			$config->get( ConfigNames::PermissionsDisallowedRights )[$group] ?? [],
-			$config->get( ConfigNames::PermissionsDisallowedRights )['any']
+			$this->options->get( ConfigNames::PermissionsDisallowedRights )[$group] ?? [],
+			$this->options->get( ConfigNames::PermissionsDisallowedRights )['any']
 		);
 
-		$allPermissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
+		$allPermissions = $this->permissionManager->getAllPermissions();
 
 		// Start with all allowed permissions
 		$allPermissions = array_diff( $allPermissions, $disallowed );
@@ -855,10 +863,10 @@ class FormFactoryBuilder {
 			'assignedPermissions' => $assignedPermissions,
 			'allGroups' => array_diff(
 				$mwPermissions->listGroups(),
-				$config->get( ConfigNames::PermissionsDisallowedGroups ),
-				$userGroupManager->listAllImplicitGroups()
+				$this->options->get( ConfigNames::PermissionsDisallowedGroups ),
+				$this->userGroupManager->listAllImplicitGroups()
 			),
-			'groupMatrix' => TypesBuilder::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
+			'groupMatrix' => $this->handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $groupData['autopromote'] ?? null,
 		];
 
@@ -880,12 +888,12 @@ class FormFactoryBuilder {
 			],
 		];
 
-		$disallowedGroups = $config->get( ConfigNames::PermissionsDisallowedGroups );
+		$disallowedGroups = $this->options->get( ConfigNames::PermissionsDisallowedGroups );
 
 		if (
 			$ceMW &&
 			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true )
+			!in_array( $group, $this->options->get( ConfigNames::PermissionsPermanentGroups ), true )
 		) {
 			$formDescriptor += [
 				'delete-checkbox' => [
@@ -961,13 +969,13 @@ class FormFactoryBuilder {
 			'type' => 'checkmatrix',
 			'columns' => [
 				$context->msg( 'managewiki-permissions-addall' )->escaped() =>
-					self::getConfigName( MainConfigNames::AddGroups ),
+					$this->getConfigName( MainConfigNames::AddGroups ),
 				$context->msg( 'managewiki-permissions-removeall' )->escaped() =>
-					self::getConfigName( MainConfigNames::RemoveGroups ),
+					$this->getConfigName( MainConfigNames::RemoveGroups ),
 				$context->msg( 'managewiki-permissions-addself' )->escaped() =>
-					self::getConfigName( MainConfigNames::GroupsAddToSelf ),
+					$this->getConfigName( MainConfigNames::GroupsAddToSelf ),
 				$context->msg( 'managewiki-permissions-removeself' )->escaped() =>
-					self::getConfigName( MainConfigNames::GroupsRemoveFromSelf ),
+					$this->getConfigName( MainConfigNames::GroupsRemoveFromSelf ),
 			],
 			'rows' => $rowsBuilt,
 			'section' => 'group',
@@ -1075,43 +1083,33 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
-	public static function submissionHandler(
+	public function submissionHandler(
 		array $formData,
 		HTMLForm $form,
 		string $module,
 		string $dbname,
 		IContextSource $context,
 		ModuleFactory $moduleFactory,
-		Config $config,
 		string $special,
 		string $filtered
 	): array {
 		switch ( $module ) {
 			case 'core':
-				$mwReturn = self::submissionCore( $formData, $dbname, $context, $moduleFactory );
+				$mwReturn = $this->submissionCore( $formData, $dbname, $context, $moduleFactory );
 				break;
 			case 'extensions':
-				$mwReturn = self::submissionExtensions(
-					$formData, $dbname, $moduleFactory, $config
-				);
+				$mwReturn = $this->submissionExtensions( $formData, $dbname, $moduleFactory );
 				break;
 			case 'settings':
-				$mwReturn = self::submissionSettings(
-					$formData, $dbname, $filtered, $context,
-					$moduleFactory, $config
+				$mwReturn = $this->submissionSettings(
+					$formData, $dbname, $filtered, $context, $moduleFactory
 				);
 				break;
 			case 'namespaces':
-				$mwReturn = self::submissionNamespaces(
-					$formData, $dbname, $special, $moduleFactory,
-					$config
-				);
+				$mwReturn = $this->submissionNamespaces( $formData, $dbname, $special, $moduleFactory );
 				break;
 			case 'permissions':
-				$mwReturn = self::submissionPermissions(
-					$formData, $dbname, $special, $moduleFactory,
-					$config
-				);
+				$mwReturn = $this->submissionPermissions( $formData, $dbname, $special, $moduleFactory );
 				break;
 			default:
 				throw new InvalidArgumentException( "$module not recognized" );
@@ -1165,7 +1163,7 @@ class FormFactoryBuilder {
 		return $mwReturn->getErrors();
 	}
 
-	private static function submissionCore(
+	private function submissionCore(
 		array $formData,
 		string $dbname,
 		IContextSource $context,
@@ -1257,8 +1255,7 @@ class FormFactoryBuilder {
 		}
 
 		if ( $mwCore->isEnabled( 'hooks' ) ) {
-			$hookRunner = MediaWikiServices::getInstance()->get( 'ManageWikiHookRunner' );
-			$hookRunner->onManageWikiCoreFormSubmission(
+			$this->hookRunner->onManageWikiCoreFormSubmission(
 				$context, $moduleFactory, $dbname, $formData
 			);
 		}
@@ -1266,16 +1263,15 @@ class FormFactoryBuilder {
 		return $mwCore;
 	}
 
-	private static function submissionExtensions(
+	private function submissionExtensions(
 		array $formData,
 		string $dbname,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): ExtensionsModule {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
 
 		$newExtList = [];
-		foreach ( $config->get( ConfigNames::Extensions ) as $name => $ext ) {
+		foreach ( $this->options->get( ConfigNames::Extensions ) as $name => $_ ) {
 			if ( $formData["ext-$name"] ) {
 				$newExtList[] = $name;
 			}
@@ -1285,13 +1281,12 @@ class FormFactoryBuilder {
 		return $mwExtensions;
 	}
 
-	private static function submissionSettings(
+	private function submissionSettings(
 		array $formData,
 		string $dbname,
 		string $filtered,
 		IContextSource $context,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): SettingsModule {
 		$mwExtensions = $moduleFactory->extensions( $dbname );
 		$extList = $mwExtensions->list();
@@ -1299,11 +1294,10 @@ class FormFactoryBuilder {
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->listAll();
 
-		$requirementsFactory = MediaWikiServices::getInstance()->get( 'ManageWikiRequirementsFactory' );
-		$mwRequirements = $requirementsFactory->getRequirements( $dbname );
+		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$settingsArray = [];
-		foreach ( $config->get( ConfigNames::Settings ) as $name => $set ) {
+		foreach ( $this->options->get( ConfigNames::Settings ) as $name => $set ) {
 			// No need to do anything if setting does not 'exist'
 			if ( !isset( $formData["set-$name"] ) ) {
 				continue;
@@ -1345,8 +1339,8 @@ class FormFactoryBuilder {
 					$value = array_map( 'intval', $value );
 					break;
 				case 'matrix':
-					$current = TypesBuilder::handleMatrix( $current, 'php' );
-					$value = TypesBuilder::handleMatrix( $value, 'phparray' );
+					$current = $this->handleMatrix( $current, 'php' );
+					$value = $this->handleMatrix( $value, 'phparray' );
 					break;
 				case 'text':
 					if ( !$value ) {
@@ -1375,7 +1369,7 @@ class FormFactoryBuilder {
 			}
 		}
 
-		$manageWikiSettings = $config->get( ConfigNames::Settings );
+		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
 			$value['from'] === strtolower( $filtered ) && (
 				in_array( $value['from'], $extList, true ) ||
@@ -1389,12 +1383,11 @@ class FormFactoryBuilder {
 		return $mwSettings;
 	}
 
-	private static function submissionNamespaces(
+	private function submissionNamespaces(
 		array $formData,
 		string $dbname,
 		string $special,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): NamespacesModule {
 		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 
@@ -1421,7 +1414,7 @@ class FormFactoryBuilder {
 			$namespaceName = str_replace( [ ' ', ':' ], '_', $formData["namespace-$name"] );
 
 			$additionalBuilt = [];
-			foreach ( $config->get( ConfigNames::NamespacesAdditional ) as $key => $a ) {
+			foreach ( $this->options->get( ConfigNames::NamespacesAdditional ) as $key => $_ ) {
 				if ( isset( $formData["$key-$name"] ) ) {
 					$additionalBuilt[$key] = $formData["$key-$name"];
 				}
@@ -1444,12 +1437,11 @@ class FormFactoryBuilder {
 		return $mwNamespaces;
 	}
 
-	private static function submissionPermissions(
+	private function submissionPermissions(
 		array $formData,
 		string $dbname,
 		string $group,
-		ModuleFactory $moduleFactory,
-		Config $config
+		ModuleFactory $moduleFactory
 	): PermissionsModule {
 		$mwPermissions = $moduleFactory->permissions( $dbname );
 		$groupData = $mwPermissions->list( $group );
@@ -1457,11 +1449,11 @@ class FormFactoryBuilder {
 		$assignedPermissions = $groupData['permissions'] ?? [];
 
 		$disallowed = array_merge(
-			$config->get( ConfigNames::PermissionsDisallowedRights )[$group] ?? [],
-			$config->get( ConfigNames::PermissionsDisallowedRights )['any']
+			$this->options->get( ConfigNames::PermissionsDisallowedRights )[$group] ?? [],
+			$this->options->get( ConfigNames::PermissionsDisallowedRights )['any']
 		);
 
-		$allPermissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
+		$allPermissions = $this->permissionManager->getAllPermissions();
 		$assignablePerms = array_diff( $allPermissions, $disallowed );
 
 		$extraAssigned = array_filter(
@@ -1471,7 +1463,7 @@ class FormFactoryBuilder {
 		);
 
 		$assignablePerms = array_unique( array_merge( $assignablePerms, $extraAssigned ) );
-		$isRemovable = !in_array( $group, $config->get( ConfigNames::PermissionsPermanentGroups ), true );
+		$isRemovable = !in_array( $group, $this->options->get( ConfigNames::PermissionsPermanentGroups ), true );
 
 		// Early escape for deletion
 		if ( $isRemovable && ( $formData['delete-checkbox'] ?? false ) ) {
@@ -1506,23 +1498,23 @@ class FormFactoryBuilder {
 			'remove' => $removedPerms,
 		];
 
-		$newMatrix = TypesBuilder::handleMatrix( $formData['group-matrix'], 'phparray' );
+		$newMatrix = $this->handleMatrix( $formData['group-matrix'], 'phparray' );
 
 		$matrixNew = [
 			'addgroups' => array_diff(
-				$newMatrix[self::getConfigName( MainConfigNames::AddGroups )] ?? [],
+				$newMatrix[$this->getConfigName( MainConfigNames::AddGroups )] ?? [],
 				$groupData['addgroups']
 			),
 			'removegroups' => array_diff(
-				$newMatrix[self::getConfigName( MainConfigNames::RemoveGroups )] ?? [],
+				$newMatrix[$this->getConfigName( MainConfigNames::RemoveGroups )] ?? [],
 				$groupData['removegroups']
 			),
 			'addself' => array_diff(
-				$newMatrix[self::getConfigName( MainConfigNames::GroupsAddToSelf )] ?? [],
+				$newMatrix[$this->getConfigName( MainConfigNames::GroupsAddToSelf )] ?? [],
 				$groupData['addself']
 			),
 			'removeself' => array_diff(
-				$newMatrix[self::getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? [],
+				$newMatrix[$this->getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? [],
 				$groupData['removeself']
 			),
 		];
@@ -1530,19 +1522,19 @@ class FormFactoryBuilder {
 		$matrixOld = [
 			'addgroups' => array_diff(
 				$groupData['addgroups'],
-				$newMatrix[self::getConfigName( MainConfigNames::AddGroups )] ?? []
+				$newMatrix[$this->getConfigName( MainConfigNames::AddGroups )] ?? []
 			),
 			'removegroups' => array_diff(
 				$groupData['removegroups'],
-				$newMatrix[self::getConfigName( MainConfigNames::RemoveGroups )] ?? []
+				$newMatrix[$this->getConfigName( MainConfigNames::RemoveGroups )] ?? []
 			),
 			'addself' => array_diff(
 				$groupData['addself'],
-				$newMatrix[self::getConfigName( MainConfigNames::GroupsAddToSelf )] ?? []
+				$newMatrix[$this->getConfigName( MainConfigNames::GroupsAddToSelf )] ?? []
 			),
 			'removeself' => array_diff(
 				$groupData['removeself'],
-				$newMatrix[self::getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? []
+				$newMatrix[$this->getConfigName( MainConfigNames::GroupsRemoveFromSelf )] ?? []
 			),
 		];
 
@@ -1599,81 +1591,5 @@ class FormFactoryBuilder {
 		}
 
 		return $mwPermissions;
-	}
-
-	private static function buildRequires(
-		IContextSource $context,
-		array $config
-	): string {
-		$requires = [];
-		$language = $context->getLanguage();
-
-		$or = $context->msg( 'managewiki-requires-or' )->text();
-		$space = $context->msg( 'word-separator' )->text();
-		$colon = $context->msg( 'colon-separator' )->text();
-
-		foreach ( $config as $require => $data ) {
-			$flat = [];
-			foreach ( (array)$data as $key => $element ) {
-				// $key/$colon can be removed here if visibility becomes its own system
-				if ( is_array( $element ) ) {
-					$flat[] = $context->msg( 'parentheses',
-						$space . ( !is_int( $key ) ? $key . $colon : '' ) . implode(
-							$space . $language->uc( $or ) . $space,
-							$element
-						) . $space
-					)->text();
-					continue;
-				}
-
-				$flat[] = ( !is_int( $key ) ? $key . $colon : '' ) . $element;
-			}
-
-			$requires[] = $language->ucfirst( $require ) . $colon . $language->commaList( $flat );
-		}
-
-		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
-	}
-
-	private static function buildDisableIf( array $requires, string $conflict ): array {
-		$conditions = [];
-		foreach ( $requires as $entry ) {
-			if ( is_array( $entry ) ) {
-				// OR logic for this group
-				$orConditions = [];
-				foreach ( $entry as $ext ) {
-					$orConditions[] = [ '!==', "ext-$ext", '1' ];
-				}
-
-				$conditions[] = count( $orConditions ) === 1 ?
-					$orConditions[0] :
-					array_merge( [ 'AND' ], $orConditions );
-			} else {
-				// Simple AND logic
-				$conditions[] = [ '!==', "ext-$entry", '1' ];
-			}
-		}
-
-		$finalCondition = count( $conditions ) === 1 ?
-			$conditions[0] :
-			array_merge( [ 'OR' ], $conditions );
-
-		if ( $conflict ) {
-			$finalCondition = [
-				'OR',
-				$finalCondition,
-				[ '===', "ext-$conflict", '1' ]
-			];
-		}
-
-		return $finalCondition;
-	}
-
-	private static function getConfigName( string $name ): string {
-		return "wg$name";
-	}
-
-	private static function getConfigVar( string $name ): string {
-		return "\$wg$name";
 	}
 }

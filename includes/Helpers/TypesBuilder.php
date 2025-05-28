@@ -4,64 +4,83 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use Collator;
 use DateTimeZone;
-use MediaWiki\Config\Config;
+use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Content\ContentHandler;
+use MediaWiki\Content\IContentHandlerFactory;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Interwiki\InterwikiLookup;
 use MediaWiki\MainConfigNames;
-use MediaWiki\MediaWikiServices;
 use MediaWiki\Message\Message;
+use MediaWiki\Permissions\PermissionManager;
+use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
+use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
+use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
+use SkinFactory;
 
 class TypesBuilder {
 
-	public static function process(
-		Config $config,
-		bool $disabled,
-		array $groupList,
-		string $module,
-		array $options,
-		mixed $value,
-		string $name,
-		mixed $overrideDefault,
-		string $type
-	): array {
-		if ( $module === 'namespaces' ) {
-			if ( $overrideDefault ) {
-				$options['overridedefault'] = $overrideDefault;
-			}
+	use MatrixHandlerTrait;
 
-			if ( $type ) {
-				$options['type'] = $type;
-			}
+	public const CONSTRUCTOR_OPTIONS = [
+		MainConfigNames::AllowUserCssPrefs,
+		MainConfigNames::DisableLangConversion,
+		MainConfigNames::EnableEmail,
+		MainConfigNames::EnableUserEmail,
+		MainConfigNames::EnableUserEmailMuteList,
+		MainConfigNames::EnotifMinorEdits,
+		MainConfigNames::EnotifRevealEditorAddress,
+		MainConfigNames::EnotifUserTalk,
+		MainConfigNames::EnotifWatchlist,
+		MainConfigNames::ForceHTTPS,
+		MainConfigNames::LocalDatabases,
+		MainConfigNames::RCShowWatchingUsers,
+		MainConfigNames::RCWatchCategoryMembership,
+		MainConfigNames::SearchMatchRedirectPreference,
+		MainConfigNames::SecureLogin,
+		MainConfigNames::SkipSkins,
+	];
 
-			return self::namespaces( $overrideDefault, $type, $value ) ?:
-				self::common( $config, $disabled, $groupList, $name, $options, $value );
-		}
-
-		return self::common( $config, $disabled, $groupList, $name, $options, $value );
+	public function __construct(
+		private readonly PermissionsFactory $permissionsFactory,
+		private readonly IContentHandlerFactory $contentHandlerFactory,
+		private readonly InterwikiLookup $interwikiLookup,
+		private readonly PermissionManager $permissionManager,
+		private readonly SkinFactory $skinFactory,
+		private readonly UserOptionsLookup $userOptionsLookup,
+		private readonly ServiceOptions $options
+	) {
+		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
-	private static function common(
-		Config $config,
-		bool $disabled,
-		array $groupList,
+	public function build(
+		string $dbname,
 		string $name,
-		array $options,
-		mixed $value
+		mixed $value,
+		bool $disabled,
+		array $options
 	): array {
 		switch ( $options['type'] ) {
+			case 'contentmodel':
+			case 'vestyle':
+				$configs = $this->buildNamespaceType(
+					$options['type'],
+					$options['overridedefault'],
+					$value
+				);
+				break;
 			case 'database':
 				$configs = [
 					'type' => 'text',
 					'default' => $value ?? $options['overridedefault'],
-					'validation-callback' => static function (
+					'validation-callback' => function (
 						string $database,
 						array $alldata,
 						HTMLForm $form
-					) use ( $config, $name ): bool|Message {
-						if ( !in_array( $database, $config->get( MainConfigNames::LocalDatabases ), true ) ) {
+					) use ( $name ): bool|Message {
+						if ( !in_array( $database, $this->options->get( MainConfigNames::LocalDatabases ), true ) ) {
 							return $form->msg( 'managewiki-invalid-database', $database, $name );
 						}
 
@@ -108,9 +127,7 @@ class TypesBuilder {
 				break;
 			case 'interwiki':
 				$interwikiPrefixes = [];
-
-				$interwikiLookup = MediaWikiServices::getInstance()->getInterwikiLookup();
-				$prefixes = $interwikiLookup->getAllPrefixes();
+				$prefixes = $this->interwikiLookup->getAllPrefixes();
 
 				foreach ( $prefixes as $row ) {
 					$prefix = $row['iw_prefix'];
@@ -181,88 +198,90 @@ class TypesBuilder {
 					'rows' => $options['rows'],
 					'columns' => $options['cols'],
 					'default' => $value !== null ?
-						self::handleMatrix( $value, 'php' ) :
+						$this->handleMatrix( $value, 'php' ) :
 						$options['overridedefault'],
 				];
 				break;
 			case 'preferences':
 				$preferences = [];
 				$excludedPrefs = [];
-				$allPreferences = MediaWikiServices::getInstance()->getUserOptionsLookup()->getDefaultOptions();
+				$allPreferences = $this->userOptionsLookup->getDefaultOptions();
 
 				// Don't show preferences hidden by configuratiom
-				if ( !$config->get( MainConfigNames::AllowUserCssPrefs ) ) {
+				if ( !$this->options->get( MainConfigNames::AllowUserCssPrefs ) ) {
 					$excludedPrefs[] = 'underline';
 					$excludedPrefs[] = 'editfont';
 				}
 
-				if ( $config->get( MainConfigNames::DisableLangConversion ) ) {
+				if ( $this->options->get( MainConfigNames::DisableLangConversion ) ) {
 					$excludedPrefs[] = 'variant';
 				} else {
-					foreach ( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
+					foreach ( preg_grep( '/variant-[A-Za-z0-9]/', array_keys( $allPreferences ) ) as $pref => $_ ) {
 						$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 					}
 				}
 
-				if ( $config->get( MainConfigNames::ForceHTTPS ) || !$config->get( MainConfigNames::SecureLogin ) ) {
+				if ( $this->options->get( MainConfigNames::ForceHTTPS ) ||
+					!$this->options->get( MainConfigNames::SecureLogin )
+				) {
 					$excludedPrefs[] = 'prefershttps';
 				}
 
-				if ( !$config->get( MainConfigNames::RCShowWatchingUsers ) ) {
+				if ( !$this->options->get( MainConfigNames::RCShowWatchingUsers ) ) {
 					$excludedPrefs[] = 'shownumberswatching';
 				}
 
-				if ( !$config->get( MainConfigNames::RCWatchCategoryMembership ) ) {
+				if ( !$this->options->get( MainConfigNames::RCWatchCategoryMembership ) ) {
 					$excludedPrefs[] = 'hidecategorization';
 					$excludedPrefs[] = 'watchlisthidecategorization';
 				}
 
-				if ( !$config->get( MainConfigNames::SearchMatchRedirectPreference ) ) {
+				if ( !$this->options->get( MainConfigNames::SearchMatchRedirectPreference ) ) {
 					$excludedPrefs[] = 'search-match-redirect';
 				}
 
-				if ( !$config->get( MainConfigNames::EnableEmail ) ) {
+				if ( !$this->options->get( MainConfigNames::EnableEmail ) ) {
 					$excludedPrefs[] = 'requireemail';
 
-					if ( !$config->get( MainConfigNames::EnableUserEmail ) ) {
+					if ( !$this->options->get( MainConfigNames::EnableUserEmail ) ) {
 						$excludedPrefs[] = 'disablemail';
 						$excludedPrefs[] = 'email-allow-new-users';
 						$excludedPrefs[] = 'ccmeonemails';
 
-						if ( !$config->get( MainConfigNames::EnableUserEmailMuteList ) ) {
+						if ( !$this->options->get( MainConfigNames::EnableUserEmailMuteList ) ) {
 							$excludedPrefs[] = 'email-blacklist';
 						}
 					}
 
-					if ( !$config->get( MainConfigNames::EnotifWatchlist ) ) {
+					if ( !$this->options->get( MainConfigNames::EnotifWatchlist ) ) {
 						$excludedPrefs[] = 'enotifwatchlistpages';
 					}
 
-					if ( !$config->get( MainConfigNames::EnotifUserTalk ) ) {
+					if ( !$this->options->get( MainConfigNames::EnotifUserTalk ) ) {
 						$excludedPrefs[] = 'enotifusertalkpages';
 					}
 
 					if (
-						!$config->get( MainConfigNames::EnotifUserTalk ) &&
-						!$config->get( MainConfigNames::EnotifWatchlist )
+						!$this->options->get( MainConfigNames::EnotifUserTalk ) &&
+						!$this->options->get( MainConfigNames::EnotifWatchlist )
 					) {
-						if ( !$config->get( MainConfigNames::EnotifMinorEdits ) ) {
+						if ( !$this->options->get( MainConfigNames::EnotifMinorEdits ) ) {
 							$excludedPrefs[] = 'enotifminoredits';
 						}
 
-						if ( !$config->get( MainConfigNames::EnotifRevealEditorAddress ) ) {
+						if ( !$this->options->get( MainConfigNames::EnotifRevealEditorAddress ) ) {
 							$excludedPrefs[] = 'enotifrevealaddr';
 						}
 					}
 				}
 
 				// Exclude searchNs* preferences
-				foreach ( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $val ) {
+				foreach ( preg_grep( '/searchNs[0-9]/', array_keys( $allPreferences ) ) as $pref => $_ ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
 				// Exclude echo-subscriptions-* preferences
-				foreach ( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $val ) {
+				foreach ( preg_grep( '/echo-subscriptions-(?s).*/', array_keys( $allPreferences ) ) as $pref => $_ ) {
 					$excludedPrefs[] = array_keys( $allPreferences )[$pref];
 				}
 
@@ -272,7 +291,7 @@ class TypesBuilder {
 				// Exclude forcesafemode preference
 				$excludedPrefs[] = 'forcesafemode';
 
-				foreach ( $allPreferences as $pref => $val ) {
+				foreach ( $allPreferences as $pref => $_ ) {
 					if ( !in_array( $pref, $excludedPrefs, true ) ) {
 						$preferences[$pref] = $pref;
 					}
@@ -291,7 +310,7 @@ class TypesBuilder {
 				}
 				break;
 			case 'skin':
-				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getInstalledSkins();
+				$enabledSkins = $this->skinFactory->getInstalledSkins();
 
 				unset(
 					$enabledSkins['apioutput'],
@@ -301,7 +320,7 @@ class TypesBuilder {
 				);
 
 				if ( $options['excludeSkipSkins'] ?? false ) {
-					foreach ( $config->get( MainConfigNames::SkipSkins ) as $skip ) {
+					foreach ( $this->options->get( MainConfigNames::SkipSkins ) as $skip ) {
 						unset( $enabledSkins[$skip] );
 					}
 				}
@@ -316,7 +335,7 @@ class TypesBuilder {
 				];
 				break;
 			case 'skins':
-				$enabledSkins = MediaWikiServices::getInstance()->getSkinFactory()->getInstalledSkins();
+				$enabledSkins = $this->skinFactory->getInstalledSkins();
 
 				unset(
 					$enabledSkins['apioutput'],
@@ -326,7 +345,7 @@ class TypesBuilder {
 				);
 
 				if ( $options['excludeSkipSkins'] ?? false ) {
-					foreach ( $config->get( MainConfigNames::SkipSkins ) as $skip ) {
+					foreach ( $this->options->get( MainConfigNames::SkipSkins ) as $skip ) {
 						unset( $enabledSkins[$skip] );
 					}
 				}
@@ -394,6 +413,9 @@ class TypesBuilder {
 				];
 				break;
 			case 'usergroups':
+				$mwPermissions = $this->permissionsFactory->newInstance( $dbname );
+				$groupList = $mwPermissions->listGroups();
+
 				$language = RequestContext::getMain()->getLanguage();
 				$groups = [];
 				foreach ( $groupList as $group ) {
@@ -412,7 +434,7 @@ class TypesBuilder {
 				}
 				break;
 			case 'userrights':
-				$permissions = MediaWikiServices::getInstance()->getPermissionManager()->getAllPermissions();
+				$permissions = $this->permissionManager->getAllPermissions();
 				$rights = array_combine( $permissions, $permissions );
 
 				$configs = [
@@ -451,15 +473,13 @@ class TypesBuilder {
 		return $configs;
 	}
 
-	private static function namespaces(
-		mixed $overrideDefault,
+	private function buildNamespaceType(
 		string $type,
+		mixed $overrideDefault,
 		mixed $value
 	): array {
 		if ( $type === 'contentmodel' ) {
-			$contentHandlerFactory = MediaWikiServices::getInstance()->getContentHandlerFactory();
-
-			$models = $contentHandlerFactory->getContentModels();
+			$models = $this->contentHandlerFactory->getContentModels();
 			$language = RequestContext::getMain()->getLanguage();
 			$contentModels = [];
 			foreach ( $models as $model ) {
@@ -488,41 +508,5 @@ class TypesBuilder {
 		}
 
 		return [];
-	}
-
-	public static function handleMatrix(
-		array|string $conversion,
-		string $to
-	): array {
-		return match ( $to ) {
-			'php' => ( static function ( string $json ): array {
-				$decoded = json_decode( $json, true );
-				if ( !is_array( $decoded ) ) {
-					return [];
-				}
-
-				$result = [];
-				foreach ( $decoded as $key => $values ) {
-					foreach ( (array)$values as $val ) {
-						$result[] = "$key-$val";
-					}
-				}
-				return $result;
-			} )( $conversion ),
-
-			'phparray' => ( static function ( array $flat ): array {
-				$result = [];
-				foreach ( $flat as $item ) {
-					$parts = explode( '-', $item, 2 );
-					if ( count( $parts ) === 2 ) {
-						[ $row, $col ] = $parts;
-						$result[$row][] = $col;
-					}
-				}
-				return $result;
-			} )( (array)$conversion ),
-
-			default => [],
-		};
 	}
 }

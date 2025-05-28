@@ -6,6 +6,8 @@ use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
+use Miraheze\ManageWiki\FormFactory\FormFactory;
+use Miraheze\ManageWiki\FormFactory\FormFactoryBuilder;
 use Miraheze\ManageWiki\Helpers\CoreModule;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
@@ -19,6 +21,7 @@ use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
+use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Psr\Log\LoggerInterface;
@@ -62,6 +65,26 @@ return [
 			$services->get( 'ManageWikiRequirementsFactory' ),
 			new ServiceOptions(
 				ExtensionsModule::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
+	'ManageWikiFormFactory' => static function ( MediaWikiServices $services ): FormFactory {
+		return new FormFactory( $services->get( 'ManageWikiFormFactoryBuilder' ) );
+	},
+	'ManageWikiFormFactoryBuilder' => static function ( MediaWikiServices $services ): FormFactoryBuilder {
+		return new FormFactoryBuilder(
+			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiHookRunner' ),
+			$services->get( 'ManageWikiLogger' ),
+			$services->get( 'ManageWikiRequirementsFactory' ),
+			$services->get( 'ManageWikiTypesBuilder' ),
+			$services->getLinkRenderer(),
+			$services->getObjectCacheFactory(),
+			$services->getPermissionManager(),
+			$services->getUserGroupManager(),
+			new ServiceOptions(
+				FormFactoryBuilder::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
@@ -131,6 +154,20 @@ return [
 			$services->get( 'ManageWikiSettingsFactory' ),
 			new ServiceOptions(
 				ModuleFactory::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
+	'ManageWikiTypesBuilder' => static function ( MediaWikiServices $services ): TypesBuilder {
+		return new TypesBuilder(
+			$services->get( 'ManageWikiPermissionsFactory' ),
+			$services->getContentHandlerFactory(),
+			$services->getInterwikiLookup(),
+			$services->getPermissionManager(),
+			$services->getSkinFactory(),
+			$services->getUserOptionsLookup(),
+			new ServiceOptions(
+				TypesBuilder::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
