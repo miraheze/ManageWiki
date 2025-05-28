@@ -17,9 +17,12 @@ use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
+use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
 use SkinFactory;
 
 class TypesBuilder {
+
+	use MatrixHandlerTrait;
 
 	public const CONSTRUCTOR_OPTIONS = [];
 
@@ -31,8 +34,7 @@ class TypesBuilder {
 		private readonly SkinFactory $skinFactory,
 		private readonly UserOptionsLookup $userOptionsLookup,
 		private readonly ServiceOptions $options,
-		private readonly string $dbname,
-		private readonly string $type
+		private readonly string $dbname
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
@@ -43,10 +45,14 @@ class TypesBuilder {
 		array $options,
 		mixed $value
 	): array {
-		switch ( $this->type ) {
+		switch ( $options['type'] ) {
 			case 'contentmodel':
 			case 'vestyle':
-				$this->buildNamespaceType( $options['overridedefault'], $value );
+				$this->buildNamespaceType(
+					$options['type'],
+					$options['overridedefault'],
+					$value
+				);
 				break;
 			case 'database':
 				$configs = [
@@ -450,8 +456,12 @@ class TypesBuilder {
 		return $configs;
 	}
 
-	private function buildNamespaceType( mixed $overrideDefault, mixed $value ): array {
-		if ( $this->type === 'contentmodel' ) {
+	private function buildNamespaceType(
+		string $type,
+		mixed $overrideDefault,
+		mixed $value
+	): array {
+		if ( $type === 'contentmodel' ) {
 			$models = $this->contentHandlerFactory->getContentModels();
 			$language = RequestContext::getMain()->getLanguage();
 			$contentModels = [];
@@ -473,7 +483,7 @@ class TypesBuilder {
 			];
 		}
 
-		if ( $this->type === 'vestyle' ) {
+		if ( $type === 'vestyle' ) {
 			return [
 				'type' => 'check',
 				'default' => $value ?? $overrideDefault,
@@ -481,41 +491,5 @@ class TypesBuilder {
 		}
 
 		return [];
-	}
-
-	public function handleMatrix(
-		array|string $conversion,
-		string $to
-	): array {
-		return match ( $to ) {
-			'php' => ( static function ( string $json ): array {
-				$decoded = json_decode( $json, true );
-				if ( !is_array( $decoded ) ) {
-					return [];
-				}
-
-				$result = [];
-				foreach ( $decoded as $key => $values ) {
-					foreach ( (array)$values as $val ) {
-						$result[] = "$key-$val";
-					}
-				}
-				return $result;
-			} )( $conversion ),
-
-			'phparray' => ( static function ( array $flat ): array {
-				$result = [];
-				foreach ( $flat as $item ) {
-					$parts = explode( '-', $item, 2 );
-					if ( count( $parts ) === 2 ) {
-						[ $row, $col ] = $parts;
-						$result[$row][] = $col;
-					}
-				}
-				return $result;
-			} )( (array)$conversion ),
-
-			default => [],
-		};
 	}
 }
