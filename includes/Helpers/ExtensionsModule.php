@@ -45,20 +45,19 @@ class ExtensionsModule implements IModule {
 			->caller( __METHOD__ )
 			->fetchField();
 
-		// To simplify clean up and to reduce the need to constantly refer back to many different variables, we now
-		// populate extension lists with config associated with them.
+		// Populate extension list with associated config to simplify cleanup
 		$config = $this->options->get( ConfigNames::Extensions );
 		foreach ( json_decode( $extensions ?: '[]', true ) as $extension ) {
-			if ( !isset( $config[$extension] ) ) {
+			// Use config if available; otherwise, default to empty array
+			$this->liveExtensions[$extension] = $config[$extension] ?? [];
+
+			// Skip logging in CLI to avoid excessive noise from scripts like ToggleExtension
+			if ( !isset( $config[$extension] ) && MW_ENTRY_POINT !== 'cli' ) {
 				$this->logger->error( '{extension} is not set in {config}', [
 					'config' => ConfigNames::Extensions,
 					'extension' => $extension,
 				] );
-
-				continue;
 			}
-
-			$this->liveExtensions[$extension] = $config[$extension];
 		}
 	}
 
@@ -99,16 +98,15 @@ class ExtensionsModule implements IModule {
 	/**
 	 * Removes an extension from the 'enabled' list
 	 * @param string[] $extensions Array of extensions to disable
-	 * @param bool $force Force removing extension in the event it is removed from config
 	 */
-	public function remove( array $extensions, bool $force ): void {
+	public function remove( array $extensions ): void {
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
-			if ( !isset( $this->liveExtensions[$ext] ) && !$force ) {
+			if ( !isset( $this->liveExtensions[$ext] ) ) {
 				continue;
 			}
 
-			$this->removedExtensions[$ext] = $this->liveExtensions[$ext] ?? [];
+			$this->removedExtensions[$ext] = $this->liveExtensions[$ext];
 			unset( $this->liveExtensions[$ext] );
 
 			$this->changes[$ext] = [
@@ -136,7 +134,7 @@ class ExtensionsModule implements IModule {
 			}
 
 			if ( !in_array( $ext, $extensions, true ) && in_array( $ext, $overwrittenExts, true ) ) {
-				$this->remove( [ $ext ], force: false );
+				$this->remove( [ $ext ] );
 			}
 		}
 	}
