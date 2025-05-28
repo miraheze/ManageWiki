@@ -21,10 +21,10 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
-use Miraheze\ManageWiki\Helpers\Factories\TypesBuilderFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
+use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Miraheze\ManageWiki\ICoreModule;
@@ -55,7 +55,7 @@ class FormFactoryBuilder {
 		private readonly HookRunner $hookRunner,
 		private readonly LoggerInterface $logger,
 		private readonly RequirementsFactory $requirementsFactory,
-		private readonly TypesBuilderFactory $typesBuilderFactory,
+		private readonly TypesBuilder $typesBuilder,
 		private readonly LinkRenderer $linkRenderer,
 		private readonly ObjectCacheFactory $objectCacheFactory,
 		private readonly PermissionManager $permissionManager,
@@ -441,7 +441,6 @@ class FormFactoryBuilder {
 		);
 
 		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
-		$mwTypesBuilder = $this->typesBuilderFactory->getBuilder( $dbname );
 
 		$formDescriptor = [];
 		$filteredSettings = array_diff_assoc( $filteredList, array_keys( $manageWikiSettings ) ) ?: $manageWikiSettings;
@@ -475,7 +474,8 @@ class FormFactoryBuilder {
 						$set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = $mwTypesBuilder->build(
+				$configs = $this->typesBuilder->build(
+					dbname: $dbname,
 					disabled: $disabled,
 					options: $set,
 					value: $value,
@@ -559,8 +559,6 @@ class FormFactoryBuilder {
 		}
 
 		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
-		$mwTypesBuilder = $this->typesBuilderFactory->getBuilder( $dbname );
-
 		$session = $context->getRequest()->getSession();
 
 		foreach ( $nsID as $name => $id ) {
@@ -653,7 +651,8 @@ class FormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
-				] + $mwTypesBuilder->build(
+				] + $this->typesBuilder->build(
+					dbname: $dbname,
 					disabled: false,
 					value: $namespaceData['contentmodel'],
 					name: '',
@@ -709,7 +708,8 @@ class FormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = $mwTypesBuilder->build(
+					$configs = $this->typesBuilder->build(
+						dbname: $dbname,
 						disabled: $disabled,
 						options: $a,
 						value: $namespaceData['additional'][$key] ?? null,
@@ -754,7 +754,8 @@ class FormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
-			] + $mwTypesBuilder->build(
+			] + $this->typesBuilder->build(
+				dbname: $dbname,
 				disabled: false,
 				value: $namespaceData['aliases'],
 				name: '',
