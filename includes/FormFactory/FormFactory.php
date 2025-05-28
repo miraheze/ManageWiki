@@ -23,8 +23,7 @@ class FormFactory {
 		IContextSource $context,
 		string $dbname,
 		string $module,
-		string $special,
-		string $filtered
+		string $special
 	): OOUIHTMLFormTabs {
 		$context->getOutput()->enableOOUI();
 		// Can the user modify ManageWiki?
@@ -38,7 +37,7 @@ class FormFactory {
 
 		$formDescriptor = $this->formFactoryBuilder->buildDescriptor(
 			$moduleFactory, $context, $dbname, $module,
-			$special, $filtered, $ceMW
+			$special, $ceMW
 		);
 
 		$htmlForm = new OOUIHTMLFormTabs( $formDescriptor, $context, $module );
@@ -50,8 +49,7 @@ class FormFactory {
 					$formData,
 					$dbname,
 					$module,
-					$special,
-					$filtered
+					$special
 				)
 			)
 			->setId( 'managewiki-form' )
@@ -71,8 +69,7 @@ class FormFactory {
 		array $formData,
 		string $dbname,
 		string $module,
-		string $special,
-		string $filtered
+		string $special
 	): Status|bool {
 		$context = $form->getContext();
 		if ( !$context->getAuthority()->isAllowed( "managewiki-$module" ) ) {
@@ -91,7 +88,7 @@ class FormFactory {
 
 		$mwReturn = $this->formFactoryBuilder->submissionHandler(
 			$formData, $form, $module, $dbname, $context,
-			$moduleFactory, $special, $filtered
+			$moduleFactory, $special
 		);
 
 		if ( $mwReturn ) {
