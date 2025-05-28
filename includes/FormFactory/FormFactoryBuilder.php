@@ -434,20 +434,19 @@ class FormFactoryBuilder {
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->listAll();
 
+		// If we have filtered settings, use them, otherwise use all settings
 		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
 			$value['from'] === strtolower( $filtered ) && (
 				in_array( $value['from'], $extList, true ) ||
 				( $value['global'] ?? false )
 			)
-		);
+		) ?: $manageWikiSettings;
 
 		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$formDescriptor = [];
-		$filteredSettings = $filteredList ?: $manageWikiSettings;
-
-		foreach ( $filteredSettings as $name => $set ) {
+		foreach ( $filteredList as $name => $set ) {
 			if ( !isset( $set['requires'] ) ) {
 				$this->logger->error( '\'requires\' is not set in {config} for {var}', [
 					'config' => ConfigNames::Settings,
