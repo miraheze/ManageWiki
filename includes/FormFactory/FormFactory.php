@@ -41,7 +41,7 @@ class FormFactory {
 			$special, $filtered, $ceMW
 		);
 
-		$htmlForm = new OOUIHTMLFormTabs( $formDescriptor, $context, $module );
+		$htmlForm = new OOUIHTMLFormTabs( $formDescriptor, $context, "managewiki-$module-section" );
 		$htmlForm
 			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
 				$this->submitForm(
