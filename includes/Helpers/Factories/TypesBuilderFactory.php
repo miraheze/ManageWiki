@@ -23,7 +23,7 @@ class TypesBuilderFactory {
 	) {
 	}
 
-	public function getBuilder( string $dbname, string $type ): TypesBuilder {
+	public function getBuilder( string $dbname ): TypesBuilder {
 		return new TypesBuilder(
 			$this->contentHandlerFactory,
 			$this->interwikiLookup,
@@ -32,8 +32,7 @@ class TypesBuilderFactory {
 			$this->skinFactory,
 			$this->userOptionsLookup,
 			$this->options,
-			$dbname,
-			$type
+			$dbname
 		);
 	}
 }
