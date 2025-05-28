@@ -39,7 +39,7 @@ class TypesBuilder {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
-	private function build(
+	public function build(
 		bool $disabled,
 		string $name,
 		array $options,
