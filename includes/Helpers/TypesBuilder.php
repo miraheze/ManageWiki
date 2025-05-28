@@ -24,7 +24,24 @@ class TypesBuilder {
 
 	use MatrixHandlerTrait;
 
-	public const CONSTRUCTOR_OPTIONS = [];
+	public const CONSTRUCTOR_OPTIONS = [
+		MainConfigNames::AllowUserCssPrefs,
+		MainConfigNames::DisableLangConversion,
+		MainConfigNames::EnableEmail,
+		MainConfigNames::EnableUserEmail,
+		MainConfigNames::EnableUserEmailMuteList,
+		MainConfigNames::EnotifMinorEdits,
+		MainConfigNames::EnotifRevealEditorAddress,
+		MainConfigNames::EnotifUserTalk,
+		MainConfigNames::EnotifWatchlist,
+		MainConfigNames::ForceHTTPS,
+		MainConfigNames::LocalDatabases,
+		MainConfigNames::RCShowWatchingUsers,
+		MainConfigNames::RCWatchCategoryMembership,
+		MainConfigNames::SearchMatchRedirectPreference,
+		MainConfigNames::SecureLogin,
+		MainConfigNames::SkipSkins
+	];
 
 	public function __construct(
 		private readonly ContentHandlerFactory $contentHandlerFactory,
