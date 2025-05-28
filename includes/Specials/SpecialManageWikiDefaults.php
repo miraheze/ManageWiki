@@ -60,8 +60,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			context: $this->getContext(),
 			dbname: ModuleFactory::DEFAULT_DBNAME,
 			module: 'permissions',
-			special: $group,
-			filtered: ''
+			special: $group
 		)->show();
 	}
 

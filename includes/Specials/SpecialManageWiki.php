@@ -65,7 +65,14 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$additional = $par[1] ?? '';
-		$filtered = $par[2] ?? $par[1] ?? '';
+		if ( isset( $par[2] ) && $additional !== '' ) {
+			// If the first part is a database name then the second part is the actual
+			// additional data we provide to the module.
+			$databases = $this->getConfig()->get( MainConfigNames::LocalDatabases );
+			if ( in_array( $additional, $databases, true ) ) {
+				$additional = $par[2];
+			}
+		}
 
 		if ( !$this->moduleFactory->isEnabled( $module ) ) {
 			$this->getOutput()->addWikiMsg( 'managewiki-disabled', $module );
@@ -83,8 +90,7 @@ class SpecialManageWiki extends SpecialPage {
 			$this->showWikiForm(
 				$this->getConfig()->get( MainConfigNames::DBname ),
 				$module,
-				$additional,
-				$filtered
+				$additional
 			);
 			return;
 		}
@@ -103,7 +109,7 @@ class SpecialManageWiki extends SpecialPage {
 
 			$dbname = $par[1] ?? $this->getConfig()->get( MainConfigNames::DBname );
 			$this->showWikiForm(
-				strtolower( $dbname ), $module, '', ''
+				strtolower( $dbname ), $module, special: ''
 			);
 			return;
 		}
@@ -112,8 +118,7 @@ class SpecialManageWiki extends SpecialPage {
 		$this->showWikiForm(
 			$this->getConfig()->get( MainConfigNames::DBname ),
 			$module,
-			$additional,
-			$filtered
+			$additional
 		);
 	}
 
@@ -188,8 +193,7 @@ class SpecialManageWiki extends SpecialPage {
 	private function showWikiForm(
 		string $dbname,
 		string $module,
-		string $special,
-		string $filtered
+		string $special
 	): void {
 		$this->getOutput()->addModules( [
 			'ext.managewiki.oouiform',
@@ -297,8 +301,7 @@ class SpecialManageWiki extends SpecialPage {
 			context: $this->getContext(),
 			dbname: $dbname,
 			module: $module,
-			special: mb_strtolower( $special ),
-			filtered: $filtered
+			special: mb_strtolower( $special )
 		);
 
 		$this->getOutput()->addHTML( new FieldLayout(
