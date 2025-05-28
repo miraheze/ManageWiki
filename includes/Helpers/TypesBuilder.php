@@ -62,11 +62,10 @@ class TypesBuilder {
 		array $options,
 		mixed $value
 	): array {
-		$configs = [];
 		switch ( $options['type'] ) {
 			case 'contentmodel':
 			case 'vestyle':
-				$this->buildNamespaceType(
+				$configs = $this->buildNamespaceType(
 					$options['type'],
 					$options['overridedefault'],
 					$value
