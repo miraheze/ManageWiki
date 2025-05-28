@@ -149,7 +149,9 @@ class FormFactoryBuilder {
 				'if' => $mwCore->isEnabled( 'sitename' ),
 				'type' => 'text',
 				'default' => $mwCore->getSitename(),
-				// https://github.com/miraheze/CreateWiki/blob/20c2f47/sql/cw_wikis.sql#L3
+				// Needs to be the same as the maxlength for the namespace name in mw_namespaces
+				// due to MetaNamespace (NS_PROJECT) which will often use the sitename.
+				// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_namespaces.sql#L4
 				'maxlength' => 128,
 				'required' => true,
 				'access' => !$ceMW,
