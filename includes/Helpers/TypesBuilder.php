@@ -50,17 +50,17 @@ class TypesBuilder {
 		private readonly PermissionsFactory $permissionsFactory,
 		private readonly SkinFactory $skinFactory,
 		private readonly UserOptionsLookup $userOptionsLookup,
-		private readonly ServiceOptions $options,
-		private readonly string $dbname
+		private readonly ServiceOptions $options
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
 	public function build(
-		bool $disabled,
+		string $dbname,
 		string $name,
-		array $options,
-		mixed $value
+		mixed $value,
+		bool $disabled,
+		array $options
 	): array {
 		switch ( $options['type'] ) {
 			case 'contentmodel':
