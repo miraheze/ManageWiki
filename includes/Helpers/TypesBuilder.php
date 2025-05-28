@@ -6,7 +6,7 @@ use Collator;
 use DateTimeZone;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Content\ContentHandler;
-use MediaWiki\Content\ContentHandlerFactory;
+use MediaWiki\Content\IContentHandlerFactory;
 use MediaWiki\Context\RequestContext;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Interwiki\InterwikiLookup;
@@ -44,7 +44,7 @@ class TypesBuilder {
 	];
 
 	public function __construct(
-		private readonly ContentHandlerFactory $contentHandlerFactory,
+		private readonly IContentHandlerFactory $contentHandlerFactory,
 		private readonly InterwikiLookup $interwikiLookup,
 		private readonly PermissionManager $permissionManager,
 		private readonly PermissionsFactory $permissionsFactory,
@@ -62,6 +62,7 @@ class TypesBuilder {
 		array $options,
 		mixed $value
 	): array {
+		$configs = [];
 		switch ( $options['type'] ) {
 			case 'contentmodel':
 			case 'vestyle':
@@ -79,7 +80,7 @@ class TypesBuilder {
 						string $database,
 						array $alldata,
 						HTMLForm $form
-					) use ( $config, $name ): bool|Message {
+					) use ( $name ): bool|Message {
 						if ( !in_array( $database, $this->options->get( MainConfigNames::LocalDatabases ), true ) ) {
 							return $form->msg( 'managewiki-invalid-database', $database, $name );
 						}
