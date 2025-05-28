@@ -29,11 +29,16 @@ use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Miraheze\ManageWiki\ICoreModule;
+use Miraheze\ManageWiki\Traits\FormHelperTrait;
+use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
 use ObjectCacheFactory;
 use Psr\Log\LoggerInterface;
 use Wikimedia\ObjectCache\WANObjectCache;
 
 class FormFactoryBuilder {
+
+	use FormHelperTrait;
+	use MatrixHandlerTrait;
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
@@ -54,6 +59,7 @@ class FormFactoryBuilder {
 		private readonly LoggerInterface $logger,
 		private readonly MessageUpdater $messageUpdater,
 		private readonly RequirementsFactory $requirementsFactory,
+		private readonly TypesBuilder $typesBuilder,
 		private readonly LinkRenderer $linkRenderer,
 		private readonly ObjectCacheFactory $objectCacheFactory,
 		private readonly PermissionManager $permissionManager,
@@ -429,8 +435,6 @@ class FormFactoryBuilder {
 		$extList = $mwExtensions->list();
 		$mwSettings = $moduleFactory->settings( $dbname );
 		$settingsList = $mwSettings->listAll();
-		$mwPermissions = $moduleFactory->permissions( $dbname );
-		$groupList = $mwPermissions->listGroups();
 
 		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
@@ -474,15 +478,12 @@ class FormFactoryBuilder {
 						$set['overridedefault'][ $set['associativeKey'] ];
 				}
 
-				$configs = TypesBuilder::process(
+				$configs = $this->typesBuilder->build(
+					dbname: $dbname,
 					disabled: $disabled,
-					groupList: $groupList,
-					module: 'settings',
 					options: $set,
 					value: $value,
-					name: $name,
-					overrideDefault: false,
-					type: ''
+					name: $name
 				);
 
 				$help = [];
@@ -663,15 +664,15 @@ class FormFactoryBuilder {
 					'cssclass' => 'managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
-				] + TypesBuilder::process(
+				] + $this->typesBuilder->build(
+					dbname: $dbname,
 					disabled: false,
-					groupList: [],
-					module: 'namespaces',
-					options: [],
 					value: $namespaceData['contentmodel'],
 					name: '',
-					overrideDefault: false,
-					type: 'contentmodel'
+					options: [
+						'overridedefault' => false,
+						'type' => 'contentmodel',
+					]
 				),
 				"protection-$name" => [
 					'type' => 'combobox',
@@ -720,15 +721,12 @@ class FormFactoryBuilder {
 						$a['overridedefault'] = $a['overridedefault'][$id] ?? $a['overridedefault']['default'];
 					}
 
-					$configs = TypesBuilder::process(
+					$configs = $this->typesBuilder->build(
+						dbname: $dbname,
 						disabled: $disabled,
-						groupList: [],
-						module: 'namespaces',
 						options: $a,
 						value: $namespaceData['additional'][$key] ?? null,
-						name: '',
-						overrideDefault: $a['overridedefault'],
-						type: $a['type']
+						name: ''
 					);
 
 					$help = [];
@@ -769,15 +767,15 @@ class FormFactoryBuilder {
 				'cssclass' => 'managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
-			] + TypesBuilder::process(
+			] + $this->typesBuilder->build(
+				dbname: $dbname,
 				disabled: false,
-				groupList: [],
-				module: 'namespaces',
-				options: [],
 				value: $namespaceData['aliases'],
 				name: '',
-				overrideDefault: [],
-				type: 'texts'
+				options: [
+					'overridedefault' => [],
+					'type' => 'texts',
+				]
 			);
 		}
 
@@ -879,7 +877,7 @@ class FormFactoryBuilder {
 				$this->options->get( ConfigNames::PermissionsDisallowedGroups ),
 				$this->userGroupManager->listAllImplicitGroups()
 			),
-			'groupMatrix' => TypesBuilder::handleMatrix( json_encode( $matrixConstruct ), 'php' ),
+			'groupMatrix' => $this->handleMatrix( json_encode( $matrixConstruct ), 'php' ),
 			'autopromote' => $groupData['autopromote'] ?? null,
 		];
 
@@ -1376,8 +1374,8 @@ class FormFactoryBuilder {
 					$value = array_map( 'intval', $value );
 					break;
 				case 'matrix':
-					$current = TypesBuilder::handleMatrix( $current, 'php' );
-					$value = TypesBuilder::handleMatrix( $value, 'phparray' );
+					$current = $this->handleMatrix( $current, 'php' );
+					$value = $this->handleMatrix( $value, 'phparray' );
 					break;
 				case 'text':
 					if ( !$value ) {
@@ -1625,7 +1623,7 @@ class FormFactoryBuilder {
 			'remove' => $removedPerms,
 		];
 
-		$newMatrix = TypesBuilder::handleMatrix( $formData['group-matrix'], 'phparray' );
+		$newMatrix = $this->handleMatrix( $formData['group-matrix'], 'phparray' );
 
 		$matrixNew = [
 			'addgroups' => array_diff(
@@ -1718,81 +1716,5 @@ class FormFactoryBuilder {
 		}
 
 		return $mwPermissions;
-	}
-
-	private function buildRequires(
-		IContextSource $context,
-		array $config
-	): string {
-		$requires = [];
-		$language = $context->getLanguage();
-
-		$or = $context->msg( 'managewiki-requires-or' )->text();
-		$space = $context->msg( 'word-separator' )->text();
-		$colon = $context->msg( 'colon-separator' )->text();
-
-		foreach ( $config as $require => $data ) {
-			$flat = [];
-			foreach ( (array)$data as $key => $element ) {
-				// $key/$colon can be removed here if visibility becomes its own system
-				if ( is_array( $element ) ) {
-					$flat[] = $context->msg( 'parentheses',
-						$space . ( !is_int( $key ) ? $key . $colon : '' ) . implode(
-							$space . $language->uc( $or ) . $space,
-							$element
-						) . $space
-					)->text();
-					continue;
-				}
-
-				$flat[] = ( !is_int( $key ) ? $key . $colon : '' ) . $element;
-			}
-
-			$requires[] = $language->ucfirst( $require ) . $colon . $language->commaList( $flat );
-		}
-
-		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
-	}
-
-	private function buildDisableIf( array $requires, string $conflict ): array {
-		$conditions = [];
-		foreach ( $requires as $entry ) {
-			if ( is_array( $entry ) ) {
-				// OR logic for this group
-				$orConditions = [];
-				foreach ( $entry as $ext ) {
-					$orConditions[] = [ '!==', "ext-$ext", '1' ];
-				}
-
-				$conditions[] = count( $orConditions ) === 1 ?
-					$orConditions[0] :
-					array_merge( [ 'AND' ], $orConditions );
-			} else {
-				// Simple AND logic
-				$conditions[] = [ '!==', "ext-$entry", '1' ];
-			}
-		}
-
-		$finalCondition = count( $conditions ) === 1 ?
-			$conditions[0] :
-			array_merge( [ 'OR' ], $conditions );
-
-		if ( $conflict ) {
-			$finalCondition = [
-				'OR',
-				$finalCondition,
-				[ '===', "ext-$conflict", '1' ]
-			];
-		}
-
-		return $finalCondition;
-	}
-
-	private function getConfigName( string $name ): string {
-		return "wg$name";
-	}
-
-	private function getConfigVar( string $name ): string {
-		return "\$wg$name";
 	}
 }

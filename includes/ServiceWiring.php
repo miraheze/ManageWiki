@@ -22,6 +22,7 @@ use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\MessageUpdater;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
+use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Psr\Log\LoggerInterface;
@@ -79,6 +80,7 @@ return [
 			$services->get( 'ManageWikiLogger' ),
 			$services->get( 'ManageWikiMessageUpdater' ),
 			$services->get( 'ManageWikiRequirementsFactory' ),
+			$services->get( 'ManageWikiTypesBuilder' ),
 			$services->getLinkRenderer(),
 			$services->getObjectCacheFactory(),
 			$services->getPermissionManager(),
@@ -166,6 +168,20 @@ return [
 			$services->get( 'ManageWikiSettingsFactory' ),
 			new ServiceOptions(
 				ModuleFactory::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
+	'ManageWikiTypesBuilder' => static function ( MediaWikiServices $services ): TypesBuilder {
+		return new TypesBuilder(
+			$services->get( 'ManageWikiPermissionsFactory' ),
+			$services->getContentHandlerFactory(),
+			$services->getInterwikiLookup(),
+			$services->getPermissionManager(),
+			$services->getSkinFactory(),
+			$services->getUserOptionsLookup(),
+			new ServiceOptions(
+				TypesBuilder::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
