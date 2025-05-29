@@ -1020,7 +1020,7 @@ class FormFactoryBuilder {
 			'once' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-once',
-				'default' => array_search( 'once', (array)$aP, true ) !== false,
+				'default' => in_array( 'once', (array)$aP, true ),
 				'disabled' => !$ceMW,
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'section' => 'advanced/autopromote',
@@ -1047,7 +1047,7 @@ class FormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-email',
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'default' => array_search( APCOND_EMAILCONFIRMED, (array)$aP, true ) !== false,
+				'default' => in_array( APCOND_EMAILCONFIRMED, (array)$aP, true ),
 				'disabled' => !$ceMW,
 				'section' => 'advanced/autopromote',
 			],
@@ -1055,7 +1055,7 @@ class FormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-blocked',
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'default' => array_search( APCOND_BLOCKED, (array)$aP, true ) !== false,
+				'default' => in_array( APCOND_BLOCKED, (array)$aP, true ),
 				'disabled' => !$ceMW,
 				'section' => 'advanced/autopromote',
 			],
@@ -1063,7 +1063,7 @@ class FormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-bot',
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'default' => array_search( APCOND_ISBOT, (array)$aP, true ) !== false,
+				'default' => in_array( APCOND_ISBOT, (array)$aP, true ),
 				'disabled' => !$ceMW,
 				'section' => 'advanced/autopromote',
 			],
@@ -1478,12 +1478,12 @@ class FormFactoryBuilder {
 		$removedPerms = [];
 
 		foreach ( $assignablePerms as $perm ) {
-			if ( $formData["right-$perm"] && array_search( $perm, $groupData['permissions'], true ) === false ) {
+			if ( $formData["right-$perm"] && !in_array( $perm, $groupData['permissions'], true ) ) {
 				$addedPerms[] = $perm;
 				continue;
 			}
 
-			if ( !$formData["right-$perm"] && array_search( $perm, $groupData['permissions'], true ) !== false ) {
+			if ( !$formData["right-$perm"] && in_array( $perm, $groupData['permissions'], true ) ) {
 				$removedPerms[] = $perm;
 			}
 		}
@@ -1545,7 +1545,6 @@ class FormFactoryBuilder {
 
 		foreach ( $matrixOld as $type => $array ) {
 			$newArray = [];
-
 			foreach ( $array as $name ) {
 				$newArray[] = $name;
 			}
