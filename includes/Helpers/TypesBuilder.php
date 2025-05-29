@@ -502,7 +502,7 @@ class TypesBuilder {
 			// Use collator to make sure we do this in a way that works multilingual
 			$collator = new Collator( $language->getCode() );
 			uksort( $contentModels,
-				static fn ( string $a, string $b ): int =>
+				static fn ( string $a, string $b ): false|int =>
 					$collator->compare( $a, $b )
 			);
 

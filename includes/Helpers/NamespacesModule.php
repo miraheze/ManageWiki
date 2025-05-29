@@ -81,7 +81,7 @@ class NamespacesModule implements IModule {
 		}
 	}
 
-	public function getNewId(): int {
+	public function getNewId(): float|int {
 		$lastID = $this->dbr->newSelectQueryBuilder()
 			->select( 'ns_namespace_id' )
 			->from( 'mw_namespaces' )

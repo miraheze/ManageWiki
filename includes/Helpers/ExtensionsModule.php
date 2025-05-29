@@ -74,7 +74,7 @@ class ExtensionsModule implements IModule {
 	/**
 	 * Lists an array of all extensions currently 'enabled'
 	 *
-	 * @return string[] Array of extensions enabled
+	 * @return list<int>|list<string> Array of extensions enabled
 	 */
 	public function list(): array {
 		return array_keys( $this->liveExtensions );
