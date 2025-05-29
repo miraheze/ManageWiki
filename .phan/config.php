@@ -22,4 +22,35 @@ $cfg['suppress_issue_types'] = [
 	'SecurityCheck-LikelyFalsePositive',
 ];
 
+$cfg['plugins'] = array_merge( $cfg['plugins'], [
+	'AlwaysReturnPlugin',
+	'DeprecateAliasPlugin',
+	'DollarDollarPlugin',
+	'DuplicateArrayKeyPlugin',
+	'DuplicateConstantPlugin',
+	'EmptyMethodAndFunctionPlugin',
+	'EmptyStatementListPlugin',
+	'FFIAnalysisPlugin',
+	'InlineHTMLPlugin',
+	'InvalidVariableIssetPlugin',
+	'InvokePHPNativeSyntaxCheckPlugin',
+	'LoopVariableReusePlugin',
+	'MoreSpecificElementTypePlugin',
+	'NotFullyQualifiedUsagePlugin',
+	'PHPUnitAssertionPlugin',
+	'PHPUnitNotDeadCodePlugin',
+	'PreferNamespaceUsePlugin',
+	'PrintfCheckerPlugin',
+	'SimplifyExpressionPlugin',
+	'SleepCheckerPlugin',
+	'StrictComparisonPlugin',
+	'SuspiciousParamOrderPlugin',
+	'UnknownElementTypePlugin',
+	'UnreachableCodePlugin',
+	'UseReturnValuePlugin',
+	'WhitespacePlugin',
+] );
+
+$cfg['enable_class_alias_support'] = false;
+
 return $cfg;
