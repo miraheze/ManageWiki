@@ -73,18 +73,18 @@ class ExtensionsModule implements IModule {
 
 	/**
 	 * Lists an array of all extensions currently 'enabled'
-	 *
 	 * @return string[] Array of extensions enabled
+	 *
+	 * Phan warns list<int>|list<string> due to array_keys possibly returning int[]; however,
+	 * $this->liveExtensions is always defined with string keys only, making this safe.
+	 * @phan-suppress PhanPartialTypeMismatchReturn
 	 */
 	public function list(): array {
-		/** @var string[] $extensions */
-		$extensions = array_keys( $this->liveExtensions );
-		return $extensions;
+		return array_keys( $this->liveExtensions );
 	}
 
 	/**
 	 * Lists names of all currently enabled extensions.
-	 *
 	 * @return string[] Array of ExtensionRegistry names
 	 */
 	public function listNames(): array {
