@@ -77,7 +77,7 @@ class ExtensionsModule implements IModule {
 	 *
 	 * Phan warns list<int>|list<string> due to array_keys possibly returning int[]; however,
 	 * $this->liveExtensions is always defined with string keys only, making this safe.
-	 * @phan-suppress PhanPartialTypeMismatchReturn
+	 * @suppress PhanPartialTypeMismatchReturn
 	 */
 	public function list(): array {
 		return array_keys( $this->liveExtensions );
