@@ -29,7 +29,7 @@ interface ManageWikiAfterSidebarLinksHook {
 	 *   ]
 	 *   This array is passed by reference and can be modified.
 	 *
-	 * @return void
+	 * @return void This hook must not abort, it must return no value.
 	 */
 	public function onManageWikiAfterSidebarLinks( Skin $skin, array &$sidebarLinks ): void;
 }

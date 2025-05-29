@@ -26,7 +26,7 @@ interface ManageWikiCoreProviderHook {
 	 * @param string $dbname
 	 *   The database name of the target wiki (e.g., "examplewiki").
 	 *
-	 * @return void
+	 * @return void This hook must not abort, it must return no value.
 	 */
 	public function onManageWikiCoreProvider( ?ICoreModule &$provider, string $dbname ): void;
 }

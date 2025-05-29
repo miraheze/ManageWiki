@@ -30,7 +30,7 @@ interface ManageWikiCoreFormSubmissionHook {
 	 *   The submitted form data as an associative array. This contains all field values including
 	 *   both core and extension-defined fields.
 	 *
-	 * @return void
+	 * @return void This hook must not abort, it must return no value.
 	 */
 	public function onManageWikiCoreFormSubmission(
 		IContextSource $context,

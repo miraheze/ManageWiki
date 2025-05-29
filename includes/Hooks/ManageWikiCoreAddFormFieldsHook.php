@@ -33,7 +33,7 @@ interface ManageWikiCoreAddFormFieldsHook {
 	 *   to add new form fields or update existing ones. Array keys should be unique field names,
 	 *   and values should conform to HTMLForm field configuration.
 	 *
-	 * @return void
+	 * @return void This hook must not abort, it must return no value.
 	 */
 	public function onManageWikiCoreAddFormFields(
 		IContextSource $context,
