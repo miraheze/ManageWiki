@@ -33,8 +33,10 @@ $cfg['plugins'] = array_merge( $cfg['plugins'], [
 	'InlineHTMLPlugin',
 	'InvalidVariableIssetPlugin',
 	'InvokePHPNativeSyntaxCheckPlugin',
+	'LoopVariableReusePlugin',
 	// 'MoreSpecificElementTypePlugin',
 	'NotFullyQualifiedUsagePlugin',
+	'PHPDocRedundantPlugin',
 	'PHPUnitAssertionPlugin',
 	'PHPUnitNotDeadCodePlugin',
 	'PreferNamespaceUsePlugin',
@@ -43,6 +45,9 @@ $cfg['plugins'] = array_merge( $cfg['plugins'], [
 	'StrictComparisonPlugin',
 	'SuspiciousParamOrderPlugin',
 	// 'UnknownElementTypePlugin',
+	'UnreachableCodePlugin',
+	'UnsafeCodePlugin',
+	'UseReturnValuePlugin',
 ] );
 
 $cfg['enable_class_alias_support'] = false;
