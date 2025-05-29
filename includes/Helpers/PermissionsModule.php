@@ -13,7 +13,6 @@ use Wikimedia\Message\MessageValue;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
 use function array_diff;
 use function array_keys;
-use function array_map;
 use function array_merge;
 use function array_unique;
 use function array_values;

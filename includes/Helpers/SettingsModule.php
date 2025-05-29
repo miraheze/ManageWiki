@@ -10,9 +10,9 @@ use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use function array_key_exists;
 use function array_keys;
+use function implode;
 use function json_decode;
 use function json_encode;
-use function implode;
 
 class SettingsModule implements IModule {
 

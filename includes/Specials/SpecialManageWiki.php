@@ -18,7 +18,6 @@ use OOUI\SearchInputWidget;
 use function array_key_exists;
 use function array_map;
 use function explode;
-use function htmlspecialchars;
 use function in_array;
 use function is_int;
 use function mb_strtolower;
