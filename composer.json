@@ -45,7 +45,7 @@
 			"minus-x check .",
 			"@phpcs"
 		],
-		"phan": "phan -d . --long-progress-bar",
+		"phan": "phan --analyze-twice -d . --long-progress-bar",
 		"phpcs": "phpcs -sp --cache"
 	},
 	"config": {
