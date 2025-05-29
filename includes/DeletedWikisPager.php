@@ -7,6 +7,8 @@ use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Pager\TablePager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use function htmlspecialchars;
+use const ENT_QUOTES;
 
 class DeletedWikisPager extends TablePager {
 

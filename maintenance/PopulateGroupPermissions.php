@@ -7,6 +7,9 @@ use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use function array_filter;
+use function in_array;
+use function json_encode;
 
 class PopulateGroupPermissions extends Maintenance {
 

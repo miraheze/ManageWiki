@@ -8,6 +8,7 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Wikimedia\ParamValidator\ParamValidator;
+use function array_flip;
 
 class ApiQueryWikiConfig extends ApiQueryBase {
 

@@ -7,6 +7,15 @@ use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Wikimedia\Rdbms\IDatabase;
+use function array_keys;
+use function is_array;
+use function json_encode;
+use function str_replace;
+use function ucfirst;
+use const CONTENT_MODEL_WIKITEXT;
+use const NS_MAIN;
+use const NS_PROJECT;
+use const NS_PROJECT_TALK;
 
 class PopulateNamespaces extends Maintenance {
 

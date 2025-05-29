@@ -19,6 +19,19 @@ use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
 use SkinFactory;
+use function array_combine;
+use function array_filter;
+use function array_flip;
+use function array_keys;
+use function array_map;
+use function array_merge;
+use function htmlspecialchars;
+use function implode;
+use function in_array;
+use function ksort;
+use function preg_grep;
+use function str_contains;
+use function uksort;
 
 class TypesBuilder {
 
@@ -489,7 +502,7 @@ class TypesBuilder {
 			// Use collator to make sure we do this in a way that works multilingual
 			$collator = new Collator( $language->getCode() );
 			uksort( $contentModels,
-				static fn ( string $a, string $b ): int =>
+				static fn ( string $a, string $b ): false|int =>
 					$collator->compare( $a, $b )
 			);
 

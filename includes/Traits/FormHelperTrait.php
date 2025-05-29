@@ -3,6 +3,11 @@
 namespace Miraheze\ManageWiki\Traits;
 
 use MediaWiki\Context\IContextSource;
+use function array_merge;
+use function count;
+use function implode;
+use function is_array;
+use function is_int;
 
 trait FormHelperTrait {
 
