@@ -27,12 +27,10 @@ class ExtensionsModule implements IModule {
 		ConfigNames::Extensions,
 	];
 
-	/** @var array<string, array> */
-	private array $liveExtensions = [];
-
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
+	private array $liveExtensions = [];
 	private array $removedExtensions = [];
 	private array $scripts = [];
 
@@ -79,7 +77,9 @@ class ExtensionsModule implements IModule {
 	 * @return string[] Array of extensions enabled
 	 */
 	public function list(): array {
-		return array_keys( $this->liveExtensions );
+		/** @var array<string, array> $extensions */
+		$extensions = $this->liveExtensions;
+		return array_keys( $extensions );
 	}
 
 	/**
