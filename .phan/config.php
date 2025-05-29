@@ -43,6 +43,7 @@ $cfg['plugins'] = array_merge( $cfg['plugins'], [
 	'PrintfCheckerPlugin',
 	'SleepCheckerPlugin',
 	'StrictComparisonPlugin',
+	'StrictLiteralComparisonPlugin',
 	'SuspiciousParamOrderPlugin',
 	// 'UnknownElementTypePlugin',
 	'UnreachableCodePlugin',
