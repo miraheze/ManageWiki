@@ -23,6 +23,7 @@ $cfg['suppress_issue_types'] = [
 ];
 
 $cfg['plugins'] = array_merge( $cfg['plugins'], [
+	'AddNeverReturnTypePlugin',
 	'AlwaysReturnPlugin',
 	'DeprecateAliasPlugin',
 	'DollarDollarPlugin',
