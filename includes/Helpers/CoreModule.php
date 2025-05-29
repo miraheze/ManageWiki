@@ -6,6 +6,8 @@ use MediaWiki\Config\ServiceOptions;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\ICoreModule;
+use function array_keys;
+use function implode;
 
 class CoreModule implements ICoreModule {
 
@@ -32,7 +34,11 @@ class CoreModule implements ICoreModule {
 	}
 
 	public function setSitename( string $sitename ): void {
-		$this->trackChange( 'sitename', $this->getSitename(), $sitename );
+		$this->trackChange(
+			field: 'sitename',
+			oldValue: $this->getSitename(),
+			newValue: $sitename
+		);
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		$mwSettings->modify( [ 'wgSitename' => $sitename ], default: '' );
 	}
@@ -43,7 +49,11 @@ class CoreModule implements ICoreModule {
 	}
 
 	public function setLanguage( string $lang ): void {
-		$this->trackChange( 'language', $this->getLanguage(), $lang );
+		$this->trackChange(
+			field: 'language',
+			oldValue: $this->getLanguage(),
+			newValue: $lang
+		);
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		$mwSettings->modify( [ 'wgLanguageCode' => $lang ], default: 'en' );
 	}
@@ -147,7 +157,11 @@ class CoreModule implements ICoreModule {
 
 	public function setServerName( string $server ): void {
 		$server = $server === '' ? false : $server;
-		$this->trackChange( 'servername', $this->getServerName(), $server );
+		$this->trackChange(
+			field: 'servername',
+			oldValue: $this->getServerName(),
+			newValue: $server
+		);
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		$mwSettings->modify( [ 'wgServer' => $server ], default: false );
 	}

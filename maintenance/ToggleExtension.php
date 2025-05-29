@@ -5,6 +5,8 @@ namespace Miraheze\ManageWiki\Maintenance;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use function count;
+use function in_array;
 
 class ToggleExtension extends Maintenance {
 

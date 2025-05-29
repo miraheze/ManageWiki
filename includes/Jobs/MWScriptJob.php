@@ -7,6 +7,8 @@ use JobSpecification;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\Shell\Shell;
 use Psr\Log\LoggerInterface;
+use function is_bool;
+use function json_encode;
 
 class MWScriptJob extends Job {
 

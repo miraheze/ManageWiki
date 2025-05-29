@@ -6,6 +6,8 @@ use MediaWiki\Context\RequestContext;
 use MediaWiki\SiteStats\SiteStatsInit;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
+use function in_array;
+use function is_array;
 
 class Requirements {
 

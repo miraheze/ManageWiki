@@ -2,6 +2,11 @@
 
 namespace Miraheze\ManageWiki\Traits;
 
+use function count;
+use function explode;
+use function is_array;
+use function json_decode;
+
 trait MatrixHandlerTrait {
 
 	private function handleMatrix(

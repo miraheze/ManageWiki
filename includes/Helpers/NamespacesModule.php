@@ -16,6 +16,17 @@ use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
 use Wikimedia\Rdbms\SelectQueryBuilder;
+use function array_keys;
+use function array_map;
+use function in_array;
+use function json_decode;
+use function json_encode;
+use function mb_strtolower;
+use function str_replace;
+use function trim;
+use const CONTENT_MODEL_WIKITEXT;
+use const NS_PROJECT;
+use const NS_PROJECT_TALK;
 
 class NamespacesModule implements IModule {
 

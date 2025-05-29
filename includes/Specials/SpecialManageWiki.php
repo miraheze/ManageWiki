@@ -15,6 +15,18 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use OOUI\FieldLayout;
 use OOUI\SearchInputWidget;
+use function array_key_exists;
+use function array_map;
+use function explode;
+use function htmlspecialchars;
+use function in_array;
+use function is_int;
+use function mb_strtolower;
+use function mb_strtoupper;
+use function preg_replace_callback;
+use function str_replace;
+use function strtolower;
+use function trim;
 
 class SpecialManageWiki extends SpecialPage {
 

@@ -10,6 +10,16 @@ use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Psr\Log\LoggerInterface;
+use function array_column;
+use function array_filter;
+use function array_keys;
+use function array_merge;
+use function implode;
+use function in_array;
+use function is_string;
+use function json_decode;
+use function json_encode;
+use const MW_ENTRY_POINT;
 
 class ExtensionsModule implements IModule {
 

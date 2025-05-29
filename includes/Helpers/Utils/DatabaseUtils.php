@@ -14,7 +14,7 @@ class DatabaseUtils {
 	) {
 	}
 
-	public function getCentralWikiID(): bool|string {
+	public function getCentralWikiID(): string {
 		return $this->getCentralWikiReplicaDB()->getDomainID();
 	}
 

@@ -11,6 +11,19 @@ use Miraheze\ManageWiki\IModule;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
+use function array_diff;
+use function array_keys;
+use function array_map;
+use function array_merge;
+use function array_unique;
+use function array_values;
+use function implode;
+use function in_array;
+use function is_array;
+use function json_decode;
+use function json_encode;
+use function mb_strtolower;
+use function sort;
 
 class PermissionsModule implements IModule {
 

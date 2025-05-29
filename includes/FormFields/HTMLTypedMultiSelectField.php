@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\FormFields;
 
 use MediaWiki\HTMLForm\Field\HTMLMultiSelectField;
+use function array_map;
 
 /**
  * Multi-select field that preserves original value types.
