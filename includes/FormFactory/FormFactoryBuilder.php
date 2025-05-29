@@ -40,7 +40,6 @@ use function array_fill_keys;
 use function array_filter;
 use function array_map;
 use function array_merge;
-use function array_search;
 use function array_slice;
 use function array_unique;
 use function count;
