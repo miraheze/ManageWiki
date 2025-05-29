@@ -36,7 +36,6 @@ class ExtensionsModule implements IModule {
 	private array $changes = [];
 	private array $errors = [];
 	private array $logParams = [];
-	private array $liveExtensions = [];
 	private array $removedExtensions = [];
 	private array $scripts = [];
 
