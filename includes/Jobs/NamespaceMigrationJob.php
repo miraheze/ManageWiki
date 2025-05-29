@@ -44,9 +44,7 @@ class NamespaceMigrationJob extends Job {
 		$this->maintainPrefix = $params['maintainPrefix'];
 	}
 
-	/**
-	 * @return bool
-	 */
+	/** @inheritDoc */
 	public function run(): bool {
 		$dbw = $this->databaseUtils->getRemoteWikiPrimaryDB( $this->dbname );
 

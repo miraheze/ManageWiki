@@ -28,9 +28,7 @@ class MWScriptJob extends Job {
 		$this->dbname = $params['dbname'];
 	}
 
-	/**
-	 * @return bool
-	 */
+	/** @inheritDoc */
 	public function run(): bool {
 		$limits = [ 'memory' => 0, 'filesize' => 0 ];
 		foreach ( $this->data as $script => $options ) {
