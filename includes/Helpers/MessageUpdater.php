@@ -13,6 +13,10 @@ use Psr\Log\LoggerInterface;
 use RecentChange;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
+use function json_encode;
+use const EDIT_MINOR;
+use const EDIT_SUPPRESS_RC;
+use const NS_MEDIAWIKI;
 
 class MessageUpdater {
 
