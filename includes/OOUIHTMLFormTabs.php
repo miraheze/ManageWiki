@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki;
 
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\OOUIHTMLForm;
+use MediaWiki\Logger\LoggerFactory;
 use OOUI\ButtonInputWidget;
 use OOUI\FieldsetLayout;
 use OOUI\HtmlSnippet;
@@ -12,7 +13,6 @@ use OOUI\PanelLayout;
 use OOUI\TabPanelLayout;
 use OOUI\Widget;
 use function is_array;
-use function wfDebug;
 
 class OOUIHTMLFormTabs extends OOUIHTMLForm {
 
@@ -51,7 +51,10 @@ class OOUIHTMLFormTabs extends OOUIHTMLForm {
 		$tabPanels = [];
 		foreach ( $this->mFieldTree as $key => $val ) {
 			if ( !is_array( $val ) ) {
-				wfDebug( __METHOD__ . " encountered a field not attached to a section: '$key'" );
+				LoggerFactory::getInstance( 'ManageWiki' )->debug(
+					'Encountered a field not attached to a section: {key}',
+					[ 'key' => $key ]
+				);
 				continue;
 			}
 
