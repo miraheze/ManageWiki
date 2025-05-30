@@ -1170,7 +1170,7 @@ class FormFactoryBuilder {
 			$mwLogID = $mwLogEntry->insert();
 			$mwLogEntry->publish( $mwLogID );
 
-			if ( $module === 'permissions' || $module === 'namespaces' ) {
+			if ( $mwReturn instanceof PermissionsModule || $mwReturn instanceof NamespacesModule ) {
 				if ( $mwReturn->isDeleting( $special ) ) {
 					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
 					$context->getOutput()->redirect(
@@ -1178,7 +1178,7 @@ class FormFactoryBuilder {
 					);
 				}
 
-				if ( $module === 'permissions' && $mwReturn->isRenaming( $special ) ) {
+				if ( $mwReturn instanceof PermissionsModule && $mwReturn->isRenaming( $special ) ) {
 					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
 					$context->getOutput()->redirect(
 						SpecialPage::getTitleFor( 'ManageWiki', "$module/{$formData['group-name']}" )->getFullURL()
