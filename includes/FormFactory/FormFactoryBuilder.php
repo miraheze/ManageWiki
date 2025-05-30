@@ -1123,6 +1123,8 @@ class FormFactoryBuilder {
 		ModuleFactory $moduleFactory,
 		string $special
 	): array {
+		$canDelete = false;
+		$canRename = false;
 		switch ( $module ) {
 			case 'core':
 				$mwReturn = $this->submissionCore( $formData, $dbname, $context, $moduleFactory );
@@ -1137,11 +1139,12 @@ class FormFactoryBuilder {
 				break;
 			case 'namespaces':
 				$mwReturn = $this->submissionNamespaces( $formData, $dbname, $special, $moduleFactory );
-				'@phan-var NamespacesModule $mwReturn';
+				$canDelete = true;
 				break;
 			case 'permissions':
 				$mwReturn = $this->submissionPermissions( $formData, $dbname, $special, $moduleFactory );
-				'@phan-var PermissionsModule $mwReturn';
+				$canDelete = true;
+				$canRename = true;
 				break;
 			default:
 				throw new InvalidArgumentException( "$module not recognized" );
@@ -1172,7 +1175,7 @@ class FormFactoryBuilder {
 			$mwLogID = $mwLogEntry->insert();
 			$mwLogEntry->publish( $mwLogID );
 
-			if ( $module === 'permissions' || $module === 'namespaces' ) {
+			if ( $canDelete ) {
 				if ( $mwReturn->isDeleting( $special ) ) {
 					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
 					$context->getOutput()->redirect(
@@ -1180,7 +1183,7 @@ class FormFactoryBuilder {
 					);
 				}
 
-				if ( $module === 'permissions' && $mwReturn->isRenaming( $special ) ) {
+				if ( $canRename && $mwReturn->isRenaming( $special ) ) {
 					$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
 					$context->getOutput()->redirect(
 						SpecialPage::getTitleFor( 'ManageWiki', "$module/{$formData['group-name']}" )->getFullURL()
