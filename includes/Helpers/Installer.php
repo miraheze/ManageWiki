@@ -11,6 +11,8 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Jobs\MWScriptJob;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\ILBFactory;
+use function in_array;
+use const DB_PRIMARY;
 
 class Installer {
 

@@ -4,6 +4,12 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use function array_pad;
+use function explode;
+use function file;
+use function is_numeric;
+use function str_replace;
+use function strpos;
 
 class PopulateWikiSettings extends Maintenance {
 

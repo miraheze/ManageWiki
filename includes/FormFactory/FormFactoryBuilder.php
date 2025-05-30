@@ -34,6 +34,39 @@ use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
 use ObjectCacheFactory;
 use Psr\Log\LoggerInterface;
 use Wikimedia\ObjectCache\WANObjectCache;
+use function array_column;
+use function array_diff;
+use function array_diff_key;
+use function array_fill_keys;
+use function array_filter;
+use function array_map;
+use function array_merge;
+use function array_slice;
+use function array_unique;
+use function count;
+use function explode;
+use function file_get_contents;
+use function glob;
+use function htmlspecialchars;
+use function implode;
+use function in_array;
+use function is_array;
+use function json_decode;
+use function json_encode;
+use function mb_strtolower;
+use function nl2br;
+use function preg_replace;
+use function str_replace;
+use function trim;
+use const APCOND_AGE;
+use const APCOND_BLOCKED;
+use const APCOND_EDITCOUNT;
+use const APCOND_EMAILCONFIRMED;
+use const APCOND_INGROUPS;
+use const APCOND_ISBOT;
+use const NS_MAIN;
+use const NS_PROJECT;
+use const NS_PROJECT_TALK;
 
 class FormFactoryBuilder {
 
@@ -1046,7 +1079,7 @@ class FormFactoryBuilder {
 			'once' => [
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-once',
-				'default' => array_search( 'once', (array)$aP, true ) !== false,
+				'default' => in_array( 'once', (array)$aP, true ),
 				'disabled' => !$ceMW,
 				'hide-if' => [ '!==', 'enable', '1' ],
 				'section' => 'advanced/autopromote',
@@ -1073,7 +1106,7 @@ class FormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-email',
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'default' => array_search( APCOND_EMAILCONFIRMED, (array)$aP, true ) !== false,
+				'default' => in_array( APCOND_EMAILCONFIRMED, (array)$aP, true ),
 				'disabled' => !$ceMW,
 				'section' => 'advanced/autopromote',
 			],
@@ -1081,7 +1114,7 @@ class FormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-blocked',
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'default' => array_search( APCOND_BLOCKED, (array)$aP, true ) !== false,
+				'default' => in_array( APCOND_BLOCKED, (array)$aP, true ),
 				'disabled' => !$ceMW,
 				'section' => 'advanced/autopromote',
 			],
@@ -1089,7 +1122,7 @@ class FormFactoryBuilder {
 				'type' => 'check',
 				'label-message' => 'managewiki-permissions-autopromote-bot',
 				'hide-if' => [ '!==', 'enable', '1' ],
-				'default' => array_search( APCOND_ISBOT, (array)$aP, true ) !== false,
+				'default' => in_array( APCOND_ISBOT, (array)$aP, true ),
 				'disabled' => !$ceMW,
 				'section' => 'advanced/autopromote',
 			],
@@ -1603,12 +1636,12 @@ class FormFactoryBuilder {
 		$removedPerms = [];
 
 		foreach ( $assignablePerms as $perm ) {
-			if ( $formData["right-$perm"] && array_search( $perm, $groupData['permissions'], true ) === false ) {
+			if ( $formData["right-$perm"] && !in_array( $perm, $groupData['permissions'], true ) ) {
 				$addedPerms[] = $perm;
 				continue;
 			}
 
-			if ( !$formData["right-$perm"] && array_search( $perm, $groupData['permissions'], true ) !== false ) {
+			if ( !$formData["right-$perm"] && in_array( $perm, $groupData['permissions'], true ) ) {
 				$removedPerms[] = $perm;
 			}
 		}
@@ -1670,7 +1703,6 @@ class FormFactoryBuilder {
 
 		foreach ( $matrixOld as $type => $array ) {
 			$newArray = [];
-
 			foreach ( $array as $name ) {
 				$newArray[] = $name;
 			}

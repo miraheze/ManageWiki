@@ -15,6 +15,10 @@ use Miraheze\ManageWiki\FormFactory\FormFactory;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use function in_array;
+use function mb_strtolower;
+use function str_replace;
+use function trim;
 
 class SpecialManageWikiDefaults extends SpecialPage {
 

@@ -7,6 +7,9 @@ use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;
+use function str_replace;
+use function trim;
+use const NS_MAIN;
 
 /**
  * Used on namespace rename and deletion to move pages in and out of namespaces.
@@ -41,9 +44,7 @@ class NamespaceMigrationJob extends Job {
 		$this->maintainPrefix = $params['maintainPrefix'];
 	}
 
-	/**
-	 * @return bool
-	 */
+	/** @inheritDoc */
 	public function run(): bool {
 		$dbw = $this->databaseUtils->getRemoteWikiPrimaryDB( $this->dbname );
 

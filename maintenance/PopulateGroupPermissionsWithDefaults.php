@@ -8,6 +8,7 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
+use function array_diff;
 
 class PopulateGroupPermissionsWithDefaults extends Maintenance {
 

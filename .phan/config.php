@@ -22,4 +22,45 @@ $cfg['suppress_issue_types'] = [
 	'SecurityCheck-LikelyFalsePositive',
 ];
 
+$cfg['plugins'] = array_merge( $cfg['plugins'], [
+	'AddNeverReturnTypePlugin',
+	'AlwaysReturnPlugin',
+	'DeprecateAliasPlugin',
+	'DollarDollarPlugin',
+	'DuplicateConstantPlugin',
+	'EmptyMethodAndFunctionPlugin',
+	'EmptyStatementListPlugin',
+	'FFIAnalysisPlugin',
+	'InlineHTMLPlugin',
+	'InvalidVariableIssetPlugin',
+	'InvokePHPNativeSyntaxCheckPlugin',
+	'LoopVariableReusePlugin',
+	// 'MoreSpecificElementTypePlugin',
+	'NotFullyQualifiedUsagePlugin',
+	'PHPDocRedundantPlugin',
+	'PHPUnitAssertionPlugin',
+	'PHPUnitNotDeadCodePlugin',
+	'PreferNamespaceUsePlugin',
+	'PrintfCheckerPlugin',
+	'RedundantAssignmentPlugin',
+	'SimplifyExpressionPlugin',
+	'SleepCheckerPlugin',
+	'StrictComparisonPlugin',
+	'StrictLiteralComparisonPlugin',
+	'SuspiciousParamOrderPlugin',
+	'UnknownClassElementAccessPlugin',
+	// 'UnknownElementTypePlugin',
+	'UnreachableCodePlugin',
+	'UnsafeCodePlugin',
+	'UseReturnValuePlugin',
+] );
+
+$cfg['enable_class_alias_support'] = false;
+
+// $cfg['strict_method_checking'] = true;
+// $cfg['strict_object_checking'] = true;
+// $cfg['strict_param_checking'] = true;
+// $cfg['strict_property_checking'] = true;
+$cfg['strict_return_checking'] = true;
+
 return $cfg;

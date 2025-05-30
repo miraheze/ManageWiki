@@ -7,6 +7,8 @@ use JobSpecification;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\Shell\Shell;
 use Psr\Log\LoggerInterface;
+use function is_bool;
+use function json_encode;
 
 class MWScriptJob extends Job {
 
@@ -26,9 +28,7 @@ class MWScriptJob extends Job {
 		$this->dbname = $params['dbname'];
 	}
 
-	/**
-	 * @return bool
-	 */
+	/** @inheritDoc */
 	public function run(): bool {
 		$limits = [ 'memory' => 0, 'filesize' => 0 ];
 		foreach ( $this->data as $script => $options ) {

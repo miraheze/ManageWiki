@@ -10,6 +10,16 @@ use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Psr\Log\LoggerInterface;
+use function array_column;
+use function array_filter;
+use function array_keys;
+use function array_merge;
+use function implode;
+use function in_array;
+use function is_string;
+use function json_decode;
+use function json_encode;
+use const MW_ENTRY_POINT;
 
 class ExtensionsModule implements IModule {
 
@@ -63,8 +73,11 @@ class ExtensionsModule implements IModule {
 
 	/**
 	 * Lists an array of all extensions currently 'enabled'
-	 *
 	 * @return string[] Array of extensions enabled
+	 *
+	 * Phan warns list<int>|list<string> due to array_keys possibly returning int[]; however,
+	 * $this->liveExtensions is always defined with string keys only, making this safe.
+	 * @suppress PhanPartialTypeMismatchReturn
 	 */
 	public function list(): array {
 		return array_keys( $this->liveExtensions );
@@ -72,7 +85,6 @@ class ExtensionsModule implements IModule {
 
 	/**
 	 * Lists names of all currently enabled extensions.
-	 *
 	 * @return string[] Array of ExtensionRegistry names
 	 */
 	public function listNames(): array {

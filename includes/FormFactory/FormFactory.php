@@ -10,6 +10,7 @@ use MediaWiki\Status\Status;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\OOUIHTMLFormTabs;
 use PermissionsError;
+use function implode;
 
 class FormFactory {
 

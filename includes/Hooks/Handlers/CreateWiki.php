@@ -16,6 +16,17 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
+use function array_diff;
+use function array_diff_key;
+use function array_keys;
+use function array_merge;
+use function in_array;
+use function is_array;
+use function json_decode;
+use function str_replace;
+use const NS_PROJECT;
+use const NS_PROJECT_TALK;
+use const NS_SPECIAL;
 
 class CreateWiki implements
 	CreateWikiCreationHook,

@@ -11,6 +11,9 @@ use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Hooks\HookRunner;
+use function array_keys;
+use function htmlspecialchars;
+use function in_array;
 
 class Main implements
 	ContentHandlerForModelIDHook,
