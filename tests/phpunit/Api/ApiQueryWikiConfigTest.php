@@ -21,7 +21,7 @@ class ApiQueryWikiConfigTest extends ApiTestCase {
 			'action' => 'query',
 			'list' => 'wikiconfig',
 			'wcfwikis' => 'wikidb',
-		], null, null, self::getTestUser()->getUser() );
+		], null, false, self::getTestUser()->getUser() );
 		$this->addToAssertionCount( 1 );
 	}
 }
