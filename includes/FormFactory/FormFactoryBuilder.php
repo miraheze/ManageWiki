@@ -954,7 +954,7 @@ class FormFactoryBuilder {
 					'filter-callback' => static fn ( string $value ): string => mb_strtolower(
 						str_replace( ' ', '_', trim( $value ) )
 					),
-					'validation-callback' => static fn ( string $value ): bool|Message => match ( true ) {
+					'validation-callback' => static fn ( string $value ): Message|true => match ( true ) {
 						// We just use this to check if the group is valid for a title,
 						// otherwise we can not edit it because the title will be
 						// invalid for the ManageWiki permission subpage.

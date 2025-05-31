@@ -80,7 +80,7 @@ class Installer {
 		return true;
 	}
 
-	private function permissions( array $data, bool $install ): bool {
+	private function permissions( array $data, bool $install ): true {
 		$mwPermissions = $this->moduleFactory->permissions( $this->dbname );
 		$action = $install ? 'add' : 'remove';
 
@@ -104,7 +104,7 @@ class Installer {
 		return true;
 	}
 
-	private function namespaces( array $data, bool $install ): bool {
+	private function namespaces( array $data, bool $install ): true {
 		$mwNamespaces = $this->moduleFactory->namespaces( $this->dbname );
 		foreach ( $data as $name => $i ) {
 			if ( $install ) {
@@ -126,7 +126,7 @@ class Installer {
 		return true;
 	}
 
-	private function mwscript( array $data ): bool {
+	private function mwscript( array $data ): true {
 		if ( Shell::isDisabled() ) {
 			throw new ShellDisabledError();
 		}
@@ -145,7 +145,7 @@ class Installer {
 		return true;
 	}
 
-	private function settings( array $data ): bool {
+	private function settings( array $data ): true {
 		$mwSettings = $this->moduleFactory->settings( $this->dbname );
 		$mwSettings->modify( $data, default: null );
 		$mwSettings->commit();

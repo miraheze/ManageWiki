@@ -405,7 +405,7 @@ class SpecialManageWiki extends SpecialPage {
 						trim( $value )
 					) ?? '';
 
-				$create['out']['validation-callback'] = function ( string $value ) use ( $dbname ): bool|Message {
+				$create['out']['validation-callback'] = function ( string $value ) use ( $dbname ): Message|true {
 					$disallowed = array_map( 'mb_strtolower',
 						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
 					);

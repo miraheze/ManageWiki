@@ -92,7 +92,7 @@ class TypesBuilder {
 						string $database,
 						array $alldata,
 						HTMLForm $form
-					) use ( $name ): bool|Message {
+					) use ( $name ): Message|true {
 						if ( !in_array( $database, $this->options->get( MainConfigNames::LocalDatabases ), true ) ) {
 							return $form->msg( 'managewiki-invalid-database', $database, $name );
 						}
