@@ -61,7 +61,7 @@ $cfg['plugins'] = array_merge( $cfg['plugins'], [
 $cfg['enable_class_alias_support'] = false;
 
 $cfg['strict_method_checking'] = true;
-// $cfg['strict_object_checking'] = true;
+$cfg['strict_object_checking'] = true;
 // $cfg['strict_param_checking'] = true;
 $cfg['strict_property_checking'] = true;
 $cfg['strict_return_checking'] = true;
