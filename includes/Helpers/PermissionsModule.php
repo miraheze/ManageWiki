@@ -52,6 +52,7 @@ class PermissionsModule implements IModule {
 			->fetchResultSet();
 
 		foreach ( $perms as $perm ) {
+			/** @var object{perm_group:string,perm_permissions:string,perm_addgroups:string,perm_removegroups:string,perm_addgroupstoself:string,perm_removegroupsfromself:string,perm_autopromote?:string|null} $perm */
 			$this->livePermissions[$perm->perm_group] = [
 				'permissions' => json_decode( $perm->perm_permissions, true ),
 				'addgroups' => json_decode( $perm->perm_addgroups, true ),

@@ -67,6 +67,7 @@ class NamespacesModule implements IModule {
 			->fetchResultSet();
 
 		foreach ( $namespaces as $ns ) {
+			/** @var object{ns_namespace_id:int,ns_namespace_name:string,ns_searchable:int,ns_subpages:int,ns_content:int,ns_content_model:string,ns_protection:string,ns_aliases:string,ns_core:int,ns_additional:string} $ns */
 			$this->liveNamespaces[(int)$ns->ns_namespace_id] = [
 				'name' => $ns->ns_namespace_name,
 				'searchable' => (int)$ns->ns_searchable,
