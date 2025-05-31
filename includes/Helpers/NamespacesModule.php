@@ -67,8 +67,11 @@ class NamespacesModule implements IModule {
 			->caller( __METHOD__ )
 			->fetchResultSet();
 
+		if ( !$namespaces->numRows() ) {
+			return;
+		}
+
 		foreach ( $namespaces as $ns ) {
-			assert( $ns instanceof stdClass );
 			$this->liveNamespaces[(int)$ns->ns_namespace_id] = [
 				'name' => $ns->ns_namespace_name,
 				'searchable' => (int)$ns->ns_searchable,
