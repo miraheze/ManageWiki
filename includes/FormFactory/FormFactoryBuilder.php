@@ -103,10 +103,10 @@ class FormFactoryBuilder {
 	public function buildDescriptor(
 		ModuleFactory $moduleFactory,
 		IContextSource $context,
-		string $dbname = '',
-		string $module = '',
+		string $dbname,
+		string $module,
 		string $special,
-		bool $ceMW = false
+		bool $ceMW
 	): array {
 		switch ( $module ) {
 			case 'core':
@@ -138,8 +138,8 @@ class FormFactoryBuilder {
 	}
 
 	private function buildDescriptorCore(
-		string $dbname = '',
-		bool $ceMW = false,
+		string $dbname,
+		bool $ceMW,
 		IContextSource $context,
 		ModuleFactory $moduleFactory
 	): array {
