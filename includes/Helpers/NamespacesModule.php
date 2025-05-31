@@ -44,6 +44,7 @@ class NamespacesModule implements IModule {
 	private array $logParams = [];
 	private array $deleteNamespaces = [];
 	private array $liveNamespaces = [];
+	private array $messageFields = [];
 
 	private bool $runNamespaceMigrationJob = true;
 
@@ -272,6 +273,10 @@ class NamespacesModule implements IModule {
 		$this->liveNamespaces[$id] = $nsData;
 	}
 
+	public function addMessageFields( int $id ): void {
+		$this->messageFields[] = $id;
+	}
+
 	/**
 	 * Remove a namespace
 	 * @param int $id Namespace ID
@@ -318,7 +323,7 @@ class NamespacesModule implements IModule {
 	}
 
 	public function hasChanges(): bool {
-		return (bool)$this->changes;
+		return $this->changes || $this->messageFields;
 	}
 
 	public function setLogAction( string $action ): void {
