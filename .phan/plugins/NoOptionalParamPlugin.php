@@ -37,6 +37,11 @@ final class NoOptionalParamPlugin extends PluginV3 implements
 		CodeBase $code_base,
 		Method $method
 	): void {
+		// Skip if method is inherited
+		if ( $method->isOverride() ) {
+			return;
+		}
+
 		foreach ( $method->getParameterList() as $parameter ) {
 			if ( $parameter->isOptional() ) {
 				$this->emitPluginIssue(
