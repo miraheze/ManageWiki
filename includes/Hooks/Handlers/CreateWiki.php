@@ -14,6 +14,7 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Psr\Log\LoggerInterface;
+use stdClass;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
 use function array_diff;
@@ -105,6 +106,11 @@ class CreateWiki implements
 			$metaNamespaceTalk = '';
 
 			foreach ( $nsObjects as $ns ) {
+				if ( !$ns instanceof stdClass ) {
+					// Skip unexpected row
+					continue;
+				}
+
 				if ( $metaNamespace !== '' && $metaNamespaceTalk !== '' ) {
 					// Both found, no need to continue
 					break;
@@ -144,6 +150,11 @@ class CreateWiki implements
 
 			$additional = $this->config->get( ConfigNames::NamespacesAdditional );
 			foreach ( $nsObjects as $ns ) {
+				if ( !$ns instanceof stdClass ) {
+					// Skip unexpected row
+					continue;
+				}
+
 				$nsName = $lcName[(int)$ns->ns_namespace_id] ?? $ns->ns_namespace_name;
 				$lcAlias = $lcEN[(int)$ns->ns_namespace_id] ?? null;
 
@@ -225,6 +236,11 @@ class CreateWiki implements
 			$additionalRemoveGroups = $this->config->get( ConfigNames::PermissionsAdditionalRemoveGroups );
 
 			foreach ( $permObjects as $perm ) {
+				if ( !$perm instanceof stdClass ) {
+					// Skip unexpected row
+					continue;
+				}
+
 				$addPerms = [];
 				$removePerms = [];
 
