@@ -7,12 +7,15 @@ $cfg['minimum_target_php_version'] = '8.1';
 $cfg['directory_list'] = array_merge(
 	$cfg['directory_list'], [
 		'../../extensions/CreateWiki',
+		'../../tests',
+		'tests',
 	]
 );
 
 $cfg['exclude_analysis_directory_list'] = array_merge(
 	$cfg['exclude_analysis_directory_list'], [
 		'../../extensions/CreateWiki',
+		'../../tests',
 	]
 );
 
@@ -55,12 +58,14 @@ $cfg['plugins'] = array_merge( $cfg['plugins'], [
 	'UseReturnValuePlugin',
 ] );
 
+$cfg['plugins'][] = __DIR__ . '/plugins/NoOptionalParamPlugin.php';
+
 $cfg['enable_class_alias_support'] = false;
 
-// $cfg['strict_method_checking'] = true;
-// $cfg['strict_object_checking'] = true;
+$cfg['strict_method_checking'] = true;
+$cfg['strict_object_checking'] = true;
 // $cfg['strict_param_checking'] = true;
-// $cfg['strict_property_checking'] = true;
+$cfg['strict_property_checking'] = true;
 $cfg['strict_return_checking'] = true;
 
 return $cfg;

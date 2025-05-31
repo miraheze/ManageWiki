@@ -8,6 +8,7 @@ use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
+use stdClass;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
@@ -53,6 +54,11 @@ class PermissionsModule implements IModule {
 			->fetchResultSet();
 
 		foreach ( $perms as $perm ) {
+			if ( !$perm instanceof stdClass ) {
+				// Skip unexpected row
+				continue;
+			}
+
 			$this->livePermissions[$perm->perm_group] = [
 				'permissions' => json_decode( $perm->perm_permissions, true ),
 				'addgroups' => json_decode( $perm->perm_addgroups, true ),

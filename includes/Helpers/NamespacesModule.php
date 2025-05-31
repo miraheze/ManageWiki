@@ -13,6 +13,7 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
+use stdClass;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
 use Wikimedia\Rdbms\SelectQueryBuilder;
@@ -68,6 +69,11 @@ class NamespacesModule implements IModule {
 			->fetchResultSet();
 
 		foreach ( $namespaces as $ns ) {
+			if ( !$ns instanceof stdClass ) {
+				// Skip unexpected row
+				continue;
+			}
+
 			$this->liveNamespaces[(int)$ns->ns_namespace_id] = [
 				'name' => $ns->ns_namespace_name,
 				'searchable' => (int)$ns->ns_searchable,

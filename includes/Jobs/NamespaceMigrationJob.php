@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Jobs;
 
 use Job;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use stdClass;
 use Wikimedia\Rdbms\IDatabase;
 use Wikimedia\Rdbms\IExpression;
 use Wikimedia\Rdbms\LikeValue;
@@ -74,6 +75,11 @@ class NamespaceMigrationJob extends Job {
 			->fetchResultSet();
 
 		foreach ( $res as $row ) {
+			if ( !$row instanceof stdClass ) {
+				// Skip unexpected row
+				continue;
+			}
+
 			$pageTitle = $row->page_title;
 			$pageID = $row->page_id;
 
