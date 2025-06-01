@@ -29,7 +29,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 		foreach ( $params['wikis'] as $dbname ) {
 			try {
 				$mwCore = $this->moduleFactory->core( $dbname );
-			} catch ( MissingWikiError $e ) {
+			} catch ( MissingWikiError ) {
 				$this->addWarning( [ 'apiwarn-wikiconfig-wikidoesnotexist', $dbname ] );
 				continue;
 			}

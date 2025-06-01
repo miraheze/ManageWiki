@@ -43,7 +43,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 		$this->getOutput()->addModules( [ 'mediawiki.special.userrights' ] );
 
-		if ( $par && $this->databaseUtils->isCurrentWikiCentral() ) {
+		if ( $par !== null && $par !== '' && $this->databaseUtils->isCurrentWikiCentral() ) {
 			$this->getOutput()->addBacklinkSubtitle( $this->getPageTitle() );
 			$this->buildGroupView( $par );
 			return;
@@ -205,7 +205,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		);
 	}
 
-	public function onSubmitPermissionsResetForm( array $formData ): false {
+	public function onSubmitPermissionsResetForm(): false {
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
 		$dbw->newDeleteQueryBuilder()
@@ -238,7 +238,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		return false;
 	}
 
-	public function onSubmitSettingsResetForm( array $formData ): false {
+	public function onSubmitSettingsResetForm(): false {
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
 		// Set the values to the defaults
@@ -274,7 +274,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		return false;
 	}
 
-	public function onSubmitCacheResetForm( array $formData ): false {
+	public function onSubmitCacheResetForm(): false {
 		// Reset the cache or else the changes won't work
 		$data = $this->dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
 		$data->resetWikiData( isNewChanges: true );

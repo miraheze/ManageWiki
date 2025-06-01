@@ -63,7 +63,7 @@ class PopulateWikiSettings extends Maintenance {
 
 			if ( is_numeric( $value ) ) {
 				// Handle setting float and integer values
-				$setting = strpos( $value, '.' ) !== false ? (float)$value : (int)$value;
+				$value = strpos( $value, '.' ) !== false ? (float)$value : (int)$value;
 			}
 
 			$mwSettings = $this->moduleFactory->settings( $dbname );

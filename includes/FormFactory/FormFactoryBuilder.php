@@ -1143,9 +1143,7 @@ class FormFactoryBuilder {
 				$mwReturn = $this->submissionExtensions( $formData, $dbname, $moduleFactory );
 				break;
 			case 'settings':
-				$mwReturn = $this->submissionSettings(
-					$formData, $dbname, $special, $context, $moduleFactory
-				);
+				$mwReturn = $this->submissionSettings( $formData, $dbname, $special, $moduleFactory );
 				break;
 			case 'namespaces':
 				$mwReturn = $this->submissionNamespaces( $formData, $dbname, $special, $moduleFactory );
@@ -1327,7 +1325,6 @@ class FormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		string $special,
-		IContextSource $context,
 		ModuleFactory $moduleFactory
 	): SettingsModule {
 		$mwExtensions = $moduleFactory->extensions( $dbname );

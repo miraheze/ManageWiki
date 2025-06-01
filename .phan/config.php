@@ -62,8 +62,6 @@ $cfg['plugins'][] = __DIR__ . '/plugins/NoOptionalParamPlugin.php';
 
 $cfg['enable_class_alias_support'] = false;
 $cfg['redundant_condition_detection'] = true;
-$cfg['dead_code_detection'] = true;
-$cfg['dead_code_detection_prefer_false_negative'] = false;
 $cfg['unused_variable_detection'] = true;
 $cfg['warn_about_relative_include_statement'] = true;
 $cfg['enable_extended_internal_return_type_plugins'] = true;

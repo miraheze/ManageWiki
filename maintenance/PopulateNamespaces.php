@@ -67,8 +67,8 @@ class PopulateNamespaces extends Maintenance {
 			$matchedNSKeys = array_keys( $this->getConfig()->get( MainConfigNames::NamespaceAliases ), $id, true );
 			$nsAliases = [];
 
-			foreach ( $matchedNSKeys as $o => $n ) {
-				$nsAliases[] = $n;
+			foreach ( $matchedNSKeys as $alias ) {
+				$nsAliases[] = $alias;
 			}
 
 			$check = $dbw->newSelectQueryBuilder()
