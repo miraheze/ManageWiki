@@ -309,6 +309,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array{}|non-empty-array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorExtensions(
 		string $dbname,
 		bool $ceMW,
@@ -454,6 +457,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorSettings(
 		string $dbname,
 		bool $ceMW,
@@ -557,6 +563,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorNamespaces(
 		string $dbname,
 		bool $ceMW,
@@ -839,6 +848,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorPermissions(
 		string $dbname,
 		bool $ceMW,
@@ -954,7 +966,7 @@ class FormFactoryBuilder {
 					'filter-callback' => static fn ( string $value ): string => mb_strtolower(
 						str_replace( ' ', '_', trim( $value ) )
 					),
-					'validation-callback' => static fn ( string $value ): bool|Message => match ( true ) {
+					'validation-callback' => static fn ( string $value ): Message|true => match ( true ) {
 						// We just use this to check if the group is valid for a title,
 						// otherwise we can not edit it because the title will be
 						// invalid for the ManageWiki permission subpage.

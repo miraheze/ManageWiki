@@ -205,7 +205,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		);
 	}
 
-	public function onSubmitPermissionsResetForm( array $formData ): bool {
+	public function onSubmitPermissionsResetForm( array $formData ): false {
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
 		$dbw->newDeleteQueryBuilder()
@@ -238,7 +238,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		return false;
 	}
 
-	public function onSubmitSettingsResetForm( array $formData ): bool {
+	public function onSubmitSettingsResetForm( array $formData ): false {
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$dbname = $this->getConfig()->get( MainConfigNames::DBname );
 		// Set the values to the defaults
@@ -274,7 +274,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		return false;
 	}
 
-	public function onSubmitCacheResetForm( array $formData ): bool {
+	public function onSubmitCacheResetForm( array $formData ): false {
 		// Reset the cache or else the changes won't work
 		$data = $this->dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
 		$data->resetWikiData( isNewChanges: true );
@@ -300,7 +300,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		return false;
 	}
 
-	public function validateNewGroupName( string $newGroup ): bool|Message {
+	public function validateNewGroupName( string $newGroup ): Message|true {
 		if ( in_array( $newGroup, $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			return $this->msg( 'managewiki-permissions-group-disallowed' );
 		}

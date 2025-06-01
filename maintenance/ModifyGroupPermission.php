@@ -108,6 +108,9 @@ class ModifyGroupPermission extends Maintenance {
 		$mwPermissions->commit();
 	}
 
+	/**
+	 * @return array{}|non-empty-list<string>
+	 */
 	private function getValue( string $option ): array {
 		$value = $this->getOption( $option, '' );
 		return $value === '' ? [] : explode( ',', $value );
