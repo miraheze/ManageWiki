@@ -40,7 +40,7 @@ trait MatrixHandlerTrait {
 							$result[$row][] = $col;
 						}
 					}
-				return $result;
+					return $result;
 				}
 			)( (array)$conversion ),
 
