@@ -94,10 +94,16 @@ class PermissionsModule implements IModule {
 		];
 	}
 
+	/**
+	 * @return array<string, array>
+	 */
 	public function listAll(): array {
 		return $this->livePermissions;
 	}
 
+	/**
+	 * @return list<string>
+	 */
 	public function listGroups(): array {
 		return array_keys( $this->listAll() );
 	}
@@ -106,7 +112,7 @@ class PermissionsModule implements IModule {
 	 * Get all groups that have the specified permission
 	 *
 	 * @param string $permission The permission to look for
-	 * @return array List of group names that have the permission
+	 * @return string[] List of group names that have the permission
 	 */
 	public function getGroupsWithPermission( string $permission ): array {
 		$groups = [];

@@ -309,6 +309,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return non-empty-array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorExtensions(
 		string $dbname,
 		bool $ceMW,
@@ -454,6 +457,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return non-empty-array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorSettings(
 		string $dbname,
 		bool $ceMW,
@@ -557,6 +563,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorNamespaces(
 		string $dbname,
 		bool $ceMW,
@@ -839,6 +848,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorPermissions(
 		string $dbname,
 		bool $ceMW,

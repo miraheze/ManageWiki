@@ -14,7 +14,6 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\User\Options\UserOptionsLookup;
-use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
@@ -172,7 +171,7 @@ class TypesBuilder {
 				break;
 			case 'list-multi':
 				$configs = [
-					'class' => HTMLTypedMultiSelectField::class,
+					'type' => 'multiselect',
 					'options' => $options['options'],
 					'default' => $value ?? $options['overridedefault'],
 				];
