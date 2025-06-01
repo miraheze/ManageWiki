@@ -455,7 +455,7 @@ class SpecialManageWiki extends SpecialPage {
 		);
 	}
 
-	public function validateNewGroupName( string $newGroup, array $alldata ): bool|Message {
+	public function validateNewGroupName( string $newGroup, array $alldata ): Message|true {
 		$disallowed = $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups );
 		if ( in_array( $newGroup, $disallowed, true ) ) {
 			return $this->msg( 'managewiki-permissions-group-disallowed' );

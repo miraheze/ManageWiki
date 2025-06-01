@@ -310,7 +310,7 @@ class FormFactoryBuilder {
 	}
 
 	/**
-	 * @return non-empty-array<string,array<string,mixed>>
+	 * @return array<string,array<string,mixed>>
 	 */
 	private function buildDescriptorExtensions(
 		string $dbname,
@@ -458,7 +458,7 @@ class FormFactoryBuilder {
 	}
 
 	/**
-	 * @return non-empty-array<string,array<string,mixed>>
+	 * @return array<string,array<string,mixed>>
 	 */
 	private function buildDescriptorSettings(
 		string $dbname,

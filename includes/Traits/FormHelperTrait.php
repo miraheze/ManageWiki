@@ -45,6 +45,9 @@ trait FormHelperTrait {
 		return $context->msg( 'managewiki-requires', $language->listToText( $requires ) )->parse();
 	}
 
+	/**
+	 * @return array<int|string, string|array>
+	 */
 	private function buildDisableIf( array $requires, string $conflict ): array {
 		$conditions = [];
 		foreach ( $requires as $entry ) {

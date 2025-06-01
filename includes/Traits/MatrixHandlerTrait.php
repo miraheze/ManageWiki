@@ -29,17 +29,20 @@ trait MatrixHandlerTrait {
 				return $result;
 			} )( $conversion ),
 
-			'phparray' => ( static function ( array $flat ): array {
-				$result = [];
-				foreach ( $flat as $item ) {
-					$parts = explode( '-', $item, 2 );
-					if ( count( $parts ) === 2 ) {
-						[ $row, $col ] = $parts;
-						$result[$row][] = $col;
+			'phparray' => (
+				/** @return non-empty-array<string, non-empty-list<string>> */
+				static function ( array $flat ): array {
+					$result = [];
+					foreach ( $flat as $item ) {
+						$parts = explode( '-', $item, 2 );
+						if ( count( $parts ) === 2 ) {
+							[ $row, $col ] = $parts;
+							$result[$row][] = $col;
+						}
 					}
-				}
 				return $result;
-			} )( (array)$conversion ),
+				}
+			)( (array)$conversion ),
 
 			default => [],
 		};

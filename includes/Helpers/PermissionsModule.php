@@ -113,6 +113,7 @@ class PermissionsModule implements IModule {
 	 *
 	 * @param string $permission The permission to look for
 	 * @return string[] List of group names that have the permission
+	 * @phan-return array<int, string>
 	 */
 	public function getGroupsWithPermission( string $permission ): array {
 		$groups = [];
