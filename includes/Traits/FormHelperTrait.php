@@ -46,7 +46,7 @@ trait FormHelperTrait {
 	}
 
 	/**
-	 * @return array<int|string, string|array>
+	 * @return array{0: string, 1?: string|array, 2?: string}
 	 */
 	private function buildDisableIf( array $requires, string $conflict ): array {
 		$conditions = [];

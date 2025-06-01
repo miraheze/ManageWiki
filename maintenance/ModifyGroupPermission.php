@@ -110,6 +110,7 @@ class ModifyGroupPermission extends Maintenance {
 
 	/**
 	 * @return list<string>
+	 * @phan-return non-empty-list<string>
 	 */
 	private function getValue( string $option ): array {
 		$value = $this->getOption( $option, '' );
