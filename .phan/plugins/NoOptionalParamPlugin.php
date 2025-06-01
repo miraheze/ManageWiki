@@ -25,8 +25,11 @@ final class NoOptionalParamPlugin extends PluginV3 implements
 				$this->emitPluginIssue(
 					$code_base,
 					$function->getContext(),
-					'PhanOptionalFunctionParameterFound',
-					'Function {FUNCTION} has an optional parameter ${PARAMETER}',
+					'PhanDisallowedOptionalFunctionParameter',
+					'Function {FUNCTION} declares a disallowed optional parameter ${PARAMETER}. ' .
+					'Optional parameters are prohibited to enforce stricter code. ' .
+					'The value must be passed explicitly. Named arguments may be used ' .
+					'to make the value’s purpose clearer at the call site.',
 					[ $function->getName(), $parameter->getName() ]
 				);
 			}
@@ -47,8 +50,11 @@ final class NoOptionalParamPlugin extends PluginV3 implements
 				$this->emitPluginIssue(
 					$code_base,
 					$method->getContext(),
-					'PhanOptionalMethodParameterFound',
-					'Method {METHOD} has an optional parameter ${PARAMETER}',
+					'PhanDisallowedOptionalMethodParameter',
+					'Method {METHOD} declares a disallowed optional parameter ${PARAMETER}. ' .
+					'Optional parameters are not allowed to enforce stricter code. ' .
+					'The value must be passed explicitly. Named arguments may be used ' .
+					'to make the value’s purpose clearer when calling the method.',
 					[ $method->getName(), $parameter->getName() ]
 				);
 			}
@@ -57,8 +63,8 @@ final class NoOptionalParamPlugin extends PluginV3 implements
 
 	public function getIssueSuppressionList(): array {
 		return [
-			'PhanOptionalFunctionParameterFound',
-			'PhanOptionalMethodParameterFound',
+			'PhanDisallowedOptionalFunctionParameter',
+			'PhanDisallowedOptionalMethodParameter',
 		];
 	}
 }
