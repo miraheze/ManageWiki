@@ -132,10 +132,7 @@ class TypesBuilder {
 						],
 					],
 					'default' => array_map(
-						/**
-						 * @return array<string, int>
-						 * @phan-return array<string, int>
-						 */
+						/** @return array|array<string, int> */
 						static fn ( int $num ): array => [ 'value' => $num ],
 						$value ?? $options['overridedefault']
 					),
@@ -393,10 +390,7 @@ class TypesBuilder {
 						],
 					],
 					'default' => array_map(
-						/**
-						 * @return array<string, string>
-						 * @phan-return array<string, string>
-						 */
+						/** @return array|array<string, string> */
 						static fn ( string $text ): array => [ 'value' => $text ],
 						$value ?? $options['overridedefault']
 					),

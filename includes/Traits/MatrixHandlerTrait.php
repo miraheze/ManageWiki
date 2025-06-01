@@ -30,10 +30,7 @@ trait MatrixHandlerTrait {
 			} )( $conversion ),
 
 			'phparray' => (
-				/**
-				 * @return array<string, non-empty-list<string>>
-				 * @phan-return non-empty-array<string, non-empty-list<string>>
-				 */
+				/** @return array|non-empty-array<string, non-empty-list<string>> */
 				static function ( array $flat ): array {
 					$result = [];
 					foreach ( $flat as $item ) {
