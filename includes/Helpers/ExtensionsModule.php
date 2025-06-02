@@ -95,7 +95,7 @@ class ExtensionsModule implements IModule {
 	 * Adds an extension to the 'enabled' list
 	 * @param string[] $extensions Array of extensions to enable
 	 */
-	public function add( array $extensions ): void {
+	public function add( array $extensions = [] ): void {
 		$config = $this->options->get( ConfigNames::Extensions );
 		// We will handle all processing in final stages
 		foreach ( $extensions as $ext ) {
