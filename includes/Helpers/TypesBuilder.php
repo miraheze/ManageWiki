@@ -8,7 +8,6 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Content\IContentHandlerFactory;
 use MediaWiki\Context\RequestContext;
-use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Interwiki\InterwikiLookup;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
@@ -87,13 +86,10 @@ class TypesBuilder {
 				$configs = [
 					'type' => 'text',
 					'default' => $value ?? $options['overridedefault'],
-					'validation-callback' => function (
-						string $database,
-						array $alldata,
-						HTMLForm $form
-					) use ( $name ): Message|true {
+					'validation-callback' => function ( string $database ) use ( $name ): Message|true {
 						if ( !in_array( $database, $this->options->get( MainConfigNames::LocalDatabases ), true ) ) {
-							return $form->msg( 'managewiki-invalid-database', $database, $name );
+							$context = RequestContext::getMain();
+							return $context->msg( 'managewiki-invalid-database', $database, $name );
 						}
 
 						return true;

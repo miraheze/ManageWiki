@@ -90,7 +90,7 @@ class SpecialManageWiki extends SpecialPage {
 			return;
 		}
 
-		if ( $module === 'permissions' && $additional ) {
+		if ( $module === 'permissions' && $additional !== '' ) {
 			$this->getOutput()->addSubtitle(
 				$this->msg( 'editing', $additional )
 			);

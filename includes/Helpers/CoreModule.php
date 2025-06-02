@@ -28,11 +28,13 @@ class CoreModule implements ICoreModule {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
+	/** @inheritDoc */
 	public function getSitename(): string {
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		return $mwSettings->list( 'wgSitename' ) ?? '';
 	}
 
+	/** @inheritDoc */
 	public function setSitename( string $sitename ): void {
 		$this->trackChange(
 			field: 'sitename',
@@ -43,11 +45,13 @@ class CoreModule implements ICoreModule {
 		$mwSettings->modify( [ 'wgSitename' => $sitename ], default: '' );
 	}
 
+	/** @inheritDoc */
 	public function getLanguage(): string {
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		return $mwSettings->list( 'wgLanguageCode' ) ?? 'en';
 	}
 
+	/** @inheritDoc */
 	public function setLanguage( string $lang ): void {
 		$this->trackChange(
 			field: 'language',
@@ -58,103 +62,132 @@ class CoreModule implements ICoreModule {
 		$mwSettings->modify( [ 'wgLanguageCode' => $lang ], default: 'en' );
 	}
 
+	/** @inheritDoc */
 	public function isInactive(): bool {
 		// Not implemented
 		return false;
 	}
 
+	/** @inheritDoc */
 	public function markInactive(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function markActive(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function isInactiveExempt(): bool {
 		// Not implemented
 		return false;
 	}
 
+	/** @inheritDoc */
 	public function markExempt(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function unExempt(): void {
 		// Not implemented
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param string $reason @phan-unused-param
+	 */
 	public function setInactiveExemptReason( string $reason ): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function getInactiveExemptReason(): ?string {
 		// Not implemented
 		return null;
 	}
 
+	/** @inheritDoc */
 	public function isPrivate(): bool {
 		// Not implemented
 		return false;
 	}
 
+	/** @inheritDoc */
 	public function markPrivate(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function markPublic(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function isClosed(): bool {
 		// Not implemented
 		return false;
 	}
 
+	/** @inheritDoc */
 	public function markClosed(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function isDeleted(): bool {
 		// Not implemented
 		return false;
 	}
 
+	/** @inheritDoc */
 	public function delete(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function undelete(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function isLocked(): bool {
 		// Not implemented
 		return false;
 	}
 
+	/** @inheritDoc */
 	public function lock(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function unlock(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function getCategory(): string {
 		// Not implemented
 		return '';
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param string $category @phan-unused-param
+	 */
 	public function setCategory( string $category ): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function getServerName(): string {
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		return $mwSettings->list( 'wgServer' ) ?? '';
 	}
 
+	/** @inheritDoc */
 	public function setServerName( string $server ): void {
 		$server = $server === '' ? false : $server;
 		$this->trackChange(
@@ -166,37 +199,56 @@ class CoreModule implements ICoreModule {
 		$mwSettings->modify( [ 'wgServer' => $server ], default: false );
 	}
 
+	/** @inheritDoc */
 	public function getDBCluster(): string {
 		// Not implemented
 		return '';
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param string $dbcluster @phan-unused-param
+	 */
 	public function setDBCluster( string $dbcluster ): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function isExperimental(): bool {
 		// Not implemented
 		return false;
 	}
 
+	/** @inheritDoc */
 	public function markExperimental(): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function unMarkExperimental(): void {
 		// Not implemented
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param string $field @phan-unused-param
+	 */
 	public function getExtraFieldData( string $field, mixed $default ): mixed {
 		// Not implemented
 		return $default;
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param string $field @phan-unused-param
+	 * @param mixed $value @phan-unused-param
+	 * @param mixed $default @phan-unused-param
+	 */
 	public function setExtraFieldData( string $field, mixed $value, mixed $default ): void {
 		// Not implemented
 	}
 
+	/** @inheritDoc */
 	public function trackChange( string $field, mixed $oldValue, mixed $newValue ): void {
 		$this->changes[$field] = [
 			'old' => $oldValue,
@@ -204,6 +256,7 @@ class CoreModule implements ICoreModule {
 		];
 	}
 
+	/** @inheritDoc */
 	public function isEnabled( string $feature ): bool {
 		$enabled = [
 			'server' => $this->options->get( ConfigNames::UseCustomDomains ),
@@ -213,51 +266,62 @@ class CoreModule implements ICoreModule {
 		return $enabled[$feature] ?? false;
 	}
 
+	/** @inheritDoc */
 	public function getCategoryOptions(): array {
 		// Not implemented
 		return [];
 	}
 
+	/** @inheritDoc */
 	public function getDatabaseClusters(): array {
 		// Not implemented
 		return [];
 	}
 
+	/** @inheritDoc */
 	public function getDatabaseClustersInactive(): array {
 		// Not implemented
 		return [];
 	}
 
+	/** @inheritDoc */
 	public function getInactiveExemptReasonOptions(): array {
 		// Not implemented
 		return [];
 	}
 
+	/** @inheritDoc */
 	public function getErrors(): array {
 		// Not implemented
 		return [];
 	}
 
+	/** @inheritDoc */
 	public function hasChanges(): bool {
 		return (bool)$this->changes;
 	}
 
+	/** @inheritDoc */
 	public function setLogAction( string $action ): void {
 		$this->log = $action;
 	}
 
+	/** @inheritDoc */
 	public function getLogAction(): string {
 		return $this->log ?? 'settings';
 	}
 
+	/** @inheritDoc */
 	public function addLogParam( string $param, mixed $value ): void {
 		$this->logParams[$param] = $value;
 	}
 
+	/** @inheritDoc */
 	public function getLogParams(): array {
 		return $this->logParams;
 	}
 
+	/** @inheritDoc */
 	public function commit(): void {
 		if ( !$this->hasChanges() ) {
 			return;

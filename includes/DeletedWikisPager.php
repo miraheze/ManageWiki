@@ -32,21 +32,24 @@ class DeletedWikisPager extends TablePager {
 	}
 
 	/** @inheritDoc */
-	public function formatValue( $name, $value ): string {
+	public function formatValue( $field, $value ): string {
 		$row = $this->getCurrentRow();
+		if ( $value === null ) {
+			return '';
+		}
 
-		switch ( $name ) {
+		switch ( $field ) {
 			case 'wiki_dbname':
-				$formatted = $this->escape( $row->wiki_dbname );
+				$formatted = $this->escape( $value );
 				break;
 			case 'wiki_creation':
 				$formatted = $this->escape( $this->getLanguage()->userTimeAndDate(
-					$row->wiki_creation, $this->getUser()
+					$value, $this->getUser()
 				) );
 				break;
 			case 'wiki_deleted_timestamp':
 				$formatted = $this->escape( $this->getLanguage()->userTimeAndDate(
-					$row->wiki_deleted_timestamp, $this->getUser()
+					$value, $this->getUser()
 				) );
 				break;
 			case 'wiki_deleted':
@@ -57,7 +60,7 @@ class DeletedWikisPager extends TablePager {
 				);
 				break;
 			default:
-				$formatted = $this->escape( "Unable to format $name" );
+				$formatted = $this->escape( "Unable to format $field" );
 		}
 
 		return $formatted;
@@ -95,7 +98,7 @@ class DeletedWikisPager extends TablePager {
 	}
 
 	/** @inheritDoc */
-	public function isFieldSortable( $name ): bool {
-		return true;
+	public function isFieldSortable( $field ): bool {
+		return $field !== 'wiki_deleted';
 	}
 }

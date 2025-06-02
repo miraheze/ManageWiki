@@ -167,14 +167,13 @@ class CreateWiki implements
 					'contentmodel' => $ns->ns_content_model,
 					'protection' => $ns->ns_protection ?: false,
 					'aliases' => array_merge(
-						json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '' ), true ),
+						json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '[]' ), true ),
 						(array)$lcAlias
 					),
-					'additional' => json_decode( $ns->ns_additional ?? '', true ),
+					'additional' => json_decode( $ns->ns_additional ?? '[]', true ),
 				];
 
-				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
-
+				$nsAdditional = json_decode( $ns->ns_additional ?? '[]', true );
 				foreach ( $additional as $var => $conf ) {
 					$nsID = (int)$ns->ns_namespace_id;
 
@@ -198,7 +197,7 @@ class CreateWiki implements
 					}
 
 					if ( $val ) {
-						$this->setNamespaceSettingJson( $cacheArray, $nsID, $var, $val, $conf );
+						$this->setNamespaceSettingCache( $cacheArray, $nsID, $var, $val, $conf );
 						continue;
 					}
 
@@ -217,7 +216,7 @@ class CreateWiki implements
 					$this->isAdditionalSettingForNamespace( $conf, NS_SPECIAL )
 				) {
 					$val = $conf['overridedefault'][NS_SPECIAL];
-					$this->setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $val, $conf );
+					$this->setNamespaceSettingCache( $cacheArray, NS_SPECIAL, $var, $val, $conf );
 				}
 			}
 		}
@@ -255,22 +254,22 @@ class CreateWiki implements
 					}
 				}
 
-				$permissions = array_merge( json_decode( $perm->perm_permissions ?? '', true ) ?? [], $addPerms );
+				$permissions = array_merge( json_decode( $perm->perm_permissions ?? '[]', true ), $addPerms );
 				$filteredPermissions = array_diff( $permissions, $removePerms );
 
 				$cacheArray['permissions'][$perm->perm_group] = [
 					'permissions' => $filteredPermissions,
 					'addgroups' => array_merge(
-						json_decode( $perm->perm_addgroups ?? '', true ) ?? [],
+						json_decode( $perm->perm_addgroups ?? '[]', true ),
 						$additionalAddGroups[$perm->perm_group] ?? []
 					),
 					'removegroups' => array_merge(
-						json_decode( $perm->perm_removegroups ?? '', true ) ?? [],
+						json_decode( $perm->perm_removegroups ?? '[]', true ),
 						$additionalRemoveGroups[$perm->perm_group] ?? []
 					),
-					'addself' => json_decode( $perm->perm_addgroupstoself ?? '', true ),
-					'removeself' => json_decode( $perm->perm_removegroupsfromself ?? '', true ),
-					'autopromote' => json_decode( $perm->perm_autopromote ?? '', true ),
+					'addself' => json_decode( $perm->perm_addgroupstoself ?? '[]', true ),
+					'removeself' => json_decode( $perm->perm_removegroupsfromself ?? '[]', true ),
+					'autopromote' => json_decode( $perm->perm_autopromote ?? '[]', true ),
 				];
 			}
 
@@ -349,7 +348,7 @@ class CreateWiki implements
 	 * @param mixed $val variable value
 	 * @param array $varConf variable config from ConfigNames::NamespacesAdditional[$var]
 	 */
-	private function setNamespaceSettingJson(
+	private function setNamespaceSettingCache(
 		array &$cacheArray,
 		int $nsID,
 		string $var,

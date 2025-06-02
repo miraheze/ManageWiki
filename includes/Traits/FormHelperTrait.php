@@ -71,7 +71,7 @@ trait FormHelperTrait {
 			$conditions[0] :
 			array_merge( [ 'OR' ], $conditions );
 
-		if ( $conflict ) {
+		if ( $conflict !== '' ) {
 			$finalCondition = [
 				'OR',
 				$finalCondition,
