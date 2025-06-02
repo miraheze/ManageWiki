@@ -170,11 +170,10 @@ class CreateWiki implements
 						json_decode( str_replace( [ ' ', ':' ], '_', $ns->ns_aliases ?? '[]' ), true ),
 						(array)$lcAlias
 					),
-					'additional' => json_decode( $ns->ns_additional ?? '', true ),
+					'additional' => json_decode( $ns->ns_additional ?? '[]', true ),
 				];
 
-				$nsAdditional = (array)json_decode( $ns->ns_additional ?? '', true );
-
+				$nsAdditional = json_decode( $ns->ns_additional ?? '[]', true );
 				foreach ( $additional as $var => $conf ) {
 					$nsID = (int)$ns->ns_namespace_id;
 
@@ -198,7 +197,7 @@ class CreateWiki implements
 					}
 
 					if ( $val ) {
-						$this->setNamespaceSettingJson( $cacheArray, $nsID, $var, $val, $conf );
+						$this->setNamespaceSettingCache( $cacheArray, $nsID, $var, $val, $conf );
 						continue;
 					}
 
@@ -217,7 +216,7 @@ class CreateWiki implements
 					$this->isAdditionalSettingForNamespace( $conf, NS_SPECIAL )
 				) {
 					$val = $conf['overridedefault'][NS_SPECIAL];
-					$this->setNamespaceSettingJson( $cacheArray, NS_SPECIAL, $var, $val, $conf );
+					$this->setNamespaceSettingCache( $cacheArray, NS_SPECIAL, $var, $val, $conf );
 				}
 			}
 		}
@@ -349,7 +348,7 @@ class CreateWiki implements
 	 * @param mixed $val variable value
 	 * @param array $varConf variable config from ConfigNames::NamespacesAdditional[$var]
 	 */
-	private function setNamespaceSettingJson(
+	private function setNamespaceSettingCache(
 		array &$cacheArray,
 		int $nsID,
 		string $var,
