@@ -87,13 +87,10 @@ class TypesBuilder {
 				$configs = [
 					'type' => 'text',
 					'default' => $value ?? $options['overridedefault'],
-					'validation-callback' => function (
-						string $database,
-						array $alldata,
-						HTMLForm $form
-					) use ( $name ): Message|true {
+					'validation-callback' => function ( string $database ) use ( $name ): Message|true {
 						if ( !in_array( $database, $this->options->get( MainConfigNames::LocalDatabases ), true ) ) {
-							return $form->msg( 'managewiki-invalid-database', $database, $name );
+							$context = RequestContext::getMain();
+							return $context->msg( 'managewiki-invalid-database', $database, $name );
 						}
 
 						return true;

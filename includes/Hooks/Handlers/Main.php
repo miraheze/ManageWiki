@@ -8,6 +8,7 @@ use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
+use MediaWiki\User\User;
 use MediaWiki\User\Options\UserOptionsLookup;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Hooks\HookRunner;
@@ -35,7 +36,10 @@ class Main implements
 		}
 	}
 
-	/** @inheritDoc */
+	/**
+	 * @inheritDoc
+	 * @param User $user @phan-unused-param
+	 */
 	public function onGetPreferences( $user, &$preferences ) {
 		$preferences['managewikisidebar'] = [
 			'type' => 'toggle',
