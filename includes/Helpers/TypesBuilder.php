@@ -8,7 +8,6 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Content\IContentHandlerFactory;
 use MediaWiki\Context\RequestContext;
-use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Interwiki\InterwikiLookup;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
