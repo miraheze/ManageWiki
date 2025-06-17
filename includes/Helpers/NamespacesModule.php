@@ -191,10 +191,16 @@ class NamespacesModule implements IModule {
 		];
 	}
 
+	/**
+	 * @return array<int, array>
+	 */
 	public function listAll(): array {
 		return $this->liveNamespaces;
 	}
 
+	/**
+	 * @return list<int>
+	 */
 	public function listIds(): array {
 		return array_keys( $this->listAll() );
 	}

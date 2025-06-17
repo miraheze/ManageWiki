@@ -288,10 +288,10 @@ class ExtensionsModule implements IModule {
 			return;
 		}
 
-		foreach ( $this->removedExtensions as $name => $config ) {
+		foreach ( $this->removedExtensions as $config ) {
 			$requirementsCheck = true;
 			$permissionRequirements = $config['requires']['permissions'] ?? [];
-			if ( $permissionRequirements ) {
+			if ( $permissionRequirements !== [] ) {
 				$requirementsCheck = $mwRequirements->check(
 					// We only need to check for permissions when an
 					// extension is being disabled.

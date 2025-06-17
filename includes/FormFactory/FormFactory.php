@@ -43,7 +43,7 @@ class FormFactory {
 
 		$htmlForm = new OOUIHTMLFormTabs( $formDescriptor, $context, $module );
 		$htmlForm
-			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|bool =>
+			->setSubmitCallback( fn ( array $formData, HTMLForm $form ): Status|false =>
 				$this->submitForm(
 					$moduleFactory,
 					$form,
@@ -71,7 +71,7 @@ class FormFactory {
 		string $dbname,
 		string $module,
 		string $special
-	): Status|bool {
+	): Status|false {
 		$context = $form->getContext();
 		if ( !$context->getAuthority()->isAllowed( "managewiki-$module" ) ) {
 			throw new PermissionsError( "managewiki-$module" );

@@ -8,13 +8,11 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Content\ContentHandler;
 use MediaWiki\Content\IContentHandlerFactory;
 use MediaWiki\Context\RequestContext;
-use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Interwiki\InterwikiLookup;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\User\Options\UserOptionsLookup;
-use Miraheze\ManageWiki\FormFields\HTMLTypedMultiSelectField;
 use Miraheze\ManageWiki\FormFields\HTMLTypedSelectField;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
@@ -88,13 +86,10 @@ class TypesBuilder {
 				$configs = [
 					'type' => 'text',
 					'default' => $value ?? $options['overridedefault'],
-					'validation-callback' => function (
-						string $database,
-						array $alldata,
-						HTMLForm $form
-					) use ( $name ): bool|Message {
+					'validation-callback' => function ( string $database ) use ( $name ): Message|true {
 						if ( !in_array( $database, $this->options->get( MainConfigNames::LocalDatabases ), true ) ) {
-							return $form->msg( 'managewiki-invalid-database', $database, $name );
+							$context = RequestContext::getMain();
+							return $context->msg( 'managewiki-invalid-database', $database, $name );
 						}
 
 						return true;
@@ -133,6 +128,7 @@ class TypesBuilder {
 						],
 					],
 					'default' => array_map(
+						/** @return array{value: int} */
 						static fn ( int $num ): array => [ 'value' => $num ],
 						$value ?? $options['overridedefault']
 					),
@@ -172,7 +168,7 @@ class TypesBuilder {
 				break;
 			case 'list-multi':
 				$configs = [
-					'class' => HTMLTypedMultiSelectField::class,
+					'type' => 'multiselect',
 					'options' => $options['options'],
 					'default' => $value ?? $options['overridedefault'],
 				];
@@ -390,6 +386,7 @@ class TypesBuilder {
 						],
 					],
 					'default' => array_map(
+						/** @return array{value: string} */
 						static fn ( string $text ): array => [ 'value' => $text ],
 						$value ?? $options['overridedefault']
 					),

@@ -311,6 +311,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array{}|non-empty-array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorExtensions(
 		string $dbname,
 		bool $ceMW,
@@ -456,6 +459,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorSettings(
 		string $dbname,
 		bool $ceMW,
@@ -559,6 +565,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorNamespaces(
 		string $dbname,
 		bool $ceMW,
@@ -850,6 +859,9 @@ class FormFactoryBuilder {
 		return $formDescriptor;
 	}
 
+	/**
+	 * @return array<string,array<string,mixed>>
+	 */
 	private function buildDescriptorPermissions(
 		string $dbname,
 		bool $ceMW,
@@ -1157,9 +1169,7 @@ class FormFactoryBuilder {
 				$mwReturn = $this->submissionExtensions( $formData, $dbname, $moduleFactory );
 				break;
 			case 'settings':
-				$mwReturn = $this->submissionSettings(
-					$formData, $dbname, $special, $context, $moduleFactory
-				);
+				$mwReturn = $this->submissionSettings( $formData, $dbname, $special, $moduleFactory );
 				break;
 			case 'namespaces':
 				$mwReturn = $this->submissionNamespaces(
@@ -1350,7 +1360,6 @@ class FormFactoryBuilder {
 		array $formData,
 		string $dbname,
 		string $special,
-		IContextSource $context,
 		ModuleFactory $moduleFactory
 	): SettingsModule {
 		$mwExtensions = $moduleFactory->extensions( $dbname );

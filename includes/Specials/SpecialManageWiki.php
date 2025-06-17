@@ -90,7 +90,7 @@ class SpecialManageWiki extends SpecialPage {
 			return;
 		}
 
-		if ( $module === 'permissions' && $additional ) {
+		if ( $module === 'permissions' && $additional !== '' ) {
 			$this->getOutput()->addSubtitle(
 				$this->msg( 'editing', $additional )
 			);
@@ -405,7 +405,7 @@ class SpecialManageWiki extends SpecialPage {
 						trim( $value )
 					) ?? '';
 
-				$create['out']['validation-callback'] = function ( string $value ) use ( $dbname ): bool|Message {
+				$create['out']['validation-callback'] = function ( string $value ) use ( $dbname ): Message|true {
 					$disallowed = array_map( 'mb_strtolower',
 						$this->getConfig()->get( ConfigNames::NamespacesDisallowedNames )
 					);
@@ -455,7 +455,7 @@ class SpecialManageWiki extends SpecialPage {
 		);
 	}
 
-	public function validateNewGroupName( string $newGroup, array $alldata ): bool|Message {
+	public function validateNewGroupName( string $newGroup, array $alldata ): Message|true {
 		$disallowed = $this->getConfig()->get( ConfigNames::PermissionsDisallowedGroups );
 		if ( in_array( $newGroup, $disallowed, true ) ) {
 			return $this->msg( 'managewiki-permissions-group-disallowed' );

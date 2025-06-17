@@ -18,10 +18,6 @@ class DatabaseUtils {
 		return $this->getCentralWikiReplicaDB()->getDomainID();
 	}
 
-	public function getCentralWikiPrimaryDB(): IDatabase {
-		return $this->connectionProvider->getPrimaryDatabase( 'virtual-managewiki-central' );
-	}
-
 	public function getCentralWikiReplicaDB(): IReadableDatabase {
 		return $this->connectionProvider->getReplicaDatabase( 'virtual-managewiki-central' );
 	}
