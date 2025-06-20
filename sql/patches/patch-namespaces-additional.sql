@@ -1,2 +1,2 @@
 ALTER TABLE /*$wgDBprefix*/mw_namespaces
-  ADD COLUMN ns_additional LONGTEXT AFTER ns_core;
+  ADD COLUMN ns_additional JSON AFTER ns_core;
