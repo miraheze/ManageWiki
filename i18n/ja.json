@@ -159,7 +159,7 @@
 	"managewiki-permissions-addall": "他人から追加できる",
 	"managewiki-permissions-addself": "自身で追加できる",
 	"managewiki-permissions-assigned": "現在、この利用者グループには以下の利用者権限が割り当てられています。",
-	"managewiki-permissions-autopromote": "以下では、このグループへの利用者の自動昇格を管理することができます。利用者が以下で設定した基準に合致した場合、その利用者はこのグループの全ての権限を継承し、基準に合致する前に一度でも昇格を選択しない限り、いかなる状況でもこのグループから削除することはできないことに注意してください。",
+	"managewiki-permissions-autopromote": "以下では、このグループへの利用者の自動昇格を管理できます。利用者が以下で設定した基準に一致すると、このグループのすべての権限を継承し、基準を満たす前に一度でも昇格を選択しない限り、いかなる状況でもこのグループから除去できないためご注意ください。",
 	"managewiki-permissions-autopromote-age": "利用者登録をしてから下記日数が経過していること。",
 	"managewiki-permissions-autopromote-blocked": "ブロックされていること",
 	"managewiki-permissions-autopromote-bot": "Botアカウントであること",
