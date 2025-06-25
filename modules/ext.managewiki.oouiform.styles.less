@@ -3,7 +3,7 @@
 
 	/* Flexbox gap not supported by all browsers */
 	/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
-	.managewiki-submit-formfields {
+	.ext-managewiki-submit-formfields {
 		position: -webkit-sticky;
 		position: sticky;
 		bottom: 0;
@@ -21,8 +21,8 @@
 	}
 }
 
-.managewiki-tabs {
-	.managewiki-fieldset-wrapper {
+.ext-managewiki-tabs {
+	.ext-managewiki-fieldset-wrapper {
 		padding-right: 0;
 		padding-left: 0;
 
@@ -35,20 +35,20 @@
 		}
 	}
 
-	&.managewiki-tabs-searching {
+	&.ext-managewiki-tabs-searching {
 		// Prevent "Save" bar getting too close to results
 		min-height: 30em;
 
 		/* Tab panels */
-		.oo-ui-tabPanelLayout:not( .managewiki-search-matched ),
+		.oo-ui-tabPanelLayout:not( .ext-managewiki-search-matched ),
 		/* Fields */
-		.oo-ui-widget > [ class^='mw-htmlform-field-' ]:not( .managewiki-search-matched ),
+		.oo-ui-widget > [ class^='mw-htmlform-field-' ]:not( .ext-managewiki-search-matched ),
 		/* Wrappers */
-		.managewiki-fieldset-wrapper:not( .managewiki-search-matched ) {
+		.ext-managewiki-fieldset-wrapper:not( .ext-managewiki-search-matched ) {
 			display: none;
 		}
 
-		.oo-ui-tabPanelLayout.managewiki-search-matched {
+		.oo-ui-tabPanelLayout.ext-managewiki-search-matched {
 			> fieldset > legend {
 				max-width: none;
 				padding: 5px 10px;
@@ -67,7 +67,7 @@
 			margin: 0;
 		}
 
-		.managewiki-search-matched {
+		.ext-managewiki-search-matched {
 			padding: 0;
 			margin: 0 20px 10px 20px;
 		}
@@ -75,35 +75,35 @@
 }
 
 // Highlight could be in an overlay
-.managewiki-search-highlight {
+.ext-managewiki-search-highlight {
 	border-radius: 0 !important; /* stylelint-disable-line declaration-no-important */
 	background: #eaf3ff !important; /* stylelint-disable-line declaration-no-important */
 	outline: 3px solid #eaf3ff !important; /* stylelint-disable-line declaration-no-important */
 }
 
-.managewiki-search-noresults {
+.ext-managewiki-search-noresults {
 	margin: 20px;
 	font-style: italic;
 }
 
 /* TODO: Support mobile */
-.skin-minerva .managewiki-search {
+.skin-minerva .ext-managewiki-search {
 	display: none;
 }
 
-.managewiki-search.oo-ui-fieldLayout {
+.ext-managewiki-search.oo-ui-fieldLayout {
 	margin: 8px 0;
 }
 
 @media all and ( min-width: 720px ) {
-	.managewiki-search.oo-ui-fieldLayout {
+	.ext-managewiki-search.oo-ui-fieldLayout {
 		width: 20em;
 	}
 
 	.mw-special-ManageWiki .mw-specialpage-summary {
 		margin-right: 21em;
 
-		& + .managewiki-search.oo-ui-fieldLayout {
+		& + .ext-managewiki-search.oo-ui-fieldLayout {
 			margin: -36px 0 8px 0;
 			float: right;
 		}
@@ -111,7 +111,7 @@
 }
 
 @media all and ( max-width: ( 719px ) ) {
-	.managewiki-search.oo-ui-fieldLayout {
+	.ext-managewiki-search.oo-ui-fieldLayout {
 		// Fallback is graceful enough.
 		position: sticky;
 		z-index: 1;
@@ -119,8 +119,8 @@
 	}
 }
 
-.managewiki-tabs-wrapper.oo-ui-panelLayout-framed,
-.managewiki-tabs > .oo-ui-menuLayout-content > .oo-ui-indexLayout-stackLayout > .oo-ui-tabPanelLayout {
+.ext-managewiki-tabs-wrapper.oo-ui-panelLayout-framed,
+.ext-managewiki-tabs > .oo-ui-menuLayout-content > .oo-ui-indexLayout-stackLayout > .oo-ui-tabPanelLayout {
 	/* Decrease contrast of `border` slightly as padding/border combination is sufficient
 	 * accessibility wise and focus of content is more important here. */
 	border-color: #c8ccd1;
@@ -129,18 +129,18 @@
 /* JavaScript disabled */
 .client-nojs {
 	// Disable .oo-ui-panelLayout-framed on outer wrapper
-	.managewiki-tabs-wrapper {
+	.ext-managewiki-tabs-wrapper {
 		border-width: 0;
 		border-radius: 0;
 	}
 
-	.managewiki-tabs {
+	.ext-managewiki-tabs {
 		// Hide the tab menu when JS is disabled as we can't use this feature
 		> .oo-ui-menuLayout-menu {
 			display: none;
 		}
 
-		.managewiki-section-fieldset {
+		.ext-managewiki-section-fieldset {
 			// <legend> is hard to style, so apply border to top of group
 			> .oo-ui-fieldsetLayout-group {
 				padding-top: 1.5em;
@@ -162,19 +162,19 @@
 
 /* JavaScript enabled */
 .client-js {
-	.managewiki-tabs {
+	.ext-managewiki-tabs {
 		.oo-ui-tabPanelLayout {
 			// Panels don't need borders as the IndexLayout is inside a framed wrapper.
 			border: 0;
 
 			// Hide section legend, only used in nojs mode
-			&:not( .managewiki-search-matched ) > fieldset > legend {
+			&:not( .ext-managewiki-search-matched ) > fieldset > legend {
 				display: none;
 			}
 		}
 
 		// Hide all but the first panel before infusion
-		&:not( .managewiki-tabs-infused ) {
+		&:not( .ext-managewiki-tabs-infused ) {
 			.oo-ui-tabPanelLayout:not( :first-child ) {
 				display: none;
 			}
@@ -230,6 +230,6 @@
 	margin-top: 0;
 }
 
-.mw-special-ManageWiki .managewiki-fakesubmit {
+.mw-special-ManageWiki .ext-managewiki-fakesubmit {
 	display: none;
 }

@@ -38,7 +38,7 @@ class OOUIHTMLFormTabs extends OOUIHTMLForm {
 	protected function wrapFieldSetSection( $legend, $section, $attributes, $isRoot ) {
 		$layout = parent::wrapFieldSetSection( $legend, $section, $attributes, $isRoot );
 
-		$layout->addClasses( [ 'managewiki-fieldset-wrapper' ] );
+		$layout->addClasses( [ 'ext-managewiki-fieldset-wrapper' ] );
 		$layout->removeClasses( [ 'oo-ui-panelLayout-framed' ] );
 
 		return $layout;
@@ -73,7 +73,7 @@ class OOUIHTMLFormTabs extends OOUIHTMLForm {
 				'classes' => [ 'mw-htmlform-autoinfuse-lazy' ],
 				'label' => $label,
 				'content' => new FieldsetLayout( [
-					'classes' => [ 'managewiki-section-fieldset' ],
+					'classes' => [ 'ext-managewiki-section-fieldset' ],
 					'id' => "mw-section-$key",
 					'label' => $label,
 					'items' => [
@@ -91,7 +91,7 @@ class OOUIHTMLFormTabs extends OOUIHTMLForm {
 			'infusable' => true,
 			'expanded' => false,
 			'autoFocus' => false,
-			'classes' => [ 'managewiki-tabs' ],
+			'classes' => [ 'ext-managewiki-tabs' ],
 		] );
 
 		$indexLayout->addTabPanels( $tabPanels );
@@ -101,7 +101,7 @@ class OOUIHTMLFormTabs extends OOUIHTMLForm {
 		$form = new PanelLayout( [
 			'framed' => true,
 			'expanded' => false,
-			'classes' => [ 'managewiki-tabs-wrapper' ],
+			'classes' => [ 'ext-managewiki-tabs-wrapper' ],
 			'content' => $indexLayout,
 		] );
 
@@ -137,7 +137,7 @@ class OOUIHTMLFormTabs extends OOUIHTMLForm {
 			'id' => 'managewiki-review',
 		] );
 
-		$html = Html::rawElement( 'div', [ 'class' => 'managewiki-submit-formfields' ], $html );
+		$html = Html::rawElement( 'div', [ 'class' => 'ext-managewiki-submit-formfields' ], $html );
 
 		return $html;
 	}
