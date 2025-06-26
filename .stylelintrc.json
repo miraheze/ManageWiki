@@ -8,7 +8,6 @@
 	"reportNeedlessDisables": true,
 	"rules": {
 		"no-descending-specificity": null,
-		"selector-class-pattern": "^(client|ext|managewiki|mw|oo-ui|skin)-",
 		"selector-max-id": null
 	}
 }

@@ -2,11 +2,11 @@
 	$( () => {
 		let switchingNoHash;
 
-		const tabs = OO.ui.infuse( $( '.managewiki-tabs' ) );
-		tabs.$element.addClass( 'managewiki-tabs-infused' );
+		const tabs = OO.ui.infuse( $( '.ext-managewiki-tabs' ) );
+		tabs.$element.addClass( 'ext-managewiki-tabs-infused' );
 
 		function enhancePanel( panel ) {
-			const $infuse = $( panel.$element ).find( '.managewiki-infuse' );
+			const $infuse = $( panel.$element ).find( '.ext-managewiki-infuse' );
 			$infuse.each( function () {
 				try {
 					OO.ui.infuse( this );
@@ -71,7 +71,7 @@
 				switchManageWikiTab( hash.slice( 1 ) );
 			} else if ( hash.match( /^#mw-[\w-]+$/ ) ) {
 				matchedElement = document.getElementById( hash.slice( 1 ) );
-				$parentSection = $( matchedElement ).closest( '.managewiki-section-fieldset' );
+				$parentSection = $( matchedElement ).closest( '.ext-managewiki-section-fieldset' );
 				if ( $parentSection.length ) {
 					mw.storage.session.remove( 'managewiki-prevTab' );
 					// Switch to proper tab and scroll to selected item.
@@ -109,13 +109,13 @@
 		let index, texts;
 		function buildIndex() {
 			index = {};
-			const $fields = tabs.contentPanel.$element.find( '[class^=mw-htmlform-field-]:not( .managewiki-search-noindex )' );
+			const $fields = tabs.contentPanel.$element.find( '[class^=mw-htmlform-field-]:not( .ext-managewiki-search-noindex )' );
 			const $descFields = $fields.filter(
 				'.oo-ui-fieldsetLayout-group > .oo-ui-widget > .mw-htmlform-field-HTMLInfoField'
 			);
 			$fields.not( $descFields ).each( function () {
 				let $field = $( this );
-				const $wrapper = $field.parents( '.managewiki-fieldset-wrapper' );
+				const $wrapper = $field.parents( '.ext-managewiki-fieldset-wrapper' );
 				const $tabPanel = $field.closest( '.oo-ui-tabPanelLayout' );
 				const $labels = $field.find(
 					'.oo-ui-labelElement-label, .oo-ui-textInputWidget .oo-ui-inputWidget-input, p'
@@ -174,7 +174,7 @@
 			} );
 		}
 
-		const search = OO.ui.infuse( $( '.managewiki-search' ) ).fieldWidget;
+		const search = OO.ui.infuse( $( '.ext-managewiki-search' ) ).fieldWidget;
 		search.$input.on( 'focus', () => {
 			if ( !index ) {
 				// Lazy-build index on first focus
@@ -183,7 +183,7 @@
 				buildIndex();
 			}
 		} );
-		const $noResults = $( '<div>' ).addClass( 'managewiki-search-noresults' ).text( mw.msg( 'managewiki-search-noresults' ) );
+		const $noResults = $( '<div>' ).addClass( 'ext-managewiki-search-noresults' ).text( mw.msg( 'managewiki-search-noresults' ) );
 		search.on( 'change', ( val ) => {
 			if ( !index ) {
 				// In case 'focus' hasn't fired yet
@@ -191,22 +191,22 @@
 				buildIndex();
 			}
 			const isSearching = !!val;
-			tabs.$element.toggleClass( 'managewiki-tabs-searching', isSearching );
+			tabs.$element.toggleClass( 'ext-managewiki-tabs-searching', isSearching );
 			tabs.tabSelectWidget.toggle( !isSearching );
 			tabs.contentPanel.setContinuous( isSearching );
 
-			$( '.managewiki-search-matched' ).removeClass( 'managewiki-search-matched' );
-			$( '.managewiki-search-highlight' ).removeClass( 'managewiki-search-highlight' );
+			$( '.ext-managewiki-search-matched' ).removeClass( 'ext-managewiki-search-matched' );
+			$( '.ext-managewiki-search-highlight' ).removeClass( 'ext-managewiki-search-highlight' );
 			let hasResults = false;
 			if ( isSearching ) {
 				val = val.toLowerCase();
 				texts.forEach( ( text ) => {
 					if ( text.includes( val ) ) {
 						index[ text ].forEach( ( item ) => {
-							item.$highlight.addClass( 'managewiki-search-highlight' );
-							item.$field.addClass( 'managewiki-search-matched' );
-							item.$wrapper.addClass( 'managewiki-search-matched' );
-							item.$tabPanel.addClass( 'managewiki-search-matched' );
+							item.$highlight.addClass( 'ext-managewiki-search-highlight' );
+							item.$field.addClass( 'ext-managewiki-search-matched' );
+							item.$wrapper.addClass( 'ext-managewiki-search-matched' );
+							item.$tabPanel.addClass( 'ext-managewiki-search-matched' );
 						} );
 						hasResults = true;
 					}

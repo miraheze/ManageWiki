@@ -249,7 +249,7 @@ class FormFactoryBuilder {
 					'label-message' => "managewiki-label-$name",
 					'default' => $data['default'],
 					'disabled' => $data['access'],
-					'cssclass' => 'managewiki-infuse',
+					'cssclass' => 'ext-managewiki-infuse',
 					'section' => 'main',
 				];
 
@@ -278,7 +278,7 @@ class FormFactoryBuilder {
 				'options' => $mwCore->getCategoryOptions(),
 				'default' => $mwCore->getCategory(),
 				'disabled' => !$ceMW,
-				'cssclass' => 'managewiki-infuse',
+				'cssclass' => 'ext-managewiki-infuse',
 				'section' => 'main',
 			];
 		}
@@ -301,7 +301,7 @@ class FormFactoryBuilder {
 				'options' => $clusterOptions,
 				'default' => $mwCore->getDBCluster(),
 				'disabled' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
-				'cssclass' => 'managewiki-infuse',
+				'cssclass' => 'ext-managewiki-infuse',
 				'section' => 'main',
 			];
 		}
@@ -535,7 +535,7 @@ class FormFactoryBuilder {
 						'type' => 'submit',
 						'disabled' => true,
 						'section' => $set['section'],
-						'cssclass' => 'managewiki-fakesubmit',
+						'cssclass' => 'ext-managewiki-fakesubmit',
 					];
 				}
 
@@ -554,7 +554,7 @@ class FormFactoryBuilder {
 					],
 					'disabled' => $disabled,
 					'help' => nl2br( implode( ' ', $help ) ),
-					'cssclass' => 'managewiki-infuse',
+					'cssclass' => 'ext-managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
 			}
@@ -690,7 +690,7 @@ class FormFactoryBuilder {
 						'namespaces-contentmodel',
 						$this->getConfigVar( MainConfigNames::NamespaceContentModels ),
 					],
-					'cssclass' => 'managewiki-infuse',
+					'cssclass' => 'ext-managewiki-infuse',
 					'disabled' => !$ceMW,
 					'section' => $name,
 				] + $this->typesBuilder->build(
@@ -709,7 +709,7 @@ class FormFactoryBuilder {
 						'namespaces-protection',
 						$this->getConfigVar( MainConfigNames::NamespaceProtection ),
 					],
-					'cssclass' => 'managewiki-infuse',
+					'cssclass' => 'ext-managewiki-infuse',
 					'default' => $namespaceData['protection'],
 					'options-messages' => [
 						'rightsnone' => '',
@@ -773,7 +773,7 @@ class FormFactoryBuilder {
 							$context->msg( 'parentheses', "\${$key}" ),
 						],
 						'help' => nl2br( implode( ' ', $help ) ),
-						'cssclass' => 'managewiki-infuse',
+						'cssclass' => 'ext-managewiki-infuse',
 						'disabled' => $disabled,
 						'section' => $name,
 					] + $configs;
@@ -785,7 +785,7 @@ class FormFactoryBuilder {
 				'type' => 'submit',
 				'disabled' => true,
 				'section' => $name,
-				'cssclass' => 'managewiki-fakesubmit',
+				'cssclass' => 'ext-managewiki-fakesubmit',
 			];
 
 			$formDescriptor["aliases-$name"] = [
@@ -793,7 +793,7 @@ class FormFactoryBuilder {
 					'namespaces-aliases',
 					$this->getConfigVar( MainConfigNames::NamespaceAliases ),
 				],
-				'cssclass' => 'managewiki-infuse',
+				'cssclass' => 'ext-managewiki-infuse',
 				'disabled' => !$ceMW,
 				'section' => $name,
 			] + $this->typesBuilder->build(
@@ -834,7 +834,7 @@ class FormFactoryBuilder {
 				'delete-migrate-to' => [
 					'type' => 'select',
 					'label-message' => 'namespaces-migrate-to',
-					'cssclass' => 'managewiki-infuse',
+					'cssclass' => 'ext-managewiki-infuse',
 					'options' => $craftedNamespaces,
 					'default' => NS_MAIN,
 					'disabled' => !$canDelete,
