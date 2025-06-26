@@ -74,7 +74,7 @@
 	"managewiki-error-dependency": "De uitbreiding “$1” kan niet worden uitgeschakeld omdat “$2” ervan afhankelijk is.",
 	"managewiki-error-disallowednamespace": "De naamruimte \"$1\" is niet toegestaan.",
 	"managewiki-error-emptygroup": "Zonder toegewezen machtigingen kunt u geen groep aanmaken.",
-	"managewiki-error-install": "De uitbreiding “$1” kon niet worden geïnstalleerd. Als dit zich blijft voordoen, doe dan het volgende:",
+	"managewiki-error-install": "Er is een fout opgetreden bij het inschakelen van de extensie “$1”.",
 	"managewiki-error-missingpermission": "Het recht ‘managewiki-permissions’ kan niet van deze groep worden verwijderd, want geen enkele andere groep heeft dit recht. Door het te verwijderen zou de toegang tot ManageWiki onmogelijk gemaakt worden.",
 	"managewiki-error-missingwiki": "De wiki \"$1\" bestaat niet.",
 	"managewiki-error-nopermission": "U kunt de instellingen van deze wiki bekijken, maar u hebt geen toestemming om ze te bewerken.",
