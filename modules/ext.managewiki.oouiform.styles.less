@@ -1,23 +1,49 @@
-#managewiki {
-	filter: brightness( 1 );
+@import 'mediawiki.skin.variables.less';
 
-	/* Flexbox gap not supported by all browsers */
-	/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
-	.ext-managewiki-submit-formfields {
-		position: -webkit-sticky;
-		position: sticky;
-		bottom: 0;
-		display: flex;
-		align-items: center;
-		padding: 1em 0;
-		border-top: 1px solid #c8ccd1;
-		background: #fff;
-		box-shadow: 0 -4px 4px -4px rgba( 0, 0, 0, 0.25 );
-		gap: 1em;
+// Sticky header and footer
+.ext-managewiki-search.oo-ui-fieldLayout,
+.ext-managewiki-submit-formfields {
+	position: -webkit-sticky;
+	position: sticky;
+	z-index: @z-index-sticky;
+	border-color: @border-color-subtle;
+	background: @background-color-base;
+	padding-block: @spacing-75;
 
-		.mw-htmlform-submit-buttons {
-			margin: 0;
-		}
+	.oo-ui-textInputWidget {
+		max-width: none;
+	}
+}
+
+.ext-managewiki-search {
+	&.oo-ui-fieldLayout {
+		top: 0;
+		border-bottom-width: @border-width-base;
+		border-bottom-style: @border-style-base;
+		margin: 0;
+	}
+
+	.oo-ui-textInputWidget {
+		max-width: none;
+	}
+}
+
+/* Flexbox gap not supported by all browsers */
+/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+.ext-managewiki-submit-formfields {
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	border-top-width: @border-width-base;
+	border-top-style: @border-style-base;
+	gap: @spacing-50;
+
+	.oo-ui-textInputWidget {
+		margin-inline-end: 0;
+	}
+
+	.mw-htmlform-ooui & .mw-htmlform-submit-buttons {
+		margin: 0;
 	}
 }
 
@@ -38,6 +64,7 @@
 	&.ext-managewiki-tabs-searching {
 		// Prevent "Save" bar getting too close to results
 		min-height: 30em;
+		padding: @spacing-125; // match .oo-ui-tabPanelLayout padding
 
 		/* Tab panels */
 		.oo-ui-tabPanelLayout:not( .ext-managewiki-search-matched ),
@@ -51,39 +78,31 @@
 		.oo-ui-tabPanelLayout.ext-managewiki-search-matched {
 			> fieldset > legend {
 				max-width: none;
-				padding: 5px 10px;
-				margin: 0 0 10px 0;
-				background: #eaecf0;
-
-				> .oo-ui-labelElement-label {
-					display: inline;
-					margin: 0;
-				}
 			}
 		}
 
 		.oo-ui-indexLayout-stackLayout > .oo-ui-panelLayout {
 			padding: 0;
 			margin: 0;
-		}
 
-		.ext-managewiki-search-matched {
-			padding: 0;
-			margin: 0 20px 10px 20px;
+			+ .oo-ui-tabPanelLayout {
+				margin-top: @spacing-150;
+			}
 		}
 	}
 }
 
 // Highlight could be in an overlay
 .ext-managewiki-search-highlight {
-	border-radius: 0 !important; /* stylelint-disable-line declaration-no-important */
-	background: #eaf3ff !important; /* stylelint-disable-line declaration-no-important */
-	outline: 3px solid #eaf3ff !important; /* stylelint-disable-line declaration-no-important */
+	border-radius: @border-radius-base !important; /* stylelint-disable-line declaration-no-important */
+	background: @background-color-progressive-subtle !important; /* stylelint-disable-line declaration-no-important */
+	outline: @spacing-12 solid @background-color-progressive-subtle !important; /* stylelint-disable-line declaration-no-important */
 }
 
 .ext-managewiki-search-noresults {
-	margin: 20px;
+	margin: @spacing-125;
 	font-style: italic;
+	text-align: center;
 }
 
 /* TODO: Support mobile */
@@ -91,15 +110,7 @@
 	display: none;
 }
 
-.ext-managewiki-search.oo-ui-fieldLayout {
-	margin: 8px 0;
-}
-
-@media all and ( min-width: 720px ) {
-	.ext-managewiki-search.oo-ui-fieldLayout {
-		width: 20em;
-	}
-
+@media ( min-width: @min-width-breakpoint-tablet ) {
 	.mw-special-ManageWiki .mw-specialpage-summary {
 		margin-right: 21em;
 
@@ -110,20 +121,11 @@
 	}
 }
 
-@media all and ( max-width: ( 719px ) ) {
-	.ext-managewiki-search.oo-ui-fieldLayout {
-		// Fallback is graceful enough.
-		position: sticky;
-		z-index: 1;
-		top: 0;
-	}
-}
-
 .ext-managewiki-tabs-wrapper.oo-ui-panelLayout-framed,
 .ext-managewiki-tabs > .oo-ui-menuLayout-content > .oo-ui-indexLayout-stackLayout > .oo-ui-tabPanelLayout {
 	/* Decrease contrast of `border` slightly as padding/border combination is sufficient
 	 * accessibility wise and focus of content is more important here. */
-	border-color: #c8ccd1;
+	border-color: @border-color-subtle;
 }
 
 /* JavaScript disabled */
@@ -143,8 +145,8 @@
 		.ext-managewiki-section-fieldset {
 			// <legend> is hard to style, so apply border to top of group
 			> .oo-ui-fieldsetLayout-group {
-				padding-top: 1.5em;
-				border-top: 1px solid #c8ccd1;
+				padding-top: @spacing-125;
+				border-top: @border-subtle;
 			}
 
 			// Remove spacing between legend and underline
@@ -155,7 +157,7 @@
 
 		// Spacing between sections
 		> .oo-ui-menuLayout-content > .oo-ui-indexLayout-stackLayout > .oo-ui-tabPanelLayout:not( :last-child ) {
-			margin-bottom: 1em;
+			margin-bottom: @spacing-100;
 		}
 	}
 }
@@ -213,16 +215,35 @@
 	display: none;
 }
 
-.mw-htmlform-cloner-ul {
-	list-style: none;
-
-	> li > div {
+.mw-htmlform-cloner {
+	/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+	&-ul {
 		display: flex;
-		max-width: 48.4em;
+		flex-direction: column;
+		margin: 0;
+		gap: @spacing-25;
+		list-style: none;
+	}
+
+	&-li {
+		margin: 0;
+	}
+
+	&-row {
+		display: flex;
+		max-width: 50em; // .oo-ui-textInputWidget max-width
 
 		> .mw-htmlform-field-HTMLTextField {
 			flex-grow: 1;
 		}
+	}
+
+	&-delete-button {
+		margin-inline-start: @border-width-base * -1; // Merge with text input
+	}
+
+	&-create-button {
+		margin-block-start: @spacing-25;
 	}
 }
 
