@@ -320,7 +320,7 @@ class SpecialManageWiki extends SpecialPage {
 				'placeholder' => $this->msg( 'managewiki-search' )->text(),
 			] ),
 			[
-				'classes' => [ 'managewiki-search' ],
+				'classes' => [ 'ext-managewiki-search' ],
 				'label' => $this->msg( 'managewiki-search' )->text(),
 				'invisibleLabel' => true,
 				'infusable' => true,
