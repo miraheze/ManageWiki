@@ -20,15 +20,6 @@ class OOUIHTMLFormTabs extends OOUIHTMLForm {
 	protected $mSubSectionBeforeFields = false;
 
 	/**
-	 * @param string $html
-	 * @return string
-	 */
-	public function wrapForm( $html ) {
-		$html = Html::rawElement( 'div', [ 'id' => 'managewiki' ], $html );
-		return parent::wrapForm( $html );
-	}
-
-	/**
 	 * @param string $legend
 	 * @param string $section
 	 * @param array $attributes
