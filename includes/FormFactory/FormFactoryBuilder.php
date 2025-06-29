@@ -327,7 +327,7 @@ class FormFactoryBuilder {
 		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$credits = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( 'ManageWikiExtensions', 'credits' ),
+			$cache->makeGlobalKey( ConfigNames::Extensions, 'credits' ),
 			WANObjectCache::TTL_DAY,
 			function (): array {
 				$queue = array_fill_keys( array_merge(
@@ -417,7 +417,7 @@ class FormFactoryBuilder {
 					// have not been enabled. We don't want to display redlinks for them.
 					$parsed = preg_replace(
 						'#<a[^>]+class="[^"]*\bnew\b[^"]*"[^>]*>(.*?)</a>#i',
-						'<b>$1</b>', $parsed
+						'<strong>$1</strong>', $parsed
 					);
 
 					$descriptionFallback = $parsed;
