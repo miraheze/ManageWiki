@@ -189,7 +189,7 @@ class NamespacesModule implements IModule {
 	}
 
 	/**
-	 * @return array<int, array{name:string, searchable:int, subpages:int, content:int, contentmodel:string, protection:string, aliases:array, core:int, additional:array}>
+	 * @return non-empty-associative-array<int, array{name:string, searchable:int, subpages:int, content:int, contentmodel:string, protection:string, aliases:array, core:int, additional:array}>
 	 */
 	public function listAll(): array {
 		return $this->liveNamespaces;
