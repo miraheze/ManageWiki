@@ -340,7 +340,7 @@ class FormFactoryBuilder {
 				foreach ( $queue as $path => $_ ) {
 					$json = file_get_contents( (string)$path );
 					if ( $json === false ) {
-						$json === '[]';
+						$json = '[]';
 					}
 
 					$info = json_decode( $json, true );
