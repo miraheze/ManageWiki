@@ -343,7 +343,7 @@ class FormFactoryBuilder {
 						$json = '[]';
 					}
 
-					$info = json_decode( $json, true );
+					$info = (array)json_decode( $json, true );
 					$version = $info['manifest_version'] ?? 2;
 
 					$processor->extractInfo( (string)$path, $info, $version );
@@ -478,7 +478,6 @@ class FormFactoryBuilder {
 
 		// If we have filtered settings, use them, otherwise use all settings
 		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
-		/** @var array<string, array> $filteredList */
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
 			$value['from'] === $special && (
 				in_array( $value['from'], $extList, true ) ||
@@ -490,6 +489,8 @@ class FormFactoryBuilder {
 
 		$formDescriptor = [];
 		foreach ( $filteredList as $name => $set ) {
+			// Make phan happy
+			$name = (string)$name;
 			if ( !isset( $set['requires'] ) ) {
 				$this->logger->error( '\'requires\' is not set in {config} for {var}', [
 					'config' => ConfigNames::Settings,
