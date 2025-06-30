@@ -339,7 +339,11 @@ class FormFactoryBuilder {
 
 				foreach ( $queue as $path => $_ ) {
 					$json = file_get_contents( (string)$path );
-					$info = json_decode( $json ?: '[]', true );
+					if ( $json === false ) {
+						$json === '[]';
+					}
+
+					$info = json_decode( $json, true );
 					$version = $info['manifest_version'] ?? 2;
 
 					$processor->extractInfo( (string)$path, $info, $version );
@@ -474,6 +478,7 @@ class FormFactoryBuilder {
 
 		// If we have filtered settings, use them, otherwise use all settings
 		$manageWikiSettings = $this->options->get( ConfigNames::Settings );
+		/** @var array<string, array> $filteredList */
 		$filteredList = array_filter( $manageWikiSettings, static fn ( array $value ): bool =>
 			$value['from'] === $special && (
 				in_array( $value['from'], $extList, true ) ||
