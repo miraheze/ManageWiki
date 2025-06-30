@@ -87,7 +87,7 @@ class NamespacesModule implements IModule {
 		}
 	}
 
-	public function getNewId(): float|int {
+	public function getNewId(): int {
 		$lastID = $this->dbr->newSelectQueryBuilder()
 			->select( 'ns_namespace_id' )
 			->from( 'mw_namespaces' )
@@ -99,7 +99,7 @@ class NamespacesModule implements IModule {
 			->caller( __METHOD__ )
 			->fetchField();
 
-		return $lastID !== false ? $lastID + 1 : 3000;
+		return $lastID !== false ? (int)$lastID + 1 : 3000;
 	}
 
 	/**
@@ -126,7 +126,7 @@ class NamespacesModule implements IModule {
 			// Normalize
 			$nsName = str_replace(
 				[ ' ', ':' ], '_',
-				mb_strtolower( trim( $ns['name'] ?? '' ) )
+				mb_strtolower( trim( $ns['name'] ) )
 			);
 
 			if ( $nsName === $name ) {
@@ -172,13 +172,11 @@ class NamespacesModule implements IModule {
 	}
 
 	/**
-	 * Retrieves data for a specific namespace
-	 * @param int $id Namespace ID wanted
-	 * @return array Namespace configuration
+	 * Retrieves data for a specific namespace.
 	 */
 	public function list( int $id ): array {
 		return $this->listAll()[$id] ?? [
-			'name' => null,
+			'name' => '',
 			'searchable' => 0,
 			'subpages' => 0,
 			'content' => 0,
@@ -191,7 +189,7 @@ class NamespacesModule implements IModule {
 	}
 
 	/**
-	 * @return array<int, array{name:?string, searchable:int, subpages:int, content:int, contentmodel:string, protection:string, aliases:array, core:int, additional:array}>
+	 * @return array<int, array{name:string, searchable:int, subpages:int, content:int, contentmodel:string, protection:string, aliases:array, core:int, additional:array}>
 	 */
 	public function listAll(): array {
 		return $this->liveNamespaces;
@@ -292,7 +290,7 @@ class NamespacesModule implements IModule {
 		// Utilize changes differently in this case
 		$this->changes[$id] = [
 			'old' => [
-				'name' => $this->liveNamespaces[$id]['name'],
+				'name' => $this->list( $id )['name'],
 			],
 			'new' => [
 				'name' => $newNamespace,
