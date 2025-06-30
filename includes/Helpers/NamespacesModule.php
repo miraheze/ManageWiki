@@ -122,11 +122,11 @@ class NamespacesModule implements IModule {
 			return true;
 		}
 
-		foreach ( $this->liveNamespaces as $ns ) {
+		foreach ( $this->listAll() as $ns ) {
 			// Normalize
 			$nsName = str_replace(
 				[ ' ', ':' ], '_',
-				mb_strtolower( trim( $ns['name'] ) )
+				mb_strtolower( trim( $ns['name'] ?? '' ) )
 			);
 
 			if ( $nsName === $name ) {
@@ -159,11 +159,11 @@ class NamespacesModule implements IModule {
 		) );
 
 		$canonicalNameMain = mb_strtolower( trim(
-			str_replace( [ ' ', ':' ], '_', $this->namespaceInfo->getCanonicalName( NS_PROJECT ) )
+			str_replace( [ ' ', ':' ], '_', (string)$this->namespaceInfo->getCanonicalName( NS_PROJECT ) )
 		) );
 
 		$canonicalNameTalk = mb_strtolower( trim(
-			str_replace( [ ' ', ':' ], '_', $this->namespaceInfo->getCanonicalName( NS_PROJECT_TALK ) )
+			str_replace( [ ' ', ':' ], '_', (string)$this->namespaceInfo->getCanonicalName( NS_PROJECT_TALK ) )
 		) );
 
 		return in_array( $name, [ $metaNamespace, $metaNamespaceTalk,
@@ -177,7 +177,7 @@ class NamespacesModule implements IModule {
 	 * @return array Namespace configuration
 	 */
 	public function list( int $id ): array {
-		return $this->liveNamespaces[$id] ?? [
+		return $this->listAll()[$id] ?? [
 			'name' => null,
 			'searchable' => 0,
 			'subpages' => 0,
@@ -191,7 +191,7 @@ class NamespacesModule implements IModule {
 	}
 
 	/**
-	 * @return array<int, array>
+	 * @return array<int, array{name:?string, searchable:int, subpages:int, content:int, contentmodel:string, protection:string, aliases:array, core:int, additional:array}> */
 	 */
 	public function listAll(): array {
 		return $this->liveNamespaces;
@@ -226,15 +226,15 @@ class NamespacesModule implements IModule {
 
 		// We will handle all processing in final stages
 		$nsData = [
-			'name' => $this->liveNamespaces[$id]['name'] ?? null,
-			'searchable' => $this->liveNamespaces[$id]['searchable'] ?? 0,
-			'subpages' => $this->liveNamespaces[$id]['subpages'] ?? 0,
-			'content' => $this->liveNamespaces[$id]['content'] ?? 0,
-			'contentmodel' => $this->liveNamespaces[$id]['contentmodel'] ?? CONTENT_MODEL_WIKITEXT,
-			'protection' => $this->liveNamespaces[$id]['protection'] ?? '',
-			'aliases' => $this->liveNamespaces[$id]['aliases'] ?? [],
-			'core' => $this->liveNamespaces[$id]['core'] ?? 0,
-			'additional' => $this->liveNamespaces[$id]['additional'] ?? [],
+			'name' => $this->list( $id )['name'],
+			'searchable' => $this->list( $id )['searchable'],
+			'subpages' => $this->list( $id )['subpages'],
+			'content' => $this->list( $id )['content'],
+			'contentmodel' => $this->list( $id )['contentmodel'],
+			'protection' => $this->list( $id )['protection'],
+			'aliases' => $this->list( $id )['aliases'],
+			'core' => $this->list( $id )['core'],
+			'additional' => $this->list( $id )['additional'],
 			'maintainprefix' => $maintainPrefix,
 		];
 
