@@ -331,18 +331,22 @@ class FormFactoryBuilder {
 			WANObjectCache::TTL_DAY,
 			function (): array {
 				$queue = array_fill_keys( array_merge(
-					glob( $this->options->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ),
-					glob( $this->options->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' )
+					glob( $this->options->get( MainConfigNames::ExtensionDirectory ) . '/*/extension*.json' ) ?: [],
+					glob( $this->options->get( MainConfigNames::StyleDirectory ) . '/*/skin.json' ) ?: []
 				), true );
 
 				$processor = new ExtensionProcessor();
 
 				foreach ( $queue as $path => $_ ) {
-					$json = file_get_contents( $path );
-					$info = json_decode( $json, true );
+					$json = file_get_contents( (string)$path );
+					if ( $json === false ) {
+						$json = '[]';
+					}
+
+					$info = (array)json_decode( $json, true );
 					$version = $info['manifest_version'] ?? 2;
 
-					$processor->extractInfo( $path, $info, $version );
+					$processor->extractInfo( (string)$path, $info, $version );
 				}
 
 				$data = $processor->getExtractedInfo();
@@ -485,6 +489,8 @@ class FormFactoryBuilder {
 
 		$formDescriptor = [];
 		foreach ( $filteredList as $name => $set ) {
+			// Make phan happy
+			$name = (string)$name;
 			if ( !isset( $set['requires'] ) ) {
 				$this->logger->error( '\'requires\' is not set in {config} for {var}', [
 					'config' => ConfigNames::Settings,
@@ -763,7 +769,7 @@ class FormFactoryBuilder {
 						$help[] = $this->buildRequires( $context, $a['requires'] ) . "\n";
 					}
 
-					$rawMessage = new RawMessage( $a['help'] );
+					$rawMessage = new RawMessage( (string)$a['help'] );
 					$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
 
 					$formDescriptor["$key-$name"] = [
@@ -909,7 +915,7 @@ class FormFactoryBuilder {
 				$this->options->get( ConfigNames::PermissionsDisallowedGroups ),
 				$this->userGroupManager->listAllImplicitGroups()
 			),
-			'groupMatrix' => $this->handleMatrix( json_encode( $matrixConstruct ), 'php' ),
+			'groupMatrix' => $this->handleMatrix( json_encode( $matrixConstruct ) ?: '[]', 'php' ),
 			'autopromote' => $groupData['autopromote'] ?? null,
 		];
 
@@ -1437,7 +1443,7 @@ class FormFactoryBuilder {
 			);
 			$mwNamespaces->remove(
 				(int)$special + 1,
-				$formData['delete-migrate-to'] + 1,
+				(int)$formData['delete-migrate-to'] + 1,
 				maintainPrefix: false
 			);
 			return $mwNamespaces;

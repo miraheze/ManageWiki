@@ -87,7 +87,7 @@ class NamespacesModule implements IModule {
 		}
 	}
 
-	public function getNewId(): float|int {
+	public function getNewId(): int {
 		$lastID = $this->dbr->newSelectQueryBuilder()
 			->select( 'ns_namespace_id' )
 			->from( 'mw_namespaces' )
@@ -99,7 +99,7 @@ class NamespacesModule implements IModule {
 			->caller( __METHOD__ )
 			->fetchField();
 
-		return $lastID !== false ? $lastID + 1 : 3000;
+		return $lastID !== false ? (int)$lastID + 1 : 3000;
 	}
 
 	/**
@@ -122,7 +122,7 @@ class NamespacesModule implements IModule {
 			return true;
 		}
 
-		foreach ( $this->liveNamespaces as $ns ) {
+		foreach ( $this->listAll() as $ns ) {
 			// Normalize
 			$nsName = str_replace(
 				[ ' ', ':' ], '_',
@@ -159,11 +159,11 @@ class NamespacesModule implements IModule {
 		) );
 
 		$canonicalNameMain = mb_strtolower( trim(
-			str_replace( [ ' ', ':' ], '_', $this->namespaceInfo->getCanonicalName( NS_PROJECT ) )
+			str_replace( [ ' ', ':' ], '_', (string)$this->namespaceInfo->getCanonicalName( NS_PROJECT ) )
 		) );
 
 		$canonicalNameTalk = mb_strtolower( trim(
-			str_replace( [ ' ', ':' ], '_', $this->namespaceInfo->getCanonicalName( NS_PROJECT_TALK ) )
+			str_replace( [ ' ', ':' ], '_', (string)$this->namespaceInfo->getCanonicalName( NS_PROJECT_TALK ) )
 		) );
 
 		return in_array( $name, [ $metaNamespace, $metaNamespaceTalk,
@@ -172,13 +172,11 @@ class NamespacesModule implements IModule {
 	}
 
 	/**
-	 * Retrieves data for a specific namespace
-	 * @param int $id Namespace ID wanted
-	 * @return array Namespace configuration
+	 * Retrieves data for a specific namespace.
 	 */
 	public function list( int $id ): array {
-		return $this->liveNamespaces[$id] ?? [
-			'name' => null,
+		return $this->listAll()[$id] ?? [
+			'name' => '',
 			'searchable' => 0,
 			'subpages' => 0,
 			'content' => 0,
@@ -191,7 +189,7 @@ class NamespacesModule implements IModule {
 	}
 
 	/**
-	 * @return array<int, array>
+	 * @return non-empty-associative-array<int, array{name:string, searchable:int, subpages:int, content:int, contentmodel:string, protection:string, aliases:array, core:int, additional:array}>
 	 */
 	public function listAll(): array {
 		return $this->liveNamespaces;
@@ -226,15 +224,15 @@ class NamespacesModule implements IModule {
 
 		// We will handle all processing in final stages
 		$nsData = [
-			'name' => $this->liveNamespaces[$id]['name'] ?? null,
-			'searchable' => $this->liveNamespaces[$id]['searchable'] ?? 0,
-			'subpages' => $this->liveNamespaces[$id]['subpages'] ?? 0,
-			'content' => $this->liveNamespaces[$id]['content'] ?? 0,
-			'contentmodel' => $this->liveNamespaces[$id]['contentmodel'] ?? CONTENT_MODEL_WIKITEXT,
-			'protection' => $this->liveNamespaces[$id]['protection'] ?? '',
-			'aliases' => $this->liveNamespaces[$id]['aliases'] ?? [],
-			'core' => $this->liveNamespaces[$id]['core'] ?? 0,
-			'additional' => $this->liveNamespaces[$id]['additional'] ?? [],
+			'name' => $this->list( $id )['name'],
+			'searchable' => $this->list( $id )['searchable'],
+			'subpages' => $this->list( $id )['subpages'],
+			'content' => $this->list( $id )['content'],
+			'contentmodel' => $this->list( $id )['contentmodel'],
+			'protection' => $this->list( $id )['protection'],
+			'aliases' => $this->list( $id )['aliases'],
+			'core' => $this->list( $id )['core'],
+			'additional' => $this->list( $id )['additional'],
 			'maintainprefix' => $maintainPrefix,
 		];
 
@@ -292,7 +290,7 @@ class NamespacesModule implements IModule {
 		// Utilize changes differently in this case
 		$this->changes[$id] = [
 			'old' => [
-				'name' => $this->liveNamespaces[$id]['name'],
+				'name' => $this->list( $id )['name'],
 			],
 			'new' => [
 				'name' => $newNamespace,
