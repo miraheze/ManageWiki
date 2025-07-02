@@ -224,7 +224,12 @@
 			]
 		},
 		"ext.managewiki.oouiform.styles": {
-			"styles": "ext.managewiki.oouiform.styles.less"
+			"styles": "ext.managewiki.oouiform.styles.less",
+			"skinStyles": {
+				"minerva": [
+					"ext.managewiki.oouiform.styles.minerva.less"
+				]
+			}
 		}
 	},
 	"ResourceFileModulePaths": {
