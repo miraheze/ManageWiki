@@ -126,6 +126,7 @@ class Installer {
 		return true;
 	}
 
+	/** @throws ShellDisabledError */
 	private function mwscript( array $data ): true {
 		if ( Shell::isDisabled() ) {
 			throw new ShellDisabledError();
