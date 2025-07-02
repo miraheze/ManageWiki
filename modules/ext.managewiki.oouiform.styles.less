@@ -215,35 +215,39 @@
 	display: none;
 }
 
-.mw-htmlform-cloner {
-	/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
-	&-ul {
-		display: flex;
-		flex-direction: column;
-		margin: 0;
-		gap: @spacing-25;
-		list-style: none;
-	}
-
-	&-li {
-		margin: 0;
-	}
-
-	&-row {
-		display: flex;
-		max-width: 50em; // .oo-ui-textInputWidget max-width
-
-		> .mw-htmlform-field-HTMLTextField {
-			flex-grow: 1;
+/* Need the specificity to override the default styles in skins such as Minerva */
+.mw-htmlform-field-HTMLFormFieldCloner {
+	.mw-htmlform-cloner {
+		/* stylelint-disable-next-line plugin/no-unsupported-browser-features */
+		&-ul {
+			display: flex;
+			flex-direction: column;
+			padding: 0;
+			margin: 0;
+			gap: @spacing-25;
+			list-style: none;
 		}
-	}
 
-	&-delete-button {
-		margin-inline-start: @border-width-base * -1; // Merge with text input
-	}
+		&-li {
+			margin: 0;
+		}
 
-	&-create-button {
-		margin-block-start: @spacing-25;
+		&-row {
+			display: flex;
+			max-width: 50em; // .oo-ui-textInputWidget max-width
+
+			> .mw-htmlform-field-HTMLTextField {
+				flex-grow: 1;
+			}
+		}
+
+		&-delete-button {
+			margin-inline-start: @border-width-base * -1; // Merge with text input
+		}
+
+		&-create-button {
+			margin-block-start: @spacing-25;
+		}
 	}
 }
 
