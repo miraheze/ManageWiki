@@ -54,6 +54,9 @@ class Installer {
 		return !in_array( false, $stepResponse, true );
 	}
 
+	/**
+	 * @param array<string, string> $data
+	 */
 	private function sql( array $data ): bool {
 		$lb = $this->dbLoadBalancerFactory->getMainLB( $this->dbname );
 		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->dbname );
@@ -80,6 +83,9 @@ class Installer {
 		return true;
 	}
 
+	/**
+	 * @param array<string, array> $data
+	 */
 	private function permissions( array $data, bool $install ): true {
 		$mwPermissions = $this->moduleFactory->permissions( $this->dbname );
 		$action = $install ? 'add' : 'remove';
