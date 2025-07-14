@@ -71,6 +71,7 @@
 	"managewiki-error-disallowednamespace": "不允許命名空間「$1」。",
 	"managewiki-error-emptygroup": "您要被分配權限才能建立群組。",
 	"managewiki-error-install": "嘗試啟用擴充功能「$1」時失敗。",
+	"managewiki-error-missingwiki": "wiki「$1」不存在。",
 	"managewiki-error-requirements-enabled": "無法啓用擴充「$1」，因為未符合需求。",
 	"managewiki-extension-settings": "管理此擴充功能可用的組態選項",
 	"managewiki-header-core": "您可以從此面板管理此wiki的核心設定（例如名稱和語言）。灰色選項可能只能由管理員更改。完成後，請點擊「儲存」，您的偏好設定將在幾秒內生效。  \n\n您還可以在 [[Special:ManageWiki/settings]] 管理其他設定，例如標誌等。",

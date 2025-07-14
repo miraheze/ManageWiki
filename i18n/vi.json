@@ -74,7 +74,7 @@
 	"managewiki-error-dependency": "Không thể vô hiệu hóa phần mở rộng \" $1 \" vì nó là phần phụ thuộc của \" $2 \".",
 	"managewiki-error-disallowednamespace": "Không gian tên \"$1\" không được cho phép.",
 	"managewiki-error-emptygroup": "Bạn không thể tạo nhóm mà không được cấp bất kỳ quyền nào.",
-	"managewiki-error-install": "Tiện ích mở rộng \"$1\" không được bật. Nếu điều này tiếp tục xảy ra, xin vui lòng",
+	"managewiki-error-install": "Một lỗi xảy ra khi đang cố gắng bật tiện ích mở rộng “$1”.",
 	"managewiki-error-missingwiki": "Wiki '$1' không tồn tại.",
 	"managewiki-error-requirements-enabled": "Tiện ích \"$1\" không thể bật được vì nó không đáp ứng yêu cầu của nó.",
 	"managewiki-extension-settings": "Cấu hình có sẵn cho tiện ích mở rộng này",
