@@ -84,6 +84,7 @@ class PopulateWikiSettings extends Maintenance {
 			}
 
 			if ( is_numeric( $value ) ) {
+				// Handle setting float and integer values
 				$value = strpos( $value, '.' ) !== false ? (float)$value : (int)$value;
 			}
 
