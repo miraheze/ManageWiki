@@ -11,6 +11,7 @@ use function file;
 use function is_numeric;
 use function str_replace;
 use function strpos;
+use function var_export;
 
 class PopulateWikiSettings extends Maintenance {
 
