@@ -60,6 +60,7 @@
 	"managewiki-desc": "Uporabnikom omogoča upravljanje konfiguracije svojega vikija s spletnim vmesnikom.",
 	"managewiki-disabled": "Modul »$1« v tem vikiju še ni omogočen in ga ni mogoče uporabljati.",
 	"managewiki-error-conflict": "Razširitve »$1« ni mogoče omogočiti, ker je v navzkrižju z $2.",
+	"managewiki-error-dependency": "Razširitve »$1« ni mogoče deaktivirati, ker je od nje odvisna razširitev »$2«.",
 	"managewiki-error-disallowednamespace": "Imenski prostor »$1« ni dovoljen.",
 	"managewiki-error-emptygroup": "Skupine ne morete ustvariti brez dodeljenih dovoljenj.",
 	"managewiki-error-install": "Namestitev razširitve »$1« ni uspela. Če se to ponavlja,",
