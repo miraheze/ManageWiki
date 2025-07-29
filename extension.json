@@ -38,6 +38,13 @@
 		"Miraheze\\ManageWiki\\Tests\\": "tests/phpunit/"
 	},
 	"JobClasses": {
+		"LogEntryJob": {
+			"class": "Miraheze\\ManageWiki\\Jobs\\LogEntryJob",
+			"services": [
+				"TitleFactory"
+			],
+			"needsPage": false
+		},
 		"MWScriptJob": {
 			"class": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
 			"services": [
@@ -169,6 +176,9 @@
 			"handler": "Installer"
 		},
 		"SidebarBeforeOutput": {
+			"handler": "Main"
+		},
+		"UserGetReservedNames": {
 			"handler": "Main"
 		}
 	},
