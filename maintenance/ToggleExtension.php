@@ -66,7 +66,7 @@ class ToggleExtension extends Maintenance {
 				}
 			}
 			if ( !in_array( $name, $extList, true ) && $disable && !$allWikis ) {
-				$this->output( "Failed to disable $name on $dbname: Was it enabled?\n" );
+				$this->fatalError( "Failed to disable $name on $dbname: Was it enabled?" );
 			}
 		}
 
