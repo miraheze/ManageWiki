@@ -321,8 +321,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 	}
 
 	/** @inheritDoc */
-	public function getDescription(): string {
-		return $this->msg( $this->canModify() ? 'managewikidefaults' : 'managewikidefaults-view' )->text();
+	public function getDescription(): Message {
+		return $this->msg( $this->canModify() ? 'managewikidefaults' : 'managewikidefaults-view' );
 	}
 
 	/** @inheritDoc */
