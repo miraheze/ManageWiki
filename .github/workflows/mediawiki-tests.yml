@@ -12,19 +12,37 @@ jobs:
     strategy:
       matrix:
         include:
-          # Latest MediaWiki stable - PHP 8.2
+          # Legacy MediaWiki - PHP 8.2
           - mw: 'REL1_43'
             php: 8.2
             php-docker: 82
-            composer-test: true
+            composer-test: false
             coverage: true
             experimental-phan: false
             experimental-phpunit: false
 
-          # Latest MediaWiki beta - PHP 8.2
+          # Legacy MediaWiki - PHP 8.4
+          - mw: 'REL1_43'
+            php: 8.4
+            php-docker: 84
+            composer-test: true
+            coverage: false
+            experimental-phan: false
+            experimental-phpunit: false
+
+          # Latest MediaWiki stable - PHP 8.2
           - mw: 'REL1_44'
             php: 8.2
             php-docker: 82
+            composer-test: false
+            coverage: false
+            experimental-phan: true
+            experimental-phpunit: false
+
+          # Latest MediaWiki stable - PHP 8.4
+          - mw: 'REL1_44'
+            php: 8.4
+            php-docker: 84
             composer-test: false
             coverage: false
             experimental-phan: true
@@ -34,6 +52,15 @@ jobs:
           - mw: 'master'
             php: 8.2
             php-docker: 82
+            composer-test: false
+            coverage: false
+            experimental-phan: true
+            experimental-phpunit: true
+
+          # Latest MediaWiki master - PHP 8.4
+          - mw: 'master'
+            php: 8.4
+            php-docker: 84
             composer-test: false
             coverage: false
             experimental-phan: true
