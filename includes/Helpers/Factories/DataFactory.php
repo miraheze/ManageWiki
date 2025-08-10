@@ -28,6 +28,8 @@ class DataFactory {
 		ConfigNames::CacheType,
 	];
 
+	private const CACHE_KEY = 'ManageWiki';
+
 	private readonly BagOStuff $cache;
 	private IReadableDatabase $dbr;
 
@@ -58,7 +60,7 @@ class DataFactory {
 	public function newInstance( string $dbname ): self {
 		$this->dbname = $dbname;
 		$this->wikiTimestamp = (int)$this->cache->get(
-			$this->cache->makeGlobalKey( 'ManageWiki', $dbname )
+			$this->cache->makeGlobalKey( self::CACHE_KEY, $dbname )
 		);
 
 		if ( !$this->wikiTimestamp ) {
@@ -94,7 +96,7 @@ class DataFactory {
 		if ( $isNewChanges ) {
 			$this->wikiTimestamp = $mtime;
 			$this->cache->set(
-				$this->cache->makeGlobalKey( 'ManageWiki', $this->dbname ),
+				$this->cache->makeGlobalKey( self::CACHE_KEY, $this->dbname ),
 				$mtime
 			);
 		}
@@ -126,7 +128,7 @@ class DataFactory {
 	 * Probably used when a wiki is deleted or renamed.
 	 */
 	public function deleteWikiData( string $dbname ): void {
-		$this->cache->delete( $this->cache->makeGlobalKey( 'ManageWiki', $dbname ) );
+		$this->cache->delete( $this->cache->makeGlobalKey( self::CACHE_KEY, $dbname ) );
 		if ( file_exists( "{$this->cacheDir}/$dbname.php" ) ) {
 			unlink( "{$this->cacheDir}/$dbname.php" );
 		}
