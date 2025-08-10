@@ -9,6 +9,10 @@ namespace Miraheze\ManageWiki;
  */
 class ConfigNames {
 
+	public const CacheDirectory = 'ManageWikiCacheDirectory';
+
+	public const CacheType = 'ManageWikiCacheType';
+
 	public const Extensions = 'ManageWikiExtensions';
 
 	public const ExtensionsDefault = 'ManageWikiExtensionsDefault';
