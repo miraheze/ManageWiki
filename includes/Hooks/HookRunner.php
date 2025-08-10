@@ -7,12 +7,14 @@ use MediaWiki\HookContainer\HookContainer;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\ICoreModule;
 use Skin;
+use Wikimedia\Rdbms\IReadableDatabase;
 
 class HookRunner implements
 	ManageWikiAfterSidebarLinksHook,
 	ManageWikiCoreAddFormFieldsHook,
 	ManageWikiCoreFormSubmissionHook,
-	ManageWikiCoreProviderHook
+	ManageWikiCoreProviderHook,
+	ManageWikiDataFactoryBuilderHook
 {
 
 	public function __construct(
@@ -63,6 +65,19 @@ class HookRunner implements
 		$this->container->run(
 			'ManageWikiCoreProvider',
 			[ &$provider, $dbname ],
+			[ 'abortable' => false ]
+		);
+	}
+
+	/** @inheritDoc */
+	public function onManageWikiDataFactoryBuilder(
+		string $dbname,
+		IReadableDatabase $dbr,
+		array &$cacheArray
+	): void {
+		$this->hookContainer->run(
+			'ManageWikiDataFactoryBuilder',
+			[ $dbname, $dbr, &$cacheArray ],
 			[ 'abortable' => false ]
 		);
 	}
