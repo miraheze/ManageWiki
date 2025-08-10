@@ -137,7 +137,7 @@ class DataFactory {
 	 */
 	private function writeToFile( string $fileName, array $data ): void {
 		$tmpFile = tempnam( wfTempDir(), $fileName );
-		if ( $tmpFile ) {
+		if ( $tmpFile !== false ) {
 			if ( file_put_contents( $tmpFile, "<?php\n\nreturn " . var_export( $data, true ) . ";\n" ) ) {
 				if ( !rename( $tmpFile, "{$this->cacheDir}/$fileName.php" ) ) {
 					unlink( $tmpFile );
