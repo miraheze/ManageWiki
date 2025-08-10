@@ -75,7 +75,7 @@ class HookRunner implements
 		IReadableDatabase $dbr,
 		array &$cacheArray
 	): void {
-		$this->hookContainer->run(
+		$this->container->run(
 			'ManageWikiDataFactoryBuilder',
 			[ $dbname, $dbr, &$cacheArray ],
 			[ 'abortable' => false ]
