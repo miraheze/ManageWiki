@@ -237,6 +237,14 @@
 		"remoteExtPath": "ManageWiki/modules"
 	},
 	"config": {
+		"ManageWikiCacheDirectory": {
+			"description": "String. The path to store ManageWiki cache files at.",
+			"value": ""
+		},
+		"ManageWikiCacheType": {
+			"description": "Index from $wgObjectCaches. If set, this will be used instead of $wgMainCacheType for ManageWiki cache.",
+			"value": null
+		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"value": []
