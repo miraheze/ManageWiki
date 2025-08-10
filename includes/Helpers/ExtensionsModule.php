@@ -3,8 +3,8 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\ServiceOptions;
-use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\DataFactory;
 use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -37,8 +37,8 @@ class ExtensionsModule implements IModule {
 	private ?string $log = null;
 
 	public function __construct(
-		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly DataFactory $dataFactory,
 		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
 		private readonly RequirementsFactory $requirementsFactory,
