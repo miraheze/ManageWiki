@@ -127,8 +127,8 @@
 		"ManageWikiDefaults": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaults",
 			"services": [
-				"CreateWikiDataFactory",
 				"ManageWikiDatabaseUtils",
+				"ManageWikiDataFactory",
 				"ManageWikiDefaultPermissions",
 				"ManageWikiFormFactory",
 				"ManageWikiModuleFactory"
