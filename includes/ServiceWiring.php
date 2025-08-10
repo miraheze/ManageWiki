@@ -45,6 +45,9 @@ return [
 			)
 		);
 	},
+	'ManageWikiDatabaseUtils' => static function ( MediaWikiServices $services ): DatabaseUtils {
+		return new DatabaseUtils( $services->getConnectionProvider() );
+	},
 	'ManageWikiDataFactory' => static function ( MediaWikiServices $services ): DataFactory {
 		return new DataFactory(
 			$services->getObjectCacheFactory(),
@@ -55,9 +58,6 @@ return [
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
-	},
-	'ManageWikiDatabaseUtils' => static function ( MediaWikiServices $services ): DatabaseUtils {
-		return new DatabaseUtils( $services->getConnectionProvider() );
 	},
 	'ManageWikiDefaultPermissions' => static function ( MediaWikiServices $services ): DefaultPermissions {
 		return new DefaultPermissions(
@@ -70,8 +70,8 @@ return [
 	},
 	'ManageWikiExtensionsFactory' => static function ( MediaWikiServices $services ): ExtensionsFactory {
 		return new ExtensionsFactory(
-			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiDataFactory' ),
 			$services->get( 'ManageWikiInstallerFactory' ),
 			$services->get( 'ManageWikiLogger' ),
 			$services->get( 'ManageWikiRequirementsFactory' ),
@@ -118,8 +118,8 @@ return [
 	},
 	'ManageWikiNamespacesFactory' => static function ( MediaWikiServices $services ): NamespacesFactory {
 		return new NamespacesFactory(
-			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiDataFactory' ),
 			$services->getJobQueueGroupFactory(),
 			$services->getNamespaceInfo(),
 			new ServiceOptions(
@@ -130,8 +130,8 @@ return [
 	},
 	'ManageWikiPermissionsFactory' => static function ( MediaWikiServices $services ): PermissionsFactory {
 		return new PermissionsFactory(
-			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiDataFactory' ),
 			$services->getActorStoreFactory(),
 			$services->getUserGroupManagerFactory(),
 			$services->getMessageFormatterFactory()->getTextFormatter(
@@ -148,8 +148,8 @@ return [
 	},
 	'ManageWikiSettingsFactory' => static function ( MediaWikiServices $services ): SettingsFactory {
 		return new SettingsFactory(
-			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiDataFactory' ),
 			$services->get( 'ManageWikiInstallerFactory' ),
 			new ServiceOptions(
 				SettingsModule::CONSTRUCTOR_OPTIONS,
