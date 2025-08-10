@@ -12,6 +12,7 @@ use Miraheze\ManageWiki\Helpers\CoreModule;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
+use Miraheze\ManageWiki\Helpers\Factories\DataFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
@@ -40,6 +41,17 @@ return [
 			$services->get( 'ManageWikiSettingsFactory' ),
 			new ServiceOptions(
 				CoreModule::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
+	'ManageWikiDataFactory' => static function ( MediaWikiServices $services ): DataFactory {
+		return new DataFactory(
+			$services->getObjectCacheFactory(),
+			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiHookRunner' ),
+			new ServiceOptions(
+				DataFactory::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
 		);
