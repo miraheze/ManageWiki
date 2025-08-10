@@ -9,10 +9,10 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\FormFactory;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
+use Miraheze\ManageWiki\Helpers\Factories\DataFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use function in_array;
@@ -23,8 +23,8 @@ use function trim;
 class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function __construct(
-		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly DataFactory $dataFactory,
 		private readonly DefaultPermissions $defaultPermissions,
 		private readonly FormFactory $formFactory,
 		private readonly ModuleFactory $moduleFactory
