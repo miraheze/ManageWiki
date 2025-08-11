@@ -71,11 +71,12 @@ class HookRunner implements
 	/** @inheritDoc */
 	public function onManageWikiDataFactoryBuilder(
 		string $dbname,
+		ModuleFactory $moduleFactory,
 		array &$cacheArray
 	): void {
 		$this->container->run(
 			'ManageWikiDataFactoryBuilder',
-			[ $dbname, &$cacheArray ],
+			[ $dbname, $moduleFactory, &$cacheArray ],
 			[ 'abortable' => false ]
 		);
 	}
