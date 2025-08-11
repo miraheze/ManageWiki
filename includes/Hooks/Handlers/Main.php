@@ -5,12 +5,15 @@ namespace Miraheze\ManageWiki\Hooks\Handlers;
 use MediaWiki\Config\Config;
 use MediaWiki\Content\FallbackContentHandler;
 use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
+use MediaWiki\Hook\SetupAfterCacheHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
+use MediaWiki\MainConfigNames;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\DataFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use function array_keys;
 use function htmlspecialchars;
@@ -19,11 +22,13 @@ use function in_array;
 class Main implements
 	ContentHandlerForModelIDHook,
 	GetPreferencesHook,
+	SetupAfterCacheHook,
 	SidebarBeforeOutputHook
 {
 
 	public function __construct(
 		private readonly Config $config,
+		private readonly DataFactory $dataFactory,
 		private readonly HookRunner $hookRunner,
 		private readonly UserOptionsLookup $userOptionsLookup
 	) {
@@ -46,6 +51,13 @@ class Main implements
 			'label-message' => 'managewiki-toggle-forcesidebar',
 			'section' => 'rendering',
 		];
+	}
+
+	/** @inheritDoc */
+	public function onSetupAfterCache() {
+		$dbname = $this->config->get( MainConfigNames::DBname );
+		$dataStore = $this->dataFactory->newInstance( $dbname );
+		$dataStore->syncCache();
 	}
 
 	/** @inheritDoc */
