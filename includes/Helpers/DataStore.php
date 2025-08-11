@@ -24,8 +24,6 @@ class DataStore {
 	private const CACHE_KEY = 'ManageWiki';
 
 	private IReadableDatabase $dbr;
-
-	/** @var int The cached timestamp for the wiki information. */
 	private int $wikiTimestamp;
 
 	public function __construct(
@@ -45,9 +43,9 @@ class DataStore {
 	}
 
 	/**
-	 * Syncs the cache by checking if the cached wiki data or database list is outdated.
-	 * If either the wiki or database cache file has been modified, it will reset
-	 * and regenerate the cached data.
+	 * Syncs the cache by checking if the cached wiki data is outdated.
+	 * If the wiki file has been modified, it will reset and
+	 * regenerate the cached data.
 	 */
 	public function syncCache(): void {
 		// mtime will be 0 if the file does not exist as well, which means
@@ -61,9 +59,7 @@ class DataStore {
 	}
 
 	/**
-	 * Resets the wiki data information.
-	 *
-	 * This method retrieves new information for the wiki and updates the cache.
+	 * Retrieves new information for the wiki and updates the cache.
 	 */
 	public function resetWikiData( bool $isNewChanges ): void {
 		$mtime = time();
@@ -124,9 +120,6 @@ class DataStore {
 		}
 	}
 
-	/**
-	 * @return array Cached wiki data.
-	 */
 	private function getCachedWikiData(): array {
 		// Avoid using file_exists for performance reasons. Including the file directly leverages
 		// the opcode cache and prevents any file system access.
