@@ -26,7 +26,7 @@ class NamespacesFactory {
 	public function newInstance( string $dbname ): NamespacesModule {
 		return new NamespacesModule(
 			$this->databaseUtils,
-			$this->dataFactory,
+			$this->dataStoreFactory,
 			$this->jobQueueGroupFactory,
 			$this->localisationCache,
 			$this->logger,
