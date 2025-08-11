@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Hooks;
 
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 
-interface ManageWikiDataFactoryBuilderHook {
+interface ManageWikiDataStoreBuilderHook {
 
 	/**
 	 * @param ModuleFactory $moduleFactory
@@ -18,7 +18,7 @@ interface ManageWikiDataFactoryBuilderHook {
 	 * @return void This hook must not abort, it must return no value.
 	 * @codeCoverageIgnore Cannot be annotated as covered.
 	 */
-	public function onManageWikiDataFactoryBuilder(
+	public function onManageWikiDataStoreBuilder(
 		ModuleFactory $moduleFactory,
 		string $dbname,
 		array &$cacheArray
