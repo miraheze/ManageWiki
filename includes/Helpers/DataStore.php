@@ -73,8 +73,9 @@ class DataStore {
 			try {
 				$mwCore = $this->moduleFactory->core( $this->dbname );
 				$cacheArray['category'] = $mwCore->getCategory();
+				$cacheArray['created'] = $mwCore->getCreationDate();
 				$cacheArray['dbcluster'] = $mwCore->getDBCluster();
-				$cacheArray['url'] = $mwCore->getServerName();
+				$cacheArray['url'] = $mwCore->getServerName() ?: false;
 				$cacheArray['core'] = [
 					'wgSitename' => $mwCore->getSiteName(),
 					'wgLanguageCode' => $mwCore->getLanguage(),
