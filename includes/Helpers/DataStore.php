@@ -125,7 +125,7 @@ class DataStore {
 		// We only handle failures if the include does not work.
 
 		$filePath = "{$this->cacheDir}/{$this->dbname}.php";
-		$cacheData = AtEase::quietCall( static function ( string $path ): array {
+		$cacheData = AtEase::quietCall( static function ( string $path ): array|false {
 			return include $path;
 		}, $filePath );
 
