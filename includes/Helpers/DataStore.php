@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
@@ -69,34 +70,38 @@ class DataStore {
 
 		$cacheArray = [];
 		if ( $this->moduleFactory->isEnabled( 'core' ) ) {
-			$mwCore = $this->moduleFactory->core( $this->dbname );
-			$cacheArray['category'] = $mwCore->getCategory();
-			$cacheArray['dbcluster'] = $mwCore->getDBCluster();
-			$cacheArray['url'] = $mwCore->getServerName();
-			$cacheArray['core'] = [
-				'wgSitename' => $mwCore->getSiteName(),
-				'wgLanguageCode' => $mwCore->getLanguage(),
-			];
+			try {
+				$mwCore = $this->moduleFactory->core( $this->dbname );
+				$cacheArray['category'] = $mwCore->getCategory();
+				$cacheArray['dbcluster'] = $mwCore->getDBCluster();
+				$cacheArray['url'] = $mwCore->getServerName();
+				$cacheArray['core'] = [
+					'wgSitename' => $mwCore->getSiteName(),
+					'wgLanguageCode' => $mwCore->getLanguage(),
+				];
 
-			$states = [];
-			if ( $mwCore->isEnabled( 'private-wikis' ) ) {
-				$states['private'] = $mwCore->isPrivate();
+				$states = [];
+				if ( $mwCore->isEnabled( 'private-wikis' ) ) {
+					$states['private'] = $mwCore->isPrivate();
+				}
+
+				if ( $mwCore->isEnabled( 'closed-wikis' ) ) {
+					$states['closed'] = $mwCore->isClosed();
+				}
+
+				if ( $mwCore->isEnabled( 'inactive-wikis' ) ) {
+					$states['inactive'] = $mwCore->isInactiveExempt() ? 'exempt' :
+						$mwCore->isInactive();
+				}
+
+				if ( $mwCore->isEnabled( 'experimental-wikis' ) ) {
+					$states['experimental'] = $mwCore->isExperimental();
+				}
+
+				$cacheArray['states'] = $states;
+			} catch ( MissingWikiError ) {
+				// Do nothing, we don't need to handle that here.
 			}
-
-			if ( $mwCore->isEnabled( 'closed-wikis' ) ) {
-				$states['closed'] = $mwCore->isClosed();
-			}
-
-			if ( $mwCore->isEnabled( 'inactive-wikis' ) ) {
-				$states['inactive'] = $mwCore->isInactiveExempt() ? 'exempt' :
-					$mwCore->isInactive();
-			}
-
-			if ( $mwCore->isEnabled( 'experimental-wikis' ) ) {
-				$states['experimental'] = $mwCore->isExperimental();
-			}
-
-			$cacheArray['states'] = $states;
 		}
 
 		if ( $this->moduleFactory->isEnabled( 'settings' ) ) {
@@ -116,7 +121,7 @@ class DataStore {
 			'database' => $this->dbname,
 		];
 
-		$this->hookRunner->onManageWikiDataFactoryBuilder( $this->dbname, $cacheArray );
+		$this->hookRunner->onManageWikiDataFactoryBuilder( $this->dbname, $this->moduleFactory, $cacheArray );
 		$this->writeToFile( $this->dbname, $cacheArray );
 	}
 
