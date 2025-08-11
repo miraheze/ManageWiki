@@ -53,6 +53,7 @@ return [
 			$services->getObjectCacheFactory(),
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiHookRunner' ),
+			$services->get( 'ManageWikiModuleFactory' ),
 			new ServiceOptions(
 				DataFactory::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
