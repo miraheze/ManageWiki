@@ -34,6 +34,12 @@ class CacheUpdate {
 	}
 
 	public function doUpdate(): void {
+		$servers = $this->options->get( ConfigNames::Servers );
+		if ( $servers === [] ) {
+			// If no servers are configured, early exit.
+			return;
+		}
+
 		$mainPageUrl = $this->titleFactory->newMainPage()->getFullURL();
 		$url = $this->urlUtils->expand( $mainPageUrl, PROTO_INTERNAL );
 		if ( $url === null ) {
@@ -56,7 +62,6 @@ class CacheUpdate {
 			],
 		];
 
-		$servers = $this->options->get( ConfigNames::Servers );
 		$reqs = [];
 		foreach ( $servers as $server ) {
 			$reqs[] = ( $baseReq + [ 'proxy' => $server ] );
