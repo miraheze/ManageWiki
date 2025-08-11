@@ -2,7 +2,9 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use Exception;
 use JobSpecification;
+use LocalisationCache;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\MainConfigNames;
@@ -13,13 +15,16 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
+use Psr\Log\LoggerInterface;
 use stdClass;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
 use Wikimedia\Rdbms\SelectQueryBuilder;
 use function array_keys;
 use function array_map;
+use function array_merge;
 use function in_array;
+use function is_array;
 use function json_decode;
 use function json_encode;
 use function mb_strtolower;
@@ -28,10 +33,12 @@ use function trim;
 use const CONTENT_MODEL_WIKITEXT;
 use const NS_PROJECT;
 use const NS_PROJECT_TALK;
+use const NS_SPECIAL;
 
 class NamespacesModule implements IModule {
 
 	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::NamespacesAdditional,
 		ConfigNames::NamespacesDisallowedNames,
 		MainConfigNames::MetaNamespace,
 		MainConfigNames::MetaNamespaceTalk,
@@ -53,6 +60,8 @@ class NamespacesModule implements IModule {
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly DataFactory $dataFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
+		private readonly LocalisationCache $localisationCache,
+		private readonly LoggerInterface $logger,
 		private readonly NamespaceInfo $namespaceInfo,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
@@ -435,5 +444,166 @@ class NamespacesModule implements IModule {
 			$data = $this->dataFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
+	}
+
+	public function setCachedData( array &$cacheArray ): void {
+		// Figure out localized namespace names
+		$metaNamespace = '';
+		$metaNamespaceTalk = '';
+
+		// Prefer live values; fall back to configured MetaNamespace if missing
+		if ( isset( $this->liveNamespaces[NS_PROJECT]['name'] ) ) {
+			$metaNamespace = $this->liveNamespaces[NS_PROJECT]['name'];
+		} else {
+			$metaNamespace = $this->options->get( MainConfigNames::MetaNamespace );
+		}
+
+		if ( isset( $this->liveNamespaces[NS_PROJECT_TALK]['name'] ) ) {
+			$metaNamespaceTalk = $this->liveNamespaces[NS_PROJECT_TALK]['name'];
+		} else {
+			$metaNamespaceTalk = $this->options->get( MainConfigNames::MetaNamespaceTalk );
+		}
+
+		$lcName = [];
+		$lcEN = [];
+
+		try {
+			$languageCode = $cacheArray['core']['wgLanguageCode'] ?? 'en';
+			$lcName = $this->localisationCache->getItem( $languageCode, 'namespaceNames' );
+
+			// Ensure Project Talk reflects (possibly customized) Project name
+			$lcName[NS_PROJECT_TALK] = str_replace( '$1',
+				$lcName[NS_PROJECT] ?? $metaNamespace,
+				$lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk
+			);
+
+			if ( $languageCode !== 'en' ) {
+				$lcEN = $this->localisationCache->getItem( 'en', 'namespaceNames' );
+			}
+		} catch ( Exception $e ) {
+			$this->logger->error(
+				'Caught exception trying to load Localisation Cache: {exception}',
+				[ 'exception' => $e ]
+			);
+		}
+
+		$additional = $this->options->get( ConfigNames::NamespacesAdditional );
+		foreach ( $this->listAll() as $id => $ns ) {
+			$id = (int)$id;
+
+			// Localized display name + English alias (if any)
+			$nsName = $lcName[$id] ?? $ns['name'];
+			$lcAlias = $lcEN[$id] ?? null;
+
+			// Normalize aliases
+			$aliases = array_map(
+				static fn ( string $alias ): string => str_replace( [ ' ', ':' ], '_', $alias ),
+				(array)( $ns['aliases'] ?? [] )
+			);
+
+			$cacheArray['namespaces'][$nsName] = [
+				'id' => $id,
+				'core' => (bool)$ns['core'],
+				'searchable' => (bool)$ns['searchable'],
+				'subpages' => (bool)$ns['subpages'],
+				'content' => (bool)$ns['content'],
+				'contentmodel' => $ns['contentmodel'],
+				'protection' => $ns['protection'] ?: false,
+				'aliases' => array_merge( $aliases, (array)$lcAlias ),
+				'additional' => (array)( $ns['additional'] ?? [] ),
+			];
+
+			$nsAdditional = (array)( $ns['additional'] ?? [] );
+
+			// Apply NamespacesAdditional per-namespace
+			foreach ( $additional as $var => $conf ) {
+				if ( !$this->isAdditionalSettingForNamespace( $conf, $id ) ) {
+					continue;
+				}
+
+				if ( isset( $nsAdditional[$var] ) ) {
+					$val = $nsAdditional[$var];
+				} elseif ( is_array( $conf['overridedefault'] ?? null ) ) {
+					$val = $conf['overridedefault'][$id]
+						?? $conf['overridedefault']['default']
+						?? null;
+
+					if ( $val === null ) {
+						// No applicable fallback; skip
+						continue;
+					}
+				} else {
+					$val = $conf['overridedefault'] ?? null;
+				}
+
+				if ( $val ) {
+					$this->setNamespaceSettingCache( $cacheArray, $id, $var, $val, $conf );
+					continue;
+				}
+
+				// Ensure structure exists for falsey values (legacy behavior)
+				if ( empty( $conf['constant'] ) && empty( $cacheArray['settings'][$var] ) ) {
+					$cacheArray['settings'][$var] = [];
+				}
+			}
+		}
+
+		// Apply NS_SPECIAL overridedefaults (no general 'default' fallback here)
+		foreach ( $additional as $var => $conf ) {
+			$od = $conf['overridedefault'] ?? null;
+			if ( isset( $od[NS_SPECIAL] ) && $this->isAdditionalSettingForNamespace( $conf, NS_SPECIAL ) ) {
+				$this->setNamespaceSettingCache( $cacheArray, NS_SPECIAL, $var, $od[NS_SPECIAL], $conf );
+			}
+		}
+	}
+
+	/**
+	 * Adds the namespace setting for the supplied variable
+	 *
+	 * @param array &$cacheArray array for cache
+	 * @param int $nsID namespace ID number as an integer
+	 * @param string $var variable name
+	 * @param mixed $val variable value
+	 * @param array $varConf variable config from ConfigNames::NamespacesAdditional[$var]
+	 */
+	private function setNamespaceSettingCache(
+		array &$cacheArray,
+		int $nsID,
+		string $var,
+		mixed $val,
+		array $varConf
+	): void {
+		if ( $varConf['type'] === 'check' ) {
+			$cacheArray['settings'][$var][] = $nsID;
+			return;
+		}
+
+		if ( $varConf['type'] === 'vestyle' ) {
+			$cacheArray['settings'][$var][$nsID] = true;
+			return;
+		}
+
+		if ( $varConf['constant'] ?? false ) {
+			$cacheArray['settings'][$var] = str_replace( [ ' ', ':' ], '_', $val );
+			return;
+		}
+
+		$cacheArray['settings'][$var][$nsID] = $val;
+	}
+
+	/**
+	 * Checks if the namespace is for the additional setting given
+	 *
+	 * @param array $conf additional setting to check
+	 * @param int $nsID namespace ID to check if the setting is allowed for
+	 * @return bool Whether or not the setting is enabled for the namespace
+	 */
+	private function isAdditionalSettingForNamespace( array $conf, int $nsID ): bool {
+		// T12237: Do not apply additional settings if the setting is not for the
+		// namespace that we are on, otherwise it is very likely for the namespace to
+		// not have setting set, and cause settings set before to be ignored
+
+		$only = $conf['only'] ?? null;
+		return $only === null || in_array( $nsID, (array)$only, true );
 	}
 }
