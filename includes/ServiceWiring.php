@@ -8,6 +8,7 @@ use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\FormFactory\FormFactory;
 use Miraheze\ManageWiki\FormFactory\FormFactoryBuilder;
+use Miraheze\ManageWiki\Helpers\CacheUpdate;
 use Miraheze\ManageWiki\Helpers\CoreModule;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
@@ -33,6 +34,16 @@ use Psr\Log\LoggerInterface;
 // @codeCoverageIgnoreStart
 
 return [
+	'ManageWikiCacheUpdate' => static function ( MediaWikiServices $services ): CacheUpdate {
+		return new CacheUpdate(
+			$services->getHttpRequestFactory(),
+			$services->getUrlUtils(),
+			new ServiceOptions(
+				CacheUpdate::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
 	'ManageWikiConfig' => static function ( MediaWikiServices $services ): Config {
 		return $services->getConfigFactory()->makeConfig( 'ManageWiki' );
 	},
