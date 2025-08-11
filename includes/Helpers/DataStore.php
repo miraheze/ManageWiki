@@ -84,7 +84,7 @@ class DataStore {
 			'database' => $this->dbname,
 		];
 
-		$this->hookRunner->onManageWikiDataFactoryBuilder( $this->dbname, $this->dbr, $cacheArray );
+		$this->hookRunner->onManageWikiDataFactoryBuilder( $this->dbname, $cacheArray );
 		$this->writeToFile( $this->dbname, $cacheArray );
 	}
 
