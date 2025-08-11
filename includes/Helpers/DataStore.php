@@ -129,10 +129,8 @@ class DataStore {
 			$this->moduleFactory->namespaces( $this->dbname )->setCachedData( $cacheArray );
 		}
 
-		$cacheArray = [
-			'mtime' => $mtime,
-			'database' => $this->dbname,
-		];
+		$cacheArray['mtime'] = $mtime;
+		$cacheArray['database'] = $this->dbname;
 
 		$this->hookRunner->onManageWikiDataStoreBuilder( $this->moduleFactory, $this->dbname, $cacheArray );
 		$this->writeToFile( $this->dbname, $cacheArray );
