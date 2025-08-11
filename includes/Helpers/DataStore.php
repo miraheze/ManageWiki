@@ -3,12 +3,9 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
-use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
-use Wikimedia\Rdbms\IReadableDatabase;
-use Wikimedia\Rdbms\Platform\ISQLPlatform;
 use function file_exists;
 use function file_put_contents;
 use function is_array;
@@ -23,12 +20,10 @@ class DataStore {
 
 	private const CACHE_KEY = 'ManageWiki';
 
-	private IReadableDatabase $dbr;
 	private int $wikiTimestamp;
 
 	public function __construct(
 		private readonly BagOStuff $cache,
-		private readonly DatabaseUtils $databaseUtils,
 		private readonly HookRunner $hookRunner,
 		private readonly ModuleFactory $moduleFactory,
 		private readonly string $cacheDir,
@@ -72,22 +67,21 @@ class DataStore {
 			);
 		}
 
-		$this->dbr ??= $this->databaseUtils->getGlobalReplicaDB();
+		if ( $this->moduleFactory->isEnabled( 'settings' ) ) {
+			$cacheArray['settings'] = $this->moduleFactory->settings( $dbname )->listAll();
+		}
 
-		$row = $this->dbr->newSelectQueryBuilder()
-			->select( ISQLPlatform::ALL_ROWS )
-			->from( 'mw_settings' )
-			->where( [ 's_dbname' => $this->dbname ] )
-			->caller( __METHOD__ )
-			->fetchRow();
+		if ( $this->moduleFactory->isEnabled( 'extensions' ) ) {
+			$cacheArray['extensions'] = $this->moduleFactory->extensions( $dbname )->listNames();
+		}
 
-		if ( !$row ) {
-			return;
+		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
+			$cacheArray['permissions'] = $this->moduleFactory->permissions( $dbname )->getCachedData();
 		}
 
 		$cacheArray = [
 			'mtime' => $mtime,
-			'database' => $row->s_dbname,
+			'database' => $this->dbname,
 		];
 
 		$this->hookRunner->onManageWikiDataFactoryBuilder( $this->dbname, $this->dbr, $cacheArray );
