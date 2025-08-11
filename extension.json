@@ -147,9 +147,6 @@
 		"CreateWikiCreation": {
 			"handler": "CreateWiki"
 		},
-		"CreateWikiDataFactoryBuilder": {
-			"handler": "CreateWiki"
-		},
 		"CreateWikiStatePrivate": {
 			"handler": "CreateWiki"
 		},
@@ -178,9 +175,7 @@
 			"services": [
 				"ManageWikiConfig",
 				"ManageWikiDefaultPermissions",
-				"ManageWikiLogger",
-				"ManageWikiModuleFactory",
-				"LocalisationCache"
+				"ManageWikiModuleFactory"
 			]
 		},
 		"Installer": {
