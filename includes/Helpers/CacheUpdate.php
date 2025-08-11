@@ -36,6 +36,10 @@ class CacheUpdate {
 	public function doUpdate(): void {
 		$mainPageUrl = $this->titleFactory->newMainPage()->getFullURL();
 		$url = $this->urlUtils->expand( $mainPageUrl, PROTO_INTERNAL );
+		if ( $url === null ) {
+			return;
+		}
+
 		$urlInfo = $this->urlUtils->parse( $url ) ?? false;
 		$urlHost = strlen( $urlInfo['port'] ?? '' )
 			? IPUtils::combineHostAndPort( $urlInfo['host'], (int)$urlInfo['port'] )
