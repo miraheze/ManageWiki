@@ -6,7 +6,7 @@ use MediaWiki\Config\ServiceOptions;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\Factories\DataFactory;
+use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
@@ -47,7 +47,7 @@ class PermissionsModule implements IModule {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly DataFactory $dataFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly ActorStoreFactory $actorStoreFactory,
 		private readonly UserGroupManagerFactory $userGroupManagerFactory,
 		private readonly ITextFormatter $textFormatter,

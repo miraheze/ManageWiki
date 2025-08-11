@@ -10,7 +10,7 @@ use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\Factories\DataFactory;
+use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
@@ -58,7 +58,7 @@ class NamespacesModule implements IModule {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly DataFactory $dataFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LocalisationCache $localisationCache,
 		private readonly LoggerInterface $logger,
@@ -441,7 +441,7 @@ class NamespacesModule implements IModule {
 		}
 
 		if ( $this->dbname !== ModuleFactory::DEFAULT_DBNAME ) {
-			$data = $this->dataFactory->newInstance( $this->dbname );
+			$data = $this->dataStoreFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}

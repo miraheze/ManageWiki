@@ -125,7 +125,7 @@
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaults",
 			"services": [
 				"ManageWikiDatabaseUtils",
-				"ManageWikiDataFactory",
+				"ManageWikiDataStoreFactory",
 				"ManageWikiDefaultPermissions",
 				"ManageWikiFormFactory",
 				"ManageWikiModuleFactory"
@@ -185,7 +185,7 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\Main",
 			"services": [
 				"ManageWikiConfig",
-				"ManageWikiDataFactory",
+				"ManageWikiDataStoreFactory",
 				"ManageWikiHookRunner",
 				"UserOptionsLookup"
 			]

@@ -11,7 +11,7 @@ use Miraheze\ManageWiki\Hooks\HookRunner;
 use ObjectCacheFactory;
 use Wikimedia\ObjectCache\BagOStuff;
 
-class DataFactory {
+class DataStoreFactory {
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::CacheDirectory,

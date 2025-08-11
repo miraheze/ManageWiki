@@ -14,7 +14,7 @@ class NamespacesFactory {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly DataFactory $dataFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly LoggerInterface $logger,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LocalisationCache $localisationCache,

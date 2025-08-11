@@ -12,7 +12,7 @@ class SettingsFactory {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly DataFactory $dataFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly InstallerFactory $installerFactory,
 		private readonly ServiceOptions $options
 	) {
@@ -21,7 +21,7 @@ class SettingsFactory {
 	public function newInstance( string $dbname ): SettingsModule {
 		return new SettingsModule(
 			$this->databaseUtils,
-			$this->dataFactory,
+			$this->dataStoreFactory,
 			$this->installerFactory,
 			$this->options,
 			$dbname

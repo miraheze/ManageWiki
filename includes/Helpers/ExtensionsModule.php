@@ -4,7 +4,7 @@ namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\Factories\DataFactory;
+use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -38,7 +38,7 @@ class ExtensionsModule implements IModule {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly DataFactory $dataFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
 		private readonly RequirementsFactory $requirementsFactory,
@@ -343,7 +343,7 @@ class ExtensionsModule implements IModule {
 			->caller( __METHOD__ )
 			->execute();
 
-		$data = $this->dataFactory->newInstance( $this->dbname );
+		$data = $this->dataStoreFactory->newInstance( $this->dbname );
 		$data->resetWikiData( isNewChanges: true );
 
 		// We need to run mwscript steps after the extension is already loaded

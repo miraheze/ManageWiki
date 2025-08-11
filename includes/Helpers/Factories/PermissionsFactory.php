@@ -13,7 +13,7 @@ class PermissionsFactory {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly DataFactory $dataFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly ActorStoreFactory $actorStoreFactory,
 		private readonly UserGroupManagerFactory $userGroupManagerFactory,
 		private readonly ITextFormatter $textFormatter,
@@ -24,7 +24,7 @@ class PermissionsFactory {
 	public function newInstance( string $dbname ): PermissionsModule {
 		return new PermissionsModule(
 			$this->databaseUtils,
-			$this->dataFactory,
+			$this->dataStoreFactory,
 			$this->actorStoreFactory,
 			$this->userGroupManagerFactory,
 			$this->textFormatter,

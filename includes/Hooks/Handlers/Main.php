@@ -13,7 +13,7 @@ use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\Factories\DataFactory;
+use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use function array_keys;
 use function htmlspecialchars;
@@ -28,7 +28,7 @@ class Main implements
 
 	public function __construct(
 		private readonly Config $config,
-		private readonly DataFactory $dataFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly HookRunner $hookRunner,
 		private readonly UserOptionsLookup $userOptionsLookup
 	) {
@@ -56,7 +56,7 @@ class Main implements
 	/** @inheritDoc */
 	public function onSetupAfterCache() {
 		$dbname = $this->config->get( MainConfigNames::DBname );
-		$dataStore = $this->dataFactory->newInstance( $dbname );
+		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
 		$dataStore->syncCache();
 	}
 

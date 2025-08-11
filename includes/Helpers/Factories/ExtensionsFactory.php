@@ -11,7 +11,7 @@ class ExtensionsFactory {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly DataFactory $dataFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
 		private readonly RequirementsFactory $requirementsFactory,
@@ -22,7 +22,7 @@ class ExtensionsFactory {
 	public function newInstance( string $dbname ): ExtensionsModule {
 		return new ExtensionsModule(
 			$this->databaseUtils,
-			$this->dataFactory,
+			$this->dataStoreFactory,
 			$this->installerFactory,
 			$this->logger,
 			$this->requirementsFactory,
