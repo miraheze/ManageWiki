@@ -52,7 +52,6 @@ return [
 	'ManageWikiDataFactory' => static function ( MediaWikiServices $services ): DataFactory {
 		return new DataFactory(
 			$services->getObjectCacheFactory(),
-			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiHookRunner' ),
 			// Use a closure to avoid circular dependency
 			static fn (): ModuleFactory => $services->get( 'ManageWikiModuleFactory' ),
