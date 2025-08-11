@@ -6,6 +6,7 @@ use Closure;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\CacheUpdate;
 use Miraheze\ManageWiki\Helpers\DataStore;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use ObjectCacheFactory;
@@ -23,6 +24,7 @@ class DataStoreFactory {
 
 	public function __construct(
 		ObjectCacheFactory $objectCacheFactory,
+		private readonly CacheUpdate $cacheUpdate,
 		private readonly HookRunner $hookRunner,
 		private readonly Closure $moduleFactoryClosure,
 		private readonly ServiceOptions $options
@@ -38,6 +40,7 @@ class DataStoreFactory {
 			$this->options->get( MainConfigNames::CacheDirectory );
 		return new DataStore(
 			$this->cache,
+			$this->cacheUpdate,
 			$this->hookRunner,
 			( $this->moduleFactoryClosure )(),
 			$cacheDir,
