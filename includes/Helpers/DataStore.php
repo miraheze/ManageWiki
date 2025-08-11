@@ -67,6 +67,7 @@ class DataStore {
 			);
 		}
 
+		$cacheArray = [];
 		if ( $this->moduleFactory->isEnabled( 'settings' ) ) {
 			$cacheArray['settings'] = $this->moduleFactory->settings( $this->dbname )->listAll();
 		}
