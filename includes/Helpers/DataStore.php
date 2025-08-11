@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
@@ -81,7 +80,7 @@ class DataStore {
 			->fetchRow();
 
 		if ( !$row ) {
-			throw new MissingWikiError( $this->dbname );
+			return;
 		}
 
 		$cacheArray = [
