@@ -2,8 +2,10 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use MediaWiki\Config\ServiceOptions;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
+use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\DataFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -13,6 +15,7 @@ use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
 use function array_diff;
+use function array_diff_key;
 use function array_keys;
 use function array_merge;
 use function array_unique;
@@ -26,6 +29,12 @@ use function mb_strtolower;
 use function sort;
 
 class PermissionsModule implements IModule {
+
+	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::PermissionsAdditionalAddGroups,
+		ConfigNames::PermissionsAdditionalRemoveGroups,
+		ConfigNames::PermissionsAdditionalRights,
+	];
 
 	private array $changes = [];
 	private array $errors = [];
@@ -42,8 +51,11 @@ class PermissionsModule implements IModule {
 		private readonly ActorStoreFactory $actorStoreFactory,
 		private readonly UserGroupManagerFactory $userGroupManagerFactory,
 		private readonly ITextFormatter $textFormatter,
+		private readonly ServiceOptions $options,
 		private readonly string $dbname
 	) {
+		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
+
 		$dbr = $this->databaseUtils->getGlobalReplicaDB();
 		$perms = $dbr->newSelectQueryBuilder()
 			->select( ISQLPlatform::ALL_ROWS )
@@ -455,6 +467,74 @@ class PermissionsModule implements IModule {
 				$userGroupManager->removeUserFromGroup( $remoteUser, $group );
 			}
 		}
+	}
+
+	public function getCachedData(): array {
+		$additionalRights = $this->options->get( ConfigNames::PermissionsAdditionalRights );
+		$additionalAddGroups = $this->options->get( ConfigNames::PermissionsAdditionalAddGroups );
+		$additionalRemoveGroups = $this->options->get( ConfigNames::PermissionsAdditionalRemoveGroups );
+
+		$cache = [];
+		foreach ( $this->listAll() as $group => $live ) {
+			$cache[$group] = [
+				'permissions' => $this->applyAdditionalRights( $live['permissions'] ?? [], $additionalRights[$group] ?? [] ),
+				'addgroups' => $this->normalizeList( array_merge( $live['addgroups'] ?? [], $additionalAddGroups[$group] ?? [] ) ),
+				'removegroups' => $this->normalizeList( array_merge( $live['removegroups'] ?? [], $additionalRemoveGroups[$group] ?? [] ) ),
+				'addself' => $this->normalizeList( $live['addself'] ?? [] ),
+				'removeself' => $this->normalizeList( $live['removeself'] ?? [] ),
+				'autopromote' => $live['autopromote'] ?? null,
+			];
+		}
+
+		// Add config-only groups (not in ManageWiki )
+		foreach ( array_diff_key( $additionalRights, $cache ) as $group => $rightsOverlay ) {
+			$cache[$group] = [
+				'permissions' => $this->applyAdditionalRights( [], $rightsOverlay ),
+				'addgroups' => $this->normalizeList( $additionalAddGroups[$group] ?? [] ),
+				'removegroups' => $this->normalizeList( $additionalRemoveGroups[$group] ?? [] ),
+				'addself' => [],
+				'removeself' => [],
+				'autopromote' => null,
+			];
+		}
+
+		return $cache;
+	}
+
+	/**
+	 * Overlay additional rights on top of a base list.
+	 * Truthy => add; explicit false => remove. Others ignored.
+	 */
+	private function applyAdditionalRights( array $base, array $overlay ): array {
+		if ( !$overlay ) {
+			return $this->normalizeList( $base );
+		}
+
+		$add = [];
+		$remove = [];
+		foreach ( $overlay as $right => $bool ) {
+			if ( $bool ) {
+				$add[] = $right;
+				continue;
+			}
+
+			if ( $bool === false ) {
+				$remove[] = $right;
+			}
+		}
+
+		$merged = array_merge( $base, $add );
+		$merged = array_diff( $merged, $remove );
+		return $this->normalizeList( $merged );
+	}
+
+	/**
+	 * Unique + sorted list for stable comparisons and output.
+	 */
+	private function normalizeList( array $list ): array {
+		$list = array_values( array_unique( $list ) );
+		sort( $list );
+		return $list;
 	}
 
 	private function moveUsersFromGroup( string $group ): void {
