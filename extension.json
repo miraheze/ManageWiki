@@ -168,6 +168,9 @@
 		"LoadExtensionSchemaUpdates": {
 			"handler": "Installer"
 		},
+		"SetupAfterCache": {
+			"handler": "Main"
+		},
 		"SidebarBeforeOutput": {
 			"handler": "Main"
 		}
@@ -190,6 +193,7 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\Main",
 			"services": [
 				"ManageWikiConfig",
+				"ManageWikiDataFactory",
 				"ManageWikiHookRunner",
 				"UserOptionsLookup"
 			]
