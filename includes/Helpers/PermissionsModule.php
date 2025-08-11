@@ -471,15 +471,7 @@ class PermissionsModule implements IModule {
 
 	/**
 	 * Build cached permissions data from live and additional config.
-	 *
-	 * @return array<string, array{
-	 *   permissions: list<string>,
-	 *   addgroups: list<string>,
-	 *   removegroups: list<string>,
-	 *   addself: list<string>,
-	 *   removeself: list<string>,
-	 *   autopromote: ?array
-	 * }>
+	 * @return array<string, array>
 	 */
 	public function getCachedData(): array {
 		$additionalRights = $this->options->get( ConfigNames::PermissionsAdditionalRights );
