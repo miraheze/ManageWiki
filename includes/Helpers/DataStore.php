@@ -99,6 +99,14 @@ class DataStore {
 					$states['experimental'] = $mwCore->isExperimental();
 				}
 
+				if ( $mwCore->isEnabled( 'action-delete' ) ) {
+					$states['deleted'] = $mwCore->isDeleted();
+				}
+
+				if ( $mwCore->isEnabled( 'action-lock' ) ) {
+					$states['locked'] = $mwCore->isLocked();
+				}
+
 				$cacheArray['states'] = $states;
 			} catch ( MissingWikiError ) {
 				// Do nothing, we don't need to handle that here.
