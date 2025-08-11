@@ -325,6 +325,10 @@
 				"bureaucrat"
 			]
 		},
+		"ManageWikiServers": {
+			"description": "Array. An array of servers that serve MediaWiki that will have the ManageWiki cache regenerated on update.",
+			"value": []
+		},
 		"ManageWikiSettings": {
 			"description": "Array. An array of settings that can be managed through Special:ManageWiki",
 			"value": []
