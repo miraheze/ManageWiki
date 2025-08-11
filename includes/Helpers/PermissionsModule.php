@@ -481,9 +481,18 @@ class PermissionsModule implements IModule {
 		$cache = [];
 		foreach ( $this->listAll() as $group => $live ) {
 			$cache[$group] = [
-				'permissions' => $this->applyAdditionalRights( $live['permissions'] ?? [], $additionalRights[$group] ?? [] ),
-				'addgroups' => $this->normalizeList( array_merge( $live['addgroups'] ?? [], $additionalAddGroups[$group] ?? [] ) ),
-				'removegroups' => $this->normalizeList( array_merge( $live['removegroups'] ?? [], $additionalRemoveGroups[$group] ?? [] ) ),
+				'permissions' => $this->applyAdditionalRights(
+					$live['permissions'] ?? [],
+					$additionalRights[$group] ?? []
+				),
+				'addgroups' => $this->normalizeList( array_merge(
+					$live['addgroups'] ?? [],
+					$additionalAddGroups[$group] ?? []
+				) ),
+				'removegroups' => $this->normalizeList( array_merge(
+					$live['removegroups'] ?? [],
+					$additionalRemoveGroups[$group] ?? []
+				) ),
 				'addself' => $this->normalizeList( $live['addself'] ?? [] ),
 				'removeself' => $this->normalizeList( $live['removeself'] ?? [] ),
 				'autopromote' => $live['autopromote'] ?? null,
