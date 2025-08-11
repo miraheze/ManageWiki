@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
@@ -29,6 +30,7 @@ class DataStore {
 		private readonly BagOStuff $cache,
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly HookRunner $hookRunner,
+		private readonly ModuleFactory $moduleFactory,
 		private readonly string $cacheDir,
 		private readonly string $dbname
 	) {
