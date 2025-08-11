@@ -68,15 +68,15 @@ class DataStore {
 		}
 
 		if ( $this->moduleFactory->isEnabled( 'settings' ) ) {
-			$cacheArray['settings'] = $this->moduleFactory->settings( $dbname )->listAll();
+			$cacheArray['settings'] = $this->moduleFactory->settings( $this->dbname )->listAll();
 		}
 
 		if ( $this->moduleFactory->isEnabled( 'extensions' ) ) {
-			$cacheArray['extensions'] = $this->moduleFactory->extensions( $dbname )->listNames();
+			$cacheArray['extensions'] = $this->moduleFactory->extensions( $this->dbname )->listNames();
 		}
 
 		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
-			$cacheArray['permissions'] = $this->moduleFactory->permissions( $dbname )->getCachedData();
+			$cacheArray['permissions'] = $this->moduleFactory->permissions( $this->dbname )->getCachedData();
 		}
 
 		$cacheArray = [
