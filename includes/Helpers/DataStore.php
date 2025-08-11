@@ -117,6 +117,10 @@ class DataStore {
 			$cacheArray['permissions'] = $this->moduleFactory->permissions( $this->dbname )->getCachedData();
 		}
 
+		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
+			$this->moduleFactory->namespaces( $this->dbname )->setCachedData( $cacheArray );
+		}
+
 		$cacheArray = [
 			'mtime' => $mtime,
 			'database' => $this->dbname,
