@@ -54,7 +54,8 @@ return [
 			$services->getObjectCacheFactory(),
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiHookRunner' ),
-			$services->get( 'ManageWikiModuleFactory' ),
+			// Use a closure to avoid circular dependency
+			static fn (): ModuleFactory => $services->get( 'ManageWikiModuleFactory' ),
 			new ServiceOptions(
 				DataFactory::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
