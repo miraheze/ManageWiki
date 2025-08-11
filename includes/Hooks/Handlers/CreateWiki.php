@@ -17,12 +17,6 @@ use Psr\Log\LoggerInterface;
 use stdClass;
 use Wikimedia\Rdbms\IReadableDatabase;
 use Wikimedia\Rdbms\Platform\ISQLPlatform;
-use function array_diff;
-use function array_diff_key;
-use function array_keys;
-use function array_merge;
-use function in_array;
-use function is_array;
 use function json_decode;
 use function str_replace;
 use const NS_PROJECT;
@@ -85,14 +79,6 @@ class CreateWiki implements
 		IReadableDatabase $dbr,
 		array &$cacheArray
 	): void {
-		if ( $this->moduleFactory->isEnabled( 'settings' ) ) {
-			$cacheArray['settings'] = $this->moduleFactory->settings( $dbname )->listAll();
-		}
-
-		if ( $this->moduleFactory->isEnabled( 'extensions' ) ) {
-			$cacheArray['extensions'] = $this->moduleFactory->extensions( $dbname )->listNames();
-		}
-
 		// Collate NS entries and decode their entries for the array
 		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$nsObjects = $dbr->newSelectQueryBuilder()
@@ -218,82 +204,6 @@ class CreateWiki implements
 					$val = $conf['overridedefault'][NS_SPECIAL];
 					$this->setNamespaceSettingCache( $cacheArray, NS_SPECIAL, $var, $val, $conf );
 				}
-			}
-		}
-
-		// Same as NS above but for permissions
-		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
-			$permObjects = $dbr->newSelectQueryBuilder()
-				->select( ISQLPlatform::ALL_ROWS )
-				->from( 'mw_permissions' )
-				->where( [ 'perm_dbname' => $dbname ] )
-				->caller( __METHOD__ )
-				->fetchResultSet();
-
-			$additionalRights = $this->config->get( ConfigNames::PermissionsAdditionalRights );
-			$additionalAddGroups = $this->config->get( ConfigNames::PermissionsAdditionalAddGroups );
-			$additionalRemoveGroups = $this->config->get( ConfigNames::PermissionsAdditionalRemoveGroups );
-
-			foreach ( $permObjects as $perm ) {
-				if ( !$perm instanceof stdClass ) {
-					// Skip unexpected row
-					continue;
-				}
-
-				$addPerms = [];
-				$removePerms = [];
-
-				foreach ( $additionalRights[$perm->perm_group] ?? [] as $right => $bool ) {
-					if ( $bool ) {
-						$addPerms[] = $right;
-						continue;
-					}
-
-					if ( $bool === false ) {
-						$removePerms[] = $right;
-					}
-				}
-
-				$permissions = array_merge( json_decode( $perm->perm_permissions ?? '[]', true ), $addPerms );
-				$filteredPermissions = array_diff( $permissions, $removePerms );
-
-				$cacheArray['permissions'][$perm->perm_group] = [
-					'permissions' => $filteredPermissions,
-					'addgroups' => array_merge(
-						json_decode( $perm->perm_addgroups ?? '[]', true ),
-						$additionalAddGroups[$perm->perm_group] ?? []
-					),
-					'removegroups' => array_merge(
-						json_decode( $perm->perm_removegroups ?? '[]', true ),
-						$additionalRemoveGroups[$perm->perm_group] ?? []
-					),
-					'addself' => json_decode( $perm->perm_addgroupstoself ?? '[]', true ),
-					'removeself' => json_decode( $perm->perm_removegroupsfromself ?? '[]', true ),
-					'autopromote' => json_decode( $perm->perm_autopromote ?? '[]', true ),
-				];
-			}
-
-			$diffKeys = array_keys(
-				array_diff_key( $additionalRights, $cacheArray['permissions'] ?? [] )
-			);
-
-			foreach ( $diffKeys as $missingKey ) {
-				$missingPermissions = [];
-
-				foreach ( $additionalRights[$missingKey] as $right => $bool ) {
-					if ( $bool ) {
-						$missingPermissions[] = $right;
-					}
-				}
-
-				$cacheArray['permissions'][$missingKey] = [
-					'permissions' => $missingPermissions,
-					'addgroups' => $additionalAddGroups[$missingKey] ?? [],
-					'removegroups' => $additionalRemoveGroups[$missingKey] ?? [],
-					'addself' => [],
-					'removeself' => [],
-					'autopromote' => [],
-				];
 			}
 		}
 	}
