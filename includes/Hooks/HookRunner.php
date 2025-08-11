@@ -7,7 +7,6 @@ use MediaWiki\HookContainer\HookContainer;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\ICoreModule;
 use Skin;
-use Wikimedia\Rdbms\IReadableDatabase;
 
 class HookRunner implements
 	ManageWikiAfterSidebarLinksHook,
@@ -72,12 +71,11 @@ class HookRunner implements
 	/** @inheritDoc */
 	public function onManageWikiDataFactoryBuilder(
 		string $dbname,
-		IReadableDatabase $dbr,
 		array &$cacheArray
 	): void {
 		$this->container->run(
 			'ManageWikiDataFactoryBuilder',
-			[ $dbname, $dbr, &$cacheArray ],
+			[ $dbname, &$cacheArray ],
 			[ 'abortable' => false ]
 		);
 	}
