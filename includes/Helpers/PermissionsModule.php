@@ -439,7 +439,7 @@ class PermissionsModule implements IModule {
 		}
 
 		if ( $this->dbname !== ModuleFactory::DEFAULT_DBNAME ) {
-			$data = $this->dataFactory->newInstance( $this->dbname );
+			$data = $this->dataStoreFactory->newInstance( $this->dbname );
 			$data->resetWikiData( isNewChanges: true );
 		}
 	}
