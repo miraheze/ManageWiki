@@ -37,6 +37,7 @@ return [
 	'ManageWikiCacheUpdate' => static function ( MediaWikiServices $services ): CacheUpdate {
 		return new CacheUpdate(
 			$services->getHttpRequestFactory(),
+			$services->getTitleFactory(),
 			$services->getUrlUtils(),
 			new ServiceOptions(
 				CacheUpdate::CONSTRUCTOR_OPTIONS,
