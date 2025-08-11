@@ -4,6 +4,8 @@ namespace Miraheze\ManageWiki;
 
 interface ICoreModule extends IModule {
 
+	public function getCreationDate(): string;
+
 	public function getSitename(): string;
 
 	public function setSitename( string $sitename ): void;
