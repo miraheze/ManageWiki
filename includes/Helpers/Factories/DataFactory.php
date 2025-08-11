@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers\Factories;
 
+use Closure;
 use MediaWiki\Config\ServiceOptions;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\DataStore;
@@ -21,7 +22,7 @@ class DataFactory {
 	public function __construct(
 		ObjectCacheFactory $objectCacheFactory,
 		private readonly HookRunner $hookRunner,
-		private readonly ModuleFactory $moduleFactory,
+		private readonly Closure $moduleFactoryClosure,
 		private readonly ServiceOptions $options
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
@@ -35,7 +36,7 @@ class DataFactory {
 		return new DataStore(
 			$this->cache,
 			$this->hookRunner,
-			$this->moduleFactory,
+			( $this->moduleFactoryClosure )(),
 			$cacheDir,
 			$dbname
 		);
