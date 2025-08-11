@@ -23,6 +23,7 @@ class DataFactory {
 		ObjectCacheFactory $objectCacheFactory,
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly HookRunner $hookRunner,
+		private readonly ModuleFactory $moduleFactory,
 		private readonly ServiceOptions $options
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
@@ -37,6 +38,7 @@ class DataFactory {
 			$this->cache,
 			$this->databaseUtils,
 			$this->hookRunner,
+			$this->moduleFactory,
 			$cacheDir,
 			$dbname
 		);
