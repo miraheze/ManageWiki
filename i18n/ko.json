@@ -10,6 +10,7 @@
 			"PlavorSeol",
 			"Revi",
 			"Void",
+			"YeBoy371",
 			"Ykhwong",
 			"렌즈",
 			"아라"
@@ -126,7 +127,7 @@
 	"managewiki-permissions-select": "그룹을 선택하십시오",
 	"managewiki-permissions-select-header": "기존 그룹 관리",
 	"managewiki-permissions-unassigned": "아래의 사용자 권한은 현재 이 사용자 그룹에 할당되어 있지 않습니다",
-	"managewiki-requires": "요구 사항",
+	"managewiki-requires": "<em><strong>[필요]</strong> $1</em>",
 	"managewiki-requires-or": "또는",
 	"managewiki-save": "저장",
 	"managewiki-search-noresults": "결과 없음",
