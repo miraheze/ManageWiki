@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use Closure;
 use MediaWiki\Config\ServiceOptions;
+use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\DataStore;
 use Miraheze\ManageWiki\Hooks\HookRunner;
@@ -15,6 +16,7 @@ class DataFactory {
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::CacheDirectory,
 		ConfigNames::CacheType,
+		MainConfigNames::CacheDirectory,
 	];
 
 	private readonly BagOStuff $cache;
@@ -32,7 +34,8 @@ class DataFactory {
 	}
 
 	public function newInstance( string $dbname ): DataStore {
-		$cacheDir = $this->options->get( ConfigNames::CacheDirectory );
+		$cacheDir = $this->options->get( ConfigNames::CacheDirectory ) ?:
+			$this->options->get( MainConfigNames::CacheDirectory );
 		return new DataStore(
 			$this->cache,
 			$this->hookRunner,
