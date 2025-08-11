@@ -122,7 +122,9 @@ return [
 		return new NamespacesFactory(
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiDataFactory' ),
+			$services->get( 'ManageWikiLogger' ),
 			$services->getJobQueueGroupFactory(),
+			$services->getLocalisationCache(),
 			$services->getNamespaceInfo(),
 			new ServiceOptions(
 				NamespacesModule::CONSTRUCTOR_OPTIONS,
