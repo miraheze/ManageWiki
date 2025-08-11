@@ -8,6 +8,7 @@ use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\Rdbms\IReadableDatabase;
+use Wikimedia\Rdbms\Platform\ISQLPlatform;
 use function file_exists;
 use function file_put_contents;
 use function is_array;
@@ -77,7 +78,7 @@ class DataStore {
 		$this->dbr ??= $this->databaseUtils->getGlobalReplicaDB();
 
 		$row = $this->dbr->newSelectQueryBuilder()
-			->select( '*' )
+			->select( ISQLPlatform::ALL_ROWS )
 			->from( 'mw_settings' )
 			->where( [ 's_dbname' => $this->dbname ] )
 			->caller( __METHOD__ )
