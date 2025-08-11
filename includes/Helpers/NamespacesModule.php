@@ -447,10 +447,6 @@ class NamespacesModule implements IModule {
 	}
 
 	public function setCachedData( array &$cacheArray ): void {
-		// Figure out localized namespace names
-		$metaNamespace = '';
-		$metaNamespaceTalk = '';
-
 		// Prefer live values; fall back to configured MetaNamespace if missing
 		if ( isset( $this->liveNamespaces[NS_PROJECT]['name'] ) ) {
 			$metaNamespace = $this->liveNamespaces[NS_PROJECT]['name'];
