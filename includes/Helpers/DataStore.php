@@ -68,6 +68,37 @@ class DataStore {
 		}
 
 		$cacheArray = [];
+		if ( $this->moduleFactory->isEnabled( 'core' ) ) {
+			$mwCore = $this->moduleFactory->core( $this->dbname );
+			$cacheArray['category'] = $mwCore->getCategory();
+			$cacheArray['dbcluster'] = $mwCore->getDBCluster();
+			$cacheArray['url'] = $mwCore->getServerName();
+			$cacheArray['core'] = [
+				'wgSitename' => $mwCore->getSiteName(),
+				'wgLanguageCode' => $mwCore->getLanguage(),
+			];
+
+			$states = [];
+			if ( $mwCore->isEnabled( 'private-wikis' ) ) {
+				$states['private'] = $mwCore->isPrivate();
+			}
+
+			if ( $mwCore->isEnabled( 'closed-wikis' ) ) {
+				$states['closed'] = $mwCore->isClosed();
+			}
+
+			if ( $mwCore->isEnabled( 'inactive-wikis' ) ) {
+				$states['inactive'] = $mwCore->isInactiveExempt() ? 'exempt' :
+					$mwCore->isInactive();
+			}
+
+			if ( $mwCore->isEnabled( 'experimental-wikis' ) ) {
+				$states['experimental'] = $mwCore->isExperimental();
+			}
+
+			$cacheArray['states'] = $states;
+		}
+
 		if ( $this->moduleFactory->isEnabled( 'settings' ) ) {
 			$cacheArray['settings'] = $this->moduleFactory->settings( $this->dbname )->listAll();
 		}
