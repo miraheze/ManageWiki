@@ -15,9 +15,6 @@
 	"type": "specialpage",
 	"requires": {
 		"MediaWiki": ">= 1.43.0",
-		"extensions": {
-			"CreateWiki": "*"
-		},
 		"platform": {
 			"php": ">= 8.2"
 		}
