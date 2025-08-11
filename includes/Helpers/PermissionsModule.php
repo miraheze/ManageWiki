@@ -534,6 +534,7 @@ class PermissionsModule implements IModule {
 
 	/**
 	 * Unique + sorted list for stable comparisons and output.
+	 * @return list<mixed>
 	 */
 	private function normalizeList( array $list ): array {
 		$list = array_values( array_unique( $list ) );
