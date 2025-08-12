@@ -2,9 +2,9 @@ name: Call reusable MediaWiki tests
 
 on:
   push:
-    branches: [ main, cacheupdate ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, cache ]
+    branches: [ main ]
 
 jobs:
   call-mediawiki-tests-workflow:
