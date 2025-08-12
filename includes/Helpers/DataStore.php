@@ -21,7 +21,7 @@ class DataStore {
 
 	private const CACHE_KEY = 'ManageWiki';
 
-	private int $wikiTimestamp;
+	private int $timestamp;
 
 	public function __construct(
 		private readonly BagOStuff $cache,
@@ -31,11 +31,11 @@ class DataStore {
 		private readonly string $cacheDir,
 		private readonly string $dbname
 	) {
-		$this->wikiTimestamp = (int)$this->cache->get(
+		$this->timestamp = (int)$this->cache->get(
 			$this->cache->makeGlobalKey( self::CACHE_KEY, $dbname )
 		);
 
-		if ( !$this->wikiTimestamp ) {
+		if ( !$this->timestamp ) {
 			$this->resetWikiData( isNewChanges: true );
 		}
 	}
@@ -48,10 +48,10 @@ class DataStore {
 	public function syncCache(): void {
 		// mtime will be 0 if the file does not exist as well, which means
 		// it will be generated.
-		$wikiMtime = $this->getCachedWikiData()['mtime'] ?? 0;
+		$mtime = $this->getCachedWikiData()['mtime'] ?? 0;
 
 		// Regenerate wiki data cache if the file does not exist or has no valid mtime
-		if ( $wikiMtime === 0 || $wikiMtime < $this->wikiTimestamp ) {
+		if ( $mtime === 0 || $mtime < $this->timestamp ) {
 			$this->resetWikiData( isNewChanges: false );
 		}
 	}
@@ -62,7 +62,7 @@ class DataStore {
 	public function resetWikiData( bool $isNewChanges ): void {
 		$mtime = time();
 		if ( $isNewChanges ) {
-			$this->wikiTimestamp = $mtime;
+			$this->timestamp = $mtime;
 			$this->cache->set(
 				$this->cache->makeGlobalKey( self::CACHE_KEY, $this->dbname ),
 				$mtime
