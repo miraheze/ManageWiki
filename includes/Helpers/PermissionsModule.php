@@ -476,11 +476,11 @@ class PermissionsModule implements IModule {
 	 * @return array{}|non-empty-associative-array<string,array>
 	 */
 	public function getCachedData(): array {
-		$additionalRights = $this->options->get( ConfigNames::PermissionsAdditionalRights );
-		$additionalAddGroups = $this->options->get( ConfigNames::PermissionsAdditionalAddGroups );
-		$additionalRemoveGroups = $this->options->get( ConfigNames::PermissionsAdditionalRemoveGroups );
-		$additionalAddGroupsSelf = $this->options->get( ConfigNames::PermissionsAdditionalAddGroupsSelf );
-		$additionalRemoveGroupsSelf = $this->options->get( ConfigNames::PermissionsAdditionalRemoveGroupsSelf );
+		$additionalRights = (array)$this->options->get( ConfigNames::PermissionsAdditionalRights );
+		$additionalAddGroups = (array)$this->options->get( ConfigNames::PermissionsAdditionalAddGroups );
+		$additionalRemoveGroups = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroups );
+		$additionalAddGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalAddGroupsSelf );
+		$additionalRemoveGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroupsSelf );
 
 		$cache = [];
 		foreach ( $this->listAll() as $group => $live ) {
