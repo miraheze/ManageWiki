@@ -234,7 +234,7 @@
 	},
 	"config": {
 		"ManageWikiCacheDirectory": {
-			"description": "String. The path to store ManageWiki cache files at.",
+			"description": "String. The path to store ManageWiki cache files at. Defaults to $wgCacheDirectory if not set.",
 			"value": ""
 		},
 		"ManageWikiCacheType": {
@@ -324,6 +324,10 @@
 				"sysop",
 				"bureaucrat"
 			]
+		},
+		"ManageWikiServers": {
+			"description": "Array. An array of servers that serve MediaWiki that will have the ManageWiki cache regenerated on update.",
+			"value": []
 		},
 		"ManageWikiSettings": {
 			"description": "Array. An array of settings that can be managed through Special:ManageWiki",

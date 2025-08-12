@@ -47,6 +47,8 @@ class ConfigNames {
 
 	public const PermissionsPermanentGroups = 'ManageWikiPermissionsPermanentGroups';
 
+	public const Servers = 'ManageWikiServers';
+
 	public const Settings = 'ManageWikiSettings';
 
 	public const UseCustomDomains = 'ManageWikiUseCustomDomains';

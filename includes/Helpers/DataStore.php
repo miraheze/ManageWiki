@@ -25,6 +25,7 @@ class DataStore {
 
 	public function __construct(
 		private readonly BagOStuff $cache,
+		private readonly CacheUpdate $cacheUpdate,
 		private readonly HookRunner $hookRunner,
 		private readonly ModuleFactory $moduleFactory,
 		private readonly string $cacheDir,
@@ -66,6 +67,8 @@ class DataStore {
 				$this->cache->makeGlobalKey( self::CACHE_KEY, $this->dbname ),
 				$mtime
 			);
+
+			$this->cacheUpdate->addUpdate();
 		}
 
 		$cacheArray = [
