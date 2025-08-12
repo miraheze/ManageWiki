@@ -2,7 +2,7 @@ name: Call reusable MediaWiki tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, deletewikidata ]
   pull_request:
     branches: [ main ]
 
