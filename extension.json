@@ -234,7 +234,7 @@
 	},
 	"config": {
 		"ManageWikiCacheDirectory": {
-			"description": "String. The path to store ManageWiki cache files at.",
+			"description": "String. The path to store ManageWiki cache files at. Defaults to $wgCacheDirectory if not set.",
 			"value": ""
 		},
 		"ManageWikiCacheType": {
