@@ -12,7 +12,8 @@ class HookRunner implements
 	ManageWikiAfterSidebarLinksHook,
 	ManageWikiCoreAddFormFieldsHook,
 	ManageWikiCoreFormSubmissionHook,
-	ManageWikiCoreProviderHook
+	ManageWikiCoreProviderHook,
+	ManageWikiDataStoreBuilderHook
 {
 
 	public function __construct(
@@ -63,6 +64,19 @@ class HookRunner implements
 		$this->container->run(
 			'ManageWikiCoreProvider',
 			[ &$provider, $dbname ],
+			[ 'abortable' => false ]
+		);
+	}
+
+	/** @inheritDoc */
+	public function onManageWikiDataStoreBuilder(
+		ModuleFactory $moduleFactory,
+		string $dbname,
+		array &$cacheArray
+	): void {
+		$this->container->run(
+			'ManageWikiDataStoreBuilder',
+			[ $moduleFactory, $dbname, &$cacheArray ],
 			[ 'abortable' => false ]
 		);
 	}

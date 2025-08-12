@@ -3,8 +3,8 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\ServiceOptions;
-use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -37,8 +37,8 @@ class ExtensionsModule implements IModule {
 	private ?string $log = null;
 
 	public function __construct(
-		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
 		private readonly RequirementsFactory $requirementsFactory,
@@ -343,8 +343,8 @@ class ExtensionsModule implements IModule {
 			->caller( __METHOD__ )
 			->execute();
 
-		$data = $this->dataFactory->newInstance( $this->dbname );
-		$data->resetWikiData( isNewChanges: true );
+		$dataStore = $this->dataStoreFactory->newInstance( $this->dbname );
+		$dataStore->resetWikiData( isNewChanges: true );
 
 		// We need to run mwscript steps after the extension is already loaded
 		if ( $this->scripts ) {

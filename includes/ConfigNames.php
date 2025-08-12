@@ -9,6 +9,10 @@ namespace Miraheze\ManageWiki;
  */
 class ConfigNames {
 
+	public const CacheDirectory = 'ManageWikiCacheDirectory';
+
+	public const CacheType = 'ManageWikiCacheType';
+
 	public const Extensions = 'ManageWikiExtensions';
 
 	public const ExtensionsDefault = 'ManageWikiExtensionsDefault';
@@ -42,6 +46,8 @@ class ConfigNames {
 	public const PermissionsDisallowedRights = 'ManageWikiPermissionsDisallowedRights';
 
 	public const PermissionsPermanentGroups = 'ManageWikiPermissionsPermanentGroups';
+
+	public const Servers = 'ManageWikiServers';
 
 	public const Settings = 'ManageWikiSettings';
 

@@ -9,10 +9,10 @@ use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
-use Miraheze\CreateWiki\Services\CreateWikiDataFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\FormFactory\FormFactory;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
+use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use function in_array;
@@ -23,8 +23,8 @@ use function trim;
 class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function __construct(
-		private readonly CreateWikiDataFactory $dataFactory,
 		private readonly DatabaseUtils $databaseUtils,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly DefaultPermissions $defaultPermissions,
 		private readonly FormFactory $formFactory,
 		private readonly ModuleFactory $moduleFactory
@@ -250,8 +250,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			->execute();
 
 		// Reset the cache or else the changes won't work
-		$data = $this->dataFactory->newInstance( $dbname );
-		$data->resetWikiData( isNewChanges: true );
+		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
+		$dataStore->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
 		$logEntry->setPerformer( $this->getUser() );
@@ -276,8 +276,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function onSubmitCacheResetForm(): false {
 		// Reset the cache or else the changes won't work
-		$data = $this->dataFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
-		$data->resetWikiData( isNewChanges: true );
+		$dataStore = $this->dataStoreFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
+		$dataStore->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'cache-reset' );
 		$logEntry->setPerformer( $this->getUser() );

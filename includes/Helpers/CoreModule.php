@@ -29,6 +29,12 @@ class CoreModule implements ICoreModule {
 	}
 
 	/** @inheritDoc */
+	public function getCreationDate(): string {
+		// Not implemented
+		return '';
+	}
+
+	/** @inheritDoc */
 	public function getSitename(): string {
 		$mwSettings = $this->settingsFactory->getInstance( $this->dbname );
 		return $mwSettings->list( 'wgSitename' ) ?? '';

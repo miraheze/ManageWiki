@@ -8,10 +8,12 @@ use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
 use Miraheze\ManageWiki\FormFactory\FormFactory;
 use Miraheze\ManageWiki\FormFactory\FormFactoryBuilder;
+use Miraheze\ManageWiki\Helpers\CacheUpdate;
 use Miraheze\ManageWiki\Helpers\CoreModule;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\CoreFactory;
+use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ExtensionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
@@ -20,6 +22,7 @@ use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
+use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -31,6 +34,17 @@ use Psr\Log\LoggerInterface;
 // @codeCoverageIgnoreStart
 
 return [
+	'ManageWikiCacheUpdate' => static function ( MediaWikiServices $services ): CacheUpdate {
+		return new CacheUpdate(
+			$services->getHttpRequestFactory(),
+			$services->getTitleFactory(),
+			$services->getUrlUtils(),
+			new ServiceOptions(
+				CacheUpdate::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
 	'ManageWikiConfig' => static function ( MediaWikiServices $services ): Config {
 		return $services->getConfigFactory()->makeConfig( 'ManageWiki' );
 	},
@@ -47,6 +61,19 @@ return [
 	'ManageWikiDatabaseUtils' => static function ( MediaWikiServices $services ): DatabaseUtils {
 		return new DatabaseUtils( $services->getConnectionProvider() );
 	},
+	'ManageWikiDataStoreFactory' => static function ( MediaWikiServices $services ): DataStoreFactory {
+		return new DataStoreFactory(
+			$services->getObjectCacheFactory(),
+			$services->get( 'ManageWikiCacheUpdate' ),
+			$services->get( 'ManageWikiHookRunner' ),
+			// Use a closure to avoid circular dependency
+			static fn (): ModuleFactory => $services->get( 'ManageWikiModuleFactory' ),
+			new ServiceOptions(
+				DataStoreFactory::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
 	'ManageWikiDefaultPermissions' => static function ( MediaWikiServices $services ): DefaultPermissions {
 		return new DefaultPermissions(
 			$services->get( 'ManageWikiModuleFactory' ),
@@ -58,8 +85,8 @@ return [
 	},
 	'ManageWikiExtensionsFactory' => static function ( MediaWikiServices $services ): ExtensionsFactory {
 		return new ExtensionsFactory(
-			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiDataStoreFactory' ),
 			$services->get( 'ManageWikiInstallerFactory' ),
 			$services->get( 'ManageWikiLogger' ),
 			$services->get( 'ManageWikiRequirementsFactory' ),
@@ -106,9 +133,11 @@ return [
 	},
 	'ManageWikiNamespacesFactory' => static function ( MediaWikiServices $services ): NamespacesFactory {
 		return new NamespacesFactory(
-			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiDataStoreFactory' ),
+			$services->get( 'ManageWikiLogger' ),
 			$services->getJobQueueGroupFactory(),
+			$services->getLocalisationCache(),
 			$services->getNamespaceInfo(),
 			new ServiceOptions(
 				NamespacesModule::CONSTRUCTOR_OPTIONS,
@@ -118,12 +147,16 @@ return [
 	},
 	'ManageWikiPermissionsFactory' => static function ( MediaWikiServices $services ): PermissionsFactory {
 		return new PermissionsFactory(
-			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiDataStoreFactory' ),
 			$services->getActorStoreFactory(),
 			$services->getUserGroupManagerFactory(),
 			$services->getMessageFormatterFactory()->getTextFormatter(
 				$services->getContentLanguageCode()->toString()
+			),
+			new ServiceOptions(
+				PermissionsModule::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
 			)
 		);
 	},
@@ -136,8 +169,8 @@ return [
 	},
 	'ManageWikiSettingsFactory' => static function ( MediaWikiServices $services ): SettingsFactory {
 		return new SettingsFactory(
-			$services->get( 'CreateWikiDataFactory' ),
 			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->get( 'ManageWikiDataStoreFactory' ),
 			$services->get( 'ManageWikiInstallerFactory' ),
 			new ServiceOptions(
 				SettingsModule::CONSTRUCTOR_OPTIONS,

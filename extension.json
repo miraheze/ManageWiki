@@ -15,9 +15,6 @@
 	"type": "specialpage",
 	"requires": {
 		"MediaWiki": ">= 1.43.0",
-		"extensions": {
-			"CreateWiki": "*"
-		},
 		"platform": {
 			"php": ">= 8.2"
 		}
@@ -127,8 +124,8 @@
 		"ManageWikiDefaults": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialManageWikiDefaults",
 			"services": [
-				"CreateWikiDataFactory",
 				"ManageWikiDatabaseUtils",
+				"ManageWikiDataStoreFactory",
 				"ManageWikiDefaultPermissions",
 				"ManageWikiFormFactory",
 				"ManageWikiModuleFactory"
@@ -150,7 +147,13 @@
 		"CreateWikiCreation": {
 			"handler": "CreateWiki"
 		},
-		"CreateWikiDataFactoryBuilder": {
+		"CreateWikiDeletion": {
+			"handler": "CreateWiki"
+		},
+		"CreateWikiRemoteWikiCommit": {
+			"handler": "CreateWiki"
+		},
+		"CreateWikiRename": {
 			"handler": "CreateWiki"
 		},
 		"CreateWikiStatePrivate": {
@@ -168,6 +171,9 @@
 		"LoadExtensionSchemaUpdates": {
 			"handler": "Installer"
 		},
+		"SetupAfterCache": {
+			"handler": "Main"
+		},
 		"SidebarBeforeOutput": {
 			"handler": "Main"
 		}
@@ -177,10 +183,9 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\CreateWiki",
 			"services": [
 				"ManageWikiConfig",
+				"ManageWikiDataStoreFactory",
 				"ManageWikiDefaultPermissions",
-				"ManageWikiLogger",
-				"ManageWikiModuleFactory",
-				"LocalisationCache"
+				"ManageWikiModuleFactory"
 			]
 		},
 		"Installer": {
@@ -190,6 +195,7 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\Main",
 			"services": [
 				"ManageWikiConfig",
+				"ManageWikiDataStoreFactory",
 				"ManageWikiHookRunner",
 				"UserOptionsLookup"
 			]
@@ -237,6 +243,14 @@
 		"remoteExtPath": "ManageWiki/modules"
 	},
 	"config": {
+		"ManageWikiCacheDirectory": {
+			"description": "String. The path to store ManageWiki cache files at. Defaults to $wgCacheDirectory if not set.",
+			"value": ""
+		},
+		"ManageWikiCacheType": {
+			"description": "Index from $wgObjectCaches. If set, this will be used instead of $wgMainCacheType for ManageWiki cache.",
+			"value": null
+		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"value": []
@@ -320,6 +334,10 @@
 				"sysop",
 				"bureaucrat"
 			]
+		},
+		"ManageWikiServers": {
+			"description": "Array. An array of servers that serve MediaWiki that will have the ManageWiki cache regenerated on update.",
+			"value": []
 		},
 		"ManageWikiSettings": {
 			"description": "Array. An array of settings that can be managed through Special:ManageWiki",
