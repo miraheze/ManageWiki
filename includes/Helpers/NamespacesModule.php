@@ -23,6 +23,8 @@ use Wikimedia\Rdbms\SelectQueryBuilder;
 use function array_keys;
 use function array_map;
 use function array_merge;
+use function array_unique;
+use function array_values;
 use function in_array;
 use function is_array;
 use function json_decode;
@@ -505,7 +507,8 @@ class NamespacesModule implements IModule {
 				'content' => (bool)$ns['content'],
 				'contentmodel' => $ns['contentmodel'],
 				'protection' => $ns['protection'] ?: false,
-				'aliases' => array_merge( $aliases, (array)$lcAlias ),
+				// Deduplicate aliases
+				'aliases' => array_values( array_unique( array_merge( $aliases, (array)$lcAlias ) ) ),
 				'additional' => (array)( $ns['additional'] ?? [] ),
 			];
 
