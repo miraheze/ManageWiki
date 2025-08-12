@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Hooks\Handlers;
 use MediaWiki\Config\Config;
 use Miraheze\CreateWiki\Hooks\CreateWikiCreationHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiDeletionHook;
+use Miraheze\CreateWiki\Hooks\CreateWikiRemoteWikiCommitHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiRenameHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiStatePrivateHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiStatePublicHook;
@@ -18,6 +19,7 @@ use Wikimedia\Rdbms\DBConnRef;
 class CreateWiki implements
 	CreateWikiCreationHook,
 	CreateWikiDeletionHook,
+	CreateWikiRemoteWikiCommitHook,
 	CreateWikiRenameHook,
 	CreateWikiStatePrivateHook,
 	CreateWikiStatePublicHook,
@@ -72,6 +74,12 @@ class CreateWiki implements
 	public function onCreateWikiDeletion( DBConnRef $cwdb, string $dbname ): void {
 		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
 		$dataStore->deleteWikiData( $dbname );
+	}
+
+	/** @inheritDoc */
+	public function onCreateWikiRemoteWikiCommit( string $dbname ): void {
+		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
+		$dataStore->resetWikiData( isNewChanges: true );
 	}
 
 	/**
