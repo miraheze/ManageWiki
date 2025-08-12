@@ -180,6 +180,7 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\CreateWiki",
 			"services": [
 				"ManageWikiConfig",
+				"ManageWikiDataStoreFactory",
 				"ManageWikiDefaultPermissions",
 				"ManageWikiModuleFactory"
 			]
