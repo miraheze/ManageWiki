@@ -21,6 +21,7 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\ExtensionsModule;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
+use Miraheze\ManageWiki\Helpers\MessageUpdater;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
@@ -89,6 +90,7 @@ class FormFactoryBuilder {
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly HookRunner $hookRunner,
 		private readonly LoggerInterface $logger,
+		private readonly MessageUpdater $messageUpdater,
 		private readonly RequirementsFactory $requirementsFactory,
 		private readonly TypesBuilder $typesBuilder,
 		private readonly LinkRenderer $linkRenderer,
@@ -644,6 +646,8 @@ class FormFactoryBuilder {
 			$canEditName = !$namespaceData['core'] ||
 				$id === NS_PROJECT || $id === NS_PROJECT_TALK;
 
+			$descriptionMsg = $context->msg( "namespaceinfo-description-ns{$id}" );
+
 			$formDescriptor += [
 				"namespace-$name" => [
 					'type' => 'text',
@@ -653,6 +657,13 @@ class FormFactoryBuilder {
 					'maxlength' => 128,
 					'disabled' => !$canEditName || !$ceMW,
 					'required' => true,
+					'section' => $name,
+				],
+				"description-$name" => [
+					'type' => 'text',
+					'label-message' => 'namespaces-description',
+					'default' => $descriptionMsg->exists() ? $descriptionMsg->text() : '',
+					'disabled' => !$ceMW,
 					'section' => $name,
 				],
 				"content-$name" => [
@@ -931,60 +942,75 @@ class FormFactoryBuilder {
 			],
 		];
 
-		$disallowedGroups = $this->options->get( ConfigNames::PermissionsDisallowedGroups );
+		if ( $ceMW && $mwPermissions->exists( $group ) ) {
+			$disallowedGroups = $this->options->get( ConfigNames::PermissionsDisallowedGroups );
+			$permanentGroups = $this->options->get( ConfigNames::PermissionsPermanentGroups );
+			if ( !in_array( $group, $permanentGroups, true ) ) {
+				$formDescriptor += [
+					'delete-checkbox' => [
+						'type' => 'check',
+						'label-message' => 'permissions-delete-checkbox',
+						'default' => false,
+						'section' => 'advanced',
+					],
+					'rename-checkbox' => [
+						'type' => 'check',
+						'label-message' => 'managewiki-permissions-rename-checkbox',
+						'disable-if' => [ '===', 'delete-checkbox', '1' ],
+						'section' => 'advanced',
+					],
+					'group-name' => [
+						'type' => 'text',
+						'label-message' => 'managewiki-permissions-label-group-name',
+						'required' => true,
+						// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_permissions.sql#L3
+						'maxlength' => 64,
+						'default' => $group,
+						'section' => 'advanced',
+						'disable-if' => [ '===', 'delete-checkbox', '1' ],
+						'hide-if' => [ '!==', 'rename-checkbox', '1' ],
+						// Make sure this is lowercase (multi-byte safe), and has no trailing spaces,
+						// and that any remaining spaces are converted to underscores.
+						'filter-callback' => static fn ( string $value ): string => mb_strtolower(
+							str_replace( ' ', '_', trim( $value ) )
+						),
+						'validation-callback' => static fn ( string $value ): bool|Message => match ( true ) {
+							// We just use this to check if the group is valid for a title,
+							// otherwise we can not edit it because the title will be
+							// invalid for the ManageWiki permission subpage.
+							// If this returns null, it is invalid.
+							SpecialPage::getSafeTitleFor( 'ManageWiki', "permissions/$value" ) === null =>
+								$context->msg( 'managewiki-permissions-group-invalid' ),
 
-		if (
-			$ceMW &&
-			$mwPermissions->exists( $group ) &&
-			!in_array( $group, $this->options->get( ConfigNames::PermissionsPermanentGroups ), true )
-		) {
+							// The entered group is in the disallowed groups config
+							in_array( $value, $disallowedGroups, true ) =>
+								$context->msg( 'managewiki-permissions-group-disallowed' ),
+
+							// The entered group name already exists
+							$mwPermissions->exists( $value ) =>
+								$context->msg( 'managewiki-permissions-group-conflict' ),
+
+							// Everything is all good to proceed with renaming this group
+							default => true,
+						},
+					],
+				];
+			}
+
+			$groupMsg = $context->msg( "group-$group" );
+			$groupMemberMsg = $context->msg( "group-$group-member" );
 			$formDescriptor += [
-				'delete-checkbox' => [
-					'type' => 'check',
-					'label-message' => 'permissions-delete-checkbox',
-					'default' => false,
-					'section' => 'advanced',
-				],
-				'rename-checkbox' => [
-					'type' => 'check',
-					'label-message' => 'managewiki-permissions-rename-checkbox',
-					'disable-if' => [ '===', 'delete-checkbox', '1' ],
-					'section' => 'advanced',
-				],
-				'group-name' => [
+				'group-message' => [
 					'type' => 'text',
-					'label-message' => 'managewiki-permissions-label-group-name',
-					'required' => true,
-					// https://github.com/miraheze/ManageWiki/blob/4d96137/sql/mw_permissions.sql#L3
-					'maxlength' => 64,
-					'default' => $group,
+					'label-message' => 'permissions-group-message',
+					'default' => $groupMsg->exists() ? $groupMsg->text() : '',
 					'section' => 'advanced',
-					'disable-if' => [ '===', 'delete-checkbox', '1' ],
-					'hide-if' => [ '!==', 'rename-checkbox', '1' ],
-					// Make sure this is lowercase (multi-byte safe), and has no trailing spaces,
-					// and that any remaining spaces are converted to underscores.
-					'filter-callback' => static fn ( string $value ): string => mb_strtolower(
-						str_replace( ' ', '_', trim( $value ) )
-					),
-					'validation-callback' => static fn ( string $value ): Message|true => match ( true ) {
-						// We just use this to check if the group is valid for a title,
-						// otherwise we can not edit it because the title will be
-						// invalid for the ManageWiki permission subpage.
-						// If this returns null, it is invalid.
-						SpecialPage::getSafeTitleFor( 'ManageWiki', "permissions/$value" ) === null =>
-							$context->msg( 'managewiki-permissions-group-invalid' ),
-
-						// The entered group is in the disallowed groups config
-						in_array( $value, $disallowedGroups, true ) =>
-							$context->msg( 'managewiki-permissions-group-disallowed' ),
-
-						// The entered group name already exists
-						$mwPermissions->exists( $value ) =>
-							$context->msg( 'managewiki-permissions-group-conflict' ),
-
-						// Everything is all good to proceed with renaming this group
-						default => true,
-					},
+				],
+				'group-member-message' => [
+					'type' => 'text',
+					'label-message' => 'permissions-group-member-message',
+					'default' => $groupMemberMsg->exists() ? $groupMemberMsg->text() : '',
+					'section' => 'advanced',
 				],
 			];
 		}
@@ -1146,10 +1172,14 @@ class FormFactoryBuilder {
 				$mwReturn = $this->submissionSettings( $formData, $dbname, $special, $moduleFactory );
 				break;
 			case 'namespaces':
-				$mwReturn = $this->submissionNamespaces( $formData, $dbname, $special, $moduleFactory );
+				$mwReturn = $this->submissionNamespaces(
+					$formData, $dbname, $context, $special, $moduleFactory
+				);
 				break;
 			case 'permissions':
-				$mwReturn = $this->submissionPermissions( $formData, $dbname, $special, $moduleFactory );
+				$mwReturn = $this->submissionPermissions(
+					$formData, $dbname, $context, $special, $moduleFactory
+				);
 				break;
 			default:
 				throw new InvalidArgumentException( "$module not recognized" );
@@ -1166,6 +1196,11 @@ class FormFactoryBuilder {
 			$mwReturn->commit();
 			if ( $mwReturn->getErrors() ) {
 				return $mwReturn->getErrors();
+			}
+
+			// If we have no logParams, we don't want unformatted logs
+			if ( !$mwReturn->getLogParams() ) {
+				return [];
 			}
 
 			if ( $module !== 'permissions' ) {
@@ -1424,28 +1459,40 @@ class FormFactoryBuilder {
 	private function submissionNamespaces(
 		array $formData,
 		string $dbname,
+		IContextSource $context,
 		string $special,
 		ModuleFactory $moduleFactory
 	): NamespacesModule {
 		$mwNamespaces = $moduleFactory->namespaces( $dbname );
 
+		$namespaceID = (int)$special;
+		$namespaceTalkID = $namespaceID + 1;
+
 		if ( $formData['delete-checkbox'] ) {
 			$mwNamespaces->remove(
-				(int)$special,
+				$namespaceID,
 				$formData['delete-migrate-to'],
 				maintainPrefix: false
 			);
 			$mwNamespaces->remove(
-				(int)$special + 1,
+				$namespaceTalkID,
 				$formData['delete-migrate-to'] + 1,
 				maintainPrefix: false
+			);
+			$this->messageUpdater->doDelete(
+				name: "namespaceinfo-description-ns{$namespaceID}",
+				user: $context->getUser()
+			);
+			$this->messageUpdater->doDelete(
+				name: "namespaceinfo-description-ns{$namespaceTalkID}",
+				user: $context->getUser()
 			);
 			return $mwNamespaces;
 		}
 
 		$nsID = [
-			'namespace' => (int)$special,
-			'namespacetalk' => (int)$special + 1,
+			'namespace' => $namespaceID,
+			'namespacetalk' => $namespaceTalkID,
 		];
 
 		foreach ( $nsID as $name => $id ) {
@@ -1455,6 +1502,26 @@ class FormFactoryBuilder {
 			foreach ( $this->options->get( ConfigNames::NamespacesAdditional ) as $key => $_ ) {
 				if ( isset( $formData["$key-$name"] ) ) {
 					$additionalBuilt[$key] = $formData["$key-$name"];
+				}
+			}
+
+			$descriptionMsg = $context->msg( "namespaceinfo-description-ns{$id}" );
+			$messageExists = $descriptionMsg->exists();
+			if ( isset( $formData["description-$name"] ) && (
+				!$messageExists || $descriptionMsg->text() !== $formData["description-$name"]
+			) ) {
+				$mwNamespaces->addMessageFields( $id );
+				if ( $formData["description-$name"] === '' ) {
+					$this->messageUpdater->doDelete(
+						name: "namespaceinfo-description-ns{$id}",
+						user: $context->getUser()
+					);
+				} else {
+					$this->messageUpdater->doUpdate(
+						name: "namespaceinfo-description-ns{$id}",
+						content: $formData["description-$name"],
+						user: $context->getUser()
+					);
 				}
 			}
 
@@ -1478,6 +1545,7 @@ class FormFactoryBuilder {
 	private function submissionPermissions(
 		array $formData,
 		string $dbname,
+		IContextSource $context,
 		string $group,
 		ModuleFactory $moduleFactory
 	): PermissionsModule {
@@ -1506,13 +1574,70 @@ class FormFactoryBuilder {
 		// Early escape for deletion
 		if ( $isRemovable && ( $formData['delete-checkbox'] ?? false ) ) {
 			$mwPermissions->remove( $group );
+			$this->messageUpdater->doDelete(
+				name: "group-$group",
+				user: $context->getUser()
+			);
+			$this->messageUpdater->doDelete(
+				name: "group-$group-member",
+				user: $context->getUser()
+			);
 			return $mwPermissions;
 		}
 
 		// Early escape for rename
 		if ( $isRemovable && !empty( $formData['group-name'] ) && $formData['group-name'] !== $group ) {
-			$mwPermissions->rename( $group, $formData['group-name'] );
+			$newGroupName = $formData['group-name'];
+			$mwPermissions->rename( $group, $newGroupName );
+			$this->messageUpdater->doMove(
+				newName: "group-$newGroupName",
+				oldName: "group-$group",
+				user: $context->getUser()
+			);
+			$this->messageUpdater->doMove(
+				newName: "group-$newGroupName-member",
+				oldName: "group-$group-member",
+				user: $context->getUser()
+			);
 			return $mwPermissions;
+		}
+
+		$groupMsg = $context->msg( "group-$group" );
+		if ( isset( $formData['group-message'] ) && (
+			!$groupMsg->exists() || $groupMsg->text() !== $formData['group-message']
+		) ) {
+			$mwPermissions->addMessageFields( $group );
+			if ( $formData['group-message'] === '' ) {
+				$this->messageUpdater->doDelete(
+					name: "group-$group",
+					user: $context->getUser()
+				);
+			} else {
+				$this->messageUpdater->doUpdate(
+					name: "group-$group",
+					content: $formData['group-message'],
+					user: $context->getUser()
+				);
+			}
+		}
+
+		$groupMemberMsg = $context->msg( "group-$group-member" );
+		if ( isset( $formData['group-member-message'] ) && (
+			!$groupMemberMsg->exists() || $groupMemberMsg->text() !== $formData['group-member-message']
+		) ) {
+			$mwPermissions->addMessageFields( $group );
+			if ( $formData['group-member-message'] === '' ) {
+				$this->messageUpdater->doDelete(
+					name: "group-$group-member",
+					user: $context->getUser()
+				);
+			} else {
+				$this->messageUpdater->doUpdate(
+					name: "group-$group-member",
+					content: $formData['group-member-message'],
+					user: $context->getUser()
+				);
+			}
 		}
 
 		$permData = [];

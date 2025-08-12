@@ -19,6 +19,7 @@ use Miraheze\ManageWiki\Helpers\Factories\NamespacesFactory;
 use Miraheze\ManageWiki\Helpers\Factories\PermissionsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Factories\SettingsFactory;
+use Miraheze\ManageWiki\Helpers\MessageUpdater;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\TypesBuilder;
@@ -77,6 +78,7 @@ return [
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$services->get( 'ManageWikiHookRunner' ),
 			$services->get( 'ManageWikiLogger' ),
+			$services->get( 'ManageWikiMessageUpdater' ),
 			$services->get( 'ManageWikiRequirementsFactory' ),
 			$services->get( 'ManageWikiTypesBuilder' ),
 			$services->getLinkRenderer(),
@@ -103,6 +105,18 @@ return [
 	},
 	'ManageWikiLogger' => static function (): LoggerInterface {
 		return LoggerFactory::getInstance( 'ManageWiki' );
+	},
+	'ManageWikiMessageUpdater' => static function ( MediaWikiServices $services ): MessageUpdater {
+		return new MessageUpdater(
+			$services->getDeletePageFactory(),
+			$services->getMessageFormatterFactory()->getTextFormatter(
+				$services->getContentLanguageCode()->toString()
+			),
+			$services->get( 'ManageWikiLogger' ),
+			$services->getMovePageFactory(),
+			$services->getTitleFactory(),
+			$services->getWikiPageFactory()
+		);
 	},
 	'ManageWikiNamespacesFactory' => static function ( MediaWikiServices $services ): NamespacesFactory {
 		return new NamespacesFactory(
