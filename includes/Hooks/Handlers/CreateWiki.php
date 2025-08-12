@@ -65,6 +65,9 @@ class CreateWiki implements
 				$mwNamespaces->commit();
 			}
 		}
+
+		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
+		$dataStore->resetWikiData( isNewChanges: true );
 	}
 
 	/**
