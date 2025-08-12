@@ -250,8 +250,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 			->execute();
 
 		// Reset the cache or else the changes won't work
-		$data = $this->dataStoreFactory->newInstance( $dbname );
-		$data->resetWikiData( isNewChanges: true );
+		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
+		$dataStore->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'settings-reset' );
 		$logEntry->setPerformer( $this->getUser() );
@@ -276,8 +276,8 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 	public function onSubmitCacheResetForm(): false {
 		// Reset the cache or else the changes won't work
-		$data = $this->dataStoreFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
-		$data->resetWikiData( isNewChanges: true );
+		$dataStore = $this->dataStoreFactory->newInstance( $this->getConfig()->get( MainConfigNames::DBname ) );
+		$dataStore->resetWikiData( isNewChanges: true );
 
 		$logEntry = new ManualLogEntry( 'managewiki', 'cache-reset' );
 		$logEntry->setPerformer( $this->getUser() );

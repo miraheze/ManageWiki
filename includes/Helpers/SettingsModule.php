@@ -29,7 +29,7 @@ class SettingsModule implements IModule {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly DataStoreFactory $dataFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly InstallerFactory $installerFactory,
 		private readonly ServiceOptions $options,
 		private readonly string $dbname
@@ -172,8 +172,8 @@ class SettingsModule implements IModule {
 			->caller( __METHOD__ )
 			->execute();
 
-		$data = $this->dataFactory->newInstance( $this->dbname );
-		$data->resetWikiData( isNewChanges: true );
+		$dataStore = $this->dataStoreFactory->newInstance( $this->dbname );
+		$dataStore->resetWikiData( isNewChanges: true );
 
 		if ( $this->scripts ) {
 			$mwInstaller = $this->installerFactory->getInstaller( $this->dbname );

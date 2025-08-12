@@ -343,8 +343,8 @@ class ExtensionsModule implements IModule {
 			->caller( __METHOD__ )
 			->execute();
 
-		$data = $this->dataStoreFactory->newInstance( $this->dbname );
-		$data->resetWikiData( isNewChanges: true );
+		$dataStore = $this->dataStoreFactory->newInstance( $this->dbname );
+		$dataStore->resetWikiData( isNewChanges: true );
 
 		// We need to run mwscript steps after the extension is already loaded
 		if ( $this->scripts ) {
