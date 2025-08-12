@@ -4,15 +4,21 @@ namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Config\Config;
 use Miraheze\CreateWiki\Hooks\CreateWikiCreationHook;
+use Miraheze\CreateWiki\Hooks\CreateWikiDeletionHook;
+use Miraheze\CreateWiki\Hooks\CreateWikiRenameHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiStatePrivateHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiStatePublicHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiTablesHook;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
+use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Wikimedia\Rdbms\DBConnRef;
 
 class CreateWiki implements
 	CreateWikiCreationHook,
+	CreateWikiDeletionHook,
+	CreateWikiRenameHook,
 	CreateWikiStatePrivateHook,
 	CreateWikiStatePublicHook,
 	CreateWikiTablesHook
@@ -20,6 +26,7 @@ class CreateWiki implements
 
 	public function __construct(
 		private readonly Config $config,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly DefaultPermissions $defaultPermissions,
 		private readonly ModuleFactory $moduleFactory
 	) {
@@ -56,6 +63,33 @@ class CreateWiki implements
 				$mwNamespaces->commit();
 			}
 		}
+	}
+
+	/**
+	 * @inheritDoc
+	 * @param DBConnRef $cwdb @phan-unused-param
+	 */
+	public function onCreateWikiDeletion( DBConnRef $cwdb, string $dbname ): void {
+		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
+		$dataStore->deleteWikiData( $dbname );
+	}
+
+	/**
+	 * @inheritDoc
+	 * @param DBConnRef $cwdb @phan-unused-param
+	 */
+	public function onCreateWikiRename(
+		DBConnRef $cwdb,
+		string $oldDbName,
+		string $newDbName
+	): void {
+		/**
+		 * Since the wiki at $newDbName likely won't be cached yet, this will also
+		 * run resetWikiData() on it since it has no mtime, so that it will
+		 * generate the new cache file for it as well.
+		 */
+		$dataStore = $this->dataStoreFactory->newInstance( $newDbName );
+		$dataStore->deleteWikiData( $oldDbName );
 	}
 
 	/** @inheritDoc */
