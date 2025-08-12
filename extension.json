@@ -150,6 +150,9 @@
 		"CreateWikiDeletion": {
 			"handler": "CreateWiki"
 		},
+		"CreateWikiRemoteWikiCommit": {
+			"handler": "CreateWiki"
+		},
 		"CreateWikiRename": {
 			"handler": "CreateWiki"
 		},
