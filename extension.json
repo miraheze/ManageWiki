@@ -147,6 +147,12 @@
 		"CreateWikiCreation": {
 			"handler": "CreateWiki"
 		},
+		"CreateWikiDeletion": {
+			"handler": "CreateWiki"
+		},
+		"CreateWikiRename": {
+			"handler": "CreateWiki"
+		},
 		"CreateWikiStatePrivate": {
 			"handler": "CreateWiki"
 		},
@@ -174,6 +180,7 @@
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\CreateWiki",
 			"services": [
 				"ManageWikiConfig",
+				"ManageWikiDataStoreFactory",
 				"ManageWikiDefaultPermissions",
 				"ManageWikiModuleFactory"
 			]
