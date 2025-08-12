@@ -68,7 +68,11 @@ class DataStore {
 			);
 		}
 
-		$cacheArray = [];
+		$cacheArray = [
+			'mtime' => $mtime,
+			'database' => $this->dbname,
+		];
+
 		if ( $this->moduleFactory->isEnabled( 'core' ) ) {
 			try {
 				$mwCore = $this->moduleFactory->core( $this->dbname );
@@ -128,9 +132,6 @@ class DataStore {
 		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
 			$this->moduleFactory->namespaces( $this->dbname )->setCachedData( $cacheArray );
 		}
-
-		$cacheArray['mtime'] = $mtime;
-		$cacheArray['database'] = $this->dbname;
 
 		$this->hookRunner->onManageWikiDataStoreBuilder( $this->moduleFactory, $this->dbname, $cacheArray );
 		$this->writeToFile( $this->dbname, $cacheArray );
