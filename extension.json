@@ -147,6 +147,12 @@
 		"CreateWikiCreation": {
 			"handler": "CreateWiki"
 		},
+		"CreateWikiDeletion": {
+			"handler": "CreateWiki"
+		},
+		"CreateWikiRename": {
+			"handler": "CreateWiki"
+		},
 		"CreateWikiStatePrivate": {
 			"handler": "CreateWiki"
 		},
