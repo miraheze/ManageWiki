@@ -32,7 +32,9 @@ class PermissionsModule implements IModule {
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::PermissionsAdditionalAddGroups,
+		ConfigNames::PermissionsAdditionalAddGroupsSelf,
 		ConfigNames::PermissionsAdditionalRemoveGroups,
+		ConfigNames::PermissionsAdditionalRemoveGroupsSelf,
 		ConfigNames::PermissionsAdditionalRights,
 	];
 
@@ -477,6 +479,8 @@ class PermissionsModule implements IModule {
 		$additionalRights = $this->options->get( ConfigNames::PermissionsAdditionalRights );
 		$additionalAddGroups = $this->options->get( ConfigNames::PermissionsAdditionalAddGroups );
 		$additionalRemoveGroups = $this->options->get( ConfigNames::PermissionsAdditionalRemoveGroups );
+		$additionalAddGroupsSelf = $this->options->get( ConfigNames::PermissionsAdditionalAddGroupsSelf );
+		$additionalRemoveGroupsSelf = $this->options->get( ConfigNames::PermissionsAdditionalRemoveGroupsSelf );
 
 		$cache = [];
 		foreach ( $this->listAll() as $group => $live ) {
@@ -493,20 +497,36 @@ class PermissionsModule implements IModule {
 					$live['removegroups'] ?? [],
 					$additionalRemoveGroups[$group] ?? []
 				) ),
-				'addself' => $this->normalizeList( $live['addself'] ?? [] ),
-				'removeself' => $this->normalizeList( $live['removeself'] ?? [] ),
+				'addself' => $this->normalizeList( array_merge(
+					$live['addself'] ?? [],
+					$additionalAddGroupsSelf[$group] ?? []
+				) ),
+				'removeself' => $this->normalizeList( array_merge(
+					$live['removeself'] ?? [],
+					$additionalRemoveGroupsSelf[$group] ?? []
+				) ),
 				'autopromote' => $live['autopromote'] ?? null,
 			];
 		}
 
-		// Add config-only groups (not in ManageWiki )
-		foreach ( array_diff_key( $additionalRights, $cache ) as $group => $rightsOverlay ) {
+		// Add config-only groups (not in ManageWiki)
+		$union = $additionalRights +
+			$additionalAddGroups +
+			$additionalRemoveGroups +
+			$additionalAddGroupsSelf +
+			$additionalRemoveGroupsSelf;
+
+		// Drop anything already in cache and normalize
+		$missing = array_diff_key( $union, $cache );
+		$allConfigGroups = $this->normalizeList( array_keys( $missing ) );
+		foreach ( $allConfigGroups as $group ) {
+			$rightsOverlay = $additionalRights[$group] ?? [];
 			$cache[$group] = [
 				'permissions' => $this->applyAdditionalRights( [], $rightsOverlay ),
 				'addgroups' => $this->normalizeList( $additionalAddGroups[$group] ?? [] ),
 				'removegroups' => $this->normalizeList( $additionalRemoveGroups[$group] ?? [] ),
-				'addself' => [],
-				'removeself' => [],
+				'addself' => $this->normalizeList( $additionalAddGroupsSelf[$group] ?? [] ),
+				'removeself' => $this->normalizeList( $additionalRemoveGroupsSelf[$group] ?? [] ),
 				'autopromote' => null,
 			];
 		}
