@@ -66,12 +66,16 @@ class DataStore {
 			return $data['states']['private'];
 		}
 
-		$mwCore = $this->moduleFactory->core( $this->dbname );
-		if ( !$mwCore->isEnabled( 'private-wikis' ) ) {
+		try {
+			$mwCore = $this->moduleFactory->core( $this->dbname );
+			if ( !$mwCore->isEnabled( 'private-wikis' ) ) {
+				return false;
+			}
+
+			return $mwCore->isPrivate();
+		} catch ( MissingWikiError ) {
 			return false;
 		}
-
-		return $mwCore->isPrivate();
 	}
 
 	/**
