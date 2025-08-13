@@ -7,19 +7,25 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
-use function file_exists;
+use function apcu_delete;
+use function apcu_entry;
 use function file_put_contents;
+use function function_exists;
 use function is_array;
+use function opcache_compile_file;
+use function opcache_invalidate;
 use function rename;
 use function tempnam;
 use function time;
 use function unlink;
 use function var_export;
-use function wfTempDir;
 
 class DataStore {
 
 	private const CACHE_KEY = 'ManageWiki';
+	private const APCU_KEY_PREFIX = 'ManageWiki:cache:';
+
+	private static array $reqCache = [];
 
 	private int $timestamp;
 
@@ -168,25 +174,69 @@ class DataStore {
 	 */
 	public function deleteWikiData( string $dbname ): void {
 		$this->cache->delete( $this->cache->makeGlobalKey( self::CACHE_KEY, $dbname ) );
-		if ( file_exists( "{$this->cacheDir}/$dbname.php" ) ) {
-			unlink( "{$this->cacheDir}/$dbname.php" );
+		$filePath = "{$this->cacheDir}/$dbname.php";
+		if ( function_exists( 'apcu_delete' ) ) {
+			apcu_delete( self::APCU_KEY_PREFIX . $filePath );
 		}
+
+		if ( function_exists( 'opcache_invalidate' ) ) {
+			opcache_invalidate( $filePath, true );
+		}
+
+		AtEase::quietCall(
+			static fn ( string $path ): bool => unlink( $path ),
+			$filePath
+		);
 	}
 
 	/**
 	 * Writes data to a PHP file in the cache directory.
 	 */
 	private function writeToFile( string $fileName, array $data ): void {
-		$tmpFile = tempnam( wfTempDir(), $fileName );
-		if ( $tmpFile !== false ) {
-			if ( file_put_contents( $tmpFile, "<?php\n\nreturn " . var_export( $data, true ) . ";\n" ) ) {
-				if ( !rename( $tmpFile, "{$this->cacheDir}/$fileName.php" ) ) {
-					unlink( $tmpFile );
-				}
-			} else {
-				unlink( $tmpFile );
-			}
+		$tmpFile = tempnam( $this->cacheDir, $fileName . '.' );
+		$targetPath = "{$this->cacheDir}/$fileName.php";
+
+		$payload = "<?php\n\nreturn " . var_export( $data, true ) . ";\n";
+		$written = AtEase::quietCall(
+			static fn ( string $path, string $content ): int|false =>
+				file_put_contents( $path, $content, LOCK_EX ),
+			$tmpFile, $payload
+		);
+
+		if ( $written === false ) {
+			AtEase::quietCall(
+				static fn ( string $path ): bool => unlink( $path ),
+				$tmpFile
+			);
+			return;
 		}
+
+		$renamed = AtEase::quietCall(
+			static fn ( string $source, string $target ): bool => rename( $source, $target ),
+			$tmpFile, $targetPath
+		);
+
+		if ( !$renamed ) {
+			AtEase::quietCall(
+				static fn ( string $path ): bool => unlink( $path ),
+				$tmpFile
+			);
+			return;
+		}
+
+		if ( function_exists( 'apcu_delete' ) ) {
+			apcu_delete( self::APCU_KEY_PREFIX . $targetPath );
+		}
+
+		if ( function_exists( 'opcache_invalidate' ) ) {
+			opcache_invalidate( $targetPath, true );
+		}
+
+		if ( function_exists( 'opcache_compile_file' ) ) {
+			opcache_compile_file( $targetPath );
+		}
+
+		unset( self::$reqCache[$targetPath] );
 	}
 
 	private function getCachedWikiData(): array {
@@ -195,14 +245,35 @@ class DataStore {
 		// We only handle failures if the include does not work.
 
 		$filePath = "{$this->cacheDir}/{$this->dbname}.php";
-		$cacheData = AtEase::quietCall( static function ( string $path ): array|false {
-			return include $path;
-		}, $filePath );
 
-		if ( is_array( $cacheData ) ) {
-			return $cacheData;
+		if ( isset( self::$reqCache[$filePath] ) ) {
+			return self::$reqCache[$filePath];
 		}
 
-		return [ 'mtime' => 0 ];
+		if ( function_exists( 'apcu_entry' ) ) {
+			$data = apcu_entry(
+				self::APCU_KEY_PREFIX . $filePath,
+				static function () use ( $filePath ): array {
+					$cacheData = AtEase::quietCall(
+						static fn ( string $path ): array|false => include $path,
+						$filePath
+					);
+
+					return is_array( $cacheData ) ? $cacheData : [ 'mtime' => 0 ];
+				}
+			);
+
+			self::$reqCache[$filePath] = $data;
+			return $data;
+		}
+
+		$cacheData = AtEase::quietCall(
+			static fn ( string $path ): array|false => include $path,
+			$filePath
+		);
+
+		$result = is_array( $cacheData ) ? $cacheData : [ 'mtime' => 0 ];
+		self::$reqCache[$filePath] = $result;
+		return $result;
 	}
 }
