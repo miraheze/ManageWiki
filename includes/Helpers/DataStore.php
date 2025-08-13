@@ -7,7 +7,6 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
-use Wikimedia\Rdbms\ILoadBalancer;
 use function file_exists;
 use function file_put_contents;
 use function is_array;
@@ -67,12 +66,11 @@ class DataStore {
 			return $data['states']['private'];
 		}
 
-		$mwCore = $this->moduleFactory->core( ILoadBalancer::DOMAIN_ANY );
+		$mwCore = $this->moduleFactory->core( $this->dbname );
 		if ( !$mwCore->isEnabled( 'private-wikis' ) ) {
 			return false;
 		}
 
-		$mwCore = $this->moduleFactory->core( $this->dbname );
 		return $mwCore->isPrivate();
 	}
 
