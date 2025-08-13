@@ -1,3 +1,3 @@
 CreateWiki:
-  branch: wiki-commit
+  branch: test-1
   repo: https://github.com/miraheze/CreateWiki
