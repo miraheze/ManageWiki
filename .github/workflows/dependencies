@@ -1,3 +1,3 @@
 CreateWiki:
-  branch: main
+  branch: phpunit-nopopulatemainpage
   repo: https://github.com/miraheze/CreateWiki
