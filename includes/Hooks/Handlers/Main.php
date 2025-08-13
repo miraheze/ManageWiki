@@ -55,12 +55,12 @@ class Main implements
 
 	/** @inheritDoc */
 	public function onSetupAfterCache() {
-		global $wgGroupPermissions;
 		$dbname = $this->config->get( MainConfigNames::DBname );
 		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
 		$dataStore->syncCache();
 
 		// Safety Catch!
+		global $wgGroupPermissions;
 		if ( $dataStore->isPrivate() ) {
 			$wgGroupPermissions['*']['read'] = false;
 			$wgGroupPermissions['sysop']['read'] = true;
