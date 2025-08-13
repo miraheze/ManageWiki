@@ -23,34 +23,23 @@ class Requirements {
 	public function check( array $actions, array $extList ): bool {
 		$stepResponse = [];
 		foreach ( $actions as $action => $data ) {
-			switch ( $action ) {
-				case 'permissions':
-					$stepResponse['permissions'] = $this->permissions( $data );
-					break;
-				case 'extensions':
-					$stepResponse['extensions'] = $this->extensions( $data, $extList );
-					break;
-				case 'articles':
-					$stepResponse['articles'] = $this->articles( $data );
-					break;
-				case 'files':
-					$stepResponse['files'] = $this->files( $data );
-					break;
-				case 'pages':
-					$stepResponse['pages'] = $this->pages( $data );
-					break;
-				case 'users':
-					$stepResponse['users'] = $this->users( $data );
-					break;
-				case 'settings':
-					$stepResponse['settings'] = $this->settings( $data );
-					break;
-				case 'visibility':
-					$stepResponse['visibility'] = $this->visibility( $data );
-					break;
-				default:
-					return false;
+			$result = match ( $action ) {
+				'permissions' => $this->permissions( $data ),
+				'extensions' => $this->extensions( $data, $extList ),
+				'articles' => $this->articles( $data ),
+				'files' => $this->files( $data ),
+				'pages' => $this->pages( $data ),
+				'users' => $this->users( $data ),
+				'settings' => $this->settings( $data ),
+				'visibility' => $this->visibility( $data ),
+				default => null,
+			};
+
+			if ( $result === null ) {
+				return false;
 			}
+
+			$stepResponse[$action] = $result;
 		}
 
 		return !in_array( false, $stepResponse, true );
