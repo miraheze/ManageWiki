@@ -28,27 +28,21 @@ class Installer {
 	public function execute( array $actions, bool $install ): bool {
 		// Produces an array of steps and results (so we can fail what we can't do but apply what works)
 		$stepResponse = [];
-
 		foreach ( $actions as $action => $data ) {
-			switch ( $action ) {
-				case 'sql':
-					$stepResponse['sql'] = $this->sql( $data );
-					break;
-				case 'permissions':
-					$stepResponse['permissions'] = $this->permissions( $data, $install );
-					break;
-				case 'namespaces':
-					$stepResponse['namespaces'] = $this->namespaces( $data, $install );
-					break;
-				case 'mwscript':
-					$stepResponse['mwscript'] = $this->mwscript( $data );
-					break;
-				case 'settings':
-					$stepResponse['settings'] = $this->settings( $data );
-					break;
-				default:
-					return false;
+			$result = match ( $action ) {
+				'sql' => $this->sql( $data ),
+				'permissions' => $this->permissions( $data, $install ),
+				'namespaces' => $this->namespaces( $data, $install ),
+				'mwscript' => $this->mwscript( $data ),
+				'settings' => $this->settings( $data ),
+				default => null,
+			};
+
+			if ( $result === null ) {
+				return false;
 			}
+
+			$stepResponse[$action] = $result;
 		}
 
 		return !in_array( false, $stepResponse, true );
