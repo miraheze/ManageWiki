@@ -7,8 +7,6 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
-use function apcu_delete;
-use function apcu_entry;
 use function file_put_contents;
 use function function_exists;
 use function is_array;
@@ -23,7 +21,6 @@ use function var_export;
 class DataStore {
 
 	private const CACHE_KEY = 'ManageWiki';
-	private const APCU_KEY_PREFIX = 'ManageWiki:cache:';
 
 	private static array $reqCache = [];
 
@@ -175,9 +172,6 @@ class DataStore {
 	public function deleteWikiData( string $dbname ): void {
 		$this->cache->delete( $this->cache->makeGlobalKey( self::CACHE_KEY, $dbname ) );
 		$filePath = "{$this->cacheDir}/$dbname.php";
-		if ( function_exists( 'apcu_delete' ) ) {
-			apcu_delete( self::APCU_KEY_PREFIX . $filePath );
-		}
 
 		if ( function_exists( 'opcache_invalidate' ) ) {
 			opcache_invalidate( $filePath, true );
@@ -198,9 +192,9 @@ class DataStore {
 
 		$payload = "<?php\n\nreturn " . var_export( $data, true ) . ";\n";
 		$written = AtEase::quietCall(
-			static fn ( string $path, string $content ): int|false =>
-				file_put_contents( $path, $content, LOCK_EX ),
-			$tmpFile, $payload
+			static fn ( string $path, string $content ): int|false => file_put_contents( $path, $content, LOCK_EX ),
+			$tmpFile,
+			$payload
 		);
 
 		if ( $written === false ) {
@@ -213,7 +207,8 @@ class DataStore {
 
 		$renamed = AtEase::quietCall(
 			static fn ( string $source, string $target ): bool => rename( $source, $target ),
-			$tmpFile, $targetPath
+			$tmpFile,
+			$targetPath
 		);
 
 		if ( !$renamed ) {
@@ -224,14 +219,9 @@ class DataStore {
 			return;
 		}
 
-		if ( function_exists( 'apcu_delete' ) ) {
-			apcu_delete( self::APCU_KEY_PREFIX . $targetPath );
-		}
-
 		if ( function_exists( 'opcache_invalidate' ) ) {
 			opcache_invalidate( $targetPath, true );
 		}
-
 		if ( function_exists( 'opcache_compile_file' ) ) {
 			opcache_compile_file( $targetPath );
 		}
@@ -248,23 +238,6 @@ class DataStore {
 
 		if ( isset( self::$reqCache[$filePath] ) ) {
 			return self::$reqCache[$filePath];
-		}
-
-		if ( function_exists( 'apcu_entry' ) ) {
-			$data = apcu_entry(
-				self::APCU_KEY_PREFIX . $filePath,
-				static function () use ( $filePath ): array {
-					$cacheData = AtEase::quietCall(
-						static fn ( string $path ): array|false => include $path,
-						$filePath
-					);
-
-					return is_array( $cacheData ) ? $cacheData : [ 'mtime' => 0 ];
-				}
-			);
-
-			self::$reqCache[$filePath] = $data;
-			return $data;
 		}
 
 		$cacheData = AtEase::quietCall(
