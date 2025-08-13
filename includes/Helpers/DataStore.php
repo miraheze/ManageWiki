@@ -45,7 +45,7 @@ class DataStore {
 	 * If the wiki file has been modified, it will reset and
 	 * regenerate the cached data.
 	 */
-	public function syncCache() {
+	public function syncCache(): void {
 		// mtime will be 0 if the file does not exist as well, which means
 		// it will be generated.
 		$mtime = $this->getCachedWikiData()['mtime'] ?? 0;
