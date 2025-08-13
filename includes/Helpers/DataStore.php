@@ -46,26 +46,23 @@ class DataStore {
 	 * If the wiki file has been modified, it will reset and
 	 * regenerate the cached data.
 	 */
-	public function syncCache(): bool {
-		$data = $this->getCachedWikiData();
-
+	public function syncCache() {
 		// mtime will be 0 if the file does not exist as well, which means
 		// it will be generated.
-		$mtime = $data['mtime'] ?? 0;
+		$mtime = $this->getCachedWikiData()['mtime'] ?? 0;
 
 		// Regenerate wiki data cache if the file does not exist or has no valid mtime
 		if ( $mtime === 0 || $mtime < $this->timestamp ) {
 			$this->resetWikiData( isNewChanges: false );
 		}
-
-		return $this->isPrivate( $data );
 	}
 
-	private function isPrivate( array $data ): bool {
+	public function isPrivate(): bool {
 		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
 			return false;
 		}
 
+		$data = $this->getCachedWikiData();
 		if ( isset( $data['states']['private'] ) ) {
 			return $data['states']['private'];
 		}
