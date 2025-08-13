@@ -7,6 +7,7 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
+use Wikimedia\Rdbms\ILoadBalancer;
 use function file_exists;
 use function file_put_contents;
 use function is_array;
@@ -45,15 +46,37 @@ class DataStore {
 	 * If the wiki file has been modified, it will reset and
 	 * regenerate the cached data.
 	 */
-	public function syncCache(): void {
+	public function syncCache(): bool {
+		$data = $this->getCachedWikiData();
+
 		// mtime will be 0 if the file does not exist as well, which means
 		// it will be generated.
-		$mtime = $this->getCachedWikiData()['mtime'] ?? 0;
+		$mtime = $data['mtime'] ?? 0;
 
 		// Regenerate wiki data cache if the file does not exist or has no valid mtime
 		if ( $mtime === 0 || $mtime < $this->timestamp ) {
 			$this->resetWikiData( isNewChanges: false );
 		}
+
+		return $this->isPrivate( $data );
+	}
+
+	private function isPrivate( array $data ): bool {
+		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
+			return false;
+		}
+
+		if ( isset( $data['states']['private'] ) ) {
+			return $data['states']['private'];
+		}
+
+		$mwCore = $this->moduleFactory->core( ILoadBalancer::DOMAIN_ANY );
+		if ( !$mwCore->isEnabled( 'private-wikis' ) ) {
+			return false;
+		}
+
+		$mwCore = $this->moduleFactory->core( $this->dbname );
+		return $mwCore->isPrivate();
 	}
 
 	/**
