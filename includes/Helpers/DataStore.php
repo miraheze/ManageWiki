@@ -57,13 +57,13 @@ class DataStore {
 	}
 
 	public function isPrivate(): bool {
-		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
-			return false;
-		}
-
 		$data = $this->getCachedWikiData();
 		if ( isset( $data['states']['private'] ) ) {
 			return $data['states']['private'];
+		}
+
+		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
+			return false;
 		}
 
 		try {
