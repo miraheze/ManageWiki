@@ -67,8 +67,6 @@ class DataStore {
 				$this->cache->makeGlobalKey( self::CACHE_KEY, $this->dbname ),
 				$mtime
 			);
-
-			$this->cacheUpdate->addUpdate();
 		}
 
 		$cacheArray = [
