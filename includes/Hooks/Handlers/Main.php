@@ -15,9 +15,11 @@ use MediaWiki\User\User;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
+use Throwable;
 use function array_keys;
 use function htmlspecialchars;
 use function in_array;
+use function var_dump;
 
 class Main implements
 	ContentHandlerForModelIDHook,
@@ -55,9 +57,13 @@ class Main implements
 
 	/** @inheritDoc */
 	public function onSetupAfterCache() {
-		$dbname = $this->config->get( MainConfigNames::DBname );
-		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
-		$dataStore->syncCache();
+		try {
+			$dbname = $this->config->get( MainConfigNames::DBname );
+			$dataStore = $this->dataStoreFactory->newInstance( $dbname );
+			$dataStore->syncCache();
+		} catch ( Throwable $t ) {
+			var_dump( $t );
+		}
 	}
 
 	/** @inheritDoc */
