@@ -33,6 +33,7 @@ class ResetWikiCaches extends Maintenance {
 		foreach ( $dbnames as $dbname ) {
 			$dataStore = $this->dataStoreFactory->newInstance( $dbname );
 			$dataStore->resetWikiData( isNewChanges: true );
+			$this->output( "ManageWiki cache reset on $dbname\n" );
 			usleep( 20000 );
 		}
 	}
