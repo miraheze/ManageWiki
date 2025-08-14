@@ -43,13 +43,11 @@ use function array_slice;
 use function array_unique;
 use function count;
 use function explode;
-use function file_get_contents;
 use function glob;
 use function htmlspecialchars;
 use function implode;
 use function in_array;
 use function is_array;
-use function json_decode;
 use function json_encode;
 use function mb_strtolower;
 use function nl2br;
@@ -62,6 +60,7 @@ use const APCOND_EDITCOUNT;
 use const APCOND_EMAILCONFIRMED;
 use const APCOND_INGROUPS;
 use const APCOND_ISBOT;
+use const MW_VERSION;
 use const NS_MAIN;
 use const NS_PROJECT;
 use const NS_PROJECT_TALK;
@@ -306,7 +305,7 @@ class FormFactoryBuilder {
 		$mwRequirements = $this->requirementsFactory->getRequirements( $dbname );
 
 		$credits = $cache->getWithSetCallback(
-			$cache->makeGlobalKey( ConfigNames::Extensions, 'credits' ),
+			$cache->makeGlobalKey( ConfigNames::Extensions, MW_VERSION, 'credits' ),
 			WANObjectCache::TTL_DAY,
 			function (): array {
 				$queue = array_fill_keys( array_merge(
@@ -315,13 +314,8 @@ class FormFactoryBuilder {
 				), true );
 
 				$processor = new ExtensionProcessor();
-
 				foreach ( $queue as $path => $_ ) {
-					$json = file_get_contents( $path );
-					$info = json_decode( $json, true );
-					$version = $info['manifest_version'] ?? 2;
-
-					$processor->extractInfo( $path, $info, $version );
+					$processor->extractInfoFromFile( $path );
 				}
 
 				$data = $processor->getExtractedInfo();
