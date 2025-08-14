@@ -6,12 +6,12 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use MediaWiki\Registration\ExtensionProcessor;
 use Miraheze\ManageWiki\ConfigNames;
+use Wikimedia\StaticArrayWriter;
 use function array_column;
 use function array_fill_keys;
 use function array_merge;
 use function file_put_contents;
 use function glob;
-use function var_export;
 use const LOCK_EX;
 
 class RebuildExtensionListCache extends Maintenance {
@@ -43,15 +43,9 @@ class RebuildExtensionListCache extends Maintenance {
 			$this->getConfig()->get( MainConfigNames::CacheDirectory );
 
 		$cacheDir = $this->getOption( 'cachedir', $defaultCacheDir );
-		$this->generateCache( $cacheDir, $list );
-	}
 
-	private function generateCache( string $cacheDir, array $list ): void {
-		$phpContent = "<?php\n\n" .
-			"/**\n * Auto-generated extension list cache.\n */\n\n" .
-			'return ' . var_export( $list, true ) . ";\n";
-
-		file_put_contents( "$cacheDir/extension-list.php", $phpContent, LOCK_EX );
+		$contents = StaticArrayWriter::write( $list, 'Auto-generated extension list cache.' );
+		file_put_contents( "$cacheDir/extension-list.php", $contents, LOCK_EX );
 	}
 }
 
