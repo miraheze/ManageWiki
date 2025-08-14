@@ -15,7 +15,6 @@ use function rename;
 use function tempnam;
 use function time;
 use function unlink;
-use function var_export;
 
 class DataStore {
 
