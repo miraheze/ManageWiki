@@ -3,7 +3,6 @@
 namespace Miraheze\ManageWiki\FormFactory;
 
 use ErrorPageError;
-use InvalidArgumentException;
 use ManualLogEntry;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Context\IContextSource;
@@ -108,33 +107,13 @@ class FormFactoryBuilder {
 		string $special,
 		bool $ceMW
 	): array {
-		switch ( $module ) {
-			case 'core':
-				$formDescriptor = $this->buildDescriptorCore( $dbname, $ceMW, $context, $moduleFactory );
-				break;
-			case 'extensions':
-				$formDescriptor = $this->buildDescriptorExtensions( $dbname, $ceMW, $context, $moduleFactory );
-				break;
-			case 'settings':
-				$formDescriptor = $this->buildDescriptorSettings(
-					$dbname, $ceMW, $context, $moduleFactory, $special
-				);
-				break;
-			case 'namespaces':
-				$formDescriptor = $this->buildDescriptorNamespaces(
-					$dbname, $ceMW, $context, $special, $moduleFactory
-				);
-				break;
-			case 'permissions':
-				$formDescriptor = $this->buildDescriptorPermissions(
-					$dbname, $ceMW, $context, $special, $moduleFactory
-				);
-				break;
-			default:
-				throw new InvalidArgumentException( "$module not recognized" );
-		}
-
-		return $formDescriptor;
+		return match ( $module ) {
+			'core' => $this->buildDescriptorCore( $dbname, $ceMW, $context, $moduleFactory ),
+			'extensions' => $this->buildDescriptorExtensions( $dbname, $ceMW, $context, $moduleFactory ),
+			'settings' => $this->buildDescriptorSettings( $dbname, $ceMW, $context, $moduleFactory, $special ),
+			'namespaces' => $this->buildDescriptorNamespaces( $dbname, $ceMW, $context, $special, $moduleFactory ),
+			'permissions' => $this->buildDescriptorPermissions( $dbname, $ceMW, $context, $special, $moduleFactory ),
+		};
 	}
 
 	private function buildDescriptorCore(
@@ -1135,25 +1114,13 @@ class FormFactoryBuilder {
 		ModuleFactory $moduleFactory,
 		string $special
 	): array {
-		switch ( $module ) {
-			case 'core':
-				$mwReturn = $this->submissionCore( $formData, $dbname, $context, $moduleFactory );
-				break;
-			case 'extensions':
-				$mwReturn = $this->submissionExtensions( $formData, $dbname, $moduleFactory );
-				break;
-			case 'settings':
-				$mwReturn = $this->submissionSettings( $formData, $dbname, $special, $moduleFactory );
-				break;
-			case 'namespaces':
-				$mwReturn = $this->submissionNamespaces( $formData, $dbname, $special, $moduleFactory );
-				break;
-			case 'permissions':
-				$mwReturn = $this->submissionPermissions( $formData, $dbname, $special, $moduleFactory );
-				break;
-			default:
-				throw new InvalidArgumentException( "$module not recognized" );
-		}
+		$mwReturn = match ( $module ) {
+			'core' => $this->submissionCore( $formData, $dbname, $context, $moduleFactory ),
+			'extensions' => $this->submissionExtensions( $formData, $dbname, $moduleFactory ),
+			'settings' => $this->submissionSettings( $formData, $dbname, $special, $moduleFactory ),
+			'namespaces' => $this->submissionNamespaces( $formData, $dbname, $special, $moduleFactory ),
+			'permissions' => $this->submissionPermissions( $formData, $dbname, $special, $moduleFactory ),
+		};
 
 		/**
 		 * We check for errors in multiple places here because modules may add them at different stages.
