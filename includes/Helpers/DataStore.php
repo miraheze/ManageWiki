@@ -15,7 +15,6 @@ use function tempnam;
 use function time;
 use function unlink;
 use function var_export;
-use function wfTempDir;
 
 class DataStore {
 
@@ -58,6 +57,9 @@ class DataStore {
 
 	public function isPrivate(): bool {
 		$data = $this->getCachedWikiData();
+		// We just check this first because it won't be set at all
+		// if the core module is disabled or if private wikis
+		// in particular are disabled.
 		if ( isset( $data['states']['private'] ) ) {
 			return $data['states']['private'];
 		}
@@ -74,6 +76,8 @@ class DataStore {
 
 			return $mwCore->isPrivate();
 		} catch ( MissingWikiError ) {
+			// We don't want to error here. If the wiki doesn't
+			// exist then it is not private.
 			return false;
 		}
 	}
@@ -177,7 +181,7 @@ class DataStore {
 	 * Writes data to a PHP file in the cache directory.
 	 */
 	private function writeToFile( string $fileName, array $data ): void {
-		$tmpFile = tempnam( wfTempDir(), $fileName );
+		$tmpFile = tempnam( $this->cacheDir, $fileName );
 		if ( $tmpFile !== false ) {
 			if ( file_put_contents( $tmpFile, "<?php\n\nreturn " . var_export( $data, true ) . ";\n" ) ) {
 				if ( !rename( $tmpFile, "{$this->cacheDir}/$fileName.php" ) ) {
@@ -195,9 +199,10 @@ class DataStore {
 		// We only handle failures if the include does not work.
 
 		$filePath = "{$this->cacheDir}/{$this->dbname}.php";
-		$cacheData = AtEase::quietCall( static function ( string $path ): array|false {
-			return include $path;
-		}, $filePath );
+		$cacheData = AtEase::quietCall(
+			static fn ( string $path ): array|false => include $path,
+			$filePath
+		);
 
 		if ( is_array( $cacheData ) ) {
 			return $cacheData;
