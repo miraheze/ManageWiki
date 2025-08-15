@@ -37,6 +37,7 @@ use function array_diff;
 use function array_diff_key;
 use function array_fill_keys;
 use function array_filter;
+use function array_flip;
 use function array_map;
 use function array_merge;
 use function array_slice;
@@ -831,6 +832,17 @@ class FormFactoryBuilder {
 		string $group,
 		ModuleFactory $moduleFactory
 	): array {
+		// Special:ManageWiki/permissions/restrictions is a special subpage.
+		if ( $group === 'restrictions' ) {
+			// TODO: $this->buildDescriptorRestrictions()
+			// which will add $wgRestrictionLevels
+			// it will also add the ability to add user rights for them.
+			// User rights added there must always follow the format:
+			// 'editXXprotected'. This is for both security and
+			// localization purposes as well as for standardization.
+			return [];
+		}
+
 		if ( in_array( $group, $this->options->get( ConfigNames::PermissionsDisallowedGroups ), true ) ) {
 			$ceMW = false;
 		}
@@ -839,6 +851,7 @@ class FormFactoryBuilder {
 		$groupData = $mwPermissions->list( $group );
 
 		$matrixConstruct = [
+			$this->getConfigName( MainConfigNames::GroupInheritsPermissions ) => $groupData['inherited'],
 			$this->getConfigName( MainConfigNames::AddGroups ) => $groupData['addgroups'],
 			$this->getConfigName( MainConfigNames::RemoveGroups ) => $groupData['removegroups'],
 			$this->getConfigName( MainConfigNames::GroupsAddToSelf ) => $groupData['addself'],
@@ -896,6 +909,11 @@ class FormFactoryBuilder {
 				'type' => 'info',
 				'default' => $context->msg( 'managewiki-permissions-unassigned' )->text(),
 				'section' => 'unassigned',
+			],
+			'revoked' => [
+				'type' => 'info',
+				'default' => $context->msg( 'managewiki-permissions-revoked' )->text(),
+				'section' => 'revoked',
 			],
 			'group' => [
 				'type' => 'info',
@@ -962,14 +980,23 @@ class FormFactoryBuilder {
 			];
 		}
 
+		$assigned = array_flip( $groupData['assignedPermissions'] ?? [] );
+		$revoked  = array_flip( $groupData['revokedPermissions'] ?? [] );
 		foreach ( $groupData['allPermissions'] as $perm ) {
-			$assigned = in_array( $perm, $groupData['assignedPermissions'], true );
+			$isAssigned = isset( $assigned[$perm] );
+			$isRevoked  = isset( $revoked[$perm] );
+			$section = match ( true ) {
+				$isRevoked => 'revoked',
+				$isAssigned => 'assigned',
+				default => 'unassigned',
+			};
+
 			$formDescriptor["right-$perm"] = [
 				'type' => 'check',
 				'label' => $perm,
 				'help' => htmlspecialchars( User::getRightDescription( $perm ) ),
-				'section' => $assigned ? 'assigned' : 'unassigned',
-				'default' => $assigned,
+				'section' => $section,
+				'default' => $isAssigned || $isRevoked,
 				'disabled' => !$ceMW,
 			];
 		}
@@ -984,6 +1011,8 @@ class FormFactoryBuilder {
 		$formDescriptor['group-matrix'] = [
 			'type' => 'checkmatrix',
 			'columns' => [
+				$context->msg( 'managewiki-permissions-inherits' )->escaped() =>
+					$this->getConfigName( MainConfigNames::GroupInheritsPermissions ),
 				$context->msg( 'managewiki-permissions-addall' )->escaped() =>
 					$this->getConfigName( MainConfigNames::AddGroups ),
 				$context->msg( 'managewiki-permissions-removeall' )->escaped() =>
