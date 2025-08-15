@@ -22,7 +22,7 @@ class SpecialDeletedWikis extends SpecialPage {
 	 */
 	public function execute( $par ): void {
 		// TODO: Move this special page to WikiDiscover instead.
-		if ( !$this->extensionRegistry->isEnabled( 'CreateWiki' ) ) {
+		if ( !$this->extensionRegistry->isLoaded( 'CreateWiki' ) ) {
 			throw new ErrorPageError( 'nosuchspecialpage', 'nospecialpagetext' );
 		}
 
@@ -46,6 +46,6 @@ class SpecialDeletedWikis extends SpecialPage {
 
 	/** @inheritDoc */
 	public function isListed(): bool {
-		return $this->extensionRegistry->isEnabled( 'CreateWiki' );
+		return $this->extensionRegistry->isLoaded( 'CreateWiki' );
 	}
 }
