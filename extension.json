@@ -109,7 +109,8 @@
 		"DeletedWikis": {
 			"class": "Miraheze\\ManageWiki\\Specials\\SpecialDeletedWikis",
 			"services": [
-				"ManageWikiDatabaseUtils"
+				"ManageWikiDatabaseUtils",
+				"ExtensionRegistry"
 			]
 		},
 		"ManageWiki": {
