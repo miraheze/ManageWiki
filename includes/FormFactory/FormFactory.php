@@ -101,7 +101,7 @@ class FormFactory {
 			}
 
 			return Status::newFatal(
-				new RawMessage( implode( '<br />', $errorOut ) )
+				new RawMessage( implode( Html::element( 'br' ), $errorOut ) )
 			);
 		}
 
