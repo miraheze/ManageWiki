@@ -55,13 +55,17 @@ class DataStore {
 		}
 	}
 
-	public function isPrivate(): bool {
+	public function hasState( string $state ): bool {
 		$data = $this->getCachedWikiData();
 		// We just check this first because it won't be set at all
-		// if the core module is disabled or if private wikis
-		// in particular are disabled.
-		if ( isset( $data['states']['private'] ) ) {
-			return $data['states']['private'];
+		// if the core module is disabled or if the state
+		// in particular is disabled.
+		if ( isset( $data['states'][$state] ) ) {
+			if ( $state === 'inactive' && $data['states'][$state] === 'exempt' ) {
+				return false;
+			}
+
+			return $data['states'][$state];
 		}
 
 		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
@@ -70,14 +74,28 @@ class DataStore {
 
 		try {
 			$mwCore = $this->moduleFactory->core( $this->dbname );
-			if ( !$mwCore->isEnabled( 'private-wikis' ) ) {
+			$stateChecks = [
+				'private' => [ 'private-wikis', 'isPrivate' ],
+				'closed' => [ 'closed-wikis', 'isClosed' ],
+				'inactive' => [ 'inactive-wikis', 'isInactive' ],
+				'experimental' => [ 'experimental-wikis', 'isExperimental' ],
+				'deleted' => [ 'action-delete', 'isDeleted' ],
+				'locked' => [ 'action-lock', 'isLocked' ],
+			];
+
+			if ( !isset( $stateChecks[$state] ) ) {
 				return false;
 			}
 
-			return $mwCore->isPrivate();
+			[ $feature, $method ] = $stateChecks[$state];
+			if ( !$mwCore->isEnabled( $feature ) ) {
+				return false;
+			}
+
+			return $mwCore->$method();
 		} catch ( MissingWikiError ) {
 			// We don't want to error here. If the wiki doesn't
-			// exist then it is not private.
+			// exist then it can't have the state.
 			return false;
 		}
 	}
