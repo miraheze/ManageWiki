@@ -8,7 +8,6 @@ use MediaWiki\Pager\TablePager;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use function htmlspecialchars;
-use const ENT_QUOTES;
 
 class DeletedWikisPager extends TablePager {
 
@@ -32,27 +31,27 @@ class DeletedWikisPager extends TablePager {
 	}
 
 	/** @inheritDoc */
-	public function formatValue( $field, $value ): string {
-		$row = $this->getCurrentRow();
+	public function formatValue( $name, $value ): string {
 		if ( $value === null ) {
 			return '';
 		}
 
-		switch ( $field ) {
+		switch ( $name ) {
 			case 'wiki_dbname':
-				$formatted = $this->escape( $value );
+				$formatted = htmlspecialchars( $value );
 				break;
 			case 'wiki_creation':
-				$formatted = $this->escape( $this->getLanguage()->userTimeAndDate(
+				$formatted = htmlspecialchars( $this->getLanguage()->userTimeAndDate(
 					$value, $this->getUser()
 				) );
 				break;
 			case 'wiki_deleted_timestamp':
-				$formatted = $this->escape( $this->getLanguage()->userTimeAndDate(
+				$formatted = htmlspecialchars( $this->getLanguage()->userTimeAndDate(
 					$value, $this->getUser()
 				) );
 				break;
 			case 'wiki_deleted':
+				$row = $this->getCurrentRow();
 				$formatted = $this->getLinkRenderer()->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "core/{$row->wiki_dbname}" )->getFullURL(),
 					$this->msg( 'managewiki-label-goto' ),
@@ -60,17 +59,10 @@ class DeletedWikisPager extends TablePager {
 				);
 				break;
 			default:
-				$formatted = $this->escape( "Unable to format $field" );
+				$formatted = "Unable to format $name";
 		}
 
 		return $formatted;
-	}
-
-	/**
-	 * Safely HTML-escapes $value
-	 */
-	private function escape( string $value ): string {
-		return htmlspecialchars( $value, ENT_QUOTES );
 	}
 
 	/** @inheritDoc */
