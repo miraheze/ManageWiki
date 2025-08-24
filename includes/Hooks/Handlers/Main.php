@@ -61,7 +61,7 @@ class Main implements
 
 		// Safety Catch!
 		global $wgGroupPermissions;
-		if ( $dataStore->isPrivate() ) {
+		if ( $dataStore->hasState( 'private' ) ) {
 			$wgGroupPermissions['*']['read'] = false;
 			$wgGroupPermissions['sysop']['read'] = true;
 			return;
