@@ -81,6 +81,7 @@
 	"managewiki-error-requirements-disabled": "無法停用擴充功能「$1」，因為您缺少所需要的權限。",
 	"managewiki-error-requirements-enabled": "無法啓用擴充「$1」，因為未符合需求。",
 	"managewiki-extension-settings": "管理此擴充功能可用的組態選項",
+	"managewiki-extensionname": "ManageWiki​（管理Wiki）",
 	"managewiki-header-core": "您可以從此面板管理此wiki的核心設定（例如名稱和語言）。灰色選項可能只能由管理員更改。完成後，請點擊「儲存」，您的偏好設定將在幾秒內生效。  \n\n您還可以在 [[Special:ManageWiki/settings]] 管理其他設定，例如標誌等。",
 	"managewiki-header-core-view": "您可以從此面板查看此 wiki 的核心設定，但'''您無權更改'''。 \n\n您可以在 [[Special:ManageWiki/settings]] 裡查看其他設定，例如標誌等等。",
 	"managewiki-header-extensions": "您可以從此面板來管理此 wiki 的擴充功能和外觀。此面板顯示了所有可用的擴充功能和外觀。如果您沒有看到所需的擴充功能或外觀，請聯絡您的系統管理員。\n\n一旦完成後，請點擊「儲存」，您的擴充功能或外觀將在幾秒鐘內安裝完畢。",

@@ -184,6 +184,7 @@
 	"managewiki-review-nochanges": "<em>לא בוצעו שינויים.</em>",
 	"managewiki-review-none": "<אין>",
 	"managewiki-review-title": "סקירת שינויים",
+	"managewiki-review-toggled": "ההגדרה <strong>$1 ($2)</strong> הועברה למצב \"<em>$3</em>\"",
 	"managewiki-save": "שמירה",
 	"managewiki-search": "חיפוש ב־ManageWiki",
 	"managewiki-search-noresults": "אין תוצאות",

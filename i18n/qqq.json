@@ -101,6 +101,7 @@
 	"managewiki-review": "Text for the ManageWiki 'Review' button.\n{{Identical|Review}}",
 	"managewiki-review-nochanges": "The crosstags <code>< em>< /em></code> indicates the text will be emphasized (cross tags purposely misspelled to show).",
 	"managewiki-review-title": "Title for the ManageWiki review changes dialog.",
+	"managewiki-review-toggled": "* $1 is the name of the setting\n* $2 the category of the setting\n* $3 is the state: {{msg-mw|managewiki-review-enabled}} or {{msg-mw|managewiki-review-disabled}}",
 	"managewiki-save": "Text for the ManageWiki 'Save' button.\n{{Identical|Save}}",
 	"managewiki-search": "Placeholder for input to search ManageWiki.",
 	"managewiki-search-noresults": "Message showing no results found for searching ManageWiki.",
