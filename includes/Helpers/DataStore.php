@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use Miraheze\ManageWiki\Enums\State;
 use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
@@ -16,7 +17,7 @@ use function tempnam;
 use function time;
 use function unlink;
 
-class DataStore {
+final class DataStore {
 
 	private const CACHE_KEY = 'ManageWiki';
 
@@ -55,17 +56,14 @@ class DataStore {
 		}
 	}
 
-	public function hasState( string $state ): bool {
+	/** Fast path using cached data; falls back to ModuleFactory */
+	public function hasState( State $state ): bool {
 		$data = $this->getCachedWikiData();
 		// We just check this first because it won't be set at all
 		// if the core module is disabled or if the state
 		// in particular is disabled.
-		if ( isset( $data['states'][$state] ) ) {
-			if ( $state === 'inactive' && $data['states'][$state] === 'exempt' ) {
-				return false;
-			}
-
-			return $data['states'][$state];
+		if ( isset( $data['states'][$state->value] ) ) {
+			return $data['states'][$state->value] === true;
 		}
 
 		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
@@ -74,20 +72,15 @@ class DataStore {
 
 		try {
 			$mwCore = $this->moduleFactory->core( $this->dbname );
-			$stateChecks = [
-				'private' => [ 'private-wikis', 'isPrivate' ],
-				'closed' => [ 'closed-wikis', 'isClosed' ],
-				'inactive' => [ 'inactive-wikis', 'isInactive' ],
-				'experimental' => [ 'experimental-wikis', 'isExperimental' ],
-				'deleted' => [ 'action-delete', 'isDeleted' ],
-				'locked' => [ 'action-lock', 'isLocked' ],
-			];
+			[ $feature, $method ] = match ( $state ) {
+				State::Closed => [ 'closed-wikis', 'isClosed' ],
+				State::Deleted => [ 'action-delete', 'isDeleted' ],
+				State::Experimental => [ 'experimental-wikis', 'isExperimental' ],
+				State::Inactive => [ 'inactive-wikis', 'isInactive' ],
+				State::Locked => [ 'action-lock', 'isLocked' ],
+				State::Private => [ 'private-wikis', 'isPrivate' ],
+			};
 
-			if ( !isset( $stateChecks[$state] ) ) {
-				return false;
-			}
-
-			[ $feature, $method ] = $stateChecks[$state];
 			if ( !$mwCore->isEnabled( $feature ) ) {
 				return false;
 			}
@@ -100,6 +93,7 @@ class DataStore {
 		}
 	}
 
+	/** Fast path using cached data; falls back to ModuleFactory */
 	public function getExtensions(): array {
 		$data = $this->getCachedWikiData();
 		if ( isset( $data['extensions'] ) ) {
@@ -110,9 +104,7 @@ class DataStore {
 		return $mwExtensions->listNames();
 	}
 
-	/**
-	 * Retrieves new information for the wiki and updates the cache.
-	 */
+	/** Retrieves new information for the wiki and updates the cache. */
 	public function resetWikiData( bool $isNewChanges ): void {
 		$mtime = time();
 		if ( $isNewChanges ) {
@@ -205,9 +197,7 @@ class DataStore {
 		}
 	}
 
-	/**
-	 * Writes data to a PHP file in the cache directory.
-	 */
+	/** Writes data to a PHP file in the cache directory. */
 	private function writeToFile( string $fileName, array $data ): void {
 		$tmpFile = tempnam( $this->cacheDir, $fileName );
 		if ( $tmpFile !== false ) {

@@ -13,6 +13,7 @@ use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
 use Miraheze\ManageWiki\ConfigNames;
+use Miraheze\ManageWiki\Enums\State;
 use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use function array_keys;
@@ -61,7 +62,7 @@ class Main implements
 
 		// Safety Catch!
 		global $wgGroupPermissions;
-		if ( $dataStore->hasState( 'private' ) ) {
+		if ( $dataStore->hasState( State::Private ) ) {
 			$wgGroupPermissions['*']['read'] = false;
 			$wgGroupPermissions['sysop']['read'] = true;
 			return;
