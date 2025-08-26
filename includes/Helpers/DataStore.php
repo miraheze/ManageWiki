@@ -93,6 +93,7 @@ final class DataStore {
 		}
 	}
 
+	/** Fast path using cached data; falls back to ModuleFactory */
 	public function getExtensions(): array {
 		$data = $this->getCachedWikiData();
 		if ( isset( $data['extensions'] ) ) {
@@ -103,9 +104,7 @@ final class DataStore {
 		return $mwExtensions->listNames();
 	}
 
-	/**
-	 * Retrieves new information for the wiki and updates the cache.
-	 */
+	/** Retrieves new information for the wiki and updates the cache. */
 	public function resetWikiData( bool $isNewChanges ): void {
 		$mtime = time();
 		if ( $isNewChanges ) {
@@ -198,9 +197,7 @@ final class DataStore {
 		}
 	}
 
-	/**
-	 * Writes data to a PHP file in the cache directory.
-	 */
+	/** Writes data to a PHP file in the cache directory. */
 	private function writeToFile( string $fileName, array $data ): void {
 		$tmpFile = tempnam( $this->cacheDir, $fileName );
 		if ( $tmpFile !== false ) {
