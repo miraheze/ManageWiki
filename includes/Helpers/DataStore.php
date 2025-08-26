@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use Miraheze\ManageWiki\Enums\State;
 use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
@@ -16,7 +17,7 @@ use function tempnam;
 use function time;
 use function unlink;
 
-class DataStore {
+final class DataStore {
 
 	private const CACHE_KEY = 'ManageWiki';
 
@@ -55,17 +56,14 @@ class DataStore {
 		}
 	}
 
-	public function hasState( string $state ): bool {
+	/** Fast path using cached data; falls back to ModuleFactory */
+	public function hasState( State $state ): bool {
 		$data = $this->getCachedWikiData();
 		// We just check this first because it won't be set at all
 		// if the core module is disabled or if the state
 		// in particular is disabled.
-		if ( isset( $data['states'][$state] ) ) {
-			if ( $state === 'inactive' && $data['states'][$state] === 'exempt' ) {
-				return false;
-			}
-
-			return $data['states'][$state];
+		if ( isset( $data['states'][$state->value] ) ) {
+			return $data['states'][$state->value] === true;
 		}
 
 		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
@@ -74,20 +72,24 @@ class DataStore {
 
 		try {
 			$mwCore = $this->moduleFactory->core( $this->dbname );
-			$stateChecks = [
-				'private' => [ 'private-wikis', 'isPrivate' ],
-				'closed' => [ 'closed-wikis', 'isClosed' ],
-				'inactive' => [ 'inactive-wikis', 'isInactive' ],
-				'experimental' => [ 'experimental-wikis', 'isExperimental' ],
-				'deleted' => [ 'action-delete', 'isDeleted' ],
-				'locked' => [ 'action-lock', 'isLocked' ],
-			];
 
-			if ( !isset( $stateChecks[$state] ) ) {
-				return false;
+			// Special case: inactive handling with exempt logic
+			if ( $state === State::Inactive ) {
+				if ( !$mwCore->isEnabled( 'inactive-wikis' ) ) {
+					return false;
+				}
+
+				return !$mwCore->isInactiveExempt() && $mwCore->isInactive();
 			}
 
-			[ $feature, $method ] = $stateChecks[$state];
+			[ $feature, $method ] = match ( $state ) {
+				State::Private => [ 'private-wikis', 'isPrivate' ],
+				State::Closed => [ 'closed-wikis', 'isClosed' ],
+				State::Experimental => [ 'experimental-wikis', 'isExperimental' ],
+				State::Deleted => [ 'action-delete', 'isDeleted' ],
+				State::Locked => [ 'action-lock', 'isLocked' ],
+			};
+
 			if ( !$mwCore->isEnabled( $feature ) ) {
 				return false;
 			}
