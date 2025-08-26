@@ -72,22 +72,13 @@ final class DataStore {
 
 		try {
 			$mwCore = $this->moduleFactory->core( $this->dbname );
-
-			// Special case: inactive handling with exempt logic
-			if ( $state === State::Inactive ) {
-				if ( !$mwCore->isEnabled( 'inactive-wikis' ) ) {
-					return false;
-				}
-
-				return !$mwCore->isInactiveExempt() && $mwCore->isInactive();
-			}
-
 			[ $feature, $method ] = match ( $state ) {
-				State::Private => [ 'private-wikis', 'isPrivate' ],
 				State::Closed => [ 'closed-wikis', 'isClosed' ],
-				State::Experimental => [ 'experimental-wikis', 'isExperimental' ],
 				State::Deleted => [ 'action-delete', 'isDeleted' ],
+				State::Experimental => [ 'experimental-wikis', 'isExperimental' ],
+				State::Inactive => [ 'inactive-wikis', 'isInactive' ],
 				State::Locked => [ 'action-lock', 'isLocked' ],
+				State::Private => [ 'private-wikis', 'isPrivate' ],
 			};
 
 			if ( !$mwCore->isEnabled( $feature ) ) {
