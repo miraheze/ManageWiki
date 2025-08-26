@@ -100,6 +100,16 @@ class DataStore {
 		}
 	}
 
+	public function getExtensions(): array {
+		$data = $this->getCachedWikiData();
+		if ( isset( $data['extensions'] ) ) {
+			return $data['extensions'];
+		}
+
+		$mwExtensions = $this->moduleFactory->extensions( $this->dbname );
+		return $mwExtensions->listNames();
+	}
+
 	/**
 	 * Retrieves new information for the wiki and updates the cache.
 	 */
