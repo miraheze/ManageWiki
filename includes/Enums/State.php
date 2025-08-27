@@ -7,6 +7,7 @@ enum State: string {
 	case Deleted = 'deleted';
 	case Experimental = 'experimental';
 	case Inactive = 'inactive';
+	case InactiveExempt = 'inactive-exempt';
 	case Locked = 'locked';
 	case Private = 'private';
 }
