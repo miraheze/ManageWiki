@@ -63,7 +63,7 @@ final class DataStore {
 		// if the core module is disabled or if the state
 		// in particular is disabled.
 		if ( isset( $data['states'][$state->value] ) ) {
-			return $data['states'][$state->value] === true;
+			return $data['states'][$state->value];
 		}
 
 		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
@@ -77,6 +77,7 @@ final class DataStore {
 				State::Deleted => [ 'action-delete', 'isDeleted' ],
 				State::Experimental => [ 'experimental-wikis', 'isExperimental' ],
 				State::Inactive => [ 'inactive-wikis', 'isInactive' ],
+				State::InactiveExempt => [ 'inactive-wikis', 'isInactiveExempt' ],
 				State::Locked => [ 'action-lock', 'isLocked' ],
 				State::Private => [ 'private-wikis', 'isPrivate' ],
 			};
@@ -136,28 +137,28 @@ final class DataStore {
 
 				$states = [];
 				if ( $mwCore->isEnabled( 'private-wikis' ) ) {
-					$states['private'] = $mwCore->isPrivate();
+					$states[State::Private->value] = $mwCore->isPrivate();
 				}
 
 				if ( $mwCore->isEnabled( 'closed-wikis' ) ) {
-					$states['closed'] = $mwCore->isClosed();
+					$states[State::Closed->value] = $mwCore->isClosed();
 				}
 
 				if ( $mwCore->isEnabled( 'inactive-wikis' ) ) {
-					$states['inactive'] = $mwCore->isInactiveExempt() ? 'exempt' :
-						$mwCore->isInactive();
+					$states[State::InactiveExempt->value] = $mwCore->isInactiveExempt();
+					$states[State::Inactive->value] = $mwCore->isInactive();
 				}
 
 				if ( $mwCore->isEnabled( 'experimental-wikis' ) ) {
-					$states['experimental'] = $mwCore->isExperimental();
+					$states[State::Experimental->value] = $mwCore->isExperimental();
 				}
 
 				if ( $mwCore->isEnabled( 'action-delete' ) ) {
-					$states['deleted'] = $mwCore->isDeleted();
+					$states[State::Deleted->value] = $mwCore->isDeleted();
 				}
 
 				if ( $mwCore->isEnabled( 'action-lock' ) ) {
-					$states['locked'] = $mwCore->isLocked();
+					$states[State::Locked->value] = $mwCore->isLocked();
 				}
 
 				$cacheArray['states'] = $states;
