@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Anpfraum",
+			"Bapham123",
 			"Chaiwan2009",
 			"Hide on Rosé",
 			"Leduyquang753",
@@ -125,6 +126,11 @@
 	"managewiki-namespaces-select": "Chọn một không gian tên",
 	"managewiki-namespaces-select-header": "Quản lý không gian tên hiện có",
 	"managewiki-namespaces-select-info": "Dưới đây là danh sách tất cả các không gian tên tồn tại trên wiki này. Sử dụng danh sách thả xuống bên dưới để chọn vùng tên bạn muốn quản lý hoặc xem cấu hình.",
+	"managewiki-nav-core": "Lõi",
+	"managewiki-nav-extensions": "Phần mở rộng",
+	"managewiki-nav-namespaces": "Không gian tên",
+	"managewiki-nav-permissions": "Quyền",
+	"managewiki-nav-settings": "Cài đặt",
 	"managewiki-ns-invalidid": "Các ID không gian tên phải là một số nguyên để sửa qua ManageWiki.",
 	"managewiki-permissions-addall": "Có thể thêm vào những người khác",
 	"managewiki-permissions-addself": "Có thể thêm vào chính mình",
@@ -195,6 +201,7 @@
 	"namespaces-protection": "Quyền hạn nào được yêu cầu để sửa các trang trong không gian tên này?",
 	"namespaces-search": "Vùng tên này có nên tìm kiếm được theo mặc định hay không?",
 	"namespaces-subpages": "Không gian tên này có nên có các trang phụ không?",
+	"permissions-advanced": "Nâng cao",
 	"permissions-assigned": "Quyền được gán",
 	"permissions-autopromote": "Nâng chức",
 	"permissions-delete-checkbox": "Xóa nhóm người dùng này",
