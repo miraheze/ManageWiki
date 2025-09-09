@@ -64,6 +64,7 @@ class FormFactory {
 		return $htmlForm;
 	}
 
+	/** @throws PermissionsError */
 	protected function submitForm(
 		ModuleFactory $moduleFactory,
 		HTMLForm $form,

@@ -34,6 +34,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 	/**
 	 * @param ?string $par
+	 * @throws ErrorPageError
 	 */
 	public function execute( $par ): void {
 		$this->setHeaders();
@@ -68,6 +69,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		)->show();
 	}
 
+	/** @throws ErrorPageError */
 	private function buildMainView(): void {
 		$canModify = $this->canModify();
 

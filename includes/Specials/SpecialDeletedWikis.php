@@ -19,6 +19,7 @@ class SpecialDeletedWikis extends SpecialPage {
 
 	/**
 	 * @param ?string $par @phan-unused-param
+	 * @throws ErrorPageError
 	 */
 	public function execute( $par ): void {
 		// TODO: Move this special page to WikiDiscover instead.

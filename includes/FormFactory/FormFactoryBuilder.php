@@ -538,6 +538,7 @@ class FormFactoryBuilder {
 
 	/**
 	 * @return array<string,array<string,mixed>>
+	 * @throws ErrorPageError
 	 */
 	private function buildDescriptorNamespaces(
 		string $dbname,
