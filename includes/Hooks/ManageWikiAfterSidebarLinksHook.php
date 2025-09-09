@@ -2,7 +2,7 @@
 
 namespace Miraheze\ManageWiki\Hooks;
 
-use Skin;
+use MediaWiki\Skin\Skin;
 
 /**
  * Hook interface for modifying the ManageWiki sidebar links after they are built.

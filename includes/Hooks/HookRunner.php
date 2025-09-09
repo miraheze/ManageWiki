@@ -4,9 +4,9 @@ namespace Miraheze\ManageWiki\Hooks;
 
 use MediaWiki\Context\IContextSource;
 use MediaWiki\HookContainer\HookContainer;
+use MediaWiki\Skin\Skin;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\ICoreModule;
-use Skin;
 
 class HookRunner implements
 	ManageWikiAfterSidebarLinksHook,

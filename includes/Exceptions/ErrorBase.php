@@ -2,10 +2,10 @@
 
 namespace Miraheze\ManageWiki\Exceptions;
 
-use ErrorPageError;
+use MediaWiki\Exception\ErrorPageError;
+use MediaWiki\Exception\MWExceptionRenderer;
 use MediaWiki\Html\Html;
 use MediaWiki\Language\RawMessage;
-use MWExceptionRenderer;
 
 abstract class ErrorBase extends ErrorPageError {
 

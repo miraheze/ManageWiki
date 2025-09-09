@@ -2,10 +2,10 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use ErrorPageError;
-use ManualLogEntry;
+use MediaWiki\Exception\ErrorPageError;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;

@@ -2,7 +2,7 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use ErrorPageError;
+use MediaWiki\Exception\ErrorPageError;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\ManageWiki\DeletedWikisPager;

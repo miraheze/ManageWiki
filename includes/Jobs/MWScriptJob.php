@@ -2,9 +2,9 @@
 
 namespace Miraheze\ManageWiki\Jobs;
 
-use Job;
-use JobSpecification;
+use MediaWiki\JobQueue\Job;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
+use MediaWiki\JobQueue\JobSpecification;
 use MediaWiki\Shell\Shell;
 use Psr\Log\LoggerInterface;
 use function is_bool;
@@ -29,7 +29,7 @@ class MWScriptJob extends Job {
 	}
 
 	/** @inheritDoc */
-	public function run(): bool {
+	public function run(): true {
 		$limits = [ 'memory' => 0, 'filesize' => 0 ];
 		foreach ( $this->data as $script => $options ) {
 			$arguments = [ '--wiki', $this->dbname ];

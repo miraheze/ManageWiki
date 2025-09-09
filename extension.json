@@ -14,7 +14,7 @@
 	"license-name": "GPL-3.0-or-later",
 	"type": "specialpage",
 	"requires": {
-		"MediaWiki": ">= 1.43.0",
+		"MediaWiki": ">= 1.44.0",
 		"platform": {
 			"php": ">= 8.2"
 		}
@@ -61,7 +61,7 @@
 		"managewiki-settings"
 	],
 	"LogActionsHandlers": {
-		"managewiki/*": "LogFormatter"
+		"managewiki/*": "MediaWiki\\Logging\\LogFormatter"
 	},
 	"LogHeaders": {
 		"managewiki": "managewiki-log-header"
