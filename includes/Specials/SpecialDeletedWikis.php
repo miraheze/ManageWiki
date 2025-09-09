@@ -2,7 +2,7 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use ErrorPageError;
+use MediaWiki\Exception\ErrorPageError;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\ManageWiki\DeletedWikisPager;
@@ -19,6 +19,7 @@ class SpecialDeletedWikis extends SpecialPage {
 
 	/**
 	 * @param ?string $par @phan-unused-param
+	 * @throws ErrorPageError
 	 */
 	public function execute( $par ): void {
 		// TODO: Move this special page to WikiDiscover instead.

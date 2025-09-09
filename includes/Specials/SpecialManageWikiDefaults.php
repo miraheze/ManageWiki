@@ -2,10 +2,10 @@
 
 namespace Miraheze\ManageWiki\Specials;
 
-use ErrorPageError;
-use ManualLogEntry;
+use MediaWiki\Exception\ErrorPageError;
 use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
+use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -34,6 +34,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 
 	/**
 	 * @param ?string $par
+	 * @throws ErrorPageError
 	 */
 	public function execute( $par ): void {
 		$this->setHeaders();
@@ -68,6 +69,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		)->show();
 	}
 
+	/** @throws ErrorPageError */
 	private function buildMainView(): void {
 		$canModify = $this->canModify();
 

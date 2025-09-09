@@ -2,13 +2,13 @@
 
 namespace Miraheze\ManageWiki\FormFactory;
 
-use ErrorPageError;
-use ManualLogEntry;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Context\IContextSource;
+use MediaWiki\Exception\ErrorPageError;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\RawMessage;
 use MediaWiki\Linker\LinkRenderer;
+use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
 use MediaWiki\Permissions\PermissionManager;
@@ -538,6 +538,7 @@ class FormFactoryBuilder {
 
 	/**
 	 * @return array<string,array<string,mixed>>
+	 * @throws ErrorPageError
 	 */
 	private function buildDescriptorNamespaces(
 		string $dbname,
