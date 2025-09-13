@@ -49,10 +49,9 @@ class Installer {
 		return !in_array( false, $stepResponse, true );
 	}
 
-	public function sql( array $data ): bool {
+	private function sql( array $data ): bool {
 		$lb = $this->dbLoadBalancerFactory->getMainLB( $this->dbname );
 		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->dbname );
-
 		foreach ( $data as $table => $sql ) {
 			// Normalize table patch and indexes
 			$tablePatch = $sql;
