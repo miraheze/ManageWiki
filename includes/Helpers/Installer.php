@@ -13,7 +13,6 @@ use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\ILBFactory;
 use function in_array;
 use function is_array;
-use function ltrim;
 use function str_starts_with;
 use const DB_PRIMARY;
 use const MW_INSTALL_PATH;
@@ -55,6 +54,10 @@ class Installer {
 	private function sql( array $data ): bool {
 		$lb = $this->dbLoadBalancerFactory->getMainLB( $this->dbname );
 		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->dbname );
+		$isAbsolutePath = static fn ( string $path ): bool =>
+			str_starts_with( $path, '/' ) || ( $path[1] ?? '' ) === ':' ||
+			str_starts_with( $path, '\\\\' );
+
 		foreach ( $data as $table => $sql ) {
 			// Normalize table patch and indexes
 			$tablePatch = $sql;
@@ -66,10 +69,7 @@ class Installer {
 
 			// Apply table patch if defined
 			if ( $tablePatch && !$dbw->tableExists( $table, __METHOD__ ) ) {
-				// Don't require paths to include the install path, handle that here.
-				if ( !str_starts_with( $tablePatch, MW_INSTALL_PATH ) ) {
-					// If it starts with '/', strip it so we don't end up with '//'.
-					$tablePatch = ltrim( $tablePatch, '/' );
+				if ( !$isAbsolutePath( $tablePatch ) ) {
 					$tablePatch = MW_INSTALL_PATH . "/$tablePatch";
 				}
 
@@ -93,10 +93,7 @@ class Installer {
 			// Apply index patches if defined
 			foreach ( $indexes as $index => $patch ) {
 				if ( !$dbw->indexExists( $table, $index, __METHOD__ ) ) {
-					// Don't require paths to include the install path, handle that here.
-					if ( !str_starts_with( $patch, MW_INSTALL_PATH ) ) {
-						// If it starts with '/', strip it so we don't end up with '//'.
-						$patch = ltrim( $patch, '/' );
+					if ( !$isAbsolutePath( $patch ) ) {
 						$patch = MW_INSTALL_PATH . "/$patch";
 					}
 
