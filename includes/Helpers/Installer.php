@@ -13,7 +13,10 @@ use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\ILBFactory;
 use function in_array;
 use function is_array;
+use function ltrim;
+use function str_starts_with;
 use const DB_PRIMARY;
+use const MW_INSTALL_PATH;
 
 class Installer {
 
@@ -63,6 +66,13 @@ class Installer {
 
 			// Apply table patch if defined
 			if ( $tablePatch && !$dbw->tableExists( $table, __METHOD__ ) ) {
+				// Don't require paths to include the install path, handle that here.
+				if ( !str_starts_with( $tablePatch, MW_INSTALL_PATH ) ) {
+					// If it starts with '/', strip it so we don't end up with '//'.
+					$tablePatch = ltrim( $tablePatch, '/' );
+					$tablePatch = MW_INSTALL_PATH . "/$tablePatch";
+				}
+
 				try {
 					$dbw->sourceFile( $tablePatch, fname: __METHOD__ );
 				} catch ( Exception $e ) {
@@ -83,6 +93,13 @@ class Installer {
 			// Apply index patches if defined
 			foreach ( $indexes as $index => $patch ) {
 				if ( !$dbw->indexExists( $table, $index, __METHOD__ ) ) {
+					// Don't require paths to include the install path, handle that here.
+					if ( !str_starts_with( $patch, MW_INSTALL_PATH ) ) {
+						// If it starts with '/', strip it so we don't end up with '//'.
+						$patch = ltrim( $patch, '/' );
+						$patch = MW_INSTALL_PATH . "/$patch";
+					}
+
 					try {
 						$dbw->sourceFile( $patch, fname: __METHOD__ );
 					} catch ( Exception $e ) {
