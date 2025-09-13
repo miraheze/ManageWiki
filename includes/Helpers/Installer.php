@@ -12,7 +12,11 @@ use Miraheze\ManageWiki\Jobs\MWScriptJob;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\ILBFactory;
 use function in_array;
+use function is_array;
+use function ltrim;
+use function str_starts_with;
 use const DB_PRIMARY;
+use const MW_INSTALL_PATH;
 
 class Installer {
 
@@ -52,21 +56,65 @@ class Installer {
 		$lb = $this->dbLoadBalancerFactory->getMainLB( $this->dbname );
 		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->dbname );
 		foreach ( $data as $table => $sql ) {
-			if ( !$dbw->tableExists( $table, __METHOD__ ) ) {
+			// Normalize table patch and indexes
+			$tablePatch = $sql;
+			$indexes = [];
+			if ( is_array( $sql ) ) {
+				$tablePatch = $sql['patch'] ?? null;
+				$indexes = $sql['indexes'] ?? [];
+			}
+
+			// Apply table patch if defined
+			if ( $tablePatch && !$dbw->tableExists( $table, __METHOD__ ) ) {
+				// Don't require paths to include the install path, handle that here.
+				if ( !str_starts_with( $tablePatch, MW_INSTALL_PATH ) ) {
+					// If it starts with '/', strip it so we don't end up with '//'.
+					$tablePatch = ltrim( $tablePatch, '/' );
+					$tablePatch = MW_INSTALL_PATH . "/$tablePatch";
+				}
+
 				try {
-					$dbw->sourceFile( $sql, fname: __METHOD__ );
+					$dbw->sourceFile( $tablePatch, fname: __METHOD__ );
 				} catch ( Exception $e ) {
 					$this->logger->error(
-						'Caught exception trying to load {path} for {table} on {dbname}: {exception}',
+						'Caught exception trying to load {path} for table {table} on {dbname}: {exception}',
 						[
 							'dbname' => $this->dbname,
 							'exception' => $e,
-							'path' => $sql,
+							'path' => $tablePatch,
 							'table' => $table,
 						]
 					);
 
 					return false;
+				}
+			}
+
+			// Apply index patches if defined
+			foreach ( $indexes as $index => $patch ) {
+				if ( !$dbw->indexExists( $table, $index, __METHOD__ ) ) {
+					// Don't require paths to include the install path, handle that here.
+					if ( !str_starts_with( $patch, MW_INSTALL_PATH ) ) {
+						// If it starts with '/', strip it so we don't end up with '//'.
+						$patch = ltrim( $patch, '/' );
+						$patch = MW_INSTALL_PATH . "/$patch";
+					}
+
+					try {
+						$dbw->sourceFile( $patch, fname: __METHOD__ );
+					} catch ( Exception $e ) {
+						$this->logger->error(
+							'Caught exception trying to load {path} for index {index} on {dbname}: {exception}',
+							[
+								'dbname' => $this->dbname,
+								'exception' => $e,
+								'index' => $index,
+								'path' => $patch,
+							]
+						);
+
+						return false;
+					}
 				}
 			}
 		}
