@@ -12,6 +12,7 @@ use Miraheze\ManageWiki\Jobs\MWScriptJob;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\ILBFactory;
 use function in_array;
+use function is_array;
 use const DB_PRIMARY;
 
 class Installer {
@@ -48,25 +49,54 @@ class Installer {
 		return !in_array( false, $stepResponse, true );
 	}
 
-	private function sql( array $data ): bool {
+	public function sql( array $data ): bool {
 		$lb = $this->dbLoadBalancerFactory->getMainLB( $this->dbname );
 		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->dbname );
+
 		foreach ( $data as $table => $sql ) {
-			if ( !$dbw->tableExists( $table, __METHOD__ ) ) {
+			// Normalize table patch and indexes
+			$tablePatch = $sql;
+			$indexes = [];
+			if ( is_array( $sql ) ) {
+				$tablePatch = $sql['patch'] ?? null;
+				$indexes = $sql['indexes'] ?? [];
+			}
+
+			// Apply table patch if defined
+			if ( $tablePatch && !$dbw->tableExists( $table, __METHOD__ ) ) {
 				try {
-					$dbw->sourceFile( $sql, fname: __METHOD__ );
+					$dbw->sourceFile( $tablePatch, fname: __METHOD__ );
 				} catch ( Exception $e ) {
 					$this->logger->error(
-						'Caught exception trying to load {path} for {table} on {dbname}: {exception}',
+						'Caught exception trying to load {path} for table {table} on {dbname}: {exception}',
 						[
 							'dbname' => $this->dbname,
 							'exception' => $e,
-							'path' => $sql,
+							'path' => $tablePatch,
 							'table' => $table,
 						]
 					);
-
 					return false;
+				}
+			}
+
+			// Apply index patches if defined
+			foreach ( $indexes as $index => $patch ) {
+				if ( !$dbw->indexExists( $table, $index, __METHOD__ ) ) {
+					try {
+						$dbw->sourceFile( $patch, fname: __METHOD__ );
+					} catch ( Exception $e ) {
+						$this->logger->error(
+							'Caught exception trying to load {path} for index {index} on {dbname}: {exception}',
+							[
+								'dbname' => $this->dbname,
+								'exception' => $e,
+								'path' => $patch,
+								'index' => $index,
+							]
+						);
+						return false;
+					}
 				}
 			}
 		}
