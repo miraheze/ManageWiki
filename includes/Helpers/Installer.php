@@ -53,12 +53,12 @@ class Installer {
 
 	private function sql( array $data ): bool {
 		$lb = $this->dbLoadBalancerFactory->getMainLB( $this->dbname );
-		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->dbname );
+		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, domain: $this->dbname );
 		$isAbsolutePath = static fn ( string $path ): bool =>
 			str_starts_with( $path, '/' ) || ( $path[1] ?? '' ) === ':' ||
 			str_starts_with( $path, '\\\\' );
 
-		foreach ( $data as $table => $sql ) {
+		foreach ( $data as $tableName => $sql ) {
 			// Normalize table patch and indexes
 			$tablePatch = $sql;
 			$indexes = [];
@@ -68,21 +68,21 @@ class Installer {
 			}
 
 			// Apply table patch if defined
-			if ( $tablePatch && !$dbw->tableExists( $table, __METHOD__ ) ) {
+			if ( $tablePatch && !$dbw->tableExists( $tableName, __METHOD__ ) ) {
 				if ( !$isAbsolutePath( $tablePatch ) ) {
 					$tablePatch = MW_INSTALL_PATH . "/$tablePatch";
 				}
 
 				try {
 					$dbw->sourceFile( $tablePatch, fname: __METHOD__ );
-				} catch ( Exception $e ) {
+				} catch ( Exception $ex ) {
 					$this->logger->error(
 						'Caught exception trying to load {path} for table {table} on {dbname}: {exception}',
 						[
 							'dbname' => $this->dbname,
-							'exception' => $e,
+							'exception' => $ex->getMessage(),
 							'path' => $tablePatch,
-							'table' => $table,
+							'table' => $tableName,
 						]
 					);
 
@@ -91,22 +91,23 @@ class Installer {
 			}
 
 			// Apply index patches if defined
-			foreach ( $indexes as $index => $patch ) {
-				if ( !$dbw->indexExists( $table, $index, __METHOD__ ) ) {
-					if ( !$isAbsolutePath( $patch ) ) {
-						$patch = MW_INSTALL_PATH . "/$patch";
+			foreach ( $indexes as $indexName => $indexPatch ) {
+				if ( !$dbw->indexExists( $tableName, $indexName, __METHOD__ ) ) {
+					if ( !$isAbsolutePath( $indexPatch ) ) {
+						$indexPatch = MW_INSTALL_PATH . "/$indexPatch";
 					}
 
 					try {
-						$dbw->sourceFile( $patch, fname: __METHOD__ );
-					} catch ( Exception $e ) {
+						$dbw->sourceFile( $indexPatch, fname: __METHOD__ );
+					} catch ( Exception $ex ) {
 						$this->logger->error(
-							'Caught exception trying to load {path} for index {index} on {dbname}: {exception}',
+							'Caught exception trying to load {path} for index {index} on {table}.{dbname}: {exception}',
 							[
 								'dbname' => $this->dbname,
-								'exception' => $e,
-								'index' => $index,
-								'path' => $patch,
+								'exception' => $ex->getMessage(),
+								'index' => $indexName,
+								'path' => $indexPatch,
+								'table' => $tableName,
 							]
 						);
 
