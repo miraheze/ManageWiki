@@ -12,7 +12,10 @@ use Miraheze\ManageWiki\Jobs\MWScriptJob;
 use Psr\Log\LoggerInterface;
 use Wikimedia\Rdbms\ILBFactory;
 use function in_array;
+use function is_array;
+use function str_starts_with;
 use const DB_PRIMARY;
+use const MW_INSTALL_PATH;
 
 class Installer {
 
@@ -50,23 +53,66 @@ class Installer {
 
 	private function sql( array $data ): bool {
 		$lb = $this->dbLoadBalancerFactory->getMainLB( $this->dbname );
-		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, [], $this->dbname );
-		foreach ( $data as $table => $sql ) {
-			if ( !$dbw->tableExists( $table, __METHOD__ ) ) {
+		$dbw = $lb->getMaintenanceConnectionRef( DB_PRIMARY, domain: $this->dbname );
+		$isAbsolutePath = static fn ( string $path ): bool =>
+			str_starts_with( $path, '/' ) || ( $path[1] ?? '' ) === ':' ||
+			str_starts_with( $path, '\\\\' );
+
+		foreach ( $data as $tableName => $sql ) {
+			// Normalize table patch and indexes
+			$tablePatch = $sql;
+			$indexes = [];
+			if ( is_array( $sql ) ) {
+				$tablePatch = $sql['patch'] ?? null;
+				$indexes = $sql['indexes'] ?? [];
+			}
+
+			// Apply table patch if defined
+			if ( $tablePatch && !$dbw->tableExists( $tableName, __METHOD__ ) ) {
+				if ( !$isAbsolutePath( $tablePatch ) ) {
+					$tablePatch = MW_INSTALL_PATH . "/$tablePatch";
+				}
+
 				try {
-					$dbw->sourceFile( $sql, fname: __METHOD__ );
-				} catch ( Exception $e ) {
+					$dbw->sourceFile( $tablePatch, fname: __METHOD__ );
+				} catch ( Exception $ex ) {
 					$this->logger->error(
-						'Caught exception trying to load {path} for {table} on {dbname}: {exception}',
+						'Caught exception trying to load {path} for table {table} on {dbname}: {exception}',
 						[
 							'dbname' => $this->dbname,
-							'exception' => $e,
-							'path' => $sql,
-							'table' => $table,
+							'exception' => $ex->getMessage(),
+							'path' => $tablePatch,
+							'table' => $tableName,
 						]
 					);
 
 					return false;
+				}
+			}
+
+			// Apply index patches if defined
+			foreach ( $indexes as $indexName => $indexPatch ) {
+				if ( !$dbw->indexExists( $tableName, $indexName, __METHOD__ ) ) {
+					if ( !$isAbsolutePath( $indexPatch ) ) {
+						$indexPatch = MW_INSTALL_PATH . "/$indexPatch";
+					}
+
+					try {
+						$dbw->sourceFile( $indexPatch, fname: __METHOD__ );
+					} catch ( Exception $ex ) {
+						$this->logger->error(
+							'Caught exception trying to load {path} for index {index} on {table}.{dbname}: {exception}',
+							[
+								'dbname' => $this->dbname,
+								'exception' => $ex->getMessage(),
+								'index' => $indexName,
+								'path' => $indexPatch,
+								'table' => $tableName,
+							]
+						);
+
+						return false;
+					}
 				}
 			}
 		}
