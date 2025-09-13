@@ -75,6 +75,7 @@ class Installer {
 							'table' => $table,
 						]
 					);
+
 					return false;
 				}
 			}
@@ -94,6 +95,7 @@ class Installer {
 								'path' => $patch,
 							]
 						);
+
 						return false;
 					}
 				}
