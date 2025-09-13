@@ -90,8 +90,8 @@ class Installer {
 							[
 								'dbname' => $this->dbname,
 								'exception' => $e,
-								'path' => $patch,
 								'index' => $index,
+								'path' => $patch,
 							]
 						);
 						return false;
