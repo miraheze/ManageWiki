@@ -9,7 +9,6 @@ use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use SensitiveParameter
 use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
-use function ctype_space;
 
 class ResetWikiCacheHandler extends SimpleHandler {
 
