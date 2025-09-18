@@ -6,7 +6,6 @@ use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\JobQueue\Job;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\Utils\UrlUtils;
-use Miraheze\ManageWiki\ConfigNames;
 use Wikimedia\IPUtils;
 use function strlen;
 use const PROTO_INTERNAL;
