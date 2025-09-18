@@ -2,6 +2,7 @@
 
 namespace Miraheze\CreateWiki\RequestWiki\Rest;
 
+use MediaWiki\Config\Config;
 use MediaWiki\Rest\Response;
 use MediaWiki\Rest\SimpleHandler;
 use Miraheze\ManageWiki\ConfigNames;
@@ -13,7 +14,8 @@ use Wikimedia\ParamValidator\ParamValidator;
 class ResetWikiCacheHandler extends SimpleHandler {
 
 	public function __construct(
-		private readonly DataStoreFactory $dataStoreFactory
+		private readonly DataStoreFactory $dataStoreFactory,
+		private readonly Config $config
 	) {
 	}
 
@@ -22,7 +24,7 @@ class ResetWikiCacheHandler extends SimpleHandler {
 		#[SensitiveParameter]
 		string $key
 	): Response {
-		if ( $key !== $this->getConfig()->get( ConfigNames::CacheUpdateKey ) ) {
+		if ( $key !== $this->config->get( ConfigNames::CacheUpdateKey ) ) {
 			return $this->getResponseFactory()->createLocalizedHttpError(
 				403, new MessageValue( 'managewiki-rest-invalidkey' )
 			);
