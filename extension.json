@@ -38,7 +38,6 @@
 		"CacheUpdateJob": {
 			"class": "Miraheze\\ManageWiki\\Jobs\\CacheUpdateJob",
 			"services": [
-				"ManageWikiConfig",
 				"HttpRequestFactory",
 				"TitleFactory",
 				"UrlUtils"
