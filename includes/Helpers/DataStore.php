@@ -104,7 +104,7 @@ class DataStore {
 				$mtime
 			);
 
-			$this->cacheUpdate->addUpdate();
+			$this->cacheUpdate->queueJob( $this->dbname );
 		}
 
 		$cacheArray = [
