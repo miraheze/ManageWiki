@@ -12,7 +12,7 @@ use const PROTO_INTERNAL;
 
 class CacheUpdateJob extends Job {
 
-	public const JOB_NAME = 'CacheUpdateJob';
+	public const JOB_NAME = 'ManageWikiCacheUpdateJob';
 
 	private readonly array $servers;
 
