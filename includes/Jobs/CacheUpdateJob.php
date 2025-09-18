@@ -1,10 +1,10 @@
 <?php
 
-namespace Miraheze\ManageWiki\Helpers;
+namespace Miraheze\ManageWiki\Jobs;
 
-use MediaWiki\Config\ServiceOptions;
-use MediaWiki\Deferred\DeferredUpdates;
+use MediaWiki\Config\Config;
 use MediaWiki\Http\HttpRequestFactory;
+use MediaWiki\JobQueue\Job;
 use MediaWiki\Title\TitleFactory;
 use MediaWiki\Utils\UrlUtils;
 use Miraheze\ManageWiki\ConfigNames;
@@ -12,38 +12,32 @@ use Wikimedia\IPUtils;
 use function strlen;
 use const PROTO_INTERNAL;
 
-class CacheUpdate {
+class CacheUpdateJob extends Job {
 
-	public const CONSTRUCTOR_OPTIONS = [
-		ConfigNames::Servers,
-	];
+	public const JOB_NAME = 'CacheUpdateJob';
 
 	public function __construct(
+		array $params,
+		private readonly Config $config,
 		private readonly HttpRequestFactory $httpRequestFactory,
 		private readonly TitleFactory $titleFactory,
-		private readonly UrlUtils $urlUtils,
-		private readonly ServiceOptions $options
+		private readonly UrlUtils $urlUtils
 	) {
-		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
+		parent::__construct( self::JOB_NAME, $params );
 	}
 
-	public function addUpdate(): void {
-		DeferredUpdates::addCallableUpdate(
-			fn () => $this->doUpdate()
-		);
-	}
-
-	public function doUpdate(): void {
-		$servers = $this->options->get( ConfigNames::Servers );
+	/** @inheritDoc */
+	public function run(): true {
+		$servers = $this->config->get( ConfigNames::Servers );
 		if ( $servers === [] ) {
 			// If no servers are configured, early exit.
-			return;
+			return true;
 		}
 
 		$mainPageUrl = $this->titleFactory->newMainPage()->getFullURL();
 		$url = $this->urlUtils->expand( $mainPageUrl, PROTO_INTERNAL );
 		if ( $url === null ) {
-			return;
+			return true;
 		}
 
 		$urlInfo = $this->urlUtils->parse( $url ) ?? false;
@@ -73,5 +67,6 @@ class CacheUpdate {
 		] );
 
 		$http->runMulti( $reqs );
+		return true;
 	}
 }
