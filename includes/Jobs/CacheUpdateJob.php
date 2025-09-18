@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\Jobs;
 
-use MediaWiki\Config\Config;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\JobQueue\Job;
 use MediaWiki\Title\TitleFactory;
@@ -16,23 +15,20 @@ class CacheUpdateJob extends Job {
 
 	public const JOB_NAME = 'CacheUpdateJob';
 
+	private readonly array $servers;
+
 	public function __construct(
-		private readonly Config $config,
+		array $params,
 		private readonly HttpRequestFactory $httpRequestFactory,
 		private readonly TitleFactory $titleFactory,
 		private readonly UrlUtils $urlUtils
 	) {
-		parent::__construct( self::JOB_NAME );
+		parent::__construct( self::JOB_NAME, $params );
+		$this->servers = $params['servers'];
 	}
 
 	/** @inheritDoc */
 	public function run(): true {
-		$servers = $this->config->get( ConfigNames::Servers );
-		if ( $servers === [] ) {
-			// If no servers are configured, early exit.
-			return true;
-		}
-
 		$mainPageUrl = $this->titleFactory->newMainPage()->getFullURL();
 		$url = $this->urlUtils->expand( $mainPageUrl, PROTO_INTERNAL );
 		if ( $url === null ) {
@@ -56,7 +52,7 @@ class CacheUpdateJob extends Job {
 		];
 
 		$reqs = [];
-		foreach ( $servers as $server ) {
+		foreach ( $this->servers as $server ) {
 			$reqs[] = ( $baseReq + [ 'proxy' => $server ] );
 		}
 
