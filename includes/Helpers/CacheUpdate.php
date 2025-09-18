@@ -23,6 +23,11 @@ class CacheUpdate {
 
 	public function queueJob( string $dbname ): void {
 		$servers = $this->options->get( ConfigNames::Servers );
+		if ( $servers === [] ) {
+			// If no servers are configured, early exit.
+			return;
+		}
+
 		$this->jobQueueGroupFactory->makeJobQueueGroup( $dbname )->push(
 			new JobSpecification(
 				CacheUpdateJob::JOB_NAME,
