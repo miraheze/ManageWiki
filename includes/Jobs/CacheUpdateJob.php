@@ -17,13 +17,12 @@ class CacheUpdateJob extends Job {
 	public const JOB_NAME = 'CacheUpdateJob';
 
 	public function __construct(
-		array $params,
 		private readonly Config $config,
 		private readonly HttpRequestFactory $httpRequestFactory,
 		private readonly TitleFactory $titleFactory,
 		private readonly UrlUtils $urlUtils
 	) {
-		parent::__construct( self::JOB_NAME, $params );
+		parent::__construct( self::JOB_NAME );
 	}
 
 	/** @inheritDoc */
