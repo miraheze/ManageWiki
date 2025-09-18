@@ -13,6 +13,8 @@ class ConfigNames {
 
 	public const CacheType = 'ManageWikiCacheType';
 
+	public const CacheUpdateKey = 'ManageWikiCacheUpdateKey';
+
 	public const Extensions = 'ManageWikiExtensions';
 
 	public const ExtensionsDefault = 'ManageWikiExtensionsDefault';
