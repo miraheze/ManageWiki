@@ -31,7 +31,7 @@ class ResetWikiCacheHandler extends SimpleHandler {
 		}
 
 		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
-		$dataStore->resetWikiData( isNewChanges: true );
+		$dataStore->resetWikiData( isNewChanges: false );
 		return $this->getResponseFactory()->createNoContent();
 	}
 
