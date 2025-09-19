@@ -9,6 +9,8 @@ use Miraheze\ManageWiki\ConfigNames;
 use SensitiveParameter;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
+use function file_exists;
+use function unlink;
 
 class DeleteCacheHandler extends SimpleHandler {
 
