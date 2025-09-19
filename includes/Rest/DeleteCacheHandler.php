@@ -1,6 +1,6 @@
 <?php
 
-namespace Miraheze\CreateWiki\RequestWiki\Rest;
+namespace Miraheze\ManageWiki\RequestWiki\Rest;
 
 use MediaWiki\Config\Config;
 use MediaWiki\Rest\Response;
