@@ -28,7 +28,7 @@ class DeleteCacheHandler extends SimpleHandler {
 			);
 		}
 
-		$this->config->get( ConfigNames::CacheDirectory )
+		$cacheDir = $this->config->get( ConfigNames::CacheDirectory );
 		if ( file_exists( "$cacheDir/$dbname.php" ) ) {
 			unlink( "$cacheDir/$dbname.php" );
 		}
