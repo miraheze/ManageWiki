@@ -11,7 +11,7 @@ use SensitiveParameter;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 
-class ResetWikiCacheHandler extends SimpleHandler {
+class ResetCacheHandler extends SimpleHandler {
 
 	public function __construct(
 		private readonly DataStoreFactory $dataStoreFactory,
