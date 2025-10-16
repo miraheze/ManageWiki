@@ -34,6 +34,7 @@
 	"deletedwikis": "Izbrisani vikiji",
 	"extensions-other": "Drugo",
 	"log-action-filter-managewiki": "Vrsta dejanja:",
+	"log-action-filter-managewiki-cache-reset": "Ponastavitev predpomnjenja",
 	"log-action-filter-managewiki-delete": "Izbrisi vikijev",
 	"log-action-filter-managewiki-lock": "Zakleni ManageWiki",
 	"log-action-filter-managewiki-namespaces": "Spremembe imenskih prostorov",
