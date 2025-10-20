@@ -5,6 +5,7 @@
 			"Beginneruser",
 			"FarsiNevis",
 			"Jeeputer",
+			"LordProfo",
 			"Mskf1383",
 			"Sjazz"
 		]
@@ -12,6 +13,7 @@
 	"action-managewiki-editdefault": "مدیریت دسترسی‌های پیش‌فرض گروه",
 	"action-managewiki-restricted": "مدیریت تنظیمات محدودشدهٔ ویکی",
 	"apiwarn-wikiconfig-wikidoesnotexist": "ویکی «$1» وجود ندارد.",
+	"core-main": "تنظیمات اصلی",
 	"extensions-other": "دیگر",
 	"logentry-managewiki-delete": "$1 ویکی «$4» را {{GENDER:$2|جذف کرد}}",
 	"logentry-managewiki-delete-group": "$1 گروه «$3» را {{GENDER:$2|حذف کرد}}",
@@ -41,6 +43,11 @@
 	"managewiki-link-settings": "مدیریت تنظیمات اضافی این‌ویکی",
 	"managewiki-log-name": "سیاههٔ مدیریت ویکی",
 	"managewiki-namespaces-create": "ایجاد فضای نام تازه",
+	"managewiki-nav-core": "هسته",
+	"managewiki-nav-extensions": "افزونه‌ها",
+	"managewiki-nav-namespaces": "فضاهای نام",
+	"managewiki-nav-permissions": "دسترسی‌ها",
+	"managewiki-nav-settings": "تنظیمات",
 	"managewiki-permissions-addall": "می‌توان به دیگران افزود",
 	"managewiki-permissions-create": "ایجاد گروه کاربری تازه",
 	"managewiki-permissions-removeall": "می‌توان از دیگران حذف کرد",
@@ -60,9 +67,11 @@
 	"namespaces-delete": "حذف",
 	"namespaces-namespace": "فضای نام اصلی",
 	"namespaces-namespacetalk": "فضای نام بحث",
+	"permissions-advanced": "پیشرفته",
 	"permissions-assigned": "دسترسی‌های داده‌شده",
 	"permissions-group": "تخصیص گروه",
 	"permissions-unassigned": "دسترسی‌های داده‌نشده",
+	"right-managewiki-core": "مدیریت تنظیمات اصلی این ویکی",
 	"right-managewiki-editdefault": "مدیریت دسترسی‌های گروه پیش‌فرض",
 	"settings-other": "دیگر"
 }
