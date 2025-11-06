@@ -10,6 +10,7 @@
 			"NguoiDungKhongDinhDanh",
 			"NguyenHung",
 			"Nguyễn Mạnh An",
+			"Nvdtn19",
 			"Pisceskaze",
 			"SongNgu.xyz",
 			"Wolf"
@@ -122,7 +123,7 @@
 	"managewiki-link-permissions-view": "Xem các quyền hạn của wiki này",
 	"managewiki-link-settings": "Quản lý các cài đặt nâng cao của wiki",
 	"managewiki-link-settings-view": "Xem các cài đặt nâng cao của wiki",
-	"managewiki-log-header": "Nhật ký này theo dõi tất cả các thay đổi đối với cài đặt của wiki này thông qua ManageWiki.",
+	"managewiki-log-header": "Nhật trình này theo dõi tất cả các thay đổi đối với cài đặt của wiki này thông qua ManageWiki.",
 	"managewiki-log-name": "Nhật trình ManageWiki",
 	"managewiki-mwlocked": "Wiki này đã có được quyền để thay đổi các cài đặt bị khóa trong ManageWiki.",
 	"managewiki-namespace-conflicts": "Không gian tên \"$1\" đã tồn tại hoặc là tên gọi của không gian tên khác.",
