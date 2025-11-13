@@ -104,7 +104,7 @@
 	"managewiki-namespace-conflicts": "Imenski prostor \"$1\". već postoji i ne može se mijenjati.",
 	"managewiki-namespaces-create": "Naziv novog imenskog prostora",
 	"managewiki-namespaces-create-header": "Napravi novi imenski prostor",
-	"managewiki-namespaces-create-info": "Upotrijebite polje ispod za pravljenje novog imenskog prostora.",
+	"managewiki-namespaces-create-info": "Koristite polje ispod za izradu novog imenskog prostora.",
 	"managewiki-namespaces-create-submit": "Napravi imen. prostor",
 	"managewiki-namespaces-select": "Izaberite imenski prostor",
 	"managewiki-nav-extensions": "Dodaci",
