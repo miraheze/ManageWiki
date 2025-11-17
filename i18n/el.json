@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Dogogos123",
+			"Jimkats",
 			"NikosLikomitros",
 			"Nikosgranturismogt",
 			"Norhorn",
@@ -48,7 +49,7 @@
 	"managewiki-unavailable-notcentralwiki": "Αυτή η σελίδα δεν είναι διαθέσιμη σε αυτό το wiki. Επισκεφτείτε το κεντρικό wiki της φάρμας σας για να χρησιμοποιήσετε αυτήν τη σελίδα.",
 	"managewikiextensions": "Διαχείριση των επεκτάσεων ενός βίκι",
 	"managewikipermissions": "Διαχείριση των αδειών ενός βίκι",
-	"namespaces-namespace": "Όνομα του ονοματοχώρου",
+	"namespaces-namespace": "Κύριος ονοματοχώρος",
 	"permissions-assigned": "Καθορισμένες άδειες",
 	"permissions-group": "Ομαδικές εργασίες",
 	"permissions-unassigned": "Μη καθορισμένες άδειες",
