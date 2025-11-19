@@ -9,7 +9,7 @@
 		"lint:i18n": "banana-checker --requireLowerCase=0 i18n/"
 	},
 	"devDependencies": {
-		"eslint-config-wikimedia": "0.32.1",
+		"eslint-config-wikimedia": "0.32.2",
 		"grunt-banana-checker": "0.13.0",
 		"stylelint-config-idiomatic-order": "10.0.0",
 		"stylelint-config-wikimedia": "0.18.0"
