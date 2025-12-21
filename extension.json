@@ -35,6 +35,15 @@
 		"Miraheze\\ManageWiki\\Tests\\": "tests/phpunit/"
 	},
 	"JobClasses": {
+		"CacheUpdateJob": {
+			"class": "Miraheze\\ManageWiki\\Jobs\\CacheUpdateJob",
+			"services": [
+				"HttpRequestFactory",
+				"TitleFactory",
+				"UrlUtils"
+			],
+			"needsPage": false
+		},
 		"MWScriptJob": {
 			"class": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
 			"services": [
