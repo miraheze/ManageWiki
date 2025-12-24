@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use Miraheze\ManageWiki\Enums\State;
 use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
@@ -18,7 +19,7 @@ use function tempnam;
 use function time;
 use function unlink;
 
-class DataStore {
+final class DataStore {
 
 	private const CACHE_KEY = 'ManageWiki';
 
@@ -57,13 +58,14 @@ class DataStore {
 		}
 	}
 
-	public function isPrivate(): bool {
+	/** Fast path using cached data; falls back to ModuleFactory */
+	public function hasState( State $state ): bool {
 		$data = $this->getCachedWikiData();
 		// We just check this first because it won't be set at all
-		// if the core module is disabled or if private wikis
-		// in particular are disabled.
-		if ( isset( $data['states']['private'] ) ) {
-			return $data['states']['private'];
+		// if the core module is disabled or if the state
+		// in particular is disabled.
+		if ( isset( $data['states'][$state->value] ) ) {
+			return $data['states'][$state->value];
 		}
 
 		if ( !$this->moduleFactory->isEnabled( 'core' ) ) {
@@ -72,18 +74,29 @@ class DataStore {
 
 		try {
 			$mwCore = $this->moduleFactory->core( $this->dbname );
-			if ( !$mwCore->isEnabled( 'private-wikis' ) ) {
+			[ $feature, $method ] = match ( $state ) {
+				State::Closed => [ 'closed-wikis', 'isClosed' ],
+				State::Deleted => [ 'action-delete', 'isDeleted' ],
+				State::Experimental => [ 'experimental-wikis', 'isExperimental' ],
+				State::Inactive => [ 'inactive-wikis', 'isInactive' ],
+				State::InactiveExempt => [ 'inactive-wikis', 'isInactiveExempt' ],
+				State::Locked => [ 'action-lock', 'isLocked' ],
+				State::Private => [ 'private-wikis', 'isPrivate' ],
+			};
+
+			if ( !$mwCore->isEnabled( $feature ) ) {
 				return false;
 			}
 
-			return $mwCore->isPrivate();
+			return $mwCore->$method();
 		} catch ( MissingWikiError ) {
 			// We don't want to error here. If the wiki doesn't
-			// exist then it is not private.
+			// exist then it can't have the state.
 			return false;
 		}
 	}
 
+	/** Fast path using cached data; falls back to ModuleFactory */
 	public function getExtensions(): array {
 		$data = $this->getCachedWikiData();
 		if ( isset( $data['extensions'] ) ) {
@@ -94,9 +107,7 @@ class DataStore {
 		return $mwExtensions->listNames();
 	}
 
-	/**
-	 * Retrieves new information for the wiki and updates the cache.
-	 */
+	/** Retrieves new information for the wiki and updates the cache. */
 	public function resetWikiData( bool $isNewChanges ): void {
 		$mtime = time();
 		if ( $isNewChanges ) {
@@ -128,28 +139,28 @@ class DataStore {
 
 				$states = [];
 				if ( $mwCore->isEnabled( 'private-wikis' ) ) {
-					$states['private'] = $mwCore->isPrivate();
+					$states[State::Private->value] = $mwCore->isPrivate();
 				}
 
 				if ( $mwCore->isEnabled( 'closed-wikis' ) ) {
-					$states['closed'] = $mwCore->isClosed();
+					$states[State::Closed->value] = $mwCore->isClosed();
 				}
 
 				if ( $mwCore->isEnabled( 'inactive-wikis' ) ) {
-					$states['inactive'] = $mwCore->isInactiveExempt() ? 'exempt' :
-						$mwCore->isInactive();
+					$states[State::InactiveExempt->value] = $mwCore->isInactiveExempt();
+					$states[State::Inactive->value] = $mwCore->isInactive();
 				}
 
 				if ( $mwCore->isEnabled( 'experimental-wikis' ) ) {
-					$states['experimental'] = $mwCore->isExperimental();
+					$states[State::Experimental->value] = $mwCore->isExperimental();
 				}
 
 				if ( $mwCore->isEnabled( 'action-delete' ) ) {
-					$states['deleted'] = $mwCore->isDeleted();
+					$states[State::Deleted->value] = $mwCore->isDeleted();
 				}
 
 				if ( $mwCore->isEnabled( 'action-lock' ) ) {
-					$states['locked'] = $mwCore->isLocked();
+					$states[State::Locked->value] = $mwCore->isLocked();
 				}
 
 				$cacheArray['states'] = $states;
@@ -189,9 +200,7 @@ class DataStore {
 		}
 	}
 
-	/**
-	 * Writes data to a PHP file in the cache directory.
-	 */
+	/** Writes data to a PHP file in the cache directory. */
 	private function writeToFile( string $fileName, array $data ): void {
 		$tmpFile = tempnam( $this->cacheDir, $fileName );
 		if ( $tmpFile !== false ) {
