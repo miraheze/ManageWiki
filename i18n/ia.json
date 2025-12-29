@@ -35,7 +35,7 @@
 	"log-action-filter-managewiki": "Typo de action:",
 	"log-action-filter-managewiki-cache-reset": "Reinitialisation del cache",
 	"log-action-filter-managewiki-delete": "Deletiones de wikis",
-	"log-action-filter-managewiki-lock": "Serratura de ManageWiki",
+	"log-action-filter-managewiki-lock": "Serramento de ManageWiki",
 	"log-action-filter-managewiki-namespaces": "Cambiamentos de spatio de nomines",
 	"log-action-filter-managewiki-permissions": "Cambiamentos de permissiones de gruppo",
 	"log-action-filter-managewiki-settings": "Cambiamentos de parametros wiki",
