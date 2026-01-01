@@ -3,6 +3,7 @@
 		"authors": [
 			"Ajeje Brazorf",
 			"Beta16",
+			"Dream Indigo",
 			"Eindt",
 			"Executive",
 			"Gianfranco",
@@ -23,7 +24,7 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-settings": "Vedere le impostazioni della Wiki",
 	"apihelp-query+wikiconfig-paramvalue-prop-sitename": "Vedere il nome del sito della Wiki",
 	"apihelp-query+wikiconfig-summary": "Vedere nome sito, inattivo, inattivo-esentato, chiuso, privato, estensioni, specifiche e permessi per la Wiki specificata.",
-	"apiwarn-wikiconfig-nopermission": "Tu non sei autorizzato a vedere la configurazione per Wiki ‘$1’.",
+	"apiwarn-wikiconfig-nopermission": "Non hai l'autorizzazione di vedere la configurazione per Wiki '$1'.",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wiki ‘$1’ non esiste.",
 	"core-main": "Impostazioni principali",
 	"deletedwikis": "Wiki cancellati",
