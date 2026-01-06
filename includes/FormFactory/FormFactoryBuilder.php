@@ -1202,7 +1202,7 @@ class FormFactoryBuilder {
 
 		if ( $mwCore->isEnabled( 'closed-wikis' ) ) {
 			$closed = $mwCore->isClosed();
-			$newClosed = $formData['closed'];
+			$newClosed = (bool)$formData['closed'];
 
 			if ( $newClosed && $closed !== $newClosed ) {
 				$mwCore->markClosed();
@@ -1556,7 +1556,7 @@ class FormFactoryBuilder {
 			$permData[$type]['remove'] = $newArray;
 		}
 
-		$aE = $formData['enable'];
+		$aE = (bool)$formData['enable'];
 		$aPBuild = $aE ? [ $formData['conds'] ] : [];
 
 		if ( count( $aPBuild ) !== 0 ) {
