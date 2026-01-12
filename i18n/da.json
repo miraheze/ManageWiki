@@ -8,9 +8,9 @@
 	"apihelp-query+wikiconfig-paramvalue-prop-closed": "Tjek om wikien er markeret som lukket",
 	"apiwarn-wikiconfig-wikidoesnotexist": "Wikien '$1' findes ikke.",
 	"extensions-other": "Andre",
-	"logentry-managewiki-delete": "$1 slettede wikien »$4«",
-	"logentry-managewiki-delete-group": "$1 slettede gruppe »$3«",
-	"logentry-managewiki-undelete": "$1 tilbagerullede sletningen af wikien »$4«",
+	"logentry-managewiki-delete": "$1 {{GENDER:$2|slettede}} wikien »$4«",
+	"logentry-managewiki-delete-group": "$1 {{GENDER:$2|slettede}} gruppe »$3«",
+	"logentry-managewiki-undelete": "$1 {{GENDER:$2|tilbagerullede}} sletningen af wikien »$4«",
 	"managewiki-label-category": "Kategori",
 	"managewiki-label-closed": "Lukket",
 	"managewiki-label-dbname": "Databasenavn",
@@ -29,7 +29,7 @@
 	"managewiki-permissions-removeall": "Kan fjerne fra andre",
 	"namespaces-delete": "Slet",
 	"namespaces-namespace": "Hovednavnerum",
-	"namespaces-search": "Skal dette navnerum være søgbart som standard?",
-	"permissions-delete-checkbox": "Slet denne brugergruppe",
+	"namespaces-search": "Skal dette navnerum være søgbart som standard? ($1)",
+	"permissions-delete-checkbox": "Vil du slette denne brugergruppe?",
 	"settings-other": "Andet"
 }
