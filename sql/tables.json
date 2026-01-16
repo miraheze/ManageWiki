@@ -1,0 +1,195 @@
+[
+	{
+		"name": "mw_settings",
+		"columns": [
+			{
+				"name": "s_dbname",
+				"type": "string",
+				"options": {
+					"length": 64,
+					"notnull": true
+				}
+			},
+			{
+				"name": "s_settings",
+				"type": "text",
+				"options": {
+					"notnull": false
+				}
+			},
+			{
+				"name": "s_extensions",
+				"type": "text",
+				"options": {
+					"notnull": false
+				}
+			}
+		],
+		"indexes": [
+			{ "name":  "s_dbname", "columns":  ["s_dbname"], "unique": false  }
+		],
+		"pk": [ "s_dbname" ]
+	},
+	{
+		"name": "mw_permissions",
+		"columns": [
+			{
+				"name": "perm_dbname",
+				"type": "string",
+				"options": {
+					"length": 64,
+					"notnull": true
+				}
+			},
+			{
+				"name": "perm_group",
+				"type": "string",
+				"options": {
+					"length": 64,
+					"notnull": true
+				}
+			},
+			{
+				"name": "perm_permissions",
+				"type": "text",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "perm_addgroups",
+				"type": "text",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "perm_removegroups",
+				"type": "text",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "perm_addgroupstoself",
+				"type": "text",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "perm_removegroupsfromself",
+				"type": "text",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "perm_autopromote",
+				"type": "text",
+				"options": {
+					"notnull": false
+				}
+			}
+		],
+		"indexes": [
+			{ "name":  "uniqueperm", "columns":  ["perm_dbname", "perm_group"], "unique": true },
+			{ "name":  "perm_dbname", "columns":  ["perm_dbname"], "unique": false },
+			{ "name":  "perm_group", "columns":  ["perm_group"], "unique": false }
+		],
+		"pk": []
+	},
+	{
+		"name": "mw_namespaces",
+		"columns": [
+			{
+				"name": "ns_dbname",
+				"type": "string",
+				"options": {
+					"length": 64,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_namespace_id",
+				"type": "bigint",
+				"options": {
+					"unsigned": true,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_namespace_name",
+				"type": "string",
+				"options": {
+					"length": 128,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_searchable",
+				"type": "mwtinyint",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_subpages",
+				"type": "mwtinyint",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_content",
+				"type": "mwtinyint",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_content_model",
+				"type": "string",
+				"options": {
+					"length": 32,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_protection",
+				"type": "string",
+				"options": {
+					"length": 32,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_aliases",
+				"type": "text",
+				"options": {
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_core",
+				"type": "integer",
+				"options": {
+					"default": 0,
+					"notnull": true
+				}
+			},
+			{
+				"name": "ns_additional",
+				"type": "text",
+				"options": {
+					"notnull": true
+				}
+			}
+		],
+		"indexes": [
+			{ "name":  "uniquens", "columns":  ["ns_dbname", "ns_namespace_id"], "unique": true },
+			{ "name":  "ns_dbname", "columns":  ["ns_dbname"], "unique": false }
+		],
+		"pk": [ ]
+	}
+]
