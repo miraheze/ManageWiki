@@ -12,12 +12,13 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 	 */
 	public function onLoadExtensionSchemaUpdates( $updater ) {
 		$dir = __DIR__ . '/../../../sql';
+		$type = $updater->getDB()->getType();
 
 		$updater->addExtensionUpdateOnVirtualDomain( [
 			'virtual-managewiki',
 			'addTable',
 			'mw_namespaces',
-			"$dir/mw_namespaces.sql",
+			"$dir/$type/mw_namespaces.sql",
 			true,
 		] );
 
@@ -25,7 +26,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			'virtual-managewiki',
 			'addTable',
 			'mw_permissions',
-			"$dir/mw_permissions.sql",
+			"$dir/$type/mw_permissions.sql",
 			true,
 		] );
 
@@ -33,7 +34,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			'virtual-managewiki',
 			'addTable',
 			'mw_settings',
-			"$dir/mw_settings.sql",
+			"$dir/$type/mw_settings.sql",
 			true,
 		] );
 
@@ -41,7 +42,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			'virtual-managewiki',
 			'modifyTable',
 			'mw_namespaces',
-			"$dir/patches/patch-namespace-core-alter.sql",
+			"$dir/$type/patches/patch-namespace-core-alter.sql",
 			true,
 		] );
 
@@ -49,7 +50,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			'virtual-managewiki',
 			'modifyTable',
 			'mw_namespaces',
-			"$dir/patches/patch-namespace-name-alter.sql",
+			"$dir/$type/patches/patch-namespace-name-alter.sql",
 			true,
 		] );
 
@@ -58,7 +59,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			'addField',
 			'mw_permissions',
 			'perm_addgroupstoself',
-			"$dir/patches/patch-groups-self.sql",
+			"$dir/$type/patches/patch-groups-self.sql",
 			true,
 		] );
 
@@ -67,7 +68,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			'addField',
 			'mw_permissions',
 			'perm_autopromote',
-			"$dir/patches/patch-autopromote.sql",
+			"$dir/$type/patches/patch-autopromote.sql",
 			true,
 		] );
 
@@ -76,7 +77,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			'addField',
 			'mw_namespaces',
 			'ns_additional',
-			"$dir/patches/patch-namespaces-additional.sql",
+			"$dir/$type/patches/patch-namespaces-additional.sql",
 			true,
 		] );
 
@@ -85,7 +86,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			'addIndex',
 			'mw_namespaces',
 			'ns_dbname',
-			"$dir/patches/patch-namespaces-add-indexes.sql",
+			"$dir/$type/patches/patch-namespaces-add-indexes.sql",
 			true,
 		] );
 
@@ -94,7 +95,7 @@ class Installer implements LoadExtensionSchemaUpdatesHook {
 			'addIndex',
 			'mw_permissions',
 			'perm_dbname',
-			"$dir/patches/patch-permissions-add-indexes.sql",
+			"$dir/$type/patches/patch-permissions-add-indexes.sql",
 			true,
 		] );
 	}
