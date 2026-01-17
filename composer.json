@@ -29,7 +29,7 @@
 		"composer/installers": ">=1.0.1"
 	},
 	"require-dev": {
-		"mediawiki/mediawiki-codesniffer": "48.0.0",
+		"mediawiki/mediawiki-codesniffer": "49.0.0",
 		"mediawiki/mediawiki-phan-config": "0.18.0",
 		"mediawiki/minus-x": "2.0.0",
 		"miraheze/phan-plugins": "0.3.0",
