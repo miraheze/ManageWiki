@@ -35,10 +35,6 @@ class DataStore {
 		$this->timestamp = (int)$this->cache->get(
 			$this->cache->makeGlobalKey( self::CACHE_KEY, $dbname )
 		);
-
-		if ( !$this->timestamp ) {
-			$this->resetWikiData( isNewChanges: true );
-		}
 	}
 
 	/**
@@ -47,6 +43,11 @@ class DataStore {
 	 * regenerate the cached data.
 	 */
 	public function syncCache(): void {
+		if ( !$this->timestamp ) {
+			$this->resetWikiData( isNewChanges: true );
+			return;
+		}
+
 		// mtime will be 0 if the file does not exist as well, which means
 		// it will be generated.
 		$mtime = $this->getCachedWikiData()['mtime'] ?? 0;
