@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Specials;
 
 use MediaWiki\Exception\ErrorPageError;
+use MediaWiki\Parser\ParserOptions;
 use MediaWiki\Registration\ExtensionRegistry;
 use MediaWiki\SpecialPage\SpecialPage;
 use Miraheze\ManageWiki\DeletedWikisPager;
@@ -37,7 +38,8 @@ class SpecialDeletedWikis extends SpecialPage {
 		);
 
 		$table = $pager->getFullOutput();
-		$this->getOutput()->addParserOutputContent( $table );
+		$parserOptions = ParserOptions::newFromContext( $this->getContext() );
+		$this->getOutput()->addParserOutputContent( $table, $parserOptions );
 	}
 
 	/** @inheritDoc */
