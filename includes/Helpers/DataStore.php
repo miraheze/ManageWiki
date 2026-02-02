@@ -8,6 +8,7 @@ use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\StaticArrayWriter;
+use function array_search;
 use function file_exists;
 use function file_put_contents;
 use function function_exists;
@@ -17,6 +18,8 @@ use function rename;
 use function tempnam;
 use function time;
 use function unlink;
+use const NS_PROJECT;
+use const NS_PROJECT_TALK;
 
 class DataStore {
 
@@ -227,5 +230,95 @@ class DataStore {
 		}
 
 		return [ 'mtime' => 0 ];
+	}
+
+	public function getCachedSettings(): array {
+		$cacheArray = $this->getCachedWikiData();
+		if ( $cacheArray['mtime'] === 0 ) {
+			return [];
+		}
+
+		$settings = [];
+
+		// Core language code
+		$settings['wgLanguageCode'] = $cacheArray['core']['wgLanguageCode'] ?? 'en';
+
+		// States
+		$states = $cacheArray['states'] ?? [];
+		$settings['cwPrivate'] = $states['private'] ?? false;
+		$settings['cwClosed'] = $states['closed'] ?? false;
+		$settings['cwLocked'] = $states['locked'] ?? false;
+		$settings['cwDeleted'] = $states['deleted'] ?? false;
+		$settings['cwInactive'] = $states['inactive'] === 'exempt' ? 'exempt' : ( $states['inactive'] ?? false );
+		$settings['cwExperimental'] = $states['experimental'] ?? false;
+
+		// Config settings
+		foreach ( $cacheArray['settings'] ?? [] as $var => $val ) {
+			$settings[$var] = $val;
+		}
+
+		// Namespaces
+		foreach ( $cacheArray['namespaces'] ?? [] as $name => $ns ) {
+			$id = $ns['id'];
+			$settings['wgNamespacesToBeSearchedDefault'][$id] = $ns['searchable'];
+			$settings['wgNamespacesWithSubpages'][$id] = $ns['subpages'];
+			$settings['wgNamespaceContentModels'][$id] = $ns['contentmodel'];
+
+			if ( $ns['content'] ) {
+				$settings['wgContentNamespaces'][] = $id;
+			}
+
+			if ( $ns['protection'] ) {
+				$settings['wgNamespaceProtection'][$id] = [ $ns['protection'] ];
+			}
+
+			foreach ( $ns['aliases'] as $alias ) {
+				$settings['wgNamespaceAliases'][$alias] = $id;
+			}
+
+			match ( $id ) {
+				NS_PROJECT => $settings['wgMetaNamespace'] = $name,
+				NS_PROJECT_TALK => $settings['wgMetaNamespaceTalk'] = $name,
+				default => $settings['wgExtraNamespaces'][$id] = $name,
+			};
+		}
+
+		// Permissions
+		foreach ( $cacheArray['permissions'] ?? [] as $group => $perm ) {
+			foreach ( $perm['permissions'] as $right ) {
+				$settings['wgGroupPermissions'][$group][$right] = true;
+			}
+
+			foreach ( $perm['addgroups'] as $name ) {
+				$settings['wgAddGroups'][$group][] = $name;
+			}
+
+			foreach ( $perm['removegroups'] as $name ) {
+				$settings['wgRemoveGroups'][$group][] = $name;
+			}
+
+			foreach ( $perm['addself'] as $name ) {
+				$settings['wgGroupsAddToSelf'][$group][] = $name;
+			}
+
+			foreach ( $perm['removeself'] as $name ) {
+				$settings['wgGroupsRemoveFromSelf'][$group][] = $name;
+			}
+
+			$autopromote = $perm['autopromote'] ?? [];
+			if ( $autopromote !== [] ) {
+				$onceId = array_search( 'once', $autopromote, true );
+				if ( $onceId !== false ) {
+					unset( $autopromote[$onceId] );
+					$promoteVar = 'wgAutopromoteOnce';
+				} else {
+					$promoteVar = 'wgAutopromote';
+				}
+
+				$settings[$promoteVar][$group] = $autopromote;
+			}
+		}
+
+		return $settings;
 	}
 }
