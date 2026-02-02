@@ -11,14 +11,12 @@ class ExtensionRegistry extends CoreExtensionRegistry {
 	private static ?self $instance;
 
 	public static function getInstance(): self {
-		if ( self::$instance === null ) {
-			self::$instance = new self();
-		}
-
+		self::$instance ??= new self();
 		return self::$instance;
 	}
 
-	public function queue( string $path ): void {
+	/** @inheritDoc */
+	public function queue( $path ): void {
 		if ( str_ends_with( $path, 'WikibaseClient/extension.json' ) ) {
 			$path = str_replace( 'WikibaseClient/extension.json', 'Wikibase/extension-client.json', $path );
 		}
