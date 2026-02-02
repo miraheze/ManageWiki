@@ -178,6 +178,9 @@ class DataStore {
 		}
 
 		$this->hookRunner->onManageWikiDataStoreBuilder( $this->moduleFactory, $this->dbname, $cacheArray );
+
+		$cacheArray['config-overrides'] = $this->getCachedConfigs( $cacheArray );
+		unset( $cacheArray['namespaces'], $cacheArray['permissions'], $cacheArray['settings'] );
 		$this->writeToFile( $this->dbname, $cacheArray );
 	}
 
@@ -232,8 +235,7 @@ class DataStore {
 		return [ 'mtime' => 0 ];
 	}
 
-	public function getCachedSettings(): array {
-		$cacheArray = $this->getCachedWikiData();
+	private function getCachedConfigs( array $cacheArray ): array {
 		if ( $cacheArray['mtime'] === 0 ) {
 			return [];
 		}
