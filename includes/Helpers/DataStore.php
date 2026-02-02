@@ -2,8 +2,10 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use MediaWiki\Settings\Source\PhpSettingsSource;
 use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
+use Miraheze\ManageWiki\Helpers\Settings\SettingsBuilder;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
@@ -58,6 +60,10 @@ class DataStore {
 		if ( $mtime === 0 || $mtime < $this->timestamp ) {
 			$this->resetWikiData( isNewChanges: false );
 		}
+
+		$settings = SettingsBuilder::getInstance();
+		$settings->load( new PhpSettingsSource( "{$this->cacheDir}/{$this->dbname}.php" ) );
+		$settings->apply();
 	}
 
 	public function isPrivate(): bool {
