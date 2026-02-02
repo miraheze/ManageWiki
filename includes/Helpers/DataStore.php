@@ -247,11 +247,12 @@ class DataStore {
 
 		// States
 		$states = $cacheArray['states'] ?? [];
+		$inactiveState = $states['inactive'] ?? false;
 		$settings['cwPrivate'] = $states['private'] ?? false;
 		$settings['cwClosed'] = $states['closed'] ?? false;
 		$settings['cwLocked'] = $states['locked'] ?? false;
 		$settings['cwDeleted'] = $states['deleted'] ?? false;
-		$settings['cwInactive'] = $states['inactive'] === 'exempt' ? 'exempt' : ( $states['inactive'] ?? false );
+		$settings['cwInactive'] = $inactiveState === 'exempt' ? 'exempt' : $inactiveState;
 		$settings['cwExperimental'] = $states['experimental'] ?? false;
 
 		// Config settings
