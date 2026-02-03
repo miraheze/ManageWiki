@@ -8,7 +8,7 @@ use function str_replace;
 
 class ExtensionRegistry extends CoreExtensionRegistry {
 
-	private static ?self $instance;
+	private static self $instance;
 
 	public static function getInstance(): self {
 		self::$instance ??= new self();
