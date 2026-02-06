@@ -15,6 +15,7 @@
 	"action-managewiki-extensions": "enable and disable extensions for this wiki",
 	"action-managewiki-namespaces": "create, delete, and manage namespaces for this wiki",
 	"action-managewiki-permissions": "create, delete, and manage user groups on this wiki",
+	"action-managewiki-privacy": "remotely change the private state of this wiki",
 	"action-managewiki-restricted": "manage restricted wiki settings",
 	"action-managewiki-settings": "manage advanced settings for this wiki",
 	"apihelp-modifyserver-example": "Modify a wiki's server name.",
@@ -233,6 +234,7 @@
 	"right-managewiki-extensions": "Enable and disable extensions for this wiki",
 	"right-managewiki-namespaces": "Create, delete, and manage namespaces for this wiki",
 	"right-managewiki-permissions": "Create, delete, and manage user groups on this wiki",
+	"right-managewiki-privacy": "Remotely change the private state of this wiki",
 	"right-managewiki-restricted": "Manage restricted wiki settings",
 	"right-managewiki-settings": "Manage advanced settings for this wiki",
 	"settings-other": "Other"
