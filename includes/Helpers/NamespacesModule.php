@@ -15,6 +15,7 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
 use Miraheze\ManageWiki\Jobs\NamespaceMigrationJob;
+use Miraheze\ManageWiki\Traits\ConfigHelperTrait;
 use Psr\Log\LoggerInterface;
 use stdClass;
 use Wikimedia\Rdbms\IReadableDatabase;
@@ -39,7 +40,10 @@ use const NS_SPECIAL;
 
 class NamespacesModule implements IModule {
 
+	use ConfigHelperTrait;
+
 	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::Conf,
 		ConfigNames::NamespacesAdditional,
 		ConfigNames::NamespacesDisallowedNames,
 		MainConfigNames::MetaNamespace,
@@ -453,13 +457,19 @@ class NamespacesModule implements IModule {
 		if ( isset( $this->liveNamespaces[NS_PROJECT]['name'] ) ) {
 			$metaNamespace = $this->liveNamespaces[NS_PROJECT]['name'];
 		} else {
-			$metaNamespace = $this->options->get( MainConfigNames::MetaNamespace );
+			$metaNamespace = $this->getRemoteConfigIfNeeded(
+				$this->options, $this->dbname,
+				MainConfigNames::MetaNamespace
+			);
 		}
 
 		if ( isset( $this->liveNamespaces[NS_PROJECT_TALK]['name'] ) ) {
 			$metaNamespaceTalk = $this->liveNamespaces[NS_PROJECT_TALK]['name'];
 		} else {
-			$metaNamespaceTalk = $this->options->get( MainConfigNames::MetaNamespaceTalk );
+			$metaNamespaceTalk = $this->getRemoteConfigIfNeeded(
+				$this->options, $this->dbname,
+				MainConfigNames::MetaNamespaceTalk
+			);
 		}
 
 		$lcName = [];

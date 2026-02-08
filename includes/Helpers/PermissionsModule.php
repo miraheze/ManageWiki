@@ -10,6 +10,7 @@ use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
+use Miraheze\ManageWiki\Traits\ConfigHelperTrait;
 use stdClass;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
@@ -30,7 +31,10 @@ use function sort;
 
 class PermissionsModule implements IModule {
 
+	use ConfigHelperTrait;
+
 	public const CONSTRUCTOR_OPTIONS = [
+		ConfigNames::Conf,
 		ConfigNames::PermissionsAdditionalAddGroups,
 		ConfigNames::PermissionsAdditionalAddGroupsSelf,
 		ConfigNames::PermissionsAdditionalRemoveGroups,
@@ -476,11 +480,30 @@ class PermissionsModule implements IModule {
 	 * @return array{}|non-empty-associative-array<string,array>
 	 */
 	public function getCachedData( bool $isPrivate ): array {
-		$additionalRights = (array)$this->options->get( ConfigNames::PermissionsAdditionalRights );
-		$additionalAddGroups = (array)$this->options->get( ConfigNames::PermissionsAdditionalAddGroups );
-		$additionalRemoveGroups = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroups );
-		$additionalAddGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalAddGroupsSelf );
-		$additionalRemoveGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroupsSelf );
+		$additionalRights = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalRights
+		);
+
+		$additionalAddGroups = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalAddGroups
+		);
+
+		$additionalRemoveGroups = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalRemoveGroups
+		);
+
+		$additionalAddGroupsSelf = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalAddGroupsSelf
+		);
+
+		$additionalRemoveGroupsSelf = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalRemoveGroupsSelf
+		);
 
 		if ( $isPrivate ) {
 			$additionalRights['*']['read'] = false;
