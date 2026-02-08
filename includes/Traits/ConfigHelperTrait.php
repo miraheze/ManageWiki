@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Traits;
 
 use MediaWiki\Config\ServiceOptions;
+use MediaWiki\Config\SiteConfiguration;
 use MediaWiki\WikiMap\WikiMap;
 use Miraheze\ManageWiki\ConfigNames;
 
@@ -18,6 +19,7 @@ trait ConfigHelperTrait {
 		}
 
 		$conf = $options->get( ConfigNames::Conf );
+		'@phan-var SiteConfiguration $conf';
 		return $conf->get( $this->getConfigName( $configName ), $dbname );
 	}
 
