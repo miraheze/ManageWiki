@@ -10,7 +10,7 @@ namespace Miraheze\ManageWiki;
 class ConfigNames {
 
 	// From MediaWiki core but doesn't exist in MainConfigNames
-	public const Conf = 'wgConf';
+	public const Conf = 'Conf';
 
 	public const CacheDirectory = 'ManageWikiCacheDirectory';
 
