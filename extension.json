@@ -57,6 +57,7 @@
 		"managewiki-extensions",
 		"managewiki-namespaces",
 		"managewiki-permissions",
+		"managewiki-privacy",
 		"managewiki-restricted",
 		"managewiki-settings"
 	],

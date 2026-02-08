@@ -7,7 +7,6 @@ use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Settings\SettingsBuilder;
 use Miraheze\ManageWiki\Hooks\HookRunner;
-use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\StaticArrayWriter;
 use function array_search;
@@ -176,7 +175,8 @@ class DataStore {
 		}
 
 		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
-			$cacheArray['permissions'] = $this->moduleFactory->permissions( $this->dbname )->getCachedData();
+			$cacheArray['permissions'] = $this->moduleFactory->permissions( $this->dbname )
+				->getCachedData( $cacheArray['states']['private'] ?? false );
 		}
 
 		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
@@ -229,10 +229,11 @@ class DataStore {
 		// We only handle failures if the include does not work.
 
 		$filePath = "{$this->cacheDir}/{$this->dbname}.php";
-		$cacheData = AtEase::quietCall(
-			static fn ( string $path ): array|false => include $path,
-			$filePath
-		);
+
+		// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		$cacheData = @(
+			static fn ( string $path ): array|false => include $path
+		)( $filePath );
 
 		if ( is_array( $cacheData ) ) {
 			return $cacheData;

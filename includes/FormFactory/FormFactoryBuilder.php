@@ -27,6 +27,7 @@ use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Miraheze\ManageWiki\ICoreModule;
+use Miraheze\ManageWiki\Traits\ConfigHelperTrait;
 use Miraheze\ManageWiki\Traits\FormHelperTrait;
 use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
 use ObjectCacheFactory;
@@ -67,6 +68,7 @@ use const NS_PROJECT_TALK;
 
 class FormFactoryBuilder {
 
+	use ConfigHelperTrait;
 	use FormHelperTrait;
 	use MatrixHandlerTrait;
 
@@ -154,6 +156,9 @@ class FormFactoryBuilder {
 			}
 		}
 
+		$canChangeRemotePrivate = $context->getAuthority()->isAllowed( 'managewiki-restricted' ) &&
+			$context->getAuthority()->isAllowed( 'managewiki-privacy' );
+
 		$addedModules = [
 			'sitename' => [
 				'if' => $mwCore->isEnabled( 'sitename' ),
@@ -177,7 +182,7 @@ class FormFactoryBuilder {
 				'if' => $mwCore->isEnabled( 'private-wikis' ),
 				'type' => 'check',
 				'default' => $mwCore->isPrivate(),
-				'access' => !$ceMW,
+				'access' => $this->databaseUtils->isCurrentWikiCentral() ? !$canChangeRemotePrivate : !$ceMW,
 			],
 			'closed' => [
 				'if' => $mwCore->isEnabled( 'closed-wikis' ),

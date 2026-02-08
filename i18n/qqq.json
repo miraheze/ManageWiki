@@ -21,6 +21,7 @@
 	"action-managewiki-extensions": "{{doc-action|managewiki-extensions}}",
 	"action-managewiki-namespaces": "{{doc-action|managewiki-namespaces}}",
 	"action-managewiki-permissions": "{{doc-action|managewiki-permissions}}",
+	"action-managewiki-privacy": "{{doc-action|managewiki-privacy}}",
 	"action-managewiki-restricted": "{{doc-action|managewiki-restricted}}",
 	"action-managewiki-settings": "{{doc-action|managewiki-settings}}",
 	"apihelp-query+wikiconfig-example-1": "{{doc-apihelp-example|wikiconfig}}",
@@ -118,6 +119,7 @@
 	"right-managewiki-extensions": "{{doc-right|managewiki-extensions}}",
 	"right-managewiki-namespaces": "{{doc-right|managewiki-namespaces}}",
 	"right-managewiki-permissions": "{{doc-right|managewiki-permissions}}",
+	"right-managewiki-privacy": "{{doc-right|managewiki-privacy}}",
 	"right-managewiki-restricted": "{{doc-right|managewiki-restricted}}",
 	"right-managewiki-settings": "{{doc-right|managewiki-settings}}",
 	"settings-other": "{{Identical|Other}}"
