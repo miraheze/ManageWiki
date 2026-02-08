@@ -81,12 +81,4 @@ trait FormHelperTrait {
 
 		return $finalCondition;
 	}
-
-	private function getConfigName( string $name ): string {
-		return "wg$name";
-	}
-
-	private function getConfigVar( string $name ): string {
-		return "\$wg$name";
-	}
 }
