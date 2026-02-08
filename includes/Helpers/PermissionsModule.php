@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
+use MediaWiki\WikiMap\WikiMap;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
@@ -481,6 +482,15 @@ class PermissionsModule implements IModule {
 		$additionalRemoveGroups = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroups );
 		$additionalAddGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalAddGroupsSelf );
 		$additionalRemoveGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroupsSelf );
+
+		if ( !WikiMap::isCurrentWikiId( $this->dbname ) ) {
+			global $wgConf;
+			$additionalRights = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalRights, $this->dbname );
+			$additionalAddGroups = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalAddGroups, $this->dbname );
+			$additionalRemoveGroups = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalRemoveGroups, $this->dbname );
+			$additionalAddGroupsSelf = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalAddGroupsSelf, $this->dbname );
+			$additionalRemoveGroupsSelf = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalRemoveGroupsSelf, $this->dbname );
+		}
 
 		if ( $isPrivate ) {
 			$additionalRights['*']['read'] = false;
