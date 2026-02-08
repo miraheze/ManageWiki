@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Traits;
 
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\WikiMap\WikiMap;
+use Miraheze\ManageWiki\ConfigNames;
 
 trait ConfigHelperTrait {
 
@@ -16,8 +17,8 @@ trait ConfigHelperTrait {
 			return $options->get( $configName );
 		}
 
-		global $wgConf;
-		return $wgConf->get( $this->getConfigName( $configName ), $dbname );
+		$conf = $options->get( ConfigNames::Conf );
+		return $conf->get( $this->getConfigName( $configName ), $dbname );
 	}
 
 	private function getConfigName( string $name ): string {
