@@ -9,8 +9,8 @@ trait ConfigHelperTrait {
 
 	private function getRemoteConfigIfNeeded(
 		ServiceOptions $options,
-		string $configName,
-		string $dbname
+		string $dbname,
+		string $configName
 	): mixed {
 		if ( WikiMap::isCurrentWikiId( $dbname ) ) {
 			return $options->get( $configName );
