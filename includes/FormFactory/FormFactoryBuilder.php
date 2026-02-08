@@ -154,6 +154,9 @@ class FormFactoryBuilder {
 			}
 		}
 
+		$canChangeRemotePrivate = $context->getAuthority()->isAllowed( 'managewiki-restricted' ) &&
+			$context->getAuthority()->isAllowed( 'managewiki-privacy' );
+
 		$addedModules = [
 			'sitename' => [
 				'if' => $mwCore->isEnabled( 'sitename' ),
@@ -177,7 +180,7 @@ class FormFactoryBuilder {
 				'if' => $mwCore->isEnabled( 'private-wikis' ),
 				'type' => 'check',
 				'default' => $mwCore->isPrivate(),
-				'access' => !$ceMW,
+				'access' => $this->databaseUtils->isCurrentWikiCentral() ? !$canChangeRemotePrivate : !$ceMW,
 			],
 			'closed' => [
 				'if' => $mwCore->isEnabled( 'closed-wikis' ),
