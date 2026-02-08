@@ -167,7 +167,7 @@ class DataStore {
 
 		if ( $this->moduleFactory->isEnabled( 'permissions' ) ) {
 			$cacheArray['permissions'] = $this->moduleFactory->permissions( $this->dbname )
-				->getCachedData( $this->isPrivate() );
+				->getCachedData( $cacheArray['states']['private'] ?? false );
 		}
 
 		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {
