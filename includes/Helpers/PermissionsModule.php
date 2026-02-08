@@ -475,12 +475,17 @@ class PermissionsModule implements IModule {
 	 * Build cached permissions data from live and additional config.
 	 * @return array{}|non-empty-associative-array<string,array>
 	 */
-	public function getCachedData(): array {
+	public function getCachedData( bool $isPrivate ): array {
 		$additionalRights = (array)$this->options->get( ConfigNames::PermissionsAdditionalRights );
 		$additionalAddGroups = (array)$this->options->get( ConfigNames::PermissionsAdditionalAddGroups );
 		$additionalRemoveGroups = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroups );
 		$additionalAddGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalAddGroupsSelf );
 		$additionalRemoveGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroupsSelf );
+
+		if ( $isPrivate ) {
+			$additionalRights['*']['read'] = false;
+			$additionalRights['sysop']['read'] = true;
+		}
 
 		$cache = [];
 		foreach ( $this->listAll() as $group => $live ) {
