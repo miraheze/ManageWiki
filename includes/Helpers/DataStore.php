@@ -5,7 +5,6 @@ namespace Miraheze\ManageWiki\Helpers;
 use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
-use Wikimedia\AtEase\AtEase;
 use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\StaticArrayWriter;
 use function file_exists;
@@ -217,10 +216,11 @@ class DataStore {
 		// We only handle failures if the include does not work.
 
 		$filePath = "{$this->cacheDir}/{$this->dbname}.php";
-		$cacheData = AtEase::quietCall(
-			static fn ( string $path ): array|false => include $path,
-			$filePath
-		);
+
+		// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		$cacheData = @(
+			static fn ( string $path ): array|false => include $path
+		)( $filePath );
 
 		if ( is_array( $cacheData ) ) {
 			return $cacheData;
