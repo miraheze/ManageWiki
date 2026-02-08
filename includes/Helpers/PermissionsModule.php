@@ -5,12 +5,12 @@ namespace Miraheze\ManageWiki\Helpers;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\UserGroupManagerFactory;
-use MediaWiki\WikiMap\WikiMap;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
+use Miraheze\ManageWiki\Traits\ConfigHelperTrait;
 use stdClass;
 use Wikimedia\Message\ITextFormatter;
 use Wikimedia\Message\MessageValue;
@@ -30,6 +30,8 @@ use function mb_strtolower;
 use function sort;
 
 class PermissionsModule implements IModule {
+
+	use ConfigHelperTrait;
 
 	public const CONSTRUCTOR_OPTIONS = [
 		ConfigNames::PermissionsAdditionalAddGroups,
@@ -477,20 +479,30 @@ class PermissionsModule implements IModule {
 	 * @return array{}|non-empty-associative-array<string,array>
 	 */
 	public function getCachedData( bool $isPrivate ): array {
-		$additionalRights = (array)$this->options->get( ConfigNames::PermissionsAdditionalRights );
-		$additionalAddGroups = (array)$this->options->get( ConfigNames::PermissionsAdditionalAddGroups );
-		$additionalRemoveGroups = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroups );
-		$additionalAddGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalAddGroupsSelf );
-		$additionalRemoveGroupsSelf = (array)$this->options->get( ConfigNames::PermissionsAdditionalRemoveGroupsSelf );
+		$additionalRights = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalRights
+		);
 
-		if ( !WikiMap::isCurrentWikiId( $this->dbname ) ) {
-			global $wgConf;
-			$additionalRights = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalRights, $this->dbname );
-			$additionalAddGroups = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalAddGroups, $this->dbname );
-			$additionalRemoveGroups = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalRemoveGroups, $this->dbname );
-			$additionalAddGroupsSelf = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalAddGroupsSelf, $this->dbname );
-			$additionalRemoveGroupsSelf = (array)$wgConf->get( 'wg' . ConfigNames::PermissionsAdditionalRemoveGroupsSelf, $this->dbname );
-		}
+		$additionalAddGroups = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalAddGroups
+		);
+
+		$additionalRemoveGroups = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalRemoveGroups
+		);
+
+		$additionalAddGroupsSelf = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalAddGroupsSelf
+		);
+
+		$additionalRemoveGroupsSelf = (array)$this->getRemoteConfigIfNeeded(
+			$this->options, $this->dbname,
+			ConfigNames::PermissionsAdditionalRemoveGroupsSelf
+		);
 
 		if ( $isPrivate ) {
 			$additionalRights['*']['read'] = false;
