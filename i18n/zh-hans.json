@@ -47,6 +47,7 @@
 	"action-managewiki-extensions": "启用和禁用此wiki的扩展",
 	"action-managewiki-namespaces": "创建、删除和管理此wiki的命名空间",
 	"action-managewiki-permissions": "创建、删除和管理此wiki的用户组",
+	"action-managewiki-privacy": "远程更改此wiki的私有状态",
 	"action-managewiki-restricted": "管理受限的wiki设置",
 	"action-managewiki-settings": "管理此wiki的高级设置",
 	"apihelp-modifyserver-example": "修改wiki的服务器名称。",
@@ -263,6 +264,7 @@
 	"right-managewiki-extensions": "启用和禁用此wiki的扩展",
 	"right-managewiki-namespaces": "创建、删除和管理此wiki的命名空间",
 	"right-managewiki-permissions": "创建、删除和管理此wiki的用户组",
+	"right-managewiki-privacy": "远程更改此wiki的私有状态",
 	"right-managewiki-restricted": "管理受限wiki设置",
 	"right-managewiki-settings": "管理此wiki的高级设置",
 	"settings-other": "其他"

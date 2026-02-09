@@ -12,6 +12,7 @@
 	},
 	"action-managewiki-extensions": "abilitare e disabilitare le estensioni per questo wiki",
 	"action-managewiki-namespaces": "creare, cancellare e gestire i namespace per questo wiki",
+	"action-managewiki-privacy": "modificare da remoto lo stato privato di questo wiki",
 	"apihelp-query+wikiconfig-example-1": "Vedere configurazione Wiki per metawiki.",
 	"apihelp-query+wikiconfig-param-prop": "Seleziona proprietà per ritornare:",
 	"apihelp-query+wikiconfig-param-wikis": "Quale Wiki da controllare.",
@@ -172,6 +173,7 @@
 	"permissions-unassigned": "Permessi non assegnati",
 	"right-managewiki-editdefault": "Gestisci permessi del gruppo predefinito a livello di farm",
 	"right-managewiki-extensions": "Abilita e disabilita le estensioni per questo wiki",
+	"right-managewiki-privacy": "Modifica da remoto lo stato privato di questo wiki",
 	"right-managewiki-restricted": "Gestisci impostazioni Wiki limitate",
 	"right-managewiki-settings": "Gestisce le impostazioni avanzate per questo wiki",
 	"settings-other": "Altro"

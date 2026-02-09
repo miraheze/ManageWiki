@@ -18,6 +18,7 @@
 	"action-managewiki-extensions": "uitbreidingen voor deze wiki in en uit te schakelen",
 	"action-managewiki-namespaces": "naamruimten voor deze wiki te maken, te verwijderen en te beheren",
 	"action-managewiki-permissions": "gebruikersgroepen op deze wiki te maken, te verwijderen en te beheren",
+	"action-managewiki-privacy": "de privéstatus van deze wiki op afstand wijzigen",
 	"action-managewiki-restricted": "beperkte wiki-instellingen te beheren",
 	"action-managewiki-settings": "de geavanceerde instellingen voor deze wiki te beheren",
 	"apihelp-modifyserver-example": "De servernaam van een wiki wijzigen.",
@@ -233,6 +234,7 @@
 	"right-managewiki-extensions": "Uitbreidingen voor deze wiki in- en uitschakelen",
 	"right-managewiki-namespaces": "Naamruimten voor deze wiki maken, verwijderen en beheren",
 	"right-managewiki-permissions": "Gebruikersgroepen op deze wiki maken, verwijderen en beheren",
+	"right-managewiki-privacy": "De privéstatus van deze wiki op afstand wijzigen",
 	"right-managewiki-restricted": "Beperkte wiki-instellingen beheren",
 	"right-managewiki-settings": "De geavanceerde instellingen voor deze wiki beheren",
 	"settings-other": "Andere"

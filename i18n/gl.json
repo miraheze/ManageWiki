@@ -12,6 +12,7 @@
 	"action-managewiki-extensions": "activar e desactivar extensións neste wiki",
 	"action-managewiki-namespaces": "crear, eliminar e xestionar espazos de nomes neste wiki",
 	"action-managewiki-permissions": "crear, eliminar e xestionar grupos de usuarios neste wiki",
+	"action-managewiki-privacy": "modificar remotamente o estado privado deste wiki",
 	"action-managewiki-restricted": "xestionar a configuración restrinxida do wiki",
 	"action-managewiki-settings": "xestionar a configuración avanzada deste wiki",
 	"apihelp-modifyserver-example": "Modificar o nome do servidor dun wiki.",
@@ -227,6 +228,7 @@
 	"right-managewiki-extensions": "Activar e desactivar extensións neste wiki",
 	"right-managewiki-namespaces": "Crear, eliminar e xestionar espazos de nomes neste wiki",
 	"right-managewiki-permissions": "Crear, eliminar e xestionar grupos de usuarios neste wiki",
+	"right-managewiki-privacy": "Modificar remotamente o estado privado deste wiki",
 	"right-managewiki-restricted": "Xestionar a configuración restrinxida do wiki",
 	"right-managewiki-settings": "Xestionar a configuración avanzada deste wiki",
 	"settings-other": "Outro"
