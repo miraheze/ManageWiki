@@ -9,8 +9,8 @@ use function array_pad;
 use function explode;
 use function file;
 use function is_numeric;
+use function str_contains;
 use function str_replace;
-use function strpos;
 use function var_export;
 
 class PopulateWikiSettings extends Maintenance {
@@ -86,7 +86,7 @@ class PopulateWikiSettings extends Maintenance {
 
 			if ( is_numeric( $value ) ) {
 				// Handle setting float and integer values
-				$value = strpos( $value, '.' ) !== false ? (float)$value : (int)$value;
+				$value = str_contains( $value, '.' ) ? (float)$value : (int)$value;
 			}
 
 			$mwSettings = $this->moduleFactory->settings( $dbname );
