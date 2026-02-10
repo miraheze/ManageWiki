@@ -315,7 +315,7 @@ class SpecialManageWiki extends SpecialPage {
 			special: mb_strtolower( $special )
 		);
 
-		$this->getOutput()->addHTML( new FieldLayout(
+		$this->getOutput()->addHTML( ( new FieldLayout(
 			new SearchInputWidget( [
 				'placeholder' => $this->msg( 'managewiki-search' )->text(),
 			] ),
@@ -325,7 +325,7 @@ class SpecialManageWiki extends SpecialPage {
 				'invisibleLabel' => true,
 				'infusable' => true,
 			]
-		) );
+		) )->toString() );
 
 		$htmlForm->show();
 	}

@@ -363,8 +363,8 @@ class FormFactoryBuilder {
 				$help[] = $this->buildRequires( $context, $ext['requires'] ) . "\n";
 			}
 
-			if ( $ext['conflicts'] ) {
-				$help[] = $context->msg( 'managewiki-conflicts', $ext['conflicts'] )->parse() . "\n";
+			if ( $ext['conflicts'] ?? false ) {
+				$help[] = $context->msg( 'managewiki-conflicts', $ext['conflicts'] ?? '' )->parse() . "\n";
 			}
 
 			$descriptionmsg = array_column( $credits, 'descriptionmsg', 'name' )[ $ext['name'] ] ?? false;
@@ -738,8 +738,8 @@ class FormFactoryBuilder {
 					);
 
 					$help = [];
-					if ( $a['requires'] ) {
-						$help[] = $this->buildRequires( $context, $a['requires'] ) . "\n";
+					if ( $a['requires'] ?? false ) {
+						$help[] = $this->buildRequires( $context, $a['requires'] ?? [] ) . "\n";
 					}
 
 					$rawMessage = new RawMessage( $a['help'] );
