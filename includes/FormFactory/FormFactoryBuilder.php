@@ -363,7 +363,7 @@ class FormFactoryBuilder {
 				$help[] = $this->buildRequires( $context, $ext['requires'] ) . "\n";
 			}
 
-			if ( $ext['conflicts'] ) {
+			if ( $ext['conflicts'] ?? false ) {
 				$help[] = $context->msg( 'managewiki-conflicts', $ext['conflicts'] )->parse() . "\n";
 			}
 
@@ -738,7 +738,7 @@ class FormFactoryBuilder {
 					);
 
 					$help = [];
-					if ( $a['requires'] ) {
+					if ( $a['requires'] ?? false ) {
 						$help[] = $this->buildRequires( $context, $a['requires'] ) . "\n";
 					}
 
