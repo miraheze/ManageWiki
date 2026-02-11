@@ -345,6 +345,10 @@
 			"description": "Array. An array of settings that can be managed through Special:ManageWiki",
 			"value": []
 		},
+		"ManageWikiSiteConfiguration": {
+			"description": "SiteConfiguration object or null. ManageWiki's version of $wgConf for accessing certain configuration variables remotely.",
+			"value": null
+		},
 		"ManageWikiUseCustomDomains": {
 			"description": "Boolean. Whether to implement the ability to change the server name from ManageWiki.",
 			"value": false
