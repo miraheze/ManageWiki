@@ -106,7 +106,7 @@
 	"managewiki-permissions-removeself": "Kan fjerne fra seg selv",
 	"managewiki-permissions-select": "Velg eksisterende gruppe å redigere",
 	"managewiki-permissions-unassigned": "Brukerrettighetene nedenfor er for tiden ikke tildelt denne brukergruppa.",
-	"managewiki-requires": "Krever",
+	"managewiki-requires": "<em><strong>[Krever]</strong> $1</em>",
 	"managewiki-success": "Innstillingene har blitt forandret.",
 	"managewiki-toggle-forcesidebar": "Påtving visningen av ManageWiki-lenker i sidemenyen.",
 	"managewikidefaults": "Behandle en wikifarms standardtillatelser",

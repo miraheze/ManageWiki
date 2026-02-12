@@ -9,6 +9,7 @@
 	"action-managewiki-extensions": "activar e disactivar extensiones pro iste wiki",
 	"action-managewiki-namespaces": "crear, deler e gerer spatios de nomines pro iste wiki",
 	"action-managewiki-permissions": "crear, deler e gerer gruppos de usatores sur iste wiki",
+	"action-managewiki-privacy": "cambiar a distantia le stato private de iste wiki",
 	"action-managewiki-restricted": "gerer le parametros restringite del wiki",
 	"action-managewiki-settings": "gerer le parametros avantiate de iste wiki",
 	"apihelp-modifyserver-example": "Modificar le nomine del servitor de un wiki.",
@@ -224,6 +225,7 @@
 	"right-managewiki-extensions": "Activar e disactivar extensiones pro iste wiki",
 	"right-managewiki-namespaces": "Crear, deler e gerer spatios de nomines pro iste wiki",
 	"right-managewiki-permissions": "Crear, deler e gerer gruppos de usatores sur iste wiki",
+	"right-managewiki-privacy": "Cambiar a distantia le stato private de iste wiki",
 	"right-managewiki-restricted": "Gerer le parametros restringite del wiki",
 	"right-managewiki-settings": "Gerer le parametros avantiate de iste wiki",
 	"settings-other": "Altere"
