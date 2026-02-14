@@ -97,19 +97,18 @@ class DataStore {
 	 * Retrieves new information for the wiki and updates the cache.
 	 */
 	public function resetWikiData( bool $isNewChanges ): void {
-		$mtime = time();
 		if ( $isNewChanges ) {
-			$this->timestamp = $mtime;
+			$this->timestamp = time();
 			$this->cache->set(
 				$this->cache->makeGlobalKey( self::CACHE_KEY, $this->dbname ),
-				$mtime
+				$this->timestamp
 			);
 
 			$this->cacheUpdate->addUpdate();
 		}
 
 		$cacheArray = [
-			'mtime' => $mtime,
+			'mtime' => $this->timestamp,
 			'database' => $this->dbname,
 		];
 
