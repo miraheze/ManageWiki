@@ -325,6 +325,7 @@
 		"ManageWikiPermissionsDisallowedRights": {
 			"description": "Array. An array of user rights that ManageWiki can not manage and assign on wiki.",
 			"value": [
+				"managewiki-privacy",
 				"managewiki-restricted"
 			]
 		},
