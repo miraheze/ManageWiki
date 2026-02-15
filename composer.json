@@ -26,7 +26,12 @@
 		"wiki": "https://www.mediawiki.org/wiki/Extension:ManageWiki"
 	},
 	"require": {
-		"composer/installers": ">=1.0.1"
+		"composer/installers": "~1.0|~2"
+	},
+	"autoload": {
+		"psr-4": {
+			"Miraheze\\ManageWiki\\": "includes"
+		}
 	},
 	"require-dev": {
 		"mediawiki/mediawiki-codesniffer": "50.0.0",
@@ -49,9 +54,10 @@
 		"phan": "phan -d . --long-progress-bar",
 		"phpcs": "phpcs -sp --cache"
 	},
+	"extra": {
+		"installer-name": "ManageWiki"
+	},
 	"config": {
-		"prepend-autoloader": false,
-		"optimize-autoloader": true,
 		"allow-plugins": {
 			"composer/installers": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true
