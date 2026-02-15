@@ -12,22 +12,13 @@ jobs:
     strategy:
       matrix:
         include:
-          # Legacy MediaWiki stable - PHP 8.2
-          - mw: 'REL1_44'
-            php: 8.2
-            php-docker: 82
-            composer-test: false
-            coverage: true
-            experimental-phan: false
-            experimental-phpunit: false
-
           # Latest MediaWiki stable - PHP 8.2
           - mw: 'REL1_45'
             php: 8.2
             php-docker: 82
             composer-test: false
             coverage: false
-            experimental-phan: true
+            experimental-phan: false
             experimental-phpunit: false
 
           # Latest MediaWiki stable - PHP 8.4
@@ -35,8 +26,8 @@ jobs:
             php: 8.4
             php-docker: 84
             composer-test: true
-            coverage: false
-            experimental-phan: true
+            coverage: true
+            experimental-phan: false
             experimental-phpunit: false
 
           # Latest MediaWiki master - PHP 8.4
