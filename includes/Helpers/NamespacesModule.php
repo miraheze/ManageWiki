@@ -43,9 +43,9 @@ class NamespacesModule implements IModule {
 	use ConfigHelperTrait;
 
 	public const CONSTRUCTOR_OPTIONS = [
-		ConfigNames::Conf,
 		ConfigNames::NamespacesAdditional,
 		ConfigNames::NamespacesDisallowedNames,
+		ConfigNames::SiteConfiguration,
 		MainConfigNames::MetaNamespace,
 		MainConfigNames::MetaNamespaceTalk,
 	];
