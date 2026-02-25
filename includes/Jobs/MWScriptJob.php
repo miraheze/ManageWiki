@@ -12,7 +12,7 @@ use function json_encode;
 
 class MWScriptJob extends Job {
 
-	public const JOB_NAME = 'MWScriptJob';
+	public const string JOB_NAME = 'MWScriptJob';
 
 	private readonly array $data;
 	private readonly string $dbname;
