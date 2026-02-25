@@ -19,7 +19,7 @@ use function unlink;
 
 class DataStore {
 
-	private const CACHE_KEY = 'ManageWiki';
+	private const string CACHE_KEY = 'ManageWiki';
 
 	private int $timestamp;
 
