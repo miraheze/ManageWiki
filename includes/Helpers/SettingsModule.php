@@ -16,7 +16,7 @@ use function json_encode;
 
 class SettingsModule implements IModule {
 
-	public const CONSTRUCTOR_OPTIONS = [
+	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Settings,
 	];
 
