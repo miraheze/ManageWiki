@@ -17,7 +17,7 @@ use const NS_MAIN;
  */
 class NamespaceMigrationJob extends Job {
 
-	public const JOB_NAME = 'NamespaceMigrationJob';
+	public const string JOB_NAME = 'NamespaceMigrationJob';
 
 	private readonly string $action;
 	private readonly string $dbname;
