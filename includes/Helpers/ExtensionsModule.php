@@ -23,7 +23,7 @@ use const MW_ENTRY_POINT;
 
 class ExtensionsModule implements IModule {
 
-	public const CONSTRUCTOR_OPTIONS = [
+	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
 	];
 
