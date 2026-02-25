@@ -20,7 +20,11 @@ trait ConfigHelperTrait {
 
 		$conf = $options->get( ConfigNames::SiteConfiguration );
 		'@phan-var ?SiteConfiguration $conf';
-		return $conf?->get( $this->getConfigName( $configName ), $dbname );
+		if ( $conf === null ) {
+			return $options->get( $configName );
+		}
+
+		return $conf->get( $this->getConfigName( $configName ), $dbname );
 	}
 
 	private function getConfigName( string $name ): string {
