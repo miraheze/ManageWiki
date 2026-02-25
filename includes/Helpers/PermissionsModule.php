@@ -33,7 +33,7 @@ class PermissionsModule implements IModule {
 
 	use ConfigHelperTrait;
 
-	public const CONSTRUCTOR_OPTIONS = [
+	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::PermissionsAdditionalAddGroups,
 		ConfigNames::PermissionsAdditionalAddGroupsSelf,
 		ConfigNames::PermissionsAdditionalRemoveGroups,

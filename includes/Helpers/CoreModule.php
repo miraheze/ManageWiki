@@ -11,7 +11,7 @@ use function implode;
 
 class CoreModule implements ICoreModule {
 
-	public const CONSTRUCTOR_OPTIONS = [
+	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::UseCustomDomains,
 	];
 

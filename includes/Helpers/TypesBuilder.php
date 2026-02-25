@@ -35,7 +35,7 @@ class TypesBuilder {
 
 	use MatrixHandlerTrait;
 
-	public const CONSTRUCTOR_OPTIONS = [
+	public const array CONSTRUCTOR_OPTIONS = [
 		MainConfigNames::AllowUserCssPrefs,
 		MainConfigNames::DisableLangConversion,
 		MainConfigNames::EnableEmail,

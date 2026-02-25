@@ -14,7 +14,7 @@ use const PROTO_INTERNAL;
 
 class CacheUpdate {
 
-	public const CONSTRUCTOR_OPTIONS = [
+	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Servers,
 	];
 
