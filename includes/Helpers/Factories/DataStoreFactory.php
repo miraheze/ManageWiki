@@ -14,7 +14,7 @@ use Wikimedia\ObjectCache\BagOStuff;
 
 class DataStoreFactory {
 
-	public const CONSTRUCTOR_OPTIONS = [
+	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::CacheDirectory,
 		ConfigNames::CacheType,
 		MainConfigNames::CacheDirectory,
