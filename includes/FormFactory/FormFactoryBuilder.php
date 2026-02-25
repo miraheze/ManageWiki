@@ -72,7 +72,7 @@ class FormFactoryBuilder {
 	use FormHelperTrait;
 	use MatrixHandlerTrait;
 
-	public const CONSTRUCTOR_OPTIONS = [
+	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
 		ConfigNames::NamespacesAdditional,
 		ConfigNames::PermissionsDisallowedGroups,
