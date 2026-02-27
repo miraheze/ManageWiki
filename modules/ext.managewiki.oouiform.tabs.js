@@ -156,6 +156,17 @@
 						}
 					}
 				} );
+
+				const $input = $field.find( 'input[name^="wpext-"]' );
+				if ( $input.length ) {
+					const inputName = $input.attr( 'name' );
+					if ( inputName && inputName.startsWith( 'wpext-' ) ) {
+						const canonicalName = inputName.slice( 6 );
+						if ( canonicalName ) {
+							addToIndex( $( '<span>' ).text( canonicalName ) );
+						}
+					}
+				}
 			} );
 			mw.hook( 'managewiki.search.buildIndex' ).fire( index );
 			texts = Object.keys( index );
