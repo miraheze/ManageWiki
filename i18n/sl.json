@@ -10,6 +10,7 @@
 	"action-managewiki-extensions": "omogočanje in onemogočanje razširitev v tem vikiju",
 	"action-managewiki-namespaces": "ustvarjanje, brisanje in upravljanje imenskih prostorov za ta viki",
 	"action-managewiki-permissions": "ustvarjanje, brisanje in upravljanje uporabniških skupin v tem vikiju",
+	"action-managewiki-privacy": "na daljavo spremeniti zasebno stanje tega vikija",
 	"action-managewiki-restricted": "upravljanje omejenih nastavitev vikija",
 	"action-managewiki-settings": "upravljanje naprednih nastavitev tega vikija",
 	"apihelp-modifyserver-example": "Sprememba imena vikistrežnika.",
@@ -225,6 +226,7 @@
 	"right-managewiki-extensions": "Omogočanje in onemogočanje razširitev v tem vikiju",
 	"right-managewiki-namespaces": "ustvarjanje, brisanje in upravljanje uporabniških skupin v tem vikiju",
 	"right-managewiki-permissions": "Ustvarjanje, brisanje in upravljanje uporabniških skupin v tem vikiju",
+	"right-managewiki-privacy": "Sprememba zasebnega stanja tega vikija na daljavo",
 	"right-managewiki-restricted": "Upravljanje omejenih nastavitev vikija",
 	"right-managewiki-settings": "Upravljanje naprednih nastavitev tega vikija",
 	"settings-other": "Drugo"
