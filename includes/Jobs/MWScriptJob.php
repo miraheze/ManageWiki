@@ -20,8 +20,8 @@ class MWScriptJob extends Job {
 
 	public function __construct(
 		array $params,
-		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
+		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly LoggerInterface $logger
 	) {
 		parent::__construct( self::JOB_NAME, $params );
