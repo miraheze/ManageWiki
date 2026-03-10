@@ -3,14 +3,10 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use MediaWiki\Config\ServiceOptions;
-use MediaWiki\Deferred\DeferredUpdates;
-use MediaWiki\Http\HttpRequestFactory;
-use MediaWiki\Title\TitleFactory;
-use MediaWiki\Utils\UrlUtils;
+use MediaWiki\JobQueue\JobQueueGroupFactory;
+use MediaWiki\JobQueue\JobSpecification;
 use Miraheze\ManageWiki\ConfigNames;
-use Wikimedia\IPUtils;
-use function strlen;
-use const PROTO_INTERNAL;
+use Miraheze\ManageWiki\Jobs\CacheUpdateJob;
 
 class CacheUpdate {
 
@@ -19,59 +15,24 @@ class CacheUpdate {
 	];
 
 	public function __construct(
-		private readonly HttpRequestFactory $httpRequestFactory,
-		private readonly TitleFactory $titleFactory,
-		private readonly UrlUtils $urlUtils,
+		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly ServiceOptions $options
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
-	public function addUpdate(): void {
-		DeferredUpdates::addCallableUpdate(
-			fn () => $this->doUpdate()
-		);
-	}
-
-	public function doUpdate(): void {
+	public function queueJob( string $dbname ): void {
 		$servers = $this->options->get( ConfigNames::Servers );
 		if ( $servers === [] ) {
 			// If no servers are configured, early exit.
 			return;
 		}
 
-		$mainPageUrl = $this->titleFactory->newMainPage()->getFullURL();
-		$url = $this->urlUtils->expand( $mainPageUrl, PROTO_INTERNAL );
-		if ( $url === null ) {
-			return;
-		}
-
-		$urlInfo = $this->urlUtils->parse( $url ) ?? false;
-		$urlHost = strlen( $urlInfo['port'] ?? '' )
-			? IPUtils::combineHostAndPort( $urlInfo['host'], (int)$urlInfo['port'] )
-			: $urlInfo['host'];
-
-		$baseReq = [
-			'method' => 'PURGE',
-			'url' => $url,
-			'headers' => [
-				'Host' => $urlHost,
-				'Connection' => 'Keep-Alive',
-				'Proxy-Connection' => 'Keep-Alive',
-				'User-Agent' => 'ManageWiki extension',
-			],
-		];
-
-		$reqs = [];
-		foreach ( $servers as $server ) {
-			$reqs[] = ( $baseReq + [ 'proxy' => $server ] );
-		}
-
-		$http = $this->httpRequestFactory->createMultiClient( [
-			'maxConnsPerHost' => 8,
-			'usePipelining' => true,
-		] );
-
-		$http->runMulti( $reqs );
+		$this->jobQueueGroupFactory->makeJobQueueGroup( $dbname )->push(
+			new JobSpecification(
+				CacheUpdateJob::JOB_NAME,
+				[ 'servers' => $servers ]
+			)
+		);
 	}
 }
