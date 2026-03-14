@@ -27,7 +27,7 @@ class SpecialManageWikiDefaults extends SpecialPage {
 		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly DefaultPermissions $defaultPermissions,
 		private readonly FormFactory $formFactory,
-		private readonly ModuleFactory $moduleFactory
+		private readonly ModuleFactory $moduleFactory,
 	) {
 		parent::__construct( 'ManageWikiDefaults' );
 	}

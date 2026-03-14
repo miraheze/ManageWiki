@@ -15,7 +15,7 @@ class ExtensionsFactory {
 		private readonly InstallerFactory $installerFactory,
 		private readonly LoggerInterface $logger,
 		private readonly RequirementsFactory $requirementsFactory,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 	}
 

@@ -10,7 +10,7 @@ use Wikimedia\Rdbms\IReadableDatabase;
 class DatabaseUtils {
 
 	public function __construct(
-		private readonly IConnectionProvider $connectionProvider
+		private readonly IConnectionProvider $connectionProvider,
 	) {
 	}
 

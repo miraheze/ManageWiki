@@ -61,7 +61,7 @@ class TypesBuilder {
 		private readonly PermissionManager $permissionManager,
 		private readonly SkinFactory $skinFactory,
 		private readonly UserOptionsLookup $userOptionsLookup,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}

@@ -70,7 +70,7 @@ class NamespacesModule implements IModule {
 		private readonly LoggerInterface $logger,
 		private readonly NamespaceInfo $namespaceInfo,
 		private readonly ServiceOptions $options,
-		private readonly string $dbname
+		private readonly string $dbname,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 

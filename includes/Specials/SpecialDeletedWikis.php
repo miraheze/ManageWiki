@@ -13,7 +13,7 @@ class SpecialDeletedWikis extends SpecialPage {
 
 	public function __construct(
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly ExtensionRegistry $extensionRegistry
+		private readonly ExtensionRegistry $extensionRegistry,
 	) {
 		parent::__construct( 'DeletedWikis' );
 	}

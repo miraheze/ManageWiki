@@ -22,7 +22,7 @@ class CacheUpdate {
 		private readonly HttpRequestFactory $httpRequestFactory,
 		private readonly TitleFactory $titleFactory,
 		private readonly UrlUtils $urlUtils,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}

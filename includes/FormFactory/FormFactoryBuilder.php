@@ -95,7 +95,7 @@ class FormFactoryBuilder {
 		private readonly ObjectCacheFactory $objectCacheFactory,
 		private readonly PermissionManager $permissionManager,
 		private readonly UserGroupManager $userGroupManager,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}

@@ -43,7 +43,7 @@ class ExtensionsModule implements IModule {
 		private readonly LoggerInterface $logger,
 		private readonly RequirementsFactory $requirementsFactory,
 		private readonly ServiceOptions $options,
-		private readonly string $dbname
+		private readonly string $dbname,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 
