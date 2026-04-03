@@ -27,7 +27,7 @@ class DataStoreFactory {
 		private readonly CacheUpdate $cacheUpdate,
 		private readonly HookRunner $hookRunner,
 		private readonly Closure $moduleFactoryClosure,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 		$this->cache = ( $this->options->get( ConfigNames::CacheType ) !== null ) ?

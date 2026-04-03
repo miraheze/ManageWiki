@@ -30,7 +30,7 @@ class Main implements
 		private readonly Config $config,
 		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly HookRunner $hookRunner,
-		private readonly UserOptionsLookup $userOptionsLookup
+		private readonly UserOptionsLookup $userOptionsLookup,
 	) {
 	}
 

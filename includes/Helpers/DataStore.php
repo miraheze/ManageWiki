@@ -29,7 +29,7 @@ class DataStore {
 		private readonly HookRunner $hookRunner,
 		private readonly ModuleFactory $moduleFactory,
 		private readonly string $cacheDir,
-		private readonly string $dbname
+		private readonly string $dbname,
 	) {
 		$this->timestamp = (int)$this->cache->get(
 			$this->cache->makeGlobalKey( self::CACHE_KEY, $dbname )

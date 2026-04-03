@@ -15,7 +15,7 @@ class ApiQueryWikiConfig extends ApiQueryBase {
 	public function __construct(
 		ApiQuery $query,
 		string $moduleName,
-		private readonly ModuleFactory $moduleFactory
+		private readonly ModuleFactory $moduleFactory,
 	) {
 		parent::__construct( $query, $moduleName, 'wcf' );
 	}

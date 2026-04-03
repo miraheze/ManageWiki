@@ -68,19 +68,14 @@ class DeletedWikisPager extends TablePager {
 	/** @inheritDoc */
 	public function getQueryInfo(): array {
 		return [
-			'tables' => [
-				'cw_wikis',
-			],
+			'tables' => [ 'cw_wikis' ],
 			'fields' => [
 				'wiki_dbname',
 				'wiki_creation',
 				'wiki_deleted',
 				'wiki_deleted_timestamp',
 			],
-			'conds' => [
-				'wiki_deleted' => 1,
-			],
-			'joins_conds' => [],
+			'conds' => [ 'wiki_deleted' => 1 ],
 		];
 	}
 

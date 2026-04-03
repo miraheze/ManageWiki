@@ -33,7 +33,7 @@ class SpecialManageWiki extends SpecialPage {
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly FormFactory $formFactory,
 		private readonly ModuleFactory $moduleFactory,
-		private readonly NamespaceInfo $namespaceInfo
+		private readonly NamespaceInfo $namespaceInfo,
 	) {
 		parent::__construct( 'ManageWiki' );
 	}

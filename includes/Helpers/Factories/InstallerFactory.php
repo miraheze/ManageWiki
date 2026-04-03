@@ -14,7 +14,7 @@ class InstallerFactory {
 		private readonly ILBFactory $dbLoadBalancerFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LoggerInterface $logger,
-		private readonly Closure $moduleFactoryClosure
+		private readonly Closure $moduleFactoryClosure,
 	) {
 	}
 

@@ -14,7 +14,7 @@ class SettingsFactory {
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly InstallerFactory $installerFactory,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 	}
 

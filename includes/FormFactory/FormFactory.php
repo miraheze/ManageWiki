@@ -15,7 +15,7 @@ use function implode;
 class FormFactory {
 
 	public function __construct(
-		private readonly FormFactoryBuilder $formFactoryBuilder
+		private readonly FormFactoryBuilder $formFactoryBuilder,
 	) {
 	}
 

@@ -19,7 +19,7 @@ class NamespacesFactory {
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LocalisationCache $localisationCache,
 		private readonly NamespaceInfo $namespaceInfo,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 	}
 

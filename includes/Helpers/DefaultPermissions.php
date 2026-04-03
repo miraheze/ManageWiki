@@ -15,7 +15,7 @@ class DefaultPermissions {
 
 	public function __construct(
 		private readonly ModuleFactory $moduleFactory,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}

@@ -12,7 +12,7 @@ class CoreFactory {
 	public function __construct(
 		private readonly HookRunner $hookRunner,
 		private readonly SettingsFactory $settingsFactory,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 	}
 

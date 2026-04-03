@@ -30,7 +30,7 @@ class NamespaceMigrationJob extends Job {
 
 	public function __construct(
 		array $params,
-		private readonly DatabaseUtils $databaseUtils
+		private readonly DatabaseUtils $databaseUtils,
 	) {
 		parent::__construct( self::JOB_NAME, $params );
 
