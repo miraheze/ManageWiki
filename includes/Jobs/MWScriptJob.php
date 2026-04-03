@@ -22,7 +22,7 @@ class MWScriptJob extends Job {
 		array $params,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly DataStoreFactory $dataStoreFactory,
-		private readonly LoggerInterface $logger
+		private readonly LoggerInterface $logger,
 	) {
 		parent::__construct( self::JOB_NAME, $params );
 
