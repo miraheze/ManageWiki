@@ -39,6 +39,7 @@
 			"class": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
 			"services": [
 				"JobQueueGroupFactory",
+				"ManageWikiDataStoreFactory",
 				"ManageWikiLogger"
 			],
 			"needsPage": false
