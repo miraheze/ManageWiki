@@ -54,16 +54,20 @@ class DataStore {
 		$logger = LoggerFactory::getInstance( 'ManageWiki' );
 		// Regenerate wiki data cache if the file does not exist or has no valid mtime
 		if ( $mtime === 0 || $mtime < $this->timestamp ) {
-			$logger->debug( "Resetting wiki data for $this->dbname.", [
-				'mtime' => $mtime,
-				'timestamp' => $this->timestamp,
-			] );
+			if ( defined( 'MEDIAWIKI_JOB_RUNNER' ) ) {
+				$logger->debug( "Resetting wiki data for $this->dbname.", [
+					'mtime' => $mtime,
+					'timestamp' => $this->timestamp,
+				] );
+			}
 			$this->resetWikiData( isNewChanges: false );
 		} else {
-			$logger->debug( "Cache already up to date for $this->dbname.", [
-				'mtime' => $mtime,
-				'timestamp' => $this->timestamp,
-			] );
+			if ( defined( 'MEDIAWIKI_JOB_RUNNER' ) ) {
+				$logger->debug( "Cache already up to date for $this->dbname.", [
+					'mtime' => $mtime,
+					'timestamp' => $this->timestamp,
+				] );
+			}
 		}
 	}
 
