@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use MediaWiki\Logger\LoggerFactory;
 use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
@@ -50,9 +51,19 @@ class DataStore {
 		// it will be generated.
 		$mtime = $this->getCachedWikiData()['mtime'] ?? 0;
 
+		$logger = LoggerFactory::getInstance( 'ManageWiki' );
 		// Regenerate wiki data cache if the file does not exist or has no valid mtime
 		if ( $mtime === 0 || $mtime < $this->timestamp ) {
+			$logger->debug( "Resetting wiki data for $this->dbname.", [
+				'mtime' => $mtime,
+				'timestamp' => $this->timestamp,
+			] );
 			$this->resetWikiData( isNewChanges: false );
+		} else {
+			$logger->debug( "Cache already up to date for $this->dbname.", [
+				'mtime' => $mtime,
+				'timestamp' => $this->timestamp,
+			] );
 		}
 	}
 
