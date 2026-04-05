@@ -218,11 +218,15 @@ class DataStore {
 						opcache_invalidate( $targetFilename, true );
 					}
 				} else {
+					LoggerFactory::getInstance( 'ManageWiki' )->debug( 'Failed to rename the temporary file for the the ManageWiki cache!' );
 					unlink( $tmpFile );
 				}
 			} else {
+				LoggerFactory::getInstance( 'ManageWiki' )->debug( 'Failed to write the ManageWiki cache to the temporary file!' );
 				unlink( $tmpFile );
 			}
+		} else {
+			LoggerFactory::getInstance( 'ManageWiki' )->debug( 'Failed to create a temp file to write the ManageWiki cache!' );
 		}
 	}
 
