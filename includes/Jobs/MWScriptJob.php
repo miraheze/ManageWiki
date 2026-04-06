@@ -6,7 +6,6 @@ use MediaWiki\JobQueue\Job;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\JobQueue\JobSpecification;
 use MediaWiki\Shell\Shell;
-use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Psr\Log\LoggerInterface;
 use function is_bool;
 use function json_encode;
@@ -21,7 +20,6 @@ class MWScriptJob extends Job {
 	public function __construct(
 		array $params,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
-		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly LoggerInterface $logger,
 	) {
 		parent::__construct( self::JOB_NAME, $params );
@@ -32,10 +30,6 @@ class MWScriptJob extends Job {
 
 	/** @inheritDoc */
 	public function run(): true {
-		// Make sure cache is up-to-date before running anything.
-		$dataStore = $this->dataStoreFactory->newInstance( $this->dbname );
-		$dataStore->syncCache();
-
 		$limits = [ 'memory' => 0, 'filesize' => 0 ];
 		foreach ( $this->data as $script => $options ) {
 			$arguments = [ '--wiki', $this->dbname ];
