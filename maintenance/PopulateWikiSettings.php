@@ -71,7 +71,7 @@ class PopulateWikiSettings extends Maintenance {
 			$this->fatalError( 'You must provide --sourcelist when not using --remove' );
 		}
 
-		if ( !$this->hasOption( 'remove' ) && count( $settings ) > 1 ) {
+		if ( count( $settings ) > 1 ) {
 			$this->fatalError( 'Multiple --setting values are only supported with --remove.' );
 		}
 
