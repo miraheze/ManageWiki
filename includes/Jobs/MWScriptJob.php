@@ -41,7 +41,6 @@ class MWScriptJob extends Job {
 
 			foreach ( $options as $name => $val ) {
 				$arguments[] = "--$name";
-
 				if ( !is_bool( $val ) ) {
 					$arguments[] = $val;
 				}
