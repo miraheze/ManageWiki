@@ -160,7 +160,7 @@
 	"managewiki-permissions-select": "Seleccionar el grupo existente para editarlo",
 	"managewiki-permissions-unassigned": "Los privilegios de usuario a continuación no se han asignado actualmente a este grupo de usuarios.",
 	"managewiki-placeholder-reason": "Motivo de este cambio.",
-	"managewiki-requires": "Requiere",
+	"managewiki-requires": "<em><strong>[Requiere]</strong> $1</em>",
 	"managewiki-review": "Revisar",
 	"managewiki-review-title": "Revisar cambios",
 	"managewiki-save": "Guardar",
