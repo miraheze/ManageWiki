@@ -12,7 +12,7 @@
 		"eslint-config-wikimedia": "0.32.3",
 		"grunt-banana-checker": "0.13.0",
 		"stylelint-config-idiomatic-order": "10.0.0",
-		"stylelint-config-wikimedia": "0.18.0"
+		"stylelint-config-wikimedia": "0.19.0"
 	},
 	"peerDependencies": {
 		"postcss-less": "6.0.0"
