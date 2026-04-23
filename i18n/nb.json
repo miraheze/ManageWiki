@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"EdoAug",
+			"Fademaze",
 			"Imre Eilertsen",
 			"Jon Harald Søby"
 		]
@@ -26,7 +27,7 @@
 	"log-action-filter-managewiki": "Handlingstype:",
 	"log-action-filter-managewiki-namespaces": "Navneromsendringer",
 	"log-action-filter-managewiki-permissions": "Gruppetillatelse-endringer",
-	"logentry-managewiki-delete": "$1 slettet wikien «$4»",
+	"logentry-managewiki-delete": "$1 {{GENDER:$2|slettet}} wikien \"$4\"",
 	"logentry-managewiki-delete-group": "$1 slettet gruppa $3",
 	"logentry-managewiki-lock": "$1 låste wikien «$4»",
 	"logentry-managewiki-namespaces": "$1 endret navnerommet «$5» for wikien «$4»",
@@ -82,6 +83,9 @@
 	"managewiki-namespaces-create": "Opprett nytt navnerom",
 	"managewiki-namespaces-create-submit": "Opprett navnerom",
 	"managewiki-namespaces-select": "Velg et navnerom fra lista nedenfor og trykk på send",
+	"managewiki-nav-core": "Kjerne",
+	"managewiki-nav-extensions": "Utvidelser",
+	"managewiki-nav-permissions": "Tillatelser",
 	"managewiki-ns-invalidid": "Navneroms-ID-er må være heltall og partall for å redigere via ManageWiki.",
 	"managewiki-permissions-addall": "Kan legge til andre",
 	"managewiki-permissions-addself": "Kan legge til seg selv",

@@ -4,6 +4,7 @@
 			"Ajeje Brazorf",
 			"Alien333",
 			"Alno",
+			"Chpol",
 			"Crochet.david",
 			"DSwissK",
 			"Derugon",
@@ -39,6 +40,7 @@
 	"action-managewiki-extensions": "activer et désactiver les extensions pour ce wiki",
 	"action-managewiki-namespaces": "créer, supprimer et gérer les espaces de noms pour ce wiki",
 	"action-managewiki-permissions": "créer, supprimer et gérer des groupes d'utilisateurs sur ce wiki",
+	"action-managewiki-privacy": "modifier à distance l'état privé de ce wiki",
 	"action-managewiki-restricted": "gérer les paramètres restreints du wiki",
 	"action-managewiki-settings": "gérer les paramètres avancés de ce wiki",
 	"apihelp-modifyserver-example": "Modifier le nom du serveur d’un wiki.",
@@ -255,6 +257,7 @@
 	"right-managewiki-extensions": "Activer et désactiver les extensions pour ce wiki",
 	"right-managewiki-namespaces": "Créer, supprimer et gérer les espaces de noms pour ce wiki",
 	"right-managewiki-permissions": "Créer, supprimer et gérer des groupes d'utilisateurs sur ce wiki",
+	"right-managewiki-privacy": "Modifier à distance l'état privé de ce wiki",
 	"right-managewiki-restricted": "Gérer les paramètres restreints du wiki",
 	"right-managewiki-settings": "Gérer les paramètres avancés de ce wiki",
 	"settings-other": "Autre"
