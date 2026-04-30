@@ -9,6 +9,7 @@
 			"MemphisA5",
 			"PlavorSeol",
 			"Revi",
+			"Tensama0415",
 			"Void",
 			"YeBoy371",
 			"Ykhwong",
@@ -163,7 +164,7 @@
 	"permissions-delete-checkbox": "이 사용자 그룹을 삭제하시겠습니까?",
 	"permissions-group": "그룹 할당",
 	"permissions-unassigned": "부여되지 않은 권한",
-	"right-managewiki-editdefault": "기본 그룹 권한 관리",
+	"right-managewiki-editdefault": "팜 전역 기본 그룹 권한 관리",
 	"right-managewiki-restricted": "제한된 위키 설정 관리",
 	"settings-other": "기타"
 }
