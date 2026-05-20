@@ -81,6 +81,8 @@
 	"managewiki-error-requirements-disabled": "The extension \"$1\" cannot be disabled because you are missing the required permissions.",
 	"managewiki-error-requirements-enabled": "The extension \"$1\" cannot be enabled because it fails to meet its requirements.",
 	"managewiki-extension-name": "[$1 $2]",
+	"managewiki-extension-oneway-disable": "<strong>One-way change:</strong> once disabled, this extension can only be enabled again by users with the {{PLURAL:$2|right|rights}} $1.",
+	"managewiki-extension-oneway-enable": "<strong>One-way change:</strong> once enabled, this extension can only be disabled by users with the {{PLURAL:$2|right|rights}} $1.",
 	"managewiki-extension-settings": "Manage available configuration options for this extension",
 	"managewiki-extensionname": "ManageWiki",
 	"managewiki-header-core": "You can manage this wiki's core settings (such as the name and language) from this panel. Greyed out options may only be changed by farm operators. Once done, click 'Save' and your preferences will reflect in a few seconds.\n\nYou may manage additional settings such as logo and more at [[Special:ManageWiki/settings]].",

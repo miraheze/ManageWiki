@@ -52,6 +52,11 @@ class Requirements {
 			return true;
 		}
 
+		// Sometimes an empty array is passed because there are no requirements.
+		if ( $data === [] ) {
+			return true;
+		}
+
 		$authority = RequestContext::getMain()->getAuthority();
 		return $authority->isAllowedAll( ...$data );
 	}
