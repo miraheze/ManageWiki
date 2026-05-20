@@ -25,6 +25,7 @@ use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\Helpers\Utils\PermissionUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Miraheze\ManageWiki\ICoreModule;
 use Miraheze\ManageWiki\Traits\ConfigHelperTrait;
@@ -353,14 +354,31 @@ class FormFactoryBuilder {
 			$help = [];
 			$requirementsCheck = true;
 			if ( $ext['requires'] ) {
+				$extRequirements = $ext['requires'];
+				// Permissions required to toggle the extension can depend on whether it is currently enabled.
+				$isCurrentlyEnabled = in_array( $name, $extList, true );
+				$perms = PermissionUtils::processPermissionRequirements(
+					$extRequirements['permissions'],
+					// If the extension is enabled, perform permission check for disabling it.
+					// If the extension is disabled, perform permission check for enabling it.
+					!$isCurrentlyEnabled,
+				);
+				if ( $perms !== [] ) {
+					$extRequirements['permissions'] = $perms;
+				} else {
+					unset( $extRequirements['permissions'] );
+				}
+
 				$requirementsCheck = $mwRequirements->check(
 					// Don't check for extension requirements as we don't want
 					// to disable the field, we use disable-if for that.
-					array_diff_key( $ext['requires'], [ 'extensions' => true ] ),
+					array_diff_key( $extRequirements, [ 'extensions' => true ] ),
 					$extList
 				);
 
-				$help[] = $this->buildRequires( $context, $ext['requires'] ) . "\n";
+				if ( $extRequirements !== [] ) {
+					$help[] = $this->buildRequires( $context, $extRequirements ) . "\n";
+				}
 			}
 
 			if ( $ext['conflicts'] ?? false ) {
