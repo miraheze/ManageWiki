@@ -30,7 +30,12 @@ class MWScriptJob extends Job {
 
 	/** @inheritDoc */
 	public function run(): true {
-		$limits = [ 'memory' => 0, 'filesize' => 0 ];
+		$limits = [
+			'memory' => 0,
+			'filesize' => 0,
+			'time' => 3600,
+			'walltime' => 3600,
+		];
 		foreach ( $this->data as $script => $options ) {
 			$arguments = [ '--wiki', $this->dbname ];
 			$repeatWith = [];
