@@ -8,6 +8,7 @@ use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\Helpers\Utils\PermissionUtils;
 use Miraheze\ManageWiki\IModule;
 use Psr\Log\LoggerInterface;
 use function array_column;
@@ -212,6 +213,13 @@ class ExtensionsModule implements IModule {
 			// we don't need to check for permissions.
 			if ( !isset( $this->changes[$name] ) ) {
 				unset( $requirements['permissions'] );
+			} else {
+				$perms = $requirements['permissions'] ?? [];
+				$perms = array_merge(
+					$perms,
+					$perms['enable'] ?? []
+				);
+				$requirements['permissions'] = $perms;
 			}
 
 			// Now we need to check if we fulfill the requirements to enable this extension.
@@ -290,7 +298,10 @@ class ExtensionsModule implements IModule {
 
 		foreach ( $this->removedExtensions as $config ) {
 			$requirementsCheck = true;
-			$permissionRequirements = $config['requires']['permissions'] ?? [];
+			$permissionRequirements = PermissionUtils::processPermissionRequirements(
+				$config['requires']['permissions'],
+				false
+			);
 			if ( $permissionRequirements !== [] ) {
 				$requirementsCheck = $mwRequirements->check(
 					// We only need to check for permissions when an
