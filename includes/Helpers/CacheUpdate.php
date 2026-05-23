@@ -53,18 +53,16 @@ class CacheUpdate {
 
 		$baseReq = [
 			'method' => 'PURGE',
-			'url' => $url,
 			'headers' => [
 				'Host' => $urlHost,
 				'Connection' => 'Keep-Alive',
-				'Proxy-Connection' => 'Keep-Alive',
 				'User-Agent' => 'ManageWiki extension',
 			],
 		];
 
 		$reqs = [];
 		foreach ( $servers as $server ) {
-			$reqs[] = ( $baseReq + [ 'proxy' => $server ] );
+			$reqs[] = ( $baseReq + [ 'url' => $server . $urlInfo['path'] ] );
 		}
 
 		$http = $this->httpRequestFactory->createMultiClient( [
