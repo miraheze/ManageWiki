@@ -104,6 +104,7 @@
 	"managewiki-label-goto": "Go to Special:ManageWiki",
 	"managewiki-label-inactive": "Inactive",
 	"managewiki-label-inactive-exempt": "Exempt from inactivity",
+	"managewiki-label-inactive-exempt-expiry": "Select the expiry for this exemption from inactivity.",
 	"managewiki-label-inactive-exempt-reason": "Select the reason for this exemption from inactivity.",
 	"managewiki-label-language": "Language",
 	"managewiki-label-lockwiki": "Lock this wiki's settings?",
