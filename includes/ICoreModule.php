@@ -30,6 +30,10 @@ interface ICoreModule extends IModule {
 
 	public function getInactiveExemptReason(): ?string;
 
+	public function setInactiveExemptExpiry( string $expiry ): void;
+
+	public function getInactiveExemptExpiry(): ?string;
+
 	public function isPrivate(): bool;
 
 	public function markPrivate(): void;
@@ -91,4 +95,6 @@ interface ICoreModule extends IModule {
 	public function getDatabaseClustersInactive(): array;
 
 	public function getInactiveExemptReasonOptions(): array;
+
+	public function getInactiveExemptExpiryOptions(): array;
 }

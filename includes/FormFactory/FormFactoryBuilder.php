@@ -211,6 +211,15 @@ class FormFactoryBuilder {
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 				'options' => $mwCore->getInactiveExemptReasonOptions(),
 			],
+			'inactive-exempt-expiry' => [
+				'if' => $mwCore->isEnabled( 'inactive-wikis' ) &&
+					$mwCore->getInactiveExemptExpiryOptions(),
+				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
+				'type' => 'selectorother',
+				'default' => $mwCore->getInactiveExemptExpiry() ?? 'indefinite',
+				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
+				'options' => $mwCore->getInactiveExemptExpiryOptions(),
+			],
 			'server' => [
 				'if' => $mwCore->isEnabled( 'server' ),
 				'type' => 'text',
@@ -1237,6 +1246,11 @@ class FormFactoryBuilder {
 				$newInactiveExemptReason = $formData['inactive-exempt-reason'] ?? false;
 				if ( $newInactiveExemptReason && $newInactiveExemptReason !== $mwCore->getInactiveExemptReason() ) {
 					$mwCore->setInactiveExemptReason( $formData['inactive-exempt-reason'] );
+				}
+
+				$newInactiveExemptExpiry = $formData['inactive-exempt-expiry'] ?? false;
+				if ( $newInactiveExemptExpiry && $newInactiveExemptExpiry !== $mwCore->getInactiveExemptExpiry() ) {
+					$mwCore->setInactiveExemptExpiry( $formData['inactive-exempt-expiry'] );
 				}
 			}
 		}

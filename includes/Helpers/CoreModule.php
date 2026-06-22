@@ -114,6 +114,20 @@ class CoreModule implements ICoreModule {
 		return null;
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param string $expiry @phan-unused-param
+	 */
+	public function setInactiveExemptExpiry( string $expiry ): void {
+		// Not implemented
+	}
+
+	/** @inheritDoc */
+	public function getInactiveExemptExpiry(): ?string {
+		// Not implemented
+		return null;
+	}
+
 	/** @inheritDoc */
 	public function isPrivate(): bool {
 		// Not implemented
@@ -292,6 +306,12 @@ class CoreModule implements ICoreModule {
 
 	/** @inheritDoc */
 	public function getInactiveExemptReasonOptions(): array {
+		// Not implemented
+		return [];
+	}
+
+	/** @inheritDoc */
+	public function getInactiveExemptExpiryOptions(): array {
 		// Not implemented
 		return [];
 	}
