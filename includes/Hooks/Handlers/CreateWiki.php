@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types = 1 );
+
 namespace Miraheze\ManageWiki\Hooks\Handlers;
 
 use MediaWiki\Config\Config;

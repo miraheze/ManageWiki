@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types = 1 );
+
 // phpcs:disable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
 namespace Miraheze\ManageWiki;
 
