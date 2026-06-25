@@ -3,6 +3,7 @@
 		"authors": [
 			"Adriana Lioni",
 			"Bartomelow",
+			"EGobi",
 			"EVinente",
 			"Eduardo Addad de Oliveira",
 			"Eduardoaddad",
@@ -169,7 +170,7 @@
 	"managewikidefaults-resetgroups": "Redefinir todos os grupos para o padrão",
 	"managewikidefaults-view": "Ver configurações padrão para novas wikis",
 	"managewikiextensions": "Gerenciar extensões wiki",
-	"managewikinamespaces": "Gerenciar um namespace de wiki",
+	"managewikinamespaces": "Gerenciar os espaços nominais de uma wiki",
 	"managewikipermissions": "Gerenciar permissões de uma wiki",
 	"managewikisettings": "Gerenciar configurações adicionais desta wiki",
 	"namespaces-aliases": "Adicione todos os espaços nominais não definidos que devem redirecionar para este. ($1)",
