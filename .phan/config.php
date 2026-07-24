@@ -52,7 +52,7 @@ $cfg['plugins'] = array_merge( $cfg['plugins'], [
 	'StrictLiteralComparisonPlugin',
 	'SuspiciousParamOrderPlugin',
 	'UnknownClassElementAccessPlugin',
-	// 'UnknownElementTypePlugin',
+	'UnknownElementTypePlugin',
 	'UnreachableCodePlugin',
 	'UnsafeCodePlugin',
 	'UseReturnValuePlugin',
