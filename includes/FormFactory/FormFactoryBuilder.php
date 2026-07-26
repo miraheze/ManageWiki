@@ -196,7 +196,7 @@ class FormFactoryBuilder {
 				'hide-if' => [ '!==', 'closed', '1' ],
 				'type' => 'selectorother',
 				'default' => $mwCore->getClosedReason(),
-				'access' => !$ceMW,
+				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 				'options' => $mwCore->getClosedReasonOptions(),
 			],
 			'inactive' => [
