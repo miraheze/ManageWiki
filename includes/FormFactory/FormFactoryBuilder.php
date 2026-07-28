@@ -190,15 +190,6 @@ class FormFactoryBuilder {
 				'default' => $mwCore->isClosed(),
 				'access' => !$ceMW,
 			],
-			'closed-reason' => [
-				'if' => $mwCore->isEnabled( 'closed-wikis' ) &&
-					$mwCore->getClosedReasonOptions(),
-				'hide-if' => [ '!==', 'closed', '1' ],
-				'type' => 'selectorother',
-				'default' => $mwCore->getClosedReason(),
-				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
-				'options' => $mwCore->getClosedReasonOptions(),
-			],
 			'inactive' => [
 				'if' => $mwCore->isEnabled( 'inactive-wikis' ),
 				'type' => 'check',
@@ -1220,9 +1211,6 @@ class FormFactoryBuilder {
 
 			if ( $newClosed && $closed !== $newClosed ) {
 				$mwCore->markClosed();
-				if ( $mwCore->getClosedReasonOptions() ) {
-					$mwCore->setClosedReason( $formData['closed-reason'] ?? '' );
-				}
 			} elseif ( !$newClosed && $closed !== $newClosed ) {
 				$mwCore->markActive();
 			}

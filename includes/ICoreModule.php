@@ -40,10 +40,6 @@ interface ICoreModule extends IModule {
 
 	public function markClosed(): void;
 
-	public function setClosedReason( string $reason ): void;
-
-	public function getClosedReason(): ?string;
-
 	public function isDeleted(): bool;
 
 	public function delete(): void;
@@ -95,6 +91,4 @@ interface ICoreModule extends IModule {
 	public function getDatabaseClustersInactive(): array;
 
 	public function getInactiveExemptReasonOptions(): array;
-
-	public function getClosedReasonOptions(): array;
 }
