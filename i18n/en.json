@@ -96,7 +96,7 @@
 	"managewiki-invalid-database": "$1 is an invalid database. Given by <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Category",
 	"managewiki-label-closed": "Closed",
-	"managewiki-label-closed-reason": "Select the reason this wiki was closed.",
+	"managewiki-label-closed-reason": "Select the reason for closing this wiki.",
 	"managewiki-label-creationdate": "Creation date",
 	"managewiki-label-dbcluster": "Database cluster",
 	"managewiki-label-dbname": "Database name",
