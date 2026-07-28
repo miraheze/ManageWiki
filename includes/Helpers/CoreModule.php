@@ -141,6 +141,20 @@ class CoreModule implements ICoreModule {
 		// Not implemented
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param string $reason @phan-unused-param
+	 */
+	public function setClosedReason( string $reason ): void {
+		// Not implemented
+	}
+
+	/** @inheritDoc */
+	public function getClosedReason(): ?string {
+		// Not implemented
+		return null;
+	}
+
 	/** @inheritDoc */
 	public function isDeleted(): bool {
 		// Not implemented
@@ -292,6 +306,12 @@ class CoreModule implements ICoreModule {
 
 	/** @inheritDoc */
 	public function getInactiveExemptReasonOptions(): array {
+		// Not implemented
+		return [];
+	}
+
+	/** @inheritDoc */
+	public function getClosedReasonOptions(): array {
 		// Not implemented
 		return [];
 	}
