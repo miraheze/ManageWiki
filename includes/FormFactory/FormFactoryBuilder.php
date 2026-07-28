@@ -194,7 +194,7 @@ class FormFactoryBuilder {
 				'if' => $mwCore->isEnabled( 'closed-wikis' ) &&
 					$mwCore->getClosedReasonOptions(),
 				'hide-if' => [ '!==', 'closed', '1' ],
-				'type' => 'selectorother',
+				'type' => 'select',
 				'default' => $mwCore->getClosedReason(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 				'options' => $mwCore->getClosedReasonOptions(),
