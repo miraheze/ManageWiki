@@ -46,7 +46,9 @@ class CreateWiki implements
 		) {
 			$mwExtensions = $this->moduleFactory->extensions( $dbname );
 			$mwExtensions->add( $this->config->get( ConfigNames::ExtensionsDefault ) );
-			$mwExtensions->commit();
+			// At this point, the wiki is only partially created, and its database cluster is not known to ManageWiki,
+			// so we cannot run any SQL on it. See T15460.
+			$mwExtensions->commit( skipSql: true );
 		}
 
 		if ( $this->moduleFactory->isEnabled( 'namespaces' ) ) {

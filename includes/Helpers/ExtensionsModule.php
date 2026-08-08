@@ -179,7 +179,7 @@ class ExtensionsModule implements IModule {
 		return $this->logParams;
 	}
 
-	public function commit(): void {
+	public function commit( bool $skipSql = false ): void {
 		// We use this to check for conflicts only for
 		// extensions we are currently enabling.
 		// TODO: can we just use liveExtensions for this?
@@ -267,6 +267,10 @@ class ExtensionsModule implements IModule {
 					);
 
 					unset( $config['install']['mwscript'] );
+				}
+
+				if ( $skipSql ) {
+					unset( $config['install']['sql'] );
 				}
 
 				$installResult = $mwInstaller->execute(
