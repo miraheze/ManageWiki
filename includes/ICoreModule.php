@@ -101,6 +101,6 @@ interface ICoreModule extends IModule {
 	public function getInactiveExemptReasonOptions(): array;
 
 	public function getInactiveExemptExpiryOptions(): array;
-  
+
 	public function getClosedReasonOptions(): array;
 }
