@@ -124,7 +124,7 @@
 	"managewiki-permissions-unassigned": "Вказані нижче права користувачів наразі не призначені цій групі користувачів:",
 	"managewiki-placeholder-reason": "Причина цієї зміни…",
 	"managewiki-requires": "<em><strong>[Вимагає]</strong> $1</em>",
-	"managewiki-review": "Огляд",
+	"managewiki-review": "Перевірка",
 	"managewiki-review-title": "Переглянути зміни",
 	"managewiki-save": "Зберегти",
 	"managewiki-sidebar-header": "Адміністрування",

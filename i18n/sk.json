@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"KormiSK",
 			"Wizzard",
 			"Yardom78"
 		]
@@ -44,6 +45,7 @@
 	"log-action-filter-managewiki-undelete": "Obnovenia wiki",
 	"log-action-filter-managewiki-unlock": "ManageWiki odomknutie",
 	"logentry-managewiki-cache-reset": "$1 {{GENDER:$2|obnovil|obnovila|obnovilo}} vyrovnávaciu pamäť ManageWiki pre „$4\"",
+	"logentry-managewiki-closed": "$1 {{GENDER:$2|uzatvoril|uzatvorila}} wiki \"$4\", dôvod: $5",
 	"logentry-managewiki-delete": "$1 {{GENDER:$2|vymazal|vymazala}} wiki „$4“",
 	"logentry-managewiki-delete-group": "$1 {{GENDER:$2|vymazal|vymazala}} skupinu „$3“",
 	"logentry-managewiki-lock": "$1 {{GENDER:$2|uzamkol|uzamkla}} wiki „$4“",
@@ -90,6 +92,7 @@
 	"managewiki-invalid-database": "$1 je neplatná databáza. Poskytnuté ako <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Kategória",
 	"managewiki-label-closed": "Zatvorená",
+	"managewiki-label-closed-reason": "Zvoľte dôvod na uzavretie tejto wiki.",
 	"managewiki-label-creationdate": "Dátum vytvorenia",
 	"managewiki-label-dbcluster": "Databázový klaster",
 	"managewiki-label-dbname": "Názov databázy",
