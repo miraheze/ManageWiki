@@ -11,6 +11,7 @@
 			"Luz38",
 			"PixDeVl",
 			"SaldırganSincap",
+			"User3412",
 			"YuriNikolai"
 		]
 	},
@@ -145,6 +146,7 @@
 	"managewiki-permissions-label-group-name": "O nome desse grupo:",
 	"managewiki-permissions-removeall": "Pode remover dos outros",
 	"managewiki-permissions-removeself": "Pode remover de si mesmo",
+	"managewiki-permissions-rename-checkbox": "Renomear esse grupo de usuário?",
 	"managewiki-permissions-resetgroups-title": "Redefinir o ManageWiki",
 	"managewiki-permissions-select": "Selecione um grupo",
 	"managewiki-permissions-unassigned": "Os direitos de usuário abaixo não estão atualmente atribuídos a este grupo de usuários:",

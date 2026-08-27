@@ -67,7 +67,7 @@
 	"log-action-filter-managewiki-undelete": "ウィキの復元",
 	"log-action-filter-managewiki-unlock": "ManageWikiロック解除",
 	"logentry-managewiki-cache-reset": "$1が \"$4\" のManageWikiキャッシュを{{GENDER:$2|リフレッシュ}}しました",
-	"logentry-managewiki-closed": "$1 がウィキ「$4」を{{GENDER:$2|閉鎖しました}}、理由: $5",
+	"logentry-managewiki-closed": "$1 がウィキ「$4」を{{GENDER:$2|閉鎖しました}} 理由: $5",
 	"logentry-managewiki-delete": "$1 がウィキ「$4」を{{GENDER:$2|削除しました}}",
 	"logentry-managewiki-delete-group": "$1 がグループ「$3」を{{GENDER:$2|削除しました}}",
 	"logentry-managewiki-lock": "$1 がウィキ「$4」を{{GENDER:$2|ロックしました}}",

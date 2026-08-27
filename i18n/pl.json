@@ -73,7 +73,7 @@
 	"managewiki-error-missingpermission": "Nie można usunąć uprawnienia „managewiki\n-permissions” z tej grupy, ponieważ żadna inna grupa go nie posiada. Usunięcie go spowodowałoby zablokowanie dostępu do zarządzania wiki.",
 	"managewiki-error-nopermission": "Możesz przeglądać konfigurację tej wiki, ale nie posiadasz uprawnień do jej edytowania.",
 	"managewiki-error-nopermission-remote": "Zdalnie przeglądasz konfigurację innej wiki. Jeśli posiadasz uprawnienia operatora tej wiki, przejdź d niej, aby zmodyfikować jej konfigurację. Nie można edytować jej tutaj.",
-	"managewiki-error-requirements-disabled": "Rozszerzenie „$1” nie może zostać wyłączone, ponieważ brakuje ci wymaganych uprawnień.",
+	"managewiki-error-requirements-disabled": "Rozszerzenie „$1” nie może zostać wyłączone, ponieważ brakuje Ci wymaganych uprawnień.",
 	"managewiki-error-requirements-enabled": "Rozszerzenie „$1” nie może zostać włączone, ponieważ nie można spełnić jego wymagań.",
 	"managewiki-extension-settings": "Zarządzaj dostępnymi opcjami konfiguracyjnymi tego rozszerzenia",
 	"managewiki-extensionname": "Zarządzanie wiki",
