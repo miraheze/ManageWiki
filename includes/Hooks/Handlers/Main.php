@@ -7,8 +7,10 @@ use MediaWiki\Content\FallbackContentHandler;
 use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
 use MediaWiki\Hook\SetupAfterCacheHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
+use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
+use MediaWiki\Skin\SkinTemplate;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
@@ -23,8 +25,17 @@ class Main implements
 	ContentHandlerForModelIDHook,
 	GetPreferencesHook,
 	SetupAfterCacheHook,
-	SidebarBeforeOutputHook
+	SidebarBeforeOutputHook,
+	SkinTemplateNavigation__UniversalHook
 {
+
+	private const MODULE_ICONS = [
+		'core' => 'labFlask',
+		'extensions' => 'edit',
+		'namespaces' => 'listBullet',
+		'permissions' => 'userGroup',
+		'settings' => 'settings',
+	];
 
 	public function __construct(
 		private readonly Config $config,
@@ -98,6 +109,27 @@ class Main implements
 			$sidebarLinks = $sidebar['managewiki-sidebar-header'];
 			$this->hookRunner->onManageWikiAfterSidebarLinks( $skin, $sidebarLinks );
 			$sidebar['managewiki-sidebar-header'] = $sidebarLinks;
+		}
+	}
+
+	/** @inheritDoc */
+	public function onSkinTemplateNavigation__Universal( $sktemplate, &$links ): void {
+        // only on citizen
+		if ( $sktemplate->getSkinName() !== 'citizen' ) {
+			return;
+		}
+
+		if ( !isset( $links['associated-pages'] ) || $links['associated-pages'] === [] ) {
+			return;
+		}
+
+		foreach ( self::MODULE_ICONS as $module => $icon ) {
+			$href = SpecialPage::getTitleFor( 'ManageWiki', $module )->getLocalURL();
+			foreach ( $links['associated-pages'] as $key => $link ) {
+				if ( ( $link['href'] ?? null ) === $href ) {
+					$links['associated-pages'][$key]['icon'] ??= $icon;
+				}
+			}
 		}
 	}
 }
