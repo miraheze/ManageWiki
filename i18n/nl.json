@@ -107,6 +107,7 @@
 	"managewiki-label-goto": "Ga naar Special:ManageWiki",
 	"managewiki-label-inactive": "Inactief",
 	"managewiki-label-inactive-exempt": "Vrijgesteld voor inactiviteit",
+	"managewiki-label-inactive-exempt-expiry": "Selecteer de vervaldatum voor deze vrijstelling van het inactiviteitsbeleid.",
 	"managewiki-label-inactive-exempt-reason": "Selecteer de reden voor deze vrijstelling van inactiviteit.",
 	"managewiki-label-language": "Taal",
 	"managewiki-label-lockwiki": "De instellingen van deze wiki vergrendelen?",

@@ -47,6 +47,7 @@
 	"log-action-filter-managewiki-undelete": "Przywrócenia usuniętych wiki",
 	"log-action-filter-managewiki-unlock": "Odblokowania ManageWiki",
 	"logentry-managewiki-cache-reset": "{{GENDER:$2|$1 odświeżył|$1 odświeżyła|$1 odświeżył(a)}} pamięć podręczną ManageWiki dla „$4”",
+	"logentry-managewiki-closed": "$1 {{GENDER:$2|zamknął|zamknęła|zamknął(-ęła)}} wiki „$4” z powodu: „$5”",
 	"logentry-managewiki-delete": "{{GENDER:$2|$1 usunął|$1 usunęła|$1 usunął(-ęła)}} wiki „$4”",
 	"logentry-managewiki-delete-group": "{{GENDER:$2|$1 usunął|$1 usunęła|$1 usunął(-ęła)}} grupę „$3”",
 	"logentry-managewiki-lock": "{{GENDER:$2|$1 zablokował|$1 zablokowała|$1 zablokował(a)}} wiki „$4”",

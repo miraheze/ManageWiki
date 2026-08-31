@@ -98,6 +98,7 @@
 	"managewiki-label-goto": "Ugu dub Special:ManageWiki",
 	"managewiki-label-inactive": "Aan firfircoonayn",
 	"managewiki-label-inactive-exempt": "Ka dhaaf firfircooni la'aanta",
+	"managewiki-label-inactive-exempt-expiry": "Dooro taariikhda uu dhacayo ka dhaafitaankan dhaqdhaqaaq la'aanta.",
 	"managewiki-label-inactive-exempt-reason": "Dooro sababta looga dhaafayo firfircooni la'aanta.",
 	"managewiki-label-language": "Luuqada",
 	"managewiki-label-lockwiki": "Quful dejimaha wikigan?",
