@@ -190,6 +190,7 @@
 	"managewiki-review-title": "Review Changes",
 	"managewiki-review-toggled": "<strong>$1 ($2)</strong> was <em>$3</em>",
 	"managewiki-save": "Save",
+	"managewiki-save-warnings-title": "Confirm changes",
 	"managewiki-search": "Search ManageWiki",
 	"managewiki-search-noresults": "No results",
 	"managewiki-setting-label": "$1 $2",

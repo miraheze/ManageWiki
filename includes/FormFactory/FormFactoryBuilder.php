@@ -412,7 +412,7 @@ class FormFactoryBuilder {
 					)->parse();
 					$notice = Html::rawElement(
 						'span',
-						[ 'class' => 'ext-managewiki-oneway-notice' ],
+						[ 'class' => 'ext-managewiki-save-warning' ],
 						$noticeMessage
 					);
 					array_unshift(
