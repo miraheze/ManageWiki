@@ -5,6 +5,7 @@ namespace Miraheze\ManageWiki\FormFactory;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Exception\ErrorPageError;
+use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\RawMessage;
 use MediaWiki\Linker\LinkRenderer;
@@ -25,6 +26,7 @@ use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\Helpers\Utils\PermissionUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Miraheze\ManageWiki\ICoreModule;
 use Miraheze\ManageWiki\Traits\ConfigHelperTrait;
@@ -42,6 +44,7 @@ use function array_map;
 use function array_merge;
 use function array_slice;
 use function array_unique;
+use function array_unshift;
 use function count;
 use function explode;
 use function glob;
@@ -371,14 +374,61 @@ class FormFactoryBuilder {
 			$help = [];
 			$requirementsCheck = true;
 			if ( $ext['requires'] ) {
+				$extRequirements = $ext['requires'];
+				// Permissions required to toggle the extension can depend on whether it is currently enabled.
+				$isCurrentlyEnabled = in_array( $name, $extList, true );
+				$perms = PermissionUtils::processPermissionRequirements(
+					$extRequirements['permissions'] ?? null,
+					// If the extension is enabled, perform permission check for disabling it.
+					// If the extension is disabled, perform permission check for enabling it.
+					!$isCurrentlyEnabled,
+				);
+				if ( $perms !== [] ) {
+					$extRequirements['permissions'] = $perms;
+				} else {
+					unset( $extRequirements['permissions'] );
+				}
+
 				$requirementsCheck = $mwRequirements->check(
 					// Don't check for extension requirements as we don't want
 					// to disable the field, we use disable-if for that.
-					array_diff_key( $ext['requires'], [ 'extensions' => true ] ),
+					array_diff_key( $extRequirements, [ 'extensions' => true ] ),
 					$extList
 				);
 
-				$help[] = $this->buildRequires( $context, $ext['requires'] ) . "\n";
+				if ( $extRequirements !== [] ) {
+					$help[] = $this->buildRequires( $context, $extRequirements ) . "\n";
+				}
+
+				// Check if the user is able to reverse this change.
+				// Same check as above except $isCurrentlyEnabled is reversed.
+				$reversePerms = PermissionUtils::processPermissionRequirements(
+					$ext['requires']['permissions'] ?? null,
+					$isCurrentlyEnabled
+				);
+
+				// If this extension can be toggled but this operation cannot be reversed, then warn.
+				if (
+					$ceMW && $requirementsCheck && $reversePerms !== [] &&
+					!$context->getAuthority()->isAllowedAll( ...$reversePerms )
+				) {
+					$noticeMessage = $context->msg(
+						$isCurrentlyEnabled ?
+							'managewiki-extension-oneway-disable' :
+							'managewiki-extension-oneway-enable',
+						$context->getLanguage()->listToText( $reversePerms ),
+						count( $reversePerms )
+					)->parse();
+					$notice = Html::rawElement(
+						'span',
+						[ 'class' => 'ext-managewiki-save-warning' ],
+						$noticeMessage
+					);
+					array_unshift(
+						$help,
+						$notice . "\n",
+					);
+				}
 			}
 
 			if ( $ext['conflicts'] ?? false ) {
