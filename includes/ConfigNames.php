@@ -13,6 +13,14 @@ class ConfigNames {
 
 	public const string CacheType = 'ManageWikiCacheType';
 
+	public const string CacheUpdateDebugHeader = 'ManageWikiCacheUpdateDebugHeader';
+
+	public const string CacheUpdateDomain = 'ManageWikiCacheUpdateDomain';
+
+	public const string CacheUpdateKey = 'ManageWikiCacheUpdateKey';
+
+	public const string CacheUpdateRestEnabled = 'ManageWikiCacheUpdateRestEnabled';
+
 	public const string Extensions = 'ManageWikiExtensions';
 
 	public const string ExtensionsDefault = 'ManageWikiExtensionsDefault';
