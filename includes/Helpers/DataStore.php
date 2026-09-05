@@ -106,6 +106,7 @@ class DataStore {
 			);
 
 			$this->cacheUpdate->queueJob( $this->dbname );
+			return;
 		}
 
 		$cacheArray = [
