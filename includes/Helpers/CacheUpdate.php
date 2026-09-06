@@ -21,14 +21,17 @@ class CacheUpdate {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
 
-	public function queueJob( string $dbname ): void {
+	public function queueJob( string $action, string $dbname ): void {
 		if ( $this->options->get( ConfigNames::Servers ) === [] ) {
 			// No servers configured.
 			return;
 		}
 
 		$this->jobQueueGroupFactory->makeJobQueueGroup( $dbname )->push(
-			new JobSpecification( CacheUpdateJob::JOB_NAME, [ 'dbname' => $dbname ] )
+			new JobSpecification( CacheUpdateJob::JOB_NAME, [
+				'action' => $action,
+				'dbname' => $dbname,
+			] )
 		);
 	}
 }
