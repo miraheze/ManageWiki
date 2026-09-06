@@ -4,24 +4,26 @@ namespace Miraheze\ManageWiki\Rest;
 
 use MediaWiki\Rest\Response;
 use MediaWiki\Rest\SimpleHandler;
-use Miraheze\ManageWiki\Exceptions\MissingWikiError;
-use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
+use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\Message\MessageValue;
 use Wikimedia\ParamValidator\ParamValidator;
 
 /**
- * Regenerates the wiki data cache file on the server that receives the request.
- * POST /managewiki/v0/cache/reset/{dbname}
+ * Fires the ManageWikiResetDatabaseLists hook on the server that receives
+ * the request. ManageWiki doesn't know what a database list even is, or
+ * where it lives, whatever extension manages wiki creation implements the
+ * hook and does the actual regeneration.
+ * POST /managewiki/v0/cache/reset-database-lists
  */
-class ResetCacheHandler extends SimpleHandler {
+class ResetDatabaseListsHandler extends SimpleHandler {
 
 	public function __construct(
 		private readonly CacheRestUtils $restUtils,
-		private readonly DataStoreFactory $dataStoreFactory,
+		private readonly HookRunner $hookRunner,
 	) {
 	}
 
-	public function run( string $dbname ): Response {
+	public function run(): Response {
 		if ( !$this->restUtils->isRestEnabled() ) {
 			return $this->getResponseFactory()->createLocalizedHttpError(
 				404, new MessageValue( 'managewiki-rest-disabled' )
@@ -29,7 +31,7 @@ class ResetCacheHandler extends SimpleHandler {
 		}
 
 		$clientIp = $this->getRequest()->getServerParams()['REMOTE_ADDR'] ?? '';
-		if ( $this->restUtils->isThrottled( 'reset', $clientIp ) ) {
+		if ( $this->restUtils->isThrottled( 'reset-database-lists', $clientIp ) ) {
 			return $this->getResponseFactory()->createLocalizedHttpError(
 				429, new MessageValue( 'managewiki-rest-throttled' )
 			);
@@ -43,41 +45,18 @@ class ResetCacheHandler extends SimpleHandler {
 		}
 
 		if ( !$this->restUtils->isValidKey( $key ) ) {
-			$this->restUtils->recordFailure( 'reset', $clientIp );
+			$this->restUtils->recordFailure( 'reset-database-lists', $clientIp );
 			return $this->getResponseFactory()->createLocalizedHttpError(
 				403, new MessageValue( 'managewiki-rest-invalidkey' )
 			);
 		}
 
-		if ( !$this->restUtils->isValidDbname( $dbname ) ) {
-			return $this->getResponseFactory()->createLocalizedHttpError(
-				400, new MessageValue( 'managewiki-rest-invaliddbname' )
-			);
-		}
-
-		try {
-			$this->dataStoreFactory->newInstance( $dbname )->resetWikiData( isNewChanges: false );
-		} catch ( MissingWikiError ) {
-			return $this->getResponseFactory()->createLocalizedHttpError(
-				404, new MessageValue( 'managewiki-rest-unknowndbname' )
-			);
-		}
-
+		$this->hookRunner->onManageWikiResetDatabaseLists();
 		return $this->getResponseFactory()->createNoContent();
 	}
 
 	public function needsWriteAccess(): true {
 		return true;
-	}
-
-	public function getParamSettings(): array {
-		return [
-			'dbname' => [
-				self::PARAM_SOURCE => 'path',
-				ParamValidator::PARAM_TYPE => 'string',
-				ParamValidator::PARAM_REQUIRED => true,
-			],
-		];
 	}
 
 	/** @inheritDoc */

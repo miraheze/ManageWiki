@@ -8,11 +8,8 @@ use MediaWiki\Rest\Response;
 use MediaWiki\Rest\SimpleHandler;
 use Miraheze\ManageWiki\ConfigNames;
 use Wikimedia\Message\MessageValue;
-use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\ParamValidator\ParamValidator;
 use function file_exists;
-use function hash_equals;
-use function preg_match;
 use function unlink;
 
 /**
@@ -21,25 +18,21 @@ use function unlink;
  */
 class DeleteCacheHandler extends SimpleHandler {
 
-	private const string VALID_DBNAME = '/^[a-z][a-z0-9_]{0,63}$/';
-
-	private const int MAX_ATTEMPTS = 10;
-	private const int THROTTLE_SECONDS = 60;
-
 	public function __construct(
-		private readonly BagOStuff $cache,
+		private readonly CacheRestUtils $restUtils,
 		private readonly Config $config,
 	) {
 	}
 
 	public function run( string $dbname ): Response {
-		if ( !$this->config->get( ConfigNames::CacheUpdateRestEnabled ) ) {
+		if ( !$this->restUtils->isRestEnabled() ) {
 			return $this->getResponseFactory()->createLocalizedHttpError(
 				404, new MessageValue( 'managewiki-rest-disabled' )
 			);
 		}
 
-		if ( $this->isThrottled() ) {
+		$clientIp = $this->getRequest()->getServerParams()['REMOTE_ADDR'] ?? '';
+		if ( $this->restUtils->isThrottled( 'delete', $clientIp ) ) {
 			return $this->getResponseFactory()->createLocalizedHttpError(
 				429, new MessageValue( 'managewiki-rest-throttled' )
 			);
@@ -52,16 +45,14 @@ class DeleteCacheHandler extends SimpleHandler {
 			$key = $validatedBody['key'];
 		}
 
-		$configuredKey = (string)$this->config->get( ConfigNames::CacheUpdateKey );
-
-		if ( $configuredKey === '' || !hash_equals( $configuredKey, $key ) ) {
-			$this->recordFailure();
+		if ( !$this->restUtils->isValidKey( $key ) ) {
+			$this->restUtils->recordFailure( 'delete', $clientIp );
 			return $this->getResponseFactory()->createLocalizedHttpError(
 				403, new MessageValue( 'managewiki-rest-invalidkey' )
 			);
 		}
 
-		if ( !preg_match( self::VALID_DBNAME, $dbname ) ) {
+		if ( !$this->restUtils->isValidDbname( $dbname ) ) {
 			return $this->getResponseFactory()->createLocalizedHttpError(
 				400, new MessageValue( 'managewiki-rest-invaliddbname' )
 			);
@@ -76,24 +67,6 @@ class DeleteCacheHandler extends SimpleHandler {
 		}
 
 		return $this->getResponseFactory()->createNoContent();
-	}
-
-	private function throttleKey(): string {
-		$params = $this->getRequest()->getServerParams();
-		$clientIp = $params['REMOTE_ADDR'] ?? '';
-		return $this->cache->makeGlobalKey( 'ManageWiki', 'cache-delete-attempts', $clientIp );
-	}
-
-	private function isThrottled(): bool {
-		return (int)$this->cache->get( $this->throttleKey() ) >= self::MAX_ATTEMPTS;
-	}
-
-	private function recordFailure(): void {
-		$key = $this->throttleKey();
-		$attempts = $this->cache->incrWithInit( $key, self::THROTTLE_SECONDS, 1, 1 );
-		if ( $attempts === false ) {
-			$this->cache->set( $key, 1, self::THROTTLE_SECONDS );
-		}
 	}
 
 	public function needsWriteAccess(): true {

@@ -65,8 +65,7 @@
 			"path": "/managewiki/v0/cache/reset/{dbname}",
 			"class": "Miraheze\\ManageWiki\\Rest\\ResetCacheHandler",
 			"services": [
-				"MainObjectStash",
-				"ManageWikiConfig",
+				"ManageWikiCacheRestUtils",
 				"ManageWikiDataStoreFactory"
 			]
 		},
@@ -75,8 +74,17 @@
 			"path": "/managewiki/v0/cache/delete/{dbname}",
 			"class": "Miraheze\\ManageWiki\\Rest\\DeleteCacheHandler",
 			"services": [
-				"MainObjectStash",
+				"ManageWikiCacheRestUtils",
 				"ManageWikiConfig"
+			]
+		},
+		{
+			"method": "POST",
+			"path": "/managewiki/v0/cache/reset-database-lists",
+			"class": "Miraheze\\ManageWiki\\Rest\\ResetDatabaseListsHandler",
+			"services": [
+				"ManageWikiCacheRestUtils",
+				"ManageWikiHookRunner"
 			]
 		}
 	],
@@ -216,6 +224,7 @@
 		"CreateWiki": {
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\CreateWiki",
 			"services": [
+				"ManageWikiCacheUpdate",
 				"ManageWikiConfig",
 				"ManageWikiDataStoreFactory",
 				"ManageWikiDefaultPermissions",
