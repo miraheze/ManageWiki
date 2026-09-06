@@ -100,10 +100,6 @@ class ResetCacheHandler extends SimpleHandler {
 		return true;
 	}
 
-	public function requireSafeAgainstCsrf(): true {
-		return true;
-	}
-
 	public function getParamSettings(): array {
 		return [
 			'dbname' => [
