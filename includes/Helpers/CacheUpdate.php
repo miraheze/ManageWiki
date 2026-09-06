@@ -11,7 +11,6 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Jobs\CacheUpdateJob;
 use Psr\Log\LoggerInterface;
 use function count;
-use function http_build_query;
 use function implode;
 use function in_array;
 use function json_encode;
@@ -90,7 +89,7 @@ class CacheUpdate {
 
 		$restPath = $this->options->get( MainConfigNames::RestPath );
 		$url = "https://$domain$restPath/managewiki/v0/cache/$action/$dbname";
-		$body = http_build_query( [ 'key' => $key ] );
+		$body = json_encode( [ 'key' => $key ] );
 
 		$requests = [];
 		foreach ( $servers as $server ) {
@@ -99,6 +98,7 @@ class CacheUpdate {
 				'url' => $url,
 				'body' => $body,
 				'headers' => [
+					'Content-Type' => 'application/json',
 					$debugHeader => $server,
 				],
 			];
