@@ -2,7 +2,7 @@ name: Call reusable MediaWiki tests
 
 on:
   push:
-    branches: [ main, reset-dblists ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
