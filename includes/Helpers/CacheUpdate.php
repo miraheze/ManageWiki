@@ -170,7 +170,7 @@ class CacheUpdate {
 
 		if ( !in_array( $action, [ 'delete', 'reset', 'reset-database-lists' ], true ) ) {
 			$this->logger->error(
-				'{class} can not run, action can only be delete, reset, or reset-database-lists but it was set to {action}.',
+				'{class} can not run, {action} is an invalid action.',
 				[
 					'action' => $action,
 					'class' => self::class,
