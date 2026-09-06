@@ -120,11 +120,12 @@ class CacheUpdate {
 
 		if ( $failed !== [] ) {
 			$this->logger->error(
-				'CacheUpdate::executeNow failed on {count} server(s) for {dbname}: {servers}',
+				'CacheUpdate::executeNow failed on {count} server(s) for {dbname}: {error}',
 				[
 					'count' => count( $failed ),
 					'dbname' => $dbname,
 					'servers' => implode( ', ', $failed ),
+					'error' => $requestResult,
 				]
 			);
 
