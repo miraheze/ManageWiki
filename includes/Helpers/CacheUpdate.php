@@ -62,7 +62,10 @@ class CacheUpdate {
 		$debugHeader = (string)$this->options->get( ConfigNames::CacheUpdateDebugHeader );
 
 		$restPath = $this->options->get( MainConfigNames::RestPath );
-		$url = "https://$domain$restPath/managewiki/v0/cache/$action/$dbname";
+		$url = "https://$domain$restPath/managewiki/v0/cache/$action";
+		if ( $action !== 'reset-databases' ) {
+			$url .= "/$dbname";
+		}
 
 		$body = json_encode( [ 'key' => $key ] );
 		$headers = [ 'Content-Type' => 'application/json' ];
@@ -165,9 +168,9 @@ class CacheUpdate {
 			return false;
 		}
 
-		if ( !in_array( $action, [ 'delete', 'reset' ], true ) ) {
+		if ( !in_array( $action, [ 'delete', 'reset', 'reset-databases' ], true ) ) {
 			$this->logger->error(
-				'{class} can not run, action can only be delete or reset but it was set to {action}.',
+				'{class} can not run, action can only be delete, reset, or reset-databases but it was set to {action}.',
 				[
 					'action' => $action,
 					'class' => self::class,
