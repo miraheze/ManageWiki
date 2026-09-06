@@ -99,7 +99,7 @@ class CacheUpdate {
 				'url' => $url,
 				'body' => $body,
 				'headers' => [
-					'Content-Type' => 'application/x-www-form-urlencoded',
+					'Content-Type' => 'application/json',
 					$debugHeader => $server,
 				],
 			];
