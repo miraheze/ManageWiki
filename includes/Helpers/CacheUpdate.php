@@ -103,8 +103,9 @@ class CacheUpdate {
 
 		if ( $failed !== [] ) {
 			$this->logger->error(
-				'CacheUpdate::executeNow failed on {count} server(s) for {dbname}: {servers}',
+				'{class} failed on {count} server(s) for {dbname}: {servers}',
 				[
+					'class' => self::class,
 					'count' => count( $failed ),
 					'dbname' => $dbname,
 					'servers' => implode( ', ', $failed ),
@@ -115,8 +116,11 @@ class CacheUpdate {
 		}
 
 		$this->logger->info(
-			'CacheUpdate::executeNow successful on all servers for {dbname}.',
-			[ 'dbname' => $dbname ]
+			'{class} successful on all servers for {dbname}.',
+			[
+				'class' => self::class,
+				'dbname' => $dbname,
+			]
 		);
 
 		return true;
@@ -131,7 +135,11 @@ class CacheUpdate {
 
 		if ( !$this->options->get( ConfigNames::CacheUpdateRestEnabled ) ) {
 			$this->logger->error(
-				'CacheUpdate can not run, ManageWikiCacheUpdateRestEnabled is disabled.'
+				'{class} can not run, {config} is disabled.',
+				[
+					'class' => self::class,
+					'config' => ConfigNames::CacheUpdateRestEnabled,
+				]
 			);
 
 			return false;
@@ -143,9 +151,15 @@ class CacheUpdate {
 
 		if ( $key === '' || $domain === '' || $debugHeader === '' ) {
 			$this->logger->error(
-				'CacheUpdate can not run, one of ManageWikiCacheUpdateKey, ' .
-				'ManageWikiCacheUpdateDomain, or ManageWikiCacheUpdateDebugHeader ' .
-				'is not configured.'
+				'{class} can not run, one of {keys} is not configured.',
+				[
+					'class' => self::class,
+					'keys' => implode( ', ', [
+						ConfigNames::CacheUpdateDebugHeader,
+						ConfigNames::CacheUpdateDomain,
+						ConfigNames::CacheUpdateKey,
+					] ),
+				]
 			);
 
 			return false;
@@ -153,8 +167,11 @@ class CacheUpdate {
 
 		if ( !in_array( $action, [ 'delete', 'reset' ], true ) ) {
 			$this->logger->error(
-				'CacheUpdate can not run, action can only be delete or reset but it was set to {action}.',
-				[ 'action' => $action ]
+				'{class} can not run, action can only be delete or reset but it was set to {action}.',
+				[
+					'action' => $action,
+					'class' => self::class,
+				]
 			);
 
 			return false;
