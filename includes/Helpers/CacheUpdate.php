@@ -14,6 +14,7 @@ use function count;
 use function http_build_query;
 use function implode;
 use function in_array;
+use function json_encode;
 
 class CacheUpdate {
 
@@ -125,7 +126,7 @@ class CacheUpdate {
 					'count' => count( $failed ),
 					'dbname' => $dbname,
 					'servers' => implode( ', ', $failed ),
-					'error' => $requestResult,
+					'error' => json_encode( $requestResult ),
 				]
 			);
 
