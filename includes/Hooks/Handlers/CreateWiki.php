@@ -11,7 +11,6 @@ use Miraheze\CreateWiki\Hooks\CreateWikiStatePrivateHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiStatePublicHook;
 use Miraheze\CreateWiki\Hooks\CreateWikiTablesHook;
 use Miraheze\ManageWiki\ConfigNames;
-use Miraheze\ManageWiki\Helpers\CacheUpdate;
 use Miraheze\ManageWiki\Helpers\DefaultPermissions;
 use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
@@ -28,7 +27,6 @@ class CreateWiki implements
 {
 
 	public function __construct(
-		private readonly CacheUpdate $cacheUpdate,
 		private readonly Config $config,
 		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly DefaultPermissions $defaultPermissions,
@@ -82,7 +80,6 @@ class CreateWiki implements
 	public function onCreateWikiRemoteWikiCommit( string $dbname ): void {
 		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
 		$dataStore->resetWikiData( isNewChanges: true );
-		$this->cacheUpdate->queueJob( action: 'reset-database-lists', dbname: $dbname );
 	}
 
 	/**
