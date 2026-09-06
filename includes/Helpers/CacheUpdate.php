@@ -63,7 +63,7 @@ class CacheUpdate {
 
 		$restPath = $this->options->get( MainConfigNames::RestPath );
 		$url = "https://$domain$restPath/managewiki/v0/cache/$action";
-		if ( $action !== 'reset-databases' ) {
+		if ( $action !== 'reset-database-lists' ) {
 			$url .= "/$dbname";
 		}
 
@@ -168,9 +168,9 @@ class CacheUpdate {
 			return false;
 		}
 
-		if ( !in_array( $action, [ 'delete', 'reset', 'reset-databases' ], true ) ) {
+		if ( !in_array( $action, [ 'delete', 'reset', 'reset-database-lists' ], true ) ) {
 			$this->logger->error(
-				'{class} can not run, action can only be delete, reset, or reset-databases but it was set to {action}.',
+				'{class} can not run, action can only be delete, reset, or reset-database-lists but it was set to {action}.',
 				[
 					'action' => $action,
 					'class' => self::class,
