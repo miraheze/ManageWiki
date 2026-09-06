@@ -122,19 +122,22 @@ class CacheUpdate {
 
 		if ( $failed !== [] ) {
 			$this->logger->error(
-				'CacheUpdate::executeNow failed on {count} server(s) for {dbname}: {error}',
+				'CacheUpdate::executeNow failed on {count} server(s) for {dbname}: {servers}',
 				[
 					'count' => count( $failed ),
 					'dbname' => $dbname,
 					'servers' => implode( ', ', $failed ),
-					'error' => json_encode( $requestResult ),
 				]
 			);
 
 			return false;
 		}
 
-		$this->logger->info( 'CacheUpdate::executeNow successful on all servers.' );
+		$this->logger->info(
+			'CacheUpdate::executeNow successful on all servers for {dbname}.',
+			[ 'dbname' => $dbname ]
+		);
+
 		return true;
 	}
 }
