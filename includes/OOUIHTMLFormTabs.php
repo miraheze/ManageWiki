@@ -42,6 +42,12 @@ class OOUIHTMLFormTabs extends OOUIHTMLForm {
 		$tabPanels = [];
 		foreach ( $this->mFieldTree as $key => $val ) {
 			if ( !is_array( $val ) ) {
+				// reason will never be attached to a section,
+				// so just skip logging as it is expected.
+				if ( $key === 'reason' ) {
+					continue;
+				}
+
 				LoggerFactory::getInstance( 'ManageWiki' )->debug(
 					'Encountered a field not attached to a section: {key}',
 					[ 'key' => $key ]
