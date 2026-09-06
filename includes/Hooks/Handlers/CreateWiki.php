@@ -82,7 +82,7 @@ class CreateWiki implements
 	public function onCreateWikiRemoteWikiCommit( string $dbname ): void {
 		$dataStore = $this->dataStoreFactory->newInstance( $dbname );
 		$dataStore->resetWikiData( isNewChanges: true );
-		$this->cacheUpdate->queueJob( action: 'reset-databases', dbname: $dbname );
+		$this->cacheUpdate->queueJob( action: 'reset-database-lists', dbname: $dbname );
 	}
 
 	/**
