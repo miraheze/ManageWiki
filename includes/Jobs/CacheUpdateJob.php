@@ -5,17 +5,23 @@ namespace Miraheze\ManageWiki\Jobs;
 use MediaWiki\Config\Config;
 use MediaWiki\Http\HttpRequestFactory;
 use MediaWiki\JobQueue\Job;
+use MediaWiki\MainConfigNames;
 use Miraheze\ManageWiki\ConfigNames;
 use Psr\Log\LoggerInterface;
 use function count;
 use function http_build_query;
 use function implode;
+use function in_array;
 use function rawurlencode;
 
 class CacheUpdateJob extends Job {
 
+	public const string ACTION_DELETE = 'delete';
+	public const string ACTION_RESET = 'reset';
+
 	public const string JOB_NAME = 'CacheUpdateJob';
 
+	private readonly string $action;
 	private readonly string $dbname;
 
 	public function __construct(
@@ -25,6 +31,7 @@ class CacheUpdateJob extends Job {
 		private readonly LoggerInterface $logger,
 	) {
 		parent::__construct( self::JOB_NAME, $params );
+		$this->action = $params['action'];
 		$this->dbname = $params['dbname'];
 	}
 
@@ -39,7 +46,7 @@ class CacheUpdateJob extends Job {
 				'CacheUpdateJob can not run, ManageWikiCacheUpdateRestEnabled is disabled.'
 			);
 
-			return false;
+			return true;
 		}
 
 		$key = (string)$this->config->get( ConfigNames::CacheUpdateKey );
@@ -53,10 +60,20 @@ class CacheUpdateJob extends Job {
 				'is not configured.'
 			);
 
-			return false;
+			return true;
 		}
 
-		$url = 'https://' . $domain . '/w/rest.php/managewiki/v0/cache/reset/' .
+		if ( !in_array( $this->action, [ 'delete', 'reset' ], true ) ) {
+			$this->logger->error(
+				'CacheUpdateJob can not run, action can only be delete or reset but it was set to {action}.',
+				[ 'action' => $this->action ]
+			);
+
+			return true;
+		}
+
+		$restPath = $this->config->get( MainConfigNames::RestPath )
+		$url = "https://$domain$restPath/managewiki/v0/cache/{$this->action}/" .
 			rawurlencode( $this->dbname );
 
 		$body = http_build_query( [ 'key' => $key ] );
