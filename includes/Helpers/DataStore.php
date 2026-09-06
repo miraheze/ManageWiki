@@ -104,7 +104,7 @@ class DataStore {
 				$mtime
 			);
 
-			$this->cacheUpdate->queueJob( action: 'reset', $this->dbname );
+			$this->cacheUpdate->queueJob( action: 'reset', dbname: $this->dbname );
 			return;
 		}
 
@@ -184,7 +184,7 @@ class DataStore {
 	 */
 	public function deleteWikiData( string $dbname ): void {
 		$this->cache->delete( $this->cache->makeGlobalKey( self::CACHE_KEY, $dbname ) );
-		$this->cacheUpdate->queueJob( action: 'delete', $dbname );
+		$this->cacheUpdate->queueJob( action: 'delete', dbname: $dbname );
 	}
 
 	/**
