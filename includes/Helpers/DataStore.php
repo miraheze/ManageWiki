@@ -7,7 +7,6 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Wikimedia\ObjectCache\BagOStuff;
 use Wikimedia\StaticArrayWriter;
-use function file_exists;
 use function file_put_contents;
 use function function_exists;
 use function is_array;
@@ -105,7 +104,7 @@ class DataStore {
 				$mtime
 			);
 
-			$this->cacheUpdate->queueJob( $this->dbname );
+			$this->cacheUpdate->queueJob( action: 'reset', $this->dbname );
 			return;
 		}
 
@@ -185,9 +184,7 @@ class DataStore {
 	 */
 	public function deleteWikiData( string $dbname ): void {
 		$this->cache->delete( $this->cache->makeGlobalKey( self::CACHE_KEY, $dbname ) );
-		if ( file_exists( "{$this->cacheDir}/$dbname.php" ) ) {
-			unlink( "{$this->cacheDir}/$dbname.php" );
-		}
+		$this->cacheUpdate->queueJob( action: 'delete', $dbname );
 	}
 
 	/**
