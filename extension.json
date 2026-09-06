@@ -77,15 +77,6 @@
 				"ManageWikiCacheRestUtils",
 				"ManageWikiConfig"
 			]
-		},
-		{
-			"method": "POST",
-			"path": "/managewiki/v0/cache/reset-database-lists",
-			"class": "Miraheze\\ManageWiki\\Rest\\ResetDatabaseListsHandler",
-			"services": [
-				"ManageWikiCacheRestUtils",
-				"ManageWikiHookRunner"
-			]
 		}
 	],
 	"AvailableRights": [
@@ -224,7 +215,6 @@
 		"CreateWiki": {
 			"class": "Miraheze\\ManageWiki\\Hooks\\Handlers\\CreateWiki",
 			"services": [
-				"ManageWikiCacheUpdate",
 				"ManageWikiConfig",
 				"ManageWikiDataStoreFactory",
 				"ManageWikiDefaultPermissions",
