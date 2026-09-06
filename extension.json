@@ -65,8 +65,7 @@
 			"path": "/managewiki/v0/cache/reset/{dbname}",
 			"class": "Miraheze\\ManageWiki\\Rest\\ResetCacheHandler",
 			"services": [
-				"MainObjectStash",
-				"ManageWikiConfig",
+				"ManageWikiCacheRestUtils",
 				"ManageWikiDataStoreFactory"
 			]
 		},
@@ -75,7 +74,7 @@
 			"path": "/managewiki/v0/cache/delete/{dbname}",
 			"class": "Miraheze\\ManageWiki\\Rest\\DeleteCacheHandler",
 			"services": [
-				"MainObjectStash",
+				"ManageWikiCacheRestUtils",
 				"ManageWikiConfig"
 			]
 		}
