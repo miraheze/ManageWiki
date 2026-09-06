@@ -18,11 +18,13 @@ use function json_encode;
 class CacheUpdate {
 
 	public const array CONSTRUCTOR_OPTIONS = [
+		ConfigNames::CacheUpdateDebugAccessKey,
+		ConfigNames::CacheUpdateDebugAccessKeyHeader,
 		ConfigNames::CacheUpdateDebugHeader,
 		ConfigNames::CacheUpdateDomain,
 		ConfigNames::CacheUpdateKey,
 		ConfigNames::CacheUpdateRestEnabled,
-		ConfigNames::Servers,
+		ConfigNames::CacheUpdateServers,
 		MainConfigNames::HTTPProxy,
 		MainConfigNames::RestPath,
 	];
@@ -37,11 +39,6 @@ class CacheUpdate {
 	}
 
 	public function queueJob( string $action, string $dbname ): void {
-		if ( $this->options->get( ConfigNames::Servers ) === [] ) {
-			// No servers configured.
-			return;
-		}
-
 		$this->jobQueueGroupFactory->makeJobQueueGroup( $dbname )->push(
 			new JobSpecification( CacheUpdateJob::JOB_NAME, [
 				'action' => $action,
@@ -51,8 +48,9 @@ class CacheUpdate {
 	}
 
 	public function executeNow( string $action, string $dbname ): bool {
-		$servers = $this->options->get( ConfigNames::Servers );
+		$servers = $this->options->get( ConfigNames::CacheUpdateServers );
 		if ( $servers === [] ) {
+			// No servers configured.
 			return true;
 		}
 
@@ -89,7 +87,15 @@ class CacheUpdate {
 
 		$restPath = $this->options->get( MainConfigNames::RestPath );
 		$url = "https://$domain$restPath/managewiki/v0/cache/$action/$dbname";
+
 		$body = json_encode( [ 'key' => $key ] );
+		$headers = [ 'Content-Type' => 'application/json' ];
+
+		$debugAccessKeyHeader = (string)$this->options->get( ConfigNames::CacheUpdateDebugAccessKeyHeader );
+		$debugAccessKey = (string)$this->options->get( ConfigNames::CacheUpdateDebugAccessKey );
+		if ( $debugAccessKeyHeader !== '' && $debugAccessKey !== '' ) {
+			$headers[$debugAccessKeyHeader] = $debugAccessKey;
+		}
 
 		$requests = [];
 		foreach ( $servers as $server ) {
@@ -97,8 +103,7 @@ class CacheUpdate {
 				'method' => 'POST',
 				'url' => $url,
 				'body' => $body,
-				'headers' => [
-					'Content-Type' => 'application/json',
+				'headers' => $headers + [
 					$debugHeader => $server,
 				],
 			];
