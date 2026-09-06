@@ -39,6 +39,10 @@ class CacheUpdate {
 	}
 
 	public function queueJob( string $action, string $dbname ): void {
+		if ( !$this->isExecutionAllowed( $action ) ) {
+			return;
+		}
+
 		$this->jobQueueGroupFactory->makeJobQueueGroup( $dbname )->push(
 			new JobSpecification( CacheUpdateJob::JOB_NAME, [
 				'action' => $action,
@@ -48,42 +52,14 @@ class CacheUpdate {
 	}
 
 	public function executeNow( string $action, string $dbname ): bool {
+		if ( !$this->isExecutionAllowed( $action ) ) {
+			return true;
+		}
+
 		$servers = $this->options->get( ConfigNames::CacheUpdateServers );
-		if ( $servers === [] ) {
-			// No servers configured.
-			return true;
-		}
-
-		if ( !$this->options->get( ConfigNames::CacheUpdateRestEnabled ) ) {
-			$this->logger->error(
-				'CacheUpdate::executeNow can not run, ManageWikiCacheUpdateRestEnabled is disabled.'
-			);
-
-			return true;
-		}
-
 		$key = (string)$this->options->get( ConfigNames::CacheUpdateKey );
 		$domain = (string)$this->options->get( ConfigNames::CacheUpdateDomain );
 		$debugHeader = (string)$this->options->get( ConfigNames::CacheUpdateDebugHeader );
-
-		if ( $key === '' || $domain === '' || $debugHeader === '' ) {
-			$this->logger->error(
-				'CacheUpdate::executeNow can not run, one of ManageWikiCacheUpdateKey, ' .
-				'ManageWikiCacheUpdateDomain, or ManageWikiCacheUpdateDebugHeader ' .
-				'is not configured.'
-			);
-
-			return true;
-		}
-
-		if ( !in_array( $action, [ 'delete', 'reset' ], true ) ) {
-			$this->logger->error(
-				'CacheUpdate::executeNow can not run, action can only be delete or reset but it was set to {action}.',
-				[ 'action' => $action ]
-			);
-
-			return true;
-		}
 
 		$restPath = $this->options->get( MainConfigNames::RestPath );
 		$url = "https://$domain$restPath/managewiki/v0/cache/$action/$dbname";
@@ -142,6 +118,47 @@ class CacheUpdate {
 			'CacheUpdate::executeNow successful on all servers for {dbname}.',
 			[ 'dbname' => $dbname ]
 		);
+
+		return true;
+	}
+
+	private function isExecutionAllowed( string $action ): bool {
+		$servers = $this->options->get( ConfigNames::CacheUpdateServers );
+		if ( $servers === [] ) {
+			// No servers configured.
+			return false;
+		}
+
+		if ( !$this->options->get( ConfigNames::CacheUpdateRestEnabled ) ) {
+			$this->logger->error(
+				'CacheUpdate can not run, ManageWikiCacheUpdateRestEnabled is disabled.'
+			);
+
+			return false;
+		}
+
+		$key = (string)$this->options->get( ConfigNames::CacheUpdateKey );
+		$domain = (string)$this->options->get( ConfigNames::CacheUpdateDomain );
+		$debugHeader = (string)$this->options->get( ConfigNames::CacheUpdateDebugHeader );
+
+		if ( $key === '' || $domain === '' || $debugHeader === '' ) {
+			$this->logger->error(
+				'CacheUpdate can not run, one of ManageWikiCacheUpdateKey, ' .
+				'ManageWikiCacheUpdateDomain, or ManageWikiCacheUpdateDebugHeader ' .
+				'is not configured.'
+			);
+
+			return false;
+		}
+
+		if ( !in_array( $action, [ 'delete', 'reset' ], true ) ) {
+			$this->logger->error(
+				'CacheUpdate can not run, action can only be delete or reset but it was set to {action}.',
+				[ 'action' => $action ]
+			);
+
+			return false;
+		}
 
 		return true;
 	}
