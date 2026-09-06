@@ -69,7 +69,7 @@ class CacheUpdateJob extends Job {
 			return true;
 		}
 
-		$restPath = $this->config->get( MainConfigNames::RestPath )
+		$restPath = $this->config->get( MainConfigNames::RestPath );
 		$url = "https://$domain$restPath/managewiki/v0/cache/{$this->action}/" .
 			rawurlencode( $this->dbname );
 
