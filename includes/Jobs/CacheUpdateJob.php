@@ -16,9 +16,6 @@ use function rawurlencode;
 
 class CacheUpdateJob extends Job {
 
-	public const string ACTION_DELETE = 'delete';
-	public const string ACTION_RESET = 'reset';
-
 	public const string JOB_NAME = 'CacheUpdateJob';
 
 	private readonly string $action;
