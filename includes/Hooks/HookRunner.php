@@ -13,8 +13,7 @@ class HookRunner implements
 	ManageWikiCoreAddFormFieldsHook,
 	ManageWikiCoreFormSubmissionHook,
 	ManageWikiCoreProviderHook,
-	ManageWikiDataStoreBuilderHook,
-	ManageWikiResetDatabaseListsHook
+	ManageWikiDataStoreBuilderHook
 {
 
 	public function __construct(
@@ -78,15 +77,6 @@ class HookRunner implements
 		$this->container->run(
 			'ManageWikiDataStoreBuilder',
 			[ $moduleFactory, $dbname, &$cacheArray ],
-			[ 'abortable' => false ]
-		);
-	}
-
-	/** @inheritDoc */
-	public function onManageWikiResetDatabaseLists(): void {
-		$this->container->run(
-			'ManageWikiResetDatabaseLists',
-			[],
 			[ 'abortable' => false ]
 		);
 	}
