@@ -13,6 +13,10 @@ class ConfigNames {
 
 	public const string CacheType = 'ManageWikiCacheType';
 
+	public const string CacheUpdateDebugAccessKey = 'ManageWikiCacheUpdateDebugAccessKey';
+
+	public const string CacheUpdateDebugAccessKeyHeader = 'ManageWikiCacheUpdateDebugAccessKeyHeader';
+
 	public const string CacheUpdateDebugHeader = 'ManageWikiCacheUpdateDebugHeader';
 
 	public const string CacheUpdateDomain = 'ManageWikiCacheUpdateDomain';
@@ -20,6 +24,8 @@ class ConfigNames {
 	public const string CacheUpdateKey = 'ManageWikiCacheUpdateKey';
 
 	public const string CacheUpdateRestEnabled = 'ManageWikiCacheUpdateRestEnabled';
+
+	public const string CacheUpdateServers = 'ManageWikiCacheUpdateServers';
 
 	public const string Extensions = 'ManageWikiExtensions';
 
@@ -54,8 +60,6 @@ class ConfigNames {
 	public const string PermissionsDisallowedRights = 'ManageWikiPermissionsDisallowedRights';
 
 	public const string PermissionsPermanentGroups = 'ManageWikiPermissionsPermanentGroups';
-
-	public const string Servers = 'ManageWikiServers';
 
 	public const string Settings = 'ManageWikiSettings';
 
