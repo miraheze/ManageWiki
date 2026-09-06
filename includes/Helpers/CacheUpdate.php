@@ -14,7 +14,6 @@ use function count;
 use function http_build_query;
 use function implode;
 use function in_array;
-use function rawurlencode;
 
 class CacheUpdate {
 
