@@ -131,6 +131,7 @@ class CacheUpdate {
 			return false;
 		}
 
+		$this->logger->info( 'CacheUpdate::executeNow successful on all servers.' );
 		return true;
 	}
 }
