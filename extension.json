@@ -38,9 +38,7 @@
 		"CacheUpdateJob": {
 			"class": "Miraheze\\ManageWiki\\Jobs\\CacheUpdateJob",
 			"services": [
-				"ManageWikiConfig",
-				"HttpRequestFactory",
-				"ManageWikiLogger"
+				"ManageWikiCacheUpdate"
 			],
 			"needsPage": false
 		},
@@ -48,6 +46,7 @@
 			"class": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
 			"services": [
 				"JobQueueGroupFactory",
+				"ManageWikiCacheUpdate",
 				"ManageWikiLogger"
 			],
 			"needsPage": false
