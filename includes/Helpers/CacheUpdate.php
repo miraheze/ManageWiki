@@ -39,11 +39,11 @@ class CacheUpdate {
 	}
 
 	public function queueJob( string $action, string $dbname ): void {
-		if ( !$this->isExecutionAllowed( $action ) ) {
+		/* if ( !$this->isExecutionAllowed( $action ) ) {
 			return;
-		}
+		} */
 
-		$this->jobQueueGroupFactory->makeJobQueueGroup( $dbname )->push(
+		$this->jobQueueGroupFactory->makeJobQueueGroup()->push(
 			new JobSpecification( CacheUpdateJob::JOB_NAME, [
 				'action' => $action,
 				'dbname' => $dbname,
