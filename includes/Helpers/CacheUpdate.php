@@ -24,6 +24,7 @@ class CacheUpdate {
 		ConfigNames::CacheUpdateKey,
 		ConfigNames::CacheUpdateRestEnabled,
 		ConfigNames::Servers,
+		MainConfigNames::HTTPProxy,
 		MainConfigNames::RestPath,
 	];
 
@@ -107,6 +108,7 @@ class CacheUpdate {
 		$http = $this->httpRequestFactory->createMultiClient( [
 			'maxConnsPerHost' => 8,
 			'usePipelining' => true,
+			'proxy' => $this->options->get( MainConfigNames::HTTPProxy ),
 		] );
 
 		$responses = $http->runMulti( $requests );
