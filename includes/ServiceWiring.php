@@ -36,7 +36,9 @@ use Psr\Log\LoggerInterface;
 return [
 	'ManageWikiCacheUpdate' => static function ( MediaWikiServices $services ): CacheUpdate {
 		return new CacheUpdate(
+			$services->getHttpRequestFactory(),
 			$services->getJobQueueGroupFactory(),
+			$services->get( 'ManageWikiLogger' ),
 			new ServiceOptions(
 				CacheUpdate::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
