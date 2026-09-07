@@ -191,7 +191,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 	public function testExecuteNowFailsWhenAServerFails(): void {
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
-			/** @phan-suppress PhanPluginMoreSpecificActualReturnType */
+			/** @phan-suppress-next-line all */
 			static function ( array $requests ): array {
 				$responses = [];
 				$first = true;
