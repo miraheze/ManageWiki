@@ -17,6 +17,7 @@ use function json_encode;
  * @coversDefaultClass \Miraheze\ManageWiki\Rest\ResetCacheHandler
  */
 class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
+
 	use HandlerTestTrait;
 
 	private function newRequest( array $body ): RequestData {
