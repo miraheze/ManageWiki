@@ -1,5 +1,7 @@
 <?php
 
+/** @phan-file-suppress PhanPluginMoreSpecificActualReturnType */
+
 namespace Miraheze\ManageWiki\Tests\Unit\Helpers;
 
 use MediaWiki\Config\ServiceOptions;
@@ -164,7 +166,6 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 	public function testExecuteNowSuccessOnAllServers(): void {
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
-			/** @phan-suppress-next-line PhanPluginMoreSpecificActualReturnType, UnusedSuppression */
 			static function ( array $requests ): array {
 				$responses = [];
 				foreach ( array_keys( $requests ) as $key ) {
@@ -191,7 +192,6 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 	public function testExecuteNowFailsWhenAServerFails(): void {
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
-			/** @phan-suppress-next-line all */
 			static function ( array $requests ): array {
 				$responses = [];
 				$first = true;
@@ -223,7 +223,6 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		$capturedRequests = [];
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
-			/** @phan-suppress-next-line PhanPluginMoreSpecificActualReturnType, UnusedSuppression */
 			static function ( array $requests ) use ( &$capturedRequests ): array {
 				$capturedRequests = $requests;
 				$responses = [];
@@ -260,7 +259,6 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		$capturedUrl = '';
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
-			/** @phan-suppress-next-line PhanPluginMoreSpecificActualReturnType, UnusedSuppression */
 			static function ( array $requests ) use ( &$capturedUrl ): array {
 				$capturedUrl = (string)reset( $requests )['url'];
 				$responses = [];
@@ -294,7 +292,6 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		$capturedBody = '';
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
-			/** @phan-suppress-next-line PhanPluginMoreSpecificActualReturnType, UnusedSuppression */
 			static function ( array $requests ) use ( &$capturedBody ): array {
 				$capturedBody = (string)reset( $requests )['body'];
 				$responses = [];
