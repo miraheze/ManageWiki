@@ -293,7 +293,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		$capturedBody = '';
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
-			/** @return array<array-key, array<string, array<string, int>>> */
+			/** @return array<mixed, array<string, array<string, int>>> */
 			static function ( array $requests ) use ( &$capturedBody ): array {
 				$capturedBody = (string)reset( $requests )['body'];
 				$responses = [];
@@ -314,7 +314,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 
 		$cacheUpdate->executeNow( 'reset', 'examplewiki' );
 
-		$decoded = json_decode( $capturedBody, true );
+		$decoded = json_decode( $capturedBody ?: '[]', true );
 		$this->assertSame( 'secret-key', $decoded['key'] );
 	}
 
