@@ -10,6 +10,7 @@ use MediaWiki\MainConfigNames;
 use MediaWikiUnitTestCase;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\CacheUpdate;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Wikimedia\Http\MultiHttpClient;
@@ -35,6 +36,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		MainConfigNames::RestPath => '/w/rest.php',
 	];
 
+	/** @return ServiceOptions&MockObject */
 	private function newOptions( array $overrides ): ServiceOptions {
 		$config = $overrides + self::BASE_CONFIG;
 		$options = $this->createMock( ServiceOptions::class );
@@ -76,6 +78,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$this->assertTrue( $cacheUpdate->executeNow( 'reset', 'examplewiki' ) );
 	}
 
@@ -90,6 +93,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$this->assertTrue( $cacheUpdate->executeNow( 'reset', 'examplewiki' ) );
 	}
 
@@ -104,6 +108,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$this->assertTrue( $cacheUpdate->executeNow( 'reset', 'examplewiki' ) );
 	}
 
@@ -118,6 +123,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$this->assertTrue( $cacheUpdate->executeNow( 'reset', 'examplewiki' ) );
 	}
 
@@ -132,6 +138,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$this->assertTrue( $cacheUpdate->executeNow( 'reset', 'examplewiki' ) );
 	}
 
@@ -146,6 +153,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$this->assertFalse( $cacheUpdate->executeNow( 'not-a-real-action', 'examplewiki' ) );
 	}
 
@@ -155,6 +163,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 	public function testExecuteNowSuccessOnAllServers(): void {
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
+			/** @return array<array-key, array{response: array{code: int}}> */
 			static function ( array $requests ): array {
 				$responses = [];
 				foreach ( array_keys( $requests ) as $key ) {
@@ -171,6 +180,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$this->assertTrue( $cacheUpdate->executeNow( 'reset', 'examplewiki' ) );
 	}
 
@@ -180,6 +190,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 	public function testExecuteNowFailsWhenAServerFails(): void {
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
+			/** @return array<array-key, array{response: array{code: int}}> */
 			static function ( array $requests ): array {
 				$responses = [];
 				$first = true;
@@ -200,6 +211,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$this->assertFalse( $cacheUpdate->executeNow( 'reset', 'examplewiki' ) );
 	}
 
@@ -210,6 +222,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		$capturedRequests = [];
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
+			/** @return array<array-key, array{response: array{code: int}}> */
 			static function ( array $requests ) use ( &$capturedRequests ): array {
 				$capturedRequests = $requests;
 				$responses = [];
@@ -246,6 +259,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		$capturedUrl = '';
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
+			/** @return array<array-key, array{response: array{code: int}}> */
 			static function ( array $requests ) use ( &$capturedUrl ): array {
 				$capturedUrl = (string)reset( $requests )['url'];
 				$responses = [];
@@ -263,6 +277,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$cacheUpdate->executeNow( 'reset', 'examplewiki' );
 
 		$this->assertSame(
@@ -278,6 +293,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		$capturedBody = '';
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
+			/** @return array<array-key, array{response: array{code: int}}> */
 			static function ( array $requests ) use ( &$capturedBody ): array {
 				$capturedBody = (string)reset( $requests )['body'];
 				$responses = [];
@@ -295,11 +311,12 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: null,
 			logger: null
 		);
+
 		$cacheUpdate->executeNow( 'reset', 'examplewiki' );
 
 		$decoded = json_decode( $capturedBody, true );
 		$this->assertIsArray( $decoded );
-		$this->assertSame( 'secret-key', $decoded['key'] );
+		$this->assertSame( 'secret-key', $decoded['key'] ?? '' );
 	}
 
 	/**
@@ -318,6 +335,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: $jobQueueGroupFactory,
 			logger: null
 		);
+
 		$cacheUpdate->queueJob( 'reset', 'examplewiki' );
 	}
 
@@ -335,6 +353,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: $jobQueueGroupFactory,
 			logger: null
 		);
+
 		$cacheUpdate->queueJob( 'reset', 'examplewiki' );
 	}
 
@@ -352,6 +371,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			jobQueueGroupFactory: $jobQueueGroupFactory,
 			logger: null
 		);
+
 		$cacheUpdate->queueJob( 'not-a-real-action', 'examplewiki' );
 	}
 }
