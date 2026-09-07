@@ -155,10 +155,14 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 		$dataStore = $this->createMock( DataStore::class );
 		$dataStore->expects( $this->once() )
 			->method( 'resetWikiData' )
+			// @phan-suppress-next-line PhanTypeMismatchArgumentProbablyReal
 			->with( false );
 
 		$dataStoreFactory = $this->createMock( DataStoreFactory::class );
-		$dataStoreFactory->method( 'newInstance' )->with( 'examplewiki' )->willReturn( $dataStore );
+		$dataStoreFactory->method( 'newInstance' )
+			// @phan-suppress-next-line PhanTypeMismatchArgumentProbablyReal
+			->with( 'examplewiki' )
+			->willReturn( $dataStore );
 
 		$handler = new ResetCacheHandler( $restUtils, $dataStoreFactory );
 
