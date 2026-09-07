@@ -43,7 +43,6 @@ use function array_map;
 use function array_merge;
 use function array_slice;
 use function array_unique;
-use function array_unshift;
 use function count;
 use function explode;
 use function glob;
@@ -351,6 +350,7 @@ class FormFactoryBuilder {
 
 		$formDescriptor = [];
 		foreach ( $this->options->get( ConfigNames::Extensions ) as $name => $ext ) {
+			$isEnabled = in_array( $name, $extList, true );
 			$hasSettings = count( array_filter(
 				$manageWikiSettings,
 				static fn ( array $value ): bool => $value['from'] === $name
@@ -360,7 +360,7 @@ class FormFactoryBuilder {
 			if (
 				// Don't want to disable fields for extensions already enabled
 				// otherwise it makes disabling them more complicated.
-				!in_array( $name, $extList, true ) && (
+				!$isEnabled && (
 					isset( $ext['requires']['extensions'] ) ||
 					$ext['conflicts']
 				)
@@ -374,15 +374,10 @@ class FormFactoryBuilder {
 			$help = [];
 			$requirementsCheck = true;
 			if ( $ext['requires'] ) {
-				$extRequirements = $ext['requires'];
-				// Permissions required to toggle the extension can depend on whether it is currently enabled.
-				$isCurrentlyEnabled = in_array( $name, $extList, true );
-				$extRequirements = $this->resolvePermissions(
-					$extRequirements,
-					// If the extension is enabled, perform permission check for disabling it.
-					// If the extension is disabled, perform permission check for enabling it.
-					!$isCurrentlyEnabled,
-				);
+				// Permissions required to toggle the extension can depend on whether it is currently
+				// enabled. If the extension is enabled, perform permission check for disabling it.
+				// If the extension is disabled, perform permission check for enabling it.
+				$extRequirements = $this->resolvePermissions( $ext['requires'], !$isEnabled );
 
 				$requirementsCheck = $mwRequirements->check(
 					// Don't check for extension requirements as we don't want
@@ -391,15 +386,11 @@ class FormFactoryBuilder {
 					$extList
 				);
 
-				if ( $extRequirements !== [] ) {
-					$help[] = $this->buildRequires( $context, $extRequirements ) . "\n";
-				}
-
 				// Check if the user is able to reverse this change.
-				// Same check as above except $isCurrentlyEnabled is reversed.
+				// Same check as above except $isEnabled is reversed.
 				$reversePerms = $this->processPermissionRequirements(
 					$ext['requires']['permissions'] ?? [],
-					$isCurrentlyEnabled
+					$isEnabled
 				);
 
 				// If this extension can be toggled but this operation cannot be reversed, then warn.
@@ -407,11 +398,11 @@ class FormFactoryBuilder {
 					$ceMW && $requirementsCheck && $reversePerms !== [] &&
 					!$context->getAuthority()->isAllowedAll( ...$reversePerms )
 				) {
-					$notice = $this->buildOneWayNotice( $context, $reversePerms, $isCurrentlyEnabled );
-					array_unshift(
-						$help,
-						$notice . "\n",
-					);
+					$help[] = $this->buildOneWayNotice( $context, $reversePerms, $isEnabled ) . "\n";
+				}
+
+				if ( $extRequirements !== [] ) {
+					$help[] = $this->buildRequires( $context, $extRequirements ) . "\n";
 				}
 			}
 
@@ -461,7 +452,7 @@ class FormFactoryBuilder {
 				$help[] = "\n" . $rawMessage->parse();
 			}
 
-			if ( $hasSettings && in_array( $name, $extList, true ) ) {
+			if ( $hasSettings && $isEnabled ) {
 				$help[] = "\n" . $this->linkRenderer->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "settings/$name" )->getFullURL(),
 					$context->msg( 'managewiki-extension-settings' ),
@@ -476,7 +467,7 @@ class FormFactoryBuilder {
 					$ext['linkPage'],
 					$extDisplayName ?? ( $namemsg ? $context->msg( $namemsg )->text() : $extname ) ?? $ext['name'],
 				],
-				'default' => in_array( $name, $extList, true ),
+				'default' => $isEnabled,
 				'disabled' => $ceMW ? !$requirementsCheck : true,
 				'disable-if' => $disableIf,
 				'help' => nl2br( implode( ' ', $help ) ),
