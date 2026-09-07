@@ -35,9 +35,17 @@
 		"Miraheze\\ManageWiki\\Tests\\": "tests/phpunit/"
 	},
 	"JobClasses": {
+		"CacheUpdateJob": {
+			"class": "Miraheze\\ManageWiki\\Jobs\\CacheUpdateJob",
+			"services": [
+				"ManageWikiCacheUpdate"
+			],
+			"needsPage": false
+		},
 		"MWScriptJob": {
 			"class": "Miraheze\\ManageWiki\\Jobs\\MWScriptJob",
 			"services": [
+				"ManageWikiCacheUpdate",
 				"JobQueueGroupFactory",
 				"ManageWikiLogger"
 			],
@@ -51,6 +59,26 @@
 			"needsPage": false
 		}
 	},
+	"RestRoutes": [
+		{
+			"method": "POST",
+			"path": "/managewiki/v0/cache/reset/{dbname}",
+			"class": "Miraheze\\ManageWiki\\Rest\\ResetCacheHandler",
+			"services": [
+				"ManageWikiCacheRestUtils",
+				"ManageWikiDataStoreFactory"
+			]
+		},
+		{
+			"method": "POST",
+			"path": "/managewiki/v0/cache/delete/{dbname}",
+			"class": "Miraheze\\ManageWiki\\Rest\\DeleteCacheHandler",
+			"services": [
+				"ManageWikiCacheRestUtils",
+				"ManageWikiConfig"
+			]
+		}
+	],
 	"AvailableRights": [
 		"managewiki-core",
 		"managewiki-editdefault",
@@ -256,6 +284,34 @@
 			"description": "Index from $wgObjectCaches. If set, this will be used instead of $wgMainCacheType for ManageWiki cache.",
 			"value": null
 		},
+		"ManageWikiCacheUpdateDebugAccessKey": {
+			"description": "String. Optional. The value sent in the header named by ManageWikiCacheUpdateDebugAccessKeyHeader. Only used if that header name is also set.",
+			"value": ""
+		},
+		"ManageWikiCacheUpdateDebugAccessKeyHeader": {
+			"description": "String. Optional. The name of an HTTP header CacheUpdateJob sends alongside ManageWikiCacheUpdateDebugHeader, only needed if whatever routes requests to a specific server based on that debug header also requires its own access key to honor it. This is unrelated to ManageWikiCacheUpdateKey, which authenticates the request to the ManageWiki REST endpoint itself, this one authenticates the debug routing at the infrastructure level, in front of the app servers. Leave unset if your setup doesn't require it.",
+			"value": ""
+		},
+		"ManageWikiCacheUpdateDebugHeader": {
+			"description": "String. The name of the HTTP header CacheUpdateJob sets to the value of each entry in ManageWikiServers when it calls the cache reset REST endpoint. Whatever sits in front of the app servers is expected to use this header to route the request to that specific server.",
+			"value": ""
+		},
+		"ManageWikiCacheUpdateDomain": {
+			"description": "String. The hostname used in the URL when CacheUpdateJob contacts the cache reset REST endpoint. Should be a wiki that will always exist, such as the central wiki, since the request needs MediaWiki to boot successfully regardless of which wiki's cache is being reset.",
+			"value": ""
+		},
+		"ManageWikiCacheUpdateKey": {
+			"description": "String. A secret shared between servers, required as the 'key' POST field for the cache reset and cache delete REST endpoints to accept a request. Generate with something like random_bytes(32) and keep it out of public config.",
+			"value": ""
+		},
+		"ManageWikiCacheUpdateRestEnabled": {
+			"description": "Boolean. Whether the cache reset and cache delete REST endpoints are enabled. Disabled by default, only enable once ManageWikiCacheUpdateKey, ManageWikiCacheUpdateDomain, and ManageWikiCacheUpdateDebugHeader are all configured.",
+			"value": false
+		},
+		"ManageWikiCacheUpdateServers": {
+			"description": "Array. An array of servers that serve MediaWiki that will have the ManageWiki cache regenerated on update.",
+			"value": []
+		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",
 			"value": []
@@ -340,10 +396,6 @@
 				"sysop",
 				"bureaucrat"
 			]
-		},
-		"ManageWikiServers": {
-			"description": "Array. An array of servers that serve MediaWiki that will have the ManageWiki cache regenerated on update.",
-			"value": []
 		},
 		"ManageWikiSettings": {
 			"description": "Array. An array of settings that can be managed through Special:ManageWiki",
