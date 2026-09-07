@@ -111,6 +111,7 @@
 	"managewiki-label-goto": "특수:ManageWiki로 이동",
 	"managewiki-label-inactive": "비활성",
 	"managewiki-label-inactive-exempt": "비활성 상태에서 제외",
+	"managewiki-label-inactive-exempt-expiry": "이 비활성 면제에 대한 만료일을 선택하세요.",
 	"managewiki-label-inactive-exempt-reason": "비활성 면제 이유를 선택하세요.",
 	"managewiki-label-language": "언어",
 	"managewiki-label-lockwiki": "이 위키 설정을 잠그시겠습니까?",
