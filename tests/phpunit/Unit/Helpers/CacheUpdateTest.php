@@ -293,7 +293,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		$capturedBody = '';
 		$multiClient = $this->createMock( MultiHttpClient::class );
 		$multiClient->method( 'runMulti' )->willReturnCallback(
-			/** @return array<array-key, array{response: array{code: int}}> */
+			/** @return associative-array<array-key, array{response: array{code: int}}> */
 			static function ( array $requests ) use ( &$capturedBody ): array {
 				$capturedBody = (string)reset( $requests )['body'];
 				$responses = [];
