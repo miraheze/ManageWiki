@@ -30,6 +30,13 @@ trait PermissionsHelperTrait {
 		return array_values( $filtered );
 	}
 
+	/**
+	 * @param array<string,mixed> $requires The requirements array for the extension.
+	 * @param bool $enable Whether the check is performed against enabling the extension.
+	 *
+	 * @return array<string,mixed> The requirements array with 'permissions' resolved for
+	 *  this direction or removed entirely if no permissions are required for it.
+	 */
 	private function resolvePermissions( array $requires, bool $enable ): array {
 		$perms = $this->processPermissionRequirements( $requires['permissions'] ?? [], $enable );
 		// If permission requirements are one-way, then we may end up with no permission requirements.

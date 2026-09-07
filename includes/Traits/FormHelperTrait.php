@@ -90,8 +90,6 @@ trait FormHelperTrait {
 	 * @param IContextSource $context
 	 * @param list<string> $permissions The permissions required to reverse the change.
 	 * @param bool $isEnabled Whether the extension is currently enabled.
-	 *
-	 * @return string
 	 */
 	private function buildOneWayNotice(
 		IContextSource $context,
