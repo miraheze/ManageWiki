@@ -22,6 +22,7 @@ use function unlink;
  * @coversDefaultClass \Miraheze\ManageWiki\Rest\DeleteCacheHandler
  */
 class DeleteCacheHandlerTest extends MediaWikiIntegrationTestCase {
+
 	use HandlerTestTrait;
 
 	private ?string $cacheDir = null;
