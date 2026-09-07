@@ -24,8 +24,8 @@
 			"i18n"
 		]
 	},
-	"ExtensionMessagesFiles": {
-		"ManageWikiAliases": "ManageWikiAliases.php"
+	"TranslationAliasesDirs": {
+		"CreateWikiAliases": "i18n/aliases"
 	},
 	"AutoloadNamespaces": {
 		"Miraheze\\ManageWiki\\": "includes/",
