@@ -5,7 +5,6 @@ namespace Miraheze\ManageWiki\FormFactory;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Context\IContextSource;
 use MediaWiki\Exception\ErrorPageError;
-use MediaWiki\Html\Html;
 use MediaWiki\HTMLForm\HTMLForm;
 use MediaWiki\Language\RawMessage;
 use MediaWiki\Linker\LinkRenderer;
@@ -413,18 +412,7 @@ class FormFactoryBuilder {
 					$ceMW && $requirementsCheck && $reversePerms !== [] &&
 					!$context->getAuthority()->isAllowedAll( ...$reversePerms )
 				) {
-					$noticeMessage = $context->msg(
-						$isCurrentlyEnabled ?
-							'managewiki-extension-oneway-disable' :
-							'managewiki-extension-oneway-enable',
-						$context->getLanguage()->listToText( $reversePerms ),
-						count( $reversePerms )
-					)->parse();
-					$notice = Html::rawElement(
-						'span',
-						[ 'class' => 'ext-managewiki-save-warning' ],
-						$noticeMessage
-					);
+					$notice = $this->buildOneWayNotice( $context, $reversePerms, $isCurrentlyEnabled );
 					array_unshift(
 						$help,
 						$notice . "\n",
