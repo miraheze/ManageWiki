@@ -216,10 +216,7 @@ class ExtensionsModule implements IModule {
 			if ( !isset( $this->changes[$name] ) ) {
 				unset( $requirements['permissions'] );
 			} else {
-				$requirements['permissions'] = $this->processPermissionRequirements(
-					$requirements['permissions'] ?? [],
-					enable: true,
-				);
+				$requirements = $this->resolvePermissions( $requirements, enable: true );
 			}
 
 			// Now we need to check if we fulfill the requirements to enable this extension.

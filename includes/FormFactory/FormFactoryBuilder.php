@@ -377,17 +377,12 @@ class FormFactoryBuilder {
 				$extRequirements = $ext['requires'];
 				// Permissions required to toggle the extension can depend on whether it is currently enabled.
 				$isCurrentlyEnabled = in_array( $name, $extList, true );
-				$perms = $this->processPermissionRequirements(
-					$extRequirements['permissions'] ?? [],
+				$extRequirements = $this->resolvePermissions(
+					$extRequirements,
 					// If the extension is enabled, perform permission check for disabling it.
 					// If the extension is disabled, perform permission check for enabling it.
 					!$isCurrentlyEnabled,
 				);
-				if ( $perms !== [] ) {
-					$extRequirements['permissions'] = $perms;
-				} else {
-					unset( $extRequirements['permissions'] );
-				}
 
 				$requirementsCheck = $mwRequirements->check(
 					// Don't check for extension requirements as we don't want

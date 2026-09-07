@@ -29,4 +29,17 @@ trait PermissionsHelperTrait {
 		// Make phan happy about the return type
 		return array_values( $filtered );
 	}
+
+	private function resolvePermissions( array $requires, bool $enable ): array {
+		$perms = $this->processPermissionRequirements( $requires['permissions'] ?? [], $enable );
+		// If permission requirements are one-way, then we may end up with no permission requirements.
+		// In this case we need to unset the attribute so that permission checks are skipped entirely.
+		if ( $perms === [] ) {
+			unset( $requires['permissions'] );
+			return $requires;
+		}
+
+		$requires['permissions'] = $perms;
+		return $requires;
+	}
 }
