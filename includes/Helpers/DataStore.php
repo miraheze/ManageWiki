@@ -41,19 +41,25 @@ class DataStore {
 	}
 
 	/**
-	 * Syncs the cache by checking if the cached wiki data is outdated.
+	 * Syncs the cache if the cached wiki data is outdated.
 	 * If the wiki file has been modified, it will reset and
 	 * regenerate the cached data.
 	 */
 	public function syncCache(): void {
+		if ( $this->isCacheOutdated() ) {
+			$this->resetWikiData( isNewChanges: false );
+		}
+	}
+
+	/**
+	 * @return bool Whether the stored cache file doesn't exist yet or is outdated
+	 */
+	public function isCacheOutdated(): bool {
 		// mtime will be 0 if the file does not exist as well, which means
 		// it will be generated.
 		$mtime = $this->getCachedWikiData()['mtime'] ?? 0;
 
-		// Regenerate wiki data cache if the file does not exist or has no valid mtime
-		if ( $mtime === 0 || $mtime < $this->timestamp ) {
-			$this->resetWikiData( isNewChanges: false );
-		}
+		return $mtime === 0 || $mtime < $this->timestamp;
 	}
 
 	public function isPrivate(): bool {
