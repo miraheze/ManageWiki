@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Wikimedia\Http\MultiHttpClient;
 use function array_keys;
+use function is_array;
 use function json_decode;
 use function reset;
 
@@ -315,6 +316,10 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 		$cacheUpdate->executeNow( 'reset', 'examplewiki' );
 
 		$decoded = json_decode( $capturedBody ?: '[]', true );
+		if ( !is_array( $decoded ) ) {
+			$this->fail( 'Expected the request body to decode to an array.' );
+		}
+
 		$this->assertSame( 'secret-key', $decoded['key'] );
 	}
 
