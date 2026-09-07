@@ -1,6 +1,6 @@
 <?php
 
-namespace Miraheze\ManageWiki\Helpers\Utils;
+namespace Miraheze\ManageWiki\Traits;
 
 use function array_filter;
 use function array_merge;
@@ -8,18 +8,17 @@ use function array_values;
 use function is_numeric;
 use const ARRAY_FILTER_USE_KEY;
 
-class PermissionUtils {
+trait PermissionsHelperTrait {
 
 	/**
-	 * @param array|null $perms The permissions array, which is either a numeric array consisting of permission names
+	 * @param array $perms The permissions array, which is either a numeric array consisting of permission names
 	 * or an associative array with keys 'enable' and/or 'disable' mapping to a numeric array of permissions required
 	 * on enable/disable.
 	 * @param bool $enable Whether the check is performed against enabling the extension.
 	 *
 	 * @return list<string> Numeric array of permission names required.
 	 */
-	public static function processPermissionRequirements( ?array $perms, bool $enable ): array {
-		$perms ??= [];
+	private function processPermissionRequirements( array $perms, bool $enable ): array {
 		if ( $enable ) {
 			$perms = array_merge( $perms, $perms['enable'] ?? [] );
 		} else {

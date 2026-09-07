@@ -26,12 +26,12 @@ use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
-use Miraheze\ManageWiki\Helpers\Utils\PermissionUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Miraheze\ManageWiki\ICoreModule;
 use Miraheze\ManageWiki\Traits\ConfigHelperTrait;
 use Miraheze\ManageWiki\Traits\FormHelperTrait;
 use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
+use Miraheze\ManageWiki\Traits\PermissionsHelperTrait;
 use ObjectCacheFactory;
 use Psr\Log\LoggerInterface;
 use Wikimedia\ObjectCache\WANObjectCache;
@@ -74,6 +74,7 @@ class FormFactoryBuilder {
 	use ConfigHelperTrait;
 	use FormHelperTrait;
 	use MatrixHandlerTrait;
+	use PermissionsHelperTrait;
 
 	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
@@ -377,8 +378,8 @@ class FormFactoryBuilder {
 				$extRequirements = $ext['requires'];
 				// Permissions required to toggle the extension can depend on whether it is currently enabled.
 				$isCurrentlyEnabled = in_array( $name, $extList, true );
-				$perms = PermissionUtils::processPermissionRequirements(
-					$extRequirements['permissions'] ?? null,
+				$perms = $this->processPermissionRequirements(
+					$extRequirements['permissions'] ?? [],
 					// If the extension is enabled, perform permission check for disabling it.
 					// If the extension is disabled, perform permission check for enabling it.
 					!$isCurrentlyEnabled,
@@ -402,8 +403,8 @@ class FormFactoryBuilder {
 
 				// Check if the user is able to reverse this change.
 				// Same check as above except $isCurrentlyEnabled is reversed.
-				$reversePerms = PermissionUtils::processPermissionRequirements(
-					$ext['requires']['permissions'] ?? null,
+				$reversePerms = $this->processPermissionRequirements(
+					$ext['requires']['permissions'] ?? [],
 					$isCurrentlyEnabled
 				);
 

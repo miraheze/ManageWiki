@@ -8,8 +8,8 @@ use Miraheze\ManageWiki\Helpers\Factories\DataStoreFactory;
 use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
-use Miraheze\ManageWiki\Helpers\Utils\PermissionUtils;
 use Miraheze\ManageWiki\IModule;
+use Miraheze\ManageWiki\Traits\PermissionsHelperTrait;
 use Psr\Log\LoggerInterface;
 use function array_column;
 use function array_filter;
@@ -23,6 +23,8 @@ use function json_encode;
 use const MW_ENTRY_POINT;
 
 class ExtensionsModule implements IModule {
+
+	use PermissionsHelperTrait;
 
 	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
@@ -214,8 +216,8 @@ class ExtensionsModule implements IModule {
 			if ( !isset( $this->changes[$name] ) ) {
 				unset( $requirements['permissions'] );
 			} else {
-				$requirements['permissions'] = PermissionUtils::processPermissionRequirements(
-					$requirements['permissions'] ?? null,
+				$requirements['permissions'] = $this->processPermissionRequirements(
+					$requirements['permissions'] ?? [],
 					enable: true,
 				);
 			}
@@ -296,8 +298,8 @@ class ExtensionsModule implements IModule {
 
 		foreach ( $this->removedExtensions as $config ) {
 			$requirementsCheck = true;
-			$permissionRequirements = PermissionUtils::processPermissionRequirements(
-				$config['requires']['permissions'] ?? null,
+			$permissionRequirements = $this->processPermissionRequirements(
+				$config['requires']['permissions'] ?? [],
 				false
 			);
 			if ( $permissionRequirements !== [] ) {
