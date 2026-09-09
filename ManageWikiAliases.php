@@ -6,6 +6,7 @@ $specialPageAliases['en'] = [
 	'DeletedWikis' => [ 'DeletedWikis' ],
 	'ManageWiki' => [ 'ManageWiki' ],
 	'ManageWikiDefaults' => [ 'ManageWikiDefaults' ],
+	'UndeleteWiki' => [ 'UndeleteWiki' ],
 ];
 
 $specialPageAliases['vi'] = [
