@@ -135,6 +135,16 @@
 				"ManageWikiFormFactory",
 				"ManageWikiModuleFactory"
 			]
+		},
+		"UndeleteWiki": {
+			"class": "Miraheze\\ManageWiki\\Specials\\SpecialUndeleteWiki",
+			"services": [
+				"ActorStoreFactory",
+				"ManageWikiDatabaseUtils",
+				"ExtensionRegistry",
+				"ManageWikiModuleFactory",
+				"UserGroupManagerFactory"
+			]
 		}
 	},
 	"APIListModules": {
@@ -352,6 +362,10 @@
 		"ManageWikiSiteConfiguration": {
 			"description": "SiteConfiguration object or null. ManageWiki's version of $wgConf for accessing certain configuration variables remotely.",
 			"value": null
+		},
+		"ManageWikiUndeleteGroups": {
+			"description": "Array. List of local user groups that are allowed to self-service undelete their own wiki through Special:Undelete on the central wiki. Leave empty to disable Special:Undelete entirely.",
+			"value": []
 		},
 		"ManageWikiUseCustomDomains": {
 			"description": "Boolean. Whether to implement the ability to change the server name from ManageWiki.",

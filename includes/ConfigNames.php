@@ -53,5 +53,7 @@ class ConfigNames {
 
 	public const string SiteConfiguration = 'ManageWikiSiteConfiguration';
 
+	public const string UndeleteGroups = 'ManageWikiUndeleteGroups';
+
 	public const string UseCustomDomains = 'ManageWikiUseCustomDomains';
 }
