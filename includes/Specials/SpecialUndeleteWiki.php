@@ -19,8 +19,6 @@ use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use function array_intersect;
 use function implode;
-use function mb_strtolower;
-use function trim;
 
 class SpecialUndeleteWiki extends SpecialPage {
 
@@ -139,7 +137,7 @@ class SpecialUndeleteWiki extends SpecialPage {
 		);
 		return false;
 	}
-	
+
 	private function isAllowedToUndelete( string $dbname ): bool {
 		$remoteUser = $this->actorStoreFactory->getUserIdentityLookup( $dbname )
 			->getUserIdentityByName( $this->getUser()->getName() );
