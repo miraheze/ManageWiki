@@ -25,7 +25,11 @@ trait PermissionsHelperTrait {
 			$perms = array_merge( $perms, $perms['disable'] ?? [] );
 		}
 		// Drop non-numeric keys (e.g. 'enable')
-		$filtered = array_filter( $perms, static fn ( $k ) => is_numeric( $k ), ARRAY_FILTER_USE_KEY );
+		$filtered = array_filter(
+			$perms,
+			static fn ( int|string $k ): bool => is_numeric( $k ),
+			ARRAY_FILTER_USE_KEY
+		);
 		// Make phan happy about the return type
 		return array_values( $filtered );
 	}
