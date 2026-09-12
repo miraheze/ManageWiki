@@ -29,7 +29,7 @@ class Main implements
 	SkinTemplateNavigation__UniversalHook
 {
 
-	private const MODULE_ICONS = [
+	private const array MODULE_ICONS = [
 		'core' => 'labFlask',
 		'extensions' => 'edit',
 		'namespaces' => 'listBullet',
@@ -112,14 +112,14 @@ class Main implements
 		}
 	}
 
-	/** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
+     */
 	public function onSkinTemplateNavigation__Universal( $sktemplate, &$links ): void {
-        // only on citizen
-		if ( $sktemplate->getSkinName() !== 'citizen' ) {
-			return;
-		}
+        // phpcs:enable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
 
-		if ( !isset( $links['associated-pages'] ) || $links['associated-pages'] === [] ) {
+        if ( empty( $links['associated-pages'] ) ) {
 			return;
 		}
 
