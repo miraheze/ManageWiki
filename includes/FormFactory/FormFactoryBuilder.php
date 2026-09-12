@@ -30,6 +30,7 @@ use Miraheze\ManageWiki\ICoreModule;
 use Miraheze\ManageWiki\Traits\ConfigHelperTrait;
 use Miraheze\ManageWiki\Traits\FormHelperTrait;
 use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
+use Miraheze\ManageWiki\Traits\PermissionsHelperTrait;
 use ObjectCacheFactory;
 use Psr\Log\LoggerInterface;
 use Wikimedia\ObjectCache\WANObjectCache;
@@ -71,6 +72,7 @@ class FormFactoryBuilder {
 	use ConfigHelperTrait;
 	use FormHelperTrait;
 	use MatrixHandlerTrait;
+	use PermissionsHelperTrait;
 
 	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
@@ -348,6 +350,7 @@ class FormFactoryBuilder {
 
 		$formDescriptor = [];
 		foreach ( $this->options->get( ConfigNames::Extensions ) as $name => $ext ) {
+			$isEnabled = in_array( $name, $extList, true );
 			$hasSettings = count( array_filter(
 				$manageWikiSettings,
 				static fn ( array $value ): bool => $value['from'] === $name
@@ -357,7 +360,7 @@ class FormFactoryBuilder {
 			if (
 				// Don't want to disable fields for extensions already enabled
 				// otherwise it makes disabling them more complicated.
-				!in_array( $name, $extList, true ) && (
+				!$isEnabled && (
 					isset( $ext['requires']['extensions'] ) ||
 					$ext['conflicts']
 				)
@@ -371,14 +374,36 @@ class FormFactoryBuilder {
 			$help = [];
 			$requirementsCheck = true;
 			if ( $ext['requires'] ) {
+				// Permissions required to toggle the extension can depend on whether it is currently
+				// enabled. If the extension is enabled, perform permission check for disabling it.
+				// If the extension is disabled, perform permission check for enabling it.
+				$extRequirements = $this->resolvePermissions( $ext['requires'], !$isEnabled );
+
 				$requirementsCheck = $mwRequirements->check(
 					// Don't check for extension requirements as we don't want
 					// to disable the field, we use disable-if for that.
-					array_diff_key( $ext['requires'], [ 'extensions' => true ] ),
+					array_diff_key( $extRequirements, [ 'extensions' => true ] ),
 					$extList
 				);
 
-				$help[] = $this->buildRequires( $context, $ext['requires'] ) . "\n";
+				// Check if the user is able to reverse this change.
+				// Same check as above except $isEnabled is reversed.
+				$reversePerms = $this->processPermissionRequirements(
+					$ext['requires']['permissions'] ?? [],
+					$isEnabled
+				);
+
+				// If this extension can be toggled but this operation cannot be reversed, then warn.
+				if (
+					$ceMW && $requirementsCheck && $reversePerms !== [] &&
+					!$context->getAuthority()->isAllowedAll( ...$reversePerms )
+				) {
+					$help[] = $this->buildOneWayNotice( $context, $reversePerms, $isEnabled ) . "\n";
+				}
+
+				if ( $extRequirements !== [] ) {
+					$help[] = $this->buildRequires( $context, $extRequirements ) . "\n";
+				}
 			}
 
 			if ( $ext['conflicts'] ?? false ) {
@@ -427,7 +452,7 @@ class FormFactoryBuilder {
 				$help[] = "\n" . $rawMessage->parse();
 			}
 
-			if ( $hasSettings && in_array( $name, $extList, true ) ) {
+			if ( $hasSettings && $isEnabled ) {
 				$help[] = "\n" . $this->linkRenderer->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "settings/$name" )->getFullURL(),
 					$context->msg( 'managewiki-extension-settings' ),
@@ -442,7 +467,7 @@ class FormFactoryBuilder {
 					$ext['linkPage'],
 					$extDisplayName ?? ( $namemsg ? $context->msg( $namemsg )->text() : $extname ) ?? $ext['name'],
 				],
-				'default' => in_array( $name, $extList, true ),
+				'default' => $isEnabled,
 				'disabled' => $ceMW ? !$requirementsCheck : true,
 				'disable-if' => $disableIf,
 				'help' => nl2br( implode( ' ', $help ) ),
