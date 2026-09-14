@@ -144,6 +144,7 @@
 	"managewiki-review-nochanges": "<em>Nessuna modifica apportata.</em>",
 	"managewiki-review-toggled": "<strong>$1 ($2)</strong> era <em>$3</em>",
 	"managewiki-save": "Salva",
+	"managewiki-save-warnings-title": "Conferma modifiche",
 	"managewiki-search-noresults": "Nessun risultato",
 	"managewiki-sidebar-header": "Amministrazione",
 	"managewiki-success": "Le modifiche sono state salvate.",
