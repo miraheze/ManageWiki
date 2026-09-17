@@ -121,19 +121,6 @@ class ModifyGroupPermissions extends Maintenance {
 		string $target
 	): void {
 		$groupData = $mwPermissions->list( $group );
-
-		$isRemovable = !in_array( $group, $this->getConfig()->get( ConfigNames::PermissionsPermanentGroups ), true );
-		$allPermissionsRemoved = count( $permData['permissions']['remove'] ?? [] ) > 0 &&
-			count( $permData['permissions']['add'] ?? [] ) === 0 &&
-			count( $groupData['permissions'] ?? [] ) === count( $permData['permissions']['remove'] );
-
-		if ( $isRemovable && $allPermissionsRemoved ) {
-			$mwPermissions->remove( $group );
-			$mwPermissions->commit();
-			$this->output( "Removed $group from $target\n" );
-			return;
-		}
-
 		$mwPermissions->modify( $group, $permData );
 		$mwPermissions->commit();
 		$this->output( "Modified $group on $target\n" );
