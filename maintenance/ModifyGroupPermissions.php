@@ -79,29 +79,35 @@ class ModifyGroupPermissions extends Maintenance {
 			$dbnames = $this->getConfig()->get( MainConfigNames::LocalDatabases );
 			foreach ( $dbnames as $dbname ) {
 				$mwPermissions = $this->moduleFactory->permissions( $dbname );
-				$this->applyToGroups( $mwPermissions, $permData );
+				$this->applyToGroups( $mwPermissions, $permData, $dbname );
 			}
 
+			$this->output( "Applied changes to all wikis.\n" );
 			return;
 		}
 
 		// Local only
 		$mwPermissions = $this->moduleFactory->permissionsLocal();
-		$this->applyToGroups( $mwPermissions, $permData );
+		$this->applyToGroups( $mwPermissions, $permData, 'local wiki' );
 	}
 
-	private function applyToGroups( PermissionsModule $mwPermissions, array $permData ): void {
+	private function applyToGroups(
+		PermissionsModule $mwPermissions,
+		array $permData,
+		string $target
+	): void {
 		if ( $this->hasOption( 'all-groups' ) ) {
 			$groups = $mwPermissions->listGroups();
 			foreach ( $groups as $group ) {
-				$this->changeGroup( $group, $permData, $mwPermissions );
+				$this->changeGroup( $group, $permData, $mwPermissions, $target );
 			}
 
 			return;
 		}
 
 		if ( $this->hasOption( 'group' ) ) {
-			$this->changeGroup( $this->getOption( 'group' ), $permData, $mwPermissions );
+			$group = $this->getOption( 'group' );
+			$this->changeGroup( $mwPermissions, $permData, $group, $target );
 			return;
 		}
 
@@ -109,9 +115,10 @@ class ModifyGroupPermissions extends Maintenance {
 	}
 
 	private function changeGroup(
-		string $group,
+		PermissionsModule $mwPermissions,
 		array $permData,
-		PermissionsModule $mwPermissions
+		string $group,
+		string $target
 	): void {
 		$groupData = $mwPermissions->list( $group );
 
@@ -122,11 +129,14 @@ class ModifyGroupPermissions extends Maintenance {
 
 		if ( $isRemovable && $allPermissionsRemoved ) {
 			$mwPermissions->remove( $group );
-		} else {
-			$mwPermissions->modify( $group, $permData );
+			$mwPermissions->commit();
+			$this->output( "Removed $group from $target\n" );
+			return;
 		}
 
+		$mwPermissions->modify( $group, $permData );
 		$mwPermissions->commit();
+		$this->output( "Modified $group on $target\n" );
 	}
 
 	/**
