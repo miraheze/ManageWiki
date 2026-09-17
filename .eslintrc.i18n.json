@@ -1,0 +1,8 @@
+{
+	"root": true,
+	"parser": "jsonc-eslint-parser",
+	"plugins": [ "jsonc" ],
+	"rules": {
+		"jsonc/sort-keys": [ "error", "asc", { "caseSensitive": true, "natural": false } ]
+	}
+}
