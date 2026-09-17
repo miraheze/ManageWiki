@@ -14,7 +14,6 @@
 		"eslint-config-wikimedia": "0.32.6",
 		"eslint-plugin-jsonc": "2.21.1",
 		"grunt-banana-checker": "0.13.0",
-		"jsonc-eslint-parser": "2.4.2",
 		"stylelint-config-idiomatic-order": "10.0.0",
 		"stylelint-config-wikimedia": "0.19.4"
 	},
