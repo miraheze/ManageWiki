@@ -8,7 +8,7 @@
 		"lint:styles": "stylelint \"**/*.{less,css}\"",
 		"lint:fix:i18n": "npm -s run lint:i18n:order -- --fix",
 		"lint:i18n": "banana-checker --requireLowerCase=0 i18n/ && npm -s run lint:i18n:order",
-		"lint:i18n:order": "eslint --no-eslintrc -c .eslintrc.i18n.json --cache --max-warnings 0 i18n/en.json i18n/qqq.json"
+		"lint:i18n:order": "eslint --no-eslintrc -c i18n/.eslintrc.json --cache --max-warnings 0 i18n/en.json i18n/qqq.json"
 	},
 	"devDependencies": {
 		"eslint-config-wikimedia": "0.32.6",
