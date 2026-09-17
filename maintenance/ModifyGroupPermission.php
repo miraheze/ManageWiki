@@ -56,7 +56,6 @@ class ModifyGroupPermission extends Maintenance {
 
 	public function execute(): void {
 		$this->initServices();
-
 		$permData = [
 			'permissions' => [
 				'add' => $this->getValue( 'addperms' ),
