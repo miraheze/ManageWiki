@@ -99,14 +99,15 @@ class ModifyGroupPermissions extends Maintenance {
 		if ( $this->hasOption( 'all-groups' ) ) {
 			$groups = $mwPermissions->listGroups();
 			foreach ( $groups as $group ) {
-				$this->changeGroup( $group, $permData, $mwPermissions, $target );
+				$this->changeGroup( $mwPermissions, $permData, $group, $target );
 			}
 
 			return;
 		}
 
 		if ( $this->hasOption( 'group' ) ) {
-			$this->changeGroup( $this->getOption( 'group' ), $permData, $mwPermissions, $target );
+			$group = $this->getOption( 'group' );
+			$this->changeGroup( $mwPermissions, $permData, $group, $target );
 			return;
 		}
 
@@ -114,9 +115,9 @@ class ModifyGroupPermissions extends Maintenance {
 	}
 
 	private function changeGroup(
-		string $group,
-		array $permData,
 		PermissionsModule $mwPermissions,
+		array $permData,
+		string $group,
 		string $target
 	): void {
 		if ( $this->hasOption( 'delete' ) ) {
