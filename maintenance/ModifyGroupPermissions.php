@@ -99,7 +99,7 @@ class ModifyGroupPermissions extends Maintenance {
 		if ( $this->hasOption( 'all-groups' ) ) {
 			$groups = $mwPermissions->listGroups();
 			foreach ( $groups as $group ) {
-				$this->changeGroup( $group, $permData, $mwPermissions, $target );
+				$this->changeGroup( $mwPermissions, $permData, $group, $target );
 			}
 
 			return;
