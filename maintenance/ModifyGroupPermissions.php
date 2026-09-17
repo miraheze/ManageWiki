@@ -96,7 +96,9 @@ class ModifyGroupPermissions extends Maintenance {
 		if ( $this->hasOption( 'all-groups' ) ) {
 			$groups = $mwPermissions->listGroups();
 			foreach ( $groups as $group ) {
-				$this->changeGroup( $mwPermissions, $permData, $group, $target );
+				$mwPermissions->modify( $group, $permData );
+				$mwPermissions->commit();
+				$this->output( "Modified $group on $target\n" );
 			}
 
 			return;
@@ -104,22 +106,13 @@ class ModifyGroupPermissions extends Maintenance {
 
 		if ( $this->hasOption( 'group' ) ) {
 			$group = $this->getOption( 'group' );
-			$this->changeGroup( $mwPermissions, $permData, $group, $target );
+			$mwPermissions->modify( $group, $permData );
+			$mwPermissions->commit();
+			$this->output( "Modified $group on $target\n" );
 			return;
 		}
 
 		$this->fatalError( 'You must supply either supply --group or use --all-groups' );
-	}
-
-	private function changeGroup(
-		PermissionsModule $mwPermissions,
-		array $permData,
-		string $group,
-		string $target
-	): void {
-		$mwPermissions->modify( $group, $permData );
-		$mwPermissions->commit();
-		$this->output( "Modified $group on $target\n" );
 	}
 
 	/**
