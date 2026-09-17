@@ -4,12 +4,9 @@ namespace Miraheze\ManageWiki\Maintenance;
 
 use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
-use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
-use function count;
 use function explode;
-use function in_array;
 
 class ModifyGroupPermissions extends Maintenance {
 
