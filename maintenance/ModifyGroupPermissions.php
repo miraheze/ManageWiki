@@ -117,7 +117,6 @@ class ModifyGroupPermissions extends Maintenance {
 		string $group,
 		string $target
 	): void {
-		$groupData = $mwPermissions->list( $group );
 		$mwPermissions->modify( $group, $permData );
 		$mwPermissions->commit();
 		$this->output( "Modified $group on $target\n" );
