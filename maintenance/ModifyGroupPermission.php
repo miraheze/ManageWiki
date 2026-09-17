@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Maintenance;
 
+use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
@@ -18,7 +19,6 @@ class ModifyGroupPermission extends Maintenance {
 		parent::__construct();
 
 		$this->addOption( 'group', 'The group name you want to change.', false, true );
-		$this->addOption( 'all', 'Gets all perm group names.' );
 		$this->addOption( 'addperms', 'Comma separated list of permissions to add.', false, true );
 		$this->addOption( 'removeperms', 'Comma separated list of permissions to remove.', false, true );
 
@@ -42,6 +42,10 @@ class ModifyGroupPermission extends Maintenance {
 			false, true
 		);
 
+		$this->addOption( 'all-groups', 'Apply the change to every existing group instead of a single group.' );
+		$this->addOption( 'all-wikis', 'Apply the change to all wikis instead of just the local wiki.' );
+		$this->addOption( 'execute', 'Confirm execution. Required if using --all-wikis.' );
+
 		$this->requireExtension( 'ManageWiki' );
 	}
 
@@ -52,8 +56,6 @@ class ModifyGroupPermission extends Maintenance {
 
 	public function execute(): void {
 		$this->initServices();
-		$mwPermissions = $this->moduleFactory->permissionsLocal();
-
 		$permData = [
 			'permissions' => [
 				'add' => $this->getValue( 'addperms' ),
@@ -69,9 +71,28 @@ class ModifyGroupPermission extends Maintenance {
 			],
 		];
 
-		if ( $this->hasOption( 'all' ) ) {
-			$groups = $mwPermissions->listGroups();
+		if ( $this->hasOption( 'all-wikis' ) ) {
+			if ( !$this->hasOption( 'execute' ) ) {
+				$this->fatalError( 'You must use --execute when using --all-wikis.', 2 );
+			}
 
+			$dbnames = $this->getConfig()->get( MainConfigNames::LocalDatabases );
+			foreach ( $dbnames as $dbname ) {
+				$mwPermissions = $this->moduleFactory->permissions( $dbname );
+				$this->applyToGroups( $mwPermissions, $permData );
+			}
+
+			return;
+		}
+
+		// Local only
+		$mwPermissions = $this->moduleFactory->permissionsLocal();
+		$this->applyToGroups( $mwPermissions, $permData );
+	}
+
+	private function applyToGroups( PermissionsModule $mwPermissions, array $permData ): void {
+		if ( $this->hasOption( 'all-groups' ) ) {
+			$groups = $mwPermissions->listGroups();
 			foreach ( $groups as $group ) {
 				$this->changeGroup( $group, $permData, $mwPermissions );
 			}
@@ -84,7 +105,7 @@ class ModifyGroupPermission extends Maintenance {
 			return;
 		}
 
-		$this->fatalError( 'You must supply either supply --group or use --all' );
+		$this->fatalError( 'You must supply either supply --group or use --all-groups' );
 	}
 
 	private function changeGroup(
