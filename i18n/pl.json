@@ -141,6 +141,7 @@
 	"managewiki-permissions-unassigned": "Poniższe uprawnienia nie są przypisane do tej grupy użytkowników:",
 	"managewiki-requires": "Wymaga",
 	"managewiki-save": "Zapisz",
+	"managewiki-save-warnings-title": "Zapisz zmiany",
 	"managewiki-sidebar-header": "Administracja",
 	"managewiki-success": "Zmiany zostały zapisane.",
 	"managewiki-toggle-forcesidebar": "Wymuś wyświetlanie linków ManageWiki w pasku bocznym.",

@@ -23,7 +23,8 @@
 			"Thothsum",
 			"Vlad5250",
 			"Vonavy",
-			"WerySkok"
+			"WerySkok",
+			"Yurina Tatiana"
 		]
 	},
 	"action-managewiki-core": "управлять основными настройками для этой вики",
@@ -199,6 +200,7 @@
 	"managewiki-review-title": "Проверить изменения",
 	"managewiki-review-toggled": "<strong>$1 ($2)</strong> было <em>$3</em>",
 	"managewiki-save": "Сохранить",
+	"managewiki-save-warnings-title": "Подтвердите изменения",
 	"managewiki-search": "Поиск ManageWiki",
 	"managewiki-search-noresults": "Нет результатов",
 	"managewiki-sidebar-header": "Администрирование",
