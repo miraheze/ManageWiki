@@ -11,7 +11,7 @@ use function count;
 use function explode;
 use function in_array;
 
-class ModifyGroupPermission extends Maintenance {
+class ModifyGroupPermissions extends Maintenance {
 
 	private ModuleFactory $moduleFactory;
 
@@ -139,5 +139,5 @@ class ModifyGroupPermission extends Maintenance {
 }
 
 // @codeCoverageIgnoreStart
-return ModifyGroupPermission::class;
+return ModifyGroupPermissions::class;
 // @codeCoverageIgnoreEnd
