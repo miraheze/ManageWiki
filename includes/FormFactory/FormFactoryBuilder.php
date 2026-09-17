@@ -1634,16 +1634,7 @@ class FormFactoryBuilder {
 		}
 
 		$permData['autopromote'] = count( $aPBuild ) > 1 ? $aPBuild : null;
-
-		$allPermissionsRemoved = count( $permData['permissions']['remove'] ?? [] ) > 0 &&
-			count( $permData['permissions']['add'] ?? [] ) === 0 &&
-			count( $groupData['permissions'] ?? [] ) === count( $permData['permissions']['remove'] );
-
-		if ( $isRemovable && $allPermissionsRemoved ) {
-			$mwPermissions->remove( $group );
-		} else {
-			$mwPermissions->modify( $group, $permData );
-		}
+		$mwPermissions->modify( $group, $permData );
 
 		return $mwPermissions;
 	}
