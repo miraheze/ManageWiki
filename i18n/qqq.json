@@ -74,7 +74,6 @@
 	"managewiki-error-conflict": "A message that is shown when a setting conflicts with another",
 	"managewiki-error-dependency": "Error message shown when a user tries to disable an extension that another enabled extension depends on. $1 is the extension being disabled, $2 is the extension that depends on it.",
 	"managewiki-error-disallowednamespace": "A message that is shown when someone tries to create a disallowed namespace",
-	"managewiki-error-emptygroup": "Error message shown when a user tries to create a user group without assigning any permissions to it.",
 	"managewiki-error-install": "Error message shown when enabling an extension fails. $1 is the name of the extension.",
 	"managewiki-error-missingpermission": "Error message shown when a user attempts to remove the 'managewiki-permissions' right from the last group that has it.",
 	"managewiki-error-missingwiki": "Error message given when a wiki does not exist. $1 is the wiki database name.",
