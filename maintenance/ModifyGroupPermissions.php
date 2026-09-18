@@ -7,7 +7,6 @@ use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\PermissionsModule;
-use function count;
 use function explode;
 use function in_array;
 
@@ -19,6 +18,7 @@ class ModifyGroupPermissions extends Maintenance {
 		parent::__construct();
 
 		$this->addOption( 'group', 'The group name you want to change.', false, true );
+		$this->addOption( 'delete', 'Delete the group entirely instead of modifying its permissions.' );
 		$this->addOption( 'addperms', 'Comma separated list of permissions to add.', false, true );
 		$this->addOption( 'removeperms', 'Comma separated list of permissions to remove.', false, true );
 
@@ -120,17 +120,21 @@ class ModifyGroupPermissions extends Maintenance {
 		string $group,
 		string $target
 	): void {
-		$groupData = $mwPermissions->list( $group );
+		if ( $this->hasOption( 'delete' ) ) {
+			$permanentGroups = $this->getConfig()->get( ConfigNames::PermissionsPermanentGroups );
+			if ( in_array( $group, $permanentGroups, true ) ) {
+				$this->output( "Skipped deleting $group on $target: group is marked permanent\n" );
+				return;
+			}
 
-		$isRemovable = !in_array( $group, $this->getConfig()->get( ConfigNames::PermissionsPermanentGroups ), true );
-		$allPermissionsRemoved = count( $permData['permissions']['remove'] ?? [] ) > 0 &&
-			count( $permData['permissions']['add'] ?? [] ) === 0 &&
-			count( $groupData['permissions'] ?? [] ) === count( $permData['permissions']['remove'] );
-
-		if ( $isRemovable && $allPermissionsRemoved ) {
 			$mwPermissions->remove( $group );
+			if ( $mwPermissions->getErrors() ) {
+				$this->output( "Failed to delete $group on $target\n" );
+				return;
+			}
+
 			$mwPermissions->commit();
-			$this->output( "Removed $group from $target\n" );
+			$this->output( "Deleted $group from $target\n" );
 			return;
 		}
 
