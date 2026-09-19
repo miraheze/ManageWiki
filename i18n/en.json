@@ -68,7 +68,6 @@
 	"managewiki-error-conflict": "The extension \"$1\" cannot be enabled because it conflicts with $2.",
 	"managewiki-error-dependency": "The extension \"$1\" cannot be disabled because it is a dependency of \"$2\".",
 	"managewiki-error-disallowednamespace": "The namespace \"$1\" is not allowed.",
-	"managewiki-error-emptygroup": "You cannot create a group without any permissions assigned.",
 	"managewiki-error-install": "An error occurred while attempting to enable the extension \"$1\".",
 	"managewiki-error-missingpermission": "Cannot remove the 'managewiki-permissions' right from this group, as no other groups have the right. Removing it would prevent access to ManageWiki.",
 	"managewiki-error-missingwiki": "The wiki '$1' does not exist.",
