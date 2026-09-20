@@ -143,9 +143,7 @@ class ModifyGroupPermissions extends Maintenance {
 		$this->output( "Modified $group on $target\n" );
 	}
 
-	/**
-	 * @return array{}|non-empty-list<string>
-	 */
+	/** @return array{}|non-empty-list<string> */
 	private function getValue( string $option ): array {
 		$value = $this->getOption( $option, '' );
 		return $value === '' ? [] : explode( ',', $value );
