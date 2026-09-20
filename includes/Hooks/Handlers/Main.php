@@ -112,14 +112,14 @@ class Main implements
 		}
 	}
 
-    /**
-     * @inheritDoc
+	/**
+	 * @inheritDoc
 	 * @param SkinTemplate $sktemplate @phan-unused-param
-     * @phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
-     */
+	 * @phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
+	 */
 	public function onSkinTemplateNavigation__Universal( $sktemplate, &$links ): void {
-        // phpcs:enable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
-        if ( empty( $links['associated-pages'] ) ) {
+		// phpcs:enable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
+		if ( empty( $links['associated-pages'] ) ) {
 			return;
 		}
 
