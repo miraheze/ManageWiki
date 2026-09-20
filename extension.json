@@ -181,9 +181,6 @@
 		},
 		"SidebarBeforeOutput": {
 			"handler": "Main"
-		},
-		"SkinTemplateNavigation::Universal": {
-			"handler": "Main"
 		}
 	},
 	"HookHandlers": {
