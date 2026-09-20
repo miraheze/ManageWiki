@@ -114,6 +114,7 @@ class Main implements
 
     /**
      * @inheritDoc
+	 * @param SkinTemplate $sktemplate @phan-unused-param
      * @phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
      */
 	public function onSkinTemplateNavigation__Universal( $sktemplate, &$links ): void {
