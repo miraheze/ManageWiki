@@ -7,10 +7,8 @@ use MediaWiki\Content\FallbackContentHandler;
 use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
 use MediaWiki\Hook\SetupAfterCacheHook;
 use MediaWiki\Hook\SidebarBeforeOutputHook;
-use MediaWiki\Hook\SkinTemplateNavigation__UniversalHook;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
-use MediaWiki\Skin\SkinTemplate;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
@@ -25,17 +23,8 @@ class Main implements
 	ContentHandlerForModelIDHook,
 	GetPreferencesHook,
 	SetupAfterCacheHook,
-	SidebarBeforeOutputHook,
-	SkinTemplateNavigation__UniversalHook
+	SidebarBeforeOutputHook
 {
-
-	private const array MODULE_ICONS = [
-		'core' => 'configure',
-		'extensions' => 'puzzle',
-		'namespaces' => 'articles',
-		'permissions' => 'userRights',
-		'settings' => 'settings',
-	];
 
 	public function __construct(
 		private readonly Config $config,
@@ -109,27 +98,6 @@ class Main implements
 			$sidebarLinks = $sidebar['managewiki-sidebar-header'];
 			$this->hookRunner->onManageWikiAfterSidebarLinks( $skin, $sidebarLinks );
 			$sidebar['managewiki-sidebar-header'] = $sidebarLinks;
-		}
-	}
-
-	/**
-	 * @inheritDoc
-	 * @param SkinTemplate $sktemplate @phan-unused-param
-	 * @phpcs:disable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
-	 */
-	public function onSkinTemplateNavigation__Universal( $sktemplate, &$links ): void {
-		// phpcs:enable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
-		if ( empty( $links['associated-pages'] ) ) {
-			return;
-		}
-
-		foreach ( self::MODULE_ICONS as $module => $icon ) {
-			$href = SpecialPage::getTitleFor( 'ManageWiki', $module )->getLocalURL();
-			foreach ( $links['associated-pages'] as $key => $link ) {
-				if ( ( $link['href'] ?? null ) === $href ) {
-					$links['associated-pages'][$key]['icon'] ??= $icon;
-				}
-			}
 		}
 	}
 }
