@@ -30,10 +30,10 @@ class Main implements
 {
 
 	private const array MODULE_ICONS = [
-		'core' => 'labFlask',
-		'extensions' => 'edit',
-		'namespaces' => 'listBullet',
-		'permissions' => 'userGroup',
+		'core' => 'configure',
+		'extensions' => 'puzzle',
+		'namespaces' => 'articles',
+		'permissions' => 'userRights',
 		'settings' => 'settings',
 	];
 
@@ -119,7 +119,6 @@ class Main implements
      */
 	public function onSkinTemplateNavigation__Universal( $sktemplate, &$links ): void {
         // phpcs:enable MediaWiki.NamingConventions.LowerCamelFunctionsName.FunctionName
-
         if ( empty( $links['associated-pages'] ) ) {
 			return;
 		}
