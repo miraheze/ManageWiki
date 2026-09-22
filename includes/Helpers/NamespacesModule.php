@@ -3,10 +3,10 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
-use LocalisationCache;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\JobQueue\JobSpecification;
+use MediaWiki\Language\LocalisationCache;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\ManageWiki\ConfigNames;
