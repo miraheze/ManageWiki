@@ -9,8 +9,8 @@ use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\CacheUpdate;
 use Miraheze\ManageWiki\Helpers\DataStore;
 use Miraheze\ManageWiki\Hooks\HookRunner;
-use ObjectCacheFactory;
 use Wikimedia\ObjectCache\BagOStuff;
+use MediaWiki\ObjectCache\ObjectCacheFactory;
 
 class DataStoreFactory {
 
