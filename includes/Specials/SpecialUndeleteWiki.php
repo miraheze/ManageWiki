@@ -77,6 +77,7 @@ class SpecialUndeleteWiki extends SpecialPage {
 	public function onSubmit( array $formData ): Status|false {
 		$dbname = $formData['dbname'];
 
+		/** @throws MissingWikiError */
 		try {
 			$mwCore = $this->moduleFactory->core( $dbname );
 		} catch ( MissingWikiError ) {
