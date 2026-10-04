@@ -48,7 +48,7 @@ class SpecialUndeleteWiki extends SpecialPage {
 		}
 
 		if ( !$this->getConfig()->get( ConfigNames::UndeleteGroups ) ) {
-			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ 'undelete' ] );
+			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ 'undeletewiki' ] );
 		}
 
 		$this->requireNamedUser();
@@ -56,7 +56,7 @@ class SpecialUndeleteWiki extends SpecialPage {
 		$formDescriptor = [
 			'info' => [
 				'type' => 'info',
-				'default' => $this->msg( 'managewiki-undelete-info' )->text(),
+				'default' => $this->msg( 'managewiki-undeletewiki-info' )->text(),
 			],
 			'dbname' => [
 				'type' => 'text',
@@ -68,8 +68,8 @@ class SpecialUndeleteWiki extends SpecialPage {
 		$htmlForm = HTMLForm::factory( 'ooui', $formDescriptor, $this->getContext() );
 		$htmlForm
 			->setSubmitCallback( [ $this, 'onSubmit' ] )
-			->setWrapperLegendMsg( 'managewiki-undelete-header' )
-			->setSubmitTextMsg( 'managewiki-undelete-submit' )
+			->setWrapperLegendMsg( 'managewiki-undeletewiki-header' )
+			->setSubmitTextMsg( 'managewiki-undeletewiki-submit' )
 			->prepareForm()
 			->show();
 	}
@@ -88,12 +88,12 @@ class SpecialUndeleteWiki extends SpecialPage {
 			return Status::newFatal( 'managewiki-mwlocked' );
 		}
 
-		if ( !$mwCore->isEnabled( 'action-undelete' ) || !$mwCore->isDeleted() ) {
-			return Status::newFatal( 'managewiki-undelete-notdeleted', $dbname );
+		if ( !$mwCore->isEnabled( 'action-undeletewiki' ) || !$mwCore->isDeleted() ) {
+			return Status::newFatal( 'managewiki-undeletewiki-notdeleted', $dbname );
 		}
 
 		if ( !$this->isAllowedToUndelete( $dbname ) ) {
-			return Status::newFatal( 'managewiki-undelete-notallowed', $dbname );
+			return Status::newFatal( 'managewiki-undeletewiki-notallowed', $dbname );
 		}
 
 		$mwCore->undelete();
@@ -154,7 +154,7 @@ class SpecialUndeleteWiki extends SpecialPage {
 
 	/** @inheritDoc */
 	public function getDescription(): Message {
-		return $this->msg( 'managewiki-undelete' );
+		return $this->msg( 'managewiki-undeletewiki' );
 	}
 
 	/** @inheritDoc */

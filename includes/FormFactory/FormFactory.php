@@ -106,16 +106,8 @@ class FormFactory {
 			);
 		}
 
-		$form->getOutput()->addHTML(
-			Html::successBox(
-				Html::element(
-					'p',
-					[],
-					$form->msg( 'managewiki-success' )->text()
-				),
-				'mw-notify-success'
-			)
-		);
+		$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
+		$context->getOutput()->redirect( $form->getTitle()->getFullURL() );
 
 		// Even though it's successful we still return false so
 		// that the form does not dissappear when submitted.

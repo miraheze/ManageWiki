@@ -381,13 +381,6 @@ class PermissionsModule implements IModule {
 			}
 
 			$live = $this->livePermissions[$group];
-			if ( empty( $live['permissions'] ) ) {
-				$this->errors[] = [
-					'managewiki-error-emptygroup' => [],
-				];
-				continue;
-			}
-
 			$builtTable = [
 				'perm_permissions' => json_encode( $live['permissions'] ),
 				'perm_addgroups' => json_encode( $live['addgroups'] ),

@@ -1,0 +1,16 @@
+{
+	"SpecialPageAliases": {
+		"DeletedWikis": [
+			"DeletedWikis"
+		],
+		"ManageWiki": [
+			"ManageWiki"
+		],
+		"ManageWikiDefaults": [
+			"ManageWikiDefaults"
+		],
+		"UndeleteWiki": [
+			"UndeleteWiki"
+		]
+	}
+}

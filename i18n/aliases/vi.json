@@ -1,0 +1,13 @@
+{
+	"SpecialPageAliases": {
+		"DeletedWikis": [
+			"Wiki bị xóa"
+		],
+		"ManageWiki": [
+			"Quản lý wiki"
+		],
+		"ManageWikiDefaults": [
+			"Quản lý quyền mặc định của wiki"
+		]
+	}
+}
