@@ -171,6 +171,6 @@ class SpecialUndeleteWiki extends SpecialPage {
 	public function isListed(): bool {
 		return $this->extensionRegistry->isLoaded( 'CreateWiki' ) &&
 			$this->databaseUtils->isCurrentWikiCentral() &&
-			(bool)$this->getConfig()->get( ConfigNames::UndeleteGroups );
+			(bool)$this->getConfig()->get( ConfigNames::UndeleteWikiGroups );
 	}
 }

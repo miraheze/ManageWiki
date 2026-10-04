@@ -361,8 +361,8 @@
 			"description": "SiteConfiguration object or null. ManageWiki's version of $wgConf for accessing certain configuration variables remotely.",
 			"value": null
 		},
-		"ManageWikiUndeleteGroups": {
-			"description": "Array. List of local user groups that are allowed to self-service undelete their own wiki through Special:Undelete on the central wiki. Leave empty to disable Special:Undelete entirely.",
+		"ManageWikiUndeleteWikiGroups": {
+			"description": "Array. List of local user groups that are allowed to self-service undelete their own wiki through Special:UndeleteWiki on the central wiki. Leave empty to disable Special:Undelete entirely.",
 			"value": []
 		},
 		"ManageWikiUseCustomDomains": {
