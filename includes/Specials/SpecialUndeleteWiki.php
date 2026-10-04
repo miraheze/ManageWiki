@@ -47,7 +47,7 @@ class SpecialUndeleteWiki extends SpecialPage {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-notcentralwiki' );
 		}
 
-		if ( !$this->getConfig()->get( ConfigNames::UndeleteGroups ) ) {
+		if ( !$this->getConfig()->get( ConfigNames::UndeleteWikiGroups ) ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-disabled', [ 'undeletewiki' ] );
 		}
 
@@ -147,7 +147,7 @@ class SpecialUndeleteWiki extends SpecialPage {
 			return false;
 		}
 
-		$allowedGroups = $this->getConfig()->get( ConfigNames::UndeleteGroups );
+		$allowedGroups = $this->getConfig()->get( ConfigNames::UndeleteWikiGroups );
 		$userGroupManager = $this->userGroupManagerFactory->getUserGroupManager( $dbname );
 		return (bool)array_intersect( $allowedGroups, $userGroupManager->getUserGroups( $remoteUser ) );
 	}
