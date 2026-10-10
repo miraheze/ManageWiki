@@ -205,8 +205,7 @@ class SpecialUndeleteWiki extends SpecialPage {
 		string $configName
 	): bool {
 		$allowedGroups = $this->getConfig()->get( $configName );
-		return (bool)array_intersect( $allowedGroups, $userGroupManager->getUserGroups( $user ) );
-	}
+		return (bool)array_intersect( $allowedGroups, $userGroupManager->getUserEffectiveGroups( $user ) );	}
 
 	/** @inheritDoc */
 	public function getDescription(): Message {
