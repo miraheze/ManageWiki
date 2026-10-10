@@ -8,6 +8,9 @@
 		],
 		"ManageWikiDefaults": [
 			"ManageWikiDefaults"
+		],
+		"UndeleteWiki": [
+			"UndeleteWiki"
 		]
 	}
 }
