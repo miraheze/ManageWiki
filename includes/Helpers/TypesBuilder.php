@@ -172,7 +172,8 @@ class TypesBuilder {
 					'default' => $value ?? $options['overridedefault'],
 				];
 
-				if ( !$disabled ) {
+				// Allow disable the dropdown if option labels are too long
+				if ( !$disabled && ( $options['dropdown'] ?? true ) ) {
 					$configs['dropdown'] = true;
 				}
 				break;
