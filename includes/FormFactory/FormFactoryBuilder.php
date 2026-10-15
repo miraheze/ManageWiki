@@ -1016,7 +1016,7 @@ class FormFactoryBuilder {
 			$formDescriptor["right-$perm"] = [
 				'type' => 'check',
 				'label' => $perm,
-				'help' => htmlspecialchars( User::getRightDescription( $perm ) ),
+				'help' => new RawMessage( User::getRightDescription( $perm ) )->parse(),
 				'section' => $assigned ? 'assigned' : 'unassigned',
 				'default' => $assigned,
 				'disabled' => !$ceMW,
