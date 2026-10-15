@@ -470,7 +470,7 @@ class FormFactoryBuilder {
 				'default' => $isEnabled,
 				'disabled' => $ceMW ? !$requirementsCheck : true,
 				'disable-if' => $disableIf,
-				'help' => nl2br( implode( ' ', $help ) ),
+				'help-raw' => nl2br( implode( ' ', $help ) ),
 				'section' => $ext['section'],
 			];
 		}
@@ -574,7 +574,7 @@ class FormFactoryBuilder {
 						$varName,
 					],
 					'disabled' => $disabled,
-					'help' => nl2br( implode( ' ', $help ) ),
+					'help-raw' => nl2br( implode( ' ', $help ) ),
 					'cssclass' => 'ext-managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
@@ -794,7 +794,7 @@ class FormFactoryBuilder {
 							$msgName->exists() ? $msgName->text() : $a['name'],
 							$context->msg( 'parentheses', "\${$key}" ),
 						],
-						'help' => nl2br( implode( ' ', $help ) ),
+						'help-raw' => nl2br( implode( ' ', $help ) ),
 						'cssclass' => 'ext-managewiki-infuse',
 						'disabled' => $disabled,
 						'section' => $name,
@@ -1016,7 +1016,7 @@ class FormFactoryBuilder {
 			$formDescriptor["right-$perm"] = [
 				'type' => 'check',
 				'label' => $perm,
-				'help' => new RawMessage( User::getRightDescription( $perm ) )->parse(),
+				'help-raw' => new RawMessage( User::getRightDescription( $perm ) )->parse(),
 				'section' => $assigned ? 'assigned' : 'unassigned',
 				'default' => $assigned,
 				'disabled' => !$ceMW,
