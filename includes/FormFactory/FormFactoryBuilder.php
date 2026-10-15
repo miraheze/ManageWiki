@@ -446,10 +446,8 @@ class FormFactoryBuilder {
 			}
 
 			$help[] = $extDescription ?? $descriptionFallback ?? $description;
-
 			if ( $ext['help'] ?? false ) {
-				$rawMessage = new RawMessage( $ext['help'] );
-				$help[] = "\n" . $rawMessage->parse();
+				$help[] = "\n" . new RawMessage( $ext['help'] )->parse();
 			}
 
 			if ( $hasSettings && $isEnabled ) {
@@ -547,8 +545,7 @@ class FormFactoryBuilder {
 					$help[] = $this->buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$rawMessage = new RawMessage( $set['help'] );
-				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : new RawMessage( $set['help'] )->parse();
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
@@ -785,9 +782,7 @@ class FormFactoryBuilder {
 						$help[] = $this->buildRequires( $context, $a['requires'] ?? [] ) . "\n";
 					}
 
-					$rawMessage = new RawMessage( $a['help'] );
-					$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
-
+					$help[] = $msgHelp->exists() ? $msgHelp->escaped() : new RawMessage( $a['help'] )->parse();
 					$formDescriptor["$key-$name"] = [
 						'label-message' => [
 							'managewiki-setting-label',
