@@ -132,6 +132,16 @@
 				"ManageWikiFormFactory",
 				"ManageWikiModuleFactory"
 			]
+		},
+		"UndeleteWiki": {
+			"class": "Miraheze\\ManageWiki\\Specials\\SpecialUndeleteWiki",
+			"services": [
+				"ActorStoreFactory",
+				"ManageWikiDatabaseUtils",
+				"ExtensionRegistry",
+				"ManageWikiModuleFactory",
+				"UserGroupManagerFactory"
+			]
 		}
 	},
 	"APIListModules": {
@@ -281,7 +291,8 @@
 				"extensions": false,
 				"namespaces": false,
 				"permissions": false,
-				"settings": false
+				"settings": false,
+				"undeletewiki": false
 			}
 		},
 		"ManageWikiNamespacesAdditional": {
@@ -350,6 +361,14 @@
 		"ManageWikiSiteConfiguration": {
 			"description": "SiteConfiguration object or null. ManageWiki's version of $wgConf for accessing certain configuration variables remotely.",
 			"value": null
+		},
+		"ManageWikiUndeleteWikiCentralGroups": {
+			"description": "Array. List of groups, held on the central wiki, that are allowed to undelete wikis through Special:UndeleteWiki. This is subject to the 'managewiki-undeletewiki' rate limit in $wgRateLimits.",
+			"value": []
+		},
+		"ManageWikiUndeleteWikiLocalGroups": {
+			"description": "Array. List of groups, held on the wiki being undeleted, that are allowed to undelete that wiki through Special:UndeleteWiki. This is not rate limited.",
+			"value": []
 		},
 		"ManageWikiUseCustomDomains": {
 			"description": "Boolean. Whether to implement the ability to change the server name from ManageWiki.",
