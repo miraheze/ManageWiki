@@ -35,7 +35,7 @@
 		"Miraheze\\ManageWiki\\Tests\\": "tests/phpunit/"
 	},
 	"JobClasses": {
-		"CacheUpdateJob": {
+		"ManageWikiCacheUpdateJob": {
 			"class": "Miraheze\\ManageWiki\\Jobs\\CacheUpdateJob",
 			"services": [
 				"ManageWikiCacheUpdate"
