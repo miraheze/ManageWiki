@@ -45,7 +45,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 		$response = $this->executeHandler(
 			$handler,
 			$this->newRequest( [ 'key' => 'x' ] ),
-			[ 'dbname' => 'examplewiki' ]
+			validatedParams: [ 'dbname' => 'examplewiki' ]
 		);
 
 		$this->assertSame( 404, $response->getStatusCode() );
@@ -65,7 +65,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 		$response = $this->executeHandler(
 			$handler,
 			$this->newRequest( [ 'key' => 'x' ] ),
-			[ 'dbname' => 'examplewiki' ]
+			validatedParams: [ 'dbname' => 'examplewiki' ]
 		);
 
 		$this->assertSame( 429, $response->getStatusCode() );
@@ -87,7 +87,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 		$response = $this->executeHandler(
 			$handler,
 			$this->newRequest( [ 'key' => 'wrong' ] ),
-			[ 'dbname' => 'examplewiki' ]
+			validatedParams: [ 'dbname' => 'examplewiki' ]
 		);
 
 		$this->assertSame( 403, $response->getStatusCode() );
@@ -111,7 +111,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 		$response = $this->executeHandler(
 			$handler,
 			$this->newRequest( [ 'key' => 'correct' ] ),
-			[ 'dbname' => '../not-a-real-dbname' ]
+			validatedParams: [ 'dbname' => '../not-a-real-dbname' ]
 		);
 
 		$this->assertSame( 400, $response->getStatusCode() );
@@ -139,7 +139,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 		$response = $this->executeHandler(
 			$handler,
 			$this->newRequest( [ 'key' => 'correct' ] ),
-			[ 'dbname' => 'examplewiki' ]
+			validatedParams: [ 'dbname' => 'examplewiki' ]
 		);
 
 		$this->assertSame( 404, $response->getStatusCode() );
@@ -172,7 +172,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 		$response = $this->executeHandler(
 			$handler,
 			$this->newRequest( [ 'key' => 'correct' ] ),
-			[ 'dbname' => 'examplewiki' ]
+			validatedParams: [ 'dbname' => 'examplewiki' ]
 		);
 
 		$this->assertSame( 204, $response->getStatusCode() );
