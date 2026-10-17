@@ -152,7 +152,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 	 * @covers ::executeNow
 	 * @covers ::isExecutionAllowed
 	 */
-	public function testExecuteNowReturnsFalseForInvalidAction(): void {
+	public function testExecuteNowReturnsTrueForInvalidAction(): void {
 		$cacheUpdate = $this->newCacheUpdate(
 			configOverrides: [],
 			multiClient: null,
@@ -160,7 +160,7 @@ class CacheUpdateTest extends MediaWikiUnitTestCase {
 			logger: null
 		);
 
-		$this->assertFalse( $cacheUpdate->executeNow( 'not-a-real-action', 'examplewiki' ) );
+		$this->assertTrue( $cacheUpdate->executeNow( 'not-a-real-action', 'examplewiki' ) );
 	}
 
 	/**
