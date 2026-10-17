@@ -4,6 +4,7 @@ declare( strict_types = 1 );
 
 namespace Miraheze\ManageWiki\Maintenance;
 
+use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
