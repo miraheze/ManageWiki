@@ -8,9 +8,9 @@ use MediaWiki\Config\Config;
 use MediaWiki\Content\FallbackContentHandler;
 use MediaWiki\Content\Hook\ContentHandlerForModelIDHook;
 use MediaWiki\Hook\SetupAfterCacheHook;
-use MediaWiki\Hook\SidebarBeforeOutputHook;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Preferences\Hook\GetPreferencesHook;
+use MediaWiki\Skin\Hook\SidebarBeforeOutputHook;
 use MediaWiki\SpecialPage\SpecialPage;
 use MediaWiki\User\Options\UserOptionsLookup;
 use MediaWiki\User\User;
@@ -32,7 +32,7 @@ class Main implements
 		private readonly Config $config,
 		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly HookRunner $hookRunner,
-		private readonly UserOptionsLookup $userOptionsLookup
+		private readonly UserOptionsLookup $userOptionsLookup,
 	) {
 	}
 

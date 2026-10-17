@@ -7,11 +7,11 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 use Closure;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
+use MediaWiki\ObjectCache\ObjectCacheFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\CacheUpdate;
 use Miraheze\ManageWiki\Helpers\DataStore;
 use Miraheze\ManageWiki\Hooks\HookRunner;
-use ObjectCacheFactory;
 use Wikimedia\ObjectCache\BagOStuff;
 
 class DataStoreFactory {
@@ -29,7 +29,7 @@ class DataStoreFactory {
 		private readonly CacheUpdate $cacheUpdate,
 		private readonly HookRunner $hookRunner,
 		private readonly Closure $moduleFactoryClosure,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 		$this->cache = ( $this->options->get( ConfigNames::CacheType ) !== null ) ?

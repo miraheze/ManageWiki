@@ -18,7 +18,7 @@ class Requirements {
 		private readonly CoreFactory $coreFactory,
 		private readonly SettingsFactory $settingsFactory,
 		private readonly SiteStatsInit $siteStatsInit,
-		private readonly string $dbname
+		private readonly string $dbname,
 	) {
 	}
 

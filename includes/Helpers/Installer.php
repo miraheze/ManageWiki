@@ -26,7 +26,7 @@ class Installer {
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LoggerInterface $logger,
 		private readonly ModuleFactory $moduleFactory,
-		private readonly string $dbname
+		private readonly string $dbname,
 	) {
 	}
 

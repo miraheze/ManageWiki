@@ -11,6 +11,7 @@ use Miraheze\ManageWiki\Helpers\Factories\InstallerFactory;
 use Miraheze\ManageWiki\Helpers\Factories\RequirementsFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\IModule;
+use Miraheze\ManageWiki\Traits\PermissionsHelperTrait;
 use Psr\Log\LoggerInterface;
 use function array_column;
 use function array_filter;
@@ -24,6 +25,8 @@ use function json_encode;
 use const MW_ENTRY_POINT;
 
 class ExtensionsModule implements IModule {
+
+	use PermissionsHelperTrait;
 
 	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
@@ -45,7 +48,7 @@ class ExtensionsModule implements IModule {
 		private readonly LoggerInterface $logger,
 		private readonly RequirementsFactory $requirementsFactory,
 		private readonly ServiceOptions $options,
-		private readonly string $dbname
+		private readonly string $dbname,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 
@@ -214,6 +217,8 @@ class ExtensionsModule implements IModule {
 			// we don't need to check for permissions.
 			if ( !isset( $this->changes[$name] ) ) {
 				unset( $requirements['permissions'] );
+			} else {
+				$requirements = $this->resolvePermissions( $requirements, enable: true );
 			}
 
 			// Now we need to check if we fulfill the requirements to enable this extension.
@@ -292,7 +297,10 @@ class ExtensionsModule implements IModule {
 
 		foreach ( $this->removedExtensions as $config ) {
 			$requirementsCheck = true;
-			$permissionRequirements = $config['requires']['permissions'] ?? [];
+			$permissionRequirements = $this->processPermissionRequirements(
+				$config['requires']['permissions'] ?? [],
+				false
+			);
 			if ( $permissionRequirements !== [] ) {
 				$requirementsCheck = $mwRequirements->check(
 					// We only need to check for permissions when an

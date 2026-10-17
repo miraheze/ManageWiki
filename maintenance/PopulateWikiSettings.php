@@ -8,12 +8,18 @@ use MediaWiki\MainConfigNames;
 use MediaWiki\Maintenance\Maintenance;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use function array_pad;
+use function count;
 use function explode;
 use function file;
+use function implode;
 use function is_numeric;
+use function json_decode;
+use function json_last_error;
+use function json_last_error_msg;
 use function str_contains;
 use function str_replace;
 use function var_export;
+use const JSON_ERROR_NONE;
 
 class PopulateWikiSettings extends Maintenance {
 
@@ -22,8 +28,12 @@ class PopulateWikiSettings extends Maintenance {
 	public function __construct() {
 		parent::__construct();
 
-		$this->addOption( 'setting', 'The setting variable minus the $.', true, true );
+		$this->addOption( 'setting', 'The setting variable minus the $.', true, true, multiOccurrence: true );
 		$this->addOption( 'sourcelist', 'File in format of "wikidb|value" for the setting above.', false, true );
+		$this->addOption(
+			'json',
+			'Parse setting values in the file specified by --sourcelist as JSON. Only needed for multi-value settings.'
+		);
 		$this->addOption( 'remove', 'Removes setting listed with --setting.' );
 		$this->addOption( 'all-wikis', 'Remove this setting from all wikis. Only valid with --remove.' );
 		$this->addOption( 'execute', 'Confirm execution. Required if using --all-wikis.' );
@@ -39,9 +49,9 @@ class PopulateWikiSettings extends Maintenance {
 	public function execute(): void {
 		$this->initServices();
 
-		$setting = $this->getOption( 'setting' );
-
+		$settings = $this->getOption( 'setting' );
 		if ( $this->hasOption( 'remove' ) ) {
+			$settingsList = implode( ', ', $settings );
 			if ( $this->hasOption( 'all-wikis' ) ) {
 				if ( !$this->hasOption( 'execute' ) ) {
 					$this->fatalError( 'You must use --execute when using --remove with --all-wikis.', 2 );
@@ -50,20 +60,20 @@ class PopulateWikiSettings extends Maintenance {
 				$dbnames = $this->getConfig()->get( MainConfigNames::LocalDatabases );
 				foreach ( $dbnames as $dbname ) {
 					$mwSettings = $this->moduleFactory->settings( $dbname );
-					$mwSettings->remove( [ $setting ], default: null );
+					$mwSettings->remove( $settings, default: null );
 					$mwSettings->commit();
-					$this->output( "Removed $setting from $dbname\n" );
+					$this->output( "Removed $settingsList from $dbname\n" );
 				}
 
-				$this->output( "Removed $setting from all wikis.\n" );
+				$this->output( "Removed $settingsList from all wikis.\n" );
 				return;
 			}
 
 			// Local only
 			$mwSettings = $this->moduleFactory->settingsLocal();
-			$mwSettings->remove( [ $setting ], default: null );
+			$mwSettings->remove( $settings, default: null );
 			$mwSettings->commit();
-			$this->output( "Removed $setting from local wiki.\n" );
+			$this->output( "Removed $settingsList from local wiki.\n" );
 			return;
 		}
 
@@ -71,6 +81,11 @@ class PopulateWikiSettings extends Maintenance {
 			$this->fatalError( 'You must provide --sourcelist when not using --remove' );
 		}
 
+		if ( count( $settings ) > 1 ) {
+			$this->fatalError( 'Multiple --setting values are only supported with --remove.' );
+		}
+
+		$setting = $settings[0];
 		$settingSource = file( $this->getOption( 'sourcelist' ) );
 		foreach ( $settingSource as $input ) {
 			$wikidb = explode( '|', $input, 2 );
@@ -78,17 +93,24 @@ class PopulateWikiSettings extends Maintenance {
 
 			$value = str_replace( "\n", '', $settingValue );
 
-			if ( $value === 'true' ) {
-				$value = true;
-			}
+			if ( $this->hasOption( 'json' ) ) {
+				$value = json_decode( $value, true );
+				if ( json_last_error() !== JSON_ERROR_NONE ) {
+					$this->fatalError( "Invalid JSON for $dbname: " . json_last_error_msg() );
+				}
+			} else {
+				if ( $value === 'true' ) {
+					$value = true;
+				}
 
-			if ( $value === 'false' ) {
-				$value = false;
-			}
+				if ( $value === 'false' ) {
+					$value = false;
+				}
 
-			if ( is_numeric( $value ) ) {
-				// Handle setting float and integer values
-				$value = str_contains( $value, '.' ) ? (float)$value : (int)$value;
+				if ( is_numeric( $value ) ) {
+					// Handle setting float and integer values
+					$value = str_contains( $value, '.' ) ? (float)$value : (int)$value;
+				}
 			}
 
 			$mwSettings = $this->moduleFactory->settings( $dbname );

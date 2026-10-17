@@ -13,6 +13,7 @@ use MediaWiki\Linker\LinkRenderer;
 use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Message\Message;
+use MediaWiki\ObjectCache\ObjectCacheFactory;
 use MediaWiki\Permissions\PermissionManager;
 use MediaWiki\Registration\ExtensionProcessor;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -32,7 +33,7 @@ use Miraheze\ManageWiki\ICoreModule;
 use Miraheze\ManageWiki\Traits\ConfigHelperTrait;
 use Miraheze\ManageWiki\Traits\FormHelperTrait;
 use Miraheze\ManageWiki\Traits\MatrixHandlerTrait;
-use ObjectCacheFactory;
+use Miraheze\ManageWiki\Traits\PermissionsHelperTrait;
 use Psr\Log\LoggerInterface;
 use Wikimedia\ObjectCache\WANObjectCache;
 use function array_column;
@@ -73,6 +74,7 @@ class FormFactoryBuilder {
 	use ConfigHelperTrait;
 	use FormHelperTrait;
 	use MatrixHandlerTrait;
+	use PermissionsHelperTrait;
 
 	public const array CONSTRUCTOR_OPTIONS = [
 		ConfigNames::Extensions,
@@ -97,7 +99,7 @@ class FormFactoryBuilder {
 		private readonly ObjectCacheFactory $objectCacheFactory,
 		private readonly PermissionManager $permissionManager,
 		private readonly UserGroupManager $userGroupManager,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
@@ -192,6 +194,15 @@ class FormFactoryBuilder {
 				'default' => $mwCore->isClosed(),
 				'access' => !$ceMW,
 			],
+			'closed-reason' => [
+				'if' => $mwCore->isEnabled( 'closed-wikis' ) &&
+					$mwCore->getClosedReasonOptions(),
+				'hide-if' => [ '!==', 'closed', '1' ],
+				'type' => 'select',
+				'default' => $mwCore->getClosedReason(),
+				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
+				'options' => $mwCore->getClosedReasonOptions(),
+			],
 			'inactive' => [
 				'if' => $mwCore->isEnabled( 'inactive-wikis' ),
 				'type' => 'check',
@@ -212,6 +223,15 @@ class FormFactoryBuilder {
 				'default' => $mwCore->getInactiveExemptReason(),
 				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
 				'options' => $mwCore->getInactiveExemptReasonOptions(),
+			],
+			'inactive-exempt-expiry' => [
+				'if' => $mwCore->isEnabled( 'inactive-wikis' ) &&
+					$mwCore->getInactiveExemptExpiryOptions(),
+				'hide-if' => [ '!==', 'inactive-exempt', '1' ],
+				'type' => 'selectorother',
+				'default' => $mwCore->getInactiveExemptExpiry() ?? 'indefinite',
+				'access' => !$context->getAuthority()->isAllowed( 'managewiki-restricted' ),
+				'options' => $mwCore->getInactiveExemptExpiryOptions(),
 			],
 			'server' => [
 				'if' => $mwCore->isEnabled( 'server' ),
@@ -332,6 +352,7 @@ class FormFactoryBuilder {
 
 		$formDescriptor = [];
 		foreach ( $this->options->get( ConfigNames::Extensions ) as $name => $ext ) {
+			$isEnabled = in_array( $name, $extList, true );
 			$hasSettings = count( array_filter(
 				$manageWikiSettings,
 				static fn ( array $value ): bool => $value['from'] === $name
@@ -341,7 +362,7 @@ class FormFactoryBuilder {
 			if (
 				// Don't want to disable fields for extensions already enabled
 				// otherwise it makes disabling them more complicated.
-				!in_array( $name, $extList, true ) && (
+				!$isEnabled && (
 					isset( $ext['requires']['extensions'] ) ||
 					$ext['conflicts']
 				)
@@ -355,14 +376,36 @@ class FormFactoryBuilder {
 			$help = [];
 			$requirementsCheck = true;
 			if ( $ext['requires'] ) {
+				// Permissions required to toggle the extension can depend on whether it is currently
+				// enabled. If the extension is enabled, perform permission check for disabling it.
+				// If the extension is disabled, perform permission check for enabling it.
+				$extRequirements = $this->resolvePermissions( $ext['requires'], !$isEnabled );
+
 				$requirementsCheck = $mwRequirements->check(
 					// Don't check for extension requirements as we don't want
 					// to disable the field, we use disable-if for that.
-					array_diff_key( $ext['requires'], [ 'extensions' => true ] ),
+					array_diff_key( $extRequirements, [ 'extensions' => true ] ),
 					$extList
 				);
 
-				$help[] = $this->buildRequires( $context, $ext['requires'] ) . "\n";
+				// Check if the user is able to reverse this change.
+				// Same check as above except $isEnabled is reversed.
+				$reversePerms = $this->processPermissionRequirements(
+					$ext['requires']['permissions'] ?? [],
+					$isEnabled
+				);
+
+				// If this extension can be toggled but this operation cannot be reversed, then warn.
+				if (
+					$ceMW && $requirementsCheck && $reversePerms !== [] &&
+					!$context->getAuthority()->isAllowedAll( ...$reversePerms )
+				) {
+					$help[] = $this->buildOneWayNotice( $context, $reversePerms, $isEnabled ) . "\n";
+				}
+
+				if ( $extRequirements !== [] ) {
+					$help[] = $this->buildRequires( $context, $extRequirements ) . "\n";
+				}
 			}
 
 			if ( $ext['conflicts'] ?? false ) {
@@ -405,13 +448,11 @@ class FormFactoryBuilder {
 			}
 
 			$help[] = $extDescription ?? $descriptionFallback ?? $description;
-
 			if ( $ext['help'] ?? false ) {
-				$rawMessage = new RawMessage( $ext['help'] );
-				$help[] = "\n" . $rawMessage->parse();
+				$help[] = "\n" . new RawMessage( $ext['help'] )->parse();
 			}
 
-			if ( $hasSettings && in_array( $name, $extList, true ) ) {
+			if ( $hasSettings && $isEnabled ) {
 				$help[] = "\n" . $this->linkRenderer->makeExternalLink(
 					SpecialPage::getTitleFor( 'ManageWiki', "settings/$name" )->getFullURL(),
 					$context->msg( 'managewiki-extension-settings' ),
@@ -426,10 +467,10 @@ class FormFactoryBuilder {
 					$ext['linkPage'],
 					$extDisplayName ?? ( $namemsg ? $context->msg( $namemsg )->text() : $extname ) ?? $ext['name'],
 				],
-				'default' => in_array( $name, $extList, true ),
+				'default' => $isEnabled,
 				'disabled' => $ceMW ? !$requirementsCheck : true,
 				'disable-if' => $disableIf,
-				'help' => nl2br( implode( ' ', $help ) ),
+				'help-raw' => nl2br( implode( ' ', $help ) ),
 				'section' => $ext['section'],
 			];
 		}
@@ -506,8 +547,7 @@ class FormFactoryBuilder {
 					$help[] = $this->buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$rawMessage = new RawMessage( $set['help'] );
-				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : new RawMessage( $set['help'] )->parse();
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
@@ -533,7 +573,7 @@ class FormFactoryBuilder {
 						$varName,
 					],
 					'disabled' => $disabled,
-					'help' => nl2br( implode( ' ', $help ) ),
+					'help-raw' => nl2br( implode( ' ', $help ) ),
 					'cssclass' => 'ext-managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
@@ -744,16 +784,14 @@ class FormFactoryBuilder {
 						$help[] = $this->buildRequires( $context, $a['requires'] ?? [] ) . "\n";
 					}
 
-					$rawMessage = new RawMessage( $a['help'] );
-					$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
-
+					$help[] = $msgHelp->exists() ? $msgHelp->escaped() : new RawMessage( $a['help'] )->parse();
 					$formDescriptor["$key-$name"] = [
 						'label-message' => [
 							'managewiki-setting-label',
 							$msgName->exists() ? $msgName->text() : $a['name'],
 							$context->msg( 'parentheses', "\${$key}" ),
 						],
-						'help' => nl2br( implode( ' ', $help ) ),
+						'help-raw' => nl2br( implode( ' ', $help ) ),
 						'cssclass' => 'ext-managewiki-infuse',
 						'disabled' => $disabled,
 						'section' => $name,
@@ -975,7 +1013,7 @@ class FormFactoryBuilder {
 			$formDescriptor["right-$perm"] = [
 				'type' => 'check',
 				'label' => $perm,
-				'help' => htmlspecialchars( User::getRightDescription( $perm ) ),
+				'help-raw' => new RawMessage( User::getRightDescription( $perm ) )->parse(),
 				'section' => $assigned ? 'assigned' : 'unassigned',
 				'default' => $assigned,
 				'disabled' => !$ceMW,
@@ -1213,6 +1251,9 @@ class FormFactoryBuilder {
 
 			if ( $newClosed && $closed !== $newClosed ) {
 				$mwCore->markClosed();
+				if ( $mwCore->getClosedReasonOptions() ) {
+					$mwCore->setClosedReason( $formData['closed-reason'] ?? '' );
+				}
 			} elseif ( !$newClosed && $closed !== $newClosed ) {
 				$mwCore->markActive();
 			}
@@ -1239,6 +1280,11 @@ class FormFactoryBuilder {
 				$newInactiveExemptReason = $formData['inactive-exempt-reason'] ?? false;
 				if ( $newInactiveExemptReason && $newInactiveExemptReason !== $mwCore->getInactiveExemptReason() ) {
 					$mwCore->setInactiveExemptReason( $formData['inactive-exempt-reason'] );
+				}
+
+				$newInactiveExemptExpiry = $formData['inactive-exempt-expiry'] ?? false;
+				if ( $newInactiveExemptExpiry && $newInactiveExemptExpiry !== $mwCore->getInactiveExemptExpiry() ) {
+					$mwCore->setInactiveExemptExpiry( $formData['inactive-exempt-expiry'] );
 				}
 			}
 		}
@@ -1585,16 +1631,7 @@ class FormFactoryBuilder {
 		}
 
 		$permData['autopromote'] = count( $aPBuild ) > 1 ? $aPBuild : null;
-
-		$allPermissionsRemoved = count( $permData['permissions']['remove'] ?? [] ) > 0 &&
-			count( $permData['permissions']['add'] ?? [] ) === 0 &&
-			count( $groupData['permissions'] ?? [] ) === count( $permData['permissions']['remove'] );
-
-		if ( $isRemovable && $allPermissionsRemoved ) {
-			$mwPermissions->remove( $group );
-		} else {
-			$mwPermissions->modify( $group, $permData );
-		}
+		$mwPermissions->modify( $group, $permData );
 
 		return $mwPermissions;
 	}

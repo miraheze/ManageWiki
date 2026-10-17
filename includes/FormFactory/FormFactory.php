@@ -17,7 +17,7 @@ use function implode;
 class FormFactory {
 
 	public function __construct(
-		private readonly FormFactoryBuilder $formFactoryBuilder
+		private readonly FormFactoryBuilder $formFactoryBuilder,
 	) {
 	}
 
@@ -108,16 +108,8 @@ class FormFactory {
 			);
 		}
 
-		$form->getOutput()->addHTML(
-			Html::successBox(
-				Html::element(
-					'p',
-					[],
-					$form->msg( 'managewiki-success' )->text()
-				),
-				'mw-notify-success'
-			)
-		);
+		$context->getRequest()->getSession()->set( 'manageWikiSaveSuccess', 1 );
+		$context->getOutput()->redirect( $form->getTitle()->getFullURL() );
 
 		// Even though it's successful we still return false so
 		// that the form does not dissappear when submitted.

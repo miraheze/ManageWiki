@@ -19,7 +19,7 @@ class HookRunner implements
 {
 
 	public function __construct(
-		private readonly HookContainer $container
+		private readonly HookContainer $container,
 	) {
 	}
 

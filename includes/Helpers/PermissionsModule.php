@@ -60,7 +60,7 @@ class PermissionsModule implements IModule {
 		private readonly UserGroupManagerFactory $userGroupManagerFactory,
 		private readonly ITextFormatter $textFormatter,
 		private readonly ServiceOptions $options,
-		private readonly string $dbname
+		private readonly string $dbname,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 
@@ -383,13 +383,6 @@ class PermissionsModule implements IModule {
 			}
 
 			$live = $this->livePermissions[$group];
-			if ( empty( $live['permissions'] ) ) {
-				$this->errors[] = [
-					'managewiki-error-emptygroup' => [],
-				];
-				continue;
-			}
-
 			$builtTable = [
 				'perm_permissions' => json_encode( $live['permissions'] ),
 				'perm_addgroups' => json_encode( $live['addgroups'] ),

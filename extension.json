@@ -14,9 +14,9 @@
 	"license-name": "GPL-3.0-or-later",
 	"type": "specialpage",
 	"requires": {
-		"MediaWiki": ">= 1.45.0",
+		"MediaWiki": ">= 1.46.0",
 		"platform": {
-			"php": ">= 8.3"
+			"php": ">= 8.4"
 		}
 	},
 	"MessagesDirs": {
@@ -24,8 +24,8 @@
 			"i18n"
 		]
 	},
-	"ExtensionMessagesFiles": {
-		"ManageWikiAliases": "ManageWikiAliases.php"
+	"TranslationAliasesDirs": {
+		"ManageWikiAliases": "i18n/aliases"
 	},
 	"AutoloadNamespaces": {
 		"Miraheze\\ManageWiki\\": "includes/",
@@ -77,6 +77,9 @@
 		"managewiki": {
 			"cache-reset": [
 				"cache-reset"
+			],
+			"closed": [
+				"closed"
 			],
 			"delete": [
 				"delete"
@@ -220,6 +223,7 @@
 				"managewiki-review-title",
 				"managewiki-review-toggled",
 				"managewiki-save",
+				"managewiki-save-warnings-title",
 				"managewiki-search-noresults",
 				"managewiki-warning-changes"
 			],

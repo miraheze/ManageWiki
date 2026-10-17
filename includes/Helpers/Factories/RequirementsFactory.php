@@ -13,7 +13,7 @@ class RequirementsFactory {
 	public function __construct(
 		private readonly CoreFactory $coreFactory,
 		private readonly DatabaseUtils $databaseUtils,
-		private readonly SettingsFactory $settingsFactory
+		private readonly SettingsFactory $settingsFactory,
 	) {
 	}
 

@@ -5,10 +5,10 @@ declare( strict_types = 1 );
 namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
-use LocalisationCache;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\JobQueue\JobSpecification;
+use MediaWiki\Language\LocalisationCache;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\ManageWiki\ConfigNames;
@@ -72,7 +72,7 @@ class NamespacesModule implements IModule {
 		private readonly LoggerInterface $logger,
 		private readonly NamespaceInfo $namespaceInfo,
 		private readonly ServiceOptions $options,
-		private readonly string $dbname
+		private readonly string $dbname,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 

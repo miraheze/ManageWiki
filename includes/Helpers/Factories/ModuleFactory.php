@@ -30,7 +30,7 @@ class ModuleFactory {
 		private readonly NamespacesFactory $namespaces,
 		private readonly PermissionsFactory $permissions,
 		private readonly SettingsFactory $settings,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}

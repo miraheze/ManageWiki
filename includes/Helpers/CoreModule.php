@@ -25,7 +25,7 @@ class CoreModule implements ICoreModule {
 	public function __construct(
 		private readonly SettingsFactory $settingsFactory,
 		private readonly ServiceOptions $options,
-		private readonly string $dbname
+		private readonly string $dbname,
 	) {
 		$options->assertRequiredOptions( self::CONSTRUCTOR_OPTIONS );
 	}
@@ -116,6 +116,20 @@ class CoreModule implements ICoreModule {
 		return null;
 	}
 
+	/**
+	 * @inheritDoc
+	 * @param string $expiry @phan-unused-param
+	 */
+	public function setInactiveExemptExpiry( string $expiry ): void {
+		// Not implemented
+	}
+
+	/** @inheritDoc */
+	public function getInactiveExemptExpiry(): ?string {
+		// Not implemented
+		return null;
+	}
+
 	/** @inheritDoc */
 	public function isPrivate(): bool {
 		// Not implemented
@@ -141,6 +155,20 @@ class CoreModule implements ICoreModule {
 	/** @inheritDoc */
 	public function markClosed(): void {
 		// Not implemented
+	}
+
+	/**
+	 * @inheritDoc
+	 * @param string $reason @phan-unused-param
+	 */
+	public function setClosedReason( string $reason ): void {
+		// Not implemented
+	}
+
+	/** @inheritDoc */
+	public function getClosedReason(): ?string {
+		// Not implemented
+		return null;
 	}
 
 	/** @inheritDoc */
@@ -294,6 +322,18 @@ class CoreModule implements ICoreModule {
 
 	/** @inheritDoc */
 	public function getInactiveExemptReasonOptions(): array {
+		// Not implemented
+		return [];
+	}
+
+	/** @inheritDoc */
+	public function getInactiveExemptExpiryOptions(): array {
+		// Not implemented
+		return [];
+	}
+
+	/** @inheritDoc */
+	public function getClosedReasonOptions(): array {
 		// Not implemented
 		return [];
 	}

@@ -22,7 +22,7 @@ class MWScriptJob extends Job {
 	public function __construct(
 		array $params,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
-		private readonly LoggerInterface $logger
+		private readonly LoggerInterface $logger,
 	) {
 		parent::__construct( self::JOB_NAME, $params );
 
@@ -32,7 +32,12 @@ class MWScriptJob extends Job {
 
 	/** @inheritDoc */
 	public function run(): true {
-		$limits = [ 'memory' => 0, 'filesize' => 0 ];
+		$limits = [
+			'memory' => 0,
+			'filesize' => 0,
+			'time' => 3600,
+			'walltime' => 3600,
+		];
 		foreach ( $this->data as $script => $options ) {
 			$arguments = [ '--wiki', $this->dbname ];
 			$repeatWith = [];
@@ -43,7 +48,6 @@ class MWScriptJob extends Job {
 
 			foreach ( $options as $name => $val ) {
 				$arguments[] = "--$name";
-
 				if ( !is_bool( $val ) ) {
 					$arguments[] = $val;
 				}

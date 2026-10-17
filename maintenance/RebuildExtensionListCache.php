@@ -22,7 +22,7 @@ class RebuildExtensionListCache extends Maintenance {
 		parent::__construct();
 
 		$this->addDescription( 'Rebuild or generate extension-list cache file.' );
-		$this->addOption( 'cachedir', 'Path to the cachedir to use; defaults to the configured value.', false );
+		$this->addOption( 'cachedir', 'Path to the cachedir to use; defaults to the configured value.', withArg: true );
 
 		$this->requireExtension( 'ManageWiki' );
 	}

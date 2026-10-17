@@ -32,7 +32,7 @@ class CreateWiki implements
 		private readonly Config $config,
 		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly DefaultPermissions $defaultPermissions,
-		private readonly ModuleFactory $moduleFactory
+		private readonly ModuleFactory $moduleFactory,
 	) {
 	}
 

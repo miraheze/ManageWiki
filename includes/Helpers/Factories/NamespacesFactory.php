@@ -4,9 +4,9 @@ declare( strict_types = 1 );
 
 namespace Miraheze\ManageWiki\Helpers\Factories;
 
-use LocalisationCache;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
+use MediaWiki\Language\LocalisationCache;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
@@ -21,7 +21,7 @@ class NamespacesFactory {
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LocalisationCache $localisationCache,
 		private readonly NamespaceInfo $namespaceInfo,
-		private readonly ServiceOptions $options
+		private readonly ServiceOptions $options,
 	) {
 	}
 
