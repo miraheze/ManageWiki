@@ -14,7 +14,7 @@ jobs:
         include:
 
           # Latest MediaWiki stable - PHP 8.4
-          - mw: 'REL1_45'
+          - mw: 'REL1_46'
             php: 8.4
             php-docker: 84
             composer-test: true
@@ -23,7 +23,7 @@ jobs:
             experimental-phpunit: false
 
           # Latest MediaWiki alpha - PHP 8.4
-          - mw: 'REL1_46'
+          - mw: 'REL1_47'
             php: 8.4
             php-docker: 84
             composer-test: false

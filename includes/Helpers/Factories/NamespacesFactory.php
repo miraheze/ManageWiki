@@ -2,9 +2,9 @@
 
 namespace Miraheze\ManageWiki\Helpers\Factories;
 
-use LocalisationCache;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
+use MediaWiki\Language\LocalisationCache;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;

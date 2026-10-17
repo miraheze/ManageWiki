@@ -1,0 +1,13 @@
+{
+	"SpecialPageAliases": {
+		"DeletedWikis": [
+			"削除されたウィキ"
+		],
+		"ManageWiki": [
+			"ウィキ管理"
+		],
+		"ManageWikiDefaults": [
+			"ウィキ管理既定権限"
+		]
+	}
+}

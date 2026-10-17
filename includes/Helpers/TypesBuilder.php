@@ -172,7 +172,8 @@ class TypesBuilder {
 					'default' => $value ?? $options['overridedefault'],
 				];
 
-				if ( !$disabled ) {
+				// Allow disable the dropdown if option labels are too long
+				if ( !$disabled && ( $options['dropdown'] ?? true ) ) {
 					$configs['dropdown'] = true;
 				}
 				break;
@@ -406,6 +407,7 @@ class TypesBuilder {
 			case 'user':
 				$configs = [
 					'type' => 'user',
+					'excludetemp' => true,
 					'exists' => true,
 					'default' => $value ?? $options['overridedefault'],
 				];
@@ -413,6 +415,7 @@ class TypesBuilder {
 			case 'users':
 				$configs = [
 					'type' => 'usersmultiselect',
+					'excludetemp' => true,
 					'exists' => true,
 					'default' => implode( "\n", $value ?? $options['overridedefault'] ),
 				];
