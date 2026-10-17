@@ -9,7 +9,7 @@ use Miraheze\ManageWiki\Helpers\CacheUpdate;
 
 class CacheUpdateJob extends Job {
 
-	public const string JOB_NAME = 'CacheUpdateJob';
+	public const string JOB_NAME = 'ManageWikiCacheUpdateJob';
 
 	private readonly string $action;
 	private readonly string $dbname;
