@@ -37,11 +37,12 @@ class DeleteCacheHandlerTest extends MediaWikiIntegrationTestCase {
 		parent::tearDown();
 	}
 
-	private function newRequest( array $body ): RequestData {
+	private function newRequest( array $body, string $dbname ): RequestData {
 		return new RequestData( [
 			'method' => 'POST',
 			'bodyContents' => json_encode( $body ),
 			'headers' => [ 'Content-Type' => 'application/json' ],
+			'pathParams' => [ 'dbname' => $dbname ],
 		] );
 	}
 
@@ -65,8 +66,7 @@ class DeleteCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'x' ] ),
-			validatedParams: [ 'dbname' => 'examplewiki' ]
+			$this->newRequest( [ 'key' => 'x' ], 'examplewiki' )
 		);
 
 		$this->assertSame( 404, $response->getStatusCode() );
@@ -84,8 +84,7 @@ class DeleteCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'x' ] ),
-			validatedParams: [ 'dbname' => 'examplewiki' ]
+			$this->newRequest( [ 'key' => 'x' ], 'examplewiki' )
 		);
 
 		$this->assertSame( 429, $response->getStatusCode() );
@@ -105,8 +104,7 @@ class DeleteCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'wrong' ] ),
-			validatedParams: [ 'dbname' => 'examplewiki' ]
+			$this->newRequest( [ 'key' => 'wrong' ], 'examplewiki' )
 		);
 
 		$this->assertSame( 403, $response->getStatusCode() );
@@ -126,8 +124,7 @@ class DeleteCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'correct' ] ),
-			validatedParams: [ 'dbname' => '../not-a-real-dbname' ]
+			$this->newRequest( [ 'key' => 'correct' ], '../not-a-real-dbname' )
 		);
 
 		$this->assertSame( 400, $response->getStatusCode() );
@@ -160,8 +157,7 @@ class DeleteCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'correct' ] ),
-			validatedParams: [ 'dbname' => $dbname ]
+			$this->newRequest( [ 'key' => 'correct' ], $dbname )
 		);
 
 		$this->assertSame( 204, $response->getStatusCode() );
@@ -182,8 +178,7 @@ class DeleteCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'correct' ] ),
-			validatedParams: [ 'dbname' => 'awikithatwasneverwritten' ]
+			$this->newRequest( [ 'key' => 'correct' ], 'awikithatwasneverwritten' )
 		);
 
 		$this->assertSame( 204, $response->getStatusCode() );
