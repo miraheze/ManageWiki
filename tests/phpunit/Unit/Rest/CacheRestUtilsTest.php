@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types = 1 );
+
 namespace Miraheze\ManageWiki\Tests\Unit\Rest;
 
 use MediaWiki\Config\ServiceOptions;
