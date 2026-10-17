@@ -22,11 +22,12 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 	use HandlerTestTrait;
 
-	private function newRequest( array $body ): RequestData {
+	private function newRequest( array $body, string $dbname ): RequestData {
 		return new RequestData( [
 			'method' => 'POST',
 			'bodyContents' => json_encode( $body ),
 			'headers' => [ 'Content-Type' => 'application/json' ],
+			'pathParams' => [ 'dbname' => $dbname ],
 		] );
 	}
 
@@ -44,8 +45,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'x' ] ),
-			validatedParams: [ 'dbname' => 'examplewiki' ]
+			$this->newRequest( [ 'key' => 'x' ], 'examplewiki' )
 		);
 
 		$this->assertSame( 404, $response->getStatusCode() );
@@ -64,8 +64,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'x' ] ),
-			validatedParams: [ 'dbname' => 'examplewiki' ]
+			$this->newRequest( [ 'key' => 'x' ], 'examplewiki' )
 		);
 
 		$this->assertSame( 429, $response->getStatusCode() );
@@ -86,8 +85,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'wrong' ] ),
-			validatedParams: [ 'dbname' => 'examplewiki' ]
+			$this->newRequest( [ 'key' => 'wrong' ], 'examplewiki' )
 		);
 
 		$this->assertSame( 403, $response->getStatusCode() );
@@ -110,8 +108,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'correct' ] ),
-			validatedParams: [ 'dbname' => '../not-a-real-dbname' ]
+			$this->newRequest( [ 'key' => 'correct' ], '../not-a-real-dbname' )
 		);
 
 		$this->assertSame( 400, $response->getStatusCode() );
@@ -138,8 +135,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'correct' ] ),
-			validatedParams: [ 'dbname' => 'examplewiki' ]
+			$this->newRequest( [ 'key' => 'correct' ], 'examplewiki' )
 		);
 
 		$this->assertSame( 404, $response->getStatusCode() );
@@ -171,8 +167,7 @@ class ResetCacheHandlerTest extends MediaWikiIntegrationTestCase {
 
 		$response = $this->executeHandler(
 			$handler,
-			$this->newRequest( [ 'key' => 'correct' ] ),
-			validatedParams: [ 'dbname' => 'examplewiki' ]
+			$this->newRequest( [ 'key' => 'correct' ], 'examplewiki' )
 		);
 
 		$this->assertSame( 204, $response->getStatusCode() );
