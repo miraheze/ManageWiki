@@ -5,11 +5,11 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 use Closure;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\MainConfigNames;
+use MediaWiki\ObjectCache\ObjectCacheFactory;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\CacheUpdate;
 use Miraheze\ManageWiki\Helpers\DataStore;
 use Miraheze\ManageWiki\Hooks\HookRunner;
-use ObjectCacheFactory;
 use Wikimedia\ObjectCache\BagOStuff;
 
 class DataStoreFactory {

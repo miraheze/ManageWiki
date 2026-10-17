@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Traits;
 
 use MediaWiki\Context\IContextSource;
+use MediaWiki\Html\Html;
 use function array_merge;
 use function count;
 use function implode;
@@ -80,5 +81,32 @@ trait FormHelperTrait {
 		}
 
 		return $finalCondition;
+	}
+
+	/**
+	 * Build a notice warning that toggling an extension is one-way for this user,
+	 * as they are missing the permissions needed to reverse the change.
+	 *
+	 * @param IContextSource $context
+	 * @param list<string> $permissions The permissions required to reverse the change.
+	 * @param bool $isEnabled Whether the extension is currently enabled.
+	 */
+	private function buildOneWayNotice(
+		IContextSource $context,
+		array $permissions,
+		bool $isEnabled
+	): string {
+		$message = $context->msg(
+			$isEnabled ?
+				'managewiki-extension-oneway-disable' :
+				'managewiki-extension-oneway-enable',
+			$context->getLanguage()->listToText( $permissions ),
+			count( $permissions )
+		)->parse();
+
+		return Html::rawElement( 'span',
+			[ 'class' => 'ext-managewiki-save-warning' ],
+			$message
+		);
 	}
 }
