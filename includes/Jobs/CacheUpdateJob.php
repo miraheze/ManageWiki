@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types = 1 );
+
 namespace Miraheze\ManageWiki\Jobs;
 
 use MediaWiki\JobQueue\Job;
@@ -7,7 +9,7 @@ use Miraheze\ManageWiki\Helpers\CacheUpdate;
 
 class CacheUpdateJob extends Job {
 
-	public const string JOB_NAME = 'CacheUpdateJob';
+	public const string JOB_NAME = 'ManageWikiCacheUpdateJob';
 
 	private readonly string $action;
 	private readonly string $dbname;
