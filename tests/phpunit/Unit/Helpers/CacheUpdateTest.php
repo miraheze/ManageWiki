@@ -1,5 +1,7 @@
 <?php
 
+declare( strict_types = 1 );
+
 /**
  * @phan-file-suppress PhanPluginMoreSpecificActualReturnType
  * @phan-file-suppress UnusedPluginFileSuppression
