@@ -22,13 +22,13 @@ jobs:
             experimental-phan: false
             experimental-phpunit: false
 
-          # Latest MediaWiki alpha - PHP 8.4
+          # Latest MediaWiki beta - PHP 8.4
           - mw: 'REL1_47'
             php: 8.4
             php-docker: 84
             composer-test: false
             coverage: false
-            experimental-phan: true
+            experimental-phan: false
             experimental-phpunit: false
 
           # Latest MediaWiki master - PHP 8.4
