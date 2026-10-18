@@ -19,17 +19,14 @@ trait PermissionsHelperTrait {
 	 * @return list<string> Numeric array of permission names required.
 	 */
 	private function processPermissionRequirements( array $perms, bool $enable ): array {
-		if ( $enable ) {
-			$perms = array_merge( $perms, $perms['enable'] ?? [] );
-		} else {
-			$perms = array_merge( $perms, $perms['disable'] ?? [] );
-		}
+		$perms = array_merge( $perms, $perms[$enable ? 'enable' : 'disable'] ?? [] );
 		// Drop non-numeric keys (e.g. 'enable')
 		$filtered = array_filter(
 			$perms,
 			static fn ( int|string $k ): bool => is_numeric( $k ),
 			ARRAY_FILTER_USE_KEY
 		);
+
 		// Make phan happy about the return type
 		return array_values( $filtered );
 	}
@@ -38,7 +35,7 @@ trait PermissionsHelperTrait {
 	 * @param array<string,mixed> $requires The requirements array for the extension.
 	 * @param bool $enable Whether the check is performed against enabling the extension.
 	 *
-	 * @return array<string,mixed> The requirements array with 'permissions' resolved for
+	 * @return array<string, mixed> The requirements array with 'permissions' resolved for
 	 *  this direction or removed entirely if no permissions are required for it.
 	 */
 	private function resolvePermissions( array $requires, bool $enable ): array {
