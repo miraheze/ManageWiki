@@ -6,6 +6,7 @@ use MediaWiki\JobQueue\Job;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\JobQueue\JobSpecification;
 use MediaWiki\Shell\Shell;
+use Miraheze\ManageWiki\Helpers\CacheUpdate;
 use Psr\Log\LoggerInterface;
 use function is_bool;
 use function json_encode;
@@ -19,6 +20,7 @@ class MWScriptJob extends Job {
 
 	public function __construct(
 		array $params,
+		private readonly CacheUpdate $cacheUpdate,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
 		private readonly LoggerInterface $logger,
 	) {
@@ -30,6 +32,8 @@ class MWScriptJob extends Job {
 
 	/** @inheritDoc */
 	public function run(): true {
+		$this->cacheUpdate->executeNow( action: 'reset', dbname: $this->dbname );
+
 		$limits = [
 			'memory' => 0,
 			'filesize' => 0,

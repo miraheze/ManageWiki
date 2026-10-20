@@ -27,6 +27,7 @@ use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Miraheze\ManageWiki\Hooks\HookRunner;
+use Miraheze\ManageWiki\Rest\CacheRestUtils;
 use Psr\Log\LoggerInterface;
 
 // PHPUnit does not understand coverage for this file.
@@ -34,11 +35,20 @@ use Psr\Log\LoggerInterface;
 // @codeCoverageIgnoreStart
 
 return [
+	'ManageWikiCacheRestUtils' => static function ( MediaWikiServices $services ): CacheRestUtils {
+		return new CacheRestUtils(
+			$services->get( 'MainObjectStash' ),
+			new ServiceOptions(
+				CacheRestUtils::CONSTRUCTOR_OPTIONS,
+				$services->get( 'ManageWikiConfig' )
+			)
+		);
+	},
 	'ManageWikiCacheUpdate' => static function ( MediaWikiServices $services ): CacheUpdate {
 		return new CacheUpdate(
 			$services->getHttpRequestFactory(),
-			$services->getTitleFactory(),
-			$services->getUrlUtils(),
+			$services->getJobQueueGroupFactory(),
+			$services->get( 'ManageWikiLogger' ),
 			new ServiceOptions(
 				CacheUpdate::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
