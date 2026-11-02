@@ -104,6 +104,7 @@
 	"managewiki-invalid-database": "$1 является недопустимой базой данных. Задано <code>&dollar;$2</code>.",
 	"managewiki-label-category": "Категория",
 	"managewiki-label-closed": "Закрыто",
+	"managewiki-label-closed-reason": "Выберите причину закрытия этой вики.",
 	"managewiki-label-creationdate": "Дата создания",
 	"managewiki-label-dbcluster": "Кластер базы данных",
 	"managewiki-label-dbname": "Имя базы данных",
