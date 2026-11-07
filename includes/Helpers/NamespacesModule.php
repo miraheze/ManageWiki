@@ -498,9 +498,7 @@ class NamespacesModule implements IModule {
 
 				$talk = preg_replace_callback(
 					'/{{grammar:(.*?)\|(.*?)}}/i',
-					static function ( array $m ) use ( $language ): string {
-						return $language->convertGrammar( trim( $m[2] ), trim( $m[1] ) );
-					},
+					static fn ( array $m ): string => $language->convertGrammar( trim( $m[2] ), trim( $m[1] ) ),
 					$talk
 				);
 
