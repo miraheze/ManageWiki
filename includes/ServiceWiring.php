@@ -137,6 +137,7 @@ return [
 			$services->get( 'ManageWikiDataStoreFactory' ),
 			$services->get( 'ManageWikiLogger' ),
 			$services->getJobQueueGroupFactory(),
+			$services->getLanguageFactory(),
 			$services->getLocalisationCache(),
 			$services->getNamespaceInfo(),
 			new ServiceOptions(
