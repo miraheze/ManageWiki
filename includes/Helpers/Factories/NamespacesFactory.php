@@ -4,6 +4,7 @@ namespace Miraheze\ManageWiki\Helpers\Factories;
 
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
+use MediaWiki\Language\LanguageFactory;
 use MediaWiki\Language\LocalisationCache;
 use MediaWiki\Title\NamespaceInfo;
 use Miraheze\ManageWiki\Helpers\NamespacesModule;
@@ -17,6 +18,7 @@ class NamespacesFactory {
 		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly LoggerInterface $logger,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
+		private readonly LanguageFactory $languageFactory,
 		private readonly LocalisationCache $localisationCache,
 		private readonly NamespaceInfo $namespaceInfo,
 		private readonly ServiceOptions $options,
@@ -28,6 +30,7 @@ class NamespacesFactory {
 			$this->databaseUtils,
 			$this->dataStoreFactory,
 			$this->jobQueueGroupFactory,
+			$this->languageFactory,
 			$this->localisationCache,
 			$this->logger,
 			$this->namespaceInfo,

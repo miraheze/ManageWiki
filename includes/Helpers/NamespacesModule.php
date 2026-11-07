@@ -6,6 +6,7 @@ use Exception;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\JobQueue\JobSpecification;
+use MediaWiki\Language\LanguageFactory;
 use MediaWiki\Language\LocalisationCache;
 use MediaWiki\MainConfigNames;
 use MediaWiki\Title\NamespaceInfo;
@@ -31,6 +32,8 @@ use function is_array;
 use function json_decode;
 use function json_encode;
 use function mb_strtolower;
+use function preg_replace_callback;
+use function str_contains;
 use function str_replace;
 use function trim;
 use const CONTENT_MODEL_WIKITEXT;
@@ -66,6 +69,7 @@ class NamespacesModule implements IModule {
 		private readonly DatabaseUtils $databaseUtils,
 		private readonly DataStoreFactory $dataStoreFactory,
 		private readonly JobQueueGroupFactory $jobQueueGroupFactory,
+		private readonly LanguageFactory $languageFactory,
 		private readonly LocalisationCache $localisationCache,
 		private readonly LoggerInterface $logger,
 		private readonly NamespaceInfo $namespaceInfo,
@@ -480,10 +484,30 @@ class NamespacesModule implements IModule {
 			$lcName = $this->localisationCache->getItem( $languageCode, 'namespaceNames' );
 
 			// Ensure Project Talk reflects (possibly customized) Project name
-			$lcName[NS_PROJECT_TALK] = str_replace( '$1',
-				$lcName[NS_PROJECT] ?? $metaNamespace,
-				$lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk
-			);
+			$talk = $lcName[NS_PROJECT_TALK] ?? $metaNamespaceTalk;
+
+			// Mirrors MediaWiki core's private Language::fixVariableInNamespace()
+			if ( str_contains( $talk, '$1' ) ) {
+				$talk = str_replace(
+					'$1',
+					$lcName[NS_PROJECT] ?? $metaNamespace,
+					$talk
+				);
+
+				$language = $this->languageFactory->getLanguage( $languageCode );
+
+				$talk = preg_replace_callback(
+					'/{{grammar:(.*?)\|(.*?)}}/i',
+					static function ( array $m ) use ( $language ): string {
+						return $language->convertGrammar( trim( $m[2] ), trim( $m[1] ) );
+					},
+					$talk
+				);
+
+				$talk = str_replace( ' ', '_', $talk );
+			}
+
+			$lcName[NS_PROJECT_TALK] = $talk;
 
 			if ( $languageCode !== 'en' ) {
 				$lcEN = $this->localisationCache->getItem( 'en', 'namespaceNames' );
