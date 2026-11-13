@@ -3,6 +3,7 @@
 namespace Miraheze\ManageWiki\Helpers;
 
 use Exception;
+use MediaWiki\Deferred\DeferredUpdates;
 use MediaWiki\Exception\ShellDisabledError;
 use MediaWiki\JobQueue\JobQueueGroupFactory;
 use MediaWiki\JobQueue\JobSpecification;
@@ -173,15 +174,16 @@ class Installer {
 		}
 
 		$jobQueueGroup = $this->jobQueueGroupFactory->makeJobQueueGroup();
-		$jobQueueGroup->push(
-			new JobSpecification(
-				MWScriptJob::JOB_NAME,
-				[
-					'data' => $data,
-					'dbname' => $this->dbname,
-				]
-			)
+		$job = new JobSpecification(
+			MWScriptJob::JOB_NAME,
+			[
+				'data' => $data,
+				'dbname' => $this->dbname,
+			]
 		);
+
+		// T15061: run job after transaction commits and after cache is invalidated on mwtask servers
+		DeferredUpdates::addCallableUpdate( static fn () => $jobQueueGroup->push( $job ) );
 
 		return true;
 	}
