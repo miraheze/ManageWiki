@@ -11,7 +11,7 @@
 		"lint:i18n:order": "eslint --cache --max-warnings 0 i18n/"
 	},
 	"devDependencies": {
-		"eslint-config-wikimedia": "0.32.6",
+		"eslint-config-wikimedia": "0.33.1",
 		"eslint-plugin-jsonc": "2.21.1",
 		"grunt-banana-checker": "0.13.0",
 		"stylelint-config-idiomatic-order": "10.0.0",
