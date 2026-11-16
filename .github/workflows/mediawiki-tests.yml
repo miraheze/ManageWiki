@@ -54,6 +54,7 @@ jobs:
   notify-irc:
     needs: call-mediawiki-tests-workflow
     runs-on: ubuntu-latest
+    continue-on-error: true
     if: ${{ always() && github.repository_owner == 'miraheze' && ( github.ref == 'refs/heads/main' || github.event_name == 'pull_request' ) }}
     steps:
       - name: succeeded
