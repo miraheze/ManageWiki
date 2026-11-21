@@ -14,11 +14,11 @@ use function reset;
 
 class CoreFactory {
 
-	/** @param array<string, array> $providerSpecs */
 	public function __construct(
 		private readonly ObjectFactory $objectFactory,
 		private readonly SettingsFactory $settingsFactory,
 		private readonly ServiceOptions $options,
+		/** @param array<string, array> $providerSpecs */
 		private readonly array $providerSpecs,
 	) {
 	}
