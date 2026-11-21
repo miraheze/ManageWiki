@@ -18,7 +18,7 @@ class CoreFactory {
 		private readonly ObjectFactory $objectFactory,
 		private readonly SettingsFactory $settingsFactory,
 		private readonly ServiceOptions $options,
-		/** @param array<string, array> $providerSpecs */
+		/** @var array<string, array> $providerSpecs */
 		private readonly array $providerSpecs,
 	) {
 	}
