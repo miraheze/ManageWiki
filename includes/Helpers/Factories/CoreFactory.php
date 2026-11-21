@@ -8,9 +8,9 @@ use Miraheze\ManageWiki\Helpers\CoreModule;
 use Miraheze\ManageWiki\ICoreModule;
 use Wikimedia\ObjectFactory\ObjectFactory;
 use function array_keys;
+use function array_values;
 use function count;
 use function implode;
-use function reset;
 
 class CoreFactory {
 
@@ -40,7 +40,7 @@ class CoreFactory {
 		}
 
 		return $this->objectFactory->createObject(
-			reset( $this->providerSpecs ),
+			array_values( $this->providerSpecs )[0],
 			[
 				'assertClass' => ICoreModule::class,
 				'extraArgs' => [ $dbname ],
