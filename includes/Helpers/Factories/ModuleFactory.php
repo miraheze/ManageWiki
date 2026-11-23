@@ -37,8 +37,12 @@ class ModuleFactory {
 		$modulesEnabled = $this->options->get( ConfigNames::ModulesEnabled );
 		return $modulesEnabled[$module] ?? false;
 	}
+	
+	public function core( string $dbname, bool $refresh = false ): ICoreModule {
+		if ( $refresh ) {
+			unset( $this->coreInstances[$dbname] );
+		}
 
-	public function core( string $dbname ): ICoreModule {
 		$this->coreInstances[$dbname] ??=
 			$this->core->newInstance( $dbname );
 		return $this->coreInstances[$dbname];
