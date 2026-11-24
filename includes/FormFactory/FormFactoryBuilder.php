@@ -1207,7 +1207,7 @@ class FormFactoryBuilder {
 
 		if ( $module === 'core' && in_array( $mwReturn->getLogAction(), [ 'lock', 'unlock' ], true ) ) {
 			$formData['lock'] = $formData['unlock'] = false;
-			$moduleFactory->core( $dbname, refresh: true );
+			$moduleFactory->resetCore( $dbname );
 			$errors = $this->submissionHandler(
 				$formData, $form, $module, $dbname, $context,
 				$moduleFactory, $special
