@@ -38,14 +38,14 @@ class ModuleFactory {
 		return $modulesEnabled[$module] ?? false;
 	}
 
-	public function core( string $dbname, bool $refresh = false ): ICoreModule {
-		if ( $refresh ) {
-			unset( $this->coreInstances[$dbname] );
-		}
-
+	public function core( string $dbname ): ICoreModule {
 		$this->coreInstances[$dbname] ??=
 			$this->core->newInstance( $dbname );
 		return $this->coreInstances[$dbname];
+	}
+
+	public function resetCore( string $dbname ): void {
+		unset( $this->coreInstances[$dbname] );
 	}
 
 	public function extensions( string $dbname ): ExtensionsModule {
