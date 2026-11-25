@@ -18,6 +18,6 @@
 		"stylelint-config-wikimedia": "0.20.1"
 	},
 	"peerDependencies": {
-		"postcss-less": "7.1.1"
+		"postcss-less": "8.0.0"
 	}
 }
