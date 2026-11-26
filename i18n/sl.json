@@ -149,7 +149,7 @@
 	"managewiki-permissions-create-header": "Ustvaritev nove uporabniške skupine",
 	"managewiki-permissions-create-info": "Uporabite spodnje polje za ustvaritev nove uporabniške skupine v tem vikiju.",
 	"managewiki-permissions-create-submit": "Ustvari skupino",
-	"managewiki-permissions-group": "Spodaj lahko dovolite dodeljevanje/oddodeljevanje te uporabniške skupine drugim uporabniškim skupinam.",
+	"managewiki-permissions-group": "Spodaj lahko opredelite, kako lahko člani te uporabniške skupine dodeljujejo ali oddodeljujejo druge uporabniške skupine.",
 	"managewiki-permissions-group-conflict": "Vneseno ime skupine že obstaja. Vnesite drugo ime in poskusite znova.",
 	"managewiki-permissions-group-disallowed": "Vneseno ime skupine ni dovoljeno. Vnesite drugo ime in poskusite znova.",
 	"managewiki-permissions-group-invalid": "Vneseno ime skupine je neveljavno. Imena skupin morajo upoštevati veljavna pravila oblikovanja naslovov.",
