@@ -338,7 +338,7 @@ class TypesBuilder {
 					'options' => array_merge( $installedSkins, $options['options'] ?? [] ),
 					'default' => $value ?? $options['overridedefault'],
 				];
-			
+
 				if ( isset( $options['notInSetting'] ) ) {
 					$configs['validation-callback'] = static fn ( string $skin, array $alldata ): Message|true =>
 						in_array( $skin, $alldata["set-{$options['notInSetting']}"] ?? [], true ) ?
