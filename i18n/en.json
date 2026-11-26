@@ -191,6 +191,7 @@
 	"managewiki-search-noresults": "No results",
 	"managewiki-setting-label": "$1 $2",
 	"managewiki-sidebar-header": "Administration",
+	"managewiki-skin-excluded": "$1 is in $2 and can not be selected.",
 	"managewiki-success": "Your changes have been saved.",
 	"managewiki-toggle-forcesidebar": "Force the display of ManageWiki links in the sidebar.",
 	"managewiki-unavailable": "Unavailable",
