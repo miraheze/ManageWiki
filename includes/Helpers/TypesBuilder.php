@@ -338,6 +338,14 @@ class TypesBuilder {
 					'options' => array_merge( $installedSkins, $options['options'] ?? [] ),
 					'default' => $value ?? $options['overridedefault'],
 				];
+			
+				if ( isset( $options['notInSetting'] ) ) {
+					$configs['validation-callback'] = static fn ( string $skin, array $alldata ): Message|true =>
+						in_array( $skin, $alldata["set-{$options['notInSetting']}"] ?? [], true ) ?
+							RequestContext::getMain()->msg(
+								'managewiki-skin-excluded', $skin, $options['notInSetting']
+							) : true;
+				}
 				break;
 			case 'skins':
 				$installedSkins = $this->skinFactory->getInstalledSkins();
