@@ -44,6 +44,10 @@ class ModuleFactory {
 		return $this->coreInstances[$dbname];
 	}
 
+	public function resetCore( string $dbname ): void {
+		unset( $this->coreInstances[$dbname] );
+	}
+
 	public function extensions( string $dbname ): ExtensionsModule {
 		return $this->extensions->newInstance( $dbname );
 	}

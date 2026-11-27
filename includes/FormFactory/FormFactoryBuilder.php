@@ -1205,6 +1205,15 @@ class FormFactoryBuilder {
 				[ [ 'managewiki-changes-none' => null ] ];
 		}
 
+		if ( $module === 'core' && in_array( $mwReturn->getLogAction(), [ 'lock', 'unlock' ], true ) ) {
+			$formData['lock'] = $formData['unlock'] = false;
+			$moduleFactory->resetCore( $dbname );
+			$errors = $this->submissionHandler(
+				$formData, $form, $module, $dbname, $context,
+				$moduleFactory, $special
+			);
+			return $errors === [ [ 'managewiki-changes-none' => null ] ] ? [] : $errors;
+		}
 		return $mwReturn->getErrors();
 	}
 
