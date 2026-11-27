@@ -197,6 +197,7 @@
 	"managewiki-search-noresults": "Message showing no results found for searching ManageWiki.",
 	"managewiki-setting-label": "{{optional}}\nUsed as a label for settings in ManageWiki. $1 is setting name or a separate localized message; $2 is the configuration variable.",
 	"managewiki-sidebar-header": "Used as a label for the sidebar.\n{{Identical|Administration}}",
+		"managewiki-skin-excluded": "Status message given if the selected skin is also in the setting named by the 'notInSetting' option. $1 is the skin, $2 is the configuration variable name.",
 	"managewiki-success": "Message when the wiki request was successfully sent.",
 	"managewiki-toggle-forcesidebar": "Used as a label for the checkbox that forces ManageWiki links to be shown in the sidebar.",
 	"managewiki-unavailable": "Title of the error page shown when a ManageWiki module or page is unavailable.\n{{Identical|Unavailable}}",
