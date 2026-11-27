@@ -135,6 +135,14 @@
 				"ManageWikiFormFactory",
 				"ManageWikiModuleFactory"
 			]
+		},
+		"UndeleteWiki": {
+			"class": "Miraheze\\ManageWiki\\Specials\\SpecialUndeleteWiki",
+			"services": [
+				"ManageWikiDatabaseUtils",
+				"ExtensionRegistry",
+				"ManageWikiWikiUndeleter"
+			]
 		}
 	},
 	"APIListModules": {
@@ -256,6 +264,10 @@
 		"ManageWikiCacheType": {
 			"description": "Index from $wgObjectCaches. If set, this will be used instead of $wgMainCacheType for ManageWiki cache.",
 			"value": null
+		},
+		"ManageWikiEnableUndeleteWiki": {
+			"description": "Whether to allow users with the managewiki-core right on a deleted wiki to restore it from Special:UndeleteWiki on the central wiki. Requires CreateWiki.",
+			"value": false
 		},
 		"ManageWikiExtensions": {
 			"description": "Array. An array of extensions enabled within the wiki farm.",

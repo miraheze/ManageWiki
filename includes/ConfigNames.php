@@ -13,6 +13,8 @@ class ConfigNames {
 
 	public const string CacheType = 'ManageWikiCacheType';
 
+	public const string EnableUndeleteWiki = 'ManageWikiEnableUndeleteWiki';
+
 	public const string Extensions = 'ManageWikiExtensions';
 
 	public const string ExtensionsDefault = 'ManageWikiExtensionsDefault';

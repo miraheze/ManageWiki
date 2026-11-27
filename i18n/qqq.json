@@ -201,6 +201,12 @@
 	"managewiki-toggle-forcesidebar": "Used as a label for the checkbox that forces ManageWiki links to be shown in the sidebar.",
 	"managewiki-unavailable": "Title of the error page shown when a ManageWiki module or page is unavailable.\n{{Identical|Unavailable}}",
 	"managewiki-unavailable-notcentralwiki": "Error message shown when trying to access a ManageWiki page that is only available on the central wiki.",
+	"managewiki-undeletewiki": "{{doc-special}}",
+	"managewiki-undeletewiki-notallowed": "Error shown when the user lacks the managewiki-core right on the target wiki or their local account could not be verified. $1 is the wiki database name.",
+	"managewiki-undeletewiki-notdeleted": "Error shown in Special:UndeleteWiki when the given wiki is not currently deleted. $1 is the wiki database name.",
+	"managewiki-undeletewiki-statechanged": "Error shown when the wiki's state changed during submission. $1 is the wiki database name.",
+	"managewiki-undeletewiki-submit": "Text for the Special:UndeleteWiki submit button.\n{{Identical|Undelete}}",
+	"managewiki-undeletewiki-success": "Confirmation shown after a wiki was successfully undeleted.",
 	"managewiki-warning-changes": "Warning shown (except in Firefox) when attempting to leave ManageWiki with unsaved changes.",
 	"managewikidefaults": "{{doc-special}}",
 	"managewikidefaults-creategroup-info": "Help text shown above the field used to create a default user group for new wikis.",
@@ -240,5 +246,6 @@
 	"right-managewiki-privacy": "{{doc-right|managewiki-privacy}}",
 	"right-managewiki-restricted": "{{doc-right|managewiki-restricted}}",
 	"right-managewiki-settings": "{{doc-right|managewiki-settings}}",
-	"settings-other": "{{Identical|Other}}"
+	"settings-other": "{{Identical|Other}}",
+	"undeletewiki-summary": "Instructions above the form on Special:UndeleteWiki."
 }
