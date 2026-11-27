@@ -78,11 +78,6 @@ class Main implements
 
 		$modules = array_keys( $this->config->get( ConfigNames::ModulesEnabled ), true, true );
 		foreach ( $modules as $module ) {
-			// Special:UndeleteWiki isn't a ManageWiki tab, so it has no sidebar link.
-			if ( $module === 'undeletewiki' ) {
-				continue;
-			}
-
 			$append = '';
 			if ( !$authority->isAllowed( "managewiki-$module" ) ) {
 				if ( $hideSidebar ) {

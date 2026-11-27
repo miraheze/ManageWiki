@@ -53,11 +53,7 @@ class SpecialManageWiki extends SpecialPage {
 		}
 
 		$module = 'core';
-		// Special:UndeleteWiki is a module but not a ManageWiki tab.
-		if (
-			$par[0] !== 'undeletewiki' &&
-			array_key_exists( $par[0], $this->getConfig()->get( ConfigNames::ModulesEnabled ) )
-		) {
+		if ( array_key_exists( $par[0], $this->getConfig()->get( ConfigNames::ModulesEnabled ) ) ) {
 			$module = $par[0];
 		}
 

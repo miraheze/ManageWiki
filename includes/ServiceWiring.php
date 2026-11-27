@@ -26,6 +26,7 @@ use Miraheze\ManageWiki\Helpers\PermissionsModule;
 use Miraheze\ManageWiki\Helpers\SettingsModule;
 use Miraheze\ManageWiki\Helpers\TypesBuilder;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
+use Miraheze\ManageWiki\Helpers\WikiUndeleter;
 use Miraheze\ManageWiki\Hooks\HookRunner;
 use Psr\Log\LoggerInterface;
 
@@ -205,6 +206,19 @@ return [
 				TypesBuilder::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
 			)
+		);
+	},
+	'ManageWikiWikiUndeleter' => static function ( MediaWikiServices $services ): WikiUndeleter {
+		return new WikiUndeleter(
+			$services->get( 'ManageWikiDatabaseUtils' ),
+			$services->getActorStoreFactory(),
+			$services->getCentralIdLookup(),
+			$services->getUserGroupManagerFactory(),
+			$services->get( 'ManageWikiModuleFactory' ),
+			static function ( string $dbname ) use ( $services ): void {
+				$services->get( 'CreateWikiDataStore' )->resetDatabaseLists( isNewChanges: true );
+				$services->get( 'CreateWikiHookRunner' )->onCreateWikiRemoteWikiCommit( $dbname );
+			}
 		);
 	},
 ];

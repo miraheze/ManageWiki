@@ -196,12 +196,11 @@
 	"managewiki-unavailable": "Unavailable",
 	"managewiki-unavailable-notcentralwiki": "This page is unavailable on this wiki. Please visit your farm's central wiki to use this page.",
 	"managewiki-undeletewiki": "Undelete a wiki",
-	"managewiki-undeletewiki-header": "Undelete a wiki",
-	"managewiki-undeletewiki-info": "Insert the database name of the wiki you wish to undelete.",
-	"managewiki-undeletewiki-noreadaccess": "The wiki \"$1\" is private and you do not have read access to it.",
-	"managewiki-undeletewiki-notallowed": "You do not hold a group on either this wiki or \"$1\" that is permitted to undelete it.",
+	"managewiki-undeletewiki-notallowed": "You must have the permission to manage core settings on \"$1\" to undelete it.",
 	"managewiki-undeletewiki-notdeleted": "The wiki \"$1\" is not currently deleted.",
+	"managewiki-undeletewiki-statechanged": "The state of \"$1\" changed while processing your request. Please try again.",
 	"managewiki-undeletewiki-submit": "Undelete",
+	"managewiki-undeletewiki-success": "The wiki has been undeleted.",
 	"managewiki-warning-changes": "You've made changes to ManageWiki that have not been saved yet.\nIf you leave this page without clicking \"$1\" your ManageWiki changes will not be updated.",
 	"managewikidefaults": "Manage defaults for new wikis",
 	"managewikidefaults-creategroup-info": "Use the field below to create a user group which will be automatically created on new wikis from now on.",
@@ -241,5 +240,6 @@
 	"right-managewiki-privacy": "Remotely change the private state of this wiki",
 	"right-managewiki-restricted": "Manage restricted wiki settings",
 	"right-managewiki-settings": "Manage advanced settings for this wiki",
-	"settings-other": "Other"
+	"settings-other": "Other",
+	"undeletewiki-summary": "Enter the database name of the wiki you want to undelete. You can find it in the [[Special:DeletedWikis|list of deleted wikis]]. You must have permission to manage core settings on that wiki."
 }

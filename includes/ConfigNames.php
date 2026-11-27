@@ -13,6 +13,8 @@ class ConfigNames {
 
 	public const string CacheType = 'ManageWikiCacheType';
 
+	public const string EnableUndeleteWiki = 'ManageWikiEnableUndeleteWiki';
+
 	public const string Extensions = 'ManageWikiExtensions';
 
 	public const string ExtensionsDefault = 'ManageWikiExtensionsDefault';
@@ -52,10 +54,6 @@ class ConfigNames {
 	public const string Settings = 'ManageWikiSettings';
 
 	public const string SiteConfiguration = 'ManageWikiSiteConfiguration';
-
-	public const string UndeleteWikiCentralGroups = 'ManageWikiUndeleteWikiCentralGroups';
-
-	public const string UndeleteWikiLocalGroups = 'ManageWikiUndeleteWikiLocalGroups';
 
 	public const string UseCustomDomains = 'ManageWikiUseCustomDomains';
 }
