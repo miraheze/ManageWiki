@@ -11,9 +11,13 @@ use function explode;
 use function file;
 use function implode;
 use function is_numeric;
+use function json_decode;
+use function json_last_error;
+use function json_last_error_msg;
 use function str_contains;
 use function str_replace;
 use function var_export;
+use const JSON_ERROR_NONE;
 
 class PopulateWikiSettings extends Maintenance {
 
@@ -24,6 +28,10 @@ class PopulateWikiSettings extends Maintenance {
 
 		$this->addOption( 'setting', 'The setting variable minus the $.', true, true, multiOccurrence: true );
 		$this->addOption( 'sourcelist', 'File in format of "wikidb|value" for the setting above.', false, true );
+		$this->addOption(
+			'json',
+			'Parse setting values in the file specified by --sourcelist as JSON. Only needed for multi-value settings.'
+		);
 		$this->addOption( 'remove', 'Removes setting listed with --setting.' );
 		$this->addOption( 'all-wikis', 'Remove this setting from all wikis. Only valid with --remove.' );
 		$this->addOption( 'execute', 'Confirm execution. Required if using --all-wikis.' );
@@ -83,17 +91,24 @@ class PopulateWikiSettings extends Maintenance {
 
 			$value = str_replace( "\n", '', $settingValue );
 
-			if ( $value === 'true' ) {
-				$value = true;
-			}
+			if ( $this->hasOption( 'json' ) ) {
+				$value = json_decode( $value, true );
+				if ( json_last_error() !== JSON_ERROR_NONE ) {
+					$this->fatalError( "Invalid JSON for $dbname: " . json_last_error_msg() );
+				}
+			} else {
+				if ( $value === 'true' ) {
+					$value = true;
+				}
 
-			if ( $value === 'false' ) {
-				$value = false;
-			}
+				if ( $value === 'false' ) {
+					$value = false;
+				}
 
-			if ( is_numeric( $value ) ) {
-				// Handle setting float and integer values
-				$value = str_contains( $value, '.' ) ? (float)$value : (int)$value;
+				if ( is_numeric( $value ) ) {
+					// Handle setting float and integer values
+					$value = str_contains( $value, '.' ) ? (float)$value : (int)$value;
+				}
 			}
 
 			$mwSettings = $this->moduleFactory->settings( $dbname );

@@ -124,7 +124,7 @@
 	"managewiki-permissions-create": "Nome del nuovo gruppo",
 	"managewiki-permissions-create-header": "Crea un nuovo gruppo utenti",
 	"managewiki-permissions-create-submit": "Crea gruppo",
-	"managewiki-permissions-group": "Sotto puoi permettere come questo gruppo utenti può assegnare/non assegnare altri gruppi utente.",
+	"managewiki-permissions-group": "Sotto puoi definire come i membri di questo gruppo di utenti possono assegnare o revocare l'assegnazione ad altri gruppi di utenti.",
 	"managewiki-permissions-group-conflict": "Il nome del gruppo inserito esiste già. Inserisci un nome diverso e riprova.",
 	"managewiki-permissions-group-disallowed": "Il nome del gruppo inserito non è consentito. Inserisci un nome diverso e riprova.",
 	"managewiki-permissions-group-invalid": "Il nome del gruppo inserito non è valido. I nomi dei gruppi devono rispettare le regole di formattazione dei titoli valide.",

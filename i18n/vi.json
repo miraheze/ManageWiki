@@ -180,6 +180,7 @@
 	"managewiki-review-title": "Xem lại thay đổi",
 	"managewiki-review-toggled": "<strong>$1 ( $2 )</strong> là <em>$3</em>",
 	"managewiki-save": "Lưu",
+	"managewiki-save-warnings-title": "Xác nhận thay đổi",
 	"managewiki-search": "Tìm kiếm ManageWiki",
 	"managewiki-search-noresults": "Không có kết quả",
 	"managewiki-sidebar-header": "Quản trị",

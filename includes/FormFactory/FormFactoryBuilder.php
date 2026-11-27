@@ -446,10 +446,8 @@ class FormFactoryBuilder {
 			}
 
 			$help[] = $extDescription ?? $descriptionFallback ?? $description;
-
 			if ( $ext['help'] ?? false ) {
-				$rawMessage = new RawMessage( $ext['help'] );
-				$help[] = "\n" . $rawMessage->parse();
+				$help[] = "\n" . new RawMessage( $ext['help'] )->parse();
 			}
 
 			if ( $hasSettings && $isEnabled ) {
@@ -470,7 +468,7 @@ class FormFactoryBuilder {
 				'default' => $isEnabled,
 				'disabled' => $ceMW ? !$requirementsCheck : true,
 				'disable-if' => $disableIf,
-				'help' => nl2br( implode( ' ', $help ) ),
+				'help-raw' => nl2br( implode( ' ', $help ) ),
 				'section' => $ext['section'],
 			];
 		}
@@ -547,8 +545,7 @@ class FormFactoryBuilder {
 					$help[] = $this->buildRequires( $context, $set['requires'] ) . "\n";
 				}
 
-				$rawMessage = new RawMessage( $set['help'] );
-				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
+				$help[] = $msgHelp->exists() ? $msgHelp->escaped() : new RawMessage( $set['help'] )->parse();
 
 				// Hack to prevent "implicit submission". See T275588 for more
 				if ( ( $configs['type'] ?? '' ) === 'cloner' ) {
@@ -574,7 +571,7 @@ class FormFactoryBuilder {
 						$varName,
 					],
 					'disabled' => $disabled,
-					'help' => nl2br( implode( ' ', $help ) ),
+					'help-raw' => nl2br( implode( ' ', $help ) ),
 					'cssclass' => 'ext-managewiki-infuse',
 					'section' => $set['section'],
 				] + $configs;
@@ -785,16 +782,14 @@ class FormFactoryBuilder {
 						$help[] = $this->buildRequires( $context, $a['requires'] ?? [] ) . "\n";
 					}
 
-					$rawMessage = new RawMessage( $a['help'] );
-					$help[] = $msgHelp->exists() ? $msgHelp->escaped() : $rawMessage->parse();
-
+					$help[] = $msgHelp->exists() ? $msgHelp->escaped() : new RawMessage( $a['help'] )->parse();
 					$formDescriptor["$key-$name"] = [
 						'label-message' => [
 							'managewiki-setting-label',
 							$msgName->exists() ? $msgName->text() : $a['name'],
 							$context->msg( 'parentheses', "\${$key}" ),
 						],
-						'help' => nl2br( implode( ' ', $help ) ),
+						'help-raw' => nl2br( implode( ' ', $help ) ),
 						'cssclass' => 'ext-managewiki-infuse',
 						'disabled' => $disabled,
 						'section' => $name,
@@ -1016,7 +1011,7 @@ class FormFactoryBuilder {
 			$formDescriptor["right-$perm"] = [
 				'type' => 'check',
 				'label' => $perm,
-				'help' => htmlspecialchars( User::getRightDescription( $perm ) ),
+				'help-raw' => new RawMessage( User::getRightDescription( $perm ) )->parse(),
 				'section' => $assigned ? 'assigned' : 'unassigned',
 				'default' => $assigned,
 				'disabled' => !$ceMW,

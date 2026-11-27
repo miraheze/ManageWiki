@@ -50,12 +50,13 @@ return [
 	},
 	'ManageWikiCoreFactory' => static function ( MediaWikiServices $services ): CoreFactory {
 		return new CoreFactory(
-			$services->get( 'ManageWikiHookRunner' ),
+			$services->getObjectFactory(),
 			$services->get( 'ManageWikiSettingsFactory' ),
 			new ServiceOptions(
 				CoreModule::CONSTRUCTOR_OPTIONS,
 				$services->get( 'ManageWikiConfig' )
-			)
+			),
+			$services->getExtensionRegistry()->getAttribute( 'ManageWikiCoreProviders' )
 		);
 	},
 	'ManageWikiDatabaseUtils' => static function ( MediaWikiServices $services ): DatabaseUtils {
@@ -137,6 +138,7 @@ return [
 			$services->get( 'ManageWikiDataStoreFactory' ),
 			$services->get( 'ManageWikiLogger' ),
 			$services->getJobQueueGroupFactory(),
+			$services->getLanguageFactory(),
 			$services->getLocalisationCache(),
 			$services->getNamespaceInfo(),
 			new ServiceOptions(

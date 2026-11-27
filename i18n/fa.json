@@ -59,7 +59,7 @@
 	"managewiki-save": "ذخیره",
 	"managewiki-success": "تنظیمات با موفقیت تغییر داده شدند.",
 	"managewikidefaults": "مدیریت دسترسی‌های پیش‌فرض یک مزرعهٔ ویکی",
-	"managewikidefaults-resetgroups": "بازتنظیم همهٔ گروه‌ها به پیش‌فرض",
+	"managewikidefaults-resetgroups": "بازنشانی همهٔ گروه‌ها به پیش‌فرض",
 	"namespaces-aliases": "همهٔ فضاهای نام تعریف‌نشده‌ای که باید به این فضای‌نام تغییرمسیر داده شوند را در یک خط تازه بنویسید (هر فضای‌نام را با 'Enter' از هم جدا کنید؛ هم‌چنین توجه کنید که فضای‌نامی که وارد می‌کنید، نباید وجود داشته باشند)",
 	"namespaces-delete": "حذف",
 	"namespaces-namespace": "فضای نام اصلی",

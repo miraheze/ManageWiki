@@ -2,7 +2,7 @@ name: Call reusable MediaWiki tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 'renovate/**' ]
   pull_request:
     branches: [ main ]
 
@@ -19,6 +19,15 @@ jobs:
             php-docker: 84
             composer-test: true
             coverage: true
+            experimental-phan: false
+            experimental-phpunit: false
+
+          # Latest MediaWiki beta - PHP 8.4
+          - mw: 'REL1_47'
+            php: 8.4
+            php-docker: 84
+            composer-test: false
+            coverage: false
             experimental-phan: false
             experimental-phpunit: false
 
@@ -48,8 +57,10 @@ jobs:
     if: ${{ always() && github.repository_owner == 'miraheze' && ( github.ref == 'refs/heads/main' || github.event_name == 'pull_request' ) }}
     steps:
       - name: succeeded
+        continue-on-error: true
         uses: technote-space/workflow-conclusion-action@v3
       - uses: rectalogic/notify-irc@v2
+        continue-on-error: true
         if: env.WORKFLOW_CONCLUSION == 'success'
         with:
           channel: "#miraheze-tech-ops"
@@ -59,8 +70,10 @@ jobs:
           sasl_password: ${{ secrets.IRC_MIRAHEZEBOTS }}
 
       - name: failed
+        continue-on-error: true
         uses: technote-space/workflow-conclusion-action@v3
       - uses: rectalogic/notify-irc@v2
+        continue-on-error: true
         if: env.WORKFLOW_CONCLUSION == 'failure'
         with:
           channel: "#miraheze-tech-ops"

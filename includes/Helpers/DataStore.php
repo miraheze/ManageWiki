@@ -2,6 +2,7 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
+use MediaWiki\Deferred\DeferredUpdates;
 use Miraheze\ManageWiki\Exceptions\MissingWikiError;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Hooks\HookRunner;
@@ -36,7 +37,7 @@ class DataStore {
 		);
 
 		if ( !$this->timestamp ) {
-			$this->resetWikiData( isNewChanges: true );
+			$this->propagateWikiDataChanges( isNewChanges: true );
 		}
 	}
 
@@ -52,7 +53,7 @@ class DataStore {
 
 		// Regenerate wiki data cache if the file does not exist or has no valid mtime
 		if ( $mtime === 0 || $mtime < $this->timestamp ) {
-			$this->resetWikiData( isNewChanges: false );
+			$this->propagateWikiDataChanges( isNewChanges: false );
 		}
 	}
 
@@ -97,6 +98,17 @@ class DataStore {
 	 * Retrieves new information for the wiki and updates the cache.
 	 */
 	public function resetWikiData( bool $isNewChanges ): void {
+		if ( !$isNewChanges ) {
+			$this->propagateWikiDataChanges( isNewChanges: false );
+			return;
+		}
+
+		// T15061: only propagate changes to other servers after commit
+		// See https://doc.wikimedia.org/mediawiki-core/1.39.16/php/classDeferredUpdates.html for order of operations
+		DeferredUpdates::addCallableUpdate( fn () => $this->propagateWikiDataChanges( isNewChanges: true ) );
+	}
+
+	private function propagateWikiDataChanges( bool $isNewChanges ): void {
 		$mtime = time();
 		if ( $isNewChanges ) {
 			$this->timestamp = $mtime;
