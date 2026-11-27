@@ -22,7 +22,10 @@ class SpecialUndeleteWiki extends FormSpecialPage {
 		parent::__construct( 'UndeleteWiki' );
 	}
 
-	/** @inheritDoc */
+	/**
+	 * @inheritDoc
+	 * @throws ErrorPageError
+	 */
 	public function execute( $par ): void {
 		if ( !$this->extensionRegistry->isLoaded( 'CreateWiki' ) ||
 			!$this->getConfig()->get( ConfigNames::EnableUndeleteWiki )
