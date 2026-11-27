@@ -30,7 +30,7 @@ class SpecialUndeleteWiki extends FormSpecialPage {
 		if ( !$this->extensionRegistry->isLoaded( 'CreateWiki' ) ||
 			!$this->getConfig()->get( ConfigNames::EnableUndeleteWiki )
 		) {
-			throw new ErrorPageError( 'nosuchspecialpage', 'nospecialpagetext' );
+			throw new ErrorPageError( 'managewiki-unavailable', 'disabledspecialpage-disabled' );
 		}
 		if ( !$this->databaseUtils->isCurrentWikiCentral() ) {
 			throw new ErrorPageError( 'managewiki-unavailable', 'managewiki-unavailable-notcentralwiki' );
@@ -77,7 +77,7 @@ class SpecialUndeleteWiki extends FormSpecialPage {
 	}
 
 	/** @inheritDoc */
-	public function doesWrites(): bool {
+	public function doesWrites(): true {
 		return true;
 	}
 

@@ -13,6 +13,7 @@ use MediaWiki\User\UserIdentity;
 use MediaWiki\User\UserIdentityLookup;
 use MediaWiki\User\UserIdentityValue;
 use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
+use Miraheze\CreateWiki\Services\CreateWikiDataStore;
 use Miraheze\ManageWiki\ConfigNames;
 use Miraheze\ManageWiki\Helpers\WikiUndeleter;
 use stdClass;
@@ -159,14 +160,14 @@ class SpecialUndeleteWikiTest extends SpecialPageTestBase {
 		);
 
 		$services = $this->getServiceContainer();
-		$hookRunner = $this->createMock( CreateWikiHookRunner::class );
 		$this->setService( 'ManageWikiWikiUndeleter', new WikiUndeleter(
 			$services->get( 'ManageWikiDatabaseUtils' ),
 			$actorStoreFactory,
 			$centralIdLookup,
 			$groupManagerFactory,
 			$services->get( 'ManageWikiModuleFactory' ),
-			$hookRunner->onCreateWikiRemoteWikiCommit( ... )
+			$this->createMock( CreateWikiDataStore::class ),
+			$this->createMock( CreateWikiHookRunner::class )
 		) );
 	}
 

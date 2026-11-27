@@ -6,8 +6,6 @@ use MediaWiki\Config\Config;
 use MediaWiki\Config\ServiceOptions;
 use MediaWiki\Logger\LoggerFactory;
 use MediaWiki\MediaWikiServices;
-use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
-use Miraheze\CreateWiki\Services\CreateWikiDataStore;
 use Miraheze\ManageWiki\FormFactory\FormFactory;
 use Miraheze\ManageWiki\FormFactory\FormFactoryBuilder;
 use Miraheze\ManageWiki\Helpers\CacheUpdate;
@@ -217,14 +215,8 @@ return [
 			$services->getCentralIdLookup(),
 			$services->getUserGroupManagerFactory(),
 			$services->get( 'ManageWikiModuleFactory' ),
-			static function ( string $dbname ) use ( $services ): void {
-				$dataStore = $services->get( 'CreateWikiDataStore' );
-				$hookRunner = $services->get( 'CreateWikiHookRunner' );
-				'@phan-var CreateWikiDataStore $dataStore';
-				'@phan-var CreateWikiHookRunner $hookRunner';
-				$dataStore->resetDatabaseLists( isNewChanges: true );
-				$hookRunner->onCreateWikiRemoteWikiCommit( $dbname );
-			}
+			$services->hasService( 'CreateWikiDataStore' ) ? $services->get( 'CreateWikiDataStore' ) : null,
+			$services->hasService( 'CreateWikiHookRunner' ) ? $services->get( 'CreateWikiHookRunner' ) : null
 		);
 	},
 ];

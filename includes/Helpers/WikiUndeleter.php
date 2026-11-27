@@ -2,7 +2,6 @@
 
 namespace Miraheze\ManageWiki\Helpers;
 
-use Closure;
 use MediaWiki\Deferred\DeferredUpdates;
 use MediaWiki\Logging\ManualLogEntry;
 use MediaWiki\SpecialPage\SpecialPage;
@@ -11,11 +10,14 @@ use MediaWiki\User\ActorStoreFactory;
 use MediaWiki\User\CentralId\CentralIdLookup;
 use MediaWiki\User\User;
 use MediaWiki\User\UserGroupManagerFactory;
+use Miraheze\CreateWiki\Hooks\CreateWikiHookRunner;
+use Miraheze\CreateWiki\Services\CreateWikiDataStore;
 use Miraheze\ManageWiki\Helpers\Factories\ModuleFactory;
 use Miraheze\ManageWiki\Helpers\Utils\DatabaseUtils;
 use Wikimedia\Rdbms\IDBAccessObject;
 use function in_array;
 use function mb_strtolower;
+use function rawurlencode;
 use function trim;
 
 class WikiUndeleter {
@@ -26,12 +28,18 @@ class WikiUndeleter {
 		private readonly CentralIdLookup $centralIdLookup,
 		private readonly UserGroupManagerFactory $userGroupManagerFactory,
 		private readonly ModuleFactory $moduleFactory,
-		/** @var Closure(string):void */
-		private readonly Closure $refreshWikiData,
+		private readonly ?CreateWikiDataStore $createWikiDataStore,
+		private readonly ?CreateWikiHookRunner $createWikiHookRunner,
 	) {
 	}
 
 	public function undelete( string $dbname, User $performer ): Status {
+		$dataStore = $this->createWikiDataStore;
+		$hookRunner = $this->createWikiHookRunner;
+		if ( $dataStore === null || $hookRunner === null ) {
+			return Status::newFatal( 'disabledspecialpage-disabled' );
+		}
+
 		$dbname = mb_strtolower( trim( $dbname ) );
 		$dbw = $this->databaseUtils->getGlobalPrimaryDB();
 		$wikiQuery = $dbw->newSelectQueryBuilder()
@@ -43,7 +51,11 @@ class WikiUndeleter {
 			return Status::newFatal( 'managewiki-error-missingwiki', $dbname );
 		}
 
-		$dbname = $wiki->wiki_dbname;
+		// CreateWiki database names can be used unchanged as ManageWiki cache file names.
+		$dbname = rawurlencode( $wiki->wiki_dbname );
+		if ( $dbname !== $wiki->wiki_dbname ) {
+			return Status::newFatal( 'managewiki-error-missingwiki', $wiki->wiki_dbname );
+		}
 		if ( !$this->hasLocalManageWikiRight( $performer, $dbname, (bool)$wiki->wiki_private ) ) {
 			return Status::newFatal( 'managewiki-undeletewiki-notallowed', $dbname );
 		}
@@ -74,8 +86,9 @@ class WikiUndeleter {
 
 		// The database lists and ManageWiki cache must reflect the committed state.
 		DeferredUpdates::addCallableUpdate(
-			function () use ( $dbname ): void {
-				( $this->refreshWikiData )( $dbname );
+			static function () use ( $dataStore, $hookRunner, $dbname ): void {
+				$dataStore->resetDatabaseLists( isNewChanges: true );
+				$hookRunner->onCreateWikiRemoteWikiCommit( $dbname );
 			},
 			DeferredUpdates::PRESEND,
 			$dbw
